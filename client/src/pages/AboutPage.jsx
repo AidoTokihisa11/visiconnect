@@ -8,11 +8,6 @@ import {
   Shield, 
   Award, 
   Heart,
-  Target,
-  TrendingUp,
-  CheckCircle,
-  Star,
-  Clock,
   ArrowRight
 } from 'lucide-react';
 import FooterUnified from '../components/FooterUnified';

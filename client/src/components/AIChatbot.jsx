@@ -4,10 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { 
   MessageCircle, X, Send, Bot, User, 
-  Video, Mic, Monitor, Users, Settings, HelpCircle,
-  RotateCcw, Sparkles, Zap, Search, Copy,
-  ThumbsUp, Bookmark, Play, Shield,
-  Maximize2, Minimize2, ExternalLink
+  Video, Monitor, Users, Settings, HelpCircle,
+  Search, Maximize2, Minimize2, ExternalLink
 } from 'lucide-react';
 
 const ChatbotContainer = styled(motion.div)`
@@ -503,6 +501,7 @@ const AIChatbot = () => {
       setMessages(prev => [...prev, botResponse]);
       setIsTyping(false);
     }, 1500);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputValue]);
 
   const generateBotResponse = useCallback((userMessage) => {
