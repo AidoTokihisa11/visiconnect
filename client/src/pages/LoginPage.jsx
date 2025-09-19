@@ -21,7 +21,7 @@ import {
 
 const PageContainer = styled.div`
   min-height: 100vh;
-  background: #f8fafc;
+  background: var(--bg-primary, #ffffff);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -68,29 +68,24 @@ const BackgroundEffects = styled.div`
 `;
 
 const LoginContainer = styled(motion.div)`
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 24px;
   padding: 3rem;
   width: 100%;
   max-width: 450px;
   position: relative;
   z-index: 10;
+  margin-top: 6rem;
+  box-shadow: var(--shadow-xl, 0 20px 40px rgba(0, 0, 0, 0.15));
   
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), transparent);
-    border-radius: 24px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-2xl, 0 25px 50px rgba(0, 0, 0, 0.2));
   }
   
-  &:hover::before {
-    opacity: 1;
-  }
+  transition: all 0.3s ease;
   
   &::after {
     content: '';
@@ -101,6 +96,77 @@ const LoginContainer = styled(motion.div)`
     height: 2px;
     background: linear-gradient(90deg, transparent, #60a5fa, #a78bfa, transparent);
     border-radius: 2px;
+  }
+`;
+
+// Header de navigation
+const NavigationHeader = styled(motion.header)`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 1rem 2rem;
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+`;
+
+const Nav = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+`;
+
+const NavLogo = styled(motion.div)`
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-decoration: none;
+  color: var(--text-primary, #1e293b);
+  
+  .logo-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--primary-gradient, #2563eb);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(37, 99, 235, 0.3);
+  }
+  
+  .logo-text {
+    background: var(--primary-gradient, #2563eb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+`;
+
+const NavLinks = styled.div`
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+const NavLink = styled(Link)`
+  color: var(--text-primary, #1e293b);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  
+  &:hover {
+    color: var(--accent-cyan, #06b6d4);
   }
 `;
 
@@ -138,12 +204,12 @@ const Logo = styled(motion.div)`
 const Title = styled(motion.h1)`
   font-size: 2rem;
   font-weight: 700;
-  color: #333;
+  color: var(--text-primary, #1e293b);
   margin-bottom: 0.5rem;
 `;
 
 const Subtitle = styled(motion.p)`
-  color: #60a5fa;
+  color: var(--text-secondary, #475569);
   font-size: 1rem;
   margin-bottom: 2rem;
 `;
@@ -160,7 +226,7 @@ const InputGroup = styled(motion.div)`
 
 const InputLabel = styled.label`
   display: block;
-  color: #1e40af;
+  color: var(--text-primary, #1e293b);
   font-size: 0.875rem;
   font-weight: 500;
   margin-bottom: 0.5rem;
@@ -197,15 +263,15 @@ const InputContainer = styled.div`
 const Input = styled(motion.input)`
   width: 100%;
   padding: 1rem 1rem 1rem 3rem;
-  background: rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--bg-secondary, #f8fafc);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 12px;
-  color: #333;
+  color: var(--text-primary, #1e293b);
   font-size: 1rem;
   transition: all 0.3s ease;
   
   &::placeholder {
-    color: rgba(255, 255, 255, 0.3);
+    color: var(--text-secondary, #475569);
   }
   
   &:focus {
@@ -223,8 +289,8 @@ const Input = styled(motion.input)`
 const LoginButton = styled(motion.button)`
   width: 100%;
   padding: 1rem;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: #333;
+  background: var(--primary-gradient, linear-gradient(135deg, #2563eb, #06b6d4));
+  color: white;
   border: none;
   border-radius: 12px;
   font-size: 1rem;
@@ -421,6 +487,49 @@ const LoginPage = () => {
 
   return (
     <PageContainer>
+      {/* Header de navigation */}
+      <NavigationHeader
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
+        <Nav>
+          <NavLogo
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
+              <div className="logo-icon">
+                <Video size={24} color="white" />
+              </div>
+              <div className="logo-text">VisiConnect</div>
+            </Link>
+          </NavLogo>
+
+          <NavLinks>
+            <NavLink to="/">Accueil</NavLink>
+            <NavLink to="/features">Fonctionnalités</NavLink>
+            <NavLink to="/pricing">Tarifs</NavLink>
+            <NavLink to="/about">À propos</NavLink>
+            <NavLink to="/contact">Contact</NavLink>
+            <NavLink to="/signup">
+              <motion.div
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  background: 'var(--primary-gradient, #2563eb)',
+                  borderRadius: '8px',
+                  color: 'white'
+                }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Inscription
+              </motion.div>
+            </NavLink>
+          </NavLinks>
+        </Nav>
+      </NavigationHeader>
+
       <BackgroundEffects />
       
       {/* Notification */}

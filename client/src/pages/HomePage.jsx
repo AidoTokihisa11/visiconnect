@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import EpicLoader from '../components/EpicLoader';
+import FooterUnified from '../components/FooterUnified';
 import {
   Video,
   Users,
@@ -27,10 +28,11 @@ import {
 
 const AppContainer = styled.div`
   min-height: 100vh;
-  background: white;
-  color: #333;
+  background: var(--bg-primary, #ffffff);
+  color: var(--text-primary, #1e293b);
   overflow-x: hidden;
   position: relative;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 `;
 
 // HEADER MODERNE
@@ -44,7 +46,7 @@ const Header = styled(motion.header)`
   backdrop-filter: blur(20px);
   background: rgba(255, 255, 255, 0.95);
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 `;
 
 const Nav = styled.div`
@@ -62,12 +64,12 @@ const Logo = styled(motion.div)`
   font-size: 1.5rem;
   font-weight: 800;
   text-decoration: none;
-  color: #333;
+  color: var(--text-primary, #1e293b);
   
   .logo-icon {
     width: 40px;
     height: 40px;
-    background: #2563eb;
+    background: var(--primary-gradient, #2563eb);
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -76,7 +78,10 @@ const Logo = styled(motion.div)`
   }
   
   .logo-text {
-    color: #2563eb;
+    background: var(--primary-gradient, #2563eb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 `;
 
@@ -94,7 +99,7 @@ const MobileMenuButton = styled(motion.button)`
   display: none;
   background: none;
   border: none;
-  color: #333;
+  color: var(--text-primary, #1e293b);
   cursor: pointer;
   padding: 0.5rem;
   
@@ -126,16 +131,16 @@ const MobileMenu = styled(motion.div)`
 `;
 
 const MobileNavLink = styled(motion.div)`
-  color: #333;
+  color: var(--text-primary, #1e293b);
   font-size: 1.2rem;
   font-weight: 500;
   cursor: pointer;
   padding: 1rem 0;
-  border: "1px solid rgba(0, 0, 0, 0.1)"
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   text-align: center;
   
   &:hover {
-    color: #60a5fa;
+    color: var(--accent-cyan, #06b6d4);
   }
 `;
 
@@ -171,13 +176,18 @@ const PricingGrid = styled.div`
 `;
 
 const PricingCard = styled(motion.div)`
-  background: rgba(0, 0, 0, 0.05);
+  background: var(--bg-primary, #ffffff);
   backdrop-filter: blur(20px);
   border-radius: 24px;
   padding: 3rem 2rem;
-  border: "1px solid rgba(0, 0, 0, 0.1)"
+  border: 2px solid transparent;
+  background-image: linear-gradient(var(--bg-primary, #ffffff), var(--bg-primary, #ffffff)), 
+                    var(--primary-gradient, linear-gradient(135deg, #2563eb, #06b6d4));
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.1);
   
   &::before {
     content: '';
@@ -199,7 +209,7 @@ const PricingCard = styled(motion.div)`
       top: 1rem;
       right: -2rem;
       background: linear-gradient(135deg, #60a5fa, #a78bfa);
-      color: #333;
+      color: white;
       padding: 0.5rem 3rem;
       font-size: 0.8rem;
       font-weight: 700;
@@ -222,7 +232,7 @@ const PricingCard = styled(motion.div)`
   .plan-name {
     font-size: 1.8rem;
     font-weight: 700;
-    color: #333;
+    color: var(--text-primary, #1e293b);
     margin-bottom: 0.5rem;
   }
   
@@ -235,7 +245,7 @@ const PricingCard = styled(motion.div)`
   .plan-price {
     font-size: 3rem;
     font-weight: 800;
-    color: #333;
+    color: var(--text-primary, #1e293b);
     margin-bottom: 0.5rem;
     
     .currency {
@@ -283,13 +293,13 @@ const PricingButton = styled(motion.button)`
   
   &.primary {
     background: linear-gradient(135deg, #60a5fa, #a78bfa);
-    color: #333;
+    color: var(--text-primary, #1e293b);
     box-shadow: 0 8px 32px rgba(96, 165, 250, 0.4);
   }
   
   &.secondary {
     background: rgba(255, 255, 255, 0.1);
-    color: #333;
+    color: var(--text-primary, #1e293b);
     border: 1px solid rgba(255, 255, 255, 0.2);
   }
   
@@ -318,7 +328,7 @@ const NavLink = styled(motion.div)`
   }
   
   &:hover {
-    color: #333;
+    color: var(--text-primary, #1e293b);
     &::after {
       width: 100%;
     }
@@ -470,14 +480,19 @@ const FeaturesGrid = styled(motion.div)`
 `;
 
 const FeatureCard = styled(motion.div)`
-  background: rgba(0, 0, 0, 0.05);
+  background: var(--bg-primary, #ffffff);
   backdrop-filter: blur(20px);
-  border: "1px solid rgba(0, 0, 0, 0.1)"
+  border: 2px solid transparent;
+  background-image: linear-gradient(var(--bg-primary, #ffffff), var(--bg-primary, #ffffff)), 
+                    var(--primary-gradient, linear-gradient(135deg, #2563eb, #06b6d4));
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
   border-radius: 20px;
   padding: 2.5rem;
   position: relative;
   overflow: hidden;
   cursor: pointer;
+  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.08);
   
   &::before {
     content: '';
@@ -525,7 +540,7 @@ const FeatureTitle = styled.h3`
   font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 1rem;
-  color: #333;
+  color: var(--text-primary, #1e293b);
 `;
 
 const FeatureDescription = styled.p`
@@ -565,10 +580,15 @@ const StatsGrid = styled(motion.div)`
 const StatCard = styled(motion.div)`
   text-align: center;
   padding: 2rem;
-  background: rgba(0, 0, 0, 0.05);
+  background: var(--bg-primary, #ffffff);
   border-radius: 16px;
-  border: "1px solid rgba(0, 0, 0, 0.1)"
+  border: 2px solid transparent;
+  background-image: linear-gradient(var(--bg-primary, #ffffff), var(--bg-primary, #ffffff)), 
+                    var(--primary-gradient, linear-gradient(135deg, #2563eb, #06b6d4));
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
   backdrop-filter: blur(10px);
+  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.08);
   
   .stat-value {
     font-size: 3rem;
@@ -585,132 +605,6 @@ const StatCard = styled(motion.div)`
     font-size: 1rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-  }
-`;
-
-// Footer Components
-const FooterContainer = styled(motion.footer)`
-  background: linear-gradient(135deg, #1e40af, #3b82f6);
-  padding: 4rem 2rem 2rem;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-`;
-
-const FooterContent = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 3rem;
-  
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-`;
-
-const FooterSection = styled.div`
-  h3 {
-    color: white;
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 1.5rem;
-  }
-  
-  ul {
-    list-style: none;
-    padding: 0;
-    
-    li {
-      margin-bottom: 0.75rem;
-      
-      a {
-        color: rgba(255, 255, 255, 0.8);
-        text-decoration: none;
-        transition: all 0.3s ease;
-        
-        &:hover {
-          color: white;
-          transform: translateX(5px);
-        }
-      }
-    }
-  }
-  
-  p {
-    color: rgba(255, 255, 255, 0.8);
-    line-height: 1.6;
-    margin-bottom: 1rem;
-  }
-`;
-
-const SocialLinks = styled.div`
-  display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
-  
-  a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    color: #3b82f6;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    border: "1px solid rgba(0, 0, 0, 0.1)"
-    
-    &:hover {
-      background: rgba(96, 165, 250, 0.2);
-      color: #60a5fa;
-      transform: translateY(-2px);
-      border-color: rgba(96, 165, 250, 0.3);
-    }
-  }
-`;
-
-const FooterBottom = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  padding-top: 2rem;
-  margin-top: 3rem;
-  border: "1px solid rgba(0, 0, 0, 0.1)"
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-  
-  @media (max-width: 768px) {
-    flex-direction: column;
-    text-align: center;
-  }
-  
-  p {
-    color: #93c5fd;
-    margin: 0;
-  }
-  
-  .footer-links {
-    display: flex;
-    gap: 2rem;
-    flex-wrap: wrap;
-    
-    @media (max-width: 768px) {
-      justify-content: center;
-    }
-    
-    a {
-      color: #93c5fd;
-      text-decoration: none;
-      font-size: 0.9rem;
-      transition: color 0.3s ease;
-      
-      &:hover {
-        color: #60a5fa;
-      }
-    }
   }
 `;
 
@@ -1479,119 +1373,8 @@ const HomePage = () => {
             </motion.div>
           </StatsSection>
 
-          {/* FOOTER */}
-          <FooterContainer
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            <FooterContent>
-              <FooterSection>
-                <h3>VisioMeet</h3>
-                <p>
-                  La plateforme de visioconférence nouvelle génération qui transforme 
-                  vos réunions en expériences collaboratives exceptionnelles.
-                </p>
-                <SocialLinks>
-                  <motion.a
-                    href="https://github.com/visiomeet-project"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Github size={20} />
-                  </motion.a>
-                  <motion.a
-                    href="https://www.linkedin.com/company/visiomeet"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Linkedin size={20} />
-                  </motion.a>
-                  <motion.a
-                    href="mailto:contact.visiomeet@gmail.com"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Mail size={20} />
-                  </motion.a>
-                </SocialLinks>
-              </FooterSection>
-
-              <FooterSection>
-                <h3>Produit</h3>
-                <ul>
-                  <motion.li whileHover={{ x: 5 }}>
-                    <a href="#features" onClick={(e) => { e.preventDefault(); document.getElementById('features').scrollIntoView({ behavior: 'smooth' }); }}>
-                      Fonctionnalités
-                    </a>
-                  </motion.li>
-                  <motion.li whileHover={{ x: 5 }}>
-                    <a href="#pricing" onClick={(e) => { e.preventDefault(); document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' }); }}>
-                      Tarifs
-                    </a>
-                  </motion.li>
-                  <motion.li whileHover={{ x: 5 }}>
-                    <Link to="/integrations">Intégrations</Link>
-                  </motion.li>
-                  <motion.li whileHover={{ x: 5 }}>
-                    <Link to="/api-docs">API</Link>
-                  </motion.li>
-                </ul>
-              </FooterSection>
-
-              <FooterSection>
-                <h3>Ressources</h3>
-                <ul>
-                  <motion.li whileHover={{ x: 5 }}>
-                    <Link to="/user-guide">Guide utilisateur</Link>
-                  </motion.li>
-                  <motion.li whileHover={{ x: 5 }}>
-                    <Link to="/support">Support</Link>
-                  </motion.li>
-                  <motion.li whileHover={{ x: 5 }}>
-                    <Link to="/community">Communauté</Link>
-                  </motion.li>
-                  <motion.li whileHover={{ x: 5 }}>
-                    <Link to="/status">Statut</Link>
-                  </motion.li>
-                </ul>
-              </FooterSection>
-
-              <FooterSection>
-                <h3>Société</h3>
-                <ul>
-                  <motion.li whileHover={{ x: 5 }}>
-                    <a href="#about" onClick={(e) => { e.preventDefault(); document.getElementById('about').scrollIntoView({ behavior: 'smooth' }); }}>
-                      À propos
-                    </a>
-                  </motion.li>
-                  <motion.li whileHover={{ x: 5 }}>
-                    <Link to="/contact">Contact</Link>
-                  </motion.li>
-                  <motion.li whileHover={{ x: 5 }}>
-                    <Link to="/privacy">Confidentialité</Link>
-                  </motion.li>
-                  <motion.li whileHover={{ x: 5 }}>
-                    <Link to="/security">Sécurité</Link>
-                  </motion.li>
-                </ul>
-              </FooterSection>
-            </FooterContent>
-
-            <FooterBottom>
-              <p>&copy; 2025 VisioMeet. Tous droits réservés.</p>
-              <div className="footer-links">
-                <Link to="/privacy">Politique de confidentialité</Link>
-                <Link to="/terms">Conditions d'utilisation</Link>
-                <Link to="/cookies">Cookies</Link>
-              </div>
-            </FooterBottom>
-          </FooterContainer>
+          {/* FOOTER UNIFIÉ */}
+          <FooterUnified />
         </motion.div>
       )}
     </AppContainer>

@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import FooterUnified from '../components/FooterUnified';
 import {
   Video,
   ArrowLeft,
@@ -17,8 +18,8 @@ import {
 // Styled Components
 const AppContainer = styled.div`
   min-height: 100vh;
-  background: white;
-  color: #333;
+  background: var(--bg-primary, #ffffff);
+  color: var(--text-primary, #1e293b);
   overflow-x: hidden;
   position: relative;
 `;
@@ -32,21 +33,9 @@ const Header = styled(motion.header)`
   z-index: 1000;
   padding: 1rem 2rem;
   backdrop-filter: blur(20px);
-  background: rgba(0, 0, 0, 0.8);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, transparent, rgba(96, 165, 250, 0.1), transparent);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-  
-  &:hover::before {
-    opacity: 1;
-  }
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 `;
 
 const Nav = styled.div`
@@ -68,7 +57,7 @@ const Logo = styled(motion.div)`
   .logo-icon {
     width: 40px;
     height: 40px;
-    background: #1a1a2e;
+    background: var(--primary-gradient, linear-gradient(135deg, #2563eb, #06b6d4));
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -88,7 +77,7 @@ const BackButton = styled(motion.button)`
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 50px;
-  color: #333;
+  color: var(--text-primary, #1e293b);
   text-decoration: none;
   font-weight: 500;
   backdrop-filter: blur(10px);
@@ -225,14 +214,14 @@ const IntegrationIcon = styled.div`
   svg {
     width: 40px;
     height: 40px;
-    color: #333;
+    color: white;
   }
 `;
 
 const IntegrationName = styled.h3`
   font-size: 1.5rem;
   font-weight: 700;
-  color: #333;
+  color: var(--text-primary, #1e293b);
   margin-bottom: 1rem;
   position: relative;
   z-index: 2;
@@ -251,7 +240,7 @@ const IntegrationButton = styled(motion.button)`
   background: linear-gradient(135deg, #60a5fa, #a78bfa);
   border: none;
   border-radius: 25px;
-  color: #333;
+  color: white;
   font-weight: 600;
   cursor: pointer;
   display: flex;
@@ -413,6 +402,8 @@ const IntegrationsPage = () => {
           ))}
         </IntegrationsGrid>
       </IntegrationsSection>
+
+      <FooterUnified />
     </AppContainer>
   );
 };

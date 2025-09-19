@@ -1,96 +1,114 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { 
   Video, 
-  ArrowLeft, 
   Mail, 
   Phone, 
   MapPin, 
-  Send,
-  User,
-  Clock,
-  CheckCircle,
-  AlertCircle
+  Send
 } from 'lucide-react';
 
+// Styled Components avec SEULEMENT le thème clair
 const Container = styled.div`
   min-height: 100vh;
-  background: #0a0a0a;
-  color: #333;
+  background: var(--bg-primary, #ffffff);
+  color: var(--text-primary, #1e293b);
+  overflow-x: hidden;
 `;
 
-const Header = styled.header`
+const Header = styled(motion.header)`
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
-  background: rgba(10, 10, 10, 0.95);
+  padding: 1rem 2rem;
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid #1a1a1a;
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 `;
 
-const Nav = styled.nav`
+const Nav = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
   max-width: 1400px;
   margin: 0 auto;
 `;
 
-const Logo = styled.div`
+const NavLogo = styled(motion.div)`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
   font-size: 1.5rem;
   font-weight: 800;
-  color: #00ff88;
-  cursor: pointer;
+  text-decoration: none;
+  color: var(--text-primary, #1e293b);
+  
+  .logo-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--primary-gradient, linear-gradient(135deg, #2563eb, #06b6d4));
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(37, 99, 235, 0.3);
+  }
+  
+  .logo-text {
+    background: var(--primary-gradient, linear-gradient(135deg, #2563eb, #06b6d4));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 `;
 
-const BackButton = styled.button`
-  background: transparent;
-  border: 2px solid #333;
-  color: #333;
-  padding: 0.5rem 1rem;
-  border-radius: 16px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
+const NavLinks = styled.div`
   display: flex;
+  gap: 2rem;
   align-items: center;
-  gap: 0.5rem;
+  
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
 
+const NavLink = styled(Link)`
+  color: var(--text-primary, #1e293b);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  
   &:hover {
-    border-color: #00ff88;
-    color: #00ff88;
+    color: var(--accent-cyan, #06b6d4);
   }
 `;
 
 const MainContent = styled.main`
   padding: 8rem 2rem 4rem;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
 `;
 
 const HeroSection = styled.section`
   text-align: center;
-  margin-bottom: 4rem;
+  margin-bottom: 6rem;
 `;
 
 const Title = styled(motion.h1)`
   font-size: 3.5rem;
-  font-weight: 900;
-  margin-bottom: 1.5rem;
-  background: linear-gradient(135deg, #00ff88, #00e67a);
+  font-weight: 800;
+  background: var(--primary-gradient, linear-gradient(135deg, #2563eb, #06b6d4));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+  
   @media (max-width: 768px) {
     font-size: 2.5rem;
   }
@@ -98,304 +116,232 @@ const Title = styled(motion.h1)`
 
 const Subtitle = styled(motion.p)`
   font-size: 1.2rem;
-  color: #888;
-  margin-bottom: 2rem;
+  color: var(--text-secondary, #475569);
+  max-width: 600px;
+  margin: 0 auto;
   line-height: 1.6;
 `;
 
-const ContentGrid = styled.div`
+const ContactGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 4rem;
-  margin-bottom: 4rem;
-
+  align-items: start;
+  
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 3rem;
   }
 `;
 
 const ContactInfo = styled.div`
-  background: #111;
-  border: 1px solid #222;
-  border-radius: 24px;
-  padding: 3rem;
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, #00ff88, transparent);
-  }
-`;
-
-const ContactForm = styled.div`
-  background: #111;
-  border: 1px solid #222;
-  border-radius: 24px;
-  padding: 3rem;
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, #00ff88, transparent);
-  }
-`;
-
-const SectionTitle = styled.h2`
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 2rem;
-  color: #333;
-`;
-
-const ContactItem = styled.div`
   display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-  background: #0a0a0a;
-  border: 1px solid #222;
-  border-radius: 16px;
-  transition: all 0.3s ease;
-
-  &:hover {
-    border-color: #333;
-    transform: translateY(-2px);
-  }
-
-  &:last-child {
-    margin-bottom: 0;
-  }
+  flex-direction: column;
+  gap: 2rem;
 `;
 
-const ContactIcon = styled.div`
-  width: 50px;
-  height: 50px;
-  border-radius: 12px;
-  background: rgba(0, 255, 136, 0.1);
+const ContactCard = styled(motion.div)`
+  background: var(--bg-card, rgba(255, 255, 255, 0.95));
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: var(--shadow-lg, 0 8px 25px rgba(0, 0, 0, 0.1));
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl, 0 20px 40px rgba(0, 0, 0, 0.15));
+  }
+  
+  transition: all 0.3s ease;
+`;
+
+const CardIcon = styled.div`
+  width: 60px;
+  height: 60px;
+  background: var(--primary-gradient, linear-gradient(135deg, #2563eb, #06b6d4));
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #00ff88;
-  flex-shrink: 0;
+  margin-bottom: 1.5rem;
+  color: white;
 `;
 
-const ContactDetails = styled.div`
-  flex: 1;
+const CardTitle = styled.h3`
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary, #1e293b);
+  margin-bottom: 0.5rem;
 `;
 
-const ContactLabel = styled.div`
-  font-size: 0.9rem;
-  color: #888;
-  margin-bottom: 0.25rem;
+const CardText = styled.p`
+  color: var(--text-secondary, #475569);
+  line-height: 1.6;
 `;
 
-const ContactValue = styled.div`
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #333;
+const ContactForm = styled(motion.form)`
+  background: var(--bg-card, rgba(255, 255, 255, 0.95));
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 24px;
+  padding: 3rem;
+  box-shadow: var(--shadow-lg, 0 8px 25px rgba(0, 0, 0, 0.1));
 `;
 
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+const FormTitle = styled.h2`
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary, #1e293b);
+  margin-bottom: 2rem;
+  text-align: center;
 `;
 
 const FormGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  margin-bottom: 2rem;
 `;
 
 const Label = styled.label`
-  font-size: 0.9rem;
+  display: block;
   font-weight: 600;
-  color: #ccc;
+  color: var(--text-primary, #1e293b);
+  margin-bottom: 0.5rem;
 `;
 
 const Input = styled.input`
+  width: 100%;
   padding: 1rem;
-  background: #0a0a0a;
-  border: 2px solid #333;
+  border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 12px;
-  color: #333;
   font-size: 1rem;
-  outline: none;
+  background: var(--bg-primary, #ffffff);
+  color: var(--text-primary, #1e293b);
   transition: all 0.3s ease;
-
+  
   &:focus {
-    border-color: #00ff88;
+    outline: none;
+    border-color: var(--accent-cyan, #06b6d4);
+    box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
   }
-
+  
   &::placeholder {
-    color: #666;
+    color: var(--text-secondary, #475569);
   }
 `;
 
 const TextArea = styled.textarea`
-  padding: 1rem;
-  background: #0a0a0a;
-  border: 2px solid #333;
-  border-radius: 12px;
-  color: #333;
-  font-size: 1rem;
-  outline: none;
-  transition: all 0.3s ease;
-  resize: vertical;
+  width: 100%;
   min-height: 120px;
-
-  &:focus {
-    border-color: #00ff88;
-  }
-
-  &::placeholder {
-    color: #666;
-  }
-`;
-
-const Select = styled.select`
   padding: 1rem;
-  background: #0a0a0a;
-  border: 2px solid #333;
+  border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 12px;
-  color: #333;
   font-size: 1rem;
-  outline: none;
+  font-family: inherit;
+  background: var(--bg-primary, #ffffff);
+  color: var(--text-primary, #1e293b);
+  resize: vertical;
   transition: all 0.3s ease;
-
+  
   &:focus {
-    border-color: #00ff88;
+    outline: none;
+    border-color: var(--accent-cyan, #06b6d4);
+    box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
   }
-
-  option {
-    background: #0a0a0a;
-    color: #333;
+  
+  &::placeholder {
+    color: var(--text-secondary, #475569);
   }
 `;
 
-const SubmitButton = styled.button`
-  background: linear-gradient(135deg, #00ff88, #00e67a);
-  border: none;
-  color: #0a0a0a;
+const SubmitButton = styled(motion.button)`
+  width: 100%;
   padding: 1rem 2rem;
-  border-radius: 16px;
+  background: var(--primary-gradient, linear-gradient(135deg, #2563eb, #06b6d4));
+  color: white;
+  border: none;
+  border-radius: 12px;
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 255, 136, 0.3);
+    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
   }
-
+  
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
     transform: none;
   }
-`;
-
-const ResponseTime = styled.div`
-  background: #0a0a0a;
-  border: 1px solid #333;
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-top: 2rem;
-  text-align: center;
-`;
-
-const ResponseTitle = styled.h3`
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #00ff88;
-  margin-bottom: 0.5rem;
-`;
-
-const ResponseText = styled.p`
-  color: #888;
-  font-size: 0.9rem;
+  
+  transition: all 0.3s ease;
 `;
 
 const ContactPage = () => {
-  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    phone: '',
     subject: '',
-    message: '',
-    priority: 'normal'
+    message: ''
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null);
-
-  // Scroll vers le haut quand la page se charge
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    
-    // Simulation d'envoi
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSubmitStatus('success');
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        subject: '',
-        message: '',
-        priority: 'normal'
-      });
-      
-      setTimeout(() => {
-        setSubmitStatus(null);
-      }, 5000);
-    }, 2000);
+    console.log('Form submitted:', formData);
   };
 
   return (
     <Container>
-      <Header>
+      <Header
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
         <Nav>
-          <Logo onClick={() => navigate('/')}>
-            <Video size={24} />
-            Visio Pro
-          </Logo>
-          <BackButton onClick={() => navigate('/')}>
-            <ArrowLeft size={16} />
-            Retour
-          </BackButton>
+          <NavLogo
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
+              <div className="logo-icon">
+                <Video size={24} color="white" />
+              </div>
+              <div className="logo-text">VisiConnect</div>
+            </Link>
+          </NavLogo>
+
+          <NavLinks>
+            <NavLink to="/">Accueil</NavLink>
+            <NavLink to="/features">Fonctionnalités</NavLink>
+            <NavLink to="/pricing">Tarifs</NavLink>
+            <NavLink to="/about">À propos</NavLink>
+            <NavLink to="/contact" style={{ color: 'var(--accent-cyan, #06b6d4)' }}>Contact</NavLink>
+            <NavLink to="/login">
+              <motion.div
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  background: 'var(--primary-gradient, linear-gradient(135deg, #2563eb, #06b6d4))',
+                  borderRadius: '8px',
+                  color: 'white'
+                }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Connexion
+              </motion.div>
+            </NavLink>
+          </NavLinks>
         </Nav>
       </Header>
 
@@ -411,191 +357,135 @@ const ContactPage = () => {
           <Subtitle
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
           >
-            Une question ? Un projet ? N'hésitez pas à nous contacter, nous vous répondrons dans les plus brefs délais.
+            Une question ? Un projet ? Notre équipe est là pour vous accompagner dans votre transformation digitale.
           </Subtitle>
         </HeroSection>
 
-        <ContentGrid>
+        <ContactGrid>
           <ContactInfo>
-            <SectionTitle>Informations de contact</SectionTitle>
-            
-            <ContactItem>
-              <ContactIcon>
-                <User size={24} />
-              </ContactIcon>
-              <ContactDetails>
-                <ContactLabel>Développeur</ContactLabel>
-                <ContactValue>Théo Garcès</ContactValue>
-              </ContactDetails>
-            </ContactItem>
+            <ContactCard
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              whileHover={{ y: -4 }}
+            >
+              <CardIcon>
+                <Mail size={28} />
+              </CardIcon>
+              <CardTitle>Email</CardTitle>
+              <CardText>
+                Écrivez-nous à tout moment, nous vous répondrons dans les plus brefs délais.
+                <br />
+                <strong>contact@visiconnect.com</strong>
+              </CardText>
+            </ContactCard>
 
-            <ContactItem>
-              <ContactIcon>
-                <Mail size={24} />
-              </ContactIcon>
-              <ContactDetails>
-                <ContactLabel>Email</ContactLabel>
-                <ContactValue>theogarces33@gmail.com</ContactValue>
-              </ContactDetails>
-            </ContactItem>
+            <ContactCard
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              whileHover={{ y: -4 }}
+            >
+              <CardIcon>
+                <Phone size={28} />
+              </CardIcon>
+              <CardTitle>Téléphone</CardTitle>
+              <CardText>
+                Appelez-nous du lundi au vendredi de 9h à 18h.
+                <br />
+                <strong>+33 1 23 45 67 89</strong>
+              </CardText>
+              </ContactCard>
 
-            <ContactItem>
-              <ContactIcon>
-                <Phone size={24} />
-              </ContactIcon>
-              <ContactDetails>
-                <ContactLabel>Téléphone</ContactLabel>
-                <ContactValue>06 48 58 81 79</ContactValue>
-              </ContactDetails>
-            </ContactItem>
-
-            <ContactItem>
-              <ContactIcon>
-                <MapPin size={24} />
-              </ContactIcon>
-              <ContactDetails>
-                <ContactLabel>Adresse</ContactLabel>
-                <ContactValue>123 Avenue de l'Innovation<br />33000 Bordeaux, France</ContactValue>
-              </ContactDetails>
-            </ContactItem>
-
-            <ResponseTime>
-              <ResponseTitle>
-                <Clock size={16} style={{ display: 'inline', marginRight: '0.5rem' }} />
-                Temps de réponse
-              </ResponseTitle>
-              <ResponseText>
-                Nous nous engageons à répondre à tous les messages dans un délai de 24h maximum.
-              </ResponseText>
-            </ResponseTime>
+            <ContactCard
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              whileHover={{ y: -4 }}
+            >
+              <CardIcon>
+                <MapPin size={28} />
+              </CardIcon>
+              <CardTitle>Adresse</CardTitle>
+              <CardText>
+                Retrouvez-nous dans nos bureaux parisiens.
+                <br />
+                <strong>42 Avenue des Champs-Élysées<br />75008 Paris, France</strong>
+              </CardText>
+            </ContactCard>
           </ContactInfo>
 
-          <ContactForm>
-            <SectionTitle>Envoyez-nous un message</SectionTitle>
+          <ContactForm
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            onSubmit={handleSubmit}
+          >
+            <FormTitle>Envoyez-nous un message</FormTitle>
             
-            {submitStatus === 'success' && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                style={{
-                  background: 'rgba(0, 255, 136, 0.1)',
-                  border: '1px solid #00ff88',
-                  borderRadius: '12px',
-                  padding: '1rem',
-                  marginBottom: '1.5rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  color: '#00ff88'
-                }}
-              >
-                <CheckCircle size={20} />
-                Message envoyé avec succès ! Nous vous répondrons bientôt.
-              </motion.div>
-            )}
+            <FormGroup>
+              <Label htmlFor="name">Nom complet</Label>
+              <Input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Votre nom et prénom"
+                value={formData.name}
+                onChange={handleInputChange}
+                required
+              />
+            </FormGroup>
 
-            <Form onSubmit={handleSubmit}>
-              <FormGroup>
-                <Label htmlFor="name">Nom complet *</Label>
-                <Input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  placeholder="Votre nom et prénom"
-                  required
-                />
-              </FormGroup>
+            <FormGroup>
+              <Label htmlFor="email">Adresse email</Label>
+              <Input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="votre@email.com"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+              />
+            </FormGroup>
 
-              <FormGroup>
-                <Label htmlFor="email">Email *</Label>
-                <Input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="votre.email@exemple.com"
-                  required
-                />
-              </FormGroup>
+            <FormGroup>
+              <Label htmlFor="subject">Sujet</Label>
+              <Input
+                type="text"
+                id="subject"
+                name="subject"
+                placeholder="De quoi souhaitez-vous parler ?"
+                value={formData.subject}
+                onChange={handleInputChange}
+                required
+              />
+            </FormGroup>
 
-              <FormGroup>
-                <Label htmlFor="phone">Téléphone</Label>
-                <Input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  placeholder="06 12 34 56 78"
-                />
-              </FormGroup>
+            <FormGroup>
+              <Label htmlFor="message">Message</Label>
+              <TextArea
+                id="message"
+                name="message"
+                placeholder="Décrivez votre projet ou votre question..."
+                value={formData.message}
+                onChange={handleInputChange}
+                required
+              />
+            </FormGroup>
 
-              <FormGroup>
-                <Label htmlFor="priority">Priorité</Label>
-                <Select
-                  id="priority"
-                  name="priority"
-                  value={formData.priority}
-                  onChange={handleInputChange}
-                >
-                  <option value="low">Faible</option>
-                  <option value="normal">Normale</option>
-                  <option value="high">Élevée</option>
-                  <option value="urgent">Urgente</option>
-                </Select>
-              </FormGroup>
-
-              <FormGroup>
-                <Label htmlFor="subject">Sujet *</Label>
-                <Input
-                  type="text"
-                  id="subject"
-                  name="subject"
-                  value={formData.subject}
-                  onChange={handleInputChange}
-                  placeholder="Objet de votre message"
-                  required
-                />
-              </FormGroup>
-
-              <FormGroup>
-                <Label htmlFor="message">Message *</Label>
-                <TextArea
-                  id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleInputChange}
-                  placeholder="Décrivez votre demande en détail..."
-                  required
-                />
-              </FormGroup>
-
-              <SubmitButton type="submit" disabled={isSubmitting}>
-                {isSubmitting ? (
-                  <>
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                    >
-                      <AlertCircle size={20} />
-                    </motion.div>
-                    Envoi en cours...
-                  </>
-                ) : (
-                  <>
-                    <Send size={20} />
-                    Envoyer le message
-                  </>
-                )}
-              </SubmitButton>
-            </Form>
+            <SubmitButton
+              type="submit"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <Send size={20} />
+              Envoyer le message
+            </SubmitButton>
           </ContactForm>
-        </ContentGrid>
+        </ContactGrid>
       </MainContent>
     </Container>
   );

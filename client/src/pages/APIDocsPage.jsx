@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { 
   Video, 
   ArrowLeft, 
@@ -14,69 +15,86 @@ import {
   Zap, 
   Users, 
   MessageCircle, 
-  FileText, 
   Copy, 
   Check, 
   Play,
   Download,
-  Cpu,
   Activity
 } from 'lucide-react';
 
 const Container = styled.div`
   min-height: 100vh;
-  background: #0a0a0a;
-  color: #333;
+  background: var(--bg-primary, #ffffff);
+  color: var(--text-primary, #1e293b);
   overflow-x: hidden;
 `;
 
-const Header = styled.header`
+const Header = styled(motion.header)`
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
-  background: rgba(10, 10, 10, 0.95);
+  padding: 1rem 2rem;
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid #1a1a1a;
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 `;
 
 const Nav = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
   max-width: 1400px;
   margin: 0 auto;
 `;
 
-const Logo = styled.div`
+const NavLogo = styled(motion.div)`
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-decoration: none;
+  color: var(--text-primary, #1e293b);
+  
+  .logo-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--primary-gradient, linear-gradient(135deg, #2563eb, #06b6d4));
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(37, 99, 235, 0.3);
+  }
+  
+  .logo-text {
+    background: var(--primary-gradient, linear-gradient(135deg, #2563eb, #06b6d4));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+`;
+
+const BackButton = styled(motion.button)`
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: #00ff88;
-  cursor: pointer;
-`;
-
-const BackButton = styled.button`
+  padding: 0.75rem 1.5rem;
   background: transparent;
-  border: 2px solid #333;
-  color: #333;
-  padding: 0.5rem 1rem;
-  border-radius: 16px;
-  font-size: 0.9rem;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  color: var(--text-primary, #1e293b);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
 
   &:hover {
-    border-color: #00ff88;
-    color: #00ff88;
+    border-color: var(--accent-cyan, #06b6d4);
+    color: var(--accent-cyan, #06b6d4);
+    transform: translateX(-2px);
   }
 `;
 
@@ -94,44 +112,41 @@ const MainContent = styled.div`
   }
 `;
 
-const Sidebar = styled.div`
-  background: #111;
-  border: 1px solid #222;
+const Sidebar = styled(motion.div)`
+  background: var(--bg-card, rgba(255, 255, 255, 0.95));
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 24px;
   padding: 2rem;
   height: fit-content;
   position: sticky;
   top: 8rem;
-
-  @media (max-width: 1024px) {
-    position: static;
-    order: 2;
-  }
+  box-shadow: var(--shadow-lg, 0 8px 25px rgba(0, 0, 0, 0.1));
 `;
 
-const SearchBox = styled.div`
+const SearchContainer = styled.div`
   position: relative;
   margin-bottom: 2rem;
 `;
 
 const SearchInput = styled.input`
   width: 100%;
-  padding: 1rem 1rem 1rem 3rem;
-  border: 2px solid #222;
-  border-radius: 16px;
-  background: #0a0a0a;
-  color: #333;
-  font-size: 0.9rem;
+  padding: 1rem;
+  padding-left: 3rem;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  font-size: 1rem;
+  background: var(--bg-primary, #ffffff);
+  color: var(--text-primary, #1e293b);
   transition: all 0.3s ease;
-
-  &::placeholder {
-    color: #555;
-  }
 
   &:focus {
     outline: none;
-    border-color: #00ff88;
-    box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
+    border-color: var(--accent-cyan, #06b6d4);
+    box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+  }
+
+  &::placeholder {
+    color: var(--text-secondary, #475569);
   }
 `;
 
@@ -140,854 +155,650 @@ const SearchIcon = styled(Search)`
   left: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  color: #555;
-  size: 16px;
+  color: var(--text-secondary, #475569);
+  width: 20px;
+  height: 20px;
 `;
 
-const CategoryList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+const NavigationList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
 `;
 
-const CategoryItem = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  background: ${props => props.active ? 'rgba(0, 255, 136, 0.1)' : 'transparent'};
-  border: 1px solid ${props => props.active ? '#00ff88' : 'transparent'};
-  border-radius: 16px;
-  color: ${props => props.active ? '#00ff88' : '#888'};
+const NavigationItem = styled(motion.li)`
+  margin-bottom: 0.5rem;
+`;
+
+const NavigationLink = styled.button`
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid ${props => props.active ? 'var(--accent-cyan, #06b6d4)' : 'transparent'};
+  border-radius: 12px;
+  background: ${props => props.active ? 'rgba(6, 182, 212, 0.1)' : 'transparent'};
+  color: ${props => props.active ? 'var(--accent-cyan, #06b6d4)' : 'var(--text-secondary, #475569)'};
+  text-align: left;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
-  text-align: left;
-  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 
   &:hover {
-    background: rgba(0, 255, 136, 0.05);
-    color: #00ff88;
-    border-color: #333;
+    color: var(--accent-cyan, #06b6d4);
+    border-color: var(--accent-cyan, #06b6d4);
+    background: rgba(6, 182, 212, 0.05);
   }
 `;
 
-const ContentArea = styled.div`
-  background: #111;
-  border: 1px solid #222;
+const ContentArea = styled(motion.div)`
+  background: var(--bg-card, rgba(255, 255, 255, 0.95));
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 24px;
   padding: 3rem;
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, #00ff88, transparent);
-  }
+  box-shadow: var(--shadow-lg, 0 8px 25px rgba(0, 0, 0, 0.1));
 `;
 
-const ContentHeader = styled.div`
-  margin-bottom: 3rem;
-`;
-
-const ContentTitle = styled.h1`
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #333;
+const PageTitle = styled.h1`
+  font-size: 3rem;
+  font-weight: 800;
+  background: var(--primary-gradient, linear-gradient(135deg, #2563eb, #06b6d4));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
 `;
 
-const ContentSubtitle = styled.p`
-  font-size: 1.1rem;
-  color: #888;
+const PageSubtitle = styled.p`
+  color: var(--text-secondary, #475569);
+  font-size: 1.2rem;
+  margin-bottom: 3rem;
   line-height: 1.6;
-  margin-bottom: 2rem;
 `;
 
-const QuickStart = styled.div`
-  background: #0a0a0a;
-  border: 2px solid #00ff88;
-  border-radius: 16px;
-  padding: 2rem;
-  margin-bottom: 3rem;
-`;
+const Section = styled.div`
+  margin-bottom: 4rem;
 
-const QuickStartTitle = styled.h3`
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: #00ff88;
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-`;
-
-const CodeBlock = styled.div`
-  background: #000;
-  border: 1px solid #333;
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin: 1rem 0;
-  position: relative;
-  overflow-x: auto;
-`;
-
-const CodeHeader = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid #333;
-`;
-
-const CodeLanguage = styled.span`
-  font-size: 0.8rem;
-  color: #888;
-  text-transform: uppercase;
-  font-weight: 600;
-`;
-
-const CopyButton = styled.button`
-  background: transparent;
-  border: 1px solid #333;
-  color: #888;
-  padding: 0.25rem 0.5rem;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  transition: all 0.3s ease;
-
-  &:hover {
-    border-color: #00ff88;
-    color: #00ff88;
+  &:last-child {
+    margin-bottom: 0;
   }
-`;
-
-const CodePre = styled.pre`
-  color: #e6e6e6;
-  font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
-  font-size: 0.9rem;
-  line-height: 1.5;
-  margin: 0;
-  overflow-x: auto;
-
-  .keyword { color: #ff79c6; }
-  .string { color: #f1fa8c; }
-  .number { color: #bd93f9; }
-  .comment { color: #6272a4; }
-  .function { color: #50fa7b; }
-  .property { color: #8be9fd; }
-`;
-
-const EndpointSection = styled.div`
-  margin-bottom: 3rem;
 `;
 
 const SectionTitle = styled.h2`
   font-size: 1.8rem;
   font-weight: 700;
-  margin-bottom: 2rem;
-  color: #333;
+  color: var(--text-primary, #1e293b);
+  margin-bottom: 1.5rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
 `;
 
-const EndpointCard = styled(motion.div)`
-  background: #0a0a0a;
-  border: 1px solid #222;
-  border-radius: 16px;
-  margin-bottom: 1.5rem;
-  overflow: hidden;
+const SectionDescription = styled.p`
+  color: var(--text-secondary, #475569);
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  line-height: 1.6;
 `;
 
-const EndpointHeader = styled.div`
-  padding: 1.5rem;
-  border-bottom: 1px solid #222;
+const CodeBlock = styled.div`
+  background: rgba(37, 99, 235, 0.05);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  border-radius: 16px;
+  padding: 2rem;
+  margin: 2rem 0;
+  position: relative;
+  font-family: 'Monaco', 'Menlo', monospace;
+`;
+
+const CodeHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(37, 99, 235, 0.2);
+`;
+
+const CodeTitle = styled.span`
+  font-weight: 600;
+  color: var(--text-primary, #1e293b);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`;
+
+const CopyButton = styled(motion.button)`
+  padding: 0.5rem 1rem;
+  background: var(--accent-cyan, #06b6d4);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   transition: all 0.3s ease;
 
   &:hover {
-    background: rgba(0, 255, 136, 0.05);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
   }
 `;
 
-const EndpointMethod = styled.span`
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  margin-right: 1rem;
-
-  &.get { background: #4caf50; color: #333; }
-  &.post { background: #2196f3; color: #333; }
-  &.put { background: #ff9800; color: #333; }
-  &.delete { background: #f44336; color: #333; }
-`;
-
-const EndpointPath = styled.span`
-  font-family: 'Fira Code', monospace;
-  color: #00ff88;
-  font-weight: 600;
-`;
-
-const EndpointDescription = styled.p`
-  color: #888;
-  margin-top: 0.5rem;
-  line-height: 1.5;
-`;
-
-const EndpointDetails = styled(motion.div)`
+const CodeContent = styled.pre`
+  background: var(--bg-primary, #ffffff);
+  color: var(--text-primary, #1e293b);
   padding: 1.5rem;
-  border-top: 1px solid #222;
+  border-radius: 12px;
+  overflow-x: auto;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
+
+  .keyword { color: var(--accent-cyan, #06b6d4); font-weight: 600; }
+  .string { color: #10b981; }
+  .comment { color: var(--text-secondary, #475569); font-style: italic; }
+  .number { color: #f59e0b; }
 `;
 
-const ParameterTable = styled.div`
-  background: #000;
-  border: 1px solid #333;
-  border-radius: 8px;
+const ParameterTable = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2rem 0;
+  background: var(--bg-primary, #ffffff);
+  border-radius: 12px;
   overflow: hidden;
-  margin: 1rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 `;
 
-const TableHeader = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 2fr;
-  gap: 1rem;
+const TableHeader = styled.th`
+  background: var(--primary-gradient, linear-gradient(135deg, #2563eb, #06b6d4));
+  color: white;
   padding: 1rem;
-  background: #111;
-  border-bottom: 1px solid #333;
+  text-align: left;
   font-weight: 600;
-  color: #ccc;
-  font-size: 0.9rem;
 `;
 
-const TableRow = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 2fr;
-  gap: 1rem;
+const TableCell = styled.td`
   padding: 1rem;
-  border-bottom: 1px solid #333;
-  font-size: 0.9rem;
-
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  color: var(--text-primary, #1e293b);
+  
   &:last-child {
     border-bottom: none;
   }
-`;
 
-const ParameterName = styled.code`
-  color: #00ff88;
-  background: rgba(0, 255, 136, 0.1);
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.8rem;
-`;
-
-const ParameterType = styled.span`
-  color: #bd93f9;
-  font-family: 'Fira Code', monospace;
-  font-size: 0.8rem;
-`;
-
-const Required = styled.span`
-  color: ${props => props.required ? '#f44336' : '#888'};
-  font-size: 0.8rem;
-  font-weight: 600;
+  code {
+    background: rgba(37, 99, 235, 0.1);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-family: 'Monaco', 'Menlo', monospace;
+    font-size: 0.9rem;
+    color: var(--accent-cyan, #06b6d4);
+  }
 `;
 
 const ResponseExample = styled.div`
-  margin-top: 1.5rem;
+  background: var(--bg-primary, #ffffff);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  margin: 2rem 0;
 `;
 
-const ExampleTitle = styled.h4`
-  color: #333;
+const ResponseTitle = styled.h4`
+  color: var(--text-primary, #1e293b);
   margin-bottom: 1rem;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 `;
 
 const StatusCode = styled.span`
-  display: inline-block;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
+  background: ${props => {
+    if (props.code >= 200 && props.code < 300) return 'var(--success, #10b981)';
+    if (props.code >= 400) return 'var(--error, #ef4444)';
+    return 'var(--warning, #f59e0b)';
+  }};
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
   font-size: 0.8rem;
-  font-weight: 700;
-  margin-right: 0.5rem;
-
-  &.success { background: #4caf50; color: #333; }
-  &.error { background: #f44336; color: #333; }
+  font-weight: 600;
+  margin-left: 0.5rem;
 `;
 
-const SDKSection = styled.div`
-  margin-bottom: 3rem;
-`;
-
-const SDKGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-`;
-
-const SDKCard = styled(motion.div)`
-  background: #0a0a0a;
-  border: 2px solid #222;
-  border-radius: 16px;
+const QuickStart = styled.div`
+  background: rgba(6, 182, 212, 0.05);
+  border: 2px solid rgba(6, 182, 212, 0.3);
+  border-radius: 20px;
   padding: 2rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-
-  &:hover {
-    border-color: #00ff88;
-    transform: translateY(-2px);
-  }
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: ${props => props.color || '#00ff88'};
-  }
+  margin: 2rem 0;
+  text-align: center;
 `;
 
-const SDKIcon = styled.div`
-  width: 50px;
-  height: 50px;
-  background: ${props => props.color || '#00ff88'};
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1.5rem;
-  color: #0a0a0a;
-`;
-
-const SDKTitle = styled.h3`
+const QuickStartTitle = styled.h3`
+  color: var(--text-primary, #1e293b);
+  margin-bottom: 1rem;
   font-size: 1.3rem;
   font-weight: 700;
-  margin-bottom: 1rem;
-  color: #333;
 `;
 
-const SDKDescription = styled.p`
-  color: #888;
-  line-height: 1.5;
-  margin-bottom: 1.5rem;
-`;
-
-const SDKButton = styled.button`
-  background: transparent;
-  border: 2px solid #00ff88;
-  color: #00ff88;
-  padding: 0.75rem 1.5rem;
+const QuickStartButton = styled(motion.button)`
+  background: var(--primary-gradient, linear-gradient(135deg, #2563eb, #06b6d4));
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
   border-radius: 12px;
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
+  margin: 0.5rem;
+  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 
   &:hover {
-    background: #00ff88;
-    color: #0a0a0a;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
   }
-`;
-
-const RateLimitInfo = styled.div`
-  background: rgba(255, 152, 0, 0.1);
-  border: 1px solid #ff9800;
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin: 2rem 0;
-`;
-
-const RateLimitTitle = styled.h4`
-  color: #ff9800;
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-`;
-
-const AuthSection = styled.div`
-  background: rgba(0, 255, 136, 0.05);
-  border: 1px solid rgba(0, 255, 136, 0.2);
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin: 2rem 0;
-`;
-
-const AuthTitle = styled.h4`
-  color: #00ff88;
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
 `;
 
 const APIDocsPage = () => {
   const navigate = useNavigate();
-  const [activeCategory, setActiveCategory] = useState('getting-started');
+  const [activeSection, setActiveSection] = useState('overview');
   const [searchTerm, setSearchTerm] = useState('');
-  const [expandedEndpoint, setExpandedEndpoint] = useState(null);
-  const [copiedCode, setCopiedCode] = useState(null);
+  const [copiedCode, setCopiedCode] = useState('');
 
-  const categories = [
-    { id: 'getting-started', label: 'Premiers pas', icon: Play },
-    { id: 'authentication', label: 'Authentification', icon: Key },
-    { id: 'rooms', label: 'Salles', icon: Video },
-    { id: 'users', label: 'Utilisateurs', icon: Users },
-    { id: 'chat', label: 'Chat', icon: MessageCircle },
-    { id: 'recording', label: 'Enregistrement', icon: FileText },
-    { id: 'webhooks', label: 'Webhooks', icon: Zap },
-    { id: 'sdks', label: 'SDKs', icon: Code },
-    { id: 'rate-limits', label: 'Limites', icon: Shield }
+  const navigationItems = [
+    { id: 'overview', label: 'Vue d\'ensemble', icon: <Globe size={16} /> },
+    { id: 'authentication', label: 'Authentification', icon: <Key size={16} /> },
+    { id: 'meetings', label: 'Réunions', icon: <Video size={16} /> },
+    { id: 'users', label: 'Utilisateurs', icon: <Users size={16} /> },
+    { id: 'rooms', label: 'Salles', icon: <MessageCircle size={16} /> },
+    { id: 'webhooks', label: 'Webhooks', icon: <Zap size={16} /> },
+    { id: 'errors', label: 'Codes d\'erreur', icon: <Shield size={16} /> },
+    { id: 'sdks', label: 'SDK & Outils', icon: <Download size={16} /> }
   ];
 
-  const endpoints = {
-    'getting-started': [],
-    'authentication': [
-      {
-        method: 'POST',
-        path: '/api/auth/register',
-        description: 'Créer un nouveau compte utilisateur',
-        parameters: [
-          { name: 'name', type: 'string', required: true, description: 'Nom complet de l\'utilisateur' },
-          { name: 'email', type: 'string', required: true, description: 'Adresse email unique' },
-          { name: 'password', type: 'string', required: true, description: 'Mot de passe (minimum 6 caractères)' }
-        ],
-        response: {
-          status: 201,
-          example: `{
-  "success": true,
-  "message": "Compte créé avec succès",
-  "user": {
-    "id": "user_123",
-    "name": "John Doe",
-    "email": "john@example.com"
-  }
-}`
-        }
-      },
-      {
-        method: 'POST',
-        path: '/api/auth/login',
-        description: 'Se connecter avec un compte existant',
-        parameters: [
-          { name: 'email', type: 'string', required: true, description: 'Adresse email du compte' },
-          { name: 'password', type: 'string', required: true, description: 'Mot de passe du compte' }
-        ],
-        response: {
-          status: 200,
-          example: `{
-  "success": true,
-  "message": "Connexion réussie",
-  "user": {
-    "id": "user_123",
-    "name": "John Doe",
-    "email": "john@example.com"
-  }
-}`
-        }
-      }
-    ],
-    'rooms': [
-      {
-        method: 'POST',
-        path: '/api/rooms/create',
-        description: 'Créer une nouvelle salle de visioconférence',
-        parameters: [
-          { name: 'userId', type: 'string', required: true, description: 'ID de l\'utilisateur créateur' }
-        ],
-        response: {
-          status: 201,
-          example: `{
-  "success": true,
-  "roomId": "room_abc123",
-  "message": "Salle créée avec succès",
-  "joinUrl": "http://localhost:3003/room/room_abc123"
-}`
-        }
-      },
-      {
-        method: 'GET',
-        path: '/api/rooms/{roomId}',
-        description: 'Obtenir les informations d\'une salle',
-        parameters: [
-          { name: 'roomId', type: 'string', required: true, description: 'ID unique de la salle' }
-        ],
-        response: {
-          status: 200,
-          example: `{
-  "success": true,
-  "room": {
-    "id": "room_abc123",
-    "createdBy": "user_123",
-    "participants": [],
-    "createdAt": "2024-12-06T01:15:00Z",
-    "isActive": true
-  }
-}`
-        }
-      },
-      {
-        method: 'POST',
-        path: '/api/rooms/{roomId}/join',
-        description: 'Rejoindre une salle existante',
-        parameters: [
-          { name: 'roomId', type: 'string', required: true, description: 'ID de la salle à rejoindre' },
-          { name: 'userId', type: 'string', required: true, description: 'ID de l\'utilisateur qui rejoint' }
-        ],
-        response: {
-          status: 200,
-          example: `{
-  "success": true,
-  "message": "Utilisateur ajouté à la salle",
-  "room": {
-    "id": "room_abc123",
-    "participants": ["user_123", "user_456"]
-  }
-}`
-        }
-      }
-    ],
-    'users': [
-      {
-        method: 'GET',
-        path: '/api/users/me',
-        description: 'Obtenir les informations de l\'utilisateur connecté',
-        parameters: [],
-        response: {
-          status: 200,
-          example: `{
-  "success": true,
-  "user": {
-    "id": "user_123",
-    "email": "user@example.com",
-    "name": "John Doe",
-    "avatar": "https://cdn.visio.pro/avatars/user_123.jpg",
-    "plan": "pro",
-    "created_at": "2024-01-01T00:00:00Z"
-  }
-}`
-        }
-      }
-    ]
-  };
-
-  const sdks = [
-    {
-      name: 'JavaScript SDK',
-      description: 'SDK officiel pour les applications web et Node.js',
-      icon: <Code size={20} />,
-      color: '#f7df1e',
-      installCommand: 'npm install @visio-pro/sdk'
-    },
-    {
-      name: 'Python SDK',
-      description: 'SDK pour les applications Python et Django/Flask',
-      icon: <Terminal size={20} />,
-      color: '#3776ab',
-      installCommand: 'pip install visio-pro-sdk'
-    },
-    {
-      name: 'React Components',
-      description: 'Composants React prêts à l\'emploi',
-      icon: <Cpu size={20} />,
-      color: '#61dafb',
-      installCommand: 'npm install @visio-pro/react'
-    },
-    {
-      name: 'Mobile SDK',
-      description: 'SDK pour React Native et applications mobiles',
-      icon: <Activity size={20} />,
-      color: '#ff6b6b',
-      installCommand: 'npm install @visio-pro/mobile'
-    }
-  ];
-
-  const copyToClipboard = (text, id) => {
+  const copyToClipboard = (text, codeId) => {
     navigator.clipboard.writeText(text);
-    setCopiedCode(id);
-    setTimeout(() => setCopiedCode(null), 2000);
+    setCopiedCode(codeId);
+    setTimeout(() => setCopiedCode(''), 2000);
   };
 
-  const currentEndpoints = endpoints[activeCategory] || [];
+  const renderOverview = () => (
+    <Section>
+      <PageTitle>Documentation API VisiConnect</PageTitle>
+      <PageSubtitle>
+        API REST complète pour intégrer les fonctionnalités de VisiConnect dans vos applications.
+        Créez, gérez et personnalisez vos réunions en ligne avec notre API puissante et flexible.
+      </PageSubtitle>
+
+      <QuickStart>
+        <QuickStartTitle>🚀 Démarrage rapide</QuickStartTitle>
+        <p style={{ color: 'var(--text-secondary, #475569)', marginBottom: '1.5rem' }}>
+          Commencez à utiliser l'API VisiConnect en quelques minutes
+        </p>
+        <div>
+          <QuickStartButton
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Play size={16} />
+            Tester l'API
+          </QuickStartButton>
+          <QuickStartButton
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Download size={16} />
+            Télécharger SDK
+          </QuickStartButton>
+        </div>
+      </QuickStart>
+
+      <SectionTitle>
+        <Globe size={24} />
+        URL de base
+      </SectionTitle>
+      <SectionDescription>
+        Toutes les requêtes API doivent être faites vers l'URL de base suivante :
+      </SectionDescription>
+      
+      <CodeBlock>
+        <CodeHeader>
+          <CodeTitle>
+            <Terminal size={16} />
+            Base URL
+          </CodeTitle>
+          <CopyButton
+            onClick={() => copyToClipboard('https://api.visiconnect.com/v1', 'base-url')}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            {copiedCode === 'base-url' ? <Check size={16} /> : <Copy size={16} />}
+            {copiedCode === 'base-url' ? 'Copié' : 'Copier'}
+          </CopyButton>
+        </CodeHeader>
+        <CodeContent>https://api.visiconnect.com/v1</CodeContent>
+      </CodeBlock>
+
+      <SectionTitle>
+        <Shield size={24} />
+        Authentification
+      </SectionTitle>
+      <SectionDescription>
+        L'API VisiConnect utilise des clés API pour l'authentification. Incluez votre clé API dans l'en-tête Authorization :
+      </SectionDescription>
+
+      <CodeBlock>
+        <CodeHeader>
+          <CodeTitle>
+            <Code size={16} />
+            Exemple d'authentification
+          </CodeTitle>
+          <CopyButton
+            onClick={() => copyToClipboard(`curl -H "Authorization: Bearer YOUR_API_KEY" \\
+     -H "Content-Type: application/json" \\
+     https://api.visiconnect.com/v1/meetings`, 'auth-example')}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            {copiedCode === 'auth-example' ? <Check size={16} /> : <Copy size={16} />}
+            {copiedCode === 'auth-example' ? 'Copié' : 'Copier'}
+          </CopyButton>
+        </CodeHeader>
+        <CodeContent>{`curl -H "Authorization: Bearer YOUR_API_KEY" \\
+     -H "Content-Type: application/json" \\
+     https://api.visiconnect.com/v1/meetings`}</CodeContent>
+      </CodeBlock>
+
+      <SectionTitle>
+        <Activity size={24} />
+        Limites de taux
+      </SectionTitle>
+      <SectionDescription>
+        L'API applique des limites de taux pour assurer la stabilité du service :
+      </SectionDescription>
+
+      <ParameterTable>
+        <thead>
+          <tr>
+            <TableHeader>Plan</TableHeader>
+            <TableHeader>Requêtes/minute</TableHeader>
+            <TableHeader>Requêtes/heure</TableHeader>
+            <TableHeader>Limite journalière</TableHeader>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <TableCell><code>Starter</code></TableCell>
+            <TableCell>60</TableCell>
+            <TableCell>1,000</TableCell>
+            <TableCell>10,000</TableCell>
+          </tr>
+          <tr>
+            <TableCell><code>Professional</code></TableCell>
+            <TableCell>120</TableCell>
+            <TableCell>5,000</TableCell>
+            <TableCell>50,000</TableCell>
+          </tr>
+          <tr>
+            <TableCell><code>Enterprise</code></TableCell>
+            <TableCell>Illimitées</TableCell>
+            <TableCell>Illimitées</TableCell>
+            <TableCell>Illimitées</TableCell>
+          </tr>
+        </tbody>
+      </ParameterTable>
+    </Section>
+  );
+
+  const renderMeetings = () => (
+    <Section>
+      <SectionTitle>
+        <Video size={24} />
+        API Réunions
+      </SectionTitle>
+      <SectionDescription>
+        Créez, gérez et contrôlez vos réunions programmatiquement avec l'API Réunions.
+      </SectionDescription>
+
+      <h3 style={{ color: 'var(--text-primary, #1e293b)', marginTop: '2rem', marginBottom: '1rem' }}>
+        Créer une réunion
+      </h3>
+
+      <CodeBlock>
+        <CodeHeader>
+          <CodeTitle>
+            <Terminal size={16} />
+            POST /meetings
+          </CodeTitle>
+          <CopyButton
+            onClick={() => copyToClipboard(`curl -X POST https://api.visiconnect.com/v1/meetings \\
+  -H "Authorization: Bearer YOUR_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "title": "Réunion d'équipe",
+    "description": "Réunion hebdomadaire de l'équipe",
+    "start_time": "2024-02-15T10:00:00Z",
+    "duration": 60,
+    "max_participants": 10,
+    "settings": {
+      "auto_recording": true,
+      "waiting_room": false,
+      "mute_on_entry": true
+    }
+  }'`, 'create-meeting')}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            {copiedCode === 'create-meeting' ? <Check size={16} /> : <Copy size={16} />}
+            {copiedCode === 'create-meeting' ? 'Copié' : 'Copier'}
+          </CopyButton>
+        </CodeHeader>
+        <CodeContent>{`curl -X POST https://api.visiconnect.com/v1/meetings \\
+  -H "Authorization: Bearer YOUR_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "title": "Réunion d'équipe",
+    "description": "Réunion hebdomadaire de l'équipe", 
+    "start_time": "2024-02-15T10:00:00Z",
+    "duration": 60,
+    "max_participants": 10,
+    "settings": {
+      "auto_recording": true,
+      "waiting_room": false,
+      "mute_on_entry": true
+    }
+  }'`}</CodeContent>
+      </CodeBlock>
+
+      <h4 style={{ color: 'var(--text-primary, #1e293b)', marginTop: '2rem', marginBottom: '1rem' }}>
+        Paramètres de la requête
+      </h4>
+
+      <ParameterTable>
+        <thead>
+          <tr>
+            <TableHeader>Paramètre</TableHeader>
+            <TableHeader>Type</TableHeader>
+            <TableHeader>Requis</TableHeader>
+            <TableHeader>Description</TableHeader>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <TableCell><code>title</code></TableCell>
+            <TableCell>string</TableCell>
+            <TableCell>Oui</TableCell>
+            <TableCell>Titre de la réunion</TableCell>
+          </tr>
+          <tr>
+            <TableCell><code>description</code></TableCell>
+            <TableCell>string</TableCell>
+            <TableCell>Non</TableCell>
+            <TableCell>Description de la réunion</TableCell>
+          </tr>
+          <tr>
+            <TableCell><code>start_time</code></TableCell>
+            <TableCell>datetime</TableCell>
+            <TableCell>Oui</TableCell>
+            <TableCell>Date et heure de début (ISO 8601)</TableCell>
+          </tr>
+          <tr>
+            <TableCell><code>duration</code></TableCell>
+            <TableCell>integer</TableCell>
+            <TableCell>Oui</TableCell>
+            <TableCell>Durée en minutes</TableCell>
+          </tr>
+          <tr>
+            <TableCell><code>max_participants</code></TableCell>
+            <TableCell>integer</TableCell>
+            <TableCell>Non</TableCell>
+            <TableCell>Nombre maximum de participants</TableCell>
+          </tr>
+        </tbody>
+      </ParameterTable>
+
+      <ResponseExample>
+        <ResponseTitle>
+          <Check size={16} />
+          Réponse de succès
+          <StatusCode code={201}>201 Created</StatusCode>
+        </ResponseTitle>
+        <CodeContent>{`{
+  "id": "mtg_1234567890",
+  "title": "Réunion d'équipe",
+  "description": "Réunion hebdomadaire de l'équipe",
+  "start_time": "2024-02-15T10:00:00Z",
+  "duration": 60,
+  "status": "scheduled",
+  "join_url": "https://visiconnect.com/join/mtg_1234567890",
+  "host_url": "https://visiconnect.com/host/mtg_1234567890",
+  "created_at": "2024-02-14T15:30:00Z",
+  "settings": {
+    "auto_recording": true,
+    "waiting_room": false,
+    "mute_on_entry": true
+  }
+}`}</CodeContent>
+      </ResponseExample>
+    </Section>
+  );
+
+  const renderContent = () => {
+    switch (activeSection) {
+      case 'overview':
+        return renderOverview();
+      case 'meetings':
+        return renderMeetings();
+      case 'authentication':
+        return (
+          <Section>
+            <SectionTitle>
+              <Key size={24} />
+              Authentification
+            </SectionTitle>
+            <SectionDescription>
+              Gérez l'authentification et l'autorisation de votre application avec l'API VisiConnect.
+            </SectionDescription>
+            <p style={{ color: 'var(--text-secondary, #475569)' }}>
+              Documentation détaillée sur l'authentification en cours de rédaction...
+            </p>
+          </Section>
+        );
+      default:
+        return renderOverview();
+    }
+  };
+
+  const filteredNavigation = navigationItems.filter(item =>
+    item.label.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <Container>
-      <Header>
+      <Header
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
         <Nav>
-          <Logo onClick={() => navigate('/')}>
-            <Video size={24} />
-            Visio Pro
-          </Logo>
-          <BackButton onClick={() => navigate('/support')}>
-            <ArrowLeft size={16} />
-            Retour au Support
+          <NavLogo
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
+              <div className="logo-icon">
+                <Video size={24} color="white" />
+              </div>
+              <div className="logo-text">VisiConnect</div>
+            </Link>
+          </NavLogo>
+
+          <BackButton
+            onClick={() => navigate('/')}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <ArrowLeft size={18} />
+            Retour à l'accueil
           </BackButton>
         </Nav>
       </Header>
 
       <MainContent>
-        <Sidebar>
-          <SearchBox>
+        <Sidebar
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <SearchContainer>
             <SearchIcon />
             <SearchInput
-              type="text"
-              placeholder="Rechercher dans l'API..."
+              placeholder="Rechercher dans la documentation..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-          </SearchBox>
+          </SearchContainer>
 
-          <CategoryList>
-            {categories.map((category) => {
-              const IconComponent = category.icon;
-              return (
-                <CategoryItem
-                  key={category.id}
-                  active={activeCategory === category.id}
-                  onClick={() => setActiveCategory(category.id)}
+          <NavigationList>
+            <AnimatePresence>
+              {filteredNavigation.map((item) => (
+                <NavigationItem
+                  key={item.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3 }}
                 >
-                  <IconComponent size={20} />
-                  {category.label}
-                </CategoryItem>
-              );
-            })}
-          </CategoryList>
+                  <NavigationLink
+                    active={activeSection === item.id}
+                    onClick={() => setActiveSection(item.id)}
+                  >
+                    {item.icon}
+                    {item.label}
+                  </NavigationLink>
+                </NavigationItem>
+              ))}
+            </AnimatePresence>
+          </NavigationList>
         </Sidebar>
 
-        <ContentArea>
-          <ContentHeader>
-            <ContentTitle>
-              <Terminal size={32} />
-              Documentation API
-            </ContentTitle>
-            <ContentSubtitle>
-              Intégrez Visio Pro dans vos applications avec notre API REST complète. 
-              Créez des salles, gérez les utilisateurs et accédez à toutes les fonctionnalités.
-            </ContentSubtitle>
-          </ContentHeader>
-
-          {activeCategory === 'getting-started' && (
-            <>
-              <QuickStart>
-                <QuickStartTitle>
-                  <Zap size={20} />
-                  Démarrage rapide
-                </QuickStartTitle>
-                <p style={{ color: '#888', marginBottom: '1.5rem' }}>
-                  Commencez à utiliser l'API Visio Pro en quelques minutes avec cet exemple simple.
-                </p>
-                
-                <CodeBlock>
-                  <CodeHeader>
-                    <CodeLanguage>JavaScript</CodeLanguage>
-                    <CopyButton onClick={() => copyToClipboard(`const response = await fetch('https://api.visio.pro/v1/rooms', {
-  method: 'POST',
-  headers: {
-    'Authorization': 'Bearer YOUR_API_KEY',
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    name: 'Ma première réunion',
-    max_participants: 10
-  })
-});
-
-const room = await response.json();
-console.log('Salle créée:', room.room.join_url);`, 'quickstart')}>
-                      {copiedCode === 'quickstart' ? <Check size={14} /> : <Copy size={14} />}
-                      {copiedCode === 'quickstart' ? 'Copié' : 'Copier'}
-                    </CopyButton>
-                  </CodeHeader>
-                  <CodePre>{`const response = await fetch('https://api.visio.pro/v1/rooms', {
-  method: 'POST',
-  headers: {
-    'Authorization': 'Bearer YOUR_API_KEY',
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    name: 'Ma première réunion',
-    max_participants: 10
-  })
-});
-
-const room = await response.json();
-console.log('Salle créée:', room.room.join_url);`}</CodePre>
-                </CodeBlock>
-              </QuickStart>
-
-              <AuthSection>
-                <AuthTitle>
-                  <Key size={20} />
-                  Authentification
-                </AuthTitle>
-                <p style={{ color: '#888', marginBottom: '1rem' }}>
-                  Toutes les requêtes API nécessitent une authentification via un token Bearer. 
-                  Obtenez votre clé API dans votre tableau de bord.
-                </p>
-                <CodeBlock>
-                  <CodeHeader>
-                    <CodeLanguage>HTTP</CodeLanguage>
-                    <CopyButton onClick={() => copyToClipboard('Authorization: Bearer YOUR_API_KEY', 'auth')}>
-                      {copiedCode === 'auth' ? <Check size={14} /> : <Copy size={14} />}
-                      {copiedCode === 'auth' ? 'Copié' : 'Copier'}
-                    </CopyButton>
-                  </CodeHeader>
-                  <CodePre>Authorization: Bearer YOUR_API_KEY</CodePre>
-                </CodeBlock>
-              </AuthSection>
-
-              <RateLimitInfo>
-                <RateLimitTitle>
-                  <Shield size={20} />
-                  Limites de taux
-                </RateLimitTitle>
-                <p style={{ color: '#888' }}>
-                  L'API est limitée à 1000 requêtes par heure par clé API. 
-                  Les en-têtes de réponse incluent des informations sur votre utilisation actuelle.
-                </p>
-              </RateLimitInfo>
-            </>
-          )}
-
-          {activeCategory === 'sdks' && (
-            <SDKSection>
-              <SectionTitle>
-                <Code size={24} />
-                SDKs officiels
-              </SectionTitle>
-              <SDKGrid>
-                {sdks.map((sdk, index) => (
-                  <SDKCard
-                    key={index}
-                    color={sdk.color}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <SDKIcon color={sdk.color}>
-                      {sdk.icon}
-                    </SDKIcon>
-                    <SDKTitle>{sdk.name}</SDKTitle>
-                    <SDKDescription>{sdk.description}</SDKDescription>
-                    <CodeBlock>
-                      <CodeHeader>
-                        <CodeLanguage>Installation</CodeLanguage>
-                        <CopyButton onClick={() => copyToClipboard(sdk.installCommand, `sdk-${index}`)}>
-                          {copiedCode === `sdk-${index}` ? <Check size={14} /> : <Copy size={14} />}
-                          {copiedCode === `sdk-${index}` ? 'Copié' : 'Copier'}
-                        </CopyButton>
-                      </CodeHeader>
-                      <CodePre>{sdk.installCommand}</CodePre>
-                    </CodeBlock>
-                    <SDKButton>
-                      <Download size={16} />
-                      Documentation
-                    </SDKButton>
-                  </SDKCard>
-                ))}
-              </SDKGrid>
-            </SDKSection>
-          )}
-
-          {currentEndpoints.length > 0 && (
-            <EndpointSection>
-              <SectionTitle>
-                <Globe size={24} />
-                Endpoints API
-              </SectionTitle>
-              {currentEndpoints.map((endpoint, index) => (
-                <EndpointCard key={index}>
-                  <EndpointHeader
-                    onClick={() => setExpandedEndpoint(
-                      expandedEndpoint === index ? null : index
-                    )}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem' }}>
-                      <EndpointMethod className={endpoint.method.toLowerCase()}>
-                        {endpoint.method}
-                      </EndpointMethod>
-                      <EndpointPath>{endpoint.path}</EndpointPath>
-                    </div>
-                    <EndpointDescription>{endpoint.description}</EndpointDescription>
-                  </EndpointHeader>
-
-                  <AnimatePresence>
-                    {expandedEndpoint === index && (
-                      <EndpointDetails
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        {endpoint.parameters.length > 0 && (
-                          <>
-                            <ExampleTitle>Paramètres</ExampleTitle>
-                            <ParameterTable>
-                              <TableHeader>
-                                <span>Nom</span>
-                                <span>Type</span>
-                                <span>Requis</span>
-                                <span>Description</span>
-                              </TableHeader>
-                              {endpoint.parameters.map((param, paramIndex) => (
-                                <TableRow key={paramIndex}>
-                                  <ParameterName>{param.name}</ParameterName>
-                                  <ParameterType>{param.type}</ParameterType>
-                                  <Required required={param.required}>
-                                    {param.required ? 'Oui' : 'Non'}
-                                  </Required>
-                                  <span style={{ color: '#888' }}>{param.description}</span>
-                                </TableRow>
-                              ))}
-                            </ParameterTable>
-                          </>
-                        )}
-
-                        <ResponseExample>
-                          <ExampleTitle>
-                            <StatusCode className="success">{endpoint.response.status}</StatusCode>
-                            Exemple de réponse
-                          </ExampleTitle>
-                          <CodeBlock>
-                            <CodeHeader>
-                              <CodeLanguage>JSON</CodeLanguage>
-                              <CopyButton onClick={() => copyToClipboard(endpoint.response.example, `response-${index}`)}>
-                                {copiedCode === `response-${index}` ? <Check size={14} /> : <Copy size={14} />}
-                                {copiedCode === `response-${index}` ? 'Copié' : 'Copier'}
-                              </CopyButton>
-                            </CodeHeader>
-                            <CodePre>{endpoint.response.example}</CodePre>
-                          </CodeBlock>
-                        </ResponseExample>
-                      </EndpointDetails>
-                    )}
-                  </AnimatePresence>
-                </EndpointCard>
-              ))}
-            </EndpointSection>
-          )}
+        <ContentArea
+          key={activeSection}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          {renderContent()}
         </ContentArea>
       </MainContent>
     </Container>

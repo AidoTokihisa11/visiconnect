@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import FooterUnified from '../components/FooterUnified';
 import {
   Video,
   Shield,
@@ -22,9 +23,80 @@ import {
 // Styled Components
 const PageContainer = styled.div`
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f0f0f, #1a1a2e, #16213e);
-  color: #333;
+  background: var(--bg-primary, #ffffff);
+  color: var(--text-primary, #1e293b);
   overflow-x: hidden;
+`;
+
+// Header de navigation
+const NavigationHeader = styled(motion.header)`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 1rem 2rem;
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+`;
+
+const Nav = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+`;
+
+const NavLogo = styled(motion.div)`
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-decoration: none;
+  color: var(--text-primary, #1e293b);
+  
+  .logo-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--primary-gradient, #2563eb);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(37, 99, 235, 0.3);
+  }
+  
+  .logo-text {
+    background: var(--primary-gradient, #2563eb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+`;
+
+const NavLinks = styled.div`
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+const NavLink = styled(Link)`
+  color: var(--text-primary, #1e293b);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  
+  &:hover {
+    color: var(--accent-cyan, #06b6d4);
+  }
 `;
 
 const HeroSection = styled.section`
@@ -33,10 +105,10 @@ const HeroSection = styled.section`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 2rem;
+  padding: 6rem 2rem 0;
   background: 
-    radial-gradient(ellipse at top, rgba(96, 165, 250, 0.1) 0%, transparent 50%),
-    radial-gradient(ellipse at bottom, rgba(167, 139, 250, 0.1) 0%, transparent 50%);
+    radial-gradient(ellipse at top, rgba(37, 99, 235, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
 `;
 
 const HeroContent = styled(motion.div)`
@@ -48,9 +120,10 @@ const HeroContent = styled(motion.div)`
 const Title = styled(motion.h1)`
   font-size: 4rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+  background: var(--primary-gradient, linear-gradient(135deg, #2563eb, #06b6d4));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: 1.5rem;
   
   @media (max-width: 768px) {
@@ -60,7 +133,7 @@ const Title = styled(motion.h1)`
 
 const Subtitle = styled(motion.p)`
   font-size: 1.3rem;
-  color: #1e40af;
+  color: var(--text-secondary, #475569);
   max-width: 600px;
   margin: 0 auto 3rem;
   line-height: 1.6;
@@ -76,15 +149,16 @@ const SectionTitle = styled(motion.h2)`
   font-size: 3rem;
   font-weight: 800;
   text-align: center;
-  background: linear-gradient(135deg, #60a5fa, #a78bfa);
+  background: var(--primary-gradient, linear-gradient(135deg, #2563eb, #06b6d4));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: 1rem;
 `;
 
 const SectionSubtitle = styled(motion.p)`
   text-align: center;
-  color: #3b82f6;
+  color: var(--text-secondary, #475569);
   font-size: 1.2rem;
   max-width: 600px;
   margin: 0 auto 4rem;
@@ -137,7 +211,7 @@ const FeatureIcon = styled.div`
   margin-bottom: 1.5rem;
   
   svg {
-    color: #333;
+    color: white;
     width: 28px;
     height: 28px;
   }
@@ -146,7 +220,7 @@ const FeatureIcon = styled.div`
 const FeatureTitle = styled.h3`
   font-size: 1.5rem;
   font-weight: 700;
-  color: #333;
+  color: var(--text-primary, #1e293b);
   margin-bottom: 1rem;
 `;
 
@@ -187,7 +261,7 @@ const CTAButton = styled(motion.button)`
   background: linear-gradient(135deg, #60a5fa, #a78bfa);
   border: none;
   border-radius: 50px;
-  color: #333;
+  color: white;
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
@@ -214,7 +288,7 @@ const TabButton = styled(motion.button)`
   background: ${props => props.active ? 'linear-gradient(135deg, #60a5fa, #a78bfa)' : 'rgba(255, 255, 255, 0.1)'};
   border: 1px solid ${props => props.active ? 'rgba(96, 165, 250, 0.5)' : 'rgba(255, 255, 255, 0.2)'};
   border-radius: 50px;
-  color: #333;
+  color: ${props => props.active ? 'white' : 'var(--text-primary, #1e293b)'};
   cursor: pointer;
   font-weight: 500;
   transition: all 0.3s ease;
@@ -222,31 +296,6 @@ const TabButton = styled(motion.button)`
   &:hover {
     border-color: rgba(96, 165, 250, 0.5);
     background: ${props => props.active ? 'linear-gradient(135deg, #60a5fa, #a78bfa)' : 'rgba(255, 255, 255, 0.15)'};
-  }
-`;
-
-const BackButton = styled(motion.div)`
-  position: fixed;
-  top: 2rem;
-  left: 2rem;
-  z-index: 100;
-  
-  a {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    background: rgba(0, 0, 0, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 50px;
-    color: #333;
-    text-decoration: none;
-    backdrop-filter: blur(20px);
-    
-    &:hover {
-      background: rgba(96, 165, 250, 0.2);
-      border-color: rgba(96, 165, 250, 0.5);
-    }
   }
 `;
 
@@ -340,16 +389,48 @@ const FeaturesPage = () => {
 
   return (
     <PageContainer ref={containerRef}>
-      <BackButton
-        initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.6 }}
+      {/* Header de navigation */}
+      <NavigationHeader
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        <Link to="/">
-          <ArrowRight style={{ transform: 'rotate(180deg)' }} size={20} />
-          Retour à l'accueil
-        </Link>
-      </BackButton>
+        <Nav>
+          <NavLogo
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
+              <div className="logo-icon">
+                <Video size={24} color="white" />
+              </div>
+              <div className="logo-text">VisiConnect</div>
+            </Link>
+          </NavLogo>
+
+          <NavLinks>
+            <NavLink to="/">Accueil</NavLink>
+            <NavLink to="/features" style={{ color: 'var(--accent-cyan, #06b6d4)' }}>Fonctionnalités</NavLink>
+            <NavLink to="/pricing">Tarifs</NavLink>
+            <NavLink to="/about">À propos</NavLink>
+            <NavLink to="/contact">Contact</NavLink>
+            <NavLink to="/login">
+              <motion.div
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  background: 'var(--primary-gradient, #2563eb)',
+                  borderRadius: '8px',
+                  color: 'white'
+                }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Connexion
+              </motion.div>
+            </NavLink>
+          </NavLinks>
+        </Nav>
+      </NavigationHeader>
 
       <HeroSection>
         <motion.div
@@ -522,6 +603,8 @@ const FeaturesPage = () => {
           </div>
         </motion.div>
       </CTASection>
+
+      <FooterUnified />
     </PageContainer>
   );
 };

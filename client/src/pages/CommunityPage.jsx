@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
+import FooterUnified from '../components/FooterUnified';
 import { 
   Video, 
   ArrowLeft, 
@@ -33,8 +34,8 @@ import {
 
 const Container = styled.div`
   min-height: 100vh;
-  background: white;
-  color: #333;
+  background: var(--bg-primary, #ffffff);
+  color: var(--text-primary, #1e293b);
   overflow-x: hidden;
 `;
 
@@ -44,9 +45,10 @@ const Header = styled.header`
   left: 0;
   right: 0;
   z-index: 1000;
-  background: rgba(10, 10, 10, 0.95);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid #1a1a1a;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 `;
 
 const Nav = styled.nav`
@@ -70,8 +72,8 @@ const Logo = styled.div`
 
 const BackButton = styled.button`
   background: transparent;
-  border: 2px solid #333;
-  color: #333;
+  border: 2px solid var(--text-primary, #1e293b);
+  color: var(--text-primary, #1e293b);
   padding: 0.5rem 1rem;
   border-radius: 16px;
   font-size: 0.9rem;
@@ -113,17 +115,18 @@ const Sidebar = styled.div`
 `;
 
 const SidebarCard = styled.div`
-  background: #111;
-  border: 1px solid #222;
+  background: var(--bg-card, rgba(255, 255, 255, 0.95));
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 24px;
   padding: 2rem;
+  box-shadow: var(--shadow-lg, 0 8px 25px rgba(0, 0, 0, 0.1));
 `;
 
 const SidebarTitle = styled.h3`
   font-size: 1.2rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
-  color: #333;
+  color: var(--text-primary, #1e293b);
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -136,12 +139,13 @@ const ContentArea = styled.div`
 `;
 
 const ContentHeader = styled.div`
-  background: #111;
-  border: 1px solid #222;
+  background: var(--bg-card, rgba(255, 255, 255, 0.95));
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 24px;
   padding: 3rem;
   position: relative;
   overflow: hidden;
+  box-shadow: var(--shadow-lg, 0 8px 25px rgba(0, 0, 0, 0.1));
 
   &::before {
     content: '';
@@ -157,7 +161,7 @@ const ContentHeader = styled.div`
 const ContentTitle = styled.h1`
   font-size: 2.5rem;
   font-weight: 700;
-  color: #333;
+  color: var(--text-primary, #1e293b);
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
@@ -175,7 +179,7 @@ const TabsContainer = styled.div`
   display: flex;
   gap: 1rem;
   margin-bottom: 2rem;
-  border-bottom: 1px solid #222;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
 const Tab = styled.button`
@@ -200,14 +204,17 @@ const PostsContainer = styled.div`
 `;
 
 const PostCard = styled(motion.div)`
-  background: #111;
-  border: 1px solid #222;
+  background: var(--bg-card, rgba(255, 255, 255, 0.95));
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 16px;
   padding: 2rem;
   transition: all 0.3s ease;
+  box-shadow: var(--shadow-lg, 0 8px 25px rgba(0, 0, 0, 0.1));
 
   &:hover {
-    border-color: #333;
+    border-color: var(--accent-cyan, #06b6d4);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-xl, 0 20px 40px rgba(0, 0, 0, 0.15));
   }
 `;
 
@@ -222,11 +229,11 @@ const Avatar = styled.div`
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: ${props => props.color || '#60a5fa'};
+  background: ${props => props.color || 'var(--primary-gradient, linear-gradient(135deg, #2563eb, #06b6d4))'};
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #0a0a0a;
+  color: white;
   font-weight: 700;
 `;
 
@@ -236,13 +243,13 @@ const PostAuthor = styled.div`
 
 const AuthorName = styled.h4`
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary, #1e293b);
   margin-bottom: 0.25rem;
 `;
 
 const PostTime = styled.span`
   font-size: 0.85rem;
-  color: #666;
+  color: var(--text-secondary, #64748b);
 `;
 
 const PostBadge = styled.span`
@@ -250,8 +257,8 @@ const PostBadge = styled.span`
   border-radius: 12px;
   font-size: 0.8rem;
   font-weight: 600;
-  background: ${props => props.color || '#60a5fa'};
-  color: #0a0a0a;
+  background: ${props => props.color || 'var(--primary-gradient, linear-gradient(135deg, #2563eb, #06b6d4))'};
+  color: white;
 `;
 
 const PostContent = styled.div`
@@ -261,7 +268,7 @@ const PostContent = styled.div`
 const PostTitle = styled.h3`
   font-size: 1.3rem;
   font-weight: 700;
-  color: #333;
+  color: var(--text-primary, #1e293b);
   margin-bottom: 0.75rem;
   line-height: 1.4;
 `;
@@ -293,7 +300,7 @@ const PostActions = styled.div`
   align-items: center;
   gap: 1rem;
   padding-top: 1rem;
-  border-top: 1px solid #222;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
 const ActionButton = styled.button`
@@ -330,10 +337,11 @@ const RightSidebar = styled.div`
 `;
 
 const StatsCard = styled.div`
-  background: #111;
-  border: 1px solid #222;
+  background: var(--bg-card, rgba(255, 255, 255, 0.95));
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 16px;
   padding: 1.5rem;
+  box-shadow: var(--shadow-lg, 0 8px 25px rgba(0, 0, 0, 0.1));
 `;
 
 const StatItem = styled.div`
@@ -341,7 +349,7 @@ const StatItem = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 0.75rem 0;
-  border-bottom: 1px solid #222;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
   &:last-child {
     border-bottom: none;
@@ -359,23 +367,25 @@ const StatValue = styled.span`
 `;
 
 const EventCard = styled.div`
-  background: #111;
-  border: 1px solid #222;
+  background: var(--bg-card, rgba(255, 255, 255, 0.95));
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 16px;
   padding: 1.5rem;
   margin-bottom: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: var(--shadow-lg, 0 8px 25px rgba(0, 0, 0, 0.1));
 
   &:hover {
-    border-color: #60a5fa;
+    border-color: var(--accent-cyan, #06b6d4);
     transform: translateY(-2px);
+    box-shadow: var(--shadow-xl, 0 20px 40px rgba(0, 0, 0, 0.15));
   }
 `;
 
 const EventTitle = styled.h4`
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary, #1e293b);
   margin-bottom: 0.5rem;
 `;
 
@@ -404,12 +414,15 @@ const ContributorItem = styled.div`
   align-items: center;
   gap: 1rem;
   padding: 0.75rem;
-  background: #0a0a0a;
+  background: var(--bg-card, rgba(255, 255, 255, 0.95));
   border-radius: 12px;
   transition: all 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.05);
 
   &:hover {
-    background: #222;
+    background: rgba(37, 99, 235, 0.05);
+    border-color: var(--accent-cyan, #06b6d4);
+    transform: translateY(-1px);
   }
 `;
 
@@ -419,27 +432,27 @@ const ContributorInfo = styled.div`
 
 const ContributorName = styled.div`
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary, #1e293b);
   font-size: 0.9rem;
 `;
 
 const ContributorStats = styled.div`
   font-size: 0.8rem;
-  color: #888;
+  color: var(--text-secondary, #475569);
 `;
 
 const ContributorBadge = styled.div`
   padding: 0.25rem 0.5rem;
-  background: #60a5fa;
-  color: #0a0a0a;
+  background: var(--primary-gradient, linear-gradient(135deg, #2563eb, #06b6d4));
+  color: white;
   border-radius: 6px;
   font-size: 0.7rem;
   font-weight: 700;
 `;
 
 const CreatePostButton = styled(motion.button)`
-  background: #60a5fa;
-  color: #0a0a0a;
+  background: var(--primary-gradient, linear-gradient(135deg, #2563eb, #06b6d4));
+  color: white;
   border: none;
   padding: 1rem 2rem;
   border-radius: 16px;
@@ -452,8 +465,9 @@ const CreatePostButton = styled(motion.button)`
   transition: all 0.3s ease;
 
   &:hover {
-    background: #00e67a;
+    background: var(--primary-gradient, linear-gradient(135deg, #2563eb, #06b6d4));
     transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
   }
 `;
 
@@ -463,27 +477,28 @@ const FilterBar = styled.div`
   gap: 1rem;
   margin-bottom: 2rem;
   padding: 1rem;
-  background: #111;
-  border: 1px solid #222;
+  background: var(--bg-card, rgba(255, 255, 255, 0.95));
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 16px;
+  box-shadow: var(--shadow-lg, 0 8px 25px rgba(0, 0, 0, 0.1));
 `;
 
 const SearchInput = styled.input`
   flex: 1;
   background: transparent;
   border: none;
-  color: #333;
+  color: var(--text-primary, #1e293b);
   font-size: 0.9rem;
   outline: none;
 
   &::placeholder {
-    color: #555;
+    color: var(--text-secondary, #475569);
   }
 `;
 
 const FilterButton = styled.button`
   background: transparent;
-  border: 1px solid #333;
+  border: 1px solid rgba(0, 0, 0, 0.2);
   color: #888;
   padding: 0.5rem 1rem;
   border-radius: 8px;
@@ -522,8 +537,8 @@ const AIMessage = styled.p`
 
 const AIButton = styled.button`
   background: transparent;
-  border: 1px solid #60a5fa;
-  color: #60a5fa;
+  border: 1px solid var(--accent-cyan, #06b6d4);
+  color: var(--accent-cyan, #06b6d4);
   padding: 0.5rem 1rem;
   border-radius: 8px;
   font-size: 0.8rem;
@@ -531,8 +546,8 @@ const AIButton = styled.button`
   transition: all 0.3s ease;
 
   &:hover {
-    background: #60a5fa;
-    color: #0a0a0a;
+    background: var(--accent-cyan, #06b6d4);
+    color: white;
   }
 `;
 
@@ -802,7 +817,7 @@ const CommunityPage = () => {
           </CreatePostButton>
 
           <FilterBar>
-            <Search size={16} style={{ color: '#555' }} />
+            <Search size={16} style={{ color: 'var(--text-secondary, #64748b)' }} />
             <SearchInput
               type="text"
               placeholder="Rechercher dans la communauté..."
@@ -935,6 +950,8 @@ const CommunityPage = () => {
           </SidebarCard>
         </RightSidebar>
       </MainContent>
+
+      <FooterUnified />
     </Container>
   );
 };

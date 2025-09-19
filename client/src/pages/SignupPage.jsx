@@ -23,13 +23,84 @@ import {
 
 const PageContainer = styled.div`
   min-height: 100vh;
-  background: radial-gradient(ellipse at center, #1a0530 0%, #0a0118 70%, #000000 100%);
+  background: var(--bg-primary, #ffffff);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2rem;
   position: relative;
   overflow: hidden;
+`;
+
+// Header de navigation
+const NavigationHeader = styled(motion.header)`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 1rem 2rem;
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+`;
+
+const Nav = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+`;
+
+const NavLogo = styled(motion.div)`
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-decoration: none;
+  color: var(--text-primary, #1e293b);
+  
+  .logo-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--primary-gradient, #2563eb);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(37, 99, 235, 0.3);
+  }
+  
+  .logo-text {
+    background: var(--primary-gradient, #2563eb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+`;
+
+const NavLinks = styled.div`
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+const NavLink = styled(Link)`
+  color: var(--text-primary, #1e293b);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  
+  &:hover {
+    color: var(--accent-cyan, #06b6d4);
+  }
 `;
 
 const BackgroundEffects = styled.div`
@@ -48,6 +119,19 @@ const BackgroundEffects = styled.div`
     top: 10%;
     left: 20%;
     width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.1), transparent);
+    animation: float 12s ease-in-out infinite;
+  }
+  
+  &::after {
+    bottom: 10%;
+    right: 20%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(6, 182, 212, 0.08), transparent);
+    animation: float 15s ease-in-out infinite reverse;
+  }
     height: 350px;
     background: radial-gradient(circle, rgba(102, 126, 234, 0.3), transparent);
     animation: float 12s ease-in-out infinite;
@@ -70,40 +154,24 @@ const BackgroundEffects = styled.div`
 `;
 
 const SignupContainer = styled(motion.div)`
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-card, rgba(255, 255, 255, 0.95));
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 24px;
   padding: 3rem;
   width: 100%;
   max-width: 500px;
   position: relative;
   z-index: 10;
+  margin-top: 6rem;
+  box-shadow: var(--shadow-xl, 0 20px 40px rgba(0, 0, 0, 0.1));
   
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(244, 114, 182, 0.1));
-    border-radius: 24px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-2xl, 0 25px 50px rgba(0, 0, 0, 0.15));
   }
   
-  &:hover::before {
-    opacity: 1;
-  }
-  
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, #60a5fa, #f472b6, transparent);
-    border-radius: 2px;
-  }
+  transition: all 0.3s ease;
 `;
 
 const Header = styled.div`
@@ -120,32 +188,33 @@ const Logo = styled(motion.div)`
   .logo-icon {
     width: 50px;
     height: 50px;
-    background: linear-gradient(135deg, #667eea, #f472b6);
+    background: var(--primary-gradient, linear-gradient(135deg, #2563eb, #1d4ed8));
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 8px 32px rgba(244, 114, 182, 0.4);
+    box-shadow: 0 8px 32px rgba(37, 99, 235, 0.3);
   }
   
   .logo-text {
     font-size: 1.5rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #60a5fa, #f472b6);
+    background: var(--primary-gradient, linear-gradient(135deg, #2563eb, #06b6d4));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 `;
 
 const Title = styled(motion.h1)`
   font-size: 2rem;
   font-weight: 700;
-  color: #333;
+  color: var(--text-primary, #1e293b);
   margin-bottom: 0.5rem;
 `;
 
 const Subtitle = styled(motion.p)`
-  color: #60a5fa;
+  color: var(--text-secondary, #475569);
   font-size: 1rem;
 `;
 
@@ -154,16 +223,16 @@ const PlanSelector = styled(motion.div)`
   gap: 1rem;
   margin-bottom: 2rem;
   padding: 0.5rem;
-  background: rgba(0, 0, 0, 0.05);
+  background: var(--bg-secondary, #f8fafc);
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
 const PlanOption = styled(motion.button)`
   flex: 1;
   padding: 1rem;
-  background: ${props => props.active ? 'linear-gradient(135deg, #667eea, #f472b6)' : 'transparent'};
-  color: #333;
+  background: ${props => props.active ? 'var(--primary-gradient, linear-gradient(135deg, #2563eb, #1d4ed8))' : 'transparent'};
+  color: ${props => props.active ? '#ffffff' : 'var(--text-primary, #1e293b)'};
   border: none;
   border-radius: 12px;
   font-weight: 600;
@@ -191,7 +260,7 @@ const PlanOption = styled(motion.button)`
     top: -8px;
     right: -8px;
     background: linear-gradient(135deg, #f59e0b, #fbbf24);
-    color: #333;
+    color: var(--text-primary, #1e293b);
     font-size: 0.7rem;
     padding: 0.25rem 0.5rem;
     border-radius: 8px;
@@ -256,7 +325,7 @@ const Input = styled(motion.input)`
   background: rgba(0, 0, 0, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  color: #333;
+  color: var(--text-primary, #1e293b);
   font-size: 1rem;
   transition: all 0.3s ease;
   
@@ -309,7 +378,7 @@ const SignupButton = styled(motion.button)`
   width: 100%;
   padding: 1rem;
   background: linear-gradient(135deg, #667eea, #f472b6);
-  color: #333;
+  color: var(--text-primary, #1e293b);
   border: none;
   border-radius: 12px;
   font-size: 1rem;
@@ -386,7 +455,7 @@ const Notification = styled(motion.div)`
   top: 2rem;
   right: 2rem;
   background: ${props => props.type === 'success' ? 'rgba(16, 185, 129, 0.9)' : 'rgba(239, 68, 68, 0.9)'};
-  color: #333;
+  color: var(--text-primary, #1e293b);
   padding: 1rem 1.5rem;
   border-radius: 12px;
   backdrop-filter: blur(20px);
@@ -534,6 +603,49 @@ const SignupPage = () => {
 
   return (
     <PageContainer>
+      {/* Header de navigation */}
+      <NavigationHeader
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
+        <Nav>
+          <NavLogo
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
+              <div className="logo-icon">
+                <Video size={24} color="white" />
+              </div>
+              <div className="logo-text">VisiConnect</div>
+            </Link>
+          </NavLogo>
+
+          <NavLinks>
+            <NavLink to="/">Accueil</NavLink>
+            <NavLink to="/features">Fonctionnalités</NavLink>
+            <NavLink to="/pricing">Tarifs</NavLink>
+            <NavLink to="/about">À propos</NavLink>
+            <NavLink to="/contact">Contact</NavLink>
+            <NavLink to="/login">
+              <motion.div
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  background: 'var(--primary-gradient, #2563eb)',
+                  borderRadius: '8px',
+                  color: 'white'
+                }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Connexion
+              </motion.div>
+            </NavLink>
+          </NavLinks>
+        </Nav>
+      </NavigationHeader>
+
       <BackgroundEffects />
       
       {/* Notification */}
@@ -777,7 +889,7 @@ const SignupPage = () => {
                 gap: '0.5rem',
                 padding: '0.75rem 1.5rem',
                 background: '#fff',
-                color: '#333',
+                color: 'var(--text-primary, #1e293b)',
                 border: 'none',
                 borderRadius: '8px',
                 cursor: 'pointer',
