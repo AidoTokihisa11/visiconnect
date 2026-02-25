@@ -24,17 +24,29 @@ export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-      setIsLoggedIn(!!user);
-      setLoading(false);
-    });
+    // Si Firebase n'est pas initialisé correctement (auth est un objet vide ou incomplet)
+    if (!auth || !auth.app) {
+       console.warn("AuthContext: Firebase Auth not initialized. Skipping auth listener.");
+       setLoading(false);
+       return;
+    }
 
-    return unsubscribe;
+    try {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+          setUser(user);
+          setIsLoggedIn(!!user);
+          setLoading(false);
+        });
+        return unsubscribe;
+    } catch (error) {
+        console.error("AuthContext Error:", error);
+        setLoading(false);
+    }
   }, []);
 
   // Connexion avec Google
   const signInWithGoogle = async () => {
+    if (!auth || !auth.app) return { success: false, error: "Firebase not configured" };
     try {
       const result = await signInWithPopup(auth, googleProvider);
       return { success: true, user: result.user };
@@ -46,6 +58,7 @@ export const AuthProvider = ({ children }) => {
 
   // Connexion avec GitHub
   const signInWithGithub = async () => {
+    if (!auth || !auth.app) return { success: false, error: "Firebase not configured" };
     try {
       const result = await signInWithPopup(auth, githubProvider);
       return { success: true, user: result.user };
@@ -66,6 +79,7 @@ export const AuthProvider = ({ children }) => {
 
   // Connexion email/password
   const signInWithEmail = async (email, password) => {
+    if (!auth || !auth.app) return { success: false, error: "Firebase not configured" };
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
       return { success: true, user: result.user };
@@ -77,6 +91,7 @@ export const AuthProvider = ({ children }) => {
 
   // Inscription email/password
   const signUpWithEmail = async (email, password) => {
+    if (!auth || !auth.app) return { success: false, error: "Firebase not configured" };
     try {
       const result = await createUserWithEmailAndPassword(auth, email, password);
       return { success: true, user: result.user };
@@ -88,6 +103,7 @@ export const AuthProvider = ({ children }) => {
 
   // Déconnexion
   const logout = async () => {
+    if (!auth || !auth.app) return { success: true };
     try {
       await signOut(auth);
       return { success: true };
