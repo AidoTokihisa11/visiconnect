@@ -1,0 +1,255 @@
+# Dependencies
+node_modules/
+*/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+pnpm-debug.log*
+
+# Production builds  
+client/build/
+client/dist/
+server/dist/
+build/
+dist/
+*.tsbuildinfo
+
+# ============================================
+# 🔒 FICHIERS SENSIBLES - NE JAMAIS COMMIT !
+# ============================================
+
+# Environment files (SENSIBLE - Contient clés API, BDD, etc.)
+.env
+.env.*
+!.env.example
+!.env.template
+server/.env
+server/.env.*
+!server/.env.example
+client/.env
+client/.env.*
+!client/.env.example
+.env.local
+.env.development
+.env.production
+.env.test
+netlify.env
+
+# Clés API et Secrets
+**/api-keys.json
+**/secrets.json
+**/credentials.json
+**/auth-config.json
+**/*-private.js
+**/*-secret.js
+**/*-credentials.js
+
+# Configuration files with sensitive data
+src/config/firebase.js
+client/src/config/firebase.js
+**/config/keys.js
+**/config/secrets.js
+
+# Database files and backups
+*.sqlite
+*.sqlite3
+*.db
+database/*.db
+database/backups/
+*.sql.backup
+
+# Authentication & API Keys
+auth-config.json
+firebase-config.json
+stack-config.json
+api-keys.json
+credentials.json
+service-account-key.json
+
+# Logs and monitoring
+logs/
+*.log
+*.log.*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+pnpm-debug.log*
+server/logs/
+client/logs/
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+lib-cov
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+.nyc_output
+
+# Cache directories
+.npm
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+.cache/
+.parcel-cache/
+
+# Optional eslint cache
+.eslintcache
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# Next.js build output
+.next
+out
+
+# Nuxt.js build / generate output
+.nuxt
+.output
+
+# Temporary folders
+tmp/
+temp/
+.tmp/
+
+# Editor directories and files
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+.history/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# Windows
+*.stackdump
+nul
+$RECYCLE.BIN/
+
+# Linux
+*~
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# SSL certificates
+*.pem
+*.key
+*.crt
+*.p12
+
+# Local development
+.local/
+local.js
+local.json
+
+# Backup files
+*.backup
+*.bak
+*.swp
+
+# Upload directories
+uploads/
+temp-uploads/
+
+# Session storage
+sessions/
+
+# Test files
+test-results/
+coverage-results/
+
+# Netlify
+.netlify/
+
+# Vercel
+.vercel/
+
+# AWS
+.aws/
+
+# Docker
+.dockerignore
+Dockerfile.local
+
+# Jest
+jest.config.local.js
+
+# ============================================
+# DOCUMENTATION PRIVÉE ET FICHIERS SENSIBLES
+# ============================================
+# TOUT le dossier docs/ est privé
+docs/
+
+# Fichiers de structure et configuration
+PROJECT_STRUCTURE.md
+ARCHITECTURE.md
+docs/SECURITY.md
+
+# Scripts de sécurité
+scripts/env-crypto.js
+scripts/rebrand.js
+scripts/setup-local-domain.bat
+
+# Fichiers d'installation
+scripts/install.js
+scripts/install-deps.*
+scripts/quick-install.*
+scripts/start-with-auth.*
+
+# Fichiers temporaires
+bash.exe.stackdump
+*.stackdump
+
+# Fichiers de configuration sensibles
+.gitignore.backup
+.env.local.encrypted
+
+# Backup privé (dossiers temporaires uniquement)
+.backup-private/
+.backup-secure/
+
+# ⚠️ EXCEPTION : On autorise visiconnect-secrets.enc
+# C'est SAFE car chiffré AES-256 avec mot de passe
+# Permet de récupérer les configs sur nouveau PC
+!visiconnect-secrets.enc
+_archive/

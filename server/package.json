@@ -1,0 +1,50 @@
+{
+  "name": "visio-premium-server",
+  "version": "1.0.0",
+  "description": "Serveur Node.js pour l'application de visioconférence Visio Premium",
+  "main": "index.js",
+  "scripts": {
+    "start": "node simple-server-no-db.js",
+    "start-with-db": "node stack-server-simple.js",
+    "start-stack": "node stack-server.js",
+    "start-old": "node index.js",
+    "dev": "nodemon simple-server-no-db.js",
+    "dev-with-db": "nodemon stack-server-simple.js",
+    "dev-stack": "nodemon stack-server.js",
+    "dev-old": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "webrtc",
+    "socket.io",
+    "video-conference",
+    "chat",
+    "whiteboard"
+  ],
+  "author": "Visio Premium Team",
+  "license": "MIT",
+  "dependencies": {
+    "@radix-ui/react-dropdown-menu": "^2.1.16",
+    "@radix-ui/react-slot": "^1.2.4",
+    "@stackframe/stack": "^2.8.39",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "livekit-server-sdk": "^2.15.0",
+    "lucide-react": "^0.575.0",
+    "next-themes": "^0.4.6",
+    "pg": "^8.16.3",
+    "socket.io": "^4.8.1",
+    "tailwind-merge": "^3.5.0",
+    "tailwindcss-animate": "^1.0.7",
+    "uuid": "^11.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
