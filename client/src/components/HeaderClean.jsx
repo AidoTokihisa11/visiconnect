@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { Video, Menu, X } from 'lucide-react';
+import { Video, Menu, X, User } from 'lucide-react';
 import LanguageSelector from './LanguageSelector';
 // import { ModeToggle } from './mode-toggle';
-import { useAuthUser } from '../hooks/useAuthUser';
+import { useSupabaseAuth } from '../contexts/SupabaseAuthContext';
 import { useTranslation } from '../hooks/useTranslation';
 
 const COLORS = {
@@ -148,6 +148,27 @@ const MobileMenuButton = styled.button`
   }
 `;
 
+const LogoutButton = styled.button`
+  padding: 0.625rem 1.25rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  background-color: transparent;
+  color: ${COLORS.secondary};
+  border: 1px solid ${COLORS.border};
+
+  &:hover {
+    background-color: ${COLORS.background};
+    color: ${COLORS.dark};
+  }
+`;
+
 // Mobile Menu Overlay
 const MobileMenuOverlay = styled.div`
   position: fixed;
@@ -190,9 +211,14 @@ const MobileNavLink = styled(Link)`
 `;
 
 export default function HeaderClean() {
-  const { user } = useAuthUser();
+  const { user, signOut } = useSupabaseAuth();
   const { t } = useTranslation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const handleLogout = async () => {
+    await signOut();
+    setIsMobileMenuOpen(false);
+  };
 
   return (
     <>
@@ -215,9 +241,15 @@ export default function HeaderClean() {
 
           <AuthButtons>
             {user ? (
-               <Button to="/dashboard" $variant="primary">
-                 {t('navigation.dashboard')}
-               </Button>
+               <>
+                <Button to="/dashboard" $variant="primary">
+                  <User size={18} />
+                  Tableau de bord
+                </Button>
+                <LogoutButton onClick={handleLogout}>
+                  Déconnexion
+                </LogoutButton>
+               </>
             ) : (
               <>
                 <Button to="/login" $variant="ghost">{t('common.login')}</Button>
@@ -225,7 +257,6 @@ export default function HeaderClean() {
               </>
             )}
             <LanguageSelector />
-            {/* <ModeToggle /> */}
           </AuthButtons>
 
           <MobileMenuButton onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
@@ -244,13 +275,19 @@ export default function HeaderClean() {
             <MobileNavLink to="/contact" onClick={() => setIsMobileMenuOpen(false)}>{t('navigation.contact')}</MobileNavLink>
             <div style={{ margin: '1rem 0', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 {user ? (
-                   <Button to="/dashboard" $variant="primary" style={{ justifyContent: 'center' }}>
-                     {t('navigation.dashboard')}
-                   </Button>
+                   <>
+                    <Button to="/dashboard" $variant="primary" onClick={() => setIsMobileMenuOpen(false)} style={{ justifyContent: 'center' }}>
+                      <User size={18} />
+                      Tableau de bord
+                    </Button>
+                    <LogoutButton onClick={handleLogout} style={{ justifyContent: 'center', width: '100%' }}>
+                      Déconnexion
+                    </LogoutButton>
+                   </>
                 ) : (
                   <>
-                    <Button to="/login" $variant="ghost" style={{ justifyContent: 'center' }}>{t('common.login')}</Button>
-                    <Button to="/signup" $variant="primary" style={{ justifyContent: 'center' }}>{t('common.register')}</Button>
+                    <Button to="/login" $variant="ghost" onClick={() => setIsMobileMenuOpen(false)} style={{ justifyContent: 'center' }}>{t('common.login')}</Button>
+                    <Button to="/signup" $variant="primary" onClick={() => setIsMobileMenuOpen(false)} style={{ justifyContent: 'center' }}>{t('common.register')}</Button>
                   </>
                 )}
             </div>

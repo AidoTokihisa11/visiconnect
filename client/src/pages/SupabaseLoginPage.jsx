@@ -67,7 +67,7 @@ const SupabaseLoginPage = () => {
     <PageContainer>
       <LoginCard>
         <Header>
-          <Logo>VisiConnect</Logo>
+          <Logo>VisioConnect</Logo>
           <Title>Connexion</Title>
           <Subtitle>Connectez-vous pour accéder à vos réunions</Subtitle>
         </Header>

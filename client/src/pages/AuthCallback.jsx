@@ -115,17 +115,22 @@ const AuthCallback = () => {
         {!processing && !error && (
           <>
             <SuccessIcon>✓</SuccessIcon>
-            <Title>Authentification réussie !</Title>
-            <Description>Redirection en cours...</Description>
+            <Title>Bienvenue sur VisioConnect !</Title>
+            <Description>
+              Votre authentification est réussie. Nous préparons votre espace de travail...
+            </Description>
+            <RedirectMessage>Vous allez être redirigé dans quelques instants</RedirectMessage>
           </>
         )}
         
         {error && (
           <>
-            <ErrorIcon>✕</ErrorIcon>
-            <Title>Erreur d'authentification</Title>
-            <Description>{error}</Description>
-            <RedirectMessage>Redirection vers la page de connexion...</RedirectMessage>
+            <ErrorIcon>!</ErrorIcon>
+            <Title>Oups, une erreur est survenue</Title>
+            <Description>
+              Nous n'avons pas pu finaliser votre connexion. ({error})
+            </Description>
+            <RedirectMessage>Retour à la page de connexion...</RedirectMessage>
           </>
         )}
       </CallbackCard>
@@ -139,28 +144,42 @@ const CallbackContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
   padding: 20px;
+  font-family: 'Inter', sans-serif;
 `
 
 const CallbackCard = styled.div`
   background: white;
-  border-radius: 12px;
-  padding: 48px 32px;
+  border-radius: 24px;
+  padding: 48px 40px;
   text-align: center;
-  max-width: 400px;
+  max-width: 420px;
   width: 100%;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  }
 `
 
 const Spinner = styled.div`
-  width: 48px;
-  height: 48px;
-  border: 4px solid #f3f4f6;
-  border-top-color: #667eea;
+  width: 56px;
+  height: 56px;
+  border: 5px solid #f3f4f6;
+  border-top-color: #3b82f6;
   border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  margin: 0 auto 24px;
+  animation: spin 1s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+  margin: 0 auto 32px;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
 
   @keyframes spin {
     to {
@@ -170,62 +189,67 @@ const Spinner = styled.div`
 `
 
 const SuccessIcon = styled.div`
-  width: 64px;
-  height: 64px;
-  background: #10b981;
+  width: 72px;
+  height: 72px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: white;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
+  font-size: 36px;
   font-weight: bold;
-  margin: 0 auto 24px;
-  animation: scaleIn 0.3s ease-out;
+  margin: 0 auto 32px;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+  animation: scaleIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
   @keyframes scaleIn {
     from {
-      transform: scale(0);
+      transform: scale(0) rotate(-45deg);
+      opacity: 0;
     }
     to {
-      transform: scale(1);
+      transform: scale(1) rotate(0);
+      opacity: 1;
     }
   }
 `
 
 const ErrorIcon = styled.div`
-  width: 64px;
-  height: 64px;
-  background: #ef4444;
+  width: 72px;
+  height: 72px;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   color: white;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
+  font-size: 36px;
   font-weight: bold;
-  margin: 0 auto 24px;
+  margin: 0 auto 32px;
+  box-shadow: 0 8px 24px rgba(239, 68, 68, 0.3);
 `
 
 const Title = styled.h2`
-  font-size: 24px;
-  font-weight: 600;
-  color: #1f2937;
-  margin: 0 0 12px;
+  font-size: 28px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 16px;
+  letter-spacing: -0.5px;
 `
 
 const Description = styled.p`
   font-size: 16px;
-  color: #6b7280;
+  color: #64748b;
   margin: 0;
-  line-height: 1.5;
+  line-height: 1.6;
 `
 
 const RedirectMessage = styled.p`
   font-size: 14px;
-  color: #9ca3af;
-  margin: 16px 0 0;
-  font-style: italic;
+  color: #94a3b8;
+  margin: 24px 0 0;
+  font-weight: 500;
 `
 
 export default AuthCallback

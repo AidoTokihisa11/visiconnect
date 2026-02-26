@@ -110,9 +110,9 @@ const SupabaseSignupPage = () => {
       <PageContainer>
         <SuccessCard>
           <SuccessIcon><Check size={48} /></SuccessIcon>
-          <SuccessTitle>Compte créé avec succès !</SuccessTitle>
+          <SuccessTitle>Bienvenue sur VisioConnect !</SuccessTitle>
           <SuccessMessage>
-            Bienvenue sur VisiConnect. Redirection en cours...
+            Votre compte a été créé avec succès. Nous préparons votre espace...
           </SuccessMessage>
         </SuccessCard>
       </PageContainer>
@@ -123,7 +123,7 @@ const SupabaseSignupPage = () => {
     <PageContainer>
       <SignupCard>
         <Header>
-          <Logo>VisiConnect</Logo>
+          <Logo>VisioConnect</Logo>
           <Title>Créer un compte</Title>
           <Subtitle>Rejoignez-nous pour des réunions incroyables</Subtitle>
         </Header>
