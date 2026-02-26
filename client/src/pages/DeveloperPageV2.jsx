@@ -19,20 +19,6 @@ const GlobalStyle = createGlobalStyle`
     overflow-x: hidden;
     cursor: default;
   }
-  ::selection {
-    background: #2563eb;
-    color: white;
-  }
-  ::-webkit-scrollbar {
-    width: 8px;
-  }
-  ::-webkit-scrollbar-track {
-    background: #f1f5f9;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 4px;
-  }
 `;
 
 const THEME = {
@@ -234,11 +220,13 @@ const Name = styled(motion.h1)`
   margin-bottom: 1.5rem;
   letter-spacing: -0.03em;
   color: ${THEME.text};
+  word-wrap: break-word; /* Ensure clear wrapping */
   
   .highlight {
     color: ${THEME.primary};
     position: relative;
-    white-space: nowrap;
+    white-space: normal; /* Allow wrapping if needed */
+    display: inline-block; /* Helps with background skew */
     
     &::after {
       content: '';
@@ -250,6 +238,16 @@ const Name = styled(motion.h1)`
       background-color: rgba(37, 99, 235, 0.1);
       z-index: -1;
       transform: skewX(-10deg);
+    }
+  }
+
+  /* Specific mobile adjustments */
+  @media (max-width: 640px) {
+    font-size: 2.5rem; /* Set a specific size for mobile */
+    word-break: break-word; /* Prepare for very long words if any */
+    
+    .highlight {
+      white-space: normal;
     }
   }
 `;

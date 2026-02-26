@@ -5,11 +5,13 @@ import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'fra
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import { useAuthUser } from '../hooks/useAuthUser';
+import { useTranslation } from '../hooks/useTranslation';
 import FeaturesCarousel3D from '../components/home/FeaturesCarousel3D';
 import KeyStats from '../components/home/KeyStats';
 import TechBentoGrid from '../components/home/TechBentoGrid';
 import IndieBadge from '../components/home/IndieBadge';
 import ProofArea from '../components/home/ProofArea';
+import { EditableText } from '../components/Admin/EditableContent';
 
 import { 
   Video, Users, Shield, Zap, Globe, Check, 
@@ -90,8 +92,8 @@ const IconWrapperPremium = styled.div`
   width: 56px;
   height: 56px;
   border-radius: 14px;
-  background: ${props => props.bg || 'rgba(37, 99, 235, 0.1)'};
-  color: ${props => props.color || COLORS.primary};
+  background: ${props => props.$bg || 'rgba(37, 99, 235, 0.1)'};
+  color: ${props => props.$color || COLORS.primary};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1067,6 +1069,7 @@ const ContactLink = styled.a`
 // --- COMPONENT IMPLEMENTATION ---
 
 export default function HomePageClean() {
+  const { t } = useTranslation();
 
   return (
     <PageContainer>
@@ -1077,23 +1080,23 @@ export default function HomePageClean() {
         <HeroContainer>
           <HeroContent>
             <HeroHeadline>
-              Visioconférence <br/>
-              <span>simplement professionnelle.</span>
+              <EditableText translationKey="hero.titleLine1" defaultValue={t('hero.titleLine1')} /> <br/>
+              <span><EditableText translationKey="hero.titleLine2" defaultValue={t('hero.titleLine2')} /></span>
             </HeroHeadline>
             <HeroSubhead>
-              Connectez-vous avec vos équipes, clients et partenaires avec une qualité vidéo et audio exceptionnelle. Aucun téléchargement requis. Sécurisé, simple et rapide.
+              <EditableText translationKey="hero.subtitle" defaultValue={t('hero.subtitle')} type="textarea" />
             </HeroSubhead>
             <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
               <Button to="/signup" $variant="primary" style={{ padding: '0.875rem 1.5rem', fontSize: '1.125rem' }}>
-                Démarrer gratuitement
+                {t('hero.startFree')}
               </Button>
               <Button to="/room/demo-pro-room" style={{ padding: '0.875rem 1.5rem', fontSize: '1.125rem', backgroundColor: '#0f172a', color: 'white', border: '1px solid #0f172a', display: 'flex', alignItems: 'center' }}>
                 <Zap size={18} style={{ marginRight: '8px' }} />
-                Test Room Pro
+                {t('hero.testRoom')}
               </Button>
               <Button to="/demo" $variant="ghost" style={{ padding: '0.875rem 1.5rem', fontSize: '1.125rem' }}>
                 <Play size={18} style={{ marginRight: '8px' }} fill={COLORS.secondary} />
-                Voir la démo
+                {t('hero.watchDemo')}
               </Button>
             </div>
           </HeroContent>
@@ -1189,9 +1192,9 @@ export default function HomePageClean() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <SectionTitle>Tout pour des réunions réussies</SectionTitle>
+            <SectionTitle>{t('homeFeatures.title')}</SectionTitle>
             <SectionSubtitle>
-                Des fonctionnalités puissantes conçues pour les équipes modernes. Sécurisé, fiable et facile à utiliser.
+                {t('homeFeatures.subtitle')}
             </SectionSubtitle>
           </motion.div>
         </SectionHeader>
@@ -1200,30 +1203,30 @@ export default function HomePageClean() {
             {[
                 { 
                     icon: Video, 
-                    title: "Vidéo HD & Audio", 
-                    text: "Qualité vidéo et audio cristalline avec suppression du bruit et réduction de l'écho activées automatiquement.",
-                    items: ["Jusqu'à 4k pris en charge", "Suppression de bruit AI", "Codec VP9 / AV1"],
+                    title: t('homeFeatures.video.title'), 
+                    text: t('homeFeatures.video.text'),
+                    items: t('homeFeatures.video.items', { returnObjects: true }),
                     color: "#3b82f6"
                 },
                 { 
                     icon: Shield, 
-                    title: "Sécurité Bancaire", 
-                    text: "Chiffrement de bout en bout pour tous les appels. Vos conversations restent privées et sécurisées à tout moment.",
-                    items: ["Chiffrement E2E", "Conforme RGPD", "Aucune donnée stockée"],
+                    title: t('homeFeatures.security.title'), 
+                    text: t('homeFeatures.security.text'),
+                    items: t('homeFeatures.security.items', { returnObjects: true }),
                     color: "#10b981"
                 },
                 { 
                     icon: Zap, 
-                    title: "Réunions Instantanées", 
-                    text: "Démarrez en quelques secondes avec un lien partageable. Aucun téléchargement ni installation requis pour les invités.",
-                    items: ["Liens en 1-clic", "Pas de compte requis", "Compatible mobile"],
+                    title: t('homeFeatures.instant.title'), 
+                    text: t('homeFeatures.instant.text'),
+                    items: t('homeFeatures.instant.items', { returnObjects: true }),
                     color: "#f59e0b"
                 },
                 { 
                     icon: Users, 
-                    title: "Collaboration d'Équipe", 
-                    text: "Partage d'écran simple, tableau blanc collaboratif et chat intégré pour améliorer la productivité de votre équipe.",
-                    items: ["Partage d'écran", "Tableau blanc", "Chat en temps réel"],
+                    title: t('homeFeatures.collaboration.title'), 
+                    text: t('homeFeatures.collaboration.text'),
+                    items: t('homeFeatures.collaboration.items', { returnObjects: true }),
                     color: "#8b5cf6"
                 }
             ].map((feature, index) => (
@@ -1234,7 +1237,7 @@ export default function HomePageClean() {
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     viewport={{ once: true }}
                 >
-                    <IconWrapperPremium bg={`${feature.color}15`} color={feature.color}>
+                    <IconWrapperPremium $bg={`${feature.color}15`} $color={feature.color}>
                         <feature.icon size={28} />
                     </IconWrapperPremium>
                     <FeatureTitle>{feature.title}</FeatureTitle>
@@ -1312,50 +1315,45 @@ export default function HomePageClean() {
       {/* PRICING SECTION */}
       <PricingSectionWrapper id="pricing">
         <SectionHeader>
-            <SectionTitle>Prix simples et transparents</SectionTitle>
+            <SectionTitle>{t('pricing.title')}</SectionTitle>
             <SectionSubtitle>
-                Choisissez le plan qui vous correspond. Sans frais cachés.
+                {t('pricing.subtitle')}
             </SectionSubtitle>
         </SectionHeader>
 
         <PricingGrid>
             <PricingCard>
-                <PlanName>Gratuit</PlanName>
-                <PlanPrice>0€ <span>/ mois</span></PlanPrice>
+                <PlanName>{t('pricing.free.title')}</PlanName>
+                <PlanPrice>{t('pricing.free.price')} <span>{t('pricing.perMonth')}</span></PlanPrice>
                 <FeatureList>
-                    <FeatureItem><Check size={18} /> Jusqu'à 40 min par réunion</FeatureItem>
-                    <FeatureItem><Check size={18} /> Jusqu'à 100 participants</FeatureItem>
-                    <FeatureItem><Check size={18} /> Chat Privé & Groupe</FeatureItem>
-                    <FeatureItem><Check size={18} /> Tableau Blanc Basique</FeatureItem>
+                    {t('pricing.free.features', { returnObjects: true }).map((feature, i) => (
+                        <FeatureItem key={i}><Check size={18} /> {feature}</FeatureItem>
+                    ))}
                 </FeatureList>
-                <PricingButton as={Link} to="/signup">Démarrer Gratuitement</PricingButton>
+                <PricingButton as={Link} to="/signup">{t('pricing.free.action')}</PricingButton>
             </PricingCard>
 
             <PricingCard $popular>
-                <PopularBadge>Populaire</PopularBadge>
-                <PlanName>Pro</PlanName>
-                <PlanPrice>12€ <span>/ mois</span></PlanPrice>
+                <PopularBadge>{t('pricing.popularBadge')}</PopularBadge>
+                <PlanName>{t('pricing.pro.title')}</PlanName>
+                <PlanPrice>{t('pricing.pro.price')} <span>{t('pricing.perMonth')}</span></PlanPrice>
                 <FeatureList>
-                    <FeatureItem><Check size={18} /> Durée de réunion illimitée</FeatureItem>
-                    <FeatureItem><Check size={18} /> Jusqu'à 150 participants</FeatureItem>
-                    <FeatureItem><Check size={18} /> Enregistrement Cloud (1Go)</FeatureItem>
-                    <FeatureItem><Check size={18} /> Gestion Utilisateurs Avancée</FeatureItem>
-                    <FeatureItem><Check size={18} /> Branding Personnalisé</FeatureItem>
+                    {t('pricing.pro.features', { returnObjects: true }).map((feature, i) => (
+                        <FeatureItem key={i}><Check size={18} /> {feature}</FeatureItem>
+                    ))}
                 </FeatureList>
-                <PricingButton $primary as={Link} to="/signup?plan=pro">Essayer Pro</PricingButton>
+                <PricingButton $primary as={Link} to="/signup?plan=pro">{t('pricing.pro.action')}</PricingButton>
             </PricingCard>
 
             <PricingCard>
-                <PlanName>Entreprise</PlanName>
-                <PlanPrice>Sur mesure</PlanPrice>
+                <PlanName>{t('pricing.enterprise.title')}</PlanName>
+                <PlanPrice>{t('pricing.enterprise.price')}</PlanPrice>
                 <FeatureList>
-                    <FeatureItem><Check size={18} /> Tout ce qui est inclus dans Pro</FeatureItem>
-                    <FeatureItem><Check size={18} /> Jusqu'à 300 participants</FeatureItem>
-                    <FeatureItem><Check size={18} /> Enregistrement Illimité</FeatureItem>
-                    <FeatureItem><Check size={18} /> Intégration SSO</FeatureItem>
-                    <FeatureItem><Check size={18} /> Support Dédié 24/7</FeatureItem>
+                    {t('pricing.enterprise.features', { returnObjects: true }).map((feature, i) => (
+                        <FeatureItem key={i}><Check size={18} /> {feature}</FeatureItem>
+                    ))}
                 </FeatureList>
-                <PricingButton as={Link} to="/contact">Contacter les Ventes</PricingButton>
+                <PricingButton as={Link} to="/contact">{t('pricing.enterprise.action')}</PricingButton>
             </PricingCard>
         </PricingGrid>
       </PricingSectionWrapper>
@@ -1363,10 +1361,9 @@ export default function HomePageClean() {
       {/* ABOUT SECTION */}
       <AboutSection id="about">
         <SectionHeader>
-          <SectionTitle>À propos du projet</SectionTitle>
+          <SectionTitle>{t('aboutProject')}</SectionTitle>
           <AboutText>
-            VisioConnect est né de ma passion pour les technologies de communication moderne. 
-            En tant que développeur full-stack, j'ai voulu créer une solution qui combine innovation technologique et expérience utilisateur exceptionnelle.
+            {t('projectDescription')}
           </AboutText>
         </SectionHeader>
 
@@ -1375,21 +1372,19 @@ export default function HomePageClean() {
             <AboutCard>
               <AboutCardTitle>
                 <Eye size={24} color={COLORS.primary} />
-                Ma vision
+                {t('myVision')}
               </AboutCardTitle>
               <p style={{ color: COLORS.lightText, lineHeight: '1.6' }}>
-                Démocratiser l'accès à des outils de communication professionnels de haute qualité. 
-                Chaque équipe, quelle que soit sa taille, mérite une technologie qui amplifie sa collaboration.
+                {t('visionDescription')}
               </p>
             </AboutCard>
             <AboutCard>
               <AboutCardTitle>
                 <Server size={24} color={COLORS.primary} />
-                Technologies
+                {t('technologiesUsed')}
               </AboutCardTitle>
               <p style={{ color: COLORS.lightText, lineHeight: '1.6' }}>
-                React.js, WebRTC, Supabase Realtime, Node.js, AI/ML pour l'optimisation vidéo, 
-                et bien d'autres technologies cutting-edge pour une expérience fluide.
+                {t('techDescription')}
               </p>
             </AboutCard>
           </AboutGrid>
@@ -1398,22 +1393,22 @@ export default function HomePageClean() {
             <AboutStat>
               <Calendar size={28} color={COLORS.primary} style={{ marginBottom: '0.5rem' }} />
               <div style={{ fontWeight: '700', fontSize: '1.25rem', color: COLORS.dark }}>2024</div>
-              <div style={{ fontSize: '0.875rem', color: COLORS.lightText }}>Année de création</div>
+              <div style={{ fontSize: '0.875rem', color: COLORS.lightText }}>{t('creationYear')}</div>
             </AboutStat>
             <AboutStat>
               <Code size={28} color={COLORS.primary} style={{ marginBottom: '0.5rem' }} />
-              <div style={{ fontWeight: '700', fontSize: '1.25rem', color: COLORS.dark }}>Open Source</div>
-              <div style={{ fontSize: '0.875rem', color: COLORS.lightText }}>Philosophie</div>
+              <div style={{ fontWeight: '700', fontSize: '1.25rem', color: COLORS.dark }}>{t('philosophyValue')}</div>
+              <div style={{ fontSize: '0.875rem', color: COLORS.lightText }}>{t('philosophy')}</div>
             </AboutStat>
             <AboutStat>
               <Heart size={28} color={COLORS.primary} style={{ marginBottom: '0.5rem' }} />
               <div style={{ fontWeight: '700', fontSize: '1.25rem', color: COLORS.dark }}>100%</div>
-              <div style={{ fontSize: '0.875rem', color: COLORS.lightText }}>Passion</div>
+              <div style={{ fontSize: '0.875rem', color: COLORS.lightText }}>{t('passionLabel')}</div>
             </AboutStat>
             <AboutStat>
               <Globe size={28} color={COLORS.primary} style={{ marginBottom: '0.5rem' }} />
-              <div style={{ fontWeight: '700', fontSize: '1.25rem', color: COLORS.dark }}>Global</div>
-              <div style={{ fontSize: '0.875rem', color: COLORS.lightText }}>Portée</div>
+              <div style={{ fontWeight: '700', fontSize: '1.25rem', color: COLORS.dark }}>{t('globalValue')}</div>
+              <div style={{ fontSize: '0.875rem', color: COLORS.lightText }}>{t('scopeLabel')}</div>
             </AboutStat>
           </AboutStatsGrid>
         </AboutContent>
@@ -1422,9 +1417,9 @@ export default function HomePageClean() {
       {/* CONTACT SECTION */}
       <ContactSection id="contact">
         <ContactContainer>
-          <SectionTitle>Restons connectés</SectionTitle>
+          <SectionTitle>{t('contactTitle')}</SectionTitle>
           <SectionSubtitle>
-             Une question, une suggestion, ou envie de collaborer ? N'hésitez pas à me contacter !
+             {t('contactDescription')}
           </SectionSubtitle>
           
           <ContactActions>

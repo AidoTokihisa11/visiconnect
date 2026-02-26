@@ -5,13 +5,14 @@ import {
   Github, Linkedin, Twitter, 
   Globe
 } from 'lucide-react';
+import { useTranslation } from '../hooks/useTranslation';
 
 const COLORS = {
-  primary: 'hsl(var(--primary))',    
-  secondary: 'hsl(var(--muted-foreground))',  
-  dark: 'hsl(var(--foreground))',       
-  text: 'hsl(var(--foreground))',       
-  lightText: 'hsl(var(--muted-foreground))',  
+  primary: 'hsl(var(--primary))',
+  secondary: 'hsl(var(--muted-foreground))',
+  dark: 'hsl(var(--foreground))',
+  text: 'hsl(var(--foreground))',
+  lightText: 'hsl(var(--muted-foreground))',
   background: 'hsl(var(--secondary))', 
   white: 'hsl(var(--background))',
   border: 'hsl(var(--border))',     
@@ -146,6 +147,7 @@ const ExLink = styled.a`
 `;
 
 export default function FooterClean() {
+  const { t } = useTranslation();
   return (
     <FooterContainer>
       <FooterContent>
@@ -156,7 +158,7 @@ export default function FooterClean() {
             VisioConnect
           </LogoLink>
           <BrandDescription>
-            Visioconférence sécurisée et de haute qualité pour tous. Connectez-vous instantanément avec votre équipe, vos clients et vos amis.
+            {t('hero.subtitle')}
           </BrandDescription>
           <SocialLinks>
             <SocialLink href="https://twitter.com" aria-label="Twitter">
@@ -173,37 +175,37 @@ export default function FooterClean() {
 
         {/* Product */}
         <FooterSection>
-          <FooterTitle>Produit</FooterTitle>
-          <FooterLink to="/features">Fonctionnalités</FooterLink>
-          <FooterLink to="/pricing">Tarifs</FooterLink>
-          <FooterLink to="/integrations">Intégrations</FooterLink>
-          <FooterLink to="/changelog">Nouveautés</FooterLink>
-          <FooterLink to="/docs">Documentation</FooterLink>
+          <FooterTitle>{t('product')}</FooterTitle>
+          <FooterLink to="/features">{t('navigation.features')}</FooterLink>
+          <FooterLink to="/pricing">{t('navigation.pricing')}</FooterLink>
+          <FooterLink to="/integrations">{t('footerIntegrations')}</FooterLink>
+          <FooterLink to="/changelog">{t('footerChangelog')}</FooterLink>
+          <FooterLink to="/docs">{t('navigation.documentation')}</FooterLink>
         </FooterSection>
 
         {/* Company */}
         <FooterSection>
-          <FooterTitle>Entreprise</FooterTitle>
-          <FooterLink to="/about">À propos</FooterLink>
-          <FooterLink to="/careers">Carrières</FooterLink>
-          <FooterLink to="/blog">Blog</FooterLink>
-          <FooterLink to="/contact">Contact</FooterLink>
-          <FooterLink to="/partners">Partenaires</FooterLink>
+          <FooterTitle>{t('navigation.about')}</FooterTitle>
+          <FooterLink to="/about">{t('navigation.about')}</FooterLink>
+          <FooterLink to="/careers">{t('navigation.careers')}</FooterLink>
+          <FooterLink to="/blog">{t('navigation.blog')}</FooterLink>
+          <FooterLink to="/contact">{t('navigation.contact')}</FooterLink>
+          <FooterLink to="/partners">{t('footerPartners')}</FooterLink>
         </FooterSection>
 
         {/* Legal */}
         <FooterSection>
-          <FooterTitle>Légal</FooterTitle>
-          <FooterLink to="/privacy">Confidentialité</FooterLink>
-          <FooterLink to="/terms">Conditions d'utilisation</FooterLink>
-          <FooterLink to="/security">Sécurité</FooterLink>
-          <FooterLink to="/cookies">Cookies</FooterLink>
+          <FooterTitle>{t('navigation.legal')}</FooterTitle>
+          <FooterLink to="/privacy">{t('navigation.privacy')}</FooterLink>
+          <FooterLink to="/terms">{t('navigation.terms')}</FooterLink>
+          <FooterLink to="/security">{t('navigation.security')}</FooterLink>
+          <FooterLink to="/cookies">{t('navigation.cookies')}</FooterLink>
         </FooterSection>
       </FooterContent>
 
       <BottomBar>
         <div>
-          &copy; {new Date().getFullYear()} VisioConnect. Tous droits réservés.
+          &copy; {new Date().getFullYear()} VisioConnect. {t('common.allRightsReserved')}
         </div>
         <div style={{ display: 'flex', gap: '1.5rem' }}>
           <ExLink href="mailto:support@visiconnect.com">

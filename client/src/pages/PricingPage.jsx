@@ -4,6 +4,7 @@ import { Check, X, ChevronDown, ChevronUp, Star, Shield, Zap } from 'lucide-reac
 import { Link } from 'react-router-dom';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
+import CallToAction from '../components/CallToAction';
 
 const COLORS = {
   primary: 'hsl(var(--primary))',    
@@ -552,6 +553,13 @@ const PricingPage = () => {
           </FAQItem>
         ))}
       </FAQSection>
+
+      <CallToAction 
+         title="Vous avez d'autres questions ?"
+         description="Notre équipe commerciale est à votre disposition pour trouver l'offre qui correspond parfaitement à vos besoins."
+         buttonText="Contacter les ventes"
+         buttonLink="/contact"
+      />
 
       <FooterClean />
     </PageContainer>

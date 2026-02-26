@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react'
 import { supabase } from '../config/supabase'
 import SupabaseUserService from '../services/SupabaseUserService'
+import UserService from '../services/UserService' // Add UserService import
 
 const SupabaseAuthContext = createContext({})
 
@@ -19,9 +20,52 @@ export const SupabaseAuthProvider = ({ children }) => {
   const [error, setError] = useState(null)
   const [session, setSession] = useState(null)
 
+  // Function to handle local dev login
+  const loginAsDev = () => {
+    const devUser = {
+      id: 'dev-user-123',
+      email: 'admin@local.dev',
+      user_metadata: {
+        display_name: 'Admin Local',
+        full_name: 'Admin Local',
+        avatar_url: 'https://ui-avatars.com/api/?name=Admin+Local&background=0D8ABC&color=fff'
+      },
+      role: 'admin',
+      aud: 'authenticated',
+      created_at: new Date().toISOString()
+    };
+    
+    // Save to local storage via UserService
+    UserService.saveUser(devUser);
+    
+    // Update state
+    setUser(devUser);
+    setSession({ 
+      user: devUser, 
+      access_token: 'dev-token', 
+      token_type: 'bearer',
+      expires_in: 3600 
+    });
+    
+    return { data: { user: devUser }, error: null };
+  };
+
   // Fetch user profile from database
   const fetchUserProfile = useCallback(async (email) => {
     try {
+      // If it's the dev user, return mock profile
+      if (email === 'admin@local.dev') {
+        const mockProfile = {
+          id: 'dev-user-123',
+          email: 'admin@local.dev',
+          display_name: 'Admin Local',
+          avatar_url: 'https://ui-avatars.com/api/?name=Admin+Local&background=0D8ABC&color=fff',
+          role: 'admin'
+        };
+        setUserProfile(mockProfile);
+        return mockProfile;
+      }
+
       const profile = await SupabaseUserService.getUserProfile(email)
       setUserProfile(profile)
       return profile
@@ -38,6 +82,26 @@ export const SupabaseAuthProvider = ({ children }) => {
 
     const initializeAuth = async () => {
       try {
+        // Check for local dev user first
+        const localUser = UserService.getUser();
+        if (localUser && localUser.email === 'admin@local.dev') {
+             if (mounted) {
+                setUser(localUser);
+                setSession({ user: localUser, access_token: 'dev-token' });
+                // Also set profile
+                 const mockProfile = {
+                    id: 'dev-user-123',
+                    email: 'admin@local.dev',
+                    display_name: 'Admin Local',
+                    avatar_url: 'https://ui-avatars.com/api/?name=Admin+Local&background=0D8ABC&color=fff',
+                    role: 'admin'
+                };
+                setUserProfile(mockProfile);
+             }
+             setLoading(false);
+             return; // Skip supabase check
+        }
+
         // Get current session
         const { data: { session: currentSession }, error: sessionError } = await supabase.auth.getSession()
         
@@ -295,7 +359,17 @@ export const SupabaseAuthProvider = ({ children }) => {
     // Auth methods
     signIn,
     signUp,
-    signOut,
+    signOut: async () => {
+        // Clear local storage if dev user
+        UserService.clearUser();
+        // Clear state
+        setUser(null);
+        setSession(null);
+        setUserProfile(null);
+        // Supabase sign out
+        return supabase.auth.signOut();
+    },
+    loginAsDev, // Expose helper
     signInWithProvider,
     resetPassword,
     updatePassword,

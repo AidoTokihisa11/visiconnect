@@ -5,6 +5,7 @@ import { Video, Menu, X } from 'lucide-react';
 import LanguageSelector from './LanguageSelector';
 // import { ModeToggle } from './mode-toggle';
 import { useAuthUser } from '../hooks/useAuthUser';
+import { useTranslation } from '../hooks/useTranslation';
 
 const COLORS = {
   primary: 'hsl(var(--primary))',    
@@ -190,6 +191,7 @@ const MobileNavLink = styled(Link)`
 
 export default function HeaderClean() {
   const { user } = useAuthUser();
+  const { t } = useTranslation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
@@ -204,22 +206,22 @@ export default function HeaderClean() {
           </LogoContainer>
 
           <NavLinks>
-            <NavLink to="/features">Fonctionnalités</NavLink>
-            <NavLink to="/pricing">Tarifs</NavLink>
-            <NavLink to="/demo">Démo</NavLink>
-            <NavLink to="/developer">Développeur</NavLink>
-            <NavLink to="/contact">Contact</NavLink>
+            <NavLink to="/features">{t('navigation.features')}</NavLink>
+            <NavLink to="/pricing">{t('navigation.pricing')}</NavLink>
+            <NavLink to="/demo">{t('navigation.demo')}</NavLink>
+            <NavLink to="/developer">{t('navigation.developers')}</NavLink>
+            <NavLink to="/contact">{t('navigation.contact')}</NavLink>
           </NavLinks>
 
           <AuthButtons>
             {user ? (
                <Button to="/dashboard" $variant="primary">
-                 Tableau de bord
+                 {t('navigation.dashboard')}
                </Button>
             ) : (
               <>
-                <Button to="/login" $variant="ghost">Se connecter</Button>
-                <Button to="/signup" $variant="primary">S'inscrire</Button>
+                <Button to="/login" $variant="ghost">{t('common.login')}</Button>
+                <Button to="/signup" $variant="primary">{t('common.register')}</Button>
               </>
             )}
             <LanguageSelector />
@@ -235,20 +237,20 @@ export default function HeaderClean() {
       {isMobileMenuOpen && (
         <MobileMenuOverlay isOpen={isMobileMenuOpen} onClick={() => setIsMobileMenuOpen(false)}>
           <MobileMenuContent onClick={e => e.stopPropagation()}>
-            <MobileNavLink to="/features" onClick={() => setIsMobileMenuOpen(false)}>Fonctionnalités</MobileNavLink>
-            <MobileNavLink to="/pricing" onClick={() => setIsMobileMenuOpen(false)}>Tarifs</MobileNavLink>
-            <MobileNavLink to="/demo" onClick={() => setIsMobileMenuOpen(false)}>Démo</MobileNavLink>
-            <MobileNavLink to="/developer" onClick={() => setIsMobileMenuOpen(false)}>Développeur</MobileNavLink>
-            <MobileNavLink to="/contact" onClick={() => setIsMobileMenuOpen(false)}>Contact</MobileNavLink>
+            <MobileNavLink to="/features" onClick={() => setIsMobileMenuOpen(false)}>{t('navigation.features')}</MobileNavLink>
+            <MobileNavLink to="/pricing" onClick={() => setIsMobileMenuOpen(false)}>{t('navigation.pricing')}</MobileNavLink>
+            <MobileNavLink to="/demo" onClick={() => setIsMobileMenuOpen(false)}>{t('navigation.demo')}</MobileNavLink>
+            <MobileNavLink to="/developer" onClick={() => setIsMobileMenuOpen(false)}>{t('navigation.developers')}</MobileNavLink>
+            <MobileNavLink to="/contact" onClick={() => setIsMobileMenuOpen(false)}>{t('navigation.contact')}</MobileNavLink>
             <div style={{ margin: '1rem 0', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 {user ? (
                    <Button to="/dashboard" $variant="primary" style={{ justifyContent: 'center' }}>
-                     Tableau de bord
+                     {t('navigation.dashboard')}
                    </Button>
                 ) : (
                   <>
-                    <Button to="/login" $variant="ghost" style={{ justifyContent: 'center' }}>Se connecter</Button>
-                    <Button to="/signup" $variant="primary" style={{ justifyContent: 'center' }}>S'inscrire</Button>
+                    <Button to="/login" $variant="ghost" style={{ justifyContent: 'center' }}>{t('common.login')}</Button>
+                    <Button to="/signup" $variant="primary" style={{ justifyContent: 'center' }}>{t('common.register')}</Button>
                   </>
                 )}
             </div>

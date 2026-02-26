@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
+import CallToAction from '../components/CallToAction';
 
 const COLORS = {
   primary: 'hsl(var(--primary))',
@@ -27,14 +28,32 @@ const PageContainer = styled.div`
 
 const MainContent = styled.main`
   flex: 1;
-  padding: 80px 20px 60px;
-  max-width: 1200px;
-  margin: 0 auto;
   width: 100%;
 `;
 
+const Hero = styled.section`
+  background: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(var(--background)) 100%);
+  padding: 100px 24px 80px;
+  text-align: center;
+  border-bottom: 1px solid ${COLORS.border};
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+`;
+
 const HeaderSection = styled.div`
-  margin-bottom: 60px;
+  max-width: 800px;
+  margin: 0 auto;
   text-align: center;
 `;
 
@@ -244,29 +263,16 @@ const DocsPage = () => {
                     </CategoryCard>
                 </CategoriesGrid>
 
-                <HelpSection>
-                    <h3 style={{ fontSize: '1.5rem', fontWeight: '700', color: COLORS.dark, marginBottom: '16px' }}>
-                        Besoin d'aide supplémentaire ?
-                    </h3>
-                    <p style={{ color: COLORS.text, marginBottom: '24px' }}>
-                        Si vous ne trouvez pas la réponse à votre question, notre équipe de support est là pour vous aider 24/7.
-                    </p>
-                    <button style={{ 
-                        backgroundColor: COLORS.white, 
-                        color: COLORS.primary, 
-                        border: `1px solid ${COLORS.primary}`, 
-                        padding: '10px 24px', 
-                        borderRadius: '6px',
-                        fontWeight: '600',
-                        cursor: 'pointer'
-                    }}>
-                        Contacter le Support
-                    </button>
-                </HelpSection>
-            </MainContent>
-            <FooterClean />
-        </PageContainer>
-    );
+                <CallToAction 
+                    title="Besoin d'aide supplémentaire ?"
+                    description="Si vous ne trouvez pas la réponse à votre question, notre équipe est là pour vous aider 24/7."
+                    buttonText="Contacter le support"
+                    buttonLink="/support"
+                />
+      </MainContent>
+      <FooterClean />
+    </PageContainer>
+  );
 };
 
 export default DocsPage;

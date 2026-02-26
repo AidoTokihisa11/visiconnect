@@ -31,7 +31,8 @@ const enTranslations = {
     logout: 'Logout',
     login: 'Login',
     register: 'Sign Up',
-    forgotPassword: 'Forgot Password?'
+    forgotPassword: 'Forgot Password?',
+    lastUpdated: 'Last Updated: {{date}}'
   },
 
   navigation: {
@@ -49,7 +50,10 @@ const enTranslations = {
     privacy: 'Privacy',
     terms: 'Terms of Service',
     cookies: 'Cookies',
-    security: 'Security'
+    security: 'Security',
+    demo: 'Demo',
+    developers: 'Developers',
+    dashboard: 'Dashboard'
   },
 
   hero: {

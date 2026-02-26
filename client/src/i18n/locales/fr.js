@@ -29,9 +29,11 @@ const frTranslations = {
     settings: 'Paramètres',
     profile: 'Profil',
     logout: 'Déconnexion',
+    allRightsReserved: 'Tous droits réservés',
     login: 'Connexion',
     register: 'S\'inscrire',
-    forgotPassword: 'Mot de passe oublié ?'
+    forgotPassword: 'Mot de passe oublié ?',
+    lastUpdated: 'Dernière mise à jour : {{date}}'
   },
 
   navigation: {
@@ -49,15 +51,46 @@ const frTranslations = {
     privacy: 'Confidentialité',
     terms: 'Conditions d\'utilisation',
     cookies: 'Cookies',
-    security: 'Sécurité'
+    security: 'Sécurité',
+    demo: 'Démo',
+    developers: 'Développeurs',
+    dashboard: 'Tableau de bord'
   },
 
   hero: {
-    title: 'La plateforme de visioconférence nouvelle génération',
-    subtitle: 'Connectez-vous facilement avec vos équipes grâce à notre solution de visioconférence avancée et intuitive',
-    startFree: 'Commencer gratuitement',
+    title: 'Visioconférence simplement professionnelle.',
+    titleLine1: 'Visioconférence',
+    titleLine2: 'simplement professionnelle.',
+    subtitle: 'Connectez-vous avec vos équipes, clients et partenaires avec une qualité vidéo et audio exceptionnelle. Aucun téléchargement requis. Sécurisé, simple et rapide.',
+    startFree: 'Démarrer gratuitement',
+    testRoom: 'Test Room Pro',
     watchDemo: 'Voir la démo',
     trustedBy: 'Utilisé par plus de {{count}} entreprises dans le monde'
+  },
+
+  homeFeatures: {
+    title: 'Tout pour des réunions réussies',
+    subtitle: 'Des fonctionnalités puissantes conçues pour les équipes modernes. Sécurisé, fiable et facile à utiliser.',
+    video: {
+      title: "Vidéo HD & Audio",
+      text: "Qualité vidéo et audio cristalline avec suppression du bruit et réduction de l'écho activées automatiquement.",
+      items: ["Jusqu'à 4k pris en charge", "Suppression de bruit AI", "Codec VP9 / AV1"]
+    },
+    security: {
+      title: "Sécurité Bancaire",
+      text: "Chiffrement de bout en bout pour tous les appels. Vos conversations restent privées et sécurisées à tout moment.",
+      items: ["Chiffrement E2E", "Conforme RGPD", "Aucune donnée stockée"]
+    },
+    instant: {
+      title: "Réunions Instantanées",
+      text: "Démarrez en quelques secondes avec un lien partageable. Aucun téléchargement ni installation requis pour les invités.",
+      items: ["Liens en 1-clic", "Pas de compte requis", "Compatible mobile"]
+    },
+    collaboration: {
+      title: "Collaboration d'Équipe",
+      text: "Partage d'écran simple, tableau blanc collaboratif et chat intégré pour améliorer la productivité de votre équipe.",
+      items: ["Partage d'écran", "Tableau blanc", "Chat en temps réel"]
+    }
   },
 
   features: {
@@ -90,45 +123,45 @@ const frTranslations = {
   },
 
   pricing: {
-    title: 'Tarifs simples et transparents',
-    subtitle: 'Choisissez le plan qui correspond à vos besoins',
+    title: 'Prix simples et transparents',
+    subtitle: 'Choisissez le plan qui vous correspond. Sans frais cachés.',
     monthly: 'Mensuel',
     yearly: 'Annuel',
-    perMonth: '/mois',
-    perUser: 'par utilisateur',
+    perMonth: '/ mois',
+    popularBadge: 'Populaire',
     free: {
       title: 'Gratuit',
       price: '0€',
-      description: 'Parfait pour commencer',
+      action: 'Démarrer Gratuitement',
       features: [
-        'Jusqu\'à 3 participants',
-        'Réunions de 40 minutes',
-        'Audio et vidéo HD',
-        'Partage d\'écran'
+        "Jusqu'à 40 min par réunion",
+        "Jusqu'à 100 participants",
+        "Chat Privé & Groupe",
+        "Tableau Blanc Basique"
       ]
     },
     pro: {
       title: 'Pro',
       price: '12€',
-      description: 'Pour les équipes en croissance',
+      action: 'Essayer Pro',
       features: [
-        'Jusqu\'à 50 participants',
-        'Réunions illimitées',
-        'Enregistrement cloud',
-        'Chat et tableau blanc',
-        'Support prioritaire'
+        "Durée de réunion illimitée",
+        "Jusqu'à 150 participants",
+        "Enregistrement Cloud (1Go)",
+        "Gestion Utilisateurs Avancée",
+        "Branding Personnalisé"
       ]
     },
     enterprise: {
-      title: 'Enterprise',
+      title: 'Entreprise',
       price: 'Sur mesure',
-      description: 'Pour les grandes organisations',
+      action: 'Contacter les Ventes',
       features: [
-        'Participants illimités',
-        'SSO et intégrations',
-        'Administration avancée',
-        'Support dédié',
-        'SLA garanti'
+        "Tout ce qui est inclus dans Pro",
+        "Jusqu'à 300 participants",
+        "Enregistrement Illimité",
+        "Intégration SSO",
+        "Support Dédié 24/7"
       ]
     },
     getStarted: 'Commencer',
@@ -331,16 +364,25 @@ const frTranslations = {
   projectDescription: 'VisioConnect est né de ma passion pour les technologies de communication moderne. En tant que développeur full-stack, j\'ai voulu créer une solution qui combine innovation technologique et expérience utilisateur exceptionnelle.',
   myVision: 'Ma vision',
   visionDescription: 'Démocratiser l\'accès à des outils de communication professionnels de haute qualité. Chaque équipe, quelle que soit sa taille, mérite une technologie qui amplifie sa collaboration.',
-  technologiesUsed: 'Technologies utilisées',
-  techDescription: 'React.js, WebRTC, Socket.io, Node.js, MongoDB, AI/ML pour l\'optimisation vidéo, et bien d\'autres technologies cutting-edge pour une expérience fluide.',
+  technologiesUsed: 'Technologies',
+  techDescription: 'React.js, WebRTC, Supabase Realtime, Node.js, AI/ML pour l\'optimisation vidéo, et bien d\'autres technologies cutting-edge pour une expérience fluide.',
   creationYear: 'Année de création',
   philosophy: 'Philosophie',
-  targetAvailability: 'Disponibilité visée',
-  madeWithLove: 'Fait avec passion',
+  philosophyValue: 'Open Source',
+  passionLabel: 'Passion',
+  scopeLabel: 'Portée',
+  globalValue: 'Global',
 
   // Contact section
-  contactTitle: 'Contactez-moi',
+  contactTitle: 'Restons connectés',
   contactDescription: 'Une question, une suggestion, ou envie de collaborer ? N\'hésitez pas à me contacter !',
+  fullNamePlaceholder: 'Nom complet',
+  emailPlaceholder: 'Adresse email',
+  subjectPlaceholder: 'Sujet',
+  messagePlaceholder: 'Votre message',
+  sendMessage: 'Envoyer le message',
+  sending: 'Envoi en cours...',
+  messageSent: 'Message envoyé !',
   
   // Integrations section
   integrations: {
@@ -391,6 +433,9 @@ const frTranslations = {
   developmentInProgress: 'Développement en cours',
   france: 'France',
   contactDeveloper: 'Contactez le développeur',
+  footerIntegrations: 'Intégrations',
+  footerChangelog: 'Nouveautés',
+  footerPartners: 'Partenaires',
   
   // Features Page
   featuresPageTitle: 'Fonctionnalités',

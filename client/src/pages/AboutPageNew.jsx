@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Target, Users, Heart, Globe, Award, Shield } from 'lucide-react';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
+import CallToAction from '../components/CallToAction';
 
 const COLORS = {
   primary: 'hsl(var(--primary))',    
@@ -31,11 +32,23 @@ const MainContent = styled.main`
 `;
 
 const HeroSection = styled.div`
-  background-color: hsl(var(--secondary));
-  padding: 5rem 1.5rem 4rem;
+  background: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(var(--background)) 100%);
+  padding: 8rem 1.5rem 6rem;
   text-align: center;
   border-bottom: 1px solid ${COLORS.border};
-  transition: background-color 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
 `;
 
 const HeroTitle = styled.h1`
@@ -260,6 +273,12 @@ const AboutPageNew = () => {
             </StatItem>
           </StatsGrid>
         </StatsSection>
+        
+        <CallToAction 
+            title="Rejoignez la révolution" 
+            description="Découvrez comment VisioConnect peut transformer vos réunions dès aujourd'hui."
+            buttonText="Essayer gratuitement"
+        />
       </MainContent>
       <FooterClean />
     </PageContainer>

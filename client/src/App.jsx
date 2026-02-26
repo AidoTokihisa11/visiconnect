@@ -7,6 +7,8 @@ import { WebRTCProvider } from './contexts/WebRTCContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { SupabaseAuthProvider } from './contexts/SupabaseAuthContext';
 import { LanguageProvider } from './contexts/LanguageContext';
+import { AdminProvider } from './contexts/AdminContext';
+import AdminToolbar from './components/Admin/AdminToolbar';
 import SettingsPage from './pages/SettingsPage';
 
 // import HomePage from './pages/HomePage';
@@ -49,6 +51,8 @@ import DeveloperPage from './pages/DeveloperPageV2';
 // import HomePageTailwind from './pages/HomePageTailwind';
 import AIChatbot from './components/AIChatbot';
 import { useNotifications } from './components/Notification';
+import ScrollToTop from './components/ScrollToTop';
+import BackToTopButton from './components/BackToTopButton';
 // import WarmGlobalStyle from './styles/WarmGlobalStyle';
 
 // Utilisation du style global plus chaud (Désactivé pour le nouveau design Clean)
@@ -114,11 +118,14 @@ function App() {
                 v7_relativeSplatPath: true
               }}
             >
+              <ScrollToTop />
               <SupabaseAuthProvider>
-                <AuthProvider>
-                  <SupabaseRealtimeProvider>
-                    <WebRTCProvider>
-                      <Routes>
+                <AdminProvider>
+                  <AuthProvider>
+                    <SupabaseRealtimeProvider>
+                      <WebRTCProvider>
+                        <AdminToolbar />
+                        <Routes>
                         {/* Auth Callback Route */}
                         <Route path="/auth/callback" element={<AuthCallback />} />
                         
@@ -145,6 +152,7 @@ function App() {
                         <Route path="/contact" element={<ContactPage />} />
                         <Route path="/features" element={<FeaturesPage />} />
                         <Route path="/developer" element={<DeveloperPage />} />
+                        <Route path="/dashboard" element={<AdminDashboard />} /> 
                         <Route path="/status" element={<StatusPageNew />} />
                         <Route path="/careers" element={<CareersPageNew />} />
                         <Route path="/scheduler" element={<SchedulerPageNew />} />
@@ -162,9 +170,11 @@ function App() {
                         {/* <Route path="/test-4k" element={<StreamTest4K />} /> */}
                       </Routes>
                       <AIChatbot />
+                      <BackToTopButton />
                     </WebRTCProvider>
-                  </SupabaseRealtimeProvider>
-                </AuthProvider>
+                    </SupabaseRealtimeProvider>
+                  </AuthProvider>
+                </AdminProvider>
               </SupabaseAuthProvider>
             </Router>
             <NotificationProvider />

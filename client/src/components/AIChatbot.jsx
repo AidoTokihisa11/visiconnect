@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { AnimatePresence, motion } from 'framer-motion';
 import { MessageSquare, X, Send, Sparkles } from 'lucide-react';
+import { useAdmin } from '../contexts/AdminContext';
 
 const COLORS = {
   primary: '#2563eb',    // Blue 600
@@ -23,12 +24,13 @@ const COLORS = {
 const ChatContainer = styled(motion.div)`
   position: fixed;
   bottom: 2rem;
-  right: 2rem;
   z-index: 1000;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
   pointer-events: none; /* Allow clicks to pass through around the chat */
+  
+  /* Dynamic positioning based on props */
+  ${props => props.$position === 'left' ? 'left: 2rem; align-items: flex-start;' : 'right: 2rem; align-items: flex-end;'}
 `;
 
 const ChatButton = styled(motion.button)`
@@ -244,6 +246,7 @@ const SendButton = styled.button`
 // --- Main Component ---
 
 const AIChatbot = () => {
+    const { uiConfig, setIsChatbotOpen } = useAdmin();
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([
         { 
@@ -307,10 +310,11 @@ const AIChatbot = () => {
 
     const toggleChat = () => {
         setIsOpen(!isOpen);
+        setIsChatbotOpen(!isOpen);
     };
 
     return (
-        <ChatContainer>
+        <ChatContainer $position={uiConfig?.chatbotPosition || 'right'}>
             <AnimatePresence>
                 {isOpen && (
                     <ChatWindow

@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
+import CallToAction from '../components/CallToAction';
 
 const COLORS = {
   primary: 'hsl(var(--primary))',
@@ -26,25 +27,43 @@ const PageContainer = styled.div`
 
 const MainContent = styled.main`
   flex: 1;
-  padding: 80px 20px 40px; /* Top padding to account for fixed header if needed */
-  max-width: 1200px;
-  margin: 0 auto;
   width: 100%;
+`; 
+
+const Hero = styled.section`
+  background: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(var(--background)) 100%);
+  padding: 100px 24px 80px;
+  text-align: center;
+  border-bottom: 1px solid ${COLORS.border};
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
 `;
 
 const SectionHeader = styled.div`
   text-align: center;
-  margin-bottom: 60px;
+  max-width: 800px;
+  margin: 0 auto;
 
   h1 {
-    font-size: 2.5rem;
+    font-size: 3rem;
     font-weight: 800;
     color: ${COLORS.dark};
     margin-bottom: 16px;
   }
 
   p {
-    font-size: 1.125rem;
+    font-size: 1.25rem;
     color: ${COLORS.lightText};
     max-width: 600px;
     margin: 0 auto;
@@ -57,6 +76,12 @@ const SectionHeader = styled.div`
         }
     }
   }
+`;
+
+const ContentWrapper = styled.div`
+  max-width: 1200px;
+  margin: 60px auto;
+  padding: 0 24px;
 `;
 
 const TimelineContainer = styled.div`
@@ -218,12 +243,14 @@ const ChangelogPage = () => {
         <PageContainer>
             <HeaderClean />
             <MainContent>
-                <SectionHeader>
-                    <h1>Nouveautés</h1>
-                    <p>
-                        Découvrez les dernières mises à jour, améliorations et corrections de Visiconnect. Nous travaillons constamment pour améliorer votre expérience.
-                    </p>
-                </SectionHeader>
+                <Hero>
+                    <SectionHeader>
+                        <h1>Nouveautés</h1>
+                        <p>
+                            Découvrez les dernières mises à jour, améliorations et corrections de Visiconnect. Nous travaillons constamment pour améliorer votre expérience.
+                        </p>
+                    </SectionHeader>
+                </Hero>
 
                 <TimelineContainer>
                     {changes.map((change, index) => (
@@ -243,6 +270,13 @@ const ChangelogPage = () => {
                         </TimelineItem>
                     ))}
                 </TimelineContainer>
+
+                <CallToAction 
+                    title="Vous avez une idée ?"
+                    description="Votre feedback est précieux. Suggérez-nous de nouvelles fonctionnalités."
+                    buttonText="Suggérer une fonctionnalité"
+                    buttonLink="/contact"
+                />
             </MainContent>
             <FooterClean />
         </PageContainer>

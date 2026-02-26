@@ -4,6 +4,7 @@ import { Video, Shield, Zap, Users, Globe, Smartphone, Lock, Mic, Layout, ArrowR
 import { Link } from 'react-router-dom';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
+import CallToAction from '../components/CallToAction';
 
 const COLORS = {
   primary: 'hsl(var(--primary))',    
@@ -228,12 +229,12 @@ const FeaturesPage = () => {
           </Grid>
         </FeaturesGridSection>
 
-        <CTASection>
-          <CTATitle>Prêt à transformer vos communications ?</CTATitle>
-          <CTAButton to="/register">
-            Commencer Gratuitement <ArrowRight size={20} />
-          </CTAButton>
-        </CTASection>
+        <CallToAction 
+             title="Prêt à transformer vos communications ?"
+             description="Rejoignez des milliers d'équipes qui font confiance à Visiconnect pour leurs réunions."
+             buttonText="Commencer Gratuitement"
+             buttonLink="/register"
+        />
       </MainContent>
 
       <FooterClean />

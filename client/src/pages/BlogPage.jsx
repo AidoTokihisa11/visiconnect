@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
+import CallToAction from '../components/CallToAction';
 
 const COLORS = {
   primary: 'hsl(var(--primary))',
@@ -26,29 +27,57 @@ const PageContainer = styled.div`
 
 const MainContent = styled.main`
   flex: 1;
-  padding: 80px 20px 60px;
-  max-width: 1200px;
+  padding: 0 0 60px;
+  max-width: 100%;
   margin: 0 auto;
   width: 100%;
+`; 
+
+const Hero = styled.section`
+  background: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(var(--background)) 100%);
+  padding: 100px 24px 80px;
+  text-align: center;
+  border-bottom: 1px solid ${COLORS.border};
+  margin-bottom: 60px;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
 `;
 
 const SectionHeader = styled.div`
   text-align: center;
-  margin-bottom: 60px;
+  max-width: 800px;
+  margin: 0 auto;
 
   h1 {
-    font-size: 2.5rem;
+    font-size: 3rem;
     font-weight: 800;
     color: ${COLORS.dark};
     margin-bottom: 16px;
   }
 
   p {
-    font-size: 1.125rem;
+    font-size: 1.25rem;
     color: ${COLORS.lightText};
     max-width: 600px;
     margin: 0 auto;
   }
+`;
+
+const ContentWrapper = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
 `;
 
 const Grid = styled.div`
@@ -216,13 +245,16 @@ const BlogPage = () => {
         <PageContainer>
             <HeaderClean />
             <MainContent>
-                <SectionHeader>
-                    <h1>Le Blog Visiconnect</h1>
-                    <p>
-                        Actualités, conseils et insights sur le monde du travail collaboratif et de la communication.
-                    </p>
-                </SectionHeader>
+                <Hero>
+                    <SectionHeader>
+                        <h1>Le Blog Visiconnect</h1>
+                        <p>
+                            Actualités, conseils et insights sur le monde du travail collaboratif et de la communication.
+                        </p>
+                    </SectionHeader>
+                </Hero>
 
+                <ContentWrapper>
                 <Grid>
                     {posts.map(post => (
                         <BlogCard key={post.id}>
@@ -245,6 +277,13 @@ const BlogPage = () => {
                         </BlogCard>
                     ))}
                 </Grid>
+                </ContentWrapper>
+                <CallToAction 
+                    title="Vous souhaitez écrire pour nous ?"
+                    description="Partagez vos idées et votre expertise avec la communauté VisioConnect."
+                    buttonText="Proposer un article"
+                    buttonLink="/contact"
+                />
             </MainContent>
             <FooterClean />
         </PageContainer>

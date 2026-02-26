@@ -47,6 +47,11 @@ class TranslationService {
       console.warn(`Translation not found for key: ${key}`);
       return key;
     }
+
+    // Check if translation is an object or array (return as is if returnObjects is true)
+    if (typeof translation === 'object' && params.returnObjects) {
+        return translation;
+    }
     
     // Replace parameters in translation
     return this.replaceParams(translation, params);
@@ -54,6 +59,7 @@ class TranslationService {
 
   // Replace parameters in translation string
   replaceParams(text, params) {
+    if (typeof text !== 'string') return text;
     return Object.keys(params).reduce((result, key) => {
       const regex = new RegExp(`{{${key}}}`, 'g');
       return result.replace(regex, params[key]);

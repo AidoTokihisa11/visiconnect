@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
+import CallToAction from '../components/CallToAction';
 
 const COLORS = {
   primary: 'hsl(var(--primary))',
@@ -30,11 +31,24 @@ const MainContent = styled.main`
 `;
 
 const HeroSection = styled.section`
-  background-color: hsl(var(--card));
+  background: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(var(--background)) 100%);
   color: hsl(var(--foreground));
-  padding: 80px 20px;
+  padding: 100px 20px 80px;
   text-align: center;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  border-bottom: 1px solid ${COLORS.border};
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
 `;
 
 const HeroTitle = styled.h1`
@@ -100,8 +114,8 @@ const BenefitCard = styled.div`
 const IconWrapper = styled.div`
   width: 64px;
   height: 64px;
-  background-color: ${props => props.bgColor || '#eff6ff'};
-  color: ${props => props.color || COLORS.primary};
+  background-color: ${props => props.$bgColor || '#eff6ff'};
+  color: ${props => props.$color || COLORS.primary};
   border-radius: 16px;
   display: flex;
   align-items: center;
@@ -233,21 +247,21 @@ const PartnersPage = () => {
 
                     <Grid>
                         <BenefitCard>
-                            <IconWrapper bgColor="#eff6ff" color="#2563eb">🚀</IconWrapper>
+                            <IconWrapper $bgColor="#eff6ff" $color="#2563eb">🚀</IconWrapper>
                             <CardTitle>Commissions Attractives</CardTitle>
                             <CardText>
                                 Gagnez des revenus récurrents sur chaque client que vous apportez. Nos taux sont parmi les plus compétitifs du marché.
                             </CardText>
                         </BenefitCard>
                         <BenefitCard>
-                            <IconWrapper bgColor="#f0fdf4" color="#16a34a">🛠️</IconWrapper>
+                            <IconWrapper $bgColor="#f0fdf4" $color="#16a34a">🛠️</IconWrapper>
                             <CardTitle>Ressources Dédiées</CardTitle>
                             <CardText>
                                 Accédez à notre portail partenaire : documentation technique, supports marketing et formation commerciale.
                             </CardText>
                         </BenefitCard>
                         <BenefitCard>
-                            <IconWrapper bgColor="#fff7ed" color="#ea580c">🤝</IconWrapper>
+                            <IconWrapper $bgColor="#fff7ed" $color="#ea580c">🤝</IconWrapper>
                             <CardTitle>Support Prioritaire</CardTitle>
                             <CardText>
                                 Bénéficiez d'une ligne directe avec nos équipes techniques et commerciales pour vous aider à conclure vos ventes.
@@ -256,54 +270,13 @@ const PartnersPage = () => {
                     </Grid>
                 </BenefitsSection>
 
-                <ContactSection id="contact-form">
-                    <ContactContainer>
-                        <h2 style={{ fontSize: '2rem', color: COLORS.dark, marginBottom: '16px' }}>Prêt à commencer ?</h2>
-                        <p style={{ color: COLORS.lightText, marginBottom: '32px' }}>
-                            Remplissez ce formulaire et un responsable partenariats prendra contact avec vous sous 24h.
-                        </p>
+                <CallToAction 
+                    title="Devenir partenaire"
+                    description="Rejoignez notre réseau de partenaires et développez votre activité avec VisioConnect. Remplissez le formulaire de contact pour commencer."
+                    buttonText="Nous contacter"
+                    buttonLink="/contact"
+                />
 
-                        <Form onSubmit={handleSubmit}>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
-                                <FormGroup>
-                                    <Label htmlFor="firstName">Prénom</Label>
-                                    <Input type="text" id="firstName" required placeholder="Jean" />
-                                </FormGroup>
-                                <FormGroup>
-                                    <Label htmlFor="lastName">Nom</Label>
-                                    <Input type="text" id="lastName" required placeholder="Dupont" />
-                                </FormGroup>
-                            </div>
-
-                            <FormGroup>
-                                <Label htmlFor="company">Entreprise</Label>
-                                <Input type="text" id="company" required placeholder="Votre société" />
-                            </FormGroup>
-
-                            <FormGroup>
-                                <Label htmlFor="email">Email professionnel</Label>
-                                <Input type="email" id="email" required placeholder="jean@societe.com" />
-                            </FormGroup>
-
-                            <FormGroup>
-                                <Label htmlFor="type">Type de partenariat</Label>
-                                <Select id="type">
-                                    <option value="reseller">Revendeur / Distributeur</option>
-                                    <option value="integrator">Intégrateur Système</option>
-                                    <option value="consultant">Consultant</option>
-                                    <option value="other">Autre</option>
-                                </Select>
-                            </FormGroup>
-
-                            <FormGroup>
-                                <Label htmlFor="message">Message</Label>
-                                <TextArea id="message" placeholder="Parlez-nous de votre projet..." />
-                            </FormGroup>
-
-                            <SubmitButton type="submit">Envoyer la demande</SubmitButton>
-                        </Form>
-                    </ContactContainer>
-                </ContactSection>
             </MainContent>
             <FooterClean />
         </PageContainer>

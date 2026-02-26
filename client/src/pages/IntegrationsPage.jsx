@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
+import CallToAction from '../components/CallToAction';
 
 const COLORS = {
   primary: 'hsl(var(--primary))',
@@ -27,15 +28,26 @@ const PageContainer = styled.div`
 
 const MainContent = styled.main`
   flex: 1;
-  padding-top: 80px;
 `;
 
 const Hero = styled.section`
-  background-color: ${COLORS.white};
-  padding: 80px 24px;
+  background: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(var(--background)) 100%);
+  padding: 100px 24px 80px;
   text-align: center;
   border-bottom: 1px solid ${COLORS.border};
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
 `;
 
 const Title = styled.h1`
@@ -185,6 +197,13 @@ const IntegrationsPage = () => {
             </IntegrationCard>
           ))}
         </IntegrationsGrid>
+
+        <CallToAction 
+             title="Vous ne trouvez pas votre outil ?"
+             description="Nous ajoutons régulièrement de nouvelles intégrations. Une suggestion ?"
+             buttonText="Contactez l'équipe"
+             buttonLink="/contact"
+        />
 
       </MainContent>
       <FooterClean />

@@ -10,59 +10,90 @@ const AuthCallback = () => {
   const [processing, setProcessing] = useState(true)
 
   useEffect(() => {
+  useEffect(() => {
+    const finishAuth = () => {
+        console.log('✅ Auth callback successful')
+        const redirectTo = sessionStorage.getItem('auth_redirect') || '/'
+        sessionStorage.removeItem('auth_redirect')
+        
+        // Short delay to show success state
+        setTimeout(() => {
+            navigate(redirectTo, { replace: true })
+        }, 500)
+        setProcessing(false) // Stop processing only on success
+    }
+
     const handleAuthCallback = async () => {
       try {
-        // Get the hash parameters from URL
+        // Handle Implicit Flow (Hash fragments) - Legacy or specific config
         const hashParams = new URLSearchParams(location.hash.substring(1))
         const accessToken = hashParams.get('access_token')
         const refreshToken = hashParams.get('refresh_token')
-        const error = hashParams.get('error')
-        const errorDescription = hashParams.get('error_description')
+        const hashError = hashParams.get('error')
+        const hashErrorDesc = hashParams.get('error_description')
 
-        // Check for errors in URL
-        if (error) {
-          throw new Error(errorDescription || error)
+        // Handle PKCE Flow (Query params) - Default for Supabase v2
+        const queryParams = new URLSearchParams(location.search)
+        const code = queryParams.get('code')
+        const queryError = queryParams.get('error')
+        const queryErrorDesc = queryParams.get('error_description')
+
+        // Check for errors
+        if (hashError || queryError) {
+          const errMsg = hashErrorDesc || queryErrorDesc || hashError || queryError
+          console.error('Auth error param detected:', errMsg)
+          throw new Error(errMsg)
         }
 
-        // If we have tokens, set the session
+        // 1. Implicit Flow: Manually set session
         if (accessToken && refreshToken) {
-          const { data, error: sessionError } = await supabase.auth.setSession({
+          const { error: sessionError } = await supabase.auth.setSession({
             access_token: accessToken,
             refresh_token: refreshToken
           })
-
           if (sessionError) throw sessionError
-
-          console.log('✅ Auth callback successful, user:', data.user?.email)
-
-          // Redirect to home page or intended destination
-          const redirectTo = sessionStorage.getItem('auth_redirect') || '/'
-          sessionStorage.removeItem('auth_redirect')
-          
-          setTimeout(() => {
-            navigate(redirectTo, { replace: true })
-          }, 1000)
-        } else {
-          // No tokens found, check if we have an active session
-          const { data: { session } } = await supabase.auth.getSession()
-          
-          if (session) {
-            console.log('✅ Existing session found')
-            navigate('/', { replace: true })
-          } else {
-            throw new Error('No authentication data found')
-          }
+          finishAuth()
+          return
         }
+
+        // 2. PKCE Flow & Session check
+        // First check if we already have a session (fastest)
+        const { data: { session } } = await supabase.auth.getSession()
+        
+        if (session) {
+          finishAuth()
+          return
+        }
+        
+        // If no session yet but we have a code, the client is likely processing it.
+        // We'll wait and retry once.
+        if (code) {
+             console.log('⏳ PKCE Code detected, waiting for session exchange...')
+             // Wait 2 seconds and check again
+             await new Promise(resolve => setTimeout(resolve, 2000))
+             
+             const { data: { session: retrySession }, error: retryError } = await supabase.auth.getSession()
+             if (retrySession) {
+                 finishAuth()
+                 return
+             }
+             if (retryError) throw retryError
+             
+             throw new Error('Timeout: Session not established after redirect.')
+        }
+
+        // If no code and no tokens and no session -> Error
+        throw new Error('No authentication data found in URL.')
+
       } catch (err) {
         console.error('❌ Auth callback error:', err)
         setError(err.message)
+        setProcessing(false) // Stop processing on error
         
         // Redirect to login after 3 seconds
         setTimeout(() => {
           navigate('/login', { replace: true })
         }, 3000)
-      } finally {
-        setProcessing(false)
       }
     }
 

@@ -7,7 +7,7 @@ import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 
 const SupabaseLoginPage = () => {
   const navigate = useNavigate()
-  const { signIn, signInWithProvider, error: authError } = useSupabaseAuth()
+  const { signIn, loginAsDev, signInWithProvider, error: authError } = useSupabaseAuth()
   
   const [formData, setFormData] = useState({
     email: '',
@@ -130,6 +130,27 @@ const SupabaseLoginPage = () => {
         <Divider>
           <span>ou continuer avec</span>
         </Divider>
+
+        <button 
+           type="button" 
+           onClick={() => {
+             loginAsDev();
+             navigate('/');
+           }}
+           style={{
+             width: '100%',
+             padding: '0.75rem',
+             marginBottom: '1rem',
+             background: '#f59e0b',
+             color: 'white',
+             border: 'none',
+             borderRadius: '0.5rem',
+             cursor: 'pointer',
+             fontWeight: '600'
+           }}
+        >
+          🔑 Accès Développeur (Local)
+        </button>
 
         <OAuthButtons>
           <OAuthButton

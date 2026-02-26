@@ -179,8 +179,8 @@ const SectionTitle = styled.h2`
 `;
 
 const Badge = styled.span`
-  background-color: ${props => props.bg || '#dbeafe'};
-  color: ${props => props.color || '#1e40af'};
+  background-color: ${props => props.$bg || '#dbeafe'};
+  color: ${props => props.$color || '#1e40af'};
   padding: 0.35rem 0.85rem;
   border-radius: 8px;
   font-size: 0.75rem;
@@ -347,14 +347,14 @@ const SLIDES = [
           Développeur Full Stack
         </div>
         <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem' }}>
-           <Badge bg="rgba(255,255,255,0.1)" color="white">Permis B</Badge>
-           <Badge bg="rgba(255,255,255,0.1)" color="white">Mobile</Badge>
+           <Badge $bg="rgba(255,255,255,0.1)" $color="white">Permis B</Badge>
+           <Badge $bg="rgba(255,255,255,0.1)" $color="white">Mobile</Badge>
         </div>
       </div>
     ),
     rightContent: (
       <div style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-         <SectionTitle>Profil <Badge bg="#dcfce7" color="#166534">Disponible</Badge></SectionTitle>
+         <SectionTitle>Profil <Badge $bg="#dcfce7" $color="#166534">Disponible</Badge></SectionTitle>
          <p style={{ fontSize: '1.1rem', lineHeight: '1.7', color: '#475569', marginBottom: '2rem' }}>
             Professionnel polyvalent et adaptable, capable de m'adapter rapidement à divers environnements de travail. 
             Ma rigueur, ma précision et mon souci du détail sont des atouts essentiels dans l'exécution de mes tâches.
@@ -483,7 +483,7 @@ const SLIDES = [
             <TimelineItem>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
                      <h4 style={{ fontSize: '1.2rem', fontWeight: 'bold', margin: 0 }}>Designer Web</h4>
-                     <Badge bg="#f1f5f9" color="#64748b">2020 - 2021</Badge>
+                     <Badge $bg="#f1f5f9" $color="#64748b">2020 - 2021</Badge>
                 </div>
                 <div style={{ color: THEME.primary, fontWeight: '600', marginBottom: '1rem', display: 'flex', items: 'center', gap: '0.5rem' }}>
                     <MapPin size={16} /> Experiencis | Tours
@@ -589,11 +589,11 @@ const SLIDES = [
             <div style={{ marginTop: '2rem', background: '#f8fafc', padding: '1.5rem', borderRadius: '12px' }}>
                 <h4 style={{ fontSize: '1rem', fontWeight: 'bold', marginBottom: '1rem', color: '#334155' }}>Intérêts Spécifiques</h4>
                 <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                    <Badge bg="white" style={{ border: '1px solid #e2e8f0' }}>Dev Full Stack</Badge>
-                    <Badge bg="white" style={{ border: '1px solid #e2e8f0' }}>API RESTful</Badge>
-                    <Badge bg="white" style={{ border: '1px solid #e2e8f0' }}>Bases de données</Badge>
-                    <Badge bg="white" style={{ border: '1px solid #e2e8f0' }}>Agile / Scrum</Badge>
-                    <Badge bg="white" style={{ border: '1px solid #e2e8f0' }}>UX / UI</Badge>
+                    <Badge $bg="white" style={{ border: '1px solid #e2e8f0' }}>Dev Full Stack</Badge>
+                    <Badge $bg="white" style={{ border: '1px solid #e2e8f0' }}>API RESTful</Badge>
+                    <Badge $bg="white" style={{ border: '1px solid #e2e8f0' }}>Bases de données</Badge>
+                    <Badge $bg="white" style={{ border: '1px solid #e2e8f0' }}>Agile / Scrum</Badge>
+                    <Badge $bg="white" style={{ border: '1px solid #e2e8f0' }}>UX / UI</Badge>
                 </div>
             </div>
         </div>

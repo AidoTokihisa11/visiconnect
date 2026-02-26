@@ -3,6 +3,7 @@ import styled, { keyframes, css } from 'styled-components';
 import { Mail, Phone, MapPin, Send, MessageSquare, HelpCircle, ArrowRight, CheckCircle, Clock } from 'lucide-react';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
+import CallToAction from '../components/CallToAction';
 
 const COLORS = {
   primary: 'hsl(var(--primary))',    
@@ -38,11 +39,24 @@ const MainContent = styled.main`
 `;
 
 const HeroSection = styled.div`
-  background-color: hsl(var(--secondary)); /* Light blue solid / dark grey in dark mode */
-  padding: 6rem 1.5rem 4rem;
+  background: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(var(--background)) 100%);
+  padding: 8rem 1.5rem 6rem;
   text-align: center;
   border-bottom: 1px solid ${COLORS.border};
   transition: background-color 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
 `;
 
 const HeroTitle = styled.h1`
@@ -147,8 +161,8 @@ const SupportCard = styled(InfoCard)`
 const IconBox = styled.div`
   width: 48px;
   height: 48px;
-  background-color: ${props => props.dark ? 'rgba(255,255,255,0.1)' : '#eff6ff'};
-  color: ${props => props.dark ? 'white' : COLORS.primary};
+  background-color: ${props => props.$dark ? 'rgba(255,255,255,0.1)' : '#eff6ff'};
+  color: ${props => props.$dark ? 'white' : COLORS.primary};
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -420,7 +434,7 @@ const ContactPage = () => {
               </InfoCard>
 
               <SupportCard>
-                <IconBox dark>
+                <IconBox $dark>
                   <HelpCircle size={24} />
                 </IconBox>
                 <CardContent>
@@ -509,7 +523,14 @@ const ContactPage = () => {
             </FormCard>
           </ContactGrid>
         </ContentWrapper>
+      <CallToAction 
+        title="Une question urgente ?"
+        description="Notre équipe de support est disponible 24/7 pour vous aider."
+        buttonText="Consulter la FAQ"
+        buttonLink="/support"
+      />
       </MainContent>
+       
 {/* FooterClean is usually imported in App.js or included here if the structure is per page. Based on previous files, include FooterClean. */}
        <FooterClean />
     </PageContainer>
