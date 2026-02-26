@@ -10,7 +10,6 @@ const AuthCallback = () => {
   const [processing, setProcessing] = useState(true)
 
   useEffect(() => {
-  useEffect(() => {
     const finishAuth = () => {
         console.log('✅ Auth callback successful')
         const redirectTo = sessionStorage.getItem('auth_redirect') || '/'
