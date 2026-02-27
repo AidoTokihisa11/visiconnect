@@ -373,7 +373,12 @@ export default function AdminDashboard() {
     }
   };
 
-  if (loading) return <div>Chargement...</div>;
+  if (loading) return (
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <Activity className="animate-spin text-blue-600" size={48} />
+      <span style={{ marginLeft: '1rem', fontSize: '1.2rem', color: '#64748b' }}>Chargement du tableau de bord...</span>
+    </div>
+  );
 
   return (
     <Layout>

@@ -24,6 +24,8 @@ const AuthCallback = () => {
 
     const handleAuthCallback = async () => {
       try {
+        console.log('🔄 AuthCallback started', location)
+        
         // Handle Implicit Flow (Hash fragments) - Legacy or specific config
         const hashParams = new URLSearchParams(location.hash.substring(1))
         const accessToken = hashParams.get('access_token')
@@ -46,6 +48,7 @@ const AuthCallback = () => {
 
         // 1. Implicit Flow: Manually set session
         if (accessToken && refreshToken) {
+          console.log('🔑 Access Token found in URL (Implicit Flow)')
           const { error: sessionError } = await supabase.auth.setSession({
             access_token: accessToken,
             refresh_token: refreshToken
@@ -60,6 +63,7 @@ const AuthCallback = () => {
         const { data: { session } } = await supabase.auth.getSession()
         
         if (session) {
+          console.log('✅ Session already active')
           finishAuth()
           return
         }
@@ -68,20 +72,31 @@ const AuthCallback = () => {
         // We'll wait and retry once.
         if (code) {
              console.log('⏳ PKCE Code detected, waiting for session exchange...')
-             // Wait 2 seconds and check again
-             await new Promise(resolve => setTimeout(resolve, 2000))
              
-             const { data: { session: retrySession }, error: retryError } = await supabase.auth.getSession()
-             if (retrySession) {
-                 finishAuth()
-                 return
+             // Wait loop for session (up to 5 seconds)
+             let attempts = 0;
+             while (attempts < 5) {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                const { data: { session: retrySession } } = await supabase.auth.getSession();
+                if (retrySession) {
+                    console.log('✅ Session established after wait')
+                    finishAuth()
+                    return;
+                }
+                attempts++;
              }
-             if (retryError) throw retryError
              
              throw new Error('Timeout: Session not established after redirect.')
         }
 
         // If no code and no tokens and no session -> Error
+        // BUT check if we are just logged in?
+        const { data: { user } } = await supabase.auth.getUser()
+        if (user) {
+             finishAuth()
+             return
+        }
+
         throw new Error('No authentication data found in URL.')
 
       } catch (err) {
