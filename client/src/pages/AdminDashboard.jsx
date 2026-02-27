@@ -380,6 +380,23 @@ export default function AdminDashboard() {
     </div>
   );
 
+  // Redirection si non admin
+  if (!loading && (!user || (user.role !== 'admin' && !user.email?.includes('admin')))) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh', gap: '1rem' }}>
+        <AlertTriangle className="text-red-500" size={48} />
+        <h2 className="text-2xl font-bold">Accès Refusé</h2>
+        <p className="text-slate-500">Vous n'avez pas les droits d'administrateur pour accéder à cette page.</p>
+        <button 
+          onClick={() => window.location.href = '/'}
+          className="mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          Retour à l'accueil
+        </button>
+      </div>
+    );
+  }
+
   return (
     <Layout>
       <Sidebar 
@@ -417,7 +434,11 @@ export default function AdminDashboard() {
                     <div className="text-xs text-slate-500 truncate">{user?.role || 'Admin'}</div>
                 </div>
             </div>
-            <button onClick={() => window.location.href = '/login'} className="w-full text-xs text-slate-600 hover:text-red-500 flex items-center justify-center gap-1 py-1">
+            <button onClick={() => {
+                UserService.clearUser();
+                localStorage.clear();
+                window.location.href = '/login';
+            }} className="w-full text-xs text-slate-600 hover:text-red-500 flex items-center justify-center gap-1 py-1">
                 Déconnexion
             </button>
         </div>
