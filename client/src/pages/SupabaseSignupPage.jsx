@@ -122,6 +122,25 @@ const SupabaseSignupPage = () => {
     }
   }
 
+  const getPasswordStrength = (password) => {
+    const reqs = [
+      { id: 'length', label: '15+ caractères', met: password.length >= 15 },
+      { id: 'uppercase', label: 'Majuscule', met: /[A-Z]/.test(password) },
+      { id: 'lowercase', label: 'Minuscule', met: /[a-z]/.test(password) },
+      { id: 'number', label: 'Chiffre', met: /[0-9]/.test(password) },
+      { id: 'special', label: 'Symbole', met: /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?`~]/.test(password) }
+    ];
+
+    const metCount = reqs.filter(r => r.met).length;
+    const percentage = password.length === 0 ? 0 : (metCount / reqs.length) * 100;
+    
+    let color = '#ef4444'; // red
+    if (metCount === reqs.length) color = '#10b981'; // green
+    else if (metCount >= 3) color = '#f59e0b'; // yellow
+
+    return { reqs, percentage, color };
+  }
+
   if (success) {
     return (
       <PageContainer>
@@ -204,9 +223,25 @@ const SupabaseSignupPage = () => {
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </PasswordToggle>
             </PasswordWrapper>
-            <PasswordHint>
-              Min. 15 caractères, Majuscule, Minuscule, Chiffre, Symbole
-            </PasswordHint>
+            
+            {formData.password && (
+              <PasswordStrengthContainer>
+                <StrengthBar>
+                  <StrengthFill 
+                    $percentage={getPasswordStrength(formData.password).percentage} 
+                    $color={getPasswordStrength(formData.password).color} 
+                  />
+                </StrengthBar>
+                <RequirementsList>
+                  {getPasswordStrength(formData.password).reqs.map(req => (
+                    <RequirementItem key={req.id} $met={req.met}>
+                      {req.met ? <Check size={14} /> : <X size={14} />}
+                      {req.label}
+                    </RequirementItem>
+                  ))}
+                </RequirementsList>
+              </PasswordStrengthContainer>
+            )}
           </FormGroup>
 
           <FormGroup>
@@ -418,10 +453,48 @@ const PasswordToggle = styled.button`
   }
 `
 
-const PasswordHint = styled.div`
+const PasswordStrengthContainer = styled.div`
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`
+
+const StrengthBar = styled.div`
+  height: 6px;
+  width: 100%;
+  background-color: #e5e7eb;
+  border-radius: 3px;
+  overflow: hidden;
+`
+
+const StrengthFill = styled.div`
+  height: 100%;
+  width: ${props => props.$percentage}%;
+  background-color: ${props => props.$color};
+  transition: all 0.3s ease-in-out;
+`
+
+const RequirementsList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+`
+
+const RequirementItem = styled.li`
   font-size: 12px;
-  color: #6b7280;
-  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: ${props => props.$met ? '#10b981' : '#6b7280'};
+  transition: color 0.2s;
+
+  svg {
+    color: ${props => props.$met ? '#10b981' : '#9ca3af'};
+  }
 `
 
 const SubmitButton = styled.button`
