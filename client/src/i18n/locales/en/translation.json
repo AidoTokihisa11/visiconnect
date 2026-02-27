@@ -1,0 +1,51 @@
+{
+  "common": {
+    "login": "Login",
+    "register": "Sign Up",
+    "logout": "Logout",
+    "dashboard": "Dashboard",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "welcome": "Welcome",
+    "access_dashboard": "Access Dashboard"
+  },
+  "navigation": {
+    "home": "Home",
+    "features": "Features",
+    "pricing": "Pricing",
+    "demo": "Demo",
+    "developers": "Developers",
+    "contact": "Contact", 
+    "dashboard": "Dashboard",
+    "admin": "Admin"
+  },
+  "dashboard": {
+    "overview": "Overview",
+    "users": "Users",
+    "database": "Database",
+    "settings": "Settings",
+    "metrics": "System Metrics",
+    "api_latency": "API Latency",
+    "active_session": "Active Session",
+    "memory_usage": "Memory Usage",
+    "live_logs": "Live Logs",
+    "clear_cache": "Clear Cache",
+    "maintenance_mode": "Maintenance Mode",
+    "maintenance_desc": "Disable public access"
+  },
+  "auth": {
+    "login_title": "Login",
+    "signup_title": "Create Account", 
+    "email_placeholder": "your@email.com",
+    "password_placeholder": "••••••••",
+    "success_login": "Login successful!",
+    "success_signup": "Account created successfully!",
+    "redirecting": "Redirecting..."
+  },
+  "notifications": {
+    "language_changed": "Language changed to English",
+    "cache_cleared": "Cache cleared successfully",
+    "error_occurred": "An error occurred"
+  }
+}

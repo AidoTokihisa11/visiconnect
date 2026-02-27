@@ -1,33 +1,25 @@
-import { useState, useEffect } from 'react';
-import translationService from '../i18n/translationService';
+import { useTranslation as useI18Next } from 'react-i18next';
 
-// Custom hook for translations
+// Wrapper hook to keep API compatibility but use i18next
 export const useTranslation = () => {
-  const [language, setLanguage] = useState(translationService.getCurrentLanguage());
-  const [, forceUpdate] = useState({});
-
-  useEffect(() => {
-    const handleLanguageChange = (event) => {
-      setLanguage(event.detail.language);
-      forceUpdate({}); // Force re-render when language changes
-    };
-
-    window.addEventListener('languageChanged', handleLanguageChange);
-
-    return () => {
-      window.removeEventListener('languageChanged', handleLanguageChange);
-    };
-  }, []);
-
-  const t = (key, params = {}) => {
-    return translationService.t(key, params);
-  };
+  const { t, i18n } = useI18Next();
 
   const changeLanguage = (newLanguage) => {
-    translationService.setLanguage(newLanguage);
+    i18n.changeLanguage(newLanguage);
   };
+  
+  const getAvailableLanguages = () => [
+    { code: 'fr', name: 'Français', flag: '🇫🇷' },
+    { code: 'en', name: 'English', flag: '🇺🇸' },
+  ];
 
-  const formatDate = (date, options = {}) => {
+  return {
+    t,
+    language: i18n.language,
+    changeLanguage,
+    getAvailableLanguages,
+  };
+};
     return translationService.formatDate(date, options);
   };
 

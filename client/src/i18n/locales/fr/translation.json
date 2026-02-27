@@ -1,0 +1,51 @@
+{
+  "common": {
+    "login": "Connexion",
+    "register": "Inscription",
+    "logout": "Déconnexion",
+    "dashboard": "Tableau de bord",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "welcome": "Bienvenue",
+    "access_dashboard": "Accéder au tableau de bord"
+  },
+  "navigation": {
+    "home": "Accueil",
+    "features": "Fonctionnalités", 
+    "pricing": "Tarifs",
+    "demo": "Démo",
+    "developers": "Développeurs",
+    "contact": "Contact",
+    "dashboard": "Dashboard",
+    "admin": "Administration"
+  },
+  "dashboard": {
+    "overview": "Vue d'ensemble",
+    "users": "Utilisateurs",
+    "database": "Base de données",
+    "settings": "Paramètres", 
+    "metrics": "Métriques Système",
+    "api_latency": "Latence API",
+    "active_session": "Session Active",
+    "memory_usage": "Utilisation Mémoire",
+    "live_logs": "Journaux en direct",
+    "clear_cache": "Vider le cache",
+    "maintenance_mode": "Mode Maintenance",
+    "maintenance_desc": "Désactive l'accès public"
+  },
+  "auth": {
+    "login_title": "Connexion",
+    "signup_title": "Créer un compte",
+    "email_placeholder": "votre@email.com",
+    "password_placeholder": "••••••••",
+    "success_login": "Connexion réussie !",
+    "success_signup": "Compte créé avec succès !",
+    "redirecting": "Redirection en cours..."
+  },
+  "notifications": {
+    "language_changed": "Langue changée en Français",
+    "cache_cleared": "Cache vidé avec succès", 
+    "error_occurred": "Une erreur est survenue"
+  }
+}
