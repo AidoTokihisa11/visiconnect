@@ -68,25 +68,20 @@ const AuthCallback = () => {
           return
         }
         
-        // If no session yet but we have a code, the client is likely processing it.
-        // We'll wait and retry once.
+        // If no session yet but we have a code, we need to exchange it
         if (code) {
-             console.log('⏳ PKCE Code detected, waiting for session exchange...')
+             console.log('⏳ PKCE Code detected, exchanging for session...')
              
-             // Wait loop for session (up to 5 seconds)
-             let attempts = 0;
-             while (attempts < 5) {
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                const { data: { session: retrySession } } = await supabase.auth.getSession();
-                if (retrySession) {
-                    console.log('✅ Session established after wait')
-                    finishAuth()
-                    return;
-                }
-                attempts++;
+             const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
+             
+             if (exchangeError) {
+                 console.error('❌ Error exchanging code:', exchangeError)
+                 throw exchangeError
              }
              
-             throw new Error('Timeout: Session not established after redirect.')
+             console.log('✅ Session established via code exchange')
+             finishAuth()
+             return;
         }
 
         // If no code and no tokens and no session -> Error
