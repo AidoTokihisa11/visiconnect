@@ -13,35 +13,29 @@ export const useTranslation = () => {
     { code: 'en', name: 'English', flag: '🇺🇸' },
   ];
 
+  // Helper functions that might be used elsewhere
+  const formatDate = (date, options = {}) => {
+    if (!date) return '';
+    return new Date(date).toLocaleDateString(i18n.language, options);
+  };
+
+  const formatNumber = (number, options = {}) => {
+    if (isNaN(number)) return number;
+    return new Intl.NumberFormat(i18n.language, options).format(number);
+  };
+
+  const formatCurrency = (amount, currency = 'EUR') => {
+    if (isNaN(amount)) return amount;
+    return new Intl.NumberFormat(i18n.language, { style: 'currency', currency }).format(amount);
+  };
+
   return {
     t,
     language: i18n.language,
     changeLanguage,
     getAvailableLanguages,
-  };
-};
-    return translationService.formatDate(date, options);
-  };
-
-  const formatNumber = (number, options = {}) => {
-    return translationService.formatNumber(number, options);
-  };
-
-  const formatCurrency = (amount, currency) => {
-    return translationService.formatCurrency(amount, currency);
-  };
-
-  const getAvailableLanguages = () => {
-    return translationService.getAvailableLanguages();
-  };
-
-  return {
-    t,
-    language,
-    changeLanguage,
     formatDate,
     formatNumber,
-    formatCurrency,
-    getAvailableLanguages
+    formatCurrency
   };
 };
