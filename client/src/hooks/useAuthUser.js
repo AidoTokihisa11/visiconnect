@@ -36,18 +36,25 @@ export const useAuthUser = () => {
         try {
           // Ne synchroniser que si l'email est présent
           if (userData.email) {
-            await UserAPIService.syncUser({
+            // Use a timeout to prevent infinite loading if sync fails or hangs
+            const syncPromise = UserAPIService.syncUser({
               email: userData.email,
               displayName: userData.displayName,
               firstName: supabaseUser.user_metadata?.first_name,
               lastName: supabaseUser.user_metadata?.last_name,
               avatarUrl: userData.profileImageUrl
             });
+            
+            const timeoutPromise = new Promise((_, reject) => 
+              setTimeout(() => reject(new Error('Sync timeout')), 5000)
+            );
+            
+            await Promise.race([syncPromise, timeoutPromise]);
           } else {
             console.warn('Impossible de synchroniser: email manquant');
           }
         } catch (err) {
-          console.warn('Sync error:', err.message);
+          console.warn('Sync error (non-blocking):', err.message);
         }
         
         if (isMounted) {
