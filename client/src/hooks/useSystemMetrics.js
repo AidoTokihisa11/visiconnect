@@ -141,7 +141,9 @@ export const useSystemMetrics = () => {
   const measureNetworkLatency = async () => {
     const start = performance.now();
     try {
-      await fetch('/api/ping', { method: 'HEAD' });
+      // Utiliser l'origine actuelle pour le ping plutôt qu'un endpoint API inexistant
+      // Cela évite les erreurs 400/404 dans la console
+      await fetch(window.location.origin, { method: 'HEAD', cache: 'no-store' });
       return Math.round(performance.now() - start);
     } catch (error) {
       return 0;
@@ -150,11 +152,25 @@ export const useSystemMetrics = () => {
 
   // Récupérer les métriques du serveur
   const fetchServerMetrics = async () => {
+    // Simuler directement les métriques serveur car il n'y a pas de backend pour les fournir dans cette version
+    // Cela évite les erreurs 400 constants dans la console
+    setServerMetrics({
+      uptime: Date.now() - (Math.random() * 86400000), // Uptime aléatoire
+      responseTime: Math.random() * 100 + 20,
+      activeConnections: Math.floor(Math.random() * 50),
+      cpuUsage: Math.floor(Math.random() * 60) + 10,
+      memoryUsage: Math.floor(Math.random() * 40) + 20,
+      requestsPerSecond: Math.floor(Math.random() * 100)
+    });
+    
+    /* Code original désactivé pour éviter les erreurs 400
     try {
       const response = await fetch('/api/metrics');
       if (response.ok) {
         const data = await response.json();
         setServerMetrics(data);
+      } else {
+        throw new Error('Metrics endpoint error');
       }
     } catch (error) {
       console.log('Server metrics not available, using mock data');
@@ -168,6 +184,7 @@ export const useSystemMetrics = () => {
         networkLatency: Math.random() * 50 + 10
       });
     }
+    */
   };
 
   useEffect(() => {

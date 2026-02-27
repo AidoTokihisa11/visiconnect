@@ -35,8 +35,25 @@ const SupabaseSignupPage = () => {
       return false
     }
 
-    if (formData.password.length < 6) {
-      setError('Le mot de passe doit contenir au moins 6 caractères')
+    // Validation stricte du mot de passe selon la politique Supabase
+    if (formData.password.length < 15) {
+      setError('Le mot de passe doit contenir au moins 15 caractères')
+      return false
+    }
+    if (!/[a-z]/.test(formData.password)) {
+      setError('Le mot de passe doit contenir au moins une lettre minuscule')
+      return false
+    }
+    if (!/[A-Z]/.test(formData.password)) {
+      setError('Le mot de passe doit contenir au moins une lettre majuscule')
+      return false
+    }
+    if (!/[0-9]/.test(formData.password)) {
+      setError('Le mot de passe doit contenir au moins un chiffre')
+      return false
+    }
+    if (!/[!@#$%^&*()_+\-=[\]{};':"|<>?,./`~]/.test(formData.password)) {
+      setError('Le mot de passe doit contenir au moins un caractère spécial')
       return false
     }
 
@@ -187,7 +204,9 @@ const SupabaseSignupPage = () => {
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </PasswordToggle>
             </PasswordWrapper>
-            <PasswordHint>Au moins 6 caractères</PasswordHint>
+            <PasswordHint>
+              Min. 15 caractères, Majuscule, Minuscule, Chiffre, Symbole
+            </PasswordHint>
           </FormGroup>
 
           <FormGroup>
