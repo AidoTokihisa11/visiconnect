@@ -64,6 +64,31 @@ const enTranslations = {
     trustedBy: 'Trusted by over {{count}} companies worldwide'
   },
 
+  homeFeatures: {
+    title: 'Everything for successful meetings',
+    subtitle: 'Powerful features designed for modern teams. Secure, reliable, and easy to use.',
+    video: {
+      title: "HD Video & Audio",
+      text: "Crystal clear video and audio quality with noise suppression and echo cancellation enabled automatically.",
+      items: ["Up to 4k supported", "AI Noise suppression", "VP9 / AV1 Codec"]
+    },
+    security: {
+      title: "Bank-grade Security",
+      text: "End-to-end encryption for all calls. Your conversations remain private and secure at all times.",
+      items: ["E2E Encryption", "GDPR Compliant", "No data stored"]
+    },
+    instant: {
+      title: "Instant Meetings",
+      text: "Start in seconds with a shareable link. No download or installation required for guests.",
+      items: ["1-click links", "No account required", "Mobile compatible"]
+    },
+    collaboration: {
+      title: "Team Collaboration",
+      text: "Simple screen sharing, collaborative whiteboard, and integrated chat to improve your team's productivity.",
+      items: ["Screen sharing", "Whiteboard", "Real-time chat"]
+    }
+  },
+
   features: {
     title: 'Powerful Features',
     subtitle: 'Everything you need for productive meetings',

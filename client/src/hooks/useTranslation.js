@@ -11,6 +11,9 @@ export const useTranslation = () => {
   const getAvailableLanguages = () => [
     { code: 'fr', name: 'Français', flag: '🇫🇷' },
     { code: 'en', name: 'English', flag: '🇺🇸' },
+    { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
+    { code: 'es', name: 'Español', flag: '🇪🇸' },
+    { code: 'ru', name: 'Русский', flag: '🇷🇺' },
   ];
 
   // Helper functions that might be used elsewhere

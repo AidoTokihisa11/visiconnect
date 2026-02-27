@@ -1245,7 +1245,7 @@ export default function HomePageClean() {
                         {feature.text}
                     </FeatureText>
                     <div style={{ marginTop: 'auto', paddingTop: '1.5rem' }}>
-                        {feature.items.map((item, i) => (
+                        {(Array.isArray(feature.items) ? feature.items : []).map((item, i) => (
                             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem', fontSize: '0.875rem', color: COLORS.lightText }}>
                                 <Check size={14} color={feature.color} /> {item}
                             </div>
