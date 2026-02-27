@@ -58,16 +58,6 @@ const AuthCallback = () => {
           return
         }
 
-        // 2. PKCE Flow & Session check
-        // First check if we already have a session (fastest)
-        const { data: { session } } = await supabase.auth.getSession()
-        
-        if (session) {
-          console.log('✅ Session already active')
-          finishAuth()
-          return
-        }
-        
         // If no session yet but we have a code, we need to exchange it
         if (code) {
              console.log('⏳ PKCE Code detected, exchanging for session...')
@@ -82,6 +72,16 @@ const AuthCallback = () => {
              console.log('✅ Session established via code exchange')
              finishAuth()
              return;
+        }
+
+        // 2. PKCE Flow & Session check
+        // First check if we already have a session (fastest)
+        const { data: { session } } = await supabase.auth.getSession()
+        
+        if (session) {
+          console.log('✅ Session already active')
+          finishAuth()
+          return
         }
 
         // If no code and no tokens and no session -> Error
