@@ -38,6 +38,7 @@
     "@excalidraw/excalidraw": "^0.18.0",
     "@livekit/components-react": "^2.9.20",
     "@stripe/stripe-js": "^8.8.0",
+    "convex": "^1.33.1",
     "embla-carousel-autoplay": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
     "i18next": "^25.8.13",

@@ -178,7 +178,8 @@ const MobileMenuOverlay = styled.div`
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 999;
-  display: ${props => props.isOpen ? 'block' : 'none'};
+  display: ${props => props.$isOpen ? 'block' : 'none'};
+  backdrop-filter: blur(4px);
   
   @media (max-width: 640px) {
     top: 64px; /* Match mobile header height */
@@ -195,9 +196,12 @@ const MobileMenuContent = styled.div`
   max-height: calc(100vh - 72px);
   overflow-y: auto;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  width: 100%;
   
   @media (max-width: 640px) {
     max-height: calc(100vh - 64px);
+    padding: 1rem;
+  }
   }
 `;
 
@@ -266,7 +270,7 @@ export default function HeaderClean() {
       </HeaderContainer>
 
       {isMobileMenuOpen && (
-        <MobileMenuOverlay isOpen={isMobileMenuOpen} onClick={() => setIsMobileMenuOpen(false)}>
+        <MobileMenuOverlay $isOpen={isMobileMenuOpen} onClick={() => setIsMobileMenuOpen(false)}>
           <MobileMenuContent onClick={e => e.stopPropagation()}>
             <MobileNavLink to="/features" onClick={() => setIsMobileMenuOpen(false)}>{t('navigation.features')}</MobileNavLink>
             <MobileNavLink to="/pricing" onClick={() => setIsMobileMenuOpen(false)}>{t('navigation.pricing')}</MobileNavLink>
@@ -290,6 +294,9 @@ export default function HeaderClean() {
                     <Button to="/signup" $variant="primary" onClick={() => setIsMobileMenuOpen(false)} style={{ justifyContent: 'center' }}>{t('common.register')}</Button>
                   </>
                 )}
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  <LanguageSelector />
+                </div>
             </div>
           </MobileMenuContent>
         </MobileMenuOverlay>

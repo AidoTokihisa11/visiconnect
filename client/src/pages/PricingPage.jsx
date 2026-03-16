@@ -134,6 +134,10 @@ const PlanCard = styled.div`
   position: relative;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   
+  @media (max-width: 640px) {
+    padding: 1.5rem;
+  }
+  
   ${props => props.featured && css`
     box-shadow: 0 25px 50px -12px rgba(37, 99, 235, 0.25);
     transform: scale(1.05);
@@ -142,6 +146,7 @@ const PlanCard = styled.div`
 
     @media (max-width: 900px) {
       transform: none;
+      z-index: 1;
     }
   `}
 

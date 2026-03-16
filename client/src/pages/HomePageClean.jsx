@@ -387,6 +387,10 @@ const HeroSection = styled.section`
   background-color: ${COLORS.white};
   padding: 5rem 1.5rem;
   border-bottom: 1px solid ${COLORS.border};
+  
+  @media (max-width: 640px) {
+    padding: 3rem 1rem;
+  }
 `;
 
 const HeroContainer = styled.div`
@@ -401,6 +405,10 @@ const HeroContainer = styled.div`
     grid-template-columns: 1fr;
     text-align: center;
     gap: 3rem;
+  }
+  
+  @media (max-width: 640px) {
+    gap: 2rem;
   }
 `;
 
@@ -425,8 +433,16 @@ const HeroHeadline = styled.h1`
     color: ${COLORS.primary};
   }
 
+  @media (max-width: 900px) {
+    font-size: 3rem;
+  }
+
   @media (max-width: 768px) {
     font-size: 2.5rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 2rem;
   }
 `;
 
@@ -764,8 +780,13 @@ const FeaturesGrid = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
+  
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
 `;
 
 
@@ -787,14 +808,23 @@ const TestimonialsSection = styled.section`
   padding: 5rem 1.5rem;
   background-color: ${COLORS.white};
   border-bottom: 1px solid ${COLORS.border};
+  
+  @media (max-width: 640px) {
+    padding: 3rem 1rem;
+  }
 `;
 
 const TestimonialsGrid = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
+  
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
 `;
 
 const TestimonialCard = styled.div`
@@ -1115,11 +1145,11 @@ export default function HomePageClean() {
                 <div style={{ padding: '1rem', display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1rem', height: 'calc(100% - 40px)' }}>
                      <div style={{ background: '#f1f5f9', borderRadius: '6px', height: '100%', position: 'relative', overflow: 'hidden' }}>
                          <div style={{ position: 'absolute', bottom: '10px', left: '10px', background: 'rgba(0,0,0,0.6)', padding: '4px 8px', borderRadius: '4px', color: 'white', fontSize: '10px' }}>
-                           Présentation Q3
+                           {t('ui.presentation')}
                          </div>
                          <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <div style={{ width: '60%', height: '60%', border: '2px dashed #cbd5e1', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                               <span style={{ fontSize: '12px', color: '#94a3b8' }}>Partage d'écran</span>
+                               <span style={{ fontSize: '12px', color: '#94a3b8' }}>{t('ui.screenShare')}</span>
                             </div>
                          </div>
                      </div>
@@ -1136,15 +1166,15 @@ export default function HomePageClean() {
              
              <PlaceholderBadge style={{ top: 'auto', bottom: '50px', left: '-20px', right: 'auto' }}>
                 <Globe size={16} />
-                <span>Réseau Global Optimisé</span>
+                <span>{t('ui.network')}</span>
              </PlaceholderBadge>
 
              <LiveSessionCard>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div style={{ fontWeight: 600, fontSize: '0.875rem' }}>Daily Standup</div>
+                  <div style={{ fontWeight: 600, fontSize: '0.875rem' }}>{t('ui.meeting')}</div>
                   <LiveIndicator>
                     <span></span>
-                    EN DIRECT
+                    {t('ui.live')}
                   </LiveIndicator>
                 </div>
                 
@@ -1156,7 +1186,7 @@ export default function HomePageClean() {
                     <div style={{ backgroundColor: '#f1f5f9', color: '#64748b', fontSize: '10px' }}>+5</div>
                   </AvatarGroup>
                   <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500 }}>
-                    il y a 24 min
+                    {t('ui.time')}
                   </div>
                 </ParticipantRow>
                 

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useAuthUser } from '../hooks/useAuthUser';
+import { useLanguage } from './LanguageContext';
 import { debounce } from 'lodash';
 
 const AdminContext = createContext();
@@ -14,6 +15,7 @@ export const useAdmin = () => {
 
 export const AdminProvider = ({ children }) => {
     const { user } = useAuthUser();
+    const { language } = useLanguage();
     const isAdmin = user?.role === 'admin' || user?.email?.includes('admin'); // Simple check for now
     
     const [isLiveEdit, setIsLiveEdit] = useState(false);
@@ -63,13 +65,18 @@ export const AdminProvider = ({ children }) => {
     };
 
     const updateTranslation = (key, value) => {
-        const newTrans = { ...translations, [key]: value };
+        const langKey = language ? `${language}:${key}` : key;
+        const newTrans = { ...translations, [langKey]: value };
         setTranslations(newTrans);
         localStorage.setItem('visiconnect_translations', JSON.stringify(newTrans));
     };
 
     const t = (key, defaultValue) => {
-        return translations[key] || defaultValue || key;
+        const langKey = language ? `${language}:${key}` : key;
+        // Check for language-specific override first
+        if (translations[langKey]) return translations[langKey];
+        // Don't fall back to global key (old behavior) because it breaks other languages if the global key is in a specific language
+        return defaultValue || key;
     };
 
     return (

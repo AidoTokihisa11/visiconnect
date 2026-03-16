@@ -2,36 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronRight, ChevronLeft, Monitor, Smartphone, Globe } from 'lucide-react';
-
-const SLIDES = [
-  {
-    id: 1,
-    title: "Salles de Réunion Immersives",
-    subtitle: "Ressentez la présence de votre équipe, où qu'elle soit.",
-    description: "Une qualité 4K ultra-fluide qui capture chaque nuance. Notre moteur de rendu s'adapte automatiquement à votre bande passante pour garantir zéro coupure.",
-    image: "https://images.unsplash.com/photo-1531403009284-440f080d1e12?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
-    icon: Monitor,
-    tag: "Expérience Visuelle"
-  },
-  {
-    id: 2,
-    title: "Tableau de Bord Analytique",
-    subtitle: "Données précises pour décisions rapides.",
-    description: "Suivez l'engagement, la qualité des appels et l'utilisation des salles en temps réel. Des graphiques clairs pour comprendre l'activité de votre entreprise.",
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
-    icon: Globe,
-    tag: "Intelligence d'Affaires"
-  },
-  {
-    id: 3,
-    title: "Accessible Partout",
-    subtitle: "Du bureau au café, sans friction.",
-    description: "Une application mobile native qui rivalise avec la version desktop. Rejoignez une réunion en un tap, partagez votre écran et chattez sans compromis.",
-    image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
-    icon: Smartphone,
-    tag: "Mobilité Totale"
-  }
-];
+import { useTranslation } from '../../hooks/useTranslation';
 
 const Wrapper = styled.section`
   padding: 6rem 1.5rem;
@@ -181,7 +152,38 @@ const ImageCard = styled(motion.div)`
 `;
 
 export default function FeaturesCarousel3D() {
+  const { t } = useTranslation();
   const [index, setIndex] = useState(0);
+
+  const SLIDES = [
+    {
+      id: 1,
+      title: t('featuresCarousel.slide1.title'),
+      subtitle: t('featuresCarousel.slide1.subtitle'),
+      description: t('featuresCarousel.slide1.description'),
+      image: "https://images.unsplash.com/photo-1531403009284-440f080d1e12?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
+      icon: Monitor,
+      tag: t('featuresCarousel.slide1.tag')
+    },
+    {
+      id: 2,
+      title: t('featuresCarousel.slide2.title'),
+      subtitle: t('featuresCarousel.slide2.subtitle'),
+      description: t('featuresCarousel.slide2.description'),
+      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
+      icon: Globe,
+      tag: t('featuresCarousel.slide2.tag')
+    },
+    {
+      id: 3,
+      title: t('featuresCarousel.slide3.title'),
+      subtitle: t('featuresCarousel.slide3.subtitle'),
+      description: t('featuresCarousel.slide3.description'),
+      image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
+      icon: Smartphone,
+      tag: t('featuresCarousel.slide3.tag')
+    }
+  ];
 
   const nextSlide = () => {
     setIndex((prev) => (prev + 1) % SLIDES.length);

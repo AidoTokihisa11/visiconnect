@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
+import { useTranslation } from '../../hooks/useTranslation';
 
 const COLORS = {
   primary: 'hsl(var(--primary))',
@@ -68,10 +69,11 @@ const LogoPlaceholder = styled.div`
 `;
 
 const ProofArea = () => {
+    const { t } = useTranslation();
     return (
         <Section>
             <Container>
-                <Label>En phase d'accès anticipé pour les pionniers de la HD</Label>
+                <Label>{t('proofArea.label')}</Label>
                 <LogoGrid>
                     <LogoPlaceholder>
                         <div style={{ width: 24, height: 24, background: '#3b82f6', borderRadius: 4 }} />

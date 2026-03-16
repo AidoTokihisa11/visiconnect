@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
 import { 
     Pencil, Save, Settings, Menu, X, Globe, Layout, 
     Home, Hash, Server, Palette, Move, Shield
@@ -122,13 +123,14 @@ export default function AdminToolbar() {
     const { user } = useAuthUser();
     const { isLiveEdit, toggleLiveEdit, uiConfig, updateUiConfig } = useAdmin();
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const location = useLocation();
     
     // Only verify admin access for render
     // In a real app, this should match backend role checks
     // For now, assume any logged in user on localhost is dev/admin or configure Supabase Role
     const canAccess = user?.role === 'admin' || user?.email?.includes('admin');
 
-    if (!canAccess) return null;
+    if (!canAccess || location.pathname === '/') return null;
 
     return (
         <>

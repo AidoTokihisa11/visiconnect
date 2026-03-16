@@ -47,6 +47,10 @@ const HeroSection = styled.div`
   position: relative;
   overflow: hidden;
 
+  @media (max-width: 640px) {
+    padding: 6rem 1rem 4rem;
+  }
+
   &::before {
     content: '';
     position: absolute;
@@ -136,6 +140,13 @@ const InfoCard = styled.div`
   gap: 1.5rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem;
+  }
 
   &:hover {
     transform: translateY(-4px);

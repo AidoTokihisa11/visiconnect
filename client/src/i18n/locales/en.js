@@ -591,7 +591,48 @@ const enTranslations = {
   tips: 'Tips and tricks',
 
   // Personal description
-  personalDescription: 'Hi! I\'m Théo, I\'m 25 and I\'ve been developing VisioConnect since July 2023. It\'s my video conferencing platform made with React and Node.js. Still in closed beta but it\'s progressing well thanks to feedback from my testers!'
+  personalDescription: 'Hi! I\'m Théo, I\'m 25 and I\'ve been developing VisioConnect since July 2023. It\'s my video conferencing platform made with React and Node.js. Still in closed beta but it\'s progressing well thanks to feedback from my testers!',
+  
+  // New translations for homepage
+  keyStats: {
+    teams: "Beta Teams",
+    native: "Native Validated",
+    latency: "Avg Latency",
+    uptime: "Uptime"
+  },
+  proofArea: {
+    label: "In early access phase for HD pioneers"
+  },
+  featuresCarousel: {
+    slide1: {
+      title: "Immersive Meeting Rooms",
+      subtitle: "Feel your team's presence, wherever they are.",
+      description: "Ultra-smooth 4K quality that captures every nuance. Our rendering engine automatically adapts to your bandwidth efficiently to ensure zero dropouts.",
+      tag: "Visual Experience"
+    },
+    slide2: {
+      title: "Analytical Dashboard",
+      subtitle: "Precise data for quick decisions.",
+      description: "Track engagement, call quality, and room usage in real-time. Clear charts to understand your business activity.",
+      tag: "Business Intelligence"
+    },
+    slide3: {
+      title: "Accessible Everywhere",
+      subtitle: "From office to cafe, frictionlessly.",
+      description: "A native mobile app that rivals the desktop version. Join a meeting with one tap, share your screen, and chat without compromise.",
+      tag: "Total Mobility"
+    }
+  },
+  ui: {
+    presentation: "Q3 Presentation",
+    screenShare: "Screen Share",
+    network: "Optimized Global Network",
+    meeting: "Daily Standup",
+    live: "LIVE",
+    time: "24 min ago",
+    hd: "HD",
+    participants: "8"
+  }
 };
 
 export default enTranslations;

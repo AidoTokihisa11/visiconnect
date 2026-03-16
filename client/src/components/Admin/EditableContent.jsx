@@ -76,7 +76,7 @@ export const EditableText = ({
 
     useEffect(() => {
         setValue(getInitialValue());
-    }, [contentMap, translationKey, t, id]);
+    }, [contentMap, translationKey, t, id, defaultValue]);
 
     if (!isLiveEdit) {
         return (

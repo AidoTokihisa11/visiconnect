@@ -607,7 +607,48 @@ const frTranslations = {
   tips: 'Conseils et astuces',
 
   // Personal description
-  personalDescription: 'Salut ! Moi c\'est Théo, j\'ai 25 ans et je développe VisioConnect depuis juillet 2023. C\'est ma plateforme de visioconférence faite avec React et Node.js. Encore en bêta fermée mais ça avance bien grâce aux retours de mes testeurs !'
+  personalDescription: 'Salut ! Moi c\'est Théo, j\'ai 25 ans et je développe VisioConnect depuis juillet 2023. C\'est ma plateforme de visioconférence faite avec React et Node.js. Encore en bêta fermée mais ça avance bien grâce aux retours de mes testeurs !',
+
+  // Nouveaux ajouts pour la traduction complète de la Homepage
+  keyStats: {
+    teams: "Équipes Beta",
+    native: "Native Validée",
+    latency: "Latence Moyenne",
+    uptime: "Uptime"
+  },
+  proofArea: {
+    label: "En phase d'accès anticipé pour les pionniers de la HD"
+  },
+  featuresCarousel: {
+    slide1: {
+      title: "Salles de Réunion Immersives",
+      subtitle: "Ressentez la présence de votre équipe, où qu'elle soit.",
+      description: "Une qualité 4K ultra-fluide qui capture chaque nuance. Notre moteur de rendu s'adapte automatiquement à votre bande passante pour garantir zéro coupure.",
+      tag: "Expérience Visuelle"
+    },
+    slide2: {
+      title: "Tableau de Bord Analytique",
+      subtitle: "Données précises pour décisions rapides.",
+      description: "Suivez l'engagement, la qualité des appels et l'utilisation des salles en temps réel. Des graphiques clairs pour comprendre l'activité de votre entreprise.",
+      tag: "Intelligence d'Affaires"
+    },
+    slide3: {
+      title: "Accessible Partout",
+      subtitle: "Du bureau au café, sans friction.",
+      description: "Une application mobile native qui rivalise avec la version desktop. Rejoignez une réunion en un tap, partagez votre écran et chattez sans compromis.",
+      tag: "Mobilité Totale"
+    }
+  },
+  ui: {
+    presentation: "Présentation Q3",
+    screenShare: "Partage d'écran",
+    network: "Réseau Global Optimisé",
+    meeting: "Daily Standup",
+    live: "EN DIRECT",
+    time: "il y a 24 min",
+    hd: "HD",
+    participants: "8"
+  }
 };
 
 export default frTranslations;

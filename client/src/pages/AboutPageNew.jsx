@@ -39,6 +39,10 @@ const HeroSection = styled.div`
   position: relative;
   overflow: hidden;
 
+  @media (max-width: 640px) {
+    padding: 6rem 1rem 4rem;
+  }
+
   &::before {
     content: '';
     position: absolute;
@@ -169,6 +173,11 @@ const StatsGrid = styled.div`
   @media (max-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
     gap: 3rem;
+  }
+  
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
   }
 `;
 

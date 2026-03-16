@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Users, MonitorPlay, Zap, Activity } from 'lucide-react';
+import { useTranslation } from '../../hooks/useTranslation';
 
 const COLORS = {
   primary: '#2563eb',    // Blue-600
@@ -75,11 +76,12 @@ const StatLabel = styled.span`
 `;
 
 export default function KeyStats() {
+  const { t } = useTranslation();
   const stats = [
-    { icon: Users, value: "3+", label: "Équipes Beta" },
-    { icon: MonitorPlay, value: "4K", label: "Native Validée" },
-    { icon: Zap, value: "< 50ms", label: "Latence Moyenne" },
-    { icon: Activity, value: "99.9%", label: "Uptime" },
+    { icon: Users, value: "3+", label: t('keyStats.teams') },
+    { icon: MonitorPlay, value: "4K", label: t('keyStats.native') },
+    { icon: Zap, value: "< 50ms", label: t('keyStats.latency') },
+    { icon: Activity, value: "99.9%", label: t('keyStats.uptime') },
   ];
 
   return (
