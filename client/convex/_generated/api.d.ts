@@ -9,6 +9,8 @@
  */
 
 import type * as messages from "../messages.js";
+import type * as notifications from "../notifications.js";
+import type * as whiteboard from "../whiteboard.js";
 
 import type {
   ApiFromModules,
@@ -18,6 +20,8 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   messages: typeof messages;
+  notifications: typeof notifications;
+  whiteboard: typeof whiteboard;
 }>;
 
 /**

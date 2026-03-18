@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Video, Menu, X, User } from 'lucide-react';
 import LanguageSelector from './LanguageSelector';
 // import { ModeToggle } from './mode-toggle';
-import { useSupabaseAuth } from '../contexts/SupabaseAuthContext';
+import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from '../hooks/useTranslation';
 
 const COLORS = {
@@ -215,7 +215,7 @@ const MobileNavLink = styled(Link)`
 `;
 
 export default function HeaderClean() {
-  const { user, signOut } = useSupabaseAuth();
+  const { user, signOut } = useAuth();
   const { t } = useTranslation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 

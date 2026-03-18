@@ -6,7 +6,6 @@ import {
   Trash2, Shield, Search, Bell, Menu, X, Globe, Cpu,
   Wifi, HardDrive, Terminal, AlertTriangle
 } from 'lucide-react';
-import { supabase } from '../config/supabase';
 import { useAuthUser } from '../hooks/useAuthUser';
 import { useSystemMetrics } from '../hooks/useSystemMetrics';
 import UserService from '../services/UserService';

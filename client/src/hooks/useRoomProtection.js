@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useSupabaseAuth } from '../contexts/SupabaseAuthContext';
+import { useAuth } from '../contexts/AuthContext';
 
 export const useRoomProtection = (roomId) => {
-  const { user, session } = useSupabaseAuth();
+  const { user, session } = useAuth();
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -20,7 +20,7 @@ export const useRoomProtection = (roomId) => {
         setIsAuthorized(true);
       } else {
         // Retrieve session if likely just refreshed
-        // But useSupabaseAuth should handle that.
+        // But useAuth should handle that.
         // If really no user, maybe redirect?
         // For this demo, let's allow if they have a "guest" query param or require login
         if (session) {

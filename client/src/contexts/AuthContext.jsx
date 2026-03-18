@@ -1,12 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { 
-  signInWithPopup, 
-  signOut, 
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword 
-} from 'firebase/auth';
-import { auth, googleProvider, githubProvider } from '../config/firebase';
+import React, { createContext, useContext } from 'react';
+import { useUser, useAuth as useClerkAuth, useClerk, useSignIn, useSignUp } from '@clerk/react';
+import { useConvexAuth } from 'convex/react';
 
 const AuthContext = createContext({});
 
@@ -19,117 +13,104 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
+  const { isSignedIn, signOut, setActive } = useClerkAuth();
+  const clerk = useClerk();
+  const { signIn, isLoaded: isSignInLoaded } = useSignIn();
+  const { signUp, isLoaded: isSignUpLoaded } = useSignUp();
+  const { isAuthenticated: isConvexAuthed, isLoading: isConvexLoading } = useConvexAuth();
 
-  useEffect(() => {
-    // Si Firebase n'est pas initialisé correctement (auth est un objet vide ou incomplet)
-    if (!auth || !auth.app) {
-       console.warn("AuthContext: Firebase Auth not initialized. Skipping auth listener.");
-       setLoading(false);
-       return;
-    }
+  const isLoggedIn = !!isSignedIn;
 
-    try {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-          setUser(user);
-          setIsLoggedIn(!!user);
-          setLoading(false);
-        });
-        return unsubscribe;
-    } catch (error) {
-        console.error("AuthContext Error:", error);
-        setLoading(false);
-    }
-  }, []);
+  // Adaptateur pour la compatibilité avec le reste du code
+  const user = clerkUser ? {
+    id: clerkUser.id,
+    email: clerkUser.primaryEmailAddress?.emailAddress,
+    name: clerkUser.fullName || clerkUser.firstName || "User",
+    imageUrl: clerkUser.imageUrl
+  } : null;
 
-  // Connexion avec Google
-  const signInWithGoogle = async () => {
-    if (!auth || !auth.app) return { success: false, error: "Firebase not configured" };
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      return { success: true, user: result.user };
-    } catch (error) {
-      console.error('Erreur connexion Google:', error);
-      return { success: false, error: error.message };
+  // Helper de gestion d'erreur réseau
+  const handleNetworkError = (err) => {
+    if (err.message && (err.message.includes("Failed to fetch") || err.message.includes("Network error"))) {
+      return "Erreur réseau (CORS). Désactivez votre bloqueur de pub (Brave Shields, uBlock) ou videz les cookies de localhost.";
     }
+    return err.errors?.[0]?.message || err.message || "Une erreur est survenue avec l'authentification.";
   };
 
-  // Connexion avec GitHub
-  const signInWithGithub = async () => {
-    if (!auth || !auth.app) return { success: false, error: "Firebase not configured" };
+  // Implémentation réelle de la méthode attendue par tes templates (Google/Github)
+  const signInWithProvider = async (provider) => {
+    if (!isSignInLoaded) return { error: { message: "Clerk n'a pas pu se charger. Désactivez votre bloqueur de pub (Brave Shields, uBlock) pour localhost." } };
     try {
-      const result = await signInWithPopup(auth, githubProvider);
-      return { success: true, user: result.user };
-    } catch (error) {
-      console.error('Erreur connexion GitHub:', error);
-      return { success: false, error: error.message };
-    }
-  };
-
-  // Connexion avec Discord (simulée - Discord nécessite OAuth2 custom)
-  const signInWithDiscord = async () => {
-    // Pour Discord, vous devrez implémenter un flow OAuth2 custom
-    // ou utiliser une solution comme Supabase qui le supporte nativement
-    console.log('Discord auth - À implémenter avec OAuth2 custom');
-    alert('Authentification Discord bientôt disponible');
-    return { success: false, error: 'Discord auth non encore implémenté' };
-  };
-
-  // Connexion email/password
-  const signInWithEmail = async (email, password) => {
-    if (!auth || !auth.app) return { success: false, error: "Firebase not configured" };
-    try {
-      const result = await signInWithEmailAndPassword(auth, email, password);
-      return { success: true, user: result.user };
-    } catch (error) {
-      console.error('Erreur connexion email:', error);
-      return { success: false, error: error.message };
-    }
-  };
-
-  // Inscription email/password
-  const signUpWithEmail = async (email, password) => {
-    if (!auth || !auth.app) return { success: false, error: "Firebase not configured" };
-    try {
-      const result = await createUserWithEmailAndPassword(auth, email, password);
-      return { success: true, user: result.user };
-    } catch (error) {
-      console.error('Erreur inscription email:', error);
-      return { success: false, error: error.message };
-    }
-  };
-
-  // Déconnexion
-  const logout = async () => {
-    if (!auth || !auth.app) return { success: true };
-    try {
-      await signOut(auth);
+      await signIn.authenticateWithRedirect({
+        strategy: `oauth_${provider}`, // ex: "oauth_google"
+        redirectUrl: '/sso-callback',
+        redirectUrlComplete: '/'
+      });
       return { success: true };
-    } catch (error) {
-      console.error('Erreur déconnexion:', error);
-      return { success: false, error: error.message };
+    } catch (err) {
+      console.error(err);
+      return { error: { message: handleNetworkError(err) } };
     }
+  };
+
+  const signInWithGoogle = () => signInWithProvider('google');
+  const signInWithGithub = () => signInWithProvider('github');
+  const signInWithDiscord = () => signInWithProvider('discord');
+
+  const signInWithEmail = async (email, password) => {
+    if (!isSignInLoaded) return { error: { message: "Clerk n'a pas pu se charger. Désactivez votre bloqueur de pub (Brave Shields, uBlock) pour localhost." } };
+    try {
+      const res = await signIn.create({ identifier: email, password });
+      if (res.status === "complete") {
+        await setActive({ session: res.createdSessionId });
+        return { success: true };
+      }
+      return { error: { message: "Information manquante" } };
+    } catch (err) {
+      return { error: { message: handleNetworkError(err) } };
+    }
+  };
+
+  const signUpWithEmail = async (email, password) => {
+    if (!isSignUpLoaded) return { error: { message: "Clerk n'a pas pu se charger. Désactivez votre bloqueur de pub pour localhost." } };
+    try {
+      await signUp.create({ emailAddress: email, password });
+      // L'utilisateur devra vérifier son email, ça dépend de ton Dashboard Clerk
+      return { success: true };
+    } catch (err) {
+      return { error: { message: handleNetworkError(err) } };
+    }
+  };
+
+  const logout = async () => {
+    await signOut();
+    return { success: true };
   };
 
   const value = {
     user,
     isLoggedIn,
-    loading,
+    loading: !(clerkLoaded && !isConvexLoading),
+    signIn: signInWithEmail,   // Alias requis pour les vieilles pages
+    signUp: signUpWithEmail,   // Alias requis pour les vieilles pages
     signInWithGoogle,
     signInWithGithub,
     signInWithDiscord,
+    signInWithProvider,
     signInWithEmail,
     signUpWithEmail,
     logout
   };
 
+  // On bloque seulement le chargement critique (l'utilisateur et la BD) pour éviter une page blanche infinie
+  if (!clerkLoaded || isConvexLoading) {
+    return null;
+  }
+
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   );
 };
-
-export default AuthContext;

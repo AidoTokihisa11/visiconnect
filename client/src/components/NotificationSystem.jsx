@@ -2,7 +2,9 @@ import React, { useState, useEffect, useContext } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, X, Check, AlertTriangle, Info, Zap, Users, Video, MessageSquare, Settings } from 'lucide-react';
-import { SocketContext } from '../contexts/SocketContext';
+import { useQuery, useMutation } from 'convex/react';
+import { api } from '../../convex/_generated/api';
+import { useAuth } from '../contexts/AuthContext';
 
 const slideIn = keyframes`
   from {
@@ -218,158 +220,46 @@ const EmptyState = styled.div`
 `;
 
 const NotificationSystem = () => {
-  const [notifications, setNotifications] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-  const { socket } = useContext(SocketContext);
+  const { user } = useAuth();
 
-  // Notifications prédéfinies pour démonstration
-  const demoNotifications = [
-    {
-      id: 'demo-1',
-      type: 'success',
-      title: 'Connexion établie',
-      message: 'Vous êtes maintenant connecté au serveur',
-      timestamp: new Date(),
-      icon: <Check size={16} />
-    },
-    {
-      id: 'demo-2',
-      type: 'info',
-      title: 'Nouvelle fonctionnalité',
-      message: 'Le partage d\'écran est maintenant disponible',
-      timestamp: new Date(Date.now() - 300000),
+  // On récupère les notifications depuis Convex en temps réel
+  const convexNotifications = useQuery(api.notifications.getByUserId, user?.id ? { userId: user.id } : "skip");
+  const markAsRead = useMutation(api.notifications.markAsRead);
+
+  // État local pour gérer les fermetures rapides depuis l'UI sans attendre la BDD
+  const [localDismissed, setLocalDismissed] = useState(new Set());
+
+  const notifications = (convexNotifications || [])
+    .filter(n => !n.isRead && !localDismissed.has(n._id))
+    .map(n => ({
+      id: n._id,
+      type: n.title.toLowerCase().includes('erreur') ? 'error' : 'info',
+      title: n.title,
+      message: n.message,
+      timestamp: new Date(n.createdAt),
       icon: <Info size={16} />
-    },
-    {
-      id: 'demo-3',
-      type: 'warning',
-      title: 'Qualité réseau',
-      message: 'Connexion instable détectée, qualité réduite',
-      timestamp: new Date(Date.now() - 600000),
-      icon: <AlertTriangle size={16} />
-    }
-  ];
-
-  useEffect(() => {
-    // Ajouter les notifications de démonstration au démarrage
-    setNotifications(demoNotifications);
-
-    // Écouter les événements socket pour les notifications en temps réel
-    if (socket) {
-      socket.on('notification', (notification) => {
-        addNotification(notification);
-      });
-
-      socket.on('user-joined', (user) => {
-        addNotification({
-          type: 'info',
-          title: 'Nouvel utilisateur',
-          message: `${user.name} a rejoint la salle`,
-          icon: <Users size={16} />
-        });
-      });
-
-      socket.on('user-left', (userId) => {
-        addNotification({
-          type: 'warning',
-          title: 'Utilisateur parti',
-          message: 'Un utilisateur a quitté la salle',
-          icon: <Users size={16} />
-        });
-      });
-
-      socket.on('recording-started', (data) => {
-        addNotification({
-          type: 'success',
-          title: 'Enregistrement démarré',
-          message: `Enregistrement démarré par ${data.startedBy}`,
-          icon: <Video size={16} />
-        });
-      });
-
-      socket.on('recording-stopped', (data) => {
-        addNotification({
-          type: 'info',
-          title: 'Enregistrement arrêté',
-          message: `Enregistrement arrêté par ${data.stoppedBy}`,
-          icon: <Video size={16} />
-        });
-      });
-
-      socket.on('message', (message) => {
-        if (document.hidden) { // Notification seulement si l'onglet n'est pas actif
-          addNotification({
-            type: 'info',
-            title: 'Nouveau message',
-            message: `${message.sender}: ${message.content.substring(0, 50)}${message.content.length > 50 ? '...' : ''}`,
-            icon: <MessageSquare size={16} />
-          });
-        }
-      });
-
-      return () => {
-        socket.off('notification');
-        socket.off('user-joined');
-        socket.off('user-left');
-        socket.off('recording-started');
-        socket.off('recording-stopped');
-        socket.off('message');
-      };
-    }
-  }, [socket]);
-
-  // Ajouter des notifications automatiques périodiques
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const randomNotifications = [
-        {
-          type: 'info',
-          title: 'Mise à jour système',
-          message: 'Nouvelles fonctionnalités disponibles',
-          icon: <Zap size={16} />
-        },
-        {
-          type: 'success',
-          title: 'Performance optimisée',
-          message: 'Latence réduite de 15%',
-          icon: <Settings size={16} />
-        },
-        {
-          type: 'info',
-          title: 'Statistiques',
-          message: `${Math.floor(Math.random() * 100)} utilisateurs en ligne`,
-          icon: <Users size={16} />
-        }
-      ];
-
-      const randomNotif = randomNotifications[Math.floor(Math.random() * randomNotifications.length)];
-      addNotification(randomNotif);
-    }, 30000); // Toutes les 30 secondes
-
-    return () => clearInterval(interval);
-  }, []);
+    }));
 
   const addNotification = (notification) => {
-    const newNotification = {
-      id: Date.now() + Math.random(),
-      timestamp: new Date(),
-      ...notification
-    };
-
-    setNotifications(prev => [newNotification, ...prev.slice(0, 9)]); // Garder max 10 notifications
-
-    // Auto-suppression après 5 secondes
-    setTimeout(() => {
-      removeNotification(newNotification.id);
-    }, 5000);
+    // Cette fonction ne sert à rien si on pousse tout sur Convex, mais on la garde pour
+    // la compatibilité UI si d'autres composants tentent de l'appeler.
+    console.log("Nouvelle notification locale :", notification);
   };
 
   const removeNotification = (id) => {
-    setNotifications(prev => prev.filter(notif => notif.id !== id));
+    setLocalDismissed(prev => new Set(prev).add(id));
+    if (typeof id === "string" && !id.startsWith("demo")) {
+      markAsRead({ notificationId: id }).catch(console.error);
+    }
+  };
+
+  const clearAll = () => {
+    notifications.forEach(n => removeNotification(n.id));
   };
 
   const clearAllNotifications = () => {
-    setNotifications([]);
+    clearAll();
   };
 
   const formatTime = (timestamp) => {

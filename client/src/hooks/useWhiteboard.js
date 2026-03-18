@@ -1,66 +1,81 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { getSceneVersion } from '@excalidraw/excalidraw';
+import { useQuery, useMutation } from 'convex/react';
+import { api } from '../../convex/_generated/api';
+import { useAuth } from '../contexts/AuthContext';
 
 export const useWhiteboard = (socket, roomId) => {
+  // socket argument is ignored
+  const { user } = useAuth();
+  
   const [elements, setElements] = useState([]);
   const [appState, setAppState] = useState({});
-  const [collaborators, setCollaborators] = useState(new Map());
   const excalidrawRef = useRef(null);
 
-  // Sync with Socket.io
+  // Queries Convex
+  const whiteboardData = useQuery(api.whiteboard.getWhiteboard, roomId ? { meetingId: roomId } : "skip");
+  const cursorsData = useQuery(api.whiteboard.getCursors, roomId ? { meetingId: roomId } : "skip");
+  
+  // Mutations Convex
+  const updateWhiteboardMutation = useMutation(api.whiteboard.updateWhiteboard);
+  const updateCursorMutation = useMutation(api.whiteboard.updateCursor);
+
+  // Synchronisation entrante (Remote -> Local)
   useEffect(() => {
-    if (!socket || !roomId) return;
+    if (whiteboardData && excalidrawRef.current) {
+        try {
+            const parsedElements = JSON.parse(whiteboardData.elements);
+            const parsedAppState = JSON.parse(whiteboardData.appState);
+            
+            excalidrawRef.current.updateScene({
+                elements: parsedElements,
+                appState: parsedAppState
+            });
+            
+            setElements(parsedElements);
+            setAppState(parsedAppState);
+        } catch (e) {
+            console.error("Failed to parse whiteboard data", e);
+        }
+    }
+  }, [whiteboardData]);
 
-    const handleSceneUpdate = (data) => {
-      if (data.roomId !== roomId) return;
-      
-      // Update local state without triggering another emit
-      if (excalidrawRef.current) {
-         excalidrawRef.current.updateScene({
-            elements: data.elements,
-            appState: data.appState
-         });
-      }
-    };
+  // Synchronisation des curseurs
+  const collaborators = new Map();
+  if (cursorsData) {
+      cursorsData.forEach(cursor => {
+          if (user && cursor.userId !== user.id) {
+            try {
+              collaborators.set(cursor.userId, JSON.parse(cursor.pointer));
+            } catch (e) {}
+          }
+      });
+  }
 
-    const handlePointerUpdate = (data) => {
-        if (data.roomId !== roomId) return;
-        setCollaborators(prev => new Map(prev).set(data.socketId, data.pointer));
-    };
-
-    socket.on('whiteboard-update', handleSceneUpdate);
-    socket.on('cursor-update', handlePointerUpdate);
-
-    return () => {
-      socket.off('whiteboard-update', handleSceneUpdate);
-      socket.off('cursor-update', handlePointerUpdate);
-    };
-  }, [socket, roomId]);
-
+  // Synchronisation sortante (Local -> Remote)
   const onChange = useCallback((newElements, newAppState) => {
-    // Basic throttling or debouncing should be added here in production
-    if (!socket) return;
-    
-    // Only emit if changed (using version check or similar)
-    // For now, simple emit
-    socket.emit('whiteboard-update', {
-      roomId,
-      elements: newElements,
-      appState: newAppState
-    });
+    if (!roomId) return;
     
     setElements(newElements);
     setAppState(newAppState);
-  }, [socket, roomId]);
+
+    // TODO: Add throttling/debouncing to avoid spamming the DB in production
+    updateWhiteboardMutation({
+      meetingId: roomId,
+      elements: JSON.stringify(newElements),
+      appState: JSON.stringify(newAppState)
+    }).catch(console.error);
+    
+  }, [roomId, updateWhiteboardMutation]);
 
   const onPointerUpdate = useCallback((payload) => {
-      if (!socket) return;
-      socket.emit('cursor-update', {
-          roomId,
-          ...payload
-      });
-  }, [socket, roomId]);
-
+      if (!roomId || !user?.id) return;
+      
+      updateCursorMutation({
+          meetingId: roomId,
+          userId: user.id || "anonymous",
+          pointer: JSON.stringify(payload.pointer)
+      }).catch(() => {}); // Catch silent to avoid console spam on rapid movement
+  }, [roomId, user, updateCursorMutation]);
   return {
     elements,
     appState,

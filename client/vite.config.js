@@ -14,20 +14,9 @@ export default defineConfig({
     },
   },
   server: {
-    port: 3002, // Explicitly change to 3002 to avoid conflict with backend on 3001
-    strictPort: false, // If 3002 is taken, try 3003
+    port: 5173, 
+    strictPort: true, 
     open: true,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:5000',
-        changeOrigin: true,
-        secure: false,
-      },
-      '/socket.io': {
-        target: 'http://localhost:5000',
-        ws: true,
-      },
-    },
   },
   build: {
     outDir: 'build',

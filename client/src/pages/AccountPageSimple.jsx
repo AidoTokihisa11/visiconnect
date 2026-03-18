@@ -1,503 +1,767 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Edit3,
-  Save,
-  X
+  User, Camera, Mail, Building, Briefcase, 
+  MapPin, Link as LinkIcon, Save, X, Phone,
+  Loader2, LogOut, Shield, Menu
 } from 'lucide-react';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import { useUserProfile } from '../hooks/useUserProfile';
-import UserAPIService from '../services/UserAPIService';
+import { useClerk, useUser } from '@clerk/react';
+import { useNavigate } from 'react-router-dom';
 
-const COLORS = {
-  primary: '#2563eb',    // Blue 600
-  secondary: '#475569',  // Slate 600
-  dark: '#0f172a',       // Slate 900
-  text: '#334155',       // Slate 700
-  lightText: '#64748b',  // Slate 500
-  background: '#f8fafc', // Slate 50
-  white: '#ffffff',
-  border: '#e2e8f0',     // Slate 200
-  success: '#16a34a',    // Green 600
-};
-
-const Container = styled.div`
+const PageWrapper = styled.div`
   min-height: 100vh;
-  background-color: ${COLORS.background};
-  color: ${COLORS.text};
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  background-color: #f8fafc; /* Fond clair */
+  color: #334155; /* Texte foncé pour lisibilité */
   display: flex;
   flex-direction: column;
 `;
 
-const Content = styled.div`
+const ContentContainer = styled.main`
   flex: 1;
-  position: relative;
-  z-index: 1;
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 2rem 1rem;
   width: 100%;
+
+  @media (min-width: 768px) {
+    padding: 3rem 1.5rem;
+  }
 `;
 
-const Header = styled.div`
-  text-align: center;
-  margin-bottom: 3rem;
+const HeaderSection = styled.div`
+  margin-bottom: 2rem;
+  text-align: left;
+
+  @media (min-width: 768px) {
+    margin-bottom: 2.5rem;
+  }
 `;
 
 const Title = styled.h1`
-  font-size: 3rem;
+  font-size: 2rem;
   font-weight: 800;
-  color: ${COLORS.dark};
-  margin-bottom: 1rem;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+
+  @media (min-width: 768px) {
+    font-size: 2.5rem;
+  }
 `;
 
 const Subtitle = styled.p`
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: #64748b;
-  max-width: 600px;
-  margin: 0 auto;
-`;
 
-const ProfileSection = styled(motion.div)`
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(59, 130, 246, 0.1);
-  border-radius: 20px;
-  padding: 2rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.05);
-`;
-
-const ProfileHeader = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  margin-bottom: 2rem;
-`;
-
-const Avatar = styled.div`
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #2563eb, #06b6d4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 2.5rem;
-  font-weight: bold;
-  position: relative;
-  
-  img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
+  @media (min-width: 768px) {
+    font-size: 1.1rem;
   }
 `;
 
-const ProfileInfo = styled.div`
-  flex: 1;
+const DashboardGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  align-items: start;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 260px 1fr;
+    gap: 2rem;
+  }
 `;
 
-const ProfileName = styled.h2`
-  font-size: 2rem;
-  font-weight: 700;
-  color: #1e293b;
-  margin-bottom: 0.5rem;
+const Card = styled(motion.div)`
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05); /* Ombre plus douce et moderne */
 `;
 
-const ProfileEmail = styled.p`
-  font-size: 1.1rem;
-  color: #64748b;
-  margin-bottom: 1rem;
-`;
-
-const ProfileStats = styled.div`
+const CardHeader = styled.div`
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
   display: flex;
-  gap: 2rem;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8fafc;
 `;
 
-const StatItem = styled.div`
-  text-align: center;
-`;
-
-const StatValue = styled.div`
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #2563eb;
-`;
-
-const StatLabel = styled.div`
-  font-size: 0.9rem;
-  color: #64748b;
-`;
-
-const EditButton = styled(motion.button)`
-  background: linear-gradient(135deg, #2563eb, #06b6d4);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  padding: 12px 24px;
-  font-size: 1rem;
+const CardTitle = styled.h2`
+  font-size: 1.15rem;
   font-weight: 600;
-  cursor: pointer;
+  color: #0f172a;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  
+`;
+
+const CardBody = styled.div`
+  padding: 2rem;
+
+  @media (max-width: 768px) {
+    padding: 1.25rem;
+`;
+
+/* Navigation Sidebar Styles */
+const MobileNavToggle = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 1rem 1.25rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  color: #0f172a;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  transition: all 0.2s ease;
+
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+    background: #f8fafc;
+    border-color: #cbd5e1;
+  }
+
+  @media (min-width: 1024px) {
+    display: none;
   }
 `;
 
-const FormSection = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
+const NavMenu = styled.nav`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  
+  @media (max-width: 1023px) {
+    display: ${props => (props.$isOpen ? 'flex' : 'none')};
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 `;
 
+const NavItem = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  background: \${props => props.$active ? '#eff6ff' : 'transparent'};
+  color: \${props => props.$active ? '#2563eb' : '#475569'};
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-left: 3px solid \${props => props.$active ? '#2563eb' : 'transparent'};
+
+  &:hover {
+    background: ${props => props.$active ? '#eff6ff' : '#f8fafc'};
+    color: ${props => props.$active ? '#2563eb' : '#0f172a'};
+    transform: translateX(4px);
+  }
+`;
+
+/* Form Styles */
 const FormGroup = styled.div`
-  margin-bottom: 1.5rem;
+  margin-bottom: 20px;
 `;
 
 const Label = styled.label`
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
   font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: #1e293b;
-  font-size: 0.95rem;
+  color: #374151;
+  margin-bottom: 8px;
+
+  svg {
+    color: #2563eb;
+  }
+`;
+
+const InputWrapper = styled.div`
+  position: relative;
+  width: 100%;
 `;
 
 const Input = styled.input`
   width: 100%;
   padding: 12px 16px;
-  border: 2px solid rgba(59, 130, 246, 0.1);
-  border-radius: 12px;
-  font-size: 1rem;
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
-  
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.2s;
+  background-color: #ffffff;
+  color: #111827;
+
   &:focus {
     outline: none;
     border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  }
+
+  &::placeholder {
+    color: #9ca3af;
+  }
+
+  &:disabled {
+    background-color: #f3f4f6;
+    color: #6b7280;
+    cursor: not-allowed;
   }
 `;
 
 const TextArea = styled.textarea`
   width: 100%;
   padding: 12px 16px;
-  border: 2px solid rgba(59, 130, 246, 0.1);
-  border-radius: 12px;
-  font-size: 1rem;
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
-  min-height: 100px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.2s;
+  background-color: #ffffff;
+  color: #111827;
+  min-height: 120px;
   resize: vertical;
-  
+
   &:focus {
     outline: none;
     border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  }
+
+  &::placeholder {
+    color: #9ca3af;
   }
 `;
 
-const LoadingMessage = styled.div`
-  text-align: center;
-  padding: 3rem;
-  font-size: 1.2rem;
-  color: #64748b;
+const ButtonsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 32px;
+
+  @media (min-width: 640px) {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
 `;
 
-const ErrorMessage = styled.div`
-  background: #fee2e2;
-  color: #dc2626;
-  padding: 1rem;
-  border-radius: 12px;
-  margin-bottom: 2rem;
-  text-align: center;
+const Button = styled(motion.button)`
+  background-color: ${props => props.$variant === 'secondary' ? '#ffffff' : '#2563eb'};
+  color: ${props => props.$variant === 'secondary' ? '#374151' : 'white'};
+  border: ${props => props.$variant === 'secondary' ? '2px solid #e5e7eb' : 'none'};
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+
+  @media (min-width: 640px) {
+    width: auto;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: ${props => props.$variant === 'secondary' ? '#f9fafb' : '#1d4ed8'};
+    transform: translateY(-2px);
+    box-shadow: ${props => props.$variant === 'secondary' ? 'none' : '0 4px 12px rgba(37, 99, 235, 0.2)'};
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 `;
 
-const SuccessMessage = styled.div`
-  background: #d1fae5;
-  color: #065f46;
-  padding: 1rem;
-  border-radius: 12px;
+/* Profile Picture Upload */
+const ProfilePictureSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
   margin-bottom: 2rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid #e2e8f0;
   text-align: center;
+
+  @media (min-width: 640px) {
+    flex-direction: row;
+    text-align: left;
+  }
+`;
+
+const AvatarContainer = styled(motion.div)`
+  position: relative;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  border: 4px solid #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  flex-shrink: 0;
+  cursor: pointer;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .fallback {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2563eb;
+  }
+`;
+
+const UploadButton = styled.label`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #2563eb;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 3px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  
+  &:hover {
+    background: #1d4ed8;
+    transform: scale(1.05);
+  }
+  
+  input {
+    display: none;
+  }
+`;
+
+const ProfilePictureInfo = styled.div`
+  flex: 1;
+  h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #0f172a;
+  }
+  p {
+    font-size: 0.9rem;
+    color: #64748b;
+  }
+`;
+
+// Helper component for notifications
+const Notification = styled(motion.div)`
+  position: fixed;
+  bottom: 2rem;
+  right: 1rem;
+  left: 1rem;
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  background: \${props => props.type === 'error' ? '#ef4444' : '#10b981'};
+  color: white;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+
+  @media (min-width: 640px) {
+    right: 2rem;
+    left: auto;
+    justify-content: flex-start;
+  }
 `;
 
 const AccountPageSimple = () => {
-  const { 
-    userProfile, 
-    loading, 
-    error,
-    updateProfile
-  } = useUserProfile();
-
-  const [isEditing, setIsEditing] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState('');
+  const { userProfile, loading, updateProfile } = useUserProfile();
+  const { signOut } = useClerk();
+  const { user } = useUser();
+  const navigate = useNavigate();
+  
+  const [activeTab, setActiveTab] = useState('profile');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [notification, setNotification] = useState(null);
+  
   const [formData, setFormData] = useState({
     displayName: '',
-    firstName: '',
-    lastName: '',
+    bio: '',
     phone: '',
     company: '',
     jobTitle: '',
-    bio: '',
     location: '',
     website: ''
   });
 
-  // Mettre à jour le formulaire quand les données arrivent
   useEffect(() => {
-    if (userProfile) {
+    if (userProfile && !loading) {
       setFormData({
-        displayName: userProfile.displayName || '',
-        firstName: userProfile.firstName || '',
-        lastName: userProfile.lastName || '',
+        displayName: userProfile.displayName || user?.fullName || '',
+        bio: userProfile.bio || '',
         phone: userProfile.phone || '',
         company: userProfile.company || '',
         jobTitle: userProfile.jobTitle || '',
-        bio: userProfile.bio || '',
         location: userProfile.location || '',
         website: userProfile.website || ''
       });
     }
-  }, [userProfile]);
+  }, [userProfile, loading, user]);
 
-  const handleInputChange = (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
+  const showNotification = (message, type = 'success') => {
+    setNotification({ message, type });
+    setTimeout(() => setNotification(null), 3000);
   };
 
-  const handleSave = async () => {
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSave = async (e) => {
+    e.preventDefault();
+    setIsSaving(true);
     try {
-      setSaving(true);
-      setMessage('');
+      if (user) {
+        await user.update({
+          firstName: formData.displayName.split(' ')[0] || '',
+          lastName: formData.displayName.split(' ').slice(1).join(' ') || ''
+        });
+      }
       
       await updateProfile(formData);
-      
-      setMessage('Profil mis à jour avec succès !');
-      setIsEditing(false);
-      
-      // Effacer le message après 3 secondes
-      setTimeout(() => setMessage(''), 3000);
-      
+      showNotification('Profil mis à jour avec succès !');
     } catch (error) {
-      console.error('Erreur sauvegarde:', error);
-      setMessage('Erreur lors de la sauvegarde: ' + error.message);
+      console.error('Update error:', error);
+      showNotification('Erreur lors de la sauvegarde.', 'error');
     } finally {
-      setSaving(false);
+      setIsSaving(false);
     }
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
   };
 
   const getInitials = (name) => {
     if (!name) return 'U';
-    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+    return name.substring(0, 2).toUpperCase();
   };
 
   if (loading) {
     return (
-      <Container>
+      <PageWrapper>
         <HeaderClean />
-        <Content>
-          <LoadingMessage>Chargement de votre profil...</LoadingMessage>
-        </Content>
+        <ContentContainer style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Loader2 className="animate-spin" size={48} color="#2563eb" />
+        </ContentContainer>
         <FooterClean />
-      </Container>
+      </PageWrapper>
     );
   }
 
-  const stats = userProfile ? UserAPIService.formatUserStats(userProfile.stats) : [];
+  const renderProfileTab = () => (
+    <motion.form 
+      initial={{ opacity: 0, y: 10 }} 
+      animate={{ opacity: 1, y: 0 }} 
+      onSubmit={handleSave}
+    >
+      <ProfilePictureSection>
+        <AvatarContainer whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 300 }}>
+          {user?.imageUrl ? (
+            <img src={user.imageUrl} alt="Profile" />
+          ) : (
+            <div className="fallback">{getInitials(formData.displayName)}</div>
+          )}
+          <UploadButton>
+            <Camera size={14} />
+            <input type="file" accept="image/*" disabled title="Géré par Clerk" />
+          </UploadButton>
+        </AvatarContainer>
+        <ProfilePictureInfo>
+          <h3>Photo de profil</h3>
+          <p>Un avatar est généré automatiquement ou récupéré via votre fournisseur d'authentification (Google, GitHub, etc).</p>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.75rem', padding: '0.4rem 0.75rem', background: '#f1f5f9', borderRadius: '2rem', fontSize: '0.8rem', color: '#475569', fontWeight: '500' }}>
+            <Shield size={14} color="#2563eb" /> Géré de manière sécurisée par Clerk
+          </div>
+        </ProfilePictureInfo>
+      </ProfilePictureSection>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+        <FormGroup>
+          <Label><User size={18} /> Pseudo / Nom d'affichage</Label>
+          <InputWrapper>
+            <Input 
+              name="displayName"
+              value={formData.displayName}
+              onChange={handleInputChange}
+              placeholder="Ex: TheoG"
+            />
+          </InputWrapper>
+        </FormGroup>
+
+        <FormGroup>
+          <Label><Mail size={18} /> Adresse Email (Lecture seule)</Label>
+          <InputWrapper>
+            <Input 
+              type="email"
+              value={user?.primaryEmailAddress?.emailAddress || ''}
+              disabled
+            />
+          </InputWrapper>
+        </FormGroup>
+
+        <FormGroup>
+          <Label><Phone size={18} /> Téléphone</Label>
+          <InputWrapper>
+            <Input 
+              name="phone"
+              value={formData.phone}
+              onChange={handleInputChange}
+              placeholder="+33 6 12 34 56 78"
+            />
+          </InputWrapper>
+        </FormGroup>
+        
+        <FormGroup>
+          <Label><MapPin size={18} /> Localisation</Label>
+          <InputWrapper>
+            <Input 
+              name="location"
+              value={formData.location}
+              onChange={handleInputChange}
+              placeholder="Paris, France"
+            />
+          </InputWrapper>
+        </FormGroup>
+
+        <FormGroup>
+          <Label><Building size={18} /> Entreprise</Label>
+          <InputWrapper>
+            <Input 
+              name="company"
+              value={formData.company}
+              onChange={handleInputChange}
+              placeholder="Nom de l'entreprise"
+            />
+          </InputWrapper>
+        </FormGroup>
+
+        <FormGroup>
+          <Label><Briefcase size={18} /> Poste / Profession</Label>
+          <InputWrapper>
+            <Input 
+              name="jobTitle"
+              value={formData.jobTitle}
+              onChange={handleInputChange}
+              placeholder="Développeur, CEO..."
+            />
+          </InputWrapper>
+        </FormGroup>
+      </div>
+      
+      <FormGroup style={{ marginTop: '0.5rem' }}>
+        <Label><LinkIcon size={18} /> Site Web</Label>
+        <InputWrapper>
+          <Input 
+            name="website"
+            value={formData.website}
+            onChange={handleInputChange}
+            placeholder="https://mon-site.fr"
+          />
+        </InputWrapper>
+      </FormGroup>
+
+      <FormGroup>
+        <Label>Description (Bio)</Label>
+        <TextArea 
+          name="bio"
+          value={formData.bio}
+          onChange={handleInputChange}
+          placeholder="Parlez de vous, vos compétences, vos passions..."
+        />
+        <p style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '0.5rem' }}>
+          Apparaît sur votre profil public si vous en avez un.
+        </p>
+      </FormGroup>
+
+      <ButtonsContainer>
+        <Button
+          type="button"
+          $variant="secondary"
+          whileTap={{ scale: 0.98 }}
+          onClick={() => {
+             setFormData(prev => ({...prev, displayName: user?.fullName || ''}));
+          }}
+        >
+          Annuler
+        </Button>
+        <Button 
+          type="submit" 
+          disabled={isSaving}
+          whileTap={{ scale: 0.98 }}
+        >
+          {isSaving ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />}
+          {isSaving ? 'Enregistrement...' : 'Enregistrer'}
+        </Button>
+      </ButtonsContainer>
+    </motion.form>
+  );
 
   return (
-    <Container>
+    <PageWrapper>
       <HeaderClean />
-      <Content>
-        <Header>
-          <Title>Mon Profil</Title>
-          <Subtitle>Gérez vos informations personnelles et vos préférences</Subtitle>
-        </Header>
-
-        {message && (
-          message.includes('succès') ? 
-            <SuccessMessage>{message}</SuccessMessage> :
-            <ErrorMessage>{message}</ErrorMessage>
-        )}
-
-        {error && <ErrorMessage>Erreur: {error}</ErrorMessage>}
-
-        <ProfileSection
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+      <ContentContainer>
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          transition={{ duration: 0.5 }}
         >
-          <ProfileHeader>
-            <Avatar>
-              {userProfile?.avatarUrl ? (
-                <img src={userProfile.avatarUrl} alt="Avatar" />
-              ) : (
-                getInitials(userProfile?.displayName || userProfile?.email)
-              )}
-            </Avatar>
-            
-            <ProfileInfo>
-              <ProfileName>
-                {userProfile?.displayName || userProfile?.email?.split('@')[0] || 'Utilisateur'}
-              </ProfileName>
-              <ProfileEmail>{userProfile?.email}</ProfileEmail>
-              
-              {stats.length > 0 && (
-                <ProfileStats>
-                  {stats.slice(0, 3).map((stat, index) => (
-                    <StatItem key={index}>
-                      <StatValue>{stat.value}</StatValue>
-                      <StatLabel>{stat.label}</StatLabel>
-                    </StatItem>
-                  ))}
-                </ProfileStats>
-              )}
-            </ProfileInfo>
-            
-            <EditButton
-              onClick={() => setIsEditing(!isEditing)}
-              disabled={saving}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              {isEditing ? <X size={18} /> : <Edit3 size={18} />}
-              {isEditing ? 'Annuler' : 'Modifier'}
-            </EditButton>
-          </ProfileHeader>
+          <HeaderSection>
+            <Title>Tableau de bord</Title>
+            <Subtitle>Gérez votre profil et vos préférences de compte.</Subtitle>
+          </HeaderSection>
+        </motion.div>
 
-          {isEditing && (
-            <FormSection>
-              <div>
-                <FormGroup>
-                  <Label>Nom d'affichage</Label>
-                  <Input
-                    type="text"
-                    value={formData.displayName}
-                    onChange={(e) => handleInputChange('displayName', e.target.value)}
-                    placeholder="Votre nom d'affichage"
-                  />
-                </FormGroup>
-
-                <FormGroup>
-                  <Label>Prénom</Label>
-                  <Input
-                    type="text"
-                    value={formData.firstName}
-                    onChange={(e) => handleInputChange('firstName', e.target.value)}
-                    placeholder="Votre prénom"
-                  />
-                </FormGroup>
-
-                <FormGroup>
-                  <Label>Nom</Label>
-                  <Input
-                    type="text"
-                    value={formData.lastName}
-                    onChange={(e) => handleInputChange('lastName', e.target.value)}
-                    placeholder="Votre nom"
-                  />
-                </FormGroup>
-
-                <FormGroup>
-                  <Label>Téléphone</Label>
-                  <Input
-                    type="tel"
-                    value={formData.phone}
-                    onChange={(e) => handleInputChange('phone', e.target.value)}
-                    placeholder="+33 6 12 34 56 78"
-                  />
-                </FormGroup>
+        <DashboardGrid>
+          {/* Sidebar */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            <MobileNavToggle onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <Menu size={20} color="#2563eb" />
+                <span>{activeTab === 'profile' ? 'Mon Profil' : 'Sécurité & Connexion'}</span>
               </div>
+              <span style={{ fontSize: '0.8rem', color: '#64748b', background: '#f1f5f9', padding: '0.2rem 0.5rem', borderRadius: '1rem' }}>Menu</span>
+            </MobileNavToggle>
 
-              <div>
-                <FormGroup>
-                  <Label>Entreprise</Label>
-                  <Input
-                    type="text"
-                    value={formData.company}
-                    onChange={(e) => handleInputChange('company', e.target.value)}
-                    placeholder="Nom de votre entreprise"
-                  />
-                </FormGroup>
+            <Card style={{ padding: '0.5rem' }}>
+              <NavMenu $isOpen={isMobileMenuOpen}>
+                <NavItem
+                  $active={activeTab === 'profile'}
+                  onClick={() => { setActiveTab('profile'); setIsMobileMenuOpen(false); }}
+                >
+                  <User size={20} /> Mon Profil
+                </NavItem>
+                <NavItem
+                  $active={activeTab === 'security'}
+                  onClick={() => { setActiveTab('security'); setIsMobileMenuOpen(false); }}
+                >
+                  <Shield size={20} /> Sécurité & Connexion
+                </NavItem>
+                <div style={{ height: '1px', background: '#e2e8f0', margin: '0.5rem 0' }} />
+                <NavItem onClick={handleSignOut} style={{ color: '#ef4444', borderLeftColor: 'transparent' }}>
+                  <LogOut size={20} /> Déconnexion
+                </NavItem>
+              </NavMenu>
+            </Card>
+          </motion.div>
 
-                <FormGroup>
-                  <Label>Poste</Label>
-                  <Input
-                    type="text"
-                    value={formData.jobTitle}
-                    onChange={(e) => handleInputChange('jobTitle', e.target.value)}
-                    placeholder="Votre poste"
-                  />
-                </FormGroup>
-
-                <FormGroup>
-                  <Label>Localisation</Label>
-                  <Input
-                    type="text"
-                    value={formData.location}
-                    onChange={(e) => handleInputChange('location', e.target.value)}
-                    placeholder="Ville, Pays"
-                  />
-                </FormGroup>
-
-                <FormGroup>
-                  <Label>Site web</Label>
-                  <Input
-                    type="url"
-                    value={formData.website}
-                    onChange={(e) => handleInputChange('website', e.target.value)}
-                    placeholder="https://votre-site.com"
-                  />
-                </FormGroup>
-              </div>
-
-              <div style={{ gridColumn: '1 / -1' }}>
-                <FormGroup>
-                  <Label>Biographie</Label>
-                  <TextArea
-                    value={formData.bio}
-                    onChange={(e) => handleInputChange('bio', e.target.value)}
-                    placeholder="Parlez-nous de vous..."
-                  />
-                </FormGroup>
-
-                <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-                  <EditButton
-                    onClick={handleSave}
-                    disabled={saving}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+          {/* Main Form Area */}
+          <Card
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <CardHeader>
+              <CardTitle>
+                {activeTab === 'profile' ? 'Informations Personnelles' : 'Sécurité du compte'}
+              </CardTitle>
+            </CardHeader>
+            <CardBody>
+              <AnimatePresence mode="wait">
+                {activeTab === 'profile' ? (
+                  <motion.div
+                    key="profile"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    <Save size={18} />
-                    {saving ? 'Sauvegarde...' : 'Sauvegarder'}
-                  </EditButton>
+                    {renderProfileTab()}
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="security"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                <div style={{ textAlign: 'center', padding: '3rem 1rem' }}>
+                  <motion.div
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ type: "spring", stiffness: 200, delay: 0.1 }}
+                  >
+                    <Shield size={64} color="#2563eb" style={{ margin: '0 auto 1.5rem auto', opacity: 0.9 }} />
+                  </motion.div>
+                  <h3 style={{ fontSize: '1.5rem', fontWeight: '700', marginBottom: '1rem', color: '#0f172a' }}>
+                    Sécurité gérée par Clerk
+                  </h3>
+                  <p style={{ color: '#64748b', maxWidth: '450px', margin: '0 auto', lineHeight: '1.6', fontSize: '1.05rem' }}>
+                    La sécurité de votre compte (mot de passe, authentification multi-facteurs) est gérée de manière totalement sécurisée et transparente par notre fournisseur d'identité partenaire.
+                  </p>
                 </div>
-              </div>
-            </FormSection>
-          )}
-        </ProfileSection>
-      </Content>
+                  </motion.div>
+              )}
+            </AnimatePresence>
+            </CardBody>
+          </Card>
+        </DashboardGrid>
+      </ContentContainer>
       
       <FooterClean />
-    </Container>
+      
+      <AnimatePresence>
+        {notification && (
+          <Notification
+            type={notification.type}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+          >
+            {notification.message}
+          </Notification>
+        )}
+      </AnimatePresence>
+    </PageWrapper>
   );
 };
 
 export default AccountPageSimple;
+

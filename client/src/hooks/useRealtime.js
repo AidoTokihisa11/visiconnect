@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import RealtimeService from '../services/RealtimeService'
-import { useSupabaseAuth } from '../contexts/SupabaseAuthContext'
+import { useAuth } from '../contexts/AuthContext'
 
 /**
  * useRealtime Hook
@@ -11,7 +11,7 @@ import { useSupabaseAuth } from '../contexts/SupabaseAuthContext'
  * @returns {Object} État et méthodes pour la communication en temps réel
  */
 export const useRealtime = (meetingId, enabled = true) => {
-  const { user, userProfile } = useSupabaseAuth()
+  const { user, userProfile } = useAuth()
   const [participants, setParticipants] = useState([])
   const [messages, setMessages] = useState([])
   const [isConnected, setIsConnected] = useState(false)
@@ -228,7 +228,7 @@ export const useRealtime = (meetingId, enabled = true) => {
  * @returns {Object} État de présence
  */
 export const usePresence = (meetingId) => {
-  const { user, userProfile } = useSupabaseAuth()
+  const { user, userProfile } = useAuth()
   const [participants, setParticipants] = useState([])
   const [isOnline, setIsOnline] = useState(false)
 
@@ -278,7 +278,7 @@ export const usePresence = (meetingId) => {
  * @returns {Object} Messages et méthode d'envoi
  */
 export const useMessages = (meetingId) => {
-  const { userProfile } = useSupabaseAuth()
+  const { userProfile } = useAuth()
   const [messages, setMessages] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 

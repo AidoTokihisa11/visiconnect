@@ -1,110 +1,11 @@
-import { useState, useEffect } from 'react';
-import { supabase } from '../config/supabase';
-import UserService from '../services/UserService';
-import UserAPIService from '../services/UserAPIService';
+import { useAuth } from '../contexts/AuthContext';
 
 export const useAuthUser = () => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    const checkAuthState = async () => {
-      try {
-        const { data: { user: supabaseUser }, error } = await supabase.auth.getUser();
-        
-        if (error || !supabaseUser) {
-          if (isMounted) {
-            const savedUser = UserService.getUser();
-            setUser(savedUser);
-            setLoading(false);
-          }
-          return;
-        }
-
-        const userData = {
-          id: supabaseUser.id,
-          email: supabaseUser.email,
-          displayName: supabaseUser.user_metadata?.display_name || supabaseUser.email?.split('@')[0] || 'Utilisateur',
-          profileImageUrl: supabaseUser.user_metadata?.avatar_url || null,
-          isEmailVerified: !!supabaseUser.email_confirmed_at
-        };
-
-        UserService.saveUser(userData);
-        
-        try {
-          // Ne synchroniser que si l'email est présent
-          if (userData.email) {
-            // Use a timeout to prevent infinite loading if sync fails or hangs
-            const syncPromise = UserAPIService.syncUser({
-              email: userData.email,
-              displayName: userData.displayName,
-              firstName: supabaseUser.user_metadata?.first_name,
-              lastName: supabaseUser.user_metadata?.last_name,
-              avatarUrl: userData.profileImageUrl
-            });
-            
-            const timeoutPromise = new Promise((_, reject) => 
-              setTimeout(() => reject(new Error('Sync timeout')), 5000)
-            );
-            
-            await Promise.race([syncPromise, timeoutPromise]);
-          } else {
-            console.warn('Impossible de synchroniser: email manquant');
-          }
-        } catch (err) {
-          console.warn('Sync error (non-blocking):', err.message);
-        }
-        
-        if (isMounted) {
-          setUser(userData);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error('Auth error:', error);
-        if (isMounted) {
-          setUser(null);
-          setLoading(false);
-        }
-      }
-    };
-
-    checkAuthState();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === 'SIGNED_OUT') {
-        UserService.clearUser();
-        if (isMounted) { setUser(null); setLoading(false); }
-      } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-        checkAuthState();
-      }
-    });
-
-    const handleStorageChange = () => checkAuthState();
-    const handleUserUpdated = (evt) => {
-      if (evt?.detail === null && isMounted) {
-        setUser(null);
-        setLoading(false);
-      } else {
-        checkAuthState();
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('userUpdated', handleUserUpdated);
-
-    return () => {
-      isMounted = false;
-      subscription.unsubscribe();
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('userUpdated', handleUserUpdated);
-    };
-  }, []);
+  const { user, loading } = useAuth();
 
   const refreshUser = () => {
-    setLoading(true);
-    window.dispatchEvent(new Event('storage'));
+    // Dans le système Convex (ou mock), la réactivité est automatique.
+    console.log("refreshUser appelé");
   };
 
   return { user, loading, refreshUser };

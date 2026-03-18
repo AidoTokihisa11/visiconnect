@@ -1,0 +1,9 @@
+VITE_LIVEKIT_WS_URL=wss://visioconnect-g76h75i2.livekit.cloud
+VITE_API_URL=http://localhost:3001
+VITE_SOCKET_URL=http://localhost:3001
+VITE_SUPABASE_URL=https://jhlvpxtvtcuwkhdqvyhu.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpobHZweHR2dGN1d2toZHF2eWh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkzNDc5ODcsImV4cCI6MjA3NDkyMzk4N30.qZkWE2dg1Qlmx1Yt2V8tWc363KSqtLAITGNSPyBLTbs
+VITE_CLERK_PUBLISHABLE_KEY=pk_test_Y3Jpc3AtbGlvbi0zNy5jbGVyay5hY2NvdW50cy5kZXYk
+CONVEX_DEPLOYMENT=dev:hearty-malamute-134
+VITE_CONVEX_URL=https://hearty-malamute-134.eu-west-1.convex.cloud
+VITE_CONVEX_SITE_URL=https://hearty-malamute-134.eu-west-1.convex.site

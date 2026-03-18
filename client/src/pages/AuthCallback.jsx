@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { supabase } from '../config/supabase'
 import styled from 'styled-components'
 
 const AuthCallback = () => {
@@ -14,99 +13,16 @@ const AuthCallback = () => {
         console.log('✅ Auth callback successful')
         const redirectTo = sessionStorage.getItem('auth_redirect') || '/'
         sessionStorage.removeItem('auth_redirect')
-        
-        // Short delay to show success state
+
         setTimeout(() => {
             navigate(redirectTo, { replace: true })
         }, 500)
-        setProcessing(false) // Stop processing only on success
+        setProcessing(false)
     }
 
-    const handleAuthCallback = async () => {
-      try {
-        console.log('🔄 AuthCallback started', location)
-        
-        // Handle Implicit Flow (Hash fragments) - Legacy or specific config
-        const hashParams = new URLSearchParams(location.hash.substring(1))
-        const accessToken = hashParams.get('access_token')
-        const refreshToken = hashParams.get('refresh_token')
-        const hashError = hashParams.get('error')
-        const hashErrorDesc = hashParams.get('error_description')
+    // Since we mock auth without Supabase, just finish.
+    finishAuth();
 
-        // Handle PKCE Flow (Query params) - Default for Supabase v2
-        const queryParams = new URLSearchParams(location.search)
-        const code = queryParams.get('code')
-        const queryError = queryParams.get('error')
-        const queryErrorDesc = queryParams.get('error_description')
-
-        // Check for errors
-        if (hashError || queryError) {
-          const errMsg = hashErrorDesc || queryErrorDesc || hashError || queryError
-          console.error('Auth error param detected:', errMsg)
-          throw new Error(errMsg)
-        }
-
-        // 1. Implicit Flow: Manually set session
-        if (accessToken && refreshToken) {
-          console.log('🔑 Access Token found in URL (Implicit Flow)')
-          const { error: sessionError } = await supabase.auth.setSession({
-            access_token: accessToken,
-            refresh_token: refreshToken
-          })
-          if (sessionError) throw sessionError
-          finishAuth()
-          return
-        }
-
-        // If no session yet but we have a code, we need to exchange it
-        if (code) {
-             console.log('⏳ PKCE Code detected, exchanging for session...')
-             
-             const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
-             
-             if (exchangeError) {
-                 console.error('❌ Error exchanging code:', exchangeError)
-                 throw exchangeError
-             }
-             
-             console.log('✅ Session established via code exchange')
-             finishAuth()
-             return;
-        }
-
-        // 2. PKCE Flow & Session check
-        // First check if we already have a session (fastest)
-        const { data: { session } } = await supabase.auth.getSession()
-        
-        if (session) {
-          console.log('✅ Session already active')
-          finishAuth()
-          return
-        }
-
-        // If no code and no tokens and no session -> Error
-        // BUT check if we are just logged in?
-        const { data: { user } } = await supabase.auth.getUser()
-        if (user) {
-             finishAuth()
-             return
-        }
-
-        throw new Error('No authentication data found in URL.')
-
-      } catch (err) {
-        console.error('❌ Auth callback error:', err)
-        setError(err.message)
-        setProcessing(false) // Stop processing on error
-        
-        // Redirect to login after 3 seconds
-        setTimeout(() => {
-          navigate('/login', { replace: true })
-        }, 3000)
-      }
-    }
-
-    handleAuthCallback()
   }, [navigate, location])
 
   return (

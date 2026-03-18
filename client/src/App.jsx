@@ -1,11 +1,9 @@
+import { AuthenticateWithRedirectCallback } from '@clerk/react';
 import React, { createContext, useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import styled, { ThemeProvider as StyledThemeProvider } from 'styled-components';
 import { ThemeProvider } from "./components/theme-provider";
-import { SupabaseRealtimeProvider } from './contexts/SupabaseRealtimeContext';
-import { WebRTCProvider } from './contexts/WebRTCContext';
 import { AuthProvider } from './contexts/AuthContext';
-import { SupabaseAuthProvider } from './contexts/SupabaseAuthContext';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { AdminProvider } from './contexts/AdminContext';
 import AdminToolbar from './components/Admin/AdminToolbar';
@@ -15,8 +13,8 @@ import SettingsPage from './pages/SettingsPage';
 import HomePageClean from './pages/HomePageClean';
 // import LoginPageModern from './pages/LoginPageModern';
 // import SignupPageModern from './pages/SignupPageModern';
-import SupabaseLoginPage from './pages/SupabaseLoginPage';
-import SupabaseSignupPage from './pages/SupabaseSignupPage';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 import AuthCallback from './pages/AuthCallback';
 import RoomPage from './pages/RoomPageNew'; // Updated to new immersive room
 // import RoomPageOld from './pages/RoomPage';
@@ -112,27 +110,26 @@ function App() {
         <LanguageProvider>
         <NotificationContext.Provider value={{ addNotification }}>
           <AppContainer>
-            <Router 
+            <Router
               future={{
                 v7_startTransition: true,
                 v7_relativeSplatPath: true
               }}
             >
               <ScrollToTop />
-              <SupabaseAuthProvider>
                 <AdminProvider>
                   <AuthProvider>
-                    <SupabaseRealtimeProvider>
-                      <WebRTCProvider>
+                      
                         <AdminToolbar />
                         <Routes>
                         {/* Auth Callback Route */}
                         <Route path="/auth/callback" element={<AuthCallback />} />
+                        <Route path="/sso-callback" element={<AuthenticateWithRedirectCallback signUpForceRedirectUrl="/signup" />} />
                         
                         <Route path="/" element={<HomePageClean />} />
                         {/* <Route path="/home-original" element={<HomePage />} /> */}
-                        <Route path="/login" element={<SupabaseLoginPage />} />
-                        <Route path="/signup" element={<SupabaseSignupPage />} />
+                        <Route path="/login" element={<LoginPage />} />
+                        <Route path="/signup" element={<SignupPage />} />
                         {/* <Route path="/login-old" element={<LoginPageModern />} /> */}
                         {/* <Route path="/signup-old" element={<SignupPageModern />} /> */}
                         <Route path="/room/:roomId" element={<RoomPage />} />
@@ -152,7 +149,7 @@ function App() {
                         <Route path="/contact" element={<ContactPage />} />
                         <Route path="/features" element={<FeaturesPage />} />
                         <Route path="/developer" element={<DeveloperPage />} />
-                        <Route path="/dashboard" element={<AdminDashboard />} /> 
+                        <Route path="/dashboard" element={<AccountPageSimple />} /> 
                         <Route path="/status" element={<StatusPageNew />} />
                         <Route path="/careers" element={<CareersPageNew />} />
                         <Route path="/scheduler" element={<SchedulerPageNew />} />
@@ -171,11 +168,9 @@ function App() {
                       </Routes>
                       <AIChatbot />
                       <BackToTopButton />
-                    </WebRTCProvider>
-                    </SupabaseRealtimeProvider>
+                    
                   </AuthProvider>
                 </AdminProvider>
-              </SupabaseAuthProvider>
             </Router>
             <NotificationProvider />
           </AppContainer>

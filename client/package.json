@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@clerk/react": "^6.1.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@heroicons/react": "^2.2.0",
@@ -20,6 +21,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "convex": "^1.33.1",
+    "eslint-plugin-react-hooks": "^7.0.1",
     "firebase": "^12.2.1",
     "framer-motion": "^10.18.0",
     "gsap": "^3.13.0",

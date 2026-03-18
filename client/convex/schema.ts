@@ -14,7 +14,7 @@ export default defineSchema({
 
   meetings: defineTable({
     title: v.string(),
-    hostId: v.id("users"),
+    hostId: v.string(), // Autorise l'ID mocké
     livekitRoomName: v.string(),
     status: v.union(v.literal("waiting"), v.literal("active"), v.literal("ended")),
     isProtected: v.boolean(),
@@ -25,21 +25,29 @@ export default defineSchema({
     .index("by_status", ["status"]),
 
   messages: defineTable({
-    meetingId: v.id("meetings"),
-    userId: v.id("users"),
+    meetingId: v.string(), // ID LiveKit
+    userId: v.string(), // ID utilisateur mocké
+    senderName: v.string(), // Pour simplifier l'UI sans faire de requêtes croisées
     text: v.string(),
     timestamp: v.number(),
   }).index("by_meeting", ["meetingId"]),
 
-  whiteboard_elements: defineTable({
-    meetingId: v.id("meetings"),
-    type: v.union(v.literal("path"), v.literal("text"), v.literal("shape")),
-    data: v.string(),
-    createdBy: v.id("users"),
+  whiteboards: defineTable({
+    meetingId: v.string(), // ID LiveKit
+    elements: v.string(),
+    appState: v.string(),
   }).index("by_meeting", ["meetingId"]),
 
+  cursors: defineTable({
+    meetingId: v.string(),
+    userId: v.string(),
+    pointer: v.string(),
+    updatedAt: v.number(),
+  }).index("by_meeting", ["meetingId"])
+    .index("by_meeting_and_user", ["meetingId", "userId"]),
+
   notifications: defineTable({
-    targetUserId: v.id("users"),
+    targetUserId: v.string(), // ID utilisateur mocké
     title: v.string(),
     message: v.string(),
     isRead: v.boolean(),

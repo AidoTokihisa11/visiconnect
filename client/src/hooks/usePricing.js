@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useSupabaseAuth } from '../contexts/SupabaseAuthContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const FREE_PLAN_LIMIT_MINUTES = 40;
 
 export const usePricing = (onTimeLimitReached) => {
-  const { user } = useSupabaseAuth(); // Assuming this context provides user data including plan info
+  const { user } = useAuth(); // Assuming this context provides user data including plan info
   const [timeLeft, setTimeLeft] = useState(FREE_PLAN_LIMIT_MINUTES * 60);
   const [isPro, setIsPro] = useState(false); // Default to Free
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
