@@ -364,9 +364,52 @@ const ErrorMessage = styled.div`
   font-weight: 500;
 `
 
+const OTPInputWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0 20px 0;
+`
 
+const OTPInput = styled.input`
+  width: 100%;
+  max-width: 250px;
+  font-size: 28px;
+  letter-spacing: 0.5em;
+  text-align: center;
+  padding: 16px 8px 16px 24px;
+  border-radius: 12px;
+  border: 2px solid #e2e8f0;
+  background: #f8fafc;
+  color: #0f172a;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  line-height: normal;
 
+  &::placeholder {
+    color: #cbd5e1;
+    letter-spacing: 0.5em;
+  }
 
+  &:focus {
+    outline: none;
+    border-color: #3b82f6;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  }
+`
+
+const IconCircle = styled.div`
+  width: 72px;
+  height: 72px;
+  background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(147,51,234,0.1));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px auto;
+  color: #3b82f6;
+`
 
 
 const SignupPage = () => {
@@ -454,11 +497,11 @@ const SignupPage = () => {
         formData.email,
         formData.password,
         {
-          display_name: formData.displayName || formData.email.split('@')[0],
-          full_name: formData.displayName
+          firstName: formData.displayName || formData.email.split('@')[0],
+          lastName: ""
         }
       )
-      
+
       if (signUpError) {
         setError(signUpError.message)
         return
@@ -597,11 +640,16 @@ const containerVariants = {
           style={{ width: '100%', maxWidth: '450px', zIndex: 1 }}
         >
           <SignupCard>
-            <Header>
+            <Header style={{ textAlign: 'center' }}>
               <motion.div variants={itemVariants}>
-                <Logo>VisioConnect</Logo>
+                <IconCircle>
+                  <Mail size={32} strokeWidth={2} />
+                </IconCircle>
                 <Title>Vérifiez votre email</Title>
-                <Subtitle>Un code à 6 chiffres a été envoyé à {formData.email}.</Subtitle>
+                <Subtitle style={{ marginTop: '12px', lineHeight: '1.5' }}>
+                  Nous avons envoyé un code de sécurité à 6 chiffres à<br/>
+                  <strong style={{ color: '#0f172a' }}>{formData.email}</strong>
+                </Subtitle>
               </motion.div>
             </Header>
             <Form onSubmit={handleVerify}>
@@ -621,29 +669,35 @@ const containerVariants = {
               </AnimatePresence>
 
               <motion.div variants={itemVariants}>
-                <FormGroup>
-                  <Label htmlFor="code">Code de vérification</Label>
-                  <InputWrapper>
-                    <Input
+                <FormGroup style={{ textAlign: 'center' }}>
+                  <Label htmlFor="code" style={{ marginBottom: '8px', display: 'block' }}>Code de sécurité</Label>
+                  <OTPInputWrapper>
+                    <OTPInput
                       type="text"
                       id="code"
                       value={code}
-                      onChange={(e) => setCode(e.target.value)}
-                      placeholder="Ex: 123456"
+                      onChange={(e) => {
+                        // S'assurer qu'on ne garde que des chiffres et maximum 6
+                        const val = e.target.value.replace(/\D/g, '').slice(0, 6)
+                        setCode(val)
+                      }}
+                      placeholder="000000"
                       required
+                      autoComplete="one-time-code"
+                      maxLength={6}
                     />
-                  </InputWrapper>
+                  </OTPInputWrapper>
                 </FormGroup>
               </motion.div>
 
               <motion.div variants={itemVariants}>
-                <SubmitButton 
-                  type="submit" 
-                  disabled={loading || !code}
+                <SubmitButton
+                  type="submit"
+                  disabled={loading || code.length < 6}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  {loading ? 'Vérification en cours...' : 'Vérifier mon compte'}
+                  {loading ? 'Vérification en cours...' : 'Confirmer et continuer'}
                   {!loading && <ArrowRight size={18} style={{ marginLeft: '8px' }} />}
                 </SubmitButton>
               </motion.div>

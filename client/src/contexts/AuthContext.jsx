@@ -70,10 +70,15 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const signUpWithEmail = async (email, password) => {
+  const signUpWithEmail = async (email, password, options = {}) => {
     if (!clerk.client) return { error: { message: "Clerk n'est pas prêt." } };
     try {
-      const res = await clerk.client.signUp.create({ emailAddress: email, password });
+      const payload = { emailAddress: email, password };
+      if (options.firstName) payload.firstName = options.firstName;
+      if (options.lastName) payload.lastName = options.lastName;
+      if (options.username) payload.username = options.username;
+
+      const res = await clerk.client.signUp.create(payload);
       
       if (res.status === "complete") {
         await setActive({ session: res.createdSessionId });
@@ -96,8 +101,10 @@ export const AuthProvider = ({ children }) => {
       if (res.status === "complete") {
         await setActive({ session: res.createdSessionId });
         return { data: { user: res }, success: true };
+      } else if (res.status === "missing_requirements") {
+        return { error: { message: "Le code est bon, mais Clerk demande des champs obligatoires (ex: Prénom, Nom) que vous n'avez pas désactivés, ou la configuration est incomplète." } };
       } else {
-        return { error: { message: "Information manquante lors de la vérification." } };
+        return { error: { message: "Information manquante lors de la vérification. Statut retourné: " + res.status } };
       }
     } catch (err) {
       return { error: { message: handleNetworkError(err) } };
