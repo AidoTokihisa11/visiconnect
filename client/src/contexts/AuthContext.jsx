@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await clerk.client.signIn.create({ identifier: email, password });
       if (res.status === "complete") {
-        await setActive({ session: res.createdSessionId });
+        await clerk.setActive({ session: res.createdSessionId });
         return { data: { user: res }, success: true };
       }
       return { error: { message: "Information manquante" } };
@@ -98,7 +98,7 @@ export const AuthProvider = ({ children }) => {
       }
       
       if (res.status === "complete") {
-        await setActive({ session: res.createdSessionId });
+        await clerk.setActive({ session: res.createdSessionId });
         return { data: { user: res }, success: true };
       } else {
         // Envoi du mail de vérification
@@ -116,7 +116,7 @@ export const AuthProvider = ({ children }) => {
       const res = await clerk.client.signUp.attemptEmailAddressVerification({ code });
       
       if (res.status === "complete") {
-        await setActive({ session: res.createdSessionId });
+        await clerk.setActive({ session: res.createdSessionId });
         return { data: { user: res }, success: true };
       } else if (res.status === "missing_requirements") {
         // Rendre les champs manquants lisibles
