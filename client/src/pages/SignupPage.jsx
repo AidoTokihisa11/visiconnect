@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../contexts/AuthContext'
 import { FaGoogle, FaGithub } from 'react-icons/fa'
-import { Check, X, Mail, Lock, User, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { Check, X, Mail, Lock, User, Eye, EyeOff, AlertCircle, ArrowRight } from 'lucide-react';
 
 // Styled Components
 
@@ -375,8 +375,8 @@ const SignupPage = () => {
   React.useEffect(() => {
     if (isLoggedIn) navigate("/")
   }, [isLoggedIn, navigate])
-  const { signUp, signInWithProvider, error: authError } = useAuth()
-  
+  const { signUp, signInWithProvider, verifyEmailCode, error: authError } = useAuth()
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -388,6 +388,8 @@ const SignupPage = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
+  const [pendingVerification, setPendingVerification] = useState(false)
+  const [code, setCode] = useState('')
 
   const handleChange = (e) => {
     setFormData({
@@ -462,6 +464,11 @@ const SignupPage = () => {
         return
       }
 
+      if (data?.requiresVerification) {
+        setPendingVerification(true)
+        return
+      }
+
       if (data?.user) {
         setSuccess(true)
         setTimeout(() => {
@@ -470,6 +477,32 @@ const SignupPage = () => {
       }
     } catch (err) {
       setError(err.message || 'Une erreur est survenue lors de l\'inscription')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleVerify = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+
+    try {
+      const { data, error: verifyError } = await verifyEmailCode(code)
+
+      if (verifyError) {
+        setError(verifyError.message || "Code invalide.")
+        return
+      }
+
+      if (data?.user) {
+        setSuccess(true)
+        setTimeout(() => {
+          navigate('/')
+        }, 2000)
+      }
+    } catch (err) {
+      setError(err.message || 'Erreur lors de la vérification')
     } finally {
       setLoading(false)
     }
@@ -548,6 +581,74 @@ const containerVariants = {
               Votre compte a été créé avec succès. Nous préparons votre espace...
             </SuccessMessage>
           </SuccessCard>
+        </motion.div>
+      </PageContainer>
+    )
+  }
+
+  if (pendingVerification) {
+    return (
+      <PageContainer>
+        <BgDecoration />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, type: 'spring' }}
+          style={{ width: '100%', maxWidth: '450px', zIndex: 1 }}
+        >
+          <SignupCard>
+            <Header>
+              <motion.div variants={itemVariants}>
+                <Logo>VisioConnect</Logo>
+                <Title>Vérifiez votre email</Title>
+                <Subtitle>Un code à 6 chiffres a été envoyé à {formData.email}.</Subtitle>
+              </motion.div>
+            </Header>
+            <Form onSubmit={handleVerify}>
+              <AnimatePresence>
+                {error && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                  >
+                    <ErrorMessage>
+                      <AlertCircle size={18} />
+                      <span>{error}</span>
+                    </ErrorMessage>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <motion.div variants={itemVariants}>
+                <FormGroup>
+                  <Label htmlFor="code">Code de vérification</Label>
+                  <InputWrapper>
+                    <Input
+                      type="text"
+                      id="code"
+                      value={code}
+                      onChange={(e) => setCode(e.target.value)}
+                      placeholder="Ex: 123456"
+                      required
+                    />
+                  </InputWrapper>
+                </FormGroup>
+              </motion.div>
+
+              <motion.div variants={itemVariants}>
+                <SubmitButton 
+                  type="submit" 
+                  disabled={loading || !code}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  {loading ? 'Vérification en cours...' : 'Vérifier mon compte'}
+                  {!loading && <ArrowRight size={18} style={{ marginLeft: '8px' }} />}
+                </SubmitButton>
+              </motion.div>
+            </Form>
+          </SignupCard>
         </motion.div>
       </PageContainer>
     )

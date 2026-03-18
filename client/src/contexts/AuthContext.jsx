@@ -79,12 +79,25 @@ export const AuthProvider = ({ children }) => {
         await setActive({ session: res.createdSessionId });
         return { data: { user: res }, success: true };
       } else {
-        // Le statut n'est pas complet (probablement en attente de vérification d'email)
-        return { 
-          error: { 
-            message: "Action requise : Clerk demande une vérification d'email. Pour autoriser les adresses aléatoires sans vérification, vous devez désactiver la vérification d'email et de mot de passe dans les paramètres de votre dashboard Clerk (Email, Phone, Web3)." 
-          } 
-        };
+        // Envoi du mail de vérification
+        await clerk.client.signUp.prepareEmailAddressVerification({ strategy: "email_code" });
+        return { data: { requiresVerification: true, email }, success: true };
+      }
+    } catch (err) {
+      return { error: { message: handleNetworkError(err) } };
+    }
+  };
+
+  const verifyEmailCode = async (code) => {
+    if (!clerk.client) return { error: { message: "Clerk n'est pas prêt." } };
+    try {
+      const res = await clerk.client.signUp.attemptEmailAddressVerification({ code });
+      
+      if (res.status === "complete") {
+        await setActive({ session: res.createdSessionId });
+        return { data: { user: res }, success: true };
+      } else {
+        return { error: { message: "Information manquante lors de la vérification." } };
       }
     } catch (err) {
       return { error: { message: handleNetworkError(err) } };
@@ -102,12 +115,7 @@ export const AuthProvider = ({ children }) => {
     loading: !(clerkLoaded && isAuthLoaded && !isConvexLoading),
     signIn: signInWithEmail,   
     signUp: signUpWithEmail,   
-    signInWithGoogle,
-    signInWithGithub,
-    signInWithDiscord,
-    signInWithProvider,
-    signInWithEmail,
-    signUpWithEmail,
+    verifyEmailCode,
     logout
   };
 
