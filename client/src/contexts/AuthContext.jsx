@@ -74,13 +74,17 @@ export const AuthProvider = ({ children }) => {
     if (!clerk.client) return { error: { message: "Clerk n'est pas prêt." } };
     try {
       const res = await clerk.client.signUp.create({ emailAddress: email, password });
+      
       if (res.status === "complete") {
         await setActive({ session: res.createdSessionId });
         return { data: { user: res }, success: true };
       } else {
-        // En cas de vérification d'email nécessaire ou d'un autre statut
-        // On retourne quand même data.user pour déclencher la redirection
-        return { data: { user: res }, success: true };
+        // Le statut n'est pas complet (probablement en attente de vérification d'email)
+        return { 
+          error: { 
+            message: "Action requise : Clerk demande une vérification d'email. Pour autoriser les adresses aléatoires sans vérification, vous devez désactiver la vérification d'email et de mot de passe dans les paramètres de votre dashboard Clerk (Email, Phone, Web3)." 
+          } 
+        };
       }
     } catch (err) {
       return { error: { message: handleNetworkError(err) } };
