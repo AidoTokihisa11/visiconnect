@@ -15,7 +15,6 @@ import HomePageClean from './pages/HomePageClean';
 // import SignupPageModern from './pages/SignupPageModern';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
-import AuthCallback from './pages/AuthCallback';
 import RoomPage from './pages/RoomPageNew'; // Updated to new immersive room
 // import RoomPageOld from './pages/RoomPage';
 import SupportPageNew from './pages/SupportPageNew';
@@ -122,8 +121,6 @@ function App() {
                       
                         <AdminToolbar />
                         <Routes>
-                        {/* Auth Callback Route */}
-                        <Route path="/auth/callback" element={<AuthCallback />} />
                         <Route path="/sso-callback" element={<AuthenticateWithRedirectCallback signUpForceRedirectUrl="/signup" />} />
                         
                         <Route path="/" element={<HomePageClean />} />

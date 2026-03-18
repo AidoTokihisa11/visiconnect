@@ -33,14 +33,14 @@ export const AuthProvider = ({ children }) => {
   // Helper de gestion d'erreur réseau
   const handleNetworkError = (err) => {
     if (err.message && (err.message.includes("Failed to fetch") || err.message.includes("Network error"))) {
-      return "Erreur réseau (CORS). Désactivez votre bloqueur de pub (Brave Shields, uBlock) ou videz les cookies de localhost.";
+      return "Erreur réseau. Vérifiez votre connexion à internet.";
     }
     return err.errors?.[0]?.message || err.message || "Une erreur est survenue avec l'authentification.";
   };
 
   // Implémentation réelle de la méthode attendue par tes templates (Google/Github)
   const signInWithProvider = async (provider) => {
-    if (!isSignInLoaded) return { error: { message: "Clerk n'a pas pu se charger. Désactivez votre bloqueur de pub (Brave Shields, uBlock) pour localhost." } };
+    if (!isSignInLoaded) return { error: { message: "Le service d'authentification se charge, veuillez patienter une seconde..." } };       
     try {
       await signIn.authenticateWithRedirect({
         strategy: `oauth_${provider}`, // ex: "oauth_google"
@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }) => {
   const signInWithDiscord = () => signInWithProvider('discord');
 
   const signInWithEmail = async (email, password) => {
-    if (!isSignInLoaded) return { error: { message: "Clerk n'a pas pu se charger. Désactivez votre bloqueur de pub (Brave Shields, uBlock) pour localhost." } };
+    if (!isSignInLoaded) return { error: { message: "Le service d'authentification se charge, veuillez patienter une seconde..." } };       
     try {
       const res = await signIn.create({ identifier: email, password });
       if (res.status === "complete") {
@@ -73,7 +73,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signUpWithEmail = async (email, password) => {
-    if (!isSignUpLoaded) return { error: { message: "Clerk n'a pas pu se charger. Désactivez votre bloqueur de pub pour localhost." } };
+    if (!isSignUpLoaded) return { error: { message: "Le service d'authentification se charge, veuillez patienter une seconde..." } };
     try {
       await signUp.create({ emailAddress: email, password });
       // L'utilisateur devra vérifier son email, ça dépend de ton Dashboard Clerk
