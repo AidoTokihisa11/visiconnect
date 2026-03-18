@@ -72,13 +72,30 @@ export const AuthProvider = ({ children }) => {
 
   const signUpWithEmail = async (email, password, options = {}) => {
     if (!clerk.client) return { error: { message: "Clerk n'est pas prêt." } };
-    try {
+    
+    const attemptSignUp = async (withOptions) => {
       const payload = { emailAddress: email, password };
-      if (options.firstName) payload.firstName = options.firstName;
-      if (options.lastName) payload.lastName = options.lastName;
-      if (options.username) payload.username = options.username;
+      if (withOptions) {
+        if (options.firstName) payload.firstName = options.firstName;
+        if (options.lastName) payload.lastName = options.lastName;
+        if (options.username) payload.username = options.username;
+      }
+      return await clerk.client.signUp.create(payload);
+    };
 
-      const res = await clerk.client.signUp.create(payload);
+    try {
+      let res;
+      try {
+        res = await attemptSignUp(true);
+      } catch (initialErr) {
+        // Si Clerk rejette à cause d'un paramètre non configuré (ex: Prénom/Nom désactivés)
+        const errMsg = initialErr.errors?.[0]?.message || "";
+        if (errMsg.toLowerCase().includes("unknown") || errMsg.toLowerCase().includes("inconnu")) {
+          res = await attemptSignUp(false);
+        } else {
+          throw initialErr;
+        }
+      }
       
       if (res.status === "complete") {
         await setActive({ session: res.createdSessionId });
