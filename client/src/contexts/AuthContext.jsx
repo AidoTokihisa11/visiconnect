@@ -62,7 +62,7 @@ export const AuthProvider = ({ children }) => {
       const res = await clerk.client.signIn.create({ identifier: email, password });
       if (res.status === "complete") {
         await setActive({ session: res.createdSessionId });
-        return { success: true };
+        return { data: { user: res }, success: true };
       }
       return { error: { message: "Information manquante" } };
     } catch (err) {
@@ -73,8 +73,15 @@ export const AuthProvider = ({ children }) => {
   const signUpWithEmail = async (email, password) => {
     if (!clerk.client) return { error: { message: "Clerk n'est pas prêt." } };
     try {
-      await clerk.client.signUp.create({ emailAddress: email, password });
-      return { success: true };
+      const res = await clerk.client.signUp.create({ emailAddress: email, password });
+      if (res.status === "complete") {
+        await setActive({ session: res.createdSessionId });
+        return { data: { user: res }, success: true };
+      } else {
+        // En cas de vérification d'email nécessaire ou d'un autre statut
+        // On retourne quand même data.user pour déclencher la redirection
+        return { data: { user: res }, success: true };
+      }
     } catch (err) {
       return { error: { message: handleNetworkError(err) } };
     }
