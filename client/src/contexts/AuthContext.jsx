@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from 'react';
-import { useUser, useAuth as useClerkAuth, useClerk, useSignIn, useSignUp } from '@clerk/react';
+import { useUser, useAuth as useClerkAuth, useClerk } from '@clerk/react';
 import { useConvexAuth } from 'convex/react';
 
 const AuthContext = createContext({});
@@ -14,10 +14,8 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
-  const { isSignedIn, signOut, setActive } = useClerkAuth();
+  const { isSignedIn, signOut, setActive, isLoaded: isAuthLoaded } = useClerkAuth();
   const clerk = useClerk();
-  const { signIn, isLoaded: isSignInLoaded } = useSignIn();
-  const { signUp, isLoaded: isSignUpLoaded } = useSignUp();
   const { isAuthenticated: isConvexAuthed, isLoading: isConvexLoading } = useConvexAuth();
 
   const isLoggedIn = !!isSignedIn;
@@ -38,11 +36,11 @@ export const AuthProvider = ({ children }) => {
     return err.errors?.[0]?.message || err.message || "Une erreur est survenue avec l'authentification.";
   };
 
-  // Implémentation réelle de la méthode attendue par tes templates (Google/Github)
+  // Implémentation via l'objet client global (Clerk instance) pour éviter les hooks asynchrones bloquants
   const signInWithProvider = async (provider) => {
-    if (!isSignInLoaded) return { error: { message: "Le service d'authentification se charge, veuillez patienter une seconde..." } };       
+    if (!clerk.client) return { error: { message: "Clerk n'est pas prêt." } };
     try {
-      await signIn.authenticateWithRedirect({
+      await clerk.client.signIn.authenticateWithRedirect({
         strategy: `oauth_${provider}`, // ex: "oauth_google"
         redirectUrl: '/sso-callback',
         redirectUrlComplete: '/'
@@ -59,9 +57,9 @@ export const AuthProvider = ({ children }) => {
   const signInWithDiscord = () => signInWithProvider('discord');
 
   const signInWithEmail = async (email, password) => {
-    if (!isSignInLoaded) return { error: { message: "Le service d'authentification se charge, veuillez patienter une seconde..." } };       
+    if (!clerk.client) return { error: { message: "Clerk n'est pas prêt." } };
     try {
-      const res = await signIn.create({ identifier: email, password });
+      const res = await clerk.client.signIn.create({ identifier: email, password });
       if (res.status === "complete") {
         await setActive({ session: res.createdSessionId });
         return { success: true };
@@ -73,10 +71,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signUpWithEmail = async (email, password) => {
-    if (!isSignUpLoaded) return { error: { message: "Le service d'authentification se charge, veuillez patienter une seconde..." } };
+    if (!clerk.client) return { error: { message: "Clerk n'est pas prêt." } };
     try {
-      await signUp.create({ emailAddress: email, password });
-      // L'utilisateur devra vérifier son email, ça dépend de ton Dashboard Clerk
+      await clerk.client.signUp.create({ emailAddress: email, password });
       return { success: true };
     } catch (err) {
       return { error: { message: handleNetworkError(err) } };
@@ -91,9 +88,9 @@ export const AuthProvider = ({ children }) => {
   const value = {
     user,
     isLoggedIn,
-    loading: !(clerkLoaded && !isConvexLoading),
-    signIn: signInWithEmail,   // Alias requis pour les vieilles pages
-    signUp: signUpWithEmail,   // Alias requis pour les vieilles pages
+    loading: !(clerkLoaded && isAuthLoaded && !isConvexLoading),
+    signIn: signInWithEmail,   
+    signUp: signUpWithEmail,   
     signInWithGoogle,
     signInWithGithub,
     signInWithDiscord,
@@ -103,8 +100,8 @@ export const AuthProvider = ({ children }) => {
     logout
   };
 
-  // On bloque seulement le chargement critique (l'utilisateur et la BD) pour éviter une page blanche infinie
-  if (!clerkLoaded || isConvexLoading) {
+  // On bloque seulement le chargement critique global pour éviter un rendu prématuré
+  if (!clerkLoaded || !isAuthLoaded || isConvexLoading) {
     return null;
   }
 
