@@ -477,10 +477,15 @@ const AccountPageSimple = () => {
     setIsSaving(true);
     try {
       if (user) {
-        await user.update({
-          firstName: formData.displayName.split(' ')[0] || '',
-          lastName: formData.displayName.split(' ').slice(1).join(' ') || ''
-        });
+        try {
+          await user.update({
+            firstName: formData.displayName.split(' ')[0] || '',
+            lastName: formData.displayName.split(' ').slice(1).join(' ') || ''
+          });
+        } catch (clerkError) {
+          // On ignore l'erreur si le "First and Last Name" n'est pas activé dans le panel Clerk de l'utilisateur
+          console.warn("Mise à jour Clerk ignorée (paramètre first_name/last_name non activé sur votre dashboard Clerk): ", clerkError);
+        }
       }
       
       await updateProfile(formData);
