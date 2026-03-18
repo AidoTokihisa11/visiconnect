@@ -248,6 +248,10 @@ const SubmitButton = styled(motion.button)`
   font-weight: 600;
   cursor: pointer;
   box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
 
   &:disabled {
     opacity: 0.7;
@@ -364,39 +368,43 @@ const ErrorMessage = styled.div`
   font-weight: 500;
 `
 
-const OTPInputWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 10px 0 20px 0;
+const OTPContainer = styled.div`
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  margin: 15px auto 25px auto;
 `
 
-const OTPInput = styled.input`
+const HiddenInput = styled.input`
+  position: absolute;
+  inset: 0;
   width: 100%;
-  max-width: 250px;
-  font-size: 28px;
-  letter-spacing: 0.5em;
-  text-align: center;
-  padding: 16px 8px 16px 24px;
+  height: 100%;
+  opacity: 0;
+  cursor: text;
+  z-index: 10;
+`
+
+const OTPDisplay = styled.div`
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+`
+
+const OTPChar = styled.div`
+  width: 45px;
+  height: 55px;
   border-radius: 12px;
-  border: 2px solid #e2e8f0;
-  background: #f8fafc;
-  color: #0f172a;
+  border: 2px solid ${props => props.$active ? '#3b82f6' : (props.$filled ? '#cbd5e1' : '#e2e8f0')};
+  background: ${props => props.$active ? '#ffffff' : '#f8fafc'};
+  box-shadow: ${props => props.$active ? '0 0 0 4px rgba(59, 130, 246, 0.1)' : 'none'};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
   font-weight: 700;
-  transition: all 0.3s ease;
-  line-height: normal;
-
-  &::placeholder {
-    color: #cbd5e1;
-    letter-spacing: 0.5em;
-  }
-
-  &:focus {
-    outline: none;
-    border-color: #3b82f6;
-    background: #ffffff;
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
-  }
+  color: #0f172a;
+  transition: all 0.2s ease;
 `
 
 const IconCircle = styled.div`
@@ -671,22 +679,31 @@ const containerVariants = {
               <motion.div variants={itemVariants}>
                 <FormGroup style={{ textAlign: 'center' }}>
                   <Label htmlFor="code" style={{ marginBottom: '8px', display: 'block' }}>Code de sécurité</Label>
-                  <OTPInputWrapper>
-                    <OTPInput
+                  <OTPContainer>
+                    <HiddenInput
                       type="text"
                       id="code"
                       value={code}
                       onChange={(e) => {
-                        // S'assurer qu'on ne garde que des chiffres et maximum 6
                         const val = e.target.value.replace(/\D/g, '').slice(0, 6)
                         setCode(val)
                       }}
-                      placeholder="000000"
                       required
                       autoComplete="one-time-code"
                       maxLength={6}
                     />
-                  </OTPInputWrapper>
+                    <OTPDisplay>
+                      {[0, 1, 2, 3, 4, 5].map((index) => (
+                        <OTPChar 
+                          key={index} 
+                          $active={code.length === index || (code.length === 6 && index === 5)}
+                          $filled={!!code[index]}
+                        >
+                          {code[index] || ''}
+                        </OTPChar>
+                      ))}
+                    </OTPDisplay>
+                  </OTPContainer>
                 </FormGroup>
               </motion.div>
 
