@@ -591,9 +591,9 @@ const containerVariants = {
       <PageContainer>
         <BgDecoration />
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, type: 'spring' }}
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
           style={{ width: '100%', maxWidth: '450px', zIndex: 1 }}
         >
           <SignupCard>
