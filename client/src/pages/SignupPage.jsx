@@ -1,91 +1,105 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useAuth } from '../contexts/AuthContext'
 import { FaGoogle, FaGithub } from 'react-icons/fa'
-import { Check, X, Mail, Lock, Eye, EyeOff, AlertCircle, ArrowLeft } from 'lucide-react';
-import { AuthRightPanel } from '../components/AuthRightPanel';
+import { Mail, Lock, Eye, EyeOff, AlertCircle, ArrowLeft, Check, X } from 'lucide-react'
+import AuthRightPanel from '../components/AuthRightPanel'
 
 const PageWrapper = styled.div`
   display: flex;
   min-height: 100vh;
-  background-color: #ffffff;
+  background-color: white;
+  flex-direction: column-reverse; /* Put form at top, visual below on mobile */
+
+  @media (min-width: 1024px) {
+    flex-direction: row;
+  }
 `
 
 const LeftPanel = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   padding: 2rem;
-  position: relative;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  @media (min-width: 1024px) {
+    padding: 2rem 4rem;
+  }
 `
 
 const BackLink = styled(Link)`
-  position: absolute;
-  top: 2rem;
-  left: 2rem;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   color: #64748b;
-  text-decoration: none;
+  font-size: 0.9rem;
   font-weight: 500;
-  font-size: 0.95rem;
+  text-decoration: none;
   transition: color 0.2s;
+  margin-bottom: 2rem;
 
   &:hover {
-    color: #2563eb;
+    color: #0f172a;
   }
 `
 
 const FormContainer = styled(motion.div)`
   width: 100%;
-  max-width: 440px;
+  max-width: 400px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `
 
 const Header = styled.div`
   margin-bottom: 2.5rem;
 `
 
-const Logo = styled.h1`
-  font-size: 28px;
-  color: #2563eb;
+const Logo = styled.div`
+  font-size: 1.5rem;
   font-weight: 800;
-  letter-spacing: -0.5px;
-  margin-bottom: 0.5rem;
+  color: #2563eb;
+  margin-bottom: 1.5rem;
 `
 
 const Title = styled.h2`
   font-size: 2rem;
   font-weight: 700;
   color: #0f172a;
-  margin: 0 0 0.5rem;
-  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
 `
 
 const Subtitle = styled.p`
   font-size: 1rem;
   color: #64748b;
-  margin: 0;
 `
 
 const Form = styled.form`
-  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 `
 
 const FormGroup = styled.div`
-  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 `
 
 const Label = styled.label`
-  display: block;
   font-size: 0.9rem;
   font-weight: 600;
   color: #334155;
-  margin-bottom: 0.5rem;
 `
 
 const InputWrapper = styled.div`
@@ -99,24 +113,23 @@ const IconWrapper = styled.div`
   left: 1rem;
   color: #94a3b8;
   display: flex;
-  align-items: center;
 `
 
 const Input = styled.input`
   width: 100%;
   padding: 0.875rem 1rem 0.875rem 2.75rem;
   border: 1px solid #cbd5e1;
-  border-radius: 0.75rem;
+  border-radius: 0.5rem;
   font-size: 1rem;
   color: #0f172a;
   background: #f8fafc;
-  transition: all 0.2s ease;
+  transition: all 0.2s;
 
   &:focus {
     outline: none;
+    border-color: #2563eb;
     background: white;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
   }
 
   &::placeholder {
@@ -131,36 +144,35 @@ const PasswordToggle = styled.button`
   border: none;
   color: #94a3b8;
   cursor: pointer;
-  padding: 0;
   display: flex;
-  align-items: center;
-  transition: color 0.2s;
+  padding: 0;
 
   &:hover {
     color: #475569;
   }
 `
 
+/* Simple, sober, professional style (removed shadows/3D) */
 const SubmitButton = styled(motion.button)`
   width: 100%;
   padding: 0.875rem;
-  background: #2563eb;
+  background: #0f172a;
   color: white;
-  border: none;
-  border-radius: 0.75rem;
+  border: 1px solid #0f172a;
+  border-radius: 0.5rem;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
-  transition: background 0.2s;
-  margin-top: 1rem;
+  transition: all 0.2s ease;
+  margin-top: 0.5rem;
 
   &:hover:not(:disabled) {
-    background: #1d4ed8;
+    background: white;
+    color: #0f172a;
   }
 
   &:disabled {
-    opacity: 0.7;
+    opacity: 0.6;
     cursor: not-allowed;
   }
 `
@@ -221,13 +233,13 @@ const OAuthButton = styled(motion.button)`
   gap: 0.5rem;
   padding: 0.75rem;
   border: 1px solid #e2e8f0;
-  border-radius: 0.75rem;
+  border-radius: 0.5rem;
   background: white;
   color: #475569;
   font-size: 0.95rem;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 
   &:hover:not(:disabled) {
     background: #f8fafc;
@@ -246,7 +258,7 @@ const FooterLink = styled.div`
   font-size: 0.95rem;
 
   a {
-    color: #2563eb;
+    color: #0f172a;
     text-decoration: none;
     font-weight: 600;
     margin-left: 0.25rem;
@@ -287,16 +299,16 @@ const OTPGroup = styled.div`
 const OTPChar = styled.div`
   width: 45px;
   height: 55px;
-  border: 2px solid ${props => props.$active ? '#3b82f6' : props.$filled ? '#94a3b8' : '#e2e8f0'};
+  border: 1px solid ${props => props.$active ? '#0f172a' : props.$filled ? '#cbd5e1' : '#e2e8f0'};
   border-radius: 0.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 600;
   color: #0f172a;
-  background: ${props => props.$active ? '#eff6ff' : 'white'};
-  box-shadow: ${props => props.$active ? '0 0 0 3px rgba(59, 130, 246, 0.1)' : 'none'};
+  background: ${props => props.$active ? '#f8fafc' : 'white'};
+  box-shadow: ${props => props.$active ? '0 0 0 2px rgba(15, 23, 42, 0.1)' : 'none'};
   transition: all 0.2s;
 `
 
@@ -313,20 +325,19 @@ const HiddenInput = styled.input`
 const SuccessIconBox = styled.div`
   width: 64px;
   height: 64px;
-  background: #10b981;
+  background: #0f172a;
   color: white;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 1.5rem;
-  box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4);
 `
 
 const SignupPage = () => {
   const navigate = useNavigate()
   const { isLoggedIn, signUp, signInWithGoogle, signInWithGithub, verifyEmailCode } = useAuth()
-  
+
   const [formData, setFormData] = useState({ email: '', password: '' })
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -368,7 +379,7 @@ const SignupPage = () => {
     setError('')
 
     const result = await signUp(formData.email, formData.password)
-    
+
     if (result.error) {
       setError(result.error.message || 'Erreur lors de la création')
       setLoading(false)
@@ -386,7 +397,7 @@ const SignupPage = () => {
     setError('')
 
     const result = await verifyEmailCode(code)
-    
+
     if (result.error) {
       setError(result.error.message || 'Code invalide')
       setLoading(false)
@@ -412,7 +423,7 @@ const SignupPage = () => {
         <BackLink to="/">
           <ArrowLeft size={18} /> Retour à l'accueil
         </BackLink>
-        
+
         <FormContainer
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -431,7 +442,7 @@ const SignupPage = () => {
           {!pendingVerification ? (
             <>
               <Header>
-                <Logo>VisioConnect</Logo>
+                <Logo>VisiConnect</Logo>
                 <Title>Créer un compte</Title>
                 <Subtitle>Rejoignez-nous et simplifiez vos réunions vidéo.</Subtitle>
               </Header>
@@ -465,23 +476,23 @@ const SignupPage = () => {
                       required
                     />
                     <PasswordToggle type="button" onClick={() => setShowPassword(!showPassword)}>
-                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </PasswordToggle>
                   </InputWrapper>
 
                   {formData.password.length > 0 && (
                     <PasswordCriteria>
                       <Criterion $met={criteria.length}>
-                        {criteria.length ? <Check /> : <X />} 8 caractères min
+                        {criteria.length ? <Check size={14}/> : <X size={14}/>} 8 caractères min
                       </Criterion>
                       <Criterion $met={criteria.uppercase}>
-                        {criteria.uppercase ? <Check /> : <X />} 1 Majuscule
+                        {criteria.uppercase ? <Check size={14}/> : <X size={14}/>} 1 Majuscule
                       </Criterion>
                       <Criterion $met={criteria.number}>
-                        {criteria.number ? <Check /> : <X />} 1 Chiffre
+                        {criteria.number ? <Check size={14}/> : <X size={14}/>} 1 Chiffre
                       </Criterion>
                       <Criterion $met={criteria.special}>
-                        {criteria.special ? <Check /> : <X />} 1 Caractère spécial
+                        {criteria.special ? <Check size={14}/> : <X size={14}/>} 1 Caractère spécial
                       </Criterion>
                     </PasswordCriteria>
                   )}
@@ -490,7 +501,6 @@ const SignupPage = () => {
                 <SubmitButton
                   type="submit"
                   disabled={loading || (formData.password.length > 0 && !Object.values(criteria).every(Boolean))}
-                  whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.98 }}
                 >
                   {loading ? 'Création en cours...' : 'Créer mon compte'}
@@ -504,7 +514,6 @@ const SignupPage = () => {
                   type="button"
                   disabled={loading}
                   onClick={() => handleOAuth('google')}
-                  whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
                   <FaGoogle color="#ea4335" /> Google
@@ -513,7 +522,6 @@ const SignupPage = () => {
                   type="button"
                   disabled={loading}
                   onClick={() => handleOAuth('github')}
-                  whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
                   <FaGithub /> GitHub
@@ -521,7 +529,7 @@ const SignupPage = () => {
               </OAuthButtons>
 
               <FooterLink>
-                Déjà un compte ? 
+                Déjà un compte ?
                 <Link to="/login">Se connecter</Link>
               </FooterLink>
             </>
@@ -540,7 +548,7 @@ const SignupPage = () => {
                 <Form onSubmit={handleVerify}>
                   <OTPGroup>
                     {[0, 1, 2, 3, 4, 5].map((index) => (
-                      <OTPChar 
+                      <OTPChar
                         key={index}
                         $active={code.length === index}
                         $filled={code.length > index}
@@ -562,15 +570,11 @@ const SignupPage = () => {
                   <SubmitButton
                     type="submit"
                     disabled={code.length !== 6 || loading}
-                    whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
                     {loading ? 'Vérification...' : 'Valider le code'}
                   </SubmitButton>
                 </Form>
-                <p style={{ marginTop: '2rem', fontSize: '0.9rem', color: '#64748b' }}>
-                  L'inscription semble bloquée après validation ? Vérifiez que le "First and Last Name" soit désactivé ou optionnel dans votre interface de gestion Clerk.
-                </p>
               </motion.div>
             </VerifyContainer>
           )}

@@ -5,32 +5,28 @@ import { MessageSquare, X, Send, Sparkles } from 'lucide-react';
 import { useAdmin } from '../contexts/AdminContext';
 
 const COLORS = {
-  primary: '#2563eb',    // Blue 600
-  secondary: '#475569',  // Slate 600
-  dark: '#0f172a',       // Slate 900
-  text: '#334155',       // Slate 700
-  lightText: '#64748b',  // Slate 500
-  background: '#f8fafc', // Slate 50
+  primary: '#0f172a',
+  secondary: '#475569',
+  dark: '#0f172a',
+  text: '#334155',
+  lightText: '#64748b',
+  background: '#f8fafc',
   white: '#ffffff',
-  border: '#e2e8f0',     // Slate 200
-  botBubble: '#f1f5f9',  // Slate 100
-  userBubble: '#2563eb', // Blue 600
+  border: '#e2e8f0',
+  botBubble: '#f1f5f9',
+  userBubble: '#0f172a',
   userText: '#ffffff',
   shadow: 'rgba(0, 0, 0, 0.1)',
 };
 
-// --- Styled Components ---
-
 const ChatContainer = styled(motion.div)`
   position: fixed;
-  bottom: 2rem;
+  bottom: 1.5rem;
   z-index: 1000;
   display: flex;
   flex-direction: column;
-  pointer-events: none; /* Allow clicks to pass through around the chat */
-  
-  /* Dynamic positioning based on props */
-  ${props => props.$position === 'left' ? 'left: 2rem; align-items: flex-start;' : 'right: 2rem; align-items: flex-end;'}
+  pointer-events: none;
+  ${props => props.$position === 'left' ? 'left: 1.5rem; align-items: flex-start;' : 'right: 1.5rem; align-items: flex-end;'}
 `;
 
 const ChatButton = styled(motion.button)`
@@ -49,22 +45,17 @@ const ChatButton = styled(motion.button)`
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: #1d4ed8; /* Blue 700 */
-  }
-
-  &:focus {
-    outline: none;
-    ring: 2px solid ${COLORS.primary};
-    ring-offset: 2px;
+    background-color: #1e293b;
   }
 `;
 
 const ChatWindow = styled(motion.div)`
-  width: 350px;
-  height: 500px;
+  width: 360px;
+  height: 550px;
+  max-height: 80vh;
   background-color: ${COLORS.white};
-  border-radius: 12px;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -75,7 +66,7 @@ const ChatWindow = styled(motion.div)`
 
 const Header = styled.div`
   background-color: ${COLORS.white};
-  padding: 1rem;
+  padding: 1.25rem 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -96,8 +87,8 @@ const IconWrapper = styled.div`
 `;
 
 const HeaderTitle = styled.h3`
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 1.1rem;
+  font-weight: 700;
   color: ${COLORS.dark};
   margin: 0;
 `;
@@ -111,7 +102,7 @@ const CloseButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  border-radius: 6px;
   transition: all 0.2s;
 
   &:hover {
@@ -129,12 +120,8 @@ const MessagesArea = styled.div`
   gap: 1rem;
   background-color: ${COLORS.background};
 
-  /* Custom Scrollbar */
   &::-webkit-scrollbar {
     width: 6px;
-  }
-  &::-webkit-scrollbar-track {
-    background: transparent;
   }
   &::-webkit-scrollbar-thumb {
     background-color: #cbd5e1;
@@ -143,24 +130,23 @@ const MessagesArea = styled.div`
 `;
 
 const MessageBubble = styled.div`
-  max-width: 80%;
+  max-width: 85%;
   padding: 0.75rem 1rem;
-  border-radius: 12px;
-  font-size: 0.9rem;
+  border-radius: 16px;
+  font-size: 0.95rem;
   line-height: 1.5;
-  position: relative;
   word-wrap: break-word;
-  
+
   ${props => props.$isUser ? `
     align-self: flex-end;
     background-color: ${COLORS.userBubble};
     color: ${COLORS.userText};
-    border-bottom-right-radius: 2px;
+    border-bottom-right-radius: 4px;
   ` : `
     align-self: flex-start;
     background-color: ${COLORS.botBubble};
     color: ${COLORS.text};
-    border-bottom-left-radius: 2px;
+    border-bottom-left-radius: 4px;
     border: 1px solid ${COLORS.border};
   `}
 `;
@@ -168,8 +154,12 @@ const MessageBubble = styled.div`
 const TypingIndicator = styled.div`
   display: flex;
   gap: 4px;
-  padding: 4px 8px;
-  
+  padding: 6px 12px;
+  background: ${COLORS.botBubble};
+  border-radius: 12px;
+  align-self: flex-start;
+  width: fit-content;
+
   span {
     width: 6px;
     height: 6px;
@@ -177,10 +167,10 @@ const TypingIndicator = styled.div`
     border-radius: 50%;
     animation: bounce 1.4s infinite ease-in-out both;
   }
-  
+
   span:nth-child(1) { animation-delay: -0.32s; }
   span:nth-child(2) { animation-delay: -0.16s; }
-  
+
   @keyframes bounce {
     0%, 80%, 100% { transform: scale(0); }
     40% { transform: scale(1); }
@@ -202,18 +192,14 @@ const Input = styled.input`
   border: 1px solid ${COLORS.border};
   background-color: ${COLORS.background};
   color: ${COLORS.text};
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   outline: none;
   transition: all 0.2s;
 
   &:focus {
     border-color: ${COLORS.primary};
     background-color: ${COLORS.white};
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
-  }
-
-  &::placeholder {
-    color: ${COLORS.lightText};
+    box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.1);
   }
 `;
 
@@ -222,8 +208,8 @@ const SendButton = styled.button`
   color: ${COLORS.white};
   border: none;
   border-radius: 50%;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -232,10 +218,9 @@ const SendButton = styled.button`
   flex-shrink: 0;
 
   &:hover {
-    background-color: #1d4ed8;
+    background-color: #1e293b;
     transform: scale(1.05);
   }
-  
   &:disabled {
     background-color: ${COLORS.border};
     cursor: default;
@@ -243,21 +228,95 @@ const SendButton = styled.button`
   }
 `;
 
-// --- Main Component ---
+// --- KNOWLEDGE BASE SIMULATION ---
+const knowledgeBase = [
+  {
+    tags: ["prix", "tarif", "abonnement", "combien", "payant", "gratuit", "premium"],
+    response: "VisiConnect propose plusieurs formules : une version gratuite (Membres Basic) idéale pour les petites réunions, et des abonnements Premium/Pro offrant des réunions illimitées, la 4K, des salles de sous-commission, et l'accès au tableau blanc avancé."
+  },
+  {
+    tags: ["tableau", "blanc", "dessin", "tableau blanc", "dessiner", "schéma"],
+    response: "Le tableau blanc interactif de VisiConnect vous permet de dessiner, d'ajouter des formes et des notes en temps réel avec tous les participants. Il est accessible directement depuis la barre d'outils de votre salle de réunion."
+  },
+  {
+    tags: ["sécurité", "chiffrement", "sécurisé", "données", "confidenciel"],
+    response: "La sécurité est notre priorité. Toutes les communications sur VisiConnect sont protégées par un chiffrement de bout en bout (E2EE), et nous offrons des options de salle d'attente et de mot de passe pour contrôler l'accès à vos réunions."
+  },
+  {
+    tags: ["4k", "qualité", "hd", "haute définition", "vidéo"],
+    response: "Vous pouvez activer la qualité 4K UHD dans les paramètres de votre caméra (icône engrenage pendant la réunion). Cela garantit une clarté optimale si votre équipement et votre connexion le permettent."
+  },
+  {
+    tags: ["partage", "écran", "présenter", "partager", "presentation"],
+    response: "Pour partager votre écran, cliquez sur l'icône 'Partager l'écran' en bas de la fenêtre de réunion. Vous pouvez choisir de partager tout votre écran, une fenêtre d'application ou un onglet de navigateur."
+  },
+  {
+    tags: ["inscription", "compte", "creer", "inscrire", "login"],
+    response: "Pour créer un compte, cliquez sur 'Créer un compte' en haut à droite. Vous aurez besoin d'un email professionnel, ou vous pouvez vous inscrire en un clic via Google ou GitHub."
+  },
+  {
+    tags: ["micro", "audio", "entends", "son", "parle", "sourd"],
+    response: "Si vous avez des problèmes de son, vérifiez que votre micro/casque est bien sélectionné dans les Paramètres > Audio. Assurez-vous également que votre navigateur autorise VisiConnect à utiliser le microphone."
+  },
+  {
+    tags: ["caméra", "video", "marche pas", "cam", "voir"],
+    response: "Si votre caméra ne fonctionne pas, vérifiez dans Paramètres > Vidéo que la bonne source est sélectionnée, assurez-vous qu'aucune autre application n'utilise la caméra, et vérifiez les autorisations de votre navigateur."
+  },
+  {
+    tags: ["fonctionnalités", "features", "quoi", "pourquoi", "visiconnect"],
+    response: "VisiConnect est une plateforme ultra-performante offrant : Appels vidéo 4K, Audio spatial, Chat en direct, Messagerie privée, Tableau blanc collaboratif, Partage d'écran fluide, et une sécurité de bout en bout."
+  },
+  {
+    tags: ["salut", "bonjour", "hey", "coucou", "hello"],
+    response: "Bonjour ! Bienvenue sur VisiConnect. Je suis l'IA de la plateforme, entraînée pour répondre à toutes vos questions. Que puis-je faire pour vous aujourd'hui ?"
+  },
+  {
+    tags: ["merci", "thanks", "super", "génial", "top"],
+    response: "Avec grand plaisir ! N'hésitez pas si vous avez la moindre question concernant VisiConnect ou ses fonctionnalités."
+  },
+  {
+    tags: ["qui", "es tu", "nom", "ia", "robot", "agent"],
+    response: "Je suis VisiBot, l'Intelligence Artificielle ultra-performante de VisiConnect. Mon rôle est de vous guider, de vous aider à résoudre vos problèmes et de tout vous expliquer sur notre plateforme !"
+  }
+];
+
+const findBestMatch = (input) => {
+  const normInput = input.toLowerCase();
+  let bestMatch = null;
+  let highestScore = 0;
+
+  for (const item of knowledgeBase) {
+    let score = 0;
+    item.tags.forEach(tag => {
+      // Basic strict presence check
+      if (normInput.includes(tag)) score += 2;
+    });
+
+    if (score > highestScore) {
+      highestScore = score;
+      bestMatch = item.response;
+    }
+  }
+
+  if (highestScore > 0) return bestMatch;
+  
+  // Default fallback if no match
+  return "C'est une excellente question. VisiConnect propose tellement de fonctionnalités (4K, tableau blanc, sécurité E2E) que la réponse pourrait dépendre de votre situation exacte. Pouvez-vous reformuler ou préciser de quelle partie de la plateforme vous parlez ?";
+};
 
 const AIChatbot = () => {
-    const { uiConfig, setIsChatbotOpen } = useAdmin();
+    const { uiConfig = {}, setIsChatbotOpen } = useAdmin() || {};
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([
-        { 
-            id: 1, 
-            text: "Bonjour ! Je suis votre assistant virtuel VisiConnect. Je peux vous aider avec vos réunions ou des problèmes techniques.", 
-            isUser: false 
+        {
+            id: 1,
+            text: "Bonjour ! Je suis l'IA ultra-performante de VisiConnect. Je connais la plateforme sur le bout des doigts. Comment puis-je vous aider ?",
+            isUser: false
         }
     ]);
     const [inputValue, setInputValue] = useState("");
     const [isTyping, setIsTyping] = useState(false);
-    
+
     const messagesEndRef = useRef(null);
 
     const scrollToBottom = () => {
@@ -272,49 +331,30 @@ const AIChatbot = () => {
         e.preventDefault();
         if (!inputValue.trim()) return;
 
-        // Add user message
-        const userMessage = { id: Date.now(), text: inputValue, isUser: true };
-        setMessages((prev) => [...prev, userMessage]);
+        const text = inputValue;
         setInputValue("");
+        
+        const userMessage = { id: Date.now(), text, isUser: true };
+        setMessages((prev) => [...prev, userMessage]);
         setIsTyping(true);
-        scrollToBottom();
 
-        // Simulate AI thinking and response
         setTimeout(() => {
-            const lowerInput = userMessage.text.toLowerCase();
-            let botText = "Je vois. Pouvez-vous m'en dire plus ?";
-
-            if (lowerInput.includes("meeting") || lowerInput.includes("start")) {
-                botText = "Pour démarrer une nouvelle réunion, cliquez sur le bouton 'Nouvelle Réunion' sur votre tableau de bord puis partagez le lien.";
-            } else if (lowerInput.includes("audio") || lowerInput.includes("micro") || lowerInput.includes("entends")) {
-                botText = "Pour les problèmes audio, vérifiez que votre micro est bien sélectionné dans Paramètres > Audio et que le navigateur a la permission d'accès.";
-            } else if (lowerInput.includes("video") || lowerInput.includes("caméra") || lowerInput.includes("voir")) {
-                botText = "Si votre caméra ne fonctionne pas, vérifiez dans Paramètres > Vidéo que la bonne caméra est choisie et qu'aucune autre application ne l'utilise.";
-            } else if (lowerInput.includes("écran") || lowerInput.includes("partage")) {
-                botText = "Vous pouvez partager votre écran en cliquant sur l'icône 'Partager l'écran' dans la barre d'outils inférieure.";
-            } else if (lowerInput.includes("bonjour") || lowerInput.includes("salut")) {
-                botText = "Bonjour ! Prêt à vous aider avec VisiConnect.";
-            }
-
+            const botText = findBestMatch(text);
             const botResponse = {
                 id: Date.now() + 1,
                 text: botText,
                 isUser: false
             };
-            
             setMessages((prev) => [...prev, botResponse]);
             setIsTyping(false);
-            scrollToBottom();
-        }, 1500);
+        }, 1200 + Math.random() * 800); // Simulate thinking time
     };
 
-    const toggleChat = () => {
-        setIsOpen(!isOpen);
-        setIsChatbotOpen(!isOpen);
-    };
+    // Integration capability with Admin Context setting
+    const position = uiConfig?.chatbotPosition || 'right';
 
     return (
-        <ChatContainer $position={uiConfig?.chatbotPosition || 'right'}>
+        <ChatContainer $position={position} initial={false}>
             <AnimatePresence>
                 {isOpen && (
                     <ChatWindow
@@ -328,9 +368,12 @@ const AIChatbot = () => {
                                 <IconWrapper>
                                     <Sparkles size={20} />
                                 </IconWrapper>
-                                <HeaderTitle>Assistant IA</HeaderTitle>
+                                <div>
+                                    <HeaderTitle>Assistant VisiConnect</HeaderTitle>
+                                    <div style={{ fontSize: '0.75rem', color: COLORS.lightText }}>IA Ultra-performante</div>
+                                </div>
                             </TitleContainer>
-                            <CloseButton onClick={() => setIsOpen(false)} aria-label="Fermer le chat">
+                            <CloseButton onClick={() => setIsOpen(false)}>
                                 <X size={20} />
                             </CloseButton>
                         </Header>
@@ -342,13 +385,9 @@ const AIChatbot = () => {
                                 </MessageBubble>
                             ))}
                             {isTyping && (
-                                <MessageBubble $isUser={false} style={{ width: 'fit-content' }}>
-                                    <TypingIndicator>
-                                        <span></span>
-                                        <span></span>
-                                        <span></span>
-                                    </TypingIndicator>
-                                </MessageBubble>
+                                <TypingIndicator>
+                                    <span /><span /><span />
+                                </TypingIndicator>
                             )}
                             <div ref={messagesEndRef} />
                         </MessagesArea>
@@ -356,12 +395,11 @@ const AIChatbot = () => {
                         <InputArea onSubmit={handleSend}>
                             <Input
                                 type="text"
+                                placeholder="Posez votre question..."
                                 value={inputValue}
                                 onChange={(e) => setInputValue(e.target.value)}
-                                placeholder="Écrivez votre message..."
-                                disabled={isTyping}
                             />
-                            <SendButton type="submit" disabled={!inputValue.trim() || isTyping}>
+                            <SendButton type="submit" disabled={!inputValue.trim()}>
                                 <Send size={18} />
                             </SendButton>
                         </InputArea>
@@ -370,12 +408,11 @@ const AIChatbot = () => {
             </AnimatePresence>
 
             <ChatButton
-                onClick={toggleChat}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                aria-label={isOpen ? "Fermer le chat" : "Ouvrir le chat"}
+                onClick={() => setIsOpen(!isOpen)}
             >
-                {isOpen ? <X size={28} /> : <MessageSquare size={28} />}
+                {isOpen ? <X size={24} /> : <MessageSquare size={24} />}
             </ChatButton>
         </ChatContainer>
     );

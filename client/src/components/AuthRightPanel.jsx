@@ -5,16 +5,18 @@ import { MessageSquare, Video, ShieldCheck } from 'lucide-react';
 
 const PanelContainer = styled.div`
   flex: 1;
-  display: none;
+  display: flex;
   background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
   position: relative;
   overflow: hidden;
   align-items: center;
   justify-content: center;
-  padding: 4rem;
+  padding: 3rem 1.5rem;
+  min-height: 400px; /* for mobile */
 
   @media (min-width: 1024px) {
-    display: flex;
+    padding: 4rem;
+    min-height: 100vh;
   }
 `;
 
@@ -34,161 +36,125 @@ const FloatingElement = styled(motion.div)`
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
-  padding: 1.5rem;
-  display: flex;
+  border-radius: 16px;
+  padding: 1rem;
+  display: none; /* hide on very small default */
   align-items: center;
   gap: 1rem;
   color: white;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
   z-index: 2;
+  
+  @media (min-width: 640px) {
+     display: flex; /* show on tablets+ */
+  }
 `;
 
 const ContentText = styled(motion.div)`
   z-index: 10;
   max-width: 550px;
   position: relative;
+  text-align: center;
   
-  h2 {
-    font-size: 3.5rem;
-    font-weight: 800;
-    margin-bottom: 1.5rem;
-    line-height: 1.1;
-    background: linear-gradient(to right, #ffffff 0%, #93c5fd 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    letter-spacing: -0.02em;
-  }
-  
-  p {
-    font-size: 1.25rem;
-    color: #94a3b8;
-    line-height: 1.7;
-    margin-bottom: 2rem;
+  @media (min-width: 1024px) {
+    text-align: left;
   }
 `;
 
-const CircleDecoration = styled(motion.div)`
+const Title = styled.h2`
+  font-size: 2rem;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+
+  @media (min-width: 1024px) {
+    font-size: 3rem;
+  }
+`;
+
+const Description = styled.p`
+  font-size: 1rem;
+  color: #94a3b8;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+
+  @media (min-width: 1024px) {
+    font-size: 1.25rem;
+  }
+`;
+
+const DecorativeOrb = styled(motion.div)`
   position: absolute;
   border-radius: 50%;
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  filter: blur(40px);
-  opacity: 0.4;
+  filter: blur(60px);
   z-index: 0;
 `;
 
-const IconBox = styled.div`
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  background: ${props => props.$bg || 'rgba(59, 130, 246, 0.2)'};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-`;
-
-const ElementText = styled.div`
-  h4 {
-    font-size: 1rem;
-    font-weight: 600;
-    margin: 0 0 0.25rem 0;
-  }
-  span {
-    font-size: 0.85rem;
-    color: #94a3b8;
-  }
-`;
-
-export const AuthRightPanel = ({ title, description }) => {
+const AuthRightPanel = ({ title, description }) => {
   return (
     <PanelContainer>
       <DarkOverlay />
       
-      {/* Decorative Orbs */}
-      <CircleDecoration 
-        style={{ width: '400px', height: '400px', top: '-10%', right: '-5%' }}
-        animate={{ 
-          scale: [1, 1.2, 1],
-          opacity: [0.3, 0.5, 0.3] 
-        }}
+      <DecorativeOrb 
+        style={{ top: '10%', right: '20%', width: '300px', height: '300px', background: 'rgba(59, 130, 246, 0.3)' }}
+        animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
       />
-      <CircleDecoration 
-        style={{ width: '300px', height: '300px', bottom: '-5%', left: '10%' }}
-        animate={{ 
-          scale: [1, 1.5, 1],
-          opacity: [0.2, 0.4, 0.2] 
-        }}
+      <DecorativeOrb 
+        style={{ bottom: '10%', left: '10%', width: '250px', height: '250px', background: 'rgba(16, 185, 129, 0.2)' }}
+        animate={{ scale: [1, 1.3, 1], opacity: [0.4, 0.7, 0.4] }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
       />
 
-      {/* Floating UI Elements */}
-      <FloatingElement
-        initial={{ opacity: 0, x: 50, y: -50 }}
-        animate={{ opacity: 1, x: 0, y: [0, -15, 0] }}
-        transition={{ opacity: { duration: 0.8 }, y: { duration: 6, repeat: Infinity, ease: "easeInOut" } }}
-        style={{ top: '15%', right: '10%' }}
-      >
-        <IconBox $bg="rgba(16, 185, 129, 0.2)"><Video color="#34d399" size={24} /></IconBox>
-        <ElementText>
-          <h4>Appels 4K Ultra HD</h4>
-          <span>Latence minimale garantie</span>
-        </ElementText>
-      </FloatingElement>
-
-      <FloatingElement
-        initial={{ opacity: 0, x: -50, y: 50 }}
-        animate={{ opacity: 1, x: 0, y: [0, 20, 0] }}
-        transition={{ opacity: { duration: 0.8, delay: 0.3 }, y: { duration: 7, repeat: Infinity, ease: "easeInOut" } }}
-        style={{ bottom: '20%', left: '5%' }}
-      >
-        <IconBox $bg="rgba(245, 158, 11, 0.2)"><ShieldCheck color="#fbbf24" size={24} /></IconBox>
-        <ElementText>
-          <h4>Chiffrement de bout en bout</h4>
-          <span>Sécurité maximale</span>
-        </ElementText>
-      </FloatingElement>
-
-      <FloatingElement
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1, y: [0, -10, 0] }}
-        transition={{ opacity: { duration: 0.8, delay: 0.6 }, y: { duration: 5, repeat: Infinity, ease: "easeInOut", delay: 2 } }}
-        style={{ top: '40%', right: '5%', padding: '1rem', borderRadius: '50%' }}
-      >
-        <IconBox style={{ width: '60px', height: '60px', borderRadius: '50%' }} $bg="rgba(139, 92, 246, 0.2)">
-          <MessageSquare color="#a78bfa" size={28} />
-        </IconBox>
-      </FloatingElement>
-
       <ContentText
-        initial={{ opacity: 0, y: 40 }}
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.2, type: "spring", stiffness: 100 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
       >
-        <h2>{title}</h2>
-        <p>{description}</p>
-        
-        <motion.div 
-          style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 1 }}
-        >
-          <div style={{ display: 'flex', border: '2px solid rgba(255,255,255,0.1)', padding: '0.2rem', borderRadius: '2rem', background: 'rgba(0,0,0,0.2)' }}>
-            {[1,2,3,4].map((i) => (
-              <img 
-                key={i} 
-                src={`https://i.pravatar.cc/100?img=${i+10}`} 
-                alt="user" 
-                style={{ width: '38px', height: '38px', borderRadius: '50%', border: '2px solid #0f172a', marginLeft: i === 1 ? '0' : '-12px' }}
-              />
-            ))}
-          </div>
-          <span style={{ fontSize: '0.95rem', fontWeight: '500', color: '#cbd5e1' }}>+10,000 équipes connectées</span>
-        </motion.div>
+        <Title>{title}</Title>
+        <Description>{description}</Description>
       </ContentText>
+
+      { /* Floating elements to add dimension - hidden on small mobile to avoid clutter */ }
+      <FloatingElement
+        style={{ top: '15%', left: '10%' }}
+        animate={{ y: [0, -15, 0] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <Video color="#3b82f6" size={24} />
+        <div>
+          <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#e2e8f0' }}>Vidéo 4K</div>
+          <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Qualité ultra-nette</div>
+        </div>
+      </FloatingElement>
+
+      <FloatingElement
+        style={{ top: '45%', right: '5%' }}
+        animate={{ y: [0, 20, 0] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+      >
+        <ShieldCheck color="#10b981" size={24} />
+        <div>
+          <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#e2e8f0' }}>100% Sécurisé</div>
+          <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Chiffrement de bout en bout</div>
+        </div>
+      </FloatingElement>
+
+      <FloatingElement
+        style={{ bottom: '20%', left: '15%' }}
+        animate={{ y: [0, -20, 0] }}
+        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+      >
+        <MessageSquare color="#8b5cf6" size={24} />
+        <div>
+          <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#e2e8f0' }}>Chat en direct</div>
+          <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Collaboration instantanée</div>
+        </div>
+      </FloatingElement>
 
     </PanelContainer>
   );
 };
+
+export default AuthRightPanel;
