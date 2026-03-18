@@ -1,6 +1,6 @@
 [build]
   base = "client/"
-  publish = "dist/" # Vite par défaut publie dans dist/, et non build/
+  publish = "dist/"
   command = "npm run build"
 
 [build.environment]
@@ -13,5 +13,4 @@
 [[redirects]]
   from = "/*"
   to = "/index.html"
-  status = 200
   status = 200
