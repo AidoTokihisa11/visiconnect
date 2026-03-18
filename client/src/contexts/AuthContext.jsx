@@ -119,7 +119,13 @@ export const AuthProvider = ({ children }) => {
         await setActive({ session: res.createdSessionId });
         return { data: { user: res }, success: true };
       } else if (res.status === "missing_requirements") {
-        return { error: { message: "Le code est bon, mais Clerk demande des champs obligatoires (ex: Prénom, Nom) que vous n'avez pas désactivés, ou la configuration est incomplète." } };
+        // Rendre les champs manquants lisibles
+        const missing = res.missingFields ? res.missingFields.join(", ") : "inconnu";
+        return { 
+          error: { 
+            message: `Le code est valide ! Cependant, la création est bloquée car des champs obligatoires sont activés dans votre panel Clerk : [ ${missing} ]. Veuillez aller dans Clerk > Email/Phone/Username et passer ces champs en "Off" ou "Optionnel".`
+          } 
+        };
       } else {
         return { error: { message: "Information manquante lors de la vérification. Statut retourné: " + res.status } };
       }
