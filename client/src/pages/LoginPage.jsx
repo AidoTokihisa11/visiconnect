@@ -38,7 +38,13 @@ const LoginCard = styled.div`
   border-radius: 20px;
   padding: 48px 40px;
   width: 100%;
+  max-width: 440px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 20px 40px -10px rgba(37, 99, 235, 0.1);
+  
+  @media (max-width: 640px) {
+    padding: 32px 24px;
+    border-radius: 16px;
+  }
 `
 
 const Header = styled.div`

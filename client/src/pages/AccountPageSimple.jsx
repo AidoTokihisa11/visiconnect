@@ -310,10 +310,14 @@ const ProfilePictureSection = styled.div`
   }
 `;
 
-const AvatarContainer = styled(motion.div)`
+const AvatarWrapper = styled.div`
   position: relative;
-  width: 110px;
-  height: 110px;
+  display: inline-block;
+`;
+
+const AvatarContainer = styled(motion.div)`
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   background: linear-gradient(135deg, #eff6ff, #dbeafe);
   border: 4px solid #ffffff;
@@ -321,7 +325,7 @@ const AvatarContainer = styled(motion.div)`
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.15);
   flex-shrink: 0;
   cursor: pointer;
   
@@ -340,11 +344,11 @@ const AvatarContainer = styled(motion.div)`
 
 const UploadButton = styled.label`
   position: absolute;
-  bottom: 0;
-  right: 0;
+  bottom: 4px;
+  right: 4px;
   background: #2563eb;
-  width: 34px;
-  height: 34px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   border: 3px solid #ffffff;
   display: flex;
@@ -352,11 +356,13 @@ const UploadButton = styled.label`
   justify-content: center;
   color: white;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+  z-index: 10;
   
   &:hover {
     background: #1d4ed8;
-    transform: scale(1.05);
+    transform: scale(1.1);
   }
   
   input {
@@ -448,6 +454,24 @@ const AccountPageSimple = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !user) return;
+    
+    try {
+      setIsSaving(true);
+      await user.setProfileImage({ file });
+      // Force Clerk à rafraîchir l'objet user récupéré
+      await user.reload();
+      showNotification('Photo de profil mise à jour avec succès !');
+    } catch (error) {
+      console.error('Erreur image:', error);
+      showNotification('Erreur lors du changement de photo. La taille doit être inférieure à 10MB.', 'error');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   const handleSave = async (e) => {
     e.preventDefault();
     setIsSaving(true);
@@ -498,22 +522,24 @@ const AccountPageSimple = () => {
       onSubmit={handleSave}
     >
       <ProfilePictureSection>
-        <AvatarContainer whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 300 }}>
-          {user?.imageUrl ? (
-            <img src={user.imageUrl} alt="Profile" />
-          ) : (
-            <div className="fallback">{getInitials(formData.displayName)}</div>
-          )}
+        <AvatarWrapper>
+          <AvatarContainer whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 300 }}>
+            {user?.hasImage || user?.imageUrl ? (
+              <img src={user.imageUrl} alt="Profile" />
+            ) : (
+              <div className="fallback">{getInitials(formData.displayName)}</div>
+            )}
+          </AvatarContainer>
           <UploadButton>
-            <Camera size={14} />
-            <input type="file" accept="image/*" disabled title="Géré par Clerk" />
+            <Camera size={16} />
+            <input type="file" accept="image/*" onChange={handleImageChange} />
           </UploadButton>
-        </AvatarContainer>
+        </AvatarWrapper>
         <ProfilePictureInfo>
           <h3>Photo de profil</h3>
-          <p>Un avatar est généré automatiquement ou récupéré via votre fournisseur d'authentification (Google, GitHub, etc).</p>
+          <p>Personnalisez votre avatar public. Formats acceptés : JPG, PNG, GIF, WEBP (Max 10MB).</p>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.75rem', padding: '0.4rem 0.75rem', background: '#f1f5f9', borderRadius: '2rem', fontSize: '0.8rem', color: '#475569', fontWeight: '500' }}>
-            <Shield size={14} color="#2563eb" /> Géré de manière sécurisée par Clerk
+            <Shield size={14} color="#2563eb" /> Sécurité gérée par Clerk
           </div>
         </ProfilePictureInfo>
       </ProfilePictureSection>
