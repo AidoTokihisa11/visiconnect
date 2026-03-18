@@ -1,32 +1,33 @@
 const UserAPIService = {
   getUserProfile: async () => {
-    // Mock pour Convex / transition
+    const saved = localStorage.getItem('visiconnect_user_profile');
+    if (saved) return JSON.parse(saved);
     return {
       id: localStorage.getItem('convex_user_id') || 'demo_user',
       email: 'user@visiconnect.com',
-      displayName: 'Utilisateur Convex',
+      displayName: 'Utilisateur Méta',
+      bio: '', phone: '', company: '', jobTitle: '', location: '', website: '',
       avatarUrl: null,
       created_at: new Date().toISOString()
     };
   },
 
   updateUserProfile: async (updates) => {
-    console.log('Update profile mock', updates);
-    return { user: { id: 'demo_user', ...updates } };
+    const current = await UserAPIService.getUserProfile();
+    const updated = { ...current, ...updates };
+    localStorage.setItem('visiconnect_user_profile', JSON.stringify(updated));
+    return { user: updated };
   },
 
   updateNotificationSettings: async (settings) => {
-    console.log('Update notif module mock', settings);
     return { settings };
   },
 
   updatePrivacySettings: async (settings) => {
-    console.log('Update privacy mock', settings);
     return { settings };
   },
 
   syncUser: async (userData) => {
-    console.log('Sync user mock', userData);
     return userData;
   },
 

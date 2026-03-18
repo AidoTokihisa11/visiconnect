@@ -431,15 +431,17 @@ const AccountPageSimple = () => {
   });
 
   useEffect(() => {
-    if (userProfile && !loading) {
+    if (userProfile && !loading && user) {
+      const metadata = user.unsafeMetadata || {};
+      
       setFormData({
-        displayName: userProfile.displayName || user?.fullName || '',
-        bio: userProfile.bio || '',
-        phone: userProfile.phone || '',
-        company: userProfile.company || '',
-        jobTitle: userProfile.jobTitle || '',
-        location: userProfile.location || '',
-        website: userProfile.website || ''
+        displayName: metadata.displayName || userProfile.displayName || user.fullName || '',
+        bio: metadata.bio || userProfile.bio || '',
+        phone: metadata.phone || userProfile.phone || '',
+        company: metadata.company || userProfile.company || '',
+        jobTitle: metadata.jobTitle || userProfile.jobTitle || '',
+        location: metadata.location || userProfile.location || '',
+        website: metadata.website || userProfile.website || ''
       });
     }
   }, [userProfile, loading, user]);
@@ -478,16 +480,24 @@ const AccountPageSimple = () => {
     try {
       if (user) {
         try {
+          // On tente d'abord de mettre à jour les infos standard de base Clerk
           await user.update({
             firstName: formData.displayName.split(' ')[0] || '',
             lastName: formData.displayName.split(' ').slice(1).join(' ') || ''
           });
         } catch (clerkError) {
           // On ignore l'erreur si le "First and Last Name" n'est pas activé dans le panel Clerk de l'utilisateur
-          console.warn("Mise à jour Clerk ignorée (paramètre first_name/last_name non activé sur votre dashboard Clerk): ", clerkError);
+          console.warn("Mise à jour standard Clerk ignorée (paramètre first_name/last_name non activé sur votre dashboard Clerk): ", clerkError);
         }
+
+        // Ensuite on sauvegarde de force la totalité des champs persos sur Clerk
+        await user.update({
+          unsafeMetadata: formData
+        });
+        await user.reload(); // on rafraichit l'utilisateur local Clerk
       }
       
+      // Persistance secondaire (base de données locale)
       await updateProfile(formData);
       showNotification('Profil mis à jour avec succès !');
     } catch (error) {

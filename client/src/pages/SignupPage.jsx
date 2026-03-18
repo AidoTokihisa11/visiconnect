@@ -4,9 +4,8 @@ import styled from 'styled-components'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../contexts/AuthContext'
 import { FaGoogle, FaGithub } from 'react-icons/fa'
-import { Check, X, Mail, Lock, Eye, EyeOff, AlertCircle, ArrowLeft, ArrowRight } from 'lucide-react';
-
-// === NEW SPLIT SCREEN DESIGN ===
+import { Check, X, Mail, Lock, Eye, EyeOff, AlertCircle, ArrowLeft } from 'lucide-react';
+import { AuthRightPanel } from '../components/AuthRightPanel';
 
 const PageWrapper = styled.div`
   display: flex;
@@ -22,49 +21,6 @@ const LeftPanel = styled.div`
   align-items: center;
   padding: 2rem;
   position: relative;
-`
-
-const RightPanel = styled.div`
-  flex: 1;
-  display: none;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  position: relative;
-  overflow: hidden;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem;
-
-  @media (min-width: 1024px) {
-    display: flex;
-  }
-`
-
-const RightContent = styled(motion.div)`
-  color: white;
-  z-index: 10;
-  max-width: 500px;
-
-  h2 {
-    font-size: 3rem;
-    font-weight: 800;
-    margin-bottom: 1.5rem;
-    line-height: 1.2;
-    background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  p {
-    font-size: 1.25rem;
-    color: #94a3b8;
-    line-height: 1.6;
-  }
-`
-
-const FloatingShape = styled(motion.div)`
-  position: absolute;
-  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(37, 99, 235, 0.05) 100%);
-  backdrop-filter: blur(5px);
 `
 
 const BackLink = styled(Link)`
@@ -367,7 +323,6 @@ const SuccessIconBox = styled.div`
   box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4);
 `
 
-
 const SignupPage = () => {
   const navigate = useNavigate()
   const { isLoggedIn, signUp, signInWithGoogle, signInWithGithub, verifyEmailCode } = useAuth()
@@ -623,21 +578,10 @@ const SignupPage = () => {
         </FormContainer>
       </LeftPanel>
 
-      <RightPanel>
-        <FloatingShape style={{ top: '-5%', right: '-15%', width: '500px', height: '400px' }} animate={{ rotate: 360 }} transition={{ duration: 40, repeat: Infinity, ease: "linear" }} />
-        <FloatingShape style={{ bottom: '-10%', left: '-10%', width: '400px', height: '400px' }} animate={{ rotate: -360 }} transition={{ duration: 30, repeat: Infinity, ease: "linear" }} />
-        
-        <RightContent
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-        >
-          <h2>L'innovation au service de la connexion.</h2>
-          <p>
-            Créez des espaces de travail collaboratifs. Partagez, échangez et progressez ensemble, avec une fluidité exceptionnelle.
-          </p>
-        </RightContent>
-      </RightPanel>
+      <AuthRightPanel 
+        title="L'innovation au service de la connexion."
+        description="Créez des espaces de travail collaboratifs. Partagez, échangez et progressez ensemble, avec une fluidité exceptionnelle."
+      />
     </PageWrapper>
   )
 }
