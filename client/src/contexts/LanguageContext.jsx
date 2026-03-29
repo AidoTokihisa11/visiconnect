@@ -14,15 +14,12 @@ export const useLanguage = () => {
 export const LanguageProvider = ({ children }) => {
     // Current language state
     const [language, setLanguage] = useState(translationService.getCurrentLanguage());
-    // Force update state to trigger re-renders when language changes
-    const [, forceUpdate] = useState({});
 
     useEffect(() => {
         // Subscribe to language changes
         const handleLanguageChange = (event) => {
             if (event.detail && event.detail.language) {
                 setLanguage(event.detail.language);
-                forceUpdate({});
             }
         };
 

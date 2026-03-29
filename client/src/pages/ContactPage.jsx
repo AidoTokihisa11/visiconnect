@@ -1,282 +1,186 @@
-import React, { useState, useEffect } from 'react';
-import styled, { keyframes, css } from 'styled-components';
-import { Mail, Phone, MapPin, Send, MessageSquare, HelpCircle, ArrowRight, CheckCircle, Clock } from 'lucide-react';
-import HeaderClean from '../components/HeaderClean';
-import FooterClean from '../components/FooterClean';
-import CallToAction from '../components/CallToAction';
+import React, { useState } from "react";
+import styled from "styled-components";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Mail,
+  Building2,
+  MapPin,
+  CheckCircle2,
+  AlertCircle,
+  Briefcase,
+} from "lucide-react";
+import HeaderClean from "../components/HeaderClean";
+import FooterClean from "../components/FooterClean";
 
-const COLORS = {
-  primary: 'hsl(var(--primary))',    
-  primaryDark: 'hsl(var(--primary))', // Using same for simplicity or var(--primary-foreground) if needed
-  secondary: 'hsl(var(--muted-foreground))',  
-  dark: 'hsl(var(--foreground))',      
-  text: 'hsl(var(--foreground))',       
-  lightText: 'hsl(var(--muted-foreground))', 
-  background: 'hsl(var(--background))',
-  white: 'hsl(var(--card))',
-  border: 'hsl(var(--border))',    
-  success: 'hsl(var(--primary))',   
-  error: 'hsl(var(--destructive))'
-};
-
-const fadeIn = keyframes`
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-`;
-
-const PageContainer = styled.div`
+const PageLayout = styled.div`
   min-height: 100vh;
-  background-color: ${COLORS.background};
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  color: ${COLORS.text};
-  transition: background-color 0.3s ease, color 0.3s ease;
   display: flex;
   flex-direction: column;
+  background-color: #f8fafc;
 `;
 
-const MainContent = styled.main`
+const ContentWrapper = styled.main`
   flex: 1;
+  padding: 8rem 1.5rem 6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 `;
 
-const HeroSection = styled.div`
-  background: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(var(--background)) 100%);
-  padding: 8rem 1.5rem 6rem;
+const MainHeader = styled(motion.div)`
   text-align: center;
-  border-bottom: 1px solid ${COLORS.border};
-  transition: background-color 0.3s ease;
-  position: relative;
+  margin-bottom: 4rem;
+  max-width: 700px;
+  width: 100%;
+
+  h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 1.25rem;
+    letter-spacing: -0.02em;
+
+    span {
+      color: #2563eb;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 2.5rem;
+    }
+  }
+
+  p {
+    font-size: 1.125rem;
+    color: #475569;
+    line-height: 1.6;
+  }
+`;
+
+const ContactContainer = styled(motion.div)`
+  max-width: 1100px;
+  width: 100%;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px -10px rgba(37, 99, 235, 0.1);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  display: flex;
   overflow: hidden;
 
-  @media (max-width: 640px) {
-    padding: 6rem 1rem 4rem;
-  }
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(37, 99, 235, 0.05) 0%, transparent 70%);
-    pointer-events: none;
+  @media (max-width: 992px) {
+    flex-direction: column;
   }
 `;
 
-const HeroTitle = styled.h1`
-  font-size: 3.5rem;
-  font-weight: 800;
-  color: ${COLORS.dark};
-  margin-bottom: 1.5rem;
-  animation: ${fadeIn} 0.5s ease-out;
-
-  span {
-    color: ${COLORS.primary};
-    position: relative;
-    display: inline-block;
-    
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: 8px;
-      left: 0;
-      width: 100%;
-      height: 12px;
-      background-color: rgba(37, 99, 235, 0.1);
-      z-index: -1;
-      transform: skewX(-10deg);
-    }
-  }
-
-  @media (max-width: 768px) {
-    font-size: 2.5rem;
-  }
-`;
-
-const HeroSubtitle = styled.p`
-  font-size: 1.25rem;
-  color: ${COLORS.lightText};
-  max-width: 600px;
-  margin: 0 auto;
-  line-height: 1.6;
-  animation: ${fadeIn} 0.5s ease-out 0.1s backwards;
-`;
-
-const ContentWrapper = styled.div`
-  max-width: 1200px;
-  margin: -3rem auto 6rem;
-  padding: 0 1.5rem;
-  position: relative;
-  z-index: 10;
-  animation: ${fadeIn} 0.5s ease-out 0.2s backwards;
-`;
-
-const ContactGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1.5fr;
-  gap: 2rem;
-  align-items: start;
-
-  @media (max-width: 900px) {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-`;
-
-// --- LEFT SIDE: INFO ---
-const InfoColumn = styled.div`
+const LeftPanel = styled.div`
+  width: 38%;
+  background: #eff6ff;
+  border-right: 1px solid #e2e8f0;
+  padding: 4rem 3rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  position: relative;
+
+  @media (max-width: 992px) {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 3rem 2rem;
+  }
 `;
 
-const InfoCard = styled.div`
-  background-color: ${COLORS.white};
-  padding: 2rem;
-  border-radius: 16px;
-  border: 1px solid ${COLORS.border};
+const PanelContent = styled.div`
+  position: relative;
+  z-index: 2;
+
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin-bottom: 0.75rem;
+  }
+
+  p.desc {
+    color: #475569;
+    margin-bottom: 3rem;
+    line-height: 1.6;
+    font-size: 1.05rem;
+  }
+`;
+
+const InfoBlock = styled.div`
   display: flex;
   align-items: flex-start;
-  gap: 1.5rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  gap: 1.25rem;
+  margin-bottom: 2.25rem;
 
-  @media (max-width: 480px) {
-    flex-direction: column;
+  .icon-container {
+    width: 44px;
+    height: 44px;
+    background: white;
+    border: 1px solid #bfdbfe;
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.05);
+    border-radius: 12px;
+    display: flex;
     align-items: center;
-    text-align: center;
-    padding: 1.5rem;
+    justify-content: center;
+    color: #2563eb;
+    flex-shrink: 0;
   }
 
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    border-color: ${COLORS.primary};
-  }
-`;
-
-const SupportCard = styled(InfoCard)`
-  background-color: ${COLORS.dark};
-  color: white;
-  border: none;
-  
-  h3 { color: white; }
-  p { color: #94a3b8; }
-  
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.4);
-  }
-`;
-
-const IconBox = styled.div`
-  width: 48px;
-  height: 48px;
-  background-color: ${props => props.$dark ? 'rgba(255,255,255,0.1)' : '#eff6ff'};
-  color: ${props => props.$dark ? 'white' : COLORS.primary};
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-`;
-
-const CardContent = styled.div`
-  h3 {
-    font-size: 1.125rem;
-    font-weight: 700;
-    color: ${COLORS.dark};
-    margin: 0 0 0.5rem 0;
-  }
-  p {
-    font-size: 0.95rem;
-    color: ${COLORS.lightText};
-    margin: 0;
-    line-height: 1.5;
-  }
-  a {
-    color: ${COLORS.primary};
-    text-decoration: none;
-    font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    margin-top: 0.5rem;
-    
-    &:hover {
-      text-decoration: underline;
+  .text-container {
+    h4 {
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #64748b;
+      margin: 0 0 0.4rem 0;
+      font-weight: 700;
+    }
+    p,
+    a {
+      color: #0f172a;
+      font-size: 1rem;
+      margin: 0;
+      text-decoration: none;
+      font-weight: 500;
+      line-height: 1.5;
+    }
+    a:hover {
+      color: #2563eb;
     }
   }
 `;
 
-// --- RIGHT SIDE: FORM ---
-const FormCard = styled.div`
-  background-color: ${COLORS.white};
-  padding: 3rem;
-  border-radius: 20px;
-  border: 1px solid ${COLORS.border};
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+const RightPanel = styled.div`
+  width: 62%;
+  padding: 4rem;
+  background: white;
 
-  @media (max-width: 600px) {
-    padding: 1.5rem;
+  @media (max-width: 992px) {
+    width: 100%;
+    padding: 3rem 2rem;
+  }
+  @media (max-width: 480px) {
+    padding: 2.5rem 1.5rem;
   }
 `;
 
-const FormHeader = styled.div`
-  margin-bottom: 2rem;
-  h2 {
-    font-size: 1.75rem;
-    font-weight: 800;
-    color: ${COLORS.dark};
-    margin-bottom: 0.5rem;
-  }
-  p {
-    color: ${COLORS.secondary};
-  }
-`;
-
-const CategoryGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  margin-bottom: 2rem;
-
-  @media (max-width: 600px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const CategoryOption = styled.label`
+const Form = styled.form`
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem;
-  border: 1px solid ${props => props.selected ? COLORS.primary : COLORS.border};
-  background-color: ${props => props.selected ? '#eff6ff' : 'white'};
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 500;
-  color: ${props => props.selected ? COLORS.primary : COLORS.secondary};
-  transition: all 0.2s;
-  
-  &:hover {
-    border-color: ${COLORS.primary};
-    background-color: #f8fafc;
-  }
-
-  input {
-    display: none;
-  }
+  flex-direction: column;
+  gap: 1.75rem;
+  width: 100%;
 `;
 
-const Row = styled.div`
+const FormRow = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
-  margin-bottom: 1.5rem;
 
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     grid-template-columns: 1fr;
+    gap: 1.75rem;
   }
 `;
 
@@ -284,268 +188,444 @@ const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  margin-bottom: 1.5rem;
-`;
 
-const Label = styled.label`
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: ${COLORS.secondary};
+  label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #334155;
+  }
+
+  .sub-label {
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: 400;
+    margin-left: 0.5rem;
+  }
 `;
 
 const Input = styled.input`
   width: 100%;
-  padding: 0.875rem 1rem;
-  border: 1px solid ${COLORS.border};
-  border-radius: 8px;
+  padding: 0.875rem 1.125rem;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  background: white;
   font-size: 1rem;
-  transition: all 0.2s;
-  background-color: #f8fafc;
+  color: #0f172a;
+  transition: all 0.2s ease;
+  font-family: inherit;
 
   &:focus {
     outline: none;
-    border-color: ${COLORS.primary};
-    background-color: white;
-    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  }
+
+  &::placeholder {
+    color: #94a3b8;
   }
 `;
 
 const TextArea = styled.textarea`
   width: 100%;
-  padding: 0.875rem 1rem;
-  border: 1px solid ${COLORS.border};
-  border-radius: 8px;
+  padding: 1rem 1.125rem;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  background: white;
   font-size: 1rem;
-  min-height: 120px;
+  color: #0f172a;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  min-height: 140px;
   resize: vertical;
-  background-color: #f8fafc;
-  transition: all 0.2s;
 
   &:focus {
     outline: none;
-    border-color: ${COLORS.primary};
-    background-color: white;
-    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  }
+
+  &::placeholder {
+    color: #94a3b8;
   }
 `;
 
-const SubmitButton = styled.button`
+const SelectWrapper = styled.div`
+  position: relative;
   width: 100%;
-  padding: 1rem;
-  background-color: ${COLORS.primary};
+
+  select {
+    width: 100%;
+    padding: 0.875rem 3rem 0.875rem 1.125rem;
+    border-radius: 10px;
+    border: 1px solid #cbd5e1;
+    background: white;
+    font-size: 1rem;
+    color: #0f172a;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    appearance: none;
+    cursor: pointer;
+
+    &:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    }
+  }
+
+  .icon-right {
+    position: absolute;
+    right: 1.125rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #64748b;
+    pointer-events: none;
+  }
+`;
+
+const SubmitBtn = styled(motion.button)`
+  background: #2563eb;
   color: white;
   border: none;
+  padding: 1.125rem 2rem;
   border-radius: 10px;
+  font-size: 1rem;
   font-weight: 600;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: all 0.2s;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
+  width: 100%;
+  margin-top: 0.5rem;
 
-  &:hover {
-    background-color: ${COLORS.primaryDark};
-    transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+  &:hover:not(:disabled) {
+    background: #1d4ed8;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
   }
 
   &:disabled {
-    background-color: ${COLORS.lightText};
+    background: #94a3b8;
     cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
   }
 `;
 
-const SuccessMessage = styled.div`
-  padding: 1.5rem;
-  background-color: #ecfdf5;
-  color: #065f46;
-  border: 1px solid #a7f3d0;
-  border-radius: 12px;
+const AlertBox = styled(motion.div)`
+  padding: 1rem 1.25rem;
+  border-radius: 10px;
   display: flex;
-  align-items: center;
-  gap: 1rem;
+  align-items: flex-start;
+  gap: 0.875rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.5;
   margin-bottom: 2rem;
-  animation: ${fadeIn} 0.5s ease-out;
+
+  &.success {
+    background: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+  }
+
+  &.error {
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+  }
 
   svg {
-    color: ${COLORS.success};
+    flex-shrink: 0;
+    margin-top: 2px;
   }
 `;
 
-const ContactPage = () => {
-  const [category, setCategory] = useState('support');
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
+export default function ContactPage() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [status, setStatus] = useState(null);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setLoading(false);
-      setSubmitted(true);
-    }, 1500);
+    setIsSubmitting(true);
+    setStatus(null);
+
+    const formData = new FormData(e.target);
+
+    // Clef Web3Forms
+    formData.append("access_key", "d56fc4c3-11c1-47e6-94ca-6e855cbb6872");
+
+    // Tri B2B
+    const category = formData.get("category");
+    const company = formData.get("company") || "Particulier/Indépendant";
+    const firstName = formData.get("firstName");
+    const lastName = formData.get("lastName");
+
+    // L'objet formatté permet un tri instantané dans tes mails
+    const emailSubject = `[${category}] - Demande de ${firstName} ${lastName} (${company})`;
+
+    formData.append("subject", emailSubject);
+    formData.append("from_name", "Direction VisioConnect");
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setStatus("success");
+        e.target.reset();
+      } else {
+        setStatus("error");
+      }
+    } catch (error) {
+      console.error(error);
+      setStatus("error");
+    } finally {
+      setIsSubmitting(false);
+      // Fait disparaître le message de réussite au bout de 7 secondes
+      if (status !== "error") {
+        setTimeout(() => setStatus(null), 7000);
+      }
+    }
   };
 
   return (
-    <PageContainer>
+    <PageLayout>
       <HeaderClean />
-      <MainContent>
-        <HeroSection>
-          <HeroTitle>Comment pouvons-nous <span>vous aider ?</span></HeroTitle>
-          <HeroSubtitle>
-            Notre équipe est à votre disposition pour répondre à toutes vos questions.
-            Choisissez le canal qui vous convient le mieux.
-          </HeroSubtitle>
-        </HeroSection>
+      <ContentWrapper>
+        <MainHeader
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          <h1>
+            Prenez contact avec <span>notre équipe</span>
+          </h1>
+          <p>
+            Que vous ayez besoin d'une démonstration sur mesure, d'une
+            assistance technique ou d'informations sur nos tarifs
+            professionnels, nous sommes à votre écoute.
+          </p>
+        </MainHeader>
 
-        <ContentWrapper>
-          <ContactGrid>
-            {/* Left Column: Information */}
-            <InfoColumn>
-              <InfoCard>
-                <IconBox>
-                  <Mail size={24} />
-                </IconBox>
-                <CardContent>
-                  <h3>Email</h3>
-                  <p>Pour les demandes générales</p>
-                  <a href="mailto:contact@visiconnect.com">contact@visiconnect.com <ArrowRight size={14}/></a>
-                </CardContent>
-              </InfoCard>
+        <ContactContainer
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+        >
+          {/* Panneau d'Information (Couleurs claires Visiconnect) */}
+          <LeftPanel>
+            <PanelContent>
+              <h3>Informations </h3>
+              <p className="desc">
+                Remplissez ce formulaire et un expert dédié prendra contact avec
+                vous dans les 24h ouvrées.
+              </p>
 
-              <InfoCard>
-                <IconBox>
-                  <Phone size={24} />
-                </IconBox>
-                <CardContent>
-                  <h3>Téléphone</h3>
-                  <p>Lun-Ven de 9h à 18h</p>
-                  <a href="tel:+33123456789">+33 1 23 45 67 89</a>
-                </CardContent>
-              </InfoCard>
-
-              <InfoCard>
-                <IconBox>
-                  <MapPin size={24} />
-                </IconBox>
-                <CardContent>
-                  <h3>Bureaux</h3>
-                  <p>123 Avenue de l'Innovation</p>
-                  <p>75001 Paris, France</p>
-                </CardContent>
-              </InfoCard>
-
-              <SupportCard>
-                <IconBox $dark>
-                  <HelpCircle size={24} />
-                </IconBox>
-                <CardContent>
-                  <h3>Centre d'Aide</h3>
-                  <p>Trouvez des réponses instantanées dans notre base de connaissances détaillée.</p>
-                  <a href="/support" style={{color: '#60a5fa'}}>Consulter la FAQ <ArrowRight size={14}/></a>
-                </CardContent>
-              </SupportCard>
-
-              <div style={{ padding: '0 1rem', display: 'flex', alignItems: 'center', gap: '0.75rem', color: COLORS.lightText, fontSize: '0.9rem' }}>
-                <Clock size={16} /> Temps de réponse moyen : 2 heures
-              </div>
-            </InfoColumn>
-
-            {/* Right Column: Interactive Form */}
-            <FormCard>
-              {submitted ? (
-                <div style={{ textAlign: 'center', padding: '3rem 0' }}>
-                  <div style={{ width: '80px', height: '80px', background: '#dcfce7', borderRadius: '50%', color: '#16a34a', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
-                    <CheckCircle size={48} />
-                  </div>
-                  <h3 style={{ fontSize: '1.5rem', fontWeight: '800', color: COLORS.dark, marginBottom: '1rem' }}>Message Envoyé !</h3>
-                  <p style={{ color: COLORS.secondary, marginBottom: '2rem' }}>
-                    Merci de nous avoir contactés. Un membre de notre équipe reviendra vers vous sous 24h.
-                  </p>
-                  <SubmitButton onClick={() => setSubmitted(false)} style={{ maxWidth: '200px', margin: '0 auto' }}>
-                    Envoyer un autre
-                  </SubmitButton>
+              <InfoBlock>
+                <div className="icon-container">
+                  <Mail size={20} strokeWidth={2.5} />
                 </div>
-              ) : (
-                <form onSubmit={handleSubmit}>
-                  <FormHeader>
-                    <h2>Envoyez-nous un message</h2>
-                    <p>Remplissez le formulaire ci-dessous et nous vous répondrons rapidement.</p>
-                  </FormHeader>
+                <div className="text-container">
+                  <h4>Email Professionnel</h4>
+                  <a href="mailto:theo.garces.aido@gmail.com">
+                    theo.garces.aido@gmail.com
+                  </a>
+                </div>
+              </InfoBlock>
 
-                  <Label style={{ marginBottom: '1rem', display: 'block' }}>Sujet de votre demande</Label>
-                  <CategoryGrid>
-                    <CategoryOption selected={category === 'support'}>
-                      <input type="radio" name="category" checked={category === 'support'} onChange={() => setCategory('support')} />
-                      Support Technique
-                    </CategoryOption>
-                    <CategoryOption selected={category === 'sales'}>
-                      <input type="radio" name="category" checked={category === 'sales'} onChange={() => setCategory('sales')} />
-                      Commercial
-                    </CategoryOption>
-                    <CategoryOption selected={category === 'other'}>
-                      <input type="radio" name="category" checked={category === 'other'} onChange={() => setCategory('other')} />
-                      Autre
-                    </CategoryOption>
-                  </CategoryGrid>
+              <InfoBlock>
+                <div className="icon-container">
+                  <Briefcase size={20} strokeWidth={2.5} />
+                </div>
+                <div className="text-container">
+                  <h4>Département Entreprise</h4>
+                  <p>Ligne prioritaire pour les projets et accords-cadres.</p>
+                </div>
+              </InfoBlock>
 
-                  <Row>
-                    <FormGroup>
-                      <Label htmlFor="firstName">Prénom</Label>
-                      <Input type="text" id="firstName" placeholder="Jean" required />
-                    </FormGroup>
-                    <FormGroup>
-                      <Label htmlFor="lastName">Nom</Label>
-                      <Input type="text" id="lastName" placeholder="Dupont" required />
-                    </FormGroup>
-                  </Row>
-
-                  <FormGroup>
-                    <Label htmlFor="email">Email Professionnel</Label>
-                    <Input type="email" id="email" placeholder="jean@entreprise.com" required />
-                  </FormGroup>
-
-                  <FormGroup>
-                    <Label htmlFor="message">Message</Label>
-                    <TextArea id="message" placeholder="Dites-nous en plus sur votre besoin..." required />
-                  </FormGroup>
-
-                  <SubmitButton type="submit" disabled={loading}>
-                    {loading ? 'Envoi en cours...' : (
-                      <>
-                        Envoyer le message <Send size={18} />
-                      </>
-                    )}
-                  </SubmitButton>
-                  <p style={{ marginTop: '1rem', fontSize: '0.8rem', color: COLORS.lightText, textAlign: 'center' }}>
-                    En envoyant ce formulaire, vous acceptez notre politique de confidentialité.
+              <InfoBlock>
+                <div className="icon-container">
+                  <MapPin size={20} strokeWidth={2.5} />
+                </div>
+                <div className="text-container">
+                  <h4>Heures de service</h4>
+                  <p>
+                    Lundi au Vendredi
+                    <br />
+                    09:00 - 18:00 (Paris)
                   </p>
-                </form>
-              )}
-            </FormCard>
-          </ContactGrid>
-        </ContentWrapper>
-      <CallToAction 
-        title="Une question urgente ?"
-        description="Notre équipe de support est disponible 24/7 pour vous aider."
-        buttonText="Consulter la FAQ"
-        buttonLink="/support"
-      />
-      </MainContent>
-       
-{/* FooterClean is usually imported in App.js or included here if the structure is per page. Based on previous files, include FooterClean. */}
-       <FooterClean />
-    </PageContainer>
-  );
-};
+                </div>
+              </InfoBlock>
+            </PanelContent>
+          </LeftPanel>
 
-export default ContactPage;
+          {/* Formulaire (Proportionné et responsive) */}
+          <RightPanel>
+            <AnimatePresence mode="wait">
+              {status === "success" && (
+                <AlertBox
+                  key="success"
+                  className="success"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, height: 0, marginBottom: 0, padding: 0 }}
+                >
+                  <CheckCircle2 size={24} />
+                  <div>
+                    <strong>Message envoyé avec succès !</strong>
+                    <br />
+                    Notre équipe reviendra vers vous rapidement.
+                  </div>
+                </AlertBox>
+              )}
+              {status === "error" && (
+                <AlertBox
+                  key="error"
+                  className="error"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                >
+                  <AlertCircle size={24} />
+                  <div>
+                    <strong>Une erreur est survenue.</strong>
+                    <br />
+                    Veuillez réessayer ou nous contacter directement par e-mail.
+                  </div>
+                </AlertBox>
+              )}
+            </AnimatePresence>
+
+            <Form onSubmit={handleSubmit}>
+              <FormRow>
+                <FormGroup>
+                  <label htmlFor="firstName">Prénom</label>
+                  <Input
+                    type="text"
+                    id="firstName"
+                    name="firstName"
+                    placeholder="Jean"
+                    required
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <label htmlFor="lastName">Nom</label>
+                  <Input
+                    type="text"
+                    id="lastName"
+                    name="lastName"
+                    placeholder="Dupont"
+                    required
+                  />
+                </FormGroup>
+              </FormRow>
+
+              <FormRow>
+                <FormGroup>
+                  <label htmlFor="email">Email professionnel</label>
+                  <Input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="jean.dupont@societe.com"
+                    required
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <label htmlFor="phone">
+                    Téléphone <span className="sub-label">(Optionnel)</span>
+                  </label>
+                  <Input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    placeholder="+33 6 00 00 00 00"
+                  />
+                </FormGroup>
+              </FormRow>
+
+              <FormGroup>
+                <label htmlFor="company">Nom de l'entreprise</label>
+                <Input
+                  type="text"
+                  id="company"
+                  name="company"
+                  placeholder="Société ou Indépendant"
+                  required
+                />
+              </FormGroup>
+
+              <FormGroup>
+                <label htmlFor="category">Nature de la demande</label>
+                <SelectWrapper>
+                  <select
+                    id="category"
+                    name="category"
+                    required
+                    defaultValue=""
+                  >
+                    <option value="" disabled>
+                      Sélectionnez un sujet...
+                    </option>
+                    <option value="Démo">Demander une démonstration</option>
+                    <option value="Tarifs">
+                      Question sur les tarifs (Devis)
+                    </option>
+                    <option value="Partenariat">
+                      Proposition de partenariat
+                    </option>
+                    <option value="Support">Support technique</option>
+                    <option value="Autre">Autre demande</option>
+                  </select>
+                  <div className="icon-right">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </div>
+                </SelectWrapper>
+              </FormGroup>
+
+              <FormGroup>
+                <label htmlFor="message">Votre message</label>
+                <TextArea
+                  id="message"
+                  name="message"
+                  placeholder="Décrivez votre projet ou votre besoin en détail..."
+                  required
+                ></TextArea>
+              </FormGroup>
+
+              <SubmitBtn
+                type="submit"
+                disabled={isSubmitting}
+                whileHover={{ scale: isSubmitting ? 1 : 1.01 }}
+                whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
+              >
+                {isSubmitting ? "Envoi en cours..." : "Envoyer la demande"}
+              </SubmitBtn>
+            </Form>
+          </RightPanel>
+        </ContactContainer>
+      </ContentWrapper>
+      <FooterClean />
+    </PageLayout>
+  );
+}

@@ -47,10 +47,169 @@ app.use(cors({
   credentials: true
 }));
 
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY); // Requiert une vraie clé Stripe test dans le .env
+
+// Stripe requiert le body raw pour vérifier la signature du webhook
+app.post('/api/stripe/webhook', express.raw({type: 'application/json'}), (req, res) => {
+  const sig = req.headers['stripe-signature'];
+  let event;
+
+  try {
+    // Remplacer par votre secret de webhook de test (STRIPE_WEBHOOK_SECRET)
+    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+  } catch (err) {
+    console.error(`Webhook Error: ${err.message}`);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+
+  // Gérer l'événement de paiement réussi
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
+    console.log('✅ Paiement confirmé pour la session:', session.id);
+    console.log('Utilisateur:', session.customer_details.email);
+    // TODO: Mettre à jour la base de données pour donner accès au service (ex: activer le plan PRO)
+  }
+
+  res.json({received: true});
+});
+
 app.use(express.json());
 
+app.post('/api/ai/chat', async (req, res) => {
+  const { messages = [], style = 'balanced', purpose = 'chat' } = req.body || {};
+
+  if (!Array.isArray(messages) || messages.length === 0) {
+    return res.status(400).json({ error: 'messages is required' });
+  }
+
+  const openRouterKey = process.env.OPENROUTER_API_KEY;
+  const openRouterModel = process.env.OPENROUTER_MODEL || 'meta-llama/llama-3.1-8b-instruct:free';
+  const groqKey = process.env.GROQ_API_KEY;
+  const groqModel = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
+
+  const stylePrompt =
+    style === 'concise'
+      ? 'Reponds en francais de maniere concise (2-4 lignes).'
+      : style === 'deep'
+        ? 'Reponds en francais de maniere detaillee, structurée et actionnable.'
+        : 'Reponds en francais de maniere claire et utile.';
+
+  const systemPrompt =
+    purpose === 'summary'
+      ? `Tu es un assistant de reunion. Produis un resume strictement base sur le transcript. ${stylePrompt} Sections: Vue d'ensemble, Decisions, Actions, Questions ouvertes.`
+      : `Tu es l'assistant IA de VisiConnect. ${stylePrompt}`;
+
+  const payload = {
+    messages: [{ role: 'system', content: systemPrompt }, ...messages],
+    temperature: 0.35,
+  };
+
+  const tryProvider = async (url, key, model) => {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${key}`,
+      },
+      body: JSON.stringify({ ...payload, model }),
+    });
+
+    if (!response.ok) {
+      const details = await response.text().catch(() => 'provider_error');
+      throw new Error(details || `Provider call failed (${response.status})`);
+    }
+
+    const data = await response.json();
+    return data?.choices?.[0]?.message?.content || '';
+  };
+
+  try {
+    let content = '';
+    let provider = '';
+
+    if (openRouterKey) {
+      try {
+        content = await tryProvider('https://openrouter.ai/api/v1/chat/completions', openRouterKey, openRouterModel);
+        provider = 'openrouter';
+      } catch (openRouterErr) {
+        if (groqKey) {
+          content = await tryProvider('https://api.groq.com/openai/v1/chat/completions', groqKey, groqModel);
+          provider = 'groq';
+        } else {
+          throw openRouterErr;
+        }
+      }
+    } else if (groqKey) {
+      content = await tryProvider('https://api.groq.com/openai/v1/chat/completions', groqKey, groqModel);
+      provider = 'groq';
+    } else {
+      return res.status(503).json({ error: 'No AI provider key configured on server' });
+    }
+
+    return res.json({ content, provider });
+  } catch (err) {
+    console.error('AI route error:', err.message || err);
+    return res.status(500).json({ error: 'AI provider request failed' });
+  }
+});
+
+app.post('/api/create-checkout-session', async (req, res) => {
+  const { plan, billingCycle } = req.body;
+  
+  if (!process.env.STRIPE_SECRET_KEY) {
+    return res.status(500).json({ error: 'STRIPE_SECRET_KEY non configurée sur le serveur.' });
+  }
+
+  let amount = 0;
+  let name = '';
+  
+  // Utiliser les ID de prix créés dans le dashboard Stripe (recommandé pour les abonnements)
+  // ou utiliser des prix dynamiques comme ici pour le test
+  if (plan === 'starter') {
+    amount = 0; // 0.00 EUR
+    name = 'VisiConnect Starter';
+  } else if (plan === 'pro') {
+    amount = billingCycle === 'annual' ? 14400 : 1500; // 144.00 ou 15.00 EUR
+    name = 'VisiConnect Pro';
+  } else if (plan === 'business') {
+    amount = billingCycle === 'annual' ? 34800 : 3500; // 348.00 ou 35.00 EUR
+    name = 'VisiConnect Business';
+  } else {
+    return res.status(400).json({ error: 'Plan invalide' });
+  }
+
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price_data: {
+            currency: 'eur',
+            product_data: {
+              name: name,
+            },
+            unit_amount: amount,
+            recurring: {
+              interval: billingCycle === 'annual' ? 'year' : 'month',
+            },
+          },
+          quantity: 1,
+        },
+      ],
+      mode: 'subscription',
+      success_url: `${req.headers.origin || 'http://localhost:5173'}/success.html?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${req.headers.origin || 'http://localhost:5173'}/pricing`,
+    });
+
+    res.json({ id: session.id, url: session.url });
+  } catch (error) {
+    console.error('Erreur création session Stripe:', error.message);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Helper function for LiveKit token
-const createToken = (roomName, participantName) => {
+const createToken = async (roomName, participantName) => {
   // Check for missing keys and return a mock token or error gracefully
   if (!process.env.LIVEKIT_API_KEY || !process.env.LIVEKIT_API_SECRET) {
       console.warn('⚠️ Missing LiveKit API Keys - Returning mock token for local dev');
@@ -67,14 +226,14 @@ const createToken = (roomName, participantName) => {
       }
     );
     at.addGrant({ roomJoin: true, room: roomName, canPublish: true, canSubscribe: true });
-    return at.toJwt();
+    return await at.toJwt();
   } catch (error) {
      console.error("Token creation failed:", error);
      throw error;
   }
 };
 
-app.post('/api/livekit/token', (req, res) => {
+app.post('/api/livekit/token', async (req, res) => {
   const { roomName, participantName } = req.body;
   
   if (!roomName || !participantName) {
@@ -82,7 +241,7 @@ app.post('/api/livekit/token', (req, res) => {
   }
 
   try {
-    const token = createToken(roomName, participantName);
+    const token = await createToken(roomName, participantName);
     res.json({ token });
   } catch (err) {
     console.error('Error creating token:', err);

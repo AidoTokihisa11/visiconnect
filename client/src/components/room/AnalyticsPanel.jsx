@@ -69,7 +69,7 @@ const ChartContainer = styled.div`
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 16px;
   padding: 1.25rem;
-  height: 250px;
+  min-height: 250px;
   position: relative;
 
   h4 {
@@ -139,7 +139,7 @@ export const AnalyticsPanel = () => {
 
             <ChartContainer>
                 <h4>Taux d'Engagement en Temps Réel</h4>
-                <ResponsiveContainer width="100%" height="85%">
+                <ResponsiveContainer width="100%" height={190} minWidth={0}>
                     <AreaChart data={INVOLVEMENT_DATA}>
                         <defs>
                             <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
@@ -161,7 +161,7 @@ export const AnalyticsPanel = () => {
 
             <ChartContainer>
                 <h4>Stabilité du Réseau (Bitrate Audio)</h4>
-                <ResponsiveContainer width="100%" height="85%">
+                <ResponsiveContainer width="100%" height={190} minWidth={0}>
                     <LineChart data={AUDIO_QUALITY_DATA}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
                         <XAxis dataKey="time" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />

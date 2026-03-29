@@ -8,17 +8,17 @@ const StatsContainer = styled(motion.div)`
   position: absolute;
   top: 80px;
   left: 20px;
-  background: rgba(15, 23, 42, 0.9);
+  background: rgba(12, 35, 64, 0.96);
   backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid ${THEME.border};
   padding: 1rem;
   border-radius: 12px;
-  color: white;
+  color: ${THEME.text};
   z-index: 50;
   width: 250px;
   font-family: monospace;
   font-size: 0.8rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 24px -10px rgba(29, 78, 216, 0.35);
 
   h4 {
     margin: 0 0 0.5rem 0;
@@ -33,7 +33,7 @@ const StatsContainer = styled(motion.div)`
     justify-content: space-between;
     margin-bottom: 0.25rem;
     padding-bottom: 0.25rem;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+    border-bottom: 1px solid ${THEME.border};
 
     &:last-child {
       border: none;

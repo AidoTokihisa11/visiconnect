@@ -6,6 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 export const useWhiteboard = (socket, roomId) => {
   // socket argument is ignored
   const { user } = useAuth();
+  const userId = user?.id;
   
   const [elements, setElements] = useState([]);
   const [appState, setAppState] = useState({});
@@ -68,14 +69,14 @@ export const useWhiteboard = (socket, roomId) => {
   }, [roomId, updateWhiteboardMutation]);
 
   const onPointerUpdate = useCallback((payload) => {
-      if (!roomId || !user?.id) return;
+      if (!roomId || !userId) return;
       
       updateCursorMutation({
           meetingId: roomId,
-          userId: user.id || "anonymous",
+        userId: userId || "anonymous",
           pointer: JSON.stringify(payload.pointer)
       }).catch(() => {}); // Catch silent to avoid console spam on rapid movement
-  }, [roomId, user, updateCursorMutation]);
+    }, [roomId, userId, updateCursorMutation]);
   return {
     elements,
     appState,

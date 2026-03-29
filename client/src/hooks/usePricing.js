@@ -5,22 +5,14 @@ const FREE_PLAN_LIMIT_MINUTES = 40;
 
 export const usePricing = (onTimeLimitReached) => {
   const { user } = useAuth(); // Assuming this context provides user data including plan info
+  const userPlan = user?.app_metadata?.plan;
   const [timeLeft, setTimeLeft] = useState(FREE_PLAN_LIMIT_MINUTES * 60);
   const [isPro, setIsPro] = useState(false); // Default to Free
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   useEffect(() => {
-    // Check user plan status via Supabase metadata or API
-    // For now, simulate based on a simple check (e.g., metadata)
-    const checkPlan = async () => {
-      if (user?.app_metadata?.plan === 'pro') {
-        setIsPro(true);
-      } else {
-        setIsPro(false);
-      }
-    };
-    checkPlan();
-  }, [user]);
+    setIsPro(userPlan === 'pro');
+  }, [userPlan]);
 
   useEffect(() => {
     if (isPro) return;
@@ -41,7 +33,6 @@ export const usePricing = (onTimeLimitReached) => {
 
   const upgradeToPro = useCallback(async () => {
     // Simulate Stripe checkout redirection
-    console.log('Redirecting to Stripe checkout...');
     // In a real app, you would call your backend to create a Checkout Session
     // const response = await fetch('/api/create-checkout-session', { method: 'POST' });
     // const session = await response.json();

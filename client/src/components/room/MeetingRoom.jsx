@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { AnimatePresence, motion } from 'framer-motion';
 import { RoomAudioRenderer } from '@livekit/components-react';
-import { X, ChevronRight, Terminal, BarChart2, Bot, Layout, PenTool } from 'lucide-react';
+import { X, ChevronRight, BarChart2, Bot } from 'lucide-react';
 
 // Hooks
 import { useMeeting } from '../../hooks/useMeeting';
@@ -19,6 +19,7 @@ import { StatsMonitor } from './StatsMonitor';
 import { WhiteboardWrapper } from './WhiteboardWrapper';
 import { AnalyticsPanel } from './AnalyticsPanel';
 import { AIChatPanel } from './AIChatPanel';
+import { RoomSettingsPanel } from './RoomSettingsPanel';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 
 // Layout Styled Components
@@ -36,12 +37,12 @@ const MainContent = styled.div`
 // Side Panel Styles
 const SidePanel = styled(motion.div)`
   width: ${props => props.wide ? '600px' : '400px'};
-  background-color: ${THEME.cardBg};
+  background-color: ${THEME.panelBg};
   border-left: 1px solid ${THEME.border};
   display: flex;
   flex-direction: column;
   height: 100%;
-  box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+  box-shadow: -8px 0 24px rgba(29, 78, 216, 0.16);
   z-index: 50;
   position: absolute;
   right: 0;
@@ -55,13 +56,13 @@ const PanelHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: rgba(15, 23, 42, 0.5);
+  background-color: ${THEME.cardBg};
   
   h3 {
     margin: 0;
     font-size: 1.125rem;
     font-weight: 600;
-    color: white;
+    color: ${THEME.text};
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -85,18 +86,19 @@ const ChatInputContainer = styled.div`
 
 const ChatInput = styled.input`
   flex: 1;
-  background-color: rgba(15, 23, 42, 0.5);
+  background-color: ${THEME.accentSoft};
   border: 1px solid ${THEME.border};
   border-radius: 12px;
   padding: 1rem;
-  color: white;
+  color: ${THEME.text};
   outline: none;
   font-size: 0.95rem;
   transition: all 0.2s;
 
   &:focus {
     border-color: ${THEME.accent};
-    background-color: rgba(15, 23, 42, 0.8);
+    background-color: ${THEME.accentSoft};
+    box-shadow: 0 0 0 3px ${THEME.ring};
   }
 `;
 
@@ -111,24 +113,53 @@ const WhiteboardOverlay = styled(motion.div)`
 `;
 
 export const MeetingRoom = ({ onLeave, roomId, user }) => {
+  const [roomSettings, setRoomSettings] = useState(() => {
+    try {
+      const stored = localStorage.getItem('visiconnect_room_settings');
+      if (stored) return JSON.parse(stored);
+    } catch (e) {}
+    return {
+      maxQualityLock: true,
+      videoFit: 'cover',
+      showParticipantLabels: true,
+      aiResponseStyle: 'balanced',
+      widePanel: false,
+      showStatsDefault: false,
+    };
+  });
+
   const { 
     room, 
     localParticipant, 
     tracks, 
-    controls, 
-    activeSpeakerId 
-  } = useMeeting();
+    devices,
+    selectedDevices,
+    controls,
+  } = useMeeting(roomSettings.maxQualityLock);
   
   const socket = useSocket(roomId, user);
   const { messages, sendMessage } = useChat(roomId, user, socket);
-  const { isPro, timeLeft } = usePricing(onLeave); 
+  usePricing(onLeave);
   
   // -- UI State --
   const [showStats, setShowStats] = useState(false);
   const [whiteboardOpen, setWhiteboardOpen] = useState(false);
   const [sidePanelOpen, setSidePanelOpen] = useState(false);
-  const [activePanel, setActivePanel] = useState('chat'); // 'chat' | 'ai' | 'analytics'
+  const [activePanel, setActivePanel] = useState('chat'); // 'chat' | 'ai' | 'analytics' | 'settings'
   const [messageText, setMessageText] = useState('');
+  useEffect(() => {
+    localStorage.setItem('visiconnect_room_settings', JSON.stringify(roomSettings));
+  }, [roomSettings]);
+
+  useEffect(() => {
+    if (roomSettings.showStatsDefault) {
+      setShowStats(true);
+    }
+  }, [roomSettings.showStatsDefault]);
+
+  const updateSetting = (key, value) => {
+    setRoomSettings((prev) => ({ ...prev, [key]: value }));
+  };
 
   // -- Handlers --
   const togglePanel = (panel) => {
@@ -203,6 +234,8 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
       <VideoGrid 
         localParticipant={localParticipant}
         tracks={tracks}
+        videoFit={roomSettings.videoFit}
+        showParticipantLabels={roomSettings.showParticipantLabels}
       />
 
       {/* 4. Controls */}
@@ -223,7 +256,7 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
       <AnimatePresence>
         {sidePanelOpen && (
           <SidePanel
-            wide={activePanel === 'analytics'}
+            wide={activePanel === 'analytics' || roomSettings.widePanel}
             initial={{ x: '100%', opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: '100%', opacity: 0 }}
@@ -234,10 +267,11 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
                 {activePanel === 'chat' && <><ChevronRight size={20} /> Discussion</>}
                 {activePanel === 'ai' && <><Bot size={20} /> Assistant IA</>}
                 {activePanel === 'analytics' && <><BarChart2 size={20} /> Analytics</>}
+                {activePanel === 'settings' && <><ChevronRight size={20} /> Parametres</>}
               </h3>
               <button 
                 onClick={() => setSidePanelOpen(false)} 
-                style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer', padding: '4px', borderRadius: '4px', display: 'flex' }}
+                style={{ background: 'none', border: 'none', color: THEME.textDim, cursor: 'pointer', padding: '4px', borderRadius: '4px', display: 'flex' }}
               >
                 <X size={20} />
               </button>
@@ -252,11 +286,12 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
                               alignSelf: msg.sender === 'me' ? 'flex-end' : 'flex-start',
                               maxWidth: '85%',
                               padding: '0.75rem 1rem', 
-                              background: msg.sender === 'me' ? THEME.accent : 'rgba(255,255,255,0.1)', 
+                                background: msg.sender === 'me' ? THEME.accent : THEME.accentSoft,
                               borderRadius: '12px',
                               borderBottomRightRadius: msg.sender === 'me' ? '2px' : '12px',
                               borderBottomLeftRadius: msg.sender === 'me' ? '12px' : '2px',
-                              color: 'white'
+                                color: msg.sender === 'me' ? 'white' : THEME.text,
+                                border: msg.sender === 'me' ? `1px solid ${THEME.accent}` : `1px solid ${THEME.border}`,
                           }}>
                               <div style={{ fontSize: '0.75rem', opacity: 0.7, marginBottom: '4px' }}>{msg.sender === 'me' ? 'Vous' : msg.sender}</div>
                               <div style={{ lineHeight: 1.4 }}>{msg.text}</div>
@@ -278,8 +313,17 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
                  </>
                )}
                
-               {activePanel === 'ai' && <AIChatPanel />}
+               {activePanel === 'ai' && <AIChatPanel responseStyle={roomSettings.aiResponseStyle} roomMessages={messages} roomId={roomId} />}
                {activePanel === 'analytics' && <AnalyticsPanel />}
+               {activePanel === 'settings' && (
+                 <RoomSettingsPanel
+                   settings={roomSettings}
+                   updateSetting={updateSetting}
+                   devices={devices}
+                   selectedDevices={selectedDevices}
+                   controls={controls}
+                 />
+               )}
 
             </PanelContent>
           </SidePanel>

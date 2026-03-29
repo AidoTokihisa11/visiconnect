@@ -1,624 +1,832 @@
-import React, { useState } from 'react';
-import styled, { keyframes } from 'styled-components';
+import React, { useEffect } from 'react';
+import styled, { css, keyframes } from 'styled-components';
 import { Link } from 'react-router-dom';
+import {
+  ArrowRight,
+  BadgeCheck,
+  Bot,
+  Gauge,
+  Globe,
+  Layers3,
+  MessageSquareText,
+  MonitorSmartphone,
+  Play,
+  ShieldCheck,
+  Sparkles,
+  Users,
+  Video,
+} from 'lucide-react';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
-import { 
-  Play, Users, Shield, Zap, Globe, Check, 
-  Laptop
-} from 'lucide-react';
+import CallToAction from '../components/CallToAction';
 
 const COLORS = {
-  primary: 'hsl(var(--primary))',    
-  primaryDark: 'hsl(var(--primary))',
-  secondary: 'hsl(var(--muted-foreground))',  
-  dark: 'hsl(var(--foreground))',       
-  text: 'hsl(var(--foreground))',       
-  lightText: 'hsl(var(--muted-foreground))',  
-  background: 'hsl(var(--background))', 
-  white: 'hsl(var(--card))',
-  border: 'hsl(var(--border))',     
-  success: 'hsl(var(--primary))',    
-  accent: 'hsl(var(--accent))'
+  primary: 'hsl(var(--primary))',
+  foreground: 'hsl(var(--foreground))',
+  muted: 'hsl(var(--muted-foreground))',
+  background: 'hsl(var(--background))',
+  card: 'hsl(var(--card))',
+  border: 'hsl(var(--border))',
+  navy: '#0f172a',
+  surfaceBlue: '#eff6ff',
+  lineBlue: '#dbeafe',
 };
+
+const highlights = [
+  {
+    icon: <Video size={22} />,
+    title: 'Visio nette et stable',
+    description: 'Qualité vidéo premium avec adaptation dynamique selon la bande passante et les appareils connectés.',
+  },
+  {
+    icon: <Bot size={22} />,
+    title: 'Assistant IA intégré',
+    description: 'Synthèse, relance, extraction d’actions et aide conversationnelle directement depuis la salle.',
+  },
+  {
+    icon: <ShieldCheck size={22} />,
+    title: 'Cadre sécurisé',
+    description: 'Positionnement entreprise avec contrôle d’accès, architecture moderne et séparation propre des flux.',
+  },
+  {
+    icon: <MonitorSmartphone size={22} />,
+    title: 'Expérience multi-écrans',
+    description: 'La démo fonctionne dans un navigateur moderne, sur poste, laptop ou écran secondaire sans friction.',
+  },
+];
+
+const workflowSteps = [
+  {
+    step: '01',
+    title: 'Entrée immédiate dans la salle',
+    description: 'Le visiteur comprend tout de suite l’interface, les contrôles et la qualité de la mise en scène produit.',
+  },
+  {
+    step: '02',
+    title: 'Lecture claire de la valeur',
+    description: 'La page met en avant les bons signaux: collaboration, IA, sécurité et qualité perçue élevée.',
+  },
+  {
+    step: '03',
+    title: 'Passage à l’action',
+    description: 'La démonstration renvoie ensuite soit vers une room live, soit vers un contact commercial plus qualifié.',
+  },
+];
+
+const useCases = [
+  {
+    icon: <Users size={22} />,
+    title: 'Réunions direction et projets',
+    description: 'Pour montrer une salle lisible, un niveau de qualité premium et un cadre crédible face aux alternatives classiques.',
+  },
+  {
+    icon: <Globe size={22} />,
+    title: 'Équipes distribuées',
+    description: 'Pour mettre en avant la régularité de l’expérience quand plusieurs intervenants travaillent à distance.',
+  },
+  {
+    icon: <MessageSquareText size={22} />,
+    title: 'Support et relation client',
+    description: 'Pour prouver qu’un échange vidéo peut rester rapide, clair et mieux documenté avec l’assistance IA.',
+  },
+  {
+    icon: <Layers3 size={22} />,
+    title: 'Démonstration produit',
+    description: 'Pour présenter une plateforme plus premium et plus moderne à des prospects qui attendent un vrai niveau de finition.',
+  },
+];
+
+const proofMetrics = [
+  { label: 'Latence cible', value: '29 ms' },
+  { label: 'Vidéo', value: '1080p adaptatif' },
+  { label: 'IA', value: 'Résumé et actions' },
+  { label: 'Accès', value: 'Room live immédiate' },
+];
+
+const floatIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(22px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+`;
+
+const revealStyles = css`
+  opacity: 0;
+  transform: translateY(38px) scale(0.985);
+  transition:
+    opacity 0.78s ease,
+    transform 0.78s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+
+  &.is-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+`;
 
 const PageContainer = styled.div`
   min-height: 100vh;
-  background-color: ${COLORS.background};
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  color: ${COLORS.text};
-  transition: background-color 0.3s ease, color 0.3s ease;
-`;
-
-// --- ANIMATIONS ---
-const fadeIn = keyframes`
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-`;
-
-// --- COMPONENTS ---
-
-const HeroSection = styled.section`
-  background-color: hsl(var(--secondary)); /* Light blue solid / dark */
-  padding: 8rem 2rem 6rem;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  transition: background-color 0.3s ease;
-`;
-
-const HeroBadge = styled.span`
-  background-color: #dbeafe;
-  color: ${COLORS.primary};
-  font-weight: 600;
-  font-size: 0.875rem;
-  padding: 0.5rem 1rem;
-  border-radius: 9999px;
-  display: inline-block;
-  margin-bottom: 1.5rem;
-  animation: ${fadeIn} 0.6s ease-out;
-`;
-
-const HeroTitle = styled.h1`
-  font-size: 3.5rem;
-  font-weight: 800;
-  color: ${COLORS.dark};
-  margin-bottom: 1.5rem;
-  line-height: 1.1;
-  max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
-  animation: ${fadeIn} 0.6s ease-out 0.1s backwards;
-
-  span {
-    color: ${COLORS.primary};
-  }
-
-  @media (max-width: 768px) {
-    font-size: 2.5rem;
-  }
-`;
-
-const HeroSubtitle = styled.p`
-  font-size: 1.25rem;
-  color: ${COLORS.lightText};
-  max-width: 600px;
-  margin: 0 auto 3rem;
-  line-height: 1.6;
-  animation: ${fadeIn} 0.6s ease-out 0.2s backwards;
-`;
-
-const ActionButtons = styled.div`
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  margin-bottom: 4rem;
-  animation: ${fadeIn} 0.6s ease-out 0.3s backwards;
-  
-  @media (max-width: 600px) {
-    flex-direction: column;
-    align-items: stretch;
-  }
-`;
-
-const PrimaryButton = styled(Link)`
-  background-color: ${COLORS.primary};
-  color: ${COLORS.white};
-  padding: 1rem 2rem;
-  border-radius: 12px;
-  font-weight: 600;
-  font-size: 1.125rem;
-  text-decoration: none;
-  transition: all 0.2s;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
-
-  &:hover {
-    background-color: ${COLORS.primaryDark};
-    transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
-  }
-`;
-
-const SecondaryButton = styled(Link)`
-  background-color: ${COLORS.white};
-  color: ${COLORS.secondary};
-  padding: 1rem 2rem;
-  border-radius: 12px;
-  font-weight: 600;
-  font-size: 1.125rem;
-  text-decoration: none;
-  transition: all 0.2s;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  border: 1px solid ${COLORS.border};
-
-  &:hover {
-    background-color: #f1f5f9;
-    color: ${COLORS.dark};
-    border-color: #cbd5e1;
-  }
-`;
-
-// --- INTERACTIVE DEMO PREVIEW ---
-const PreviewContainer = styled.div`
-  max-width: 1100px;
-  margin: 0 auto;
-  background: ${COLORS.dark};
-  border-radius: 24px;
-  padding: 1rem;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  position: relative;
-  animation: ${fadeIn} 0.8s ease-out 0.4s backwards;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-`;
-
-const PreviewBrowser = styled.div`
-  background: ${COLORS.background};
-  border-radius: 16px;
-  overflow: hidden;
-  position: relative;
-  aspect-ratio: 16/9;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(37, 99, 235, 0.09), transparent 28%),
+    radial-gradient(circle at 100% 18%, rgba(59, 130, 246, 0.08), transparent 24%),
+    linear-gradient(180deg, #f7fbff 0%, ${COLORS.background} 28%, ${COLORS.background} 100%);
+  color: ${COLORS.foreground};
   display: flex;
   flex-direction: column;
 `;
 
-const BrowserHeader = styled.div`
-  background: #e2e8f0;
-  padding: 0.75rem 1rem;
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-
-  .dots {
-    display: flex;
-    gap: 6px;
-    div {
-      width: 10px; 
-      height: 10px; 
-      border-radius: 50%;
-    }
-    .red { background: #ef4444; }
-    .yellow { background: #f59e0b; }
-    .green { background: #10b981; }
-  }
-
-  .bar {
-    background: ${COLORS.white};
-    flex: 1;
-    margin-left: 1rem;
-    height: 24px;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    color: ${COLORS.lightText};
-    display: flex;
-    align-items: center;
-    padding-left: 10px;
-  }
-`;
-
-const PreviewContent = styled.div`
+const MainContent = styled.main`
   flex: 1;
-  background: #1e293b;
-  position: relative;
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  grid-template-rows: 1fr auto;
-  gap: 1rem;
-  padding: 1rem;
-
-  @media (max-width: 600px) {
-    grid-template-columns: 1fr;
-  }
 `;
 
-const FakeVideo = styled.div`
-  background: #0f172a;
-  border-radius: 12px;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: ${COLORS.lightText};
-  
-  &.main {
-    grid-row: 1 / 2;
-    grid-column: 1 / 2;
-  }
-
-  &.secondary {
-    grid-row: 1 / 2;
-    grid-column: 2 / 3;
-    @media (max-width: 600px) {
-      display: none;
-    }
-  }
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0.7;
-  }
+const HeroSection = styled.section`
+  padding: 6.8rem 1.5rem 4.5rem;
+  border-bottom: 1px solid ${COLORS.border};
 `;
 
-const OverlayControls = styled.div`
-  grid-column: 1 / 3;
-  height: 60px;
-  background: rgba(15, 23, 42, 0.8);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-`;
-
-const ControlDot = styled.div`
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  
-  &.active {
-    background: ${COLORS.primary};
-  }
-  &.danger {
-    background: #ef4444;
-  }
-`;
-
-// --- FEATURES SECTION ---
-const FeaturesSection = styled.section`
-  padding: 6rem 2rem;
-  background-color: ${COLORS.white};
-`;
-
-const SectionTitle = styled.div`
-  text-align: center;
-  margin-bottom: 4rem;
-  
-  h2 {
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: ${COLORS.dark};
-    margin-bottom: 1rem;
-  }
-  
-  p {
-    color: ${COLORS.secondary};
-    font-size: 1.125rem;
-    max-width: 600px;
-    margin: 0 auto;
-  }
-`;
-
-const Grid = styled.div`
-  max-width: 1200px;
+const HeroContainer = styled.div`
+  max-width: 1160px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2.5rem;
+`;
 
-  @media (max-width: 900px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  @media (max-width: 600px) {
-    grid-template-columns: 1fr;
+const HeroContent = styled.div`
+  max-width: 860px;
+  animation: ${floatIn} 0.78s cubic-bezier(0.22, 1, 0.36, 1) both;
+`;
+
+const Eyebrow = styled.div`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.55rem 0.9rem;
+  margin-bottom: 1.35rem;
+  border-radius: 999px;
+  background: ${COLORS.surfaceBlue};
+  border: 1px solid ${COLORS.lineBlue};
+  color: ${COLORS.primary};
+  font-size: 0.85rem;
+  font-weight: 800;
+`;
+
+const HeroTitle = styled.h1`
+  margin: 0 0 1.2rem;
+  font-size: clamp(2.7rem, 5.5vw, 4.8rem);
+  line-height: 0.98;
+  letter-spacing: -0.05em;
+  color: ${COLORS.navy};
+
+  span {
+    display: block;
+    color: ${COLORS.primary};
   }
 `;
 
-const FeatureBox = styled.div`
-  padding: 2rem;
-  background: ${COLORS.background};
-  border-radius: 16px;
-  transition: all 0.3s ease;
-  border: 1px solid transparent;
+const HeroSubtitle = styled.p`
+  max-width: 760px;
+  margin: 0 0 2rem;
+  color: ${COLORS.muted};
+  font-size: 1.12rem;
+  line-height: 1.75;
+`;
+
+const HeroActions = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+`;
+
+const PrimaryButton = styled(Link)`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  min-height: 54px;
+  padding: 0.95rem 1.25rem;
+  border-radius: 14px;
+  text-decoration: none;
+  font-weight: 800;
+  border: 1px solid ${COLORS.primary};
+  background: linear-gradient(135deg, ${COLORS.primary} 0%, #1d4ed8 100%);
+  color: white;
+  box-shadow: 0 16px 30px rgba(37, 99, 235, 0.18);
+  transition:
+    transform 0.24s ease,
+    box-shadow 0.24s ease,
+    filter 0.24s ease;
 
   &:hover {
-    background: ${COLORS.white};
-    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
-    border-color: ${COLORS.border};
-    transform: translateY(-5px);
-  }
-
-  .icon {
-    width: 48px;
-    height: 48px;
-    background: ${COLORS.white};
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1.5rem;
-    color: ${COLORS.primary};
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  }
-
-  h3 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin-bottom: 0.75rem;
-    color: ${COLORS.dark};
-  }
-
-  p {
-    color: ${COLORS.secondary};
-    line-height: 1.6;
+    transform: translateY(-2px);
+    box-shadow: 0 22px 42px rgba(37, 99, 235, 0.25);
+    filter: saturate(1.05);
   }
 `;
 
-// --- TEST REPORT ---
-const TechSpecs = styled.section`
-  padding: 6rem 2rem;
-  background-color: ${COLORS.dark};
-  color: ${COLORS.white};
-`;
-
-const TechContainer = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
+const SecondaryButton = styled(Link)`
+  display: inline-flex;
   align-items: center;
-  gap: 4rem;
+  justify-content: center;
+  gap: 0.65rem;
+  min-height: 54px;
+  padding: 0.95rem 1.25rem;
+  border-radius: 14px;
+  text-decoration: none;
+  font-weight: 800;
+  border: 1px solid ${COLORS.border};
+  background: rgba(255, 255, 255, 0.8);
+  color: ${COLORS.foreground};
+  transition:
+    transform 0.24s ease,
+    border-color 0.24s ease,
+    color 0.24s ease,
+    box-shadow 0.24s ease;
 
-  @media (max-width: 900px) {
-    flex-direction: column;
+  &:hover {
+    transform: translateY(-2px);
+    border-color: rgba(37, 99, 235, 0.25);
+    color: ${COLORS.primary};
+    box-shadow: 0 14px 28px rgba(15, 23, 42, 0.08);
   }
 `;
 
-const TechText = styled.div`
-  flex: 1;
-  
-  h2 {
-    font-size: 2.5rem;
+const HeroMeta = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+`;
+
+const MetaPill = styled.div`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid ${COLORS.border};
+  background: rgba(255, 255, 255, 0.76);
+  color: ${COLORS.foreground};
+  font-size: 0.92rem;
+  font-weight: 600;
+`;
+
+const CompactProofGrid = styled.div`
+  margin-top: 2.5rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  ${revealStyles};
+
+  @media (max-width: 960px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: 560px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const ProofCard = styled.div`
+  padding: 1rem 1.05rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid ${COLORS.border};
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.05);
+  transition:
+    transform 0.26s ease,
+    border-color 0.26s ease,
+    box-shadow 0.26s ease;
+
+  &:hover {
+    transform: translateY(-6px);
+    border-color: rgba(37, 99, 235, 0.24);
+    box-shadow: 0 24px 44px rgba(15, 23, 42, 0.08);
+  }
+
+  .label {
+    color: ${COLORS.muted};
+    font-size: 0.8rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .value {
+    color: ${COLORS.navy};
+    font-size: 1.08rem;
     font-weight: 800;
-    margin-bottom: 1.5rem;
-    color: ${COLORS.primary}; /* Brand primary color */
-  }
-  
-  p {
-    margin-bottom: 2rem;
-    font-size: 1.125rem;
-    color: #94a3b8;
-    line-height: 1.8;
-  }
-
-  ul {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-  }
-
-  li {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    color: #cbd5e1;
-    font-weight: 500;
   }
 `;
 
-const TechVisual = styled.div`
-  flex: 1;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 20px;
-  padding: 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+const Section = styled.section`
+  max-width: 1160px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 5rem 1.5rem;
+  ${revealStyles};
+`;
+
+const SectionHeader = styled.div`
+  max-width: 760px;
+  margin-bottom: 2.6rem;
+`;
+
+const SectionLabel = styled.div`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.9rem;
+  color: ${COLORS.primary};
+  font-weight: 800;
+  letter-spacing: 0.01em;
+`;
+
+const SectionTitle = styled.h2`
+  margin: 0 0 0.85rem;
+  color: ${COLORS.navy};
+  font-size: clamp(2rem, 3.2vw, 3rem);
+  line-height: 1.06;
+  letter-spacing: -0.035em;
+`;
+
+const SectionText = styled.p`
+  margin: 0;
+  color: ${COLORS.muted};
+  line-height: 1.72;
+  font-size: 1.05rem;
+`;
+
+const CardGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.15rem;
+
+  @media (max-width: 1080px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const FeatureCard = styled.article`
   position: relative;
+  overflow: hidden;
+  padding: 1.5rem;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid ${COLORS.border};
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.05);
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+  ${revealStyles};
 
   &::before {
     content: '';
     position: absolute;
-    top: -20px;
-    right: -20px;
-    right: 20px;
-    bottom: 20px;
-    background: ${COLORS.primary};
-    opacity: 0.1;
-    border-radius: 20px;
-    z-index: -1;
+    inset: 0;
+    background: linear-gradient(140deg, rgba(37, 99, 235, 0.08), rgba(255, 255, 255, 0));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  &:hover {
+    transform: translateY(-10px);
+    border-color: rgba(37, 99, 235, 0.24);
+    box-shadow: 0 26px 54px rgba(15, 23, 42, 0.1);
+  }
+
+  &:hover::before {
+    opacity: 1;
+  }
+
+  h3 {
+    position: relative;
+    margin: 1rem 0 0.7rem;
+    color: ${COLORS.navy};
+    font-size: 1.18rem;
+  }
+
+  p {
+    position: relative;
+    margin: 0;
+    color: ${COLORS.muted};
+    line-height: 1.7;
   }
 `;
 
-const StatRow = styled.div`
+const IconBox = styled.div`
+  position: relative;
+  width: 52px;
+  height: 52px;
+  border-radius: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: ${COLORS.surfaceBlue};
+  color: ${COLORS.primary};
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease;
+
+  ${FeatureCard}:hover & {
+    transform: translateY(-2px) scale(1.05);
+    background: rgba(37, 99, 235, 0.12);
+  }
+`;
+
+const WorkflowGrid = styled.div`
+  display: grid;
+  gap: 1rem;
+`;
+
+const WorkflowCard = styled.article`
+  display: grid;
+  grid-template-columns: 84px 1fr;
+  gap: 1.25rem;
+  padding: 1.3rem;
+  border-radius: 22px;
+  border: 1px solid ${COLORS.border};
+  background: ${COLORS.card};
+  transition:
+    transform 0.28s ease,
+    border-color 0.28s ease,
+    box-shadow 0.28s ease;
+  ${revealStyles};
+
+  &:hover {
+    transform: translateX(6px);
+    border-color: rgba(37, 99, 235, 0.22);
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+`;
+
+const StepBadge = styled.div`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  border-radius: 14px;
+  background: ${COLORS.surfaceBlue};
+  color: ${COLORS.primary};
+  font-weight: 900;
+`;
+
+const WorkflowContent = styled.div`
+  h3 {
+    margin: 0 0 0.45rem;
+    color: ${COLORS.navy};
+    font-size: 1.08rem;
+  }
+
+  p {
+    margin: 0;
+    color: ${COLORS.muted};
+    line-height: 1.68;
+  }
+`;
+
+const DarkBand = styled.section`
+  background:
+    radial-gradient(circle at 10% 0%, rgba(59, 130, 246, 0.18), transparent 22%),
+    linear-gradient(180deg, #0b1220 0%, #101b34 100%);
+  border-top: 1px solid rgba(148, 163, 184, 0.08);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+`;
+
+const DarkContainer = styled.div`
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 5rem 1.5rem;
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(300px, 1.05fr);
+  gap: 2rem;
+  align-items: center;
+  ${revealStyles};
+
+  @media (max-width: 980px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const DarkText = styled.div`
+  h2 {
+    margin: 0 0 1rem;
+    color: white;
+    font-size: clamp(2rem, 3vw, 2.8rem);
+    line-height: 1.06;
+    letter-spacing: -0.03em;
+  }
+
+  p {
+    margin: 0 0 1.6rem;
+    color: rgba(203, 213, 225, 0.88);
+    line-height: 1.75;
+    font-size: 1.04rem;
+  }
+`;
+
+const BulletGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+
+  @media (max-width: 560px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const Bullet = styled.div`
   display: flex;
-  justify-content: space-between;
-  padding: 1rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  
-  &:last-child {
-    border-bottom: none;
-  }
+  align-items: flex-start;
+  gap: 0.7rem;
+  color: white;
+  line-height: 1.55;
 
-  span.label {
-    color: #94a3b8;
-  }
-  
-  span.value {
-    color: ${COLORS.white};
-    font-family: monospace;
-    font-weight: 600;
+  svg {
+    color: #60a5fa;
+    flex-shrink: 0;
+    margin-top: 0.15rem;
   }
 `;
 
-// --- COMPONENT ---
+const MetricsPanel = styled.div`
+  display: grid;
+  gap: 1rem;
+  padding: 1.2rem;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  box-shadow: 0 24px 70px rgba(2, 6, 23, 0.3);
+`;
+
+const MetricsHero = styled.div`
+  padding: 1.2rem;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(37, 99, 235, 0.18) 0%, rgba(15, 23, 42, 0.4) 100%);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+
+  .eyebrow {
+    color: #93c5fd;
+    font-size: 0.82rem;
+    font-weight: 800;
+    margin-bottom: 0.55rem;
+  }
+
+  .value {
+    color: white;
+    font-size: clamp(2rem, 3vw, 2.7rem);
+    font-weight: 900;
+    margin-bottom: 0.35rem;
+  }
+
+  .caption {
+    color: rgba(203, 213, 225, 0.86);
+    line-height: 1.55;
+  }
+`;
+
+const MetricsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+`;
+
+const MetricsTile = styled.div`
+  padding: 1rem;
+  border-radius: 18px;
+  background: rgba(15, 23, 42, 0.48);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+
+  .label {
+    color: rgba(148, 163, 184, 0.9);
+    font-size: 0.8rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .value {
+    color: white;
+    font-weight: 800;
+    font-size: 1.08rem;
+  }
+`;
+
+const RevealBlock = styled.div`
+  ${revealStyles};
+`;
 
 export default function DemoPageNew() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+
+    const revealNodes = Array.from(document.querySelectorAll('[data-reveal]'));
+
+    if (!revealNodes.length) {
+      return undefined;
+    }
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion) {
+      revealNodes.forEach((node) => node.classList.add('is-visible'));
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.16,
+        rootMargin: '0px 0px -8% 0px',
+      }
+    );
+
+    revealNodes.forEach((node) => observer.observe(node));
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <PageContainer>
       <HeaderClean />
-      
-      <HeroSection>
-        <HeroBadge>Version 2.0 Maintenant Disponible</HeroBadge>
-        <HeroTitle>
-          La Visioconférence<br/>
-          <span>Réinventée pour Vous</span>
-        </HeroTitle>
-        <HeroSubtitle>
-          Testez instantanément notre technologie audio et vidéo HD. 
-          Aucune installation. Latence ultra-faible. Collaboration en temps réel.
-        </HeroSubtitle>
-        
-        <ActionButtons>
-          <PrimaryButton to="/room/demo-pro-room">
-            <Play size={20} fill="currentColor" />
-            Lancer la Démo Live
-          </PrimaryButton>
-          <SecondaryButton to="/contact">
-            Planifier une Présentation
-          </SecondaryButton>
-        </ActionButtons>
 
-        {/* Interactive Pseudo-Preview */}
-        <PreviewContainer>
-          <PreviewBrowser>
-            <BrowserHeader>
-              <div className="dots">
-                <div className="red"></div>
-                <div className="yellow"></div>
-                <div className="green"></div>
-              </div>
-              <div className="bar">visiconnect.com/room/demo-team-meeting</div>
-            </BrowserHeader>
-            <PreviewContent>
-              <FakeVideo className="main">
-                <div style={{ textAlign: 'center' }}>
-                    <Users size={64} style={{ marginBottom: '1rem', opacity: 0.5 }} />
-                    <h3>Intervenant Principal</h3>
-                </div>
-              </FakeVideo>
-              <FakeVideo className="secondary">
-                 <div style={{ textAlign: 'center' }}>
-                    <Users size={32} style={{ marginBottom: '0.5rem', opacity: 0.5 }} />
-                    <small>Participant</small>
-                </div>
-              </FakeVideo>
-              <OverlayControls>
-                <ControlDot className="active"><Users size={20} /></ControlDot>
-                <ControlDot><Globe size={20} /></ControlDot>
-                <ControlDot className="danger"><Play size={20} style={{ transform: 'rotate(90deg)' }} /></ControlDot>
-                <ControlDot><Zap size={20} /></ControlDot>
-              </OverlayControls>
-            </PreviewContent>
-          </PreviewBrowser>
-        </PreviewContainer>
+      <MainContent>
+        <HeroSection>
+          <HeroContainer>
+            <HeroContent>
+              <Eyebrow>
+                <Sparkles size={16} /> Démo immersive de la plateforme
+              </Eyebrow>
+              <HeroTitle>
+                Une page demo plus propre,
+                <span>sans énorme bloc inutile</span>
+              </HeroTitle>
+              <HeroSubtitle>
+                La page garde un niveau premium mais retire la grosse carte massive qui alourdissait la lecture. L’objectif est maintenant plus clair: comprendre la valeur, voir les signaux produit importants et entrer rapidement dans la room de démonstration.
+              </HeroSubtitle>
+              <HeroActions>
+                <PrimaryButton to="/room/demo-pro-room">
+                  <Play size={18} fill="currentColor" /> Lancer la démo live
+                </PrimaryButton>
+                <SecondaryButton to="/contact">
+                  Planifier une présentation <ArrowRight size={18} />
+                </SecondaryButton>
+              </HeroActions>
+              <HeroMeta>
+                <MetaPill><Gauge size={16} /> Démonstration orientée performance</MetaPill>
+                <MetaPill><Bot size={16} /> Assistant IA visible dès l’entrée</MetaPill>
+                <MetaPill><ShieldCheck size={16} /> Positionnement B2B premium</MetaPill>
+              </HeroMeta>
+            </HeroContent>
 
-      </HeroSection>
+            <CompactProofGrid data-reveal>
+              {proofMetrics.map((metric, index) => (
+                <ProofCard key={metric.label} style={{ '--reveal-delay': `${index * 70}ms` }}>
+                  <div className="label">{metric.label}</div>
+                  <div className="value">{metric.value}</div>
+                </ProofCard>
+              ))}
+            </CompactProofGrid>
+          </HeroContainer>
+        </HeroSection>
 
-      <FeaturesSection>
-        <SectionTitle>
-          <h2>Pourquoi Choisir VisiConnect ?</h2>
-          <p>Une suite complète d'outils conçus pour la productivité et la sécurité de vos échanges.</p>
-        </SectionTitle>
-        
-        <Grid>
-          <FeatureBox>
-            <div className="icon">
-              <Laptop />
-            </div>
-            <h3>Compatible Partout</h3>
-            <p>Fonctionne sur tous les navigateurs modernes (Chrome, Firefox, Safari, Edge) et sur mobile sans application native.</p>
-          </FeatureBox>
-          <FeatureBox>
-             <div className="icon">
-              <Shield />
-            </div>
-            <h3>Chiffrement de Bout en Bout</h3>
-            <p>Vos conversations sont sécurisées par défaut. Nous ne pouvons ni voir ni écouter vos réunions.</p>
-          </FeatureBox>
-          <FeatureBox>
-             <div className="icon">
-              <Zap />
-            </div>
-            <h3>Performance HD</h3>
-            <p>Technologie adaptative qui ajuste la qualité vidéo en temps réel selon votre bande passante.</p>
-          </FeatureBox>
-          <FeatureBox>
-             <div className="icon">
-              <Users />
-            </div>
-            <h3>Salles jusqu'à 100 personnes</h3>
-            <p>Réunissez toute votre équipe, vos clients ou votre classe sans limite technique.</p>
-          </FeatureBox>
-          <FeatureBox>
-             <div className="icon">
-              <Globe />
-            </div>
-            <h3>Traduction en Temps Réel</h3>
-            <p>Brisez la barrière de la langue avec nos sous-titres traduits instantanément par IA.</p>
-          </FeatureBox>
-          <FeatureBox>
-             <div className="icon">
-              <Check />
-            </div>
-            <h3>Outils Collaboratifs</h3>
-            <p>Tableau blanc partagé, chat, sondages et partage d'écran fluide inclus.</p>
-          </FeatureBox>
-        </Grid>
-      </FeaturesSection>
+        <Section data-reveal>
+          <SectionHeader>
+            <SectionLabel><Sparkles size={16} /> Ce que la démo doit prouver</SectionLabel>
+            <SectionTitle>Une démonstration plus concrète et plus premium</SectionTitle>
+            <SectionText>
+              La page demo doit vendre une expérience, pas seulement une liste d’arguments. Les cartes ci-dessous rendent visibles les briques qui comptent vraiment pour un visiteur ou un prospect.
+            </SectionText>
+          </SectionHeader>
 
-      <TechSpecs>
-        <TechContainer>
-          <TechText>
-            <h2>Sous le Capot</h2>
-            <p>
-              Notre infrastructure est basée sur WebRTC et des serveurs SFU (Selective Forwarding Unit) distribués mondialement pour garantir la latence la plus faible possible, où que vous soyez.
-            </p>
-            <ul>
-              <li><Check size={18} color="#10b981" /> Architecture SFU Évolutive</li>
-              <li><Check size={18} color="#10b981" /> Codec VP8/VP9 & AV1</li>
-              <li><Check size={18} color="#10b981" /> Audio Opus 48kHz</li>
-              <li><Check size={18} color="#10b981" /> Suppression de Bruit IA</li>
-              <li><Check size={18} color="#10b981" /> Conformité RGPD</li>
-              <li><Check size={18} color="#10b981" /> API REST Complète</li>
-            </ul>
-          </TechText>
-          <TechVisual>
-            <div style={{ marginBottom: '1.5rem', fontWeight: 'bold', color: 'white' }}>Métriques en Temps Réel (Simulé)</div>
-            <StatRow>
-              <span className="label">Bitrate Vidéo</span>
-              <span className="value">2.5 Mbps</span>
-            </StatRow>
-            <StatRow>
-              <span className="label">Latence (RTT)</span>
-              <span className="value">32 ms</span>
-            </StatRow>
-            <StatRow>
-              <span className="label">Perte de Paquets</span>
-              <span className="value">0.01%</span>
-            </StatRow>
-            <StatRow>
-              <span className="label">Résolution</span>
-              <span className="value">1920x1080 @ 60fps</span>
-            </StatRow>
-            <StatRow>
-              <span className="label">Codec Audio</span>
-              <span className="value">Opus DTX</span>
-            </StatRow>
-            <div style={{ marginTop: '1.5rem', fontSize: '0.8rem', color: '#64748b' }}>
-              *Données basées sur une connexion fibre standard en Europe.
-            </div>
-          </TechVisual>
-        </TechContainer>
-      </TechSpecs>
+          <CardGrid>
+            {highlights.map((item, index) => (
+              <FeatureCard key={item.title} data-reveal style={{ '--reveal-delay': `${index * 80}ms` }}>
+                <IconBox>{item.icon}</IconBox>
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
+              </FeatureCard>
+            ))}
+          </CardGrid>
+        </Section>
 
-      <div style={{ background: COLORS.background, padding: '6rem 2rem', textAlign: 'center' }}>
-        <h2 style={{ fontSize: '2rem', fontWeight: '800', color: COLORS.dark, marginBottom: '1rem' }}>Prêt à transformer vos réunions ?</h2>
-        <p style={{ color: COLORS.secondary, marginBottom: '2rem', maxWidth: '600px', margin: '0 auto 2rem' }}>Essai gratuit de 14 jours, sans carte bancaire requise.</p>
-        <PrimaryButton to="/signup">Créer un compte Gratuit</PrimaryButton>
-      </div>
+        <Section data-reveal>
+          <SectionHeader>
+            <SectionLabel><Layers3 size={16} /> Parcours</SectionLabel>
+            <SectionTitle>Ce que l’utilisateur comprend en quelques instants</SectionTitle>
+            <SectionText>
+              Une bonne page demo doit raccourcir la distance entre découverte produit et engagement réel. Le parcours a donc été restructuré pour rendre la valeur plus évidente à chaque étape.
+            </SectionText>
+          </SectionHeader>
+
+          <WorkflowGrid>
+            {workflowSteps.map((item, index) => (
+              <WorkflowCard key={item.step} data-reveal style={{ '--reveal-delay': `${index * 90}ms` }}>
+                <StepBadge>{item.step}</StepBadge>
+                <WorkflowContent>
+                  <h3>{item.title}</h3>
+                  <p>{item.description}</p>
+                </WorkflowContent>
+              </WorkflowCard>
+            ))}
+          </WorkflowGrid>
+        </Section>
+
+        <DarkBand>
+          <DarkContainer data-reveal>
+            <DarkText>
+              <SectionLabel style={{ color: '#93c5fd' }}><Gauge size={16} /> Lecture technique</SectionLabel>
+              <h2>Un cadrage plus crédible pour les visiteurs qui évaluent vraiment la plateforme</h2>
+              <p>
+                Au lieu d’une simple promesse marketing, la section technique met en avant des indicateurs lisibles, une architecture moderne et des signaux de sérieux plus adaptés à une audience professionnelle.
+              </p>
+              <BulletGrid>
+                <Bullet><BadgeCheck size={16} /> Architecture pensée pour la faible latence</Bullet>
+                <Bullet><BadgeCheck size={16} /> Expérience de salle cohérente sur plusieurs appareils</Bullet>
+                <Bullet><BadgeCheck size={16} /> Assistant IA exploitable dans un contexte réel</Bullet>
+                <Bullet><BadgeCheck size={16} /> Positionnement plus convaincant face aux solutions établies</Bullet>
+              </BulletGrid>
+            </DarkText>
+
+            <MetricsPanel>
+              <MetricsHero>
+                <div className="eyebrow">Signal principal</div>
+                <div className="value">4K-ready room</div>
+                <div className="caption">Une mise en scène orientée qualité perçue, réactivité et collaboration enrichie par l’IA.</div>
+              </MetricsHero>
+
+              <MetricsGrid>
+                <MetricsTile>
+                  <div className="label">Bitrate vidéo</div>
+                  <div className="value">2.4 Mbps</div>
+                </MetricsTile>
+                <MetricsTile>
+                  <div className="label">RTT moyen</div>
+                  <div className="value">29 ms</div>
+                </MetricsTile>
+                <MetricsTile>
+                  <div className="label">Audio</div>
+                  <div className="value">Opus 48 kHz</div>
+                </MetricsTile>
+                <MetricsTile>
+                  <div className="label">Collaboration</div>
+                  <div className="value">Chat + AI + partage</div>
+                </MetricsTile>
+              </MetricsGrid>
+            </MetricsPanel>
+          </DarkContainer>
+        </DarkBand>
+
+        <Section data-reveal>
+          <SectionHeader>
+            <SectionLabel><Globe size={16} /> Cas d’usage</SectionLabel>
+            <SectionTitle>Une page demo plus utile à la vente et à la qualification</SectionTitle>
+            <SectionText>
+              Cette version aide autant un visiteur curieux qu’un prospect plus avancé. Elle montre comment la plateforme se projette dans des contextes d’usage clairs, sans surcharge inutile.
+            </SectionText>
+          </SectionHeader>
+
+          <CardGrid>
+            {useCases.map((item, index) => (
+              <FeatureCard key={item.title} data-reveal style={{ '--reveal-delay': `${index * 80}ms` }}>
+                <IconBox>{item.icon}</IconBox>
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
+              </FeatureCard>
+            ))}
+          </CardGrid>
+        </Section>
+
+        <RevealBlock data-reveal style={{ '--reveal-delay': '80ms' }}>
+          <CallToAction
+            title="Passer de la page à la vraie démonstration"
+            description="Lance la room de démonstration pour voir l’expérience complète, ou échange avec l’équipe si tu veux une présentation plus cadrée."
+            buttonText="Accéder à la room démo"
+            buttonLink="/room/demo-pro-room"
+          />
+        </RevealBlock>
+      </MainContent>
 
       <FooterClean />
     </PageContainer>

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react"
+import React, { createContext, useContext, useEffect } from "react"
  
 const initialState = {
   theme: "system",
@@ -9,42 +9,22 @@ const ThemeProviderContext = createContext(initialState)
  
 export function ThemeProvider({
   children,
-  defaultTheme = "light", // Forced default to light
+  defaultTheme = "light",
   storageKey = "vite-ui-theme",
   ...props
 }) {
-  // FORCE LIGHT MODE: Ignore storage and system preference for now
-  const [theme, setTheme] = useState("light")
+  const theme = "light"
  
   useEffect(() => {
     const root = window.document.documentElement
  
     root.classList.remove("light", "dark")
-    root.classList.add("light") // Always add light class
-    
-    // Original logic commented out for now
-    /*
-    if (theme === "system") {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
-        .matches
-        ? "dark"
-        : "light"
- 
-      root.classList.add(systemTheme)
-      return
-    }
- 
-    root.classList.add(theme)
-    */
+    root.classList.add("light")
   }, [theme])
  
   const value = {
     theme,
-    setTheme: (theme) => {
-      // localStorage.setItem(storageKey, theme)
-      // setTheme(theme)
-      console.log("Dark mode is currently disabled")
-    },
+    setTheme: () => {},
   }
  
   return (

@@ -5,7 +5,6 @@ export const useAuthUser = () => {
 
   const refreshUser = () => {
     // Dans le système Convex (ou mock), la réactivité est automatique.
-    console.log("refreshUser appelé");
   };
 
   return { user, loading, refreshUser };

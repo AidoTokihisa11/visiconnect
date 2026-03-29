@@ -44,7 +44,6 @@ export const AdminProvider = ({ children }) => {
     // Save to local storage
     const saveContent = useCallback(debounce((newMap) => {
         localStorage.setItem('visiconnect_content', JSON.stringify(newMap));
-        console.log('Content auto-saved');
     }, 500), []);
 
     const updateContent = (key, value) => {

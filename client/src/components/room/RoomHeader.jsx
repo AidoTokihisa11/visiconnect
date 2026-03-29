@@ -10,7 +10,7 @@ const HeaderContainer = styled.header`
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid ${THEME.border};
-  background-color: ${THEME.bg};
+  background-color: ${THEME.cardBg};
   z-index: 10;
 `;
 
@@ -34,8 +34,8 @@ const SecureBadge = styled.div`
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background-color: rgba(16, 185, 129, 0.1);
-  color: #10b981;
+  background-color: #ecfdf5;
+  color: #059669;
   padding: 0.375rem 0.875rem;
   border-radius: 9999px;
   font-size: 0.875rem;

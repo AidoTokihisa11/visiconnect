@@ -12,6 +12,9 @@ import { useAuth } from '../contexts/AuthContext'
  */
 export const useRealtime = (meetingId, enabled = true) => {
   const { user, userProfile } = useAuth()
+  const authUserId = userProfile?.id || user?.id
+  const authUserName = userProfile?.display_name || user?.email?.split('@')[0] || 'Anonymous'
+  const authUserAvatar = userProfile?.avatar_url || null
   const [participants, setParticipants] = useState([])
   const [messages, setMessages] = useState([])
   const [isConnected, setIsConnected] = useState(false)
@@ -34,7 +37,7 @@ export const useRealtime = (meetingId, enabled = true) => {
 
   // Subscribe to realtime updates
   useEffect(() => {
-    if (!meetingId || !enabled || !user) {
+    if (!meetingId || !enabled || !authUserId) {
       setIsLoading(false)
       return
     }
@@ -53,7 +56,6 @@ export const useRealtime = (meetingId, enabled = true) => {
             // Meeting updates
             onMeetingUpdate: (payload) => {
               if (!mounted) return
-              console.log('🔄 Meeting updated:', payload)
               // Vous pouvez émettre un événement ou callback ici si nécessaire
             },
 
@@ -78,19 +80,16 @@ export const useRealtime = (meetingId, enabled = true) => {
             // User joined
             onUserJoin: ({ newPresences }) => {
               if (!mounted) return
-              console.log('✅ User joined:', newPresences)
             },
 
             // User left
             onUserLeave: ({ leftPresences }) => {
               if (!mounted) return
-              console.log('❌ User left:', leftPresences)
             },
 
             // Custom broadcasts
             onBroadcast: (payload) => {
               if (!mounted) return
-              console.log('📡 Broadcast received:', payload)
               // Gérer les événements personnalisés ici
             },
 
@@ -99,7 +98,6 @@ export const useRealtime = (meetingId, enabled = true) => {
               if (!mounted) return
               setIsConnected(true)
               setIsLoading(false)
-              console.log('✅ Connected to meeting realtime')
             },
 
             // Connection error
@@ -111,9 +109,9 @@ export const useRealtime = (meetingId, enabled = true) => {
             }
           },
           {
-            userId: userProfile?.id || user.id,
-            userName: userProfile?.display_name || user.email?.split('@')[0] || 'Anonymous',
-            userAvatar: userProfile?.avatar_url || null
+            userId: authUserId,
+            userName: authUserName,
+            userAvatar: authUserAvatar
           }
         )
 
@@ -135,19 +133,19 @@ export const useRealtime = (meetingId, enabled = true) => {
         RealtimeService.unsubscribeMeeting(meetingId)
       }
     }
-  }, [meetingId, enabled, user, userProfile, loadMessages])
+  }, [meetingId, enabled, authUserId, authUserName, authUserAvatar, loadMessages])
 
   // Send message
   const sendMessage = useCallback(
     async (messageText, type = 'text') => {
-      if (!userProfile?.id || !meetingId || !messageText.trim()) {
+      if (!authUserId || !meetingId || !messageText.trim()) {
         return null
       }
 
       try {
         const message = await RealtimeService.sendMessage(
           meetingId,
-          userProfile.id,
+          authUserId,
           messageText.trim(),
           type
         )
@@ -158,7 +156,7 @@ export const useRealtime = (meetingId, enabled = true) => {
         throw err
       }
     },
-    [meetingId, userProfile]
+    [meetingId, authUserId]
   )
 
   // Broadcast custom event
@@ -229,11 +227,14 @@ export const useRealtime = (meetingId, enabled = true) => {
  */
 export const usePresence = (meetingId) => {
   const { user, userProfile } = useAuth()
+  const authUserId = userProfile?.id || user?.id
+  const authUserName = userProfile?.display_name || user?.email?.split('@')[0] || 'Anonymous'
+  const authUserAvatar = userProfile?.avatar_url || null
   const [participants, setParticipants] = useState([])
   const [isOnline, setIsOnline] = useState(false)
 
   useEffect(() => {
-    if (!meetingId || !user) return
+    if (!meetingId || !authUserId) return
 
     let mounted = true
 
@@ -251,9 +252,9 @@ export const usePresence = (meetingId) => {
         }
       },
       {
-        userId: userProfile?.id || user.id,
-        userName: userProfile?.display_name || user.email?.split('@')[0] || 'Anonymous',
-        userAvatar: userProfile?.avatar_url || null
+        userId: authUserId,
+        userName: authUserName,
+        userAvatar: authUserAvatar
       }
     )
 
@@ -261,7 +262,7 @@ export const usePresence = (meetingId) => {
       mounted = false
       RealtimeService.unsubscribeMeeting(meetingId)
     }
-  }, [meetingId, user, userProfile])
+  }, [meetingId, authUserId, authUserName, authUserAvatar])
 
   return {
     participants,
@@ -279,6 +280,7 @@ export const usePresence = (meetingId) => {
  */
 export const useMessages = (meetingId) => {
   const { userProfile } = useAuth()
+  const userProfileId = userProfile?.id
   const [messages, setMessages] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
@@ -323,14 +325,14 @@ export const useMessages = (meetingId) => {
 
   const sendMessage = useCallback(
     async (messageText) => {
-      if (!userProfile?.id || !meetingId || !messageText.trim()) {
+      if (!userProfileId || !meetingId || !messageText.trim()) {
         return null
       }
 
       try {
         return await RealtimeService.sendMessage(
           meetingId,
-          userProfile.id,
+          userProfileId,
           messageText.trim(),
           'text'
         )
@@ -339,7 +341,7 @@ export const useMessages = (meetingId) => {
         throw err
       }
     },
-    [meetingId, userProfile]
+    [meetingId, userProfileId]
   )
 
   return {

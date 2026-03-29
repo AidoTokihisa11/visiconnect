@@ -411,10 +411,36 @@ const CheckoutPage = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Checkout submitted:', formData);
-    // Logique de traitement du paiement
+    
+    try {
+      // Create Stripe checkout session
+      const response = await fetch('http://localhost:3001/api/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          plan: selectedPlan === 'starter' ? 'pro' : selectedPlan, // using 'pro' for our dev mapping
+          billingCycle: isAnnual ? 'annual' : 'monthly',
+        }),
+      });
+
+      const session = await response.json();
+
+      if (session.error) {
+        console.error('Error from server:', session.error);
+        alert('Erreur: ' + session.error);
+        return;
+      }
+
+      // Redirect to Stripe Checkout
+      window.location.href = session.url;
+    } catch (error) {
+      console.error('Error processing checkout:', error);
+      alert('Une erreur est survenue lors de la création de la session de paiement.');
+    }
   };
 
   return (

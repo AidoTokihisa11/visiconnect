@@ -21,10 +21,7 @@ export const useUserProfile = () => {
         setLoading(true);
         setError(null);
         
-        console.log('🔍 Chargement du profil utilisateur depuis la base de données...');
         const profile = await UserAPIService.getUserProfile();
-        
-        console.log('✅ Profil utilisateur chargé:', profile);
         setUserProfile(profile);
         
       } catch (error) {

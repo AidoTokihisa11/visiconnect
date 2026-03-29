@@ -40,6 +40,11 @@ export const useRoomToken = (roomName, participantName) => {
         } 
         
         const data = await response.json();
+        if (typeof data.token === 'string' && data.token.includes('mock_token_due_to_missing_keys')) {
+          setToken(null);
+          setError(new Error('LiveKit credentials are missing on backend.'));
+          return;
+        }
         setToken(data.token);
       } catch (err) {
         // Prevent console spam in dev if backend is offline
@@ -62,10 +67,20 @@ export const useRoomToken = (roomName, participantName) => {
  * Custom Hook for accessing LiveKit meeting state and controls.
  * MUST be used within a <LiveKitRoom> or <RoomContext.Provider>.
  */
-export const useMeeting = () => {
+export const useMeeting = (maxQualityLock = true) => {
   const room = useRoomContext();
   const { localParticipant } = useLocalParticipant();
   const remoteParticipants = useParticipants();
+  const [devices, setDevices] = useState({
+    cameras: [],
+    microphones: [],
+    speakers: [],
+  });
+  const [selectedDevices, setSelectedDevices] = useState({
+    cameraId: '',
+    microphoneId: '',
+    speakerId: '',
+  });
   
   // Get all camera and screen share tracks
   // This hook automatically handles updates when tracks are published/subscribed
@@ -90,29 +105,30 @@ export const useMeeting = () => {
       // Désactiver la caméra
       await localParticipant.setCameraEnabled(false);
     } else {
-      // Activer la caméra avec fallback intelligent (4K -> 1080p -> 720p)
+      // Activer la caméra en priorité max qualité avec fallback matériel
       try {
-        // Tentative 4K (si supporté par useLiveKit4K options)
+        const targetResolution = maxQualityLock
+          ? { width: 3840, height: 2160, frameRate: 60 }
+          : { width: 1920, height: 1080, frameRate: 30 };
+
         await localParticipant.setCameraEnabled(true, {
-           resolution: { width: 3840, height: 2160 }
+          resolution: targetResolution,
         });
       } catch (e4k) {
-        console.warn("4K Camera implementation failed, falling back to 1080p", e4k);
+        console.warn('High resolution camera failed, falling back to 1080p', e4k);
         try {
-           // Fallback 1080p
-           await localParticipant.setCameraEnabled(true, {
-               resolution: { width: 1920, height: 1080 }
-           });
+          await localParticipant.setCameraEnabled(true, {
+            resolution: { width: 1920, height: 1080, frameRate: 30 },
+          });
         } catch (e1080) {
-            console.warn("1080p Camera implementation failed, falling back to 720p", e1080);
-            // Fallback 720p (Défaut standard)
-            await localParticipant.setCameraEnabled(true, {
-               resolution: { width: 1280, height: 720 }
-            });
+          console.warn('1080p camera failed, falling back to 720p', e1080);
+          await localParticipant.setCameraEnabled(true, {
+            resolution: { width: 1280, height: 720, frameRate: 30 },
+          });
         }
       }
     }
-  }, [localParticipant]);
+  }, [localParticipant, maxQualityLock]);
 
   const toggleScreenShare = useCallback(async () => {
     if (localParticipant) {
@@ -123,6 +139,81 @@ export const useMeeting = () => {
     }
   }, [localParticipant]);
 
+  const refreshDevices = useCallback(async () => {
+    if (!navigator?.mediaDevices?.enumerateDevices) return;
+    try {
+      const list = await navigator.mediaDevices.enumerateDevices();
+      const cameras = list.filter((d) => d.kind === 'videoinput');
+      const microphones = list.filter((d) => d.kind === 'audioinput');
+      const speakers = list.filter((d) => d.kind === 'audiooutput');
+
+      setDevices({ cameras, microphones, speakers });
+
+      if (room?.getActiveDevice) {
+        const readActiveDevice = async (kind) => {
+          try {
+            const value = room.getActiveDevice(kind);
+            if (value && typeof value.then === 'function') {
+              return await value;
+            }
+            return value || '';
+          } catch (e) {
+            return '';
+          }
+        };
+
+        const [cameraId, microphoneId, speakerId] = await Promise.all([
+          readActiveDevice('videoinput'),
+          readActiveDevice('audioinput'),
+          readActiveDevice('audiooutput'),
+        ]);
+        setSelectedDevices({ cameraId: cameraId || '', microphoneId: microphoneId || '', speakerId: speakerId || '' });
+      }
+    } catch (error) {
+      console.warn('Unable to enumerate media devices', error);
+    }
+  }, [room]);
+
+  useEffect(() => {
+    refreshDevices();
+    const onDeviceChange = () => {
+      refreshDevices();
+    };
+    navigator?.mediaDevices?.addEventListener?.('devicechange', onDeviceChange);
+    return () => {
+      navigator?.mediaDevices?.removeEventListener?.('devicechange', onDeviceChange);
+    };
+  }, [refreshDevices]);
+
+  const setActiveDevice = useCallback(
+    async (kind, deviceId) => {
+      if (!room || !deviceId) return;
+      try {
+        await room.switchActiveDevice(kind, deviceId);
+        setSelectedDevices((prev) => {
+          if (kind === 'videoinput') return { ...prev, cameraId: deviceId };
+          if (kind === 'audioinput') return { ...prev, microphoneId: deviceId };
+          return { ...prev, speakerId: deviceId };
+        });
+      } catch (error) {
+        console.warn(`Unable to switch ${kind}`, error);
+      }
+    },
+    [room]
+  );
+
+  const setCameraDevice = useCallback(async (deviceId) => {
+    await setActiveDevice('videoinput', deviceId);
+  }, [setActiveDevice]);
+
+  const setMicrophoneDevice = useCallback(async (deviceId) => {
+    await setActiveDevice('audioinput', deviceId);
+  }, [setActiveDevice]);
+
+  const setSpeakerDevice = useCallback(async (deviceId) => {
+    await setActiveDevice('audiooutput', deviceId);
+  }, [setActiveDevice]);
+
   return {
     room,
     localParticipant,
@@ -130,10 +221,16 @@ export const useMeeting = () => {
     tracks,
     activeSpeakerId: room?.activeSpeaker?.identity,
     connectionState: room?.state,
+    devices,
+    selectedDevices,
     controls: {
       toggleMic,
       toggleCamera,
-      toggleScreenShare
-    }
+      toggleScreenShare,
+      refreshDevices,
+      setCameraDevice,
+      setMicrophoneDevice,
+      setSpeakerDevice,
+    },
   };
 };

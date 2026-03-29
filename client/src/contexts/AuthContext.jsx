@@ -150,8 +150,14 @@ export const AuthProvider = ({ children }) => {
   };
 
   // On bloque seulement le chargement critique global pour éviter un rendu prématuré
-  if (!clerkLoaded || !isAuthLoaded || isConvexLoading) {
-    return null;
+  if (!clerkLoaded || !isAuthLoaded) {
+    return (
+      <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', fontFamily: 'sans-serif' }}>
+        <div style={{ width: '40px', height: '40px', border: '3px solid #f3f3f3', borderTop: '3px solid #2563eb', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+        <p style={{ marginTop: '20px', color: '#64748b' }}>Chargement de l'authentification (Clerk)...</p>
+        <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
   }
 
   return (

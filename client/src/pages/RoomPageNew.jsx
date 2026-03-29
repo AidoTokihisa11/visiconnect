@@ -37,9 +37,53 @@ export default function RoomPageNew() {
   // 3. 4K / Video Options
   const { options: roomOptions, videoOptions } = useLiveKit4K();
 
-  const liveKitUrl = import.meta.env.VITE_LIVEKIT_URL || 'ws://localhost:7880'; 
+  const liveKitUrl = import.meta.env.VITE_LIVEKIT_WS_URL || import.meta.env.VITE_LIVEKIT_URL || 'ws://localhost:7880';
+  const isUsableToken = typeof token === 'string' && token.length > 0 && !token.includes('mock_token_due_to_missing_keys');
 
-  // Wait for token before trying to connect (prevents failed connect)
+  // Guard 1: Wait for auth check
+  if (authLoading) {
+    return (
+      <PageContainer style={{ alignItems: 'center', justifyContent: 'center' }}>
+        <div>Vérification des accès...</div>
+      </PageContainer>
+    );
+  }
+
+  // Guard 2: Redirect unauthorized users
+  if (!isAuthorized) {
+    return (
+      <PageContainer style={{ alignItems: 'center', justifyContent: 'center', padding: '1.5rem' }}>
+        <div style={{
+          maxWidth: '480px',
+          background: 'rgba(15, 23, 42, 0.8)',
+          border: '1px solid rgba(148, 163, 184, 0.35)',
+          borderRadius: '12px',
+          padding: '1.25rem 1.5rem',
+          textAlign: 'center'
+        }}>
+          <h3 style={{ marginTop: 0 }}>Accès refusé</h3>
+          <p style={{ opacity: 0.9 }}>Vous devez être connecté pour rejoindre cette salle.</p>
+          <button
+            onClick={() => navigate('/')}
+            style={{
+              marginTop: '0.75rem',
+              padding: '0.6rem 1rem',
+              borderRadius: '8px',
+              border: 'none',
+              cursor: 'pointer',
+              background: '#2563eb',
+              color: 'white',
+              fontWeight: 600,
+            }}
+          >
+            Retour à l'accueil
+          </button>
+        </div>
+      </PageContainer>
+    );
+  }
+
+  // Guard 3: Wait for token before trying to connect (prevents failed connect)
   if (!token && !tokenError) {
       return (
         <PageContainer style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -48,42 +92,53 @@ export default function RoomPageNew() {
       );
   }
 
-  // Error Handling (Bypassed for local/demo functionality)
-  /* 
-  if (tokenError) {
+  if (!isUsableToken) {
     return (
-        <PageContainer style={{ alignItems: 'center', justifyContent: 'center' }}>
-            <div style={{ 
-                background: '#ef4444', 
-                color: 'white', 
-                padding: '2rem', 
-                borderRadius: '12px',
-                textAlign: 'center',
-                maxWidth: '400px'
-            }}>
-            <h3>⚠️ Erreur de Connexion</h3>
-            <p>Impossible de rejoindre la salle (Token invalide ou serveur inaccessible).</p>
-            <button onClick={() => navigate('/')} style={{ marginTop: '1rem', padding: '0.5rem 1rem', borderRadius: '8px', border: 'none', cursor: 'pointer', background: 'white', color: '#ef4444', fontWeight: 'bold' }}>
-                Retour à l'accueil
-            </button>
-            </div>
-        </PageContainer>
+      <PageContainer style={{ alignItems: 'center', justifyContent: 'center', padding: '1.5rem' }}>
+        <div style={{
+          maxWidth: '560px',
+          background: 'rgba(15, 23, 42, 0.8)',
+          border: '1px solid rgba(148, 163, 184, 0.35)',
+          borderRadius: '12px',
+          padding: '1.25rem 1.5rem'
+        }}>
+          <h3 style={{ marginTop: 0 }}>Connexion LiveKit indisponible</h3>
+          <p style={{ opacity: 0.9 }}>
+            Le token de réunion est absent ou invalide. Vérifie LIVEKIT_API_KEY et LIVEKIT_API_SECRET côté serveur,
+            puis relance le backend.
+          </p>
+          <button
+            onClick={() => navigate('/')}
+            style={{
+              marginTop: '0.75rem',
+              padding: '0.6rem 1rem',
+              borderRadius: '8px',
+              border: 'none',
+              cursor: 'pointer',
+              background: '#2563eb',
+              color: 'white',
+              fontWeight: 600,
+            }}
+          >
+            Retour a l'accueil
+          </button>
+        </div>
+      </PageContainer>
     );
   }
-  */
 
   // Fallback for offline mode
-  const safeToken = token || ""; 
+  const safeToken = token || "";
 
   return (
     <PageContainer>
       <LiveKitRoom
         token={safeToken}
         serverUrl={liveKitUrl}
-        connect={!!safeToken && safeToken.length > 0} 
+        connect={isUsableToken}
         video={videoOptions}
         audio={true}
-        // options={roomOptions} // livekit-client options passed directly can be tricky without token
+        options={roomOptions}
         data-lk-theme="default"
       >
         <MeetingRoom 

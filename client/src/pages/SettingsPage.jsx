@@ -104,37 +104,37 @@ const SettingsPage = () => {
       icon: User,
       title: 'Profil Utilisateur',
       description: 'Modifiez vos informations personnelles, photo de profil et nom d\'affichage',
-      onClick: () => console.log('Profil')
+      onClick: () => {}
     },
     {
       icon: Shield,
       title: 'Sécurité & Confidentialité',
       description: 'Gérez votre mot de passe, authentification à deux facteurs et paramètres de confidentialité',
-      onClick: () => console.log('Sécurité')
+      onClick: () => {}
     },
     {
       icon: CreditCard,
       title: 'Facturation & Abonnements',
       description: 'Consultez vos factures, gérez votre abonnement et méthodes de paiement',
-      onClick: () => console.log('Facturation')
+      onClick: () => {}
     },
     {
       icon: Bell,
       title: 'Notifications',
       description: 'Personnalisez vos préférences de notifications email et push',
-      onClick: () => console.log('Notifications')
+      onClick: () => {}
     },
     {
       icon: Palette,
       title: 'Apparence',
       description: 'Personnalisez le thème, les couleurs et l\'interface utilisateur',
-      onClick: () => console.log('Apparence')
+      onClick: () => {}
     },
     {
       icon: Globe,
       title: 'Langue & Région',
       description: 'Changez la langue de l\'interface et vos préférences régionales',
-      onClick: () => console.log('Langue')
+      onClick: () => {}
     }
   ];
 

@@ -1,28 +1,30 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Bot, User, Sparkles } from 'lucide-react';
+import { Send, User, Sparkles, FileText, Download, Wand2 } from 'lucide-react';
+import { ROOM_THEME as THEME } from '../../styles/roomTheme';
+
+const AI_PROXY_URL = `${import.meta.env.VITE_API_URL || ''}/api/ai/chat`;
 
 const PanelContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  background-color: rgb(15 23 42 / 0.5);
-  backdrop-filter: blur(8px);
+  background: ${THEME.panelBg};
 `;
 
 const ChatHistory = styled.div`
   flex: 1;
   overflow-y: auto;
-  padding: 1.5rem;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
 `;
 
 const MessageBubble = styled(motion.div)`
   display: flex;
-  justify-content: ${props => props.isAi ? 'flex-start' : 'flex-end'};
+  justify-content: ${(props) => (props.$isAi ? 'flex-start' : 'flex-end')};
   gap: 0.75rem;
 `;
 
@@ -30,7 +32,7 @@ const Avatar = styled.div`
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: ${props => props.isAi ? 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)' : '#475569'};
+  background: ${(props) => (props.$isAi ? THEME.accent : '#475569')};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -39,23 +41,23 @@ const Avatar = styled.div`
 `;
 
 const BubbleContent = styled.div`
-  max-width: 80%;
-  background: ${props => props.isAi ? '#1e293b' : '#3b82f6'};
-  padding: 1rem;
+  max-width: 85%;
+  background: ${(props) => (props.$isAi ? THEME.accentSoft : THEME.accent)};
+  border: 1px solid ${(props) => (props.$isAi ? THEME.border : THEME.accent)};
+  color: ${(props) => (props.$isAi ? THEME.text : 'white')};
+  padding: 0.85rem 0.95rem;
   border-radius: 12px;
-  border-top-left-radius: ${props => props.isAi ? '0' : '12px'};
-  border-top-right-radius: ${props => !props.isAi ? '0' : '12px'};
-  color: white;
+  border-top-left-radius: ${(props) => (props.$isAi ? '0' : '12px')};
+  border-top-right-radius: ${(props) => (!props.$isAi ? '0' : '12px')};
   font-size: 0.9rem;
   line-height: 1.5;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  position: relative;
+  white-space: pre-wrap;
 `;
 
 const InputArea = styled.div`
-  padding: 1rem;
-  background-color: #0f172a;
-  border-top: 1px solid #1e293b;
+  padding: 0.9rem;
+  background: ${THEME.cardBg};
+  border-top: 1px solid ${THEME.border};
   display: flex;
   gap: 0.5rem;
   align-items: center;
@@ -63,23 +65,21 @@ const InputArea = styled.div`
 
 const Input = styled.input`
   flex: 1;
-  background: #1e293b;
-  border: 1px solid #334155;
+  border: 1px solid ${THEME.border};
   border-radius: 9999px;
-  padding: 0.75rem 1.25rem;
-  color: white;
+  padding: 0.75rem 1rem;
+  color: ${THEME.text};
   outline: none;
   font-size: 0.9rem;
-  transition: all 0.2s;
 
   &:focus {
-    border-color: #6366f1;
-    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+    border-color: ${THEME.accent};
+    box-shadow: 0 0 0 3px ${THEME.ring};
   }
 `;
 
 const SendButton = styled.button`
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: ${THEME.accent};
   border: none;
   border-radius: 50%;
   width: 40px;
@@ -93,6 +93,45 @@ const SendButton = styled.button`
 
   &:hover {
     transform: scale(1.05);
+    background: ${THEME.accentHover};
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
+
+const TopHint = styled.div`
+  margin: 0.75rem 0.75rem 0;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid ${THEME.border};
+  background: ${THEME.accentSoft};
+  font-size: 0.78rem;
+  color: ${THEME.textDim};
+`;
+
+const ActionRow = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem 0;
+`;
+
+const ActionButton = styled.button`
+  border: 1px solid ${THEME.border};
+  background: ${THEME.accentSoft};
+  color: ${THEME.text};
+  border-radius: 8px;
+  padding: 0.45rem 0.65rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+
+  &:hover {
+    background: ${THEME.accentSoft};
   }
 
   &:disabled {
@@ -102,79 +141,263 @@ const SendButton = styled.button`
 `;
 
 const TypingIndicator = () => (
-    <motion.div 
-        initial={{ opacity: 0 }} 
-        animate={{ opacity: 1 }} 
-        style={{ display: 'flex', gap: '4px', padding: '12px', background: '#1e293b', borderRadius: '12px', width: 'fit-content', marginLeft: '3rem' }}
-    >
-        {[0, 1, 2].map((dot) => (
-            <motion.div
-                key={dot}
-                style={{ width: '6px', height: '6px', backgroundColor: '#94a3b8', borderRadius: '50%' }}
-                animate={{ y: [0, -5, 0] }}
-                transition={{ duration: 0.6, repeat: Infinity, delay: dot * 0.2 }}
-            />
-        ))}
-    </motion.div>
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    style={{ display: 'flex', gap: '4px', padding: '10px 12px', background: THEME.accentSoft, border: `1px solid ${THEME.border}`, borderRadius: '12px', width: 'fit-content', marginLeft: '2.75rem' }}
+  >
+    {[0, 1, 2].map((dot) => (
+      <motion.div
+        key={dot}
+        style={{ width: '6px', height: '6px', backgroundColor: '#94a3b8', borderRadius: '50%' }}
+        animate={{ y: [0, -5, 0] }}
+        transition={{ duration: 0.6, repeat: Infinity, delay: dot * 0.2 }}
+      />
+    ))}
+  </motion.div>
 );
 
-export const AIChatPanel = () => {
+const localKnowledgeAnswer = (text, style) => {
+  const q = text.toLowerCase();
+  const concise = style === 'concise';
+  const deep = style === 'deep';
+
+  if (q.includes('camera') || q.includes('cam') || q.includes('resolution') || q.includes('4k')) {
+    return concise
+      ? 'Active la camera puis va dans Parametres > Video et laisse Qualite video maximale activee.'
+      : `Pour maximiser la resolution: 1) active ta camera, 2) ouvre Parametres dans la barre du bas, 3) garde "Qualite video maximale" activee. Si ton materiel ne supporte pas 4K, le systeme bascule automatiquement en 1080p puis 720p.`;
+  }
+
+  if (q.includes('micro') || q.includes('son') || q.includes('audio')) {
+    return concise
+      ? 'Verifie ton micro systeme puis clique l’icone micro dans la barre du bas.'
+      : 'Verifie les permissions navigateur, selectionne le bon micro dans les reglages systeme, puis bascule le bouton micro dans la room. Si le son coupe, reconnecte la room.';
+  }
+
+  if (q.includes('latence') || q.includes('lag') || q.includes('freeze')) {
+    return deep
+      ? 'Pour reduire la latence: utilise Ethernet, ferme les apps gourmandes, limite le partage d’ecran simultane, et verifie que le serveur LiveKit est proche geographiquement de tes utilisateurs.'
+      : 'Pour reduire la latence: connexion filaire, moins d’apps ouvertes, et eviter trop de partage ecran simultane.';
+  }
+
+  if (q.includes('chat') || q.includes('message')) {
+    return 'Le chat de room passe par Convex. Si tu vois une erreur, relance le backend Convex puis reconnecte la salle.';
+  }
+
+  if (q.includes('security') || q.includes('secur') || q.includes('chiffre')) {
+    return 'La room affiche un mode securise et supporte des pratiques de durcissement. Pour un niveau enterprise, ajoute controle d’acces strict, rotation de tokens et audit logs.';
+  }
+
+  return deep
+    ? 'Je peux t’aider sur: qualite video, camera/micro, latence, settings de room, Convex chat, et LiveKit. Pose une question precise (ex: "comment forcer la meilleure qualite camera ?").'
+    : 'Je peux aider sur camera, audio, qualite, latence et settings room. Pose une question plus precise.';
+};
+
+const normalizeMarkdownForDisplay = (text = '') => {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '$1')
+    .replace(/^#{1,6}\s*/gm, '')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+};
+
+const fetchLLMResponse = async (conversation, style, purpose = 'chat') => {
+  const body = {
+    messages: [
+      ...conversation,
+    ],
+    style,
+    purpose,
+  };
+
+  const res = await fetch(AI_PROXY_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    throw new Error('AI proxy request failed');
+  }
+
+  const data = await res.json();
+  return normalizeMarkdownForDisplay(data?.content || 'Je n’ai pas pu produire une reponse pour le moment.');
+};
+
+const localSummary = (roomMessages = []) => {
+  const total = roomMessages.length;
+  const latest = roomMessages.slice(-8);
+  const bySpeaker = new Map();
+  latest.forEach((m) => {
+    const key = m.sender || 'Inconnu';
+    bySpeaker.set(key, (bySpeaker.get(key) || 0) + 1);
+  });
+
+  const highlights = latest.slice(-5).map((m) => `- ${m.sender || 'Inconnu'}: ${m.text}`).join('\n');
+  const participants = Array.from(bySpeaker.entries())
+    .map(([name, count]) => `- ${name}: ${count} message(s)`)
+    .join('\n');
+
+  return `Resume de reunion\n\nVue d'ensemble\n- Messages analyses: ${total}\n- Extrait utilise: ${latest.length} derniers messages\n\nParticipants actifs\n${participants || '- Aucun participant detecte'}\n\nPoints recents\n${highlights || '- Aucun message recent'}\n\nActions suggerees\n- Valider les decisions mentionnees en reunion\n- Transformer les points ouverts en taches\n- Planifier une revue de suivi`;
+};
+
+const asMarkdownDownload = (markdown, roomId) => {
+  const blob = new Blob([markdown], { type: 'text/markdown;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const safeRoom = roomId || 'room';
+  a.href = url;
+  a.download = `resume-${safeRoom}-${Date.now()}.md`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+};
+
+export const AIChatPanel = ({ responseStyle = 'balanced', roomMessages = [], roomId = 'room' }) => {
   const [messages, setMessages] = useState([
-    { id: 1, sender: 'ai', text: "Bonjour ! Je suis votre assistant de réunion intelligent. Je peux prendre des notes, résumer la discussion ou répondre à vos questions techniques. Comment puis-je vous aider ?" }
+    {
+      id: 1,
+      sender: 'ai',
+      text: 'Bonjour. Je suis votre assistant room. Je peux vous aider sur qualite video, audio, settings, et resolution camera max.',
+    },
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [meetingSummary, setMeetingSummary] = useState('');
 
-  const handleSend = () => {
-    if (!inputValue.trim()) return;
+  const hasServerAIProxy = useMemo(() => Boolean(import.meta.env.VITE_API_URL), []);
 
-    const userMsg = { id: Date.now(), sender: 'user', text: inputValue };
-    setMessages(prev => [...prev, userMsg]);
+  const handleSend = async () => {
+    if (!inputValue.trim() || isTyping) return;
+
+    const userText = inputValue.trim();
+    const userMsg = { id: Date.now(), sender: 'user', text: userText };
+    setMessages((prev) => [...prev, userMsg]);
     setInputValue('');
     setIsTyping(true);
 
-    // Simulated AI Response
-    setTimeout(() => {
-        const aiResponseOptions = [
-            "C'est noté. Je l'ajoute au compte-rendu.",
-            "Je peux organiser un vote à ce sujet si vous le souhaitez.",
-            "D'après mes analyses, l'engagement a augmenté de 15% durant les 5 dernières minutes.",
-            "Je recherche cette information dans votre base de connaissances...",
-            "Voulez-vous que je crée une tâche Jira pour cela ?"
-        ];
-        const randomResponse = aiResponseOptions[Math.floor(Math.random() * aiResponseOptions.length)];
-        
-        setMessages(prev => [...prev, { id: Date.now() + 1, sender: 'ai', text: randomResponse }]);
-        setIsTyping(false);
-    }, 1500 + Math.random() * 1000);
+    try {
+      let aiText = '';
+      if (hasServerAIProxy) {
+        const conversation = [...messages, userMsg]
+          .slice(-10)
+          .map((m) => ({ role: m.sender === 'ai' ? 'assistant' : 'user', content: m.text }));
+        aiText = await fetchLLMResponse(conversation, responseStyle, 'chat');
+      } else {
+        aiText = localKnowledgeAnswer(userText, responseStyle);
+      }
+
+      setMessages((prev) => [...prev, { id: Date.now() + 1, sender: 'ai', text: aiText }]);
+    } catch (e) {
+      const fallback = localKnowledgeAnswer(userText, responseStyle);
+      setMessages((prev) => [...prev, { id: Date.now() + 1, sender: 'ai', text: fallback }]);
+    } finally {
+      setIsTyping(false);
+    }
+  };
+
+  const generateMeetingSummary = async () => {
+    if (isTyping) return;
+    setIsTyping(true);
+    try {
+      const latestRoomMessages = (roomMessages || []).slice(-30);
+      const transcript = latestRoomMessages
+        .map((m) => `- ${m.sender || 'Inconnu'}: ${m.text}`)
+        .join('\n');
+
+      if (!transcript.trim()) {
+        const fallback = '# Resume de reunion\n\nAucun message de reunion disponible pour le moment.';
+        setMeetingSummary(fallback);
+        setMessages((prev) => [...prev, { id: Date.now(), sender: 'ai', text: 'Aucun message room a resumer pour le moment.' }]);
+        return;
+      }
+
+      let summary = '';
+      const summaryPrompt = [
+        {
+          role: 'system',
+          content:
+            'Tu es un assistant de reunion en francais. Produis un resume STRICTEMENT base sur le transcript fourni (sans inventer). Format attendu: sections claires, puces courtes, ton professionnel. Sections: Vue d\'ensemble, Decisions prises, Actions a faire (avec proprietaire si mentionne), Questions ouvertes.',
+        },
+        { role: 'user', content: `Transcript de reunion:\n\n${transcript}` },
+      ];
+
+      if (hasServerAIProxy) {
+        summary = await fetchLLMResponse(summaryPrompt, responseStyle, 'summary');
+      } else {
+        summary = localSummary(latestRoomMessages);
+      }
+
+      setMeetingSummary(normalizeMarkdownForDisplay(summary));
+      setMessages((prev) => [...prev, { id: Date.now(), sender: 'ai', text: 'Resume de reunion genere. Utilise le bouton Export Markdown pour le telecharger.' }]);
+    } catch (e) {
+      const fallback = localSummary(roomMessages);
+      setMeetingSummary(fallback);
+      setMessages((prev) => [...prev, { id: Date.now(), sender: 'ai', text: 'Generation LLM indisponible, resume local genere.' }]);
+    } finally {
+      setIsTyping(false);
+    }
   };
 
   return (
     <PanelContainer>
+      <TopHint>
+        {hasServerAIProxy
+          ? `Mode LLM actif via serveur (${import.meta.env.VITE_API_URL}).`
+          : 'Mode fallback local actif. Definis VITE_API_URL pour activer l\'IA distante.'}
+      </TopHint>
+
+      <ActionRow>
+        <ActionButton type='button' onClick={generateMeetingSummary} disabled={isTyping}>
+          <Wand2 size={14} /> Resume auto
+        </ActionButton>
+        <ActionButton type='button' onClick={() => asMarkdownDownload(meetingSummary || localSummary(roomMessages), roomId)}>
+          <Download size={14} /> Export Markdown
+        </ActionButton>
+      </ActionRow>
+
+      {meetingSummary && (
+        <TopHint>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.35rem' }}>
+            <FileText size={14} /> Resume genere
+          </div>
+          <div style={{ whiteSpace: 'pre-wrap' }}>{meetingSummary.slice(0, 380)}{meetingSummary.length > 380 ? '...' : ''}</div>
+        </TopHint>
+      )}
+
       <ChatHistory>
         <AnimatePresence initial={false}>
-            {messages.map((msg) => (
+          {messages.map((msg) => (
             <MessageBubble
-                key={msg.id}
-                isAi={msg.sender === 'ai'}
-                initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ type: "spring", stiffness: 200, damping: 20 }}
+              key={msg.id}
+              $isAi={msg.sender === 'ai'}
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ type: 'spring', stiffness: 200, damping: 20 }}
             >
-                {msg.sender === 'ai' && <Avatar isAi><Sparkles size={16} /></Avatar>}
-                <BubbleContent isAi={msg.sender === 'ai'}>
-                {msg.text}
-                </BubbleContent>
-                {msg.sender === 'user' && <Avatar><User size={16} /></Avatar>}
+              {msg.sender === 'ai' && (
+                <Avatar $isAi>
+                  <Sparkles size={16} />
+                </Avatar>
+              )}
+              <BubbleContent $isAi={msg.sender === 'ai'}>{msg.text}</BubbleContent>
+              {msg.sender === 'user' && (
+                <Avatar>
+                  <User size={16} />
+                </Avatar>
+              )}
             </MessageBubble>
-            ))}
+          ))}
         </AnimatePresence>
         {isTyping && <TypingIndicator />}
       </ChatHistory>
 
       <InputArea>
-        <Input 
-          placeholder="Demandez quelque chose à l'IA..." 
+        <Input
+          placeholder='Pose une question technique ou produit...'
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSend()}

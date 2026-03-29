@@ -3,6 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 
 export const useRoomProtection = (roomId) => {
   const { user, session } = useAuth();
+  const hasAccessIdentity = Boolean(user || session);
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -16,23 +17,11 @@ export const useRoomProtection = (roomId) => {
       // Let's assume for now any logged in user can join for the demo, 
       // or if we have a specific logic (like checking a table).
       
-      if (user) {
-        setIsAuthorized(true);
-      } else {
-        // Retrieve session if likely just refreshed
-        // But useAuth should handle that.
-        // If really no user, maybe redirect?
-        // For this demo, let's allow if they have a "guest" query param or require login
-        if (session) {
-             setIsAuthorized(true);
-        } else {
-            setIsAuthorized(false);
-        }
-      }
+      setIsAuthorized(hasAccessIdentity);
       setLoading(false);
     };
     checkAccess();
-  }, [user, session, roomId]);
+  }, [hasAccessIdentity, roomId]);
 
   return { isAuthorized, loading, user };
 };

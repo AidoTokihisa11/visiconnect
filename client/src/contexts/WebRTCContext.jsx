@@ -137,7 +137,6 @@ export const WebRTCProvider = ({ children }) => {
     };
 
     peerConnection.onconnectionstatechange = () => {
-      console.log(`Connexion avec ${userId}:`, peerConnection.connectionState);
     };
 
     return peerConnection;
@@ -410,31 +409,26 @@ export const WebRTCProvider = ({ children }) => {
 
     // Subscribe to user-joined events
     subscribeToEvent('user-joined', (userId) => {
-      console.log('🔔 User joined, creating offer for:', userId);
       createOffer(userId);
     });
 
     // Subscribe to offer events
     subscribeToEvent('offer', ({ offer, from }) => {
-      console.log('🔔 Received offer from:', from);
       createAnswer(from, offer);
     });
 
     // Subscribe to answer events
     subscribeToEvent('answer', ({ answer, from }) => {
-      console.log('🔔 Received answer from:', from);
       handleAnswer(from, answer);
     });
 
     // Subscribe to ice-candidate events
     subscribeToEvent('ice-candidate', ({ candidate, from }) => {
-      console.log('🔔 Received ICE candidate from:', from);
       handleIceCandidate(from, candidate);
     });
 
     // Subscribe to user-left events
     subscribeToEvent('user-left', (userId) => {
-      console.log('🔔 User left:', userId);
       const peerConnection = peersRef.current.get(userId);
       if (peerConnection) {
         peerConnection.close();

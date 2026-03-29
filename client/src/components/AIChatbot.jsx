@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { AnimatePresence, motion } from 'framer-motion';
 import { MessageSquare, X, Send, Sparkles } from 'lucide-react';
 import { useAdmin } from '../contexts/AdminContext';
+import { useLocation } from 'react-router-dom';
 
 const COLORS = {
   primary: '#0f172a',
@@ -280,6 +281,8 @@ const knowledgeBase = [
   }
 ];
 
+const AI_PROXY_URL = `${import.meta.env.VITE_API_URL || ''}/api/ai/chat`;
+
 const findBestMatch = (input) => {
   const normInput = input.toLowerCase();
   let bestMatch = null;
@@ -304,8 +307,44 @@ const findBestMatch = (input) => {
   return "C'est une excellente question. VisiConnect propose tellement de fonctionnalités (4K, tableau blanc, sécurité E2E) que la réponse pourrait dépendre de votre situation exacte. Pouvez-vous reformuler ou préciser de quelle partie de la plateforme vous parlez ?";
 };
 
+const normalizeForDisplay = (text = '') =>
+  text.replace(/\*\*(.*?)\*\*/g, '$1').replace(/^#{1,6}\s*/gm, '').trim();
+
+const askExternalLLM = async (messages) => {
+  if (!import.meta.env.VITE_API_URL) {
+    throw new Error('AI proxy disabled (missing VITE_API_URL)');
+  }
+
+  const payload = {
+    messages: [
+      {
+        role: 'system',
+        content: 'Tu es l\'assistant officiel de VisiConnect. Reponds en francais, de facon claire et utile, sans inventer des informations produit inexistantes.',
+      },
+      ...messages,
+    ],
+    style: 'balanced',
+    purpose: 'chat',
+  };
+
+  const res = await fetch(AI_PROXY_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+  if (res.ok) {
+    const data = await res.json();
+    return normalizeForDisplay(data?.content || 'Je n\'ai pas pu repondre pour le moment.');
+  }
+
+  throw new Error('External LLM unavailable');
+};
+
 const AIChatbot = () => {
     const { uiConfig = {}, setIsChatbotOpen } = useAdmin() || {};
+  const location = useLocation();
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([
         {
@@ -338,20 +377,36 @@ const AIChatbot = () => {
         setMessages((prev) => [...prev, userMessage]);
         setIsTyping(true);
 
-        setTimeout(() => {
-            const botText = findBestMatch(text);
-            const botResponse = {
-                id: Date.now() + 1,
-                text: botText,
-                isUser: false
-            };
-            setMessages((prev) => [...prev, botResponse]);
-            setIsTyping(false);
-        }, 1200 + Math.random() * 800); // Simulate thinking time
+        try {
+          const llmText = await askExternalLLM([
+            ...messages.slice(-8).map((m) => ({ role: m.isUser ? 'user' : 'assistant', content: m.text })),
+            { role: 'user', content: text },
+          ]);
+          const botResponse = {
+            id: Date.now() + 1,
+            text: llmText,
+            isUser: false
+          };
+          setMessages((prev) => [...prev, botResponse]);
+        } catch (error) {
+          const botText = findBestMatch(text);
+          const botResponse = {
+            id: Date.now() + 1,
+            text: botText,
+            isUser: false
+          };
+          setMessages((prev) => [...prev, botResponse]);
+        } finally {
+          setIsTyping(false);
+        }
     };
 
     // Integration capability with Admin Context setting
     const position = uiConfig?.chatbotPosition || 'right';
+
+    if (location.pathname.startsWith('/room/')) {
+      return null;
+    }
 
     return (
         <ChatContainer $position={position} initial={false}>

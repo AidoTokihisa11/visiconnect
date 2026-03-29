@@ -2,9 +2,12 @@ import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { Check, X, ChevronDown, ChevronUp, Star, Shield, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { loadStripe } from '@stripe/stripe-js';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import CallToAction from '../components/CallToAction';
+
+const stripePromise = loadStripe('pk_test_51T5EwZ8YZRxeQjiW412gOFLsaZ4fn6ArvMjf74OphD9WhovPuRDde4qOGwrpdwlnFQIt1apdfwnWNfjbt6n0CkkB00p9k8z1MO');
 
 const COLORS = {
   primary: 'hsl(var(--primary))',    
@@ -70,7 +73,7 @@ const BillingToggleContainer = styled.div`
 
 const ToggleLabel = styled.span`
   font-weight: 600;
-  color: ${props => props.active ? COLORS.dark : COLORS.lightText};
+  color: ${props => props.$active ? COLORS.dark : COLORS.lightText};
   cursor: pointer;
   transition: color 0.2s;
 `;
@@ -88,7 +91,7 @@ const ToggleSwitch = styled.div`
     content: '';
     position: absolute;
     top: 4px;
-    left: ${props => props.isAnnual ? '28px' : '4px'};
+    left: ${props => props.$isAnnual ? '28px' : '4px'};
     width: 24px;
     height: 24px;
     background-color: white;
@@ -126,7 +129,7 @@ const PricingGrid = styled.div`
 
 const PlanCard = styled.div`
   background-color: ${COLORS.white};
-  border: 1px solid ${props => props.featured ? COLORS.primary : COLORS.border};
+  border: 1px solid ${props => props.$featured ? COLORS.primary : COLORS.border};
   border-radius: 20px;
   padding: 2.5rem;
   display: flex;
@@ -138,7 +141,7 @@ const PlanCard = styled.div`
     padding: 1.5rem;
   }
   
-  ${props => props.featured && css`
+  ${props => props.$featured && css`
     box-shadow: 0 25px 50px -12px rgba(37, 99, 235, 0.25);
     transform: scale(1.05);
     z-index: 10;
@@ -151,7 +154,7 @@ const PlanCard = styled.div`
   `}
 
   &:hover {
-    transform: ${props => props.featured ? 'scale(1.05) translateY(-5px)' : 'translateY(-5px)'};
+    transform: ${props => props.$featured ? 'scale(1.05) translateY(-5px)' : 'translateY(-5px)'};
     box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
   }
 `;
@@ -372,7 +375,7 @@ const FAQAnswer = styled.div`
   margin-top: 1rem;
   color: ${COLORS.lightText};
   line-height: 1.6;
-  display: ${props => props.isOpen ? 'block' : 'none'};
+  display: ${props => props.$isOpen ? 'block' : 'none'};
   animation: slideDown 0.3s ease-out;
 
   @keyframes slideDown {
@@ -409,6 +412,41 @@ const PricingPage = () => {
     setOpenFAQ(openFAQ === index ? null : index);
   };
 
+  const handleSubscribe = async (e, plan) => {
+    e.preventDefault();
+    const billingCycle = isAnnual ? 'annual' : 'monthly';
+    
+    try {
+      // En production, utilisez une URL relative ou configurée via ENV
+      const apiUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') 
+        ? 'http://localhost:3001/api/create-checkout-session' 
+        : '/api/create-checkout-session';
+
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan, billingCycle }),
+      });
+      
+      const session = await response.json();
+      
+      if (session.error) {
+        alert(session.error);
+        return;
+      }
+
+      // Redirection native vers l'URL fournie par Stripe
+      if (session.url) {
+        window.location.href = session.url;
+      } else {
+        throw new Error('Aucune URL de redirection retournée par Stripe');
+      }
+    } catch (err) {
+      console.error('Payment error:', err);
+      alert("Erreur lors de l'initialisation du paiement. Vérifiez que le serveur est démarré.");
+    }
+  };
+
   return (
     <PageContainer>
       <HeaderClean />
@@ -420,9 +458,9 @@ const PricingPage = () => {
         </HeroSubtitle>
 
         <BillingToggleContainer>
-          <ToggleLabel onClick={() => setIsAnnual(false)} active={!isAnnual}>Mensuel</ToggleLabel>
-          <ToggleSwitch isAnnual={isAnnual} onClick={() => setIsAnnual(!isAnnual)} />
-          <ToggleLabel onClick={() => setIsAnnual(true)} active={isAnnual}>Annuel</ToggleLabel>
+          <ToggleLabel onClick={() => setIsAnnual(false)} $active={!isAnnual}>Mensuel</ToggleLabel>
+          <ToggleSwitch $isAnnual={isAnnual} onClick={() => setIsAnnual(!isAnnual)} />
+          <ToggleLabel onClick={() => setIsAnnual(true)} $active={isAnnual}>Annuel</ToggleLabel>
           <DiscountBadge>-20%</DiscountBadge>
         </BillingToggleContainer>
       </HeroSection>
@@ -443,11 +481,17 @@ const PricingPage = () => {
             <FeatureItem className="disabled"><X size={18} /> Enregistrement</FeatureItem>
             <FeatureItem className="disabled"><X size={18} /> Transcriptions IA</FeatureItem>
           </FeatureList>
-          <PlanButton to="/signup" className="outline">Commencer Gratuit</PlanButton>
+          <PlanButton 
+            to="#" 
+            className="outline"
+            onClick={(e) => handleSubscribe(e, 'starter')}
+          >
+            Commencer Gratuit
+          </PlanButton>
         </PlanCard>
 
         {/* PRO */}
-        <PlanCard featured>
+        <PlanCard $featured>
           <PopularBadge>RECOMMANDÉ</PopularBadge>
           <PlanTitle>Pro</PlanTitle>
           <PlanDescription>Pour les équipes agiles et les freelances.</PlanDescription>
@@ -462,7 +506,13 @@ const PricingPage = () => {
             <FeatureItem><Check size={18} /> Support Prioritaire</FeatureItem>
             <FeatureItem><Check size={18} /> Transcriptions IA (10h/mois)</FeatureItem>
           </FeatureList>
-          <PlanButton to="/signup?plan=pro" variant="primary">Essayer Pro Gratuitement</PlanButton>
+          <PlanButton 
+            to="#" 
+            variant="primary" 
+            onClick={(e) => handleSubscribe(e, 'pro')}
+          >
+            S'abonner
+          </PlanButton>
         </PlanCard>
 
         {/* BUSINESS */}
@@ -480,7 +530,13 @@ const PricingPage = () => {
             <FeatureItem><Check size={18} /> SSO & Admin Avancé</FeatureItem>
             <FeatureItem><Check size={18} /> Transcriptions Illimitées</FeatureItem>
           </FeatureList>
-          <PlanButton to="/contact" className="outline">Contacter les Ventes</PlanButton>
+          <PlanButton 
+            to="#" 
+            className="outline"
+            onClick={(e) => handleSubscribe(e, 'business')}
+          >
+            S'abonner
+          </PlanButton>
         </PlanCard>
       </PricingGrid>
 
@@ -552,7 +608,7 @@ const PricingPage = () => {
               {item.q}
               {openFAQ === index ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
             </FAQQuestion>
-            <FAQAnswer isOpen={openFAQ === index}>
+            <FAQAnswer $isOpen={openFAQ === index}>
               {item.a}
             </FAQAnswer>
           </FAQItem>

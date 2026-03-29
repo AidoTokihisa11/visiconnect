@@ -117,7 +117,7 @@ export const useSystemMetrics = () => {
           dischargingTime: battery.dischargingTime
         };
       } catch (error) {
-        console.log('Battery API not available');
+        // Battery API not available
       }
     }
     return { level: 0, charging: false, chargingTime: 0, dischargingTime: 0 };
@@ -162,29 +162,6 @@ export const useSystemMetrics = () => {
       memoryUsage: Math.floor(Math.random() * 40) + 20,
       requestsPerSecond: Math.floor(Math.random() * 100)
     });
-    
-    /* Code original désactivé pour éviter les erreurs 400
-    try {
-      const response = await fetch('/api/metrics');
-      if (response.ok) {
-        const data = await response.json();
-        setServerMetrics(data);
-      } else {
-        throw new Error('Metrics endpoint error');
-      }
-    } catch (error) {
-      console.log('Server metrics not available, using mock data');
-      // Utiliser des données simulées si le serveur ne répond pas
-      setServerMetrics({
-        uptime: Date.now() - (Math.random() * 86400000), // Uptime aléatoire
-        responseTime: Math.random() * 100 + 20,
-        activeConnections: Math.floor(Math.random() * 50),
-        memoryUsage: Math.random() * 80 + 10,
-        cpuUsage: Math.random() * 60 + 5,
-        networkLatency: Math.random() * 50 + 10
-      });
-    }
-    */
   };
 
   useEffect(() => {

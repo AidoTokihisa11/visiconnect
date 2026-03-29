@@ -2,15 +2,15 @@ import React from 'react';
 import styled from 'styled-components';
 import { 
   Mic, MicOff, Video, VideoOff, Phone, Monitor, MonitorOff, 
-  MessageSquare, Sparkles, Layout, Activity, BarChart2
+  MessageSquare, Sparkles, Layout, Activity, BarChart2, Settings2
 } from 'lucide-react';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 
 const BottomBar = styled.div`
   height: 80px;
-  background-color: rgba(15, 23, 42, 0.85); /* Slightly more transparent */
+  background-color: rgba(12, 35, 64, 0.95);
   backdrop-filter: blur(12px);
-  border-top: 1px solid rgba(255,255,255,0.05);
+  border-top: 1px solid ${THEME.border};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -28,18 +28,18 @@ const ControlButton = styled.button`
   height: 48px;
   border-radius: 12px;
   border: none;
-  background-color: ${props => props.$active ? props.$activeColor || THEME.accent : 'rgba(255,255,255,0.05)'};
-  color: white;
+  background-color: ${props => props.$active ? props.$activeColor || THEME.accent : THEME.accentSoft};
+  color: ${props => props.$active ? '#fff' : THEME.text};
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-  border: 1px solid rgba(255,255,255,0.05);
+  border: 1px solid ${THEME.border};
 
   &:hover {
-    background-color: ${props => props.$active ? props.$activeColor : 'rgba(255,255,255,0.15)'};
+    background-color: ${props => props.$active ? props.$activeColor : '#214875'};
     transform: translateY(-2px);
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   }
@@ -63,7 +63,7 @@ const EndCallButton = styled(ControlButton)`
 const Separator = styled.div`
   width: 1px; 
   height: 40px; 
-  background: rgba(255,255,255,0.1); 
+  background: ${THEME.border}; 
   margin: 0 1.5rem;
 `;
 
@@ -107,12 +107,16 @@ export const ControlBar = ({
           <Sparkles />
         </ControlButton>
 
-        <ControlButton onClick={() => togglePanel('analytics')} $active={activePanel === 'analytics' && sidePanelOpen} $activeColor="#8b5cf6" title="Analytics">
+        <ControlButton onClick={() => togglePanel('analytics')} $active={activePanel === 'analytics' && sidePanelOpen} $activeColor={THEME.accent} title="Analytics">
           <BarChart2 />
         </ControlButton>
 
         <ControlButton onClick={() => togglePanel('chat')} $active={activePanel === 'chat' && sidePanelOpen} $activeColor={THEME.accent} title="Chat">
           <MessageSquare />
+        </ControlButton>
+
+        <ControlButton onClick={() => togglePanel('settings')} $active={activePanel === 'settings' && sidePanelOpen} $activeColor={THEME.accent} title="Parametres">
+          <Settings2 />
         </ControlButton>
 
         <EndCallButton onClick={onLeave} $active title="Quitter">

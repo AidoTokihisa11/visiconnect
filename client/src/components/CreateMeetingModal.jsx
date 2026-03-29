@@ -445,7 +445,6 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
   };
 
   const handleSubmit = () => {
-    console.log('Création de réunion:', formData);
     // Ici on intégrerait avec l'API
     onClose();
   };

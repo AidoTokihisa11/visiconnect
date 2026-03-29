@@ -5,13 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node simple-server-no-db.js",
-    "start-with-db": "node stack-server-simple.js",
-    "start-stack": "node stack-server.js",
-    "start-old": "node index.js",
     "dev": "nodemon simple-server-no-db.js",
-    "dev-with-db": "nodemon stack-server-simple.js",
-    "dev-stack": "nodemon stack-server.js",
-    "dev-old": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -37,6 +31,7 @@
     "next-themes": "^0.4.6",
     "pg": "^8.16.3",
     "socket.io": "^4.8.1",
+    "stripe": "^20.4.1",
     "tailwind-merge": "^3.5.0",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^11.0.3"

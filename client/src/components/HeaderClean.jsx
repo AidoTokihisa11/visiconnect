@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { Video, Menu, X, User } from 'lucide-react';
 import LanguageSelector from './LanguageSelector';
-// import { ModeToggle } from './mode-toggle';
+
 import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from '../hooks/useTranslation';
 

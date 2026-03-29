@@ -13,14 +13,19 @@ export const useLiveKit4K = () => {
     const preset540 = VideoPresets?.h540 || { width: 960, height: 540, frameRate: 30 };
 
     return {
-      adaptiveStream: true,
-      dynacast: true,
+      adaptiveStream: false,
+      dynacast: false,
       videoCaptureDefaults: {
         resolution: preset4K.resolution,
+        frameRate: 60,
         facingMode: 'user',
       },
       publishDefaults: {
-        simulcast: true,
+        simulcast: false,
+        videoEncoding: {
+          maxBitrate: 12000000,
+          maxFramerate: 60,
+        },
         videoSimulcastLayers: [
           preset4K,     // 4K - 3840x2160
           preset1080,   // Full HD
@@ -34,7 +39,8 @@ export const useLiveKit4K = () => {
   }, []);
 
   const videoOptions = useMemo(() => ({
-    resolution: VideoPresets?.h2160?.resolution || { width: 3840, height: 2160, frameRate: 30 },
+    resolution: VideoPresets?.h2160?.resolution || { width: 3840, height: 2160, frameRate: 60 },
+    frameRate: 60,
     facingMode: 'user'
   }), []);
 

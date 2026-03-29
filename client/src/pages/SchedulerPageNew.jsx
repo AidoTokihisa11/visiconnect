@@ -692,7 +692,6 @@ const SchedulerPageNew = () => {
 
   const handleCreateEvent = () => {
     // Simulation de création d'événement
-    console.log('Nouvel événement:', newEvent);
     setShowNewEventModal(false);
     setNewEvent({
       title: '',

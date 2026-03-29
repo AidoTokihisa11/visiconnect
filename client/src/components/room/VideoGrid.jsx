@@ -27,7 +27,7 @@ const GridContainer = styled.div`
   }
 `;
 
-export const VideoGrid = ({ localParticipant, tracks }) => {
+export const VideoGrid = ({ localParticipant, tracks, videoFit = 'cover', showParticipantLabels = true }) => {
   return (
     <GridContainer>
       {/* Local Participant */}
@@ -37,6 +37,8 @@ export const VideoGrid = ({ localParticipant, tracks }) => {
           trackRef={{ participant: localParticipant, source: 'camera' }}
           isLocal={true}
           isSpeaking={localParticipant.isSpeaking}
+          videoFit={videoFit}
+          showLabel={showParticipantLabels}
         />
       )}
 
@@ -51,6 +53,8 @@ export const VideoGrid = ({ localParticipant, tracks }) => {
             trackRef={track}
             participant={track.participant}
             isSpeaking={track.participant.isSpeaking}
+            videoFit={videoFit}
+            showLabel={showParticipantLabels}
           />
         );
       })}

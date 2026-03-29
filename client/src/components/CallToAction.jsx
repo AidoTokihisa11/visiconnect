@@ -1,115 +1,161 @@
-import React from 'react';
-import styled from 'styled-components';
-import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import styled from "styled-components";
+import { motion } from "framer-motion";
+import { ArrowRight, Sparkles } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-const Wrapper = styled.div`
-  padding: 6rem 2rem;
-  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-  position: relative;
-  overflow: hidden;
-`;
-
-const Container = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 2;
+const Wrapper = styled.section`
+  padding: 5rem 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background-color: transparent;
 `;
 
 const Card = styled(motion.div)`
-  background: #2563eb;
-  border-radius: 32px;
-  padding: 5rem;
+  background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%);
+  border-radius: 20px;
+  max-width: 950px;
+  width: 100%;
+  padding: 5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  color: white;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.2), 0 10px 10px -5px rgba(37, 99, 235, 0.1);
+  box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.25);
 
   @media (max-width: 768px) {
-    padding: 3rem 1.5rem;
+    padding: 3.5rem 1.5rem;
   }
 `;
 
+/* The + pattern exact reference */
+const CrossPattern = styled.div`
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15 15V8h2v7h7v2h-7v7h-2v-7H8v-2h7z' fill='rgba(255,255,255,0.06)' fill-rule='evenodd'/%3E%3C/svg%3E");
+  z-index: 1;
+`;
+
+const Content = styled.div`
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const IconBox = styled.div`
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  margin-bottom: 2rem;
+  backdrop-filter: blur(10px);
+`;
+
 const Title = styled.h2`
-  font-size: 3rem;
+  color: white;
+  font-size: 2.75rem;
   font-weight: 800;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
   letter-spacing: -0.02em;
-  
+
   @media (max-width: 768px) {
     font-size: 2rem;
   }
 `;
 
 const Description = styled.p`
-  font-size: 1.25rem;
   color: rgba(255, 255, 255, 0.9);
-  max-width: 600px;
-  margin: 0 auto 3rem;
+  font-size: 1.15rem;
+  max-width: 650px;
+  margin: 0 auto 2.5rem;
   line-height: 1.6;
+  font-weight: 400;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+    padding: 0 10px;
+  }
 `;
 
 const Button = styled(motion.button)`
   background: white;
-  color: #2563eb;
-  font-weight: 600;
-  padding: 1rem 2.5rem;
-  border-radius: 9999px;
-  font-size: 1.125rem;
+  color: #1e40af;
   border: none;
-  cursor: pointer;
+  padding: 1rem 2.25rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  border-radius: 99px;
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+  .arrow {
+    transition: transform 0.2s ease;
+  }
+
   &:hover {
-    background: #f8fafc;
     transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    background: #f8fafc;
+
+    .arrow {
+      transform: translateX(4px);
+    }
   }
 `;
 
-const Decoration = styled.div`
-  position: absolute;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-  pointer-events: none;
-`;
-
-const CallToAction = ({ 
-  title = "Prêt à commencer ?", 
-  description = "Rejoignez des milliers d'équipes qui utilisent VisioConnect pour collaborer efficacement.", 
-  buttonText = "Commencer gratuitement", 
-  buttonLink = "/signup" 
+const CallToAction = ({
+  title = "Vous avez d'autres questions ?",
+  description = "Notre équipe commerciale est à votre disposition pour trouver l'offre qui correspond parfaitement à vos besoins.",
+  buttonText = "Contacter les ventes",
+  buttonLink = "/contact",
 }) => {
   const navigate = useNavigate();
 
   return (
     <Wrapper>
-      <Container>
-        <Card
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <Decoration style={{ width: 400, height: 400, top: -100, right: -100 }} />
-          <Decoration style={{ width: 300, height: 300, bottom: -50, left: -50 }} />
-          
+      <Card
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+      >
+        <CrossPattern />
+        <Content>
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+          >
+            <IconBox>
+              <Sparkles size={26} strokeWidth={2} />
+            </IconBox>
+          </motion.div>
+
           <Title>{title}</Title>
           <Description>{description}</Description>
-          <Button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => navigate(buttonLink)}
-          >
-            {buttonText} <ArrowRight size={20} />
+
+          <Button onClick={() => navigate(buttonLink)}>
+            {buttonText}{" "}
+            <ArrowRight className="arrow" size={18} strokeWidth={2.5} />
           </Button>
-        </Card>
-      </Container>
+        </Content>
+      </Card>
     </Wrapper>
   );
 };
