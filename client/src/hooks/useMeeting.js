@@ -69,7 +69,7 @@ export const useRoomToken = (roomName, participantName) => {
  */
 export const useMeeting = (maxQualityLock = true) => {
   const room = useRoomContext();
-  const { localParticipant } = useLocalParticipant();
+  const { localParticipant, isCameraEnabled, isMicrophoneEnabled, isScreenShareEnabled } = useLocalParticipant();
   const remoteParticipants = useParticipants();
   const [devices, setDevices] = useState({
     cameras: [],
@@ -91,17 +91,14 @@ export const useMeeting = (maxQualityLock = true) => {
 
   const toggleMic = useCallback(async () => {
     if (localParticipant) {
-      const isEnabled = localParticipant.isMicrophoneEnabled;
-      await localParticipant.setMicrophoneEnabled(!isEnabled);
+      await localParticipant.setMicrophoneEnabled(!isMicrophoneEnabled);
     }
-  }, [localParticipant]);
+  }, [localParticipant, isMicrophoneEnabled]);
 
   const toggleCamera = useCallback(async () => {
     if (!localParticipant) return;
     
-    const isEnabled = localParticipant.isCameraEnabled;
-    
-    if (isEnabled) {
+    if (isCameraEnabled) {
       // Désactiver la caméra
       await localParticipant.setCameraEnabled(false);
     } else {
@@ -128,16 +125,15 @@ export const useMeeting = (maxQualityLock = true) => {
         }
       }
     }
-  }, [localParticipant, maxQualityLock]);
+  }, [localParticipant, isCameraEnabled, maxQualityLock]);
 
   const toggleScreenShare = useCallback(async () => {
     if (localParticipant) {
-      const isEnabled = localParticipant.isScreenShareEnabled;
-      await localParticipant.setScreenShareEnabled(!isEnabled, {
+      await localParticipant.setScreenShareEnabled(!isScreenShareEnabled, {
          audio: true 
       });
     }
-  }, [localParticipant]);
+  }, [localParticipant, isScreenShareEnabled]);
 
   const refreshDevices = useCallback(async () => {
     if (!navigator?.mediaDevices?.enumerateDevices) return;
@@ -217,6 +213,9 @@ export const useMeeting = (maxQualityLock = true) => {
   return {
     room,
     localParticipant,
+    isCameraEnabled,
+    isMicrophoneEnabled,
+    isScreenShareEnabled,
     remoteParticipants,
     tracks,
     activeSpeakerId: room?.activeSpeaker?.identity,

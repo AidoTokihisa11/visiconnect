@@ -49,6 +49,11 @@ const SidePanel = styled(motion.div)`
   right: 0;
   top: 0;
   bottom: 0;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    z-index: 60;
+  }
 `;
 
 const PanelHeader = styled.div`
@@ -132,6 +137,9 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
   const { 
     room, 
     localParticipant, 
+    isCameraEnabled,
+    isMicrophoneEnabled,
+    isScreenShareEnabled,
     tracks, 
     devices,
     selectedDevices,
@@ -234,6 +242,8 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
       {/* 3. Main Grid */}
       <VideoGrid 
         localParticipant={localParticipant}
+        isLocalCameraEnabled={isCameraEnabled}
+        isLocalMicEnabled={isMicrophoneEnabled}
         tracks={tracks}
         videoFit={roomSettings.videoFit}
         showParticipantLabels={roomSettings.showParticipantLabels}
@@ -242,6 +252,9 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
       {/* 4. Controls */}
       <ControlBar 
          localParticipant={localParticipant}
+         isCameraEnabled={isCameraEnabled}
+         isMicrophoneEnabled={isMicrophoneEnabled}
+         isScreenShareEnabled={isScreenShareEnabled}
          controls={controls}
          whiteboardOpen={whiteboardOpen}
          toggleWhiteboard={toggleWhiteboard}

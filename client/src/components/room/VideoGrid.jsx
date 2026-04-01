@@ -15,12 +15,19 @@ const GridContainer = styled.div`
   width: 100%;
   height: calc(100% - 80px);
 
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+    gap: 0.5rem;
+    height: auto;
+    padding-bottom: 90px; /* Leave space for bottom bar */
+  }
+
   &::-webkit-scrollbar { width: 6px; }
   &::-webkit-scrollbar-track { background: transparent; }
   &::-webkit-scrollbar-thumb { background-color: \#cbd5e1; border-radius: 4px; }
 `;
 
-export const VideoGrid = ({ localParticipant, tracks, videoFit = 'cover', showParticipantLabels = true }) => {
+export const VideoGrid = ({ localParticipant, isLocalCameraEnabled, isLocalMicEnabled, tracks, videoFit = 'cover', showParticipantLabels = true }) => {
   const allParticipants = useParticipants();
 
   // Find participants who are remote and have NO tracks in the tracks array
@@ -41,6 +48,8 @@ export const VideoGrid = ({ localParticipant, tracks, videoFit = 'cover', showPa
           isSpeaking={localParticipant.isSpeaking}
           videoFit={videoFit}
           showLabel={showParticipantLabels}
+          overrideCameraEnabled={isLocalCameraEnabled}
+          overrideMicEnabled={isLocalMicEnabled}
         />
       )}
 

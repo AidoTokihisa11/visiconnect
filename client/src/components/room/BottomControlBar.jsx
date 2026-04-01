@@ -8,7 +8,7 @@ import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 
 const BottomBar = styled.div`
   height: 80px;
-  background-color: ${THEME.panelBg}; backdrop-filter: blur(12px); border-top: 1px solid ${THEME.border};
+  background-color: ${THEME.panelBg};
   backdrop-filter: blur(12px);
   border-top: 1px solid ${THEME.border};
   display: flex;
@@ -21,9 +21,25 @@ const BottomBar = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
+  
+  @media (max-width: 768px) {
+    justify-content: flex-start;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    height: auto;
+    padding: 1rem;
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    gap: 0.5rem;
+    
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
 `;
 
 const ControlButton = styled.button`
+  flex-shrink: 0;
   width: 48px;
   height: 48px;
   border-radius: 12px;
@@ -37,6 +53,11 @@ const ControlButton = styled.button`
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   border: 1px solid ${THEME.border};
+
+  @media (max-width: 768px) {
+    width: 44px;
+    height: 44px;
+  }
 
   &:hover {
     background-color: ${props => props.$active ? props.$activeColor : THEME.border};
@@ -55,20 +76,33 @@ const EndCallButton = styled(ControlButton)`
   width: 64px;
   border-radius: 16px;
   
+  @media (max-width: 768px) {
+    width: 56px;
+  }
+
   &:hover {
     background-color: #dc2626;
   }
 `;
 
 const Separator = styled.div`
+  flex-shrink: 0;
   width: 1px; 
   height: 40px; 
   background: ${THEME.border}; 
   margin: 0 1.5rem;
+  
+  @media (max-width: 768px) {
+    margin: 0 0.5rem;
+    height: 30px;
+  }
 `;
 
 export const ControlBar = ({
   localParticipant,
+  isCameraEnabled,
+  isMicrophoneEnabled,
+  isScreenShareEnabled,
   controls,
   whiteboardOpen,
   toggleWhiteboard,
@@ -81,16 +115,16 @@ export const ControlBar = ({
 }) => {
   return (
     <BottomBar>
-        <ControlButton onClick={controls.toggleMic} $active={!localParticipant?.isMicrophoneEnabled} $activeColor={THEME.danger} title="Micro">
-          {localParticipant?.isMicrophoneEnabled ? <Mic /> : <MicOff />}
+        <ControlButton onClick={controls.toggleMic} $active={!isMicrophoneEnabled} $activeColor={THEME.danger} title="Micro">
+          {isMicrophoneEnabled ? <Mic /> : <MicOff />}
         </ControlButton>
         
-        <ControlButton onClick={controls.toggleCamera} $active={!localParticipant?.isCameraEnabled} $activeColor={THEME.danger} title="Caméra">
-          {localParticipant?.isCameraEnabled ? <Video /> : <VideoOff />}
+        <ControlButton onClick={controls.toggleCamera} $active={!isCameraEnabled} $activeColor={THEME.danger} title="Caméra">
+          {isCameraEnabled ? <Video /> : <VideoOff />}
         </ControlButton>
 
-        <ControlButton onClick={controls.toggleScreenShare} $active={localParticipant?.isScreenShareEnabled} $activeColor={THEME.accent} title="Partager l'écran">
-          {localParticipant?.isScreenShareEnabled ? <Monitor /> : <MonitorOff />}
+        <ControlButton onClick={controls.toggleScreenShare} $active={isScreenShareEnabled} $activeColor={THEME.accent} title="Partager l'écran">
+          {isScreenShareEnabled ? <Monitor /> : <MonitorOff />}
         </ControlButton>
         
         <ControlButton onClick={toggleWhiteboard} $active={whiteboardOpen} $activeColor={THEME.accent} title="Tableau Blanc (Tldraw)">

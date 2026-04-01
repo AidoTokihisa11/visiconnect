@@ -9,10 +9,15 @@ const CardContainer = styled.div`
   border-radius: 12px;
   overflow: hidden;
   position: relative;
-  flex: 1 1 400px; 
+  flex: 1 1 min(100%, 400px); 
   max-width: 800px;
   aspect-ratio: 16/9;
   max-height: 100%;
+  
+  @media (max-width: 768px) {
+    border-radius: 8px;
+    flex-basis: 100%;
+  }
   
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   border: 1px solid ${props => props.$isActive ? THEME.accent : THEME.border};
@@ -87,10 +92,12 @@ export const VideoParticipant = ({
   isSpeaking = false,
   videoFit = 'cover',
   showLabel = true,
+  overrideCameraEnabled,
+  overrideMicEnabled,
 }) => {
   // Determine if camera/mic are enabled
-  const isCameraEnabled = participant?.isCameraEnabled ?? false;
-  const isMicEnabled = participant?.isMicrophoneEnabled ?? false;
+  const isCameraEnabled = overrideCameraEnabled !== undefined ? overrideCameraEnabled : (participant?.isCameraEnabled ?? false);
+  const isMicEnabled = overrideMicEnabled !== undefined ? overrideMicEnabled : (participant?.isMicrophoneEnabled ?? false);
 
   return (
     <CardContainer $isActive={isSpeaking || isMicEnabled} $videoFit={videoFit}>
