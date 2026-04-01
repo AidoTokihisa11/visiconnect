@@ -417,7 +417,9 @@ const PricingPage = () => {
     const billingCycle = isAnnual ? 'annual' : 'monthly';
     
     try {
-      const apiUrl = `${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/create-checkout-session`;
+      const apiUrl = import.meta.env.PROD 
+        ? (import.meta.env.VITE_API_URL || '') + '/api/create-checkout-session' 
+        : (import.meta.env.VITE_API_URL || 'http://localhost:3001') + '/api/create-checkout-session';
 
       const response = await fetch(apiUrl, {
         method: 'POST',

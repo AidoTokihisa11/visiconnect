@@ -59,6 +59,7 @@ export const StatsMonitor = ({ participant }) => {
     let mounted = true;
     const interval = setInterval(async () => {
       // Find the first video track
+      if (!participant.videoTracks) return;
       const tracks = Array.from(participant.videoTracks.values());
       const videoTrackPub = tracks.find(t => t.kind === 'video' && t.track);
       

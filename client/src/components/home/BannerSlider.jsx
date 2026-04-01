@@ -1,127 +1,210 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { LayoutDashboard, MonitorPlay, Activity, ArrowRight } from 'lucide-react';
 import { useTranslation } from '../../hooks/useTranslation';
 
 // ========== STYLED COMPONENTS ==========
 
-const SliderContainer = styled.div`
-  position: relative;
-  overflow: hidden;
+const SectionWrapper = styled.div`
   width: 100%;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 6rem auto;
+  padding: 0 1rem;
+`;
+
+const HeaderContainer = styled.div`
+  text-align: center;
+  margin-bottom: 3rem;
+  
+  h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: hsl(var(--foreground));
+    margin-bottom: 1rem;
+  }
+  
+  p {
+    font-size: 1.125rem;
+    color: hsl(var(--muted-foreground));
+    max-width: 600px;
+    margin: 0 auto;
+  }
+`;
+
+const ShowcaseContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
   border-radius: 24px;
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  padding: 2rem;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05);
+
+  @media (min-width: 992px) {
+    grid-template-columns: 1fr 1.5fr;
+    gap: 4rem;
+    padding: 3rem;
+  }
 `;
 
-const SlideTrack = styled(motion.div)`
+const TabsList = styled.div`
   display: flex;
-  cursor: grab;
-  &:active { cursor: grabbing; }
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
 `;
 
-const SlideItem = styled.div`
-  min-width: 100%;
-  padding: 4rem 2rem;
+const TabItem = styled.div`
+  padding: 1.5rem;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  background: ${props => props.$active ? 'rgba(59, 130, 246, 0.05)' : 'transparent'};
+  border: 1px solid ${props => props.$active ? 'rgba(59, 130, 246, 0.2)' : 'transparent'};
+  
+  &:hover {
+    background: ${props => props.$active ? 'rgba(59, 130, 246, 0.05)' : 'rgba(0, 0, 0, 0.02)'};
+  }
+  
+  .icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    background: ${props => props.$active ? props.$color : 'hsl(var(--muted))'};
+    color: ${props => props.$active ? '#fff' : 'hsl(var(--muted-foreground))'};
+    transition: all 0.3s ease;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: ${props => props.$active ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground))'};
+    margin-bottom: 0.5rem;
+    transition: color 0.3s ease;
+  }
+
+  p {
+    font-size: 0.95rem;
+    color: hsl(var(--muted-foreground));
+    line-height: 1.5;
+  }
+
+  .active-indicator {
+    position: absolute;
+    left: -1px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 0;
+    background: ${props => props.$color};
+    border-radius: 0 4px 4px 0;
+    transition: height 0.3s ease;
+    
+    ${props => props.$active && `
+      height: 60%;
+    `}
+  }
+`;
+
+const VisualizerPane = styled.div`
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 400px;
+  border: 1px solid hsl(var(--border));
+  box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);
+`;
+
+const BrowserMockup = styled(motion.div)`
+  width: 90%;
+  height: 85%;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  display: flex;
   flex-direction: column;
-  text-align: center;
-  position: relative;
-  
-  .preview-ui {
-    width: 100%;
-    max-width: 800px;
-    height: 400px;
-    background: hsl(var(--card));
-    border-radius: 16px;
-    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-    border: 1px solid hsl(var(--border));
+  overflow: hidden;
+  border: 1px solid hsl(var(--border));
+
+  .browser-header {
+    height: 40px;
+    background: #f8fafc;
+    border-bottom: 1px solid hsl(var(--border));
     display: flex;
-    flex-direction: column;
-    overflow: hidden;
+    align-items: center;
+    padding: 0 1rem;
+    gap: 0.5rem;
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      &.red { background: #ef4444; }
+      &.yellow { background: #f59e0b; }
+      &.green { background: #22c55e; }
+    }
+  }
+
+  .browser-body {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: radial-gradient(circle at center, #ffffff 0%, #f8fafc 100%);
     position: relative;
     
-    .ui-header {
-      height: 40px;
-      border-bottom: 1px solid hsl(var(--border));
+    .illustration-wrapper {
+      text-align: center;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      padding: 0 1rem;
-      gap: 0.5rem;
-      background: #f1f5f9;
-      
-      .dot { width: 8px; height: 8px; border-radius: 50%; background: #cbd5e1; }
+      gap: 1.5rem;
     }
     
-    .ui-body {
-      flex: 1;
-      padding: 2rem;
-      display: grid;
-      place-items: center;
-      background: radial-gradient(circle at center, #f8fafc 0%, #ffffff 100%);
-      
-      h3 { font-size: 2rem; color: hsl(var(--primary)); margin-bottom: 1rem; }
-      p { color: hsl(var(--muted-foreground)); max-width: 400px; }
+    h4 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: hsl(var(--foreground));
+    }
+    
+    .pulsing-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: ${props => props.$themeColor || '#3b82f6'};
+      opacity: 0.2;
+      animation: pulse 2s infinite;
+      position: absolute;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.5); opacity: 0; }
+      100% { transform: scale(1); opacity: 0; }
     }
   }
 `;
 
-const SliderNav = styled.div`
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 0.5rem;
-  z-index: 10;
-`;
-
-const SliderDot = styled.button`
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  border: none;
-  background: ${props => props.$active ? 'hsl(var(--primary))' : 'hsl(var(--muted))'};
-  cursor: pointer;
-  transition: all 0.3s;
-  
-  &:hover {
-    transform: scale(1.2);
+const getIconForIndex = (index) => {
+  switch (index) {
+    case 0: return <LayoutDashboard size={24} />;
+    case 1: return <MonitorPlay size={24} />;
+    case 2: return <Activity size={24} />;
+    default: return <ArrowRight size={24} />;
   }
-`;
-
-const SliderArrow = styled.button`
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(255,255,255,0.8);
-  backdrop-filter: blur(4px);
-  border: 1px solid hsl(var(--border));
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s;
-  z-index: 10;
-  color: hsl(var(--foreground));
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-  
-  &:hover {
-    background: hsl(var(--card));
-    transform: translateY(-50%) scale(1.1);
-  }
-  
-  &.prev { left: 1rem; }
-  &.next { right: 1rem; }
-`;
+};
 
 // ========== COMPONENT ==========
 
@@ -129,71 +212,71 @@ const BannerSlider = ({ slides = [] }) => {
   const [current, setCurrent] = useState(0);
   const { t } = useTranslation();
 
+  // Auto-advance slider
+  useEffect(() => {
+    if (slides.length === 0) return;
+    const timer = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % slides.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [slides.length]);
+
   if (slides.length === 0) {
     return null;
   }
 
-  const handleNext = () => {
-    setCurrent((prev) => (prev + 1) % slides.length);
-  };
-
-  const handlePrev = () => {
-    setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
-  };
+  const activeColor = slides[current]?.color || '#3b82f6';
 
   return (
-    <SliderContainer>
-      <AnimatePresence mode="wait">
-        <SlideTrack
-          key={current}
-          initial={{ opacity: 0, x: 100 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -100 }}
-          transition={{ duration: 0.5 }}
-        >
-          <SlideItem>
-            <div className="preview-ui">
-              <div className="ui-header">
-                <div className="dot"></div>
-                <div className="dot"></div>
-                <div className="dot"></div>
+    <SectionWrapper>
+      <ShowcaseContainer>
+        <TabsList>
+          {slides.map((slide, idx) => (
+            <TabItem
+              key={idx}
+              $active={current === idx}
+              $color={slide.color || '#3b82f6'}
+              onClick={() => setCurrent(idx)}
+            >
+              <div className="active-indicator" />
+              <div className="icon-wrapper">
+                {getIconForIndex(idx)}
               </div>
-              <div className="ui-body">
-                <h3>{slides[current].title}</h3>
-                <p>{slides[current].description}</p>
+              <h3>{slide.title}</h3>
+              <p>{slide.description}</p>
+            </TabItem>
+          ))}
+        </TabsList>
+
+        <VisualizerPane>
+          <AnimatePresence mode="wait">
+            <BrowserMockup
+              key={current}
+              $themeColor={activeColor}
+              initial={{ opacity: 0, y: 20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -20, scale: 0.95 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+            >
+              <div className="browser-header">
+                <div className="dot red"></div>
+                <div className="dot yellow"></div>
+                <div className="dot green"></div>
               </div>
-            </div>
-          </SlideItem>
-        </SlideTrack>
-      </AnimatePresence>
-
-      <SliderNav>
-        {slides.map((_, idx) => (
-          <SliderDot
-            key={idx}
-            $active={idx === current}
-            onClick={() => setCurrent(idx)}
-            aria-label={`Go to slide ${idx + 1}`}
-          />
-        ))}
-      </SliderNav>
-
-      <SliderArrow
-        className="prev"
-        onClick={handlePrev}
-        aria-label="Previous slide"
-      >
-        <ChevronLeft size={20} />
-      </SliderArrow>
-
-      <SliderArrow
-        className="next"
-        onClick={handleNext}
-        aria-label="Next slide"
-      >
-        <ChevronRight size={20} />
-      </SliderArrow>
-    </SliderContainer>
+              <div className="browser-body">
+                <div className="pulsing-circle" />
+                <div className="illustration-wrapper">
+                  <div style={{ color: activeColor, transform: 'scale(2)' }}>
+                    {getIconForIndex(current)}
+                  </div>
+                  <h4>{slides[current].title}</h4>
+                </div>
+              </div>
+            </BrowserMockup>
+          </AnimatePresence>
+        </VisualizerPane>
+      </ShowcaseContainer>
+    </SectionWrapper>
   );
 };
 
