@@ -86,7 +86,7 @@ export const useMeeting = (maxQualityLock = true) => {
   // This hook automatically handles updates when tracks are published/subscribed
   const tracks = useTracks(
     [Track.Source.Camera, Track.Source.ScreenShare],
-    { onlySubscribed: true } // optim: only get subscribed tracks
+    { onlySubscribed: false } // ensure we get notified even if auto-subscribe delays
   );
 
   const toggleMic = useCallback(async () => {

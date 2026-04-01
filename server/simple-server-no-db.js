@@ -222,7 +222,8 @@ const createToken = async (roomName, participantName) => {
       process.env.LIVEKIT_API_KEY, 
       process.env.LIVEKIT_API_SECRET, 
       {
-        identity: participantName,
+        identity: `guest_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+        name: participantName,
       }
     );
     at.addGrant({ roomJoin: true, room: roomName, canPublish: true, canSubscribe: true });
@@ -235,6 +236,8 @@ const createToken = async (roomName, participantName) => {
 
 app.post('/api/livekit/token', async (req, res) => {
   const { roomName, participantName } = req.body;
+  
+  console.log(`[Token Request] roomName="${roomName}", participantName="${participantName}"`);
   
   if (!roomName || !participantName) {
     return res.status(400).json({ error: 'Missing roomName or participantName' });

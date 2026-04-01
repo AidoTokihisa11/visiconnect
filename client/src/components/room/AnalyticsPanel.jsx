@@ -4,24 +4,25 @@ import {
   LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar 
 } from 'recharts';
 import { motion } from 'framer-motion';
+import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 import { Activity, Clock, Users, Zap, Signal } from 'lucide-react';
 
 const PanelContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  background-color: rgb(15 23 42 / 0.5);
+  background-color: ${THEME.panelBg};
   backdrop-filter: blur(8px);
   padding: 1.5rem;
   overflow-y: auto;
   gap: 2rem;
-  color: white;
+  color: ${THEME.text};
 
   &::-webkit-scrollbar {
     width: 6px;
   }
   &::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
+    background: ${THEME.border};
     border-radius: 3px;
   }
 `;
@@ -33,8 +34,8 @@ const KPIGrid = styled.div`
 `;
 
 const KPICard = styled(motion.div)`
-  background: rgba(30, 41, 59, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: ${THEME.cardBg}; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.05);
+  border: 1px solid #e0e7ff;
   border-radius: 12px;
   padding: 1rem;
   display: flex;
@@ -43,7 +44,7 @@ const KPICard = styled(motion.div)`
 
   .label {
     font-size: 0.8rem;
-    color: #94a3b8;
+    color: ${THEME.textDim};
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -52,7 +53,7 @@ const KPICard = styled(motion.div)`
   .value {
     font-size: 1.5rem;
     font-weight: 700;
-    color: white;
+    color: ${THEME.text};
   }
 
   .trend {
@@ -65,8 +66,8 @@ const KPICard = styled(motion.div)`
 `;
 
 const ChartContainer = styled.div`
-  background: rgba(30, 41, 59, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: ${THEME.cardBg}; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.05);
+  border: 1px solid #e0e7ff;
   border-radius: 16px;
   padding: 1.25rem;
   min-height: 250px;
@@ -76,7 +77,7 @@ const ChartContainer = styled.div`
     margin: 0 0 1rem 0;
     font-size: 0.95rem;
     font-weight: 600;
-    color: #cbd5e1;
+    color: ${THEME.text};
   }
 `;
 
@@ -102,7 +103,6 @@ const AUDIO_QUALITY_DATA = [
 ];
 
 export const AnalyticsPanel = () => {
-    // Simulate real-time updates
     const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
 
     useEffect(() => {
@@ -147,12 +147,12 @@ export const AnalyticsPanel = () => {
                                 <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
                             </linearGradient>
                         </defs>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
                         <XAxis dataKey="time" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
                         <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
                         <Tooltip 
-                            contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0,0,0,0.3)' }}
-                            itemStyle={{ color: '#e2e8f0' }}
+                            contentStyle={{ backgroundColor: '#ffffff', border: 'none', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0,0,0,0.3)' }}
+                            itemStyle={{ color: "#1e293b" }}
                         />
                         <Area type="monotone" dataKey="value" stroke="#8b5cf6" strokeWidth={2} fillOpacity={1} fill="url(#colorValue)" />
                     </AreaChart>
@@ -163,19 +163,19 @@ export const AnalyticsPanel = () => {
                 <h4>Stabilité du Réseau (Bitrate Audio)</h4>
                 <ResponsiveContainer width="100%" height={190} minWidth={0}>
                     <LineChart data={AUDIO_QUALITY_DATA}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
                         <XAxis dataKey="time" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
                         <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
                         <Tooltip 
-                            contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '8px' }}
-                            itemStyle={{ color: '#e2e8f0' }}
+                            contentStyle={{ backgroundColor: '#ffffff', border: 'none', borderRadius: '8px' }}
+                            itemStyle={{ color: "#1e293b" }}
                         />
                         <Line type="monotone" dataKey="bitrate" stroke="#10b981" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
                     </LineChart>
                 </ResponsiveContainer>
             </ChartContainer>
             
-            <div style={{ marginTop: 'auto', padding: '1rem', background: 'rgba(255,255,255,0.03)', borderRadius: '8px', fontSize: '0.8rem', color: '#64748b', textAlign: 'center' }}>
+            <div style={{ marginTop: 'auto', padding: '1rem', background: THEME.panelBg, borderRadius: '8px', fontSize: '0.8rem', color: THEME.textDim, textAlign: 'center' }}>
                 <Activity size={14} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }} />
                 Données mises à jour en temps réel via WebSocket
             </div>

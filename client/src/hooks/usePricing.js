@@ -4,10 +4,10 @@ import { useAuth } from '../contexts/AuthContext';
 const FREE_PLAN_LIMIT_MINUTES = 40;
 
 export const usePricing = (onTimeLimitReached) => {
-  const { user } = useAuth(); // Assuming this context provides user data including plan info
+  const { user } = useAuth();
   const userPlan = user?.app_metadata?.plan;
   const [timeLeft, setTimeLeft] = useState(FREE_PLAN_LIMIT_MINUTES * 60);
-  const [isPro, setIsPro] = useState(false); // Default to Free
+  const [isPro, setIsPro] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   useEffect(() => {
@@ -31,14 +31,7 @@ export const usePricing = (onTimeLimitReached) => {
     return () => clearInterval(timer);
   }, [isPro, onTimeLimitReached]);
 
-  const upgradeToPro = useCallback(async () => {
-    // Simulate Stripe checkout redirection
-    // In a real app, you would call your backend to create a Checkout Session
-    // const response = await fetch('/api/create-checkout-session', { method: 'POST' });
-    // const session = await response.json();
-    // stripe.redirectToCheckout({ sessionId: session.id });
-    
-    // Simulating success for demo
+  const upgradeToPro = useCallback(() => {
     alert('Simulating upgrade to PRO...');
     setIsPro(true);
     setShowUpgradeModal(false);

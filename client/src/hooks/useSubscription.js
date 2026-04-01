@@ -2,12 +2,26 @@ import { useState, useEffect } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
+const FREE_PLAN_DURATION_MS = 40 * 60 * 1000;
+const WARNING_THRESHOLD_MS = 5 * 60 * 1000;
 
-export const useSubscription = (user) => {
+const buildCheckoutPayload = (priceId, subscriberId) => ({
+  priceId,
+  userId: subscriberId,
+  successUrl: `${window.location.origin}/success`,
+  cancelUrl: `${window.location.origin}/cancel`,
+});
+
+export const useSubscription = (subscriber) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const createCheckoutSession = async (priceId) => {
+    if (!subscriber?.id || !subscriber?.token) {
+      setError('Utilisateur non authentifie pour le checkout.');
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -16,15 +30,14 @@ export const useSubscription = (user) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}` // Assuming user object has token
+          Authorization: `Bearer ${subscriber.token}`,
         },
-        body: JSON.stringify({
-          priceId,
-          userId: user.id,
-          successUrl: `${window.location.origin}/success`,
-          cancelUrl: `${window.location.origin}/cancel`,
-        }),
+        body: JSON.stringify(buildCheckoutPayload(priceId, subscriber.id)),
       });
+
+      if (!response.ok) {
+        throw new Error(`Erreur checkout (${response.status})`);
+      }
 
       const session = await response.json();
 
@@ -33,6 +46,10 @@ export const useSubscription = (user) => {
       }
 
       const stripe = await stripePromise;
+      if (!stripe) {
+        throw new Error('Stripe indisponible dans ce contexte.');
+      }
+
       const { error: stripeError } = await stripe.redirectToCheckout({
         sessionId: session.id,
       });
@@ -41,8 +58,8 @@ export const useSubscription = (user) => {
         throw new Error(stripeError.message);
       }
 
-    } catch (err) {
-      setError(err.message);
+    } catch (checkoutError) {
+      setError(checkoutError.message);
     } finally {
       setLoading(false);
     }
@@ -56,30 +73,34 @@ export const useSubscription = (user) => {
 };
 
 export const useUsageLimit = (startTime, isPremium) => {
-    const [timeLeft, setTimeLeft] = useState(null);
-    const [isLimitReached, setIsLimitReached] = useState(false);
-    const [showWarning, setShowWarning] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(null);
+  const [isLimitReached, setIsLimitReached] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
 
-    useEffect(() => {
-        if (isPremium || !startTime) return;
+  useEffect(() => {
+    if (isPremium || !startTime) return;
 
-        const limit = 40 * 60 * 1000; // 40 minutes in ms
-        const interval = setInterval(() => {
-            const elapsed = Date.now() - new Date(startTime).getTime();
-            const remaining = limit - elapsed;
+    const meetingStartTime = new Date(startTime).getTime();
+    const interval = setInterval(() => {
+      const elapsedMs = Date.now() - meetingStartTime;
+      const remainingMs = FREE_PLAN_DURATION_MS - elapsedMs;
 
-            if (remaining <= 0) {
-                setIsLimitReached(true);
-                clearInterval(interval);
-            } else if (remaining < 5 * 60 * 1000) { // Warn at 5 mins
-                setShowWarning(true);
-            }
-            
-            setTimeLeft(Math.max(0, remaining));
-        }, 1000);
+      if (remainingMs <= 0) {
+        setIsLimitReached(true);
+        setTimeLeft(0);
+        clearInterval(interval);
+        return;
+      }
 
-        return () => clearInterval(interval);
-    }, [startTime, isPremium]);
+      if (remainingMs < WARNING_THRESHOLD_MS) {
+        setShowWarning(true);
+      }
 
-    return { timeLeft, isLimitReached, showWarning };
+      setTimeLeft(remainingMs);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isPremium, startTime]);
+
+  return { timeLeft, isLimitReached, showWarning };
 };

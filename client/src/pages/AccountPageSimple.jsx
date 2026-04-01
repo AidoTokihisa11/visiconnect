@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { 
   User, Camera, Mail, Building, Briefcase, 
   MapPin, Link as LinkIcon, Save, X, Phone,
@@ -11,403 +10,34 @@ import FooterClean from '../components/FooterClean';
 import { useUserProfile } from '../hooks/useUserProfile';
 import { useClerk, useUser } from '@clerk/react';
 import { useNavigate } from 'react-router-dom';
-
-const PageWrapper = styled.div`
-  min-height: 100vh;
-  background-color: #f8fafc; /* Fond clair */
-  color: #334155; /* Texte foncé pour lisibilité */
-  display: flex;
-  flex-direction: column;
-`;
-
-const ContentContainer = styled.main`
-  flex: 1;
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
-  width: 100%;
-
-  @media (min-width: 768px) {
-    padding: 3rem 1.5rem;
-  }
-`;
-
-const HeaderSection = styled.div`
-  margin-bottom: 2rem;
-  text-align: left;
-
-  @media (min-width: 768px) {
-    margin-bottom: 2.5rem;
-  }
-`;
-
-const Title = styled.h1`
-  font-size: 2rem;
-  font-weight: 800;
-  color: #0f172a;
-  margin-bottom: 0.5rem;
-  letter-spacing: -0.02em;
-
-  @media (min-width: 768px) {
-    font-size: 2.5rem;
-  }
-`;
-
-const Subtitle = styled.p`
-  font-size: 1rem;
-  color: #64748b;
-
-  @media (min-width: 768px) {
-    font-size: 1.1rem;
-  }
-`;
-
-const DashboardGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
-  align-items: start;
-
-  @media (min-width: 1024px) {
-    grid-template-columns: 260px 1fr;
-    gap: 2rem;
-  }
-`;
-
-const Card = styled(motion.div)`
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 1rem;
-  overflow: hidden;
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05); /* Ombre plus douce et moderne */
-`;
-
-const CardHeader = styled.div`
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid #e2e8f0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #f8fafc;
-`;
-
-const CardTitle = styled.h2`
-  font-size: 1.15rem;
-  font-weight: 600;
-  color: #0f172a;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-`;
-
-const CardBody = styled.div`
-  padding: 2rem;
-
-  @media (max-width: 768px) {
-    padding: 1.25rem;
-`;
-
-/* Navigation Sidebar Styles */
-const MobileNavToggle = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  width: 100%;
-  padding: 1rem 1.25rem;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 0.75rem;
-  color: #0f172a;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: #f8fafc;
-    border-color: #cbd5e1;
-  }
-
-  @media (min-width: 1024px) {
-    display: none;
-  }
-`;
-
-const NavMenu = styled.nav`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  
-  @media (max-width: 1023px) {
-    display: ${props => (props.$isOpen ? 'flex' : 'none')};
-    animation: fadeIn 0.3s ease;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-`;
-
-const NavItem = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  width: 100%;
-  padding: 0.875rem 1rem;
-  border-radius: 0.5rem;
-  border: none;
-  background: \${props => props.$active ? '#eff6ff' : 'transparent'};
-  color: \${props => props.$active ? '#2563eb' : '#475569'};
-  font-size: 1rem;
-  font-weight: 500;
-  text-align: left;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border-left: 3px solid \${props => props.$active ? '#2563eb' : 'transparent'};
-
-  &:hover {
-    background: ${props => props.$active ? '#eff6ff' : '#f8fafc'};
-    color: ${props => props.$active ? '#2563eb' : '#0f172a'};
-    transform: translateX(4px);
-  }
-`;
-
-/* Form Styles */
-const FormGroup = styled.div`
-  margin-bottom: 20px;
-`;
-
-const Label = styled.label`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #374151;
-  margin-bottom: 8px;
-
-  svg {
-    color: #2563eb;
-  }
-`;
-
-const InputWrapper = styled.div`
-  position: relative;
-  width: 100%;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  padding: 12px 16px;
-  border: 2px solid #e5e7eb;
-  border-radius: 8px;
-  font-size: 16px;
-  transition: all 0.2s;
-  background-color: #ffffff;
-  color: #111827;
-
-  &:focus {
-    outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-  }
-
-  &::placeholder {
-    color: #9ca3af;
-  }
-
-  &:disabled {
-    background-color: #f3f4f6;
-    color: #6b7280;
-    cursor: not-allowed;
-  }
-`;
-
-const TextArea = styled.textarea`
-  width: 100%;
-  padding: 12px 16px;
-  border: 2px solid #e5e7eb;
-  border-radius: 8px;
-  font-size: 16px;
-  transition: all 0.2s;
-  background-color: #ffffff;
-  color: #111827;
-  min-height: 120px;
-  resize: vertical;
-
-  &:focus {
-    outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-  }
-
-  &::placeholder {
-    color: #9ca3af;
-  }
-`;
-
-const ButtonsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 32px;
-
-  @media (min-width: 640px) {
-    flex-direction: row;
-    justify-content: flex-end;
-  }
-`;
-
-const Button = styled(motion.button)`
-  background-color: ${props => props.$variant === 'secondary' ? '#ffffff' : '#2563eb'};
-  color: ${props => props.$variant === 'secondary' ? '#374151' : 'white'};
-  border: ${props => props.$variant === 'secondary' ? '2px solid #e5e7eb' : 'none'};
-  padding: 14px 24px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-
-  @media (min-width: 640px) {
-    width: auto;
-  }
-
-  &:hover:not(:disabled) {
-    background-color: ${props => props.$variant === 'secondary' ? '#f9fafb' : '#1d4ed8'};
-    transform: translateY(-2px);
-    box-shadow: ${props => props.$variant === 'secondary' ? 'none' : '0 4px 12px rgba(37, 99, 235, 0.2)'};
-  }
-  
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-`;
-
-/* Profile Picture Upload */
-const ProfilePictureSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-  padding-bottom: 2.5rem;
-  border-bottom: 1px solid #e2e8f0;
-  text-align: center;
-
-  @media (min-width: 640px) {
-    flex-direction: row;
-    text-align: left;
-  }
-`;
-
-const AvatarWrapper = styled.div`
-  position: relative;
-  display: inline-block;
-`;
-
-const AvatarContainer = styled(motion.div)`
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #eff6ff, #dbeafe);
-  border: 4px solid #ffffff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.15);
-  flex-shrink: 0;
-  cursor: pointer;
-  
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .fallback {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #2563eb;
-  }
-`;
-
-const UploadButton = styled.label`
-  position: absolute;
-  bottom: 4px;
-  right: 4px;
-  background: #2563eb;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 3px solid #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
-  z-index: 10;
-  
-  &:hover {
-    background: #1d4ed8;
-    transform: scale(1.1);
-  }
-  
-  input {
-    display: none;
-  }
-`;
-
-const ProfilePictureInfo = styled.div`
-  flex: 1;
-  h3 {
-    font-size: 1.15rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    color: #0f172a;
-  }
-  p {
-    font-size: 0.9rem;
-    color: #64748b;
-  }
-`;
-
-// Helper component for notifications
-const Notification = styled(motion.div)`
-  position: fixed;
-  bottom: 2rem;
-  right: 1rem;
-  left: 1rem;
-  padding: 1rem 1.5rem;
-  border-radius: 0.5rem;
-  background: \${props => props.type === 'error' ? '#ef4444' : '#10b981'};
-  color: white;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  z-index: 50;
-
-  @media (min-width: 640px) {
-    right: 2rem;
-    left: auto;
-    justify-content: flex-start;
-  }
-`;
+import {
+  PageWrapper,
+  ContentContainer,
+  HeaderSection,
+  Title,
+  Subtitle,
+  DashboardGrid,
+  Card,
+  CardHeader,
+  CardTitle,
+  CardBody,
+  MobileNavToggle,
+  NavMenu,
+  NavItem,
+  FormGroup,
+  Label,
+  InputWrapper,
+  Input,
+  TextArea,
+  ButtonsContainer,
+  Button,
+  ProfilePictureSection,
+  AvatarWrapper,
+  AvatarContainer,
+  UploadButton,
+  ProfilePictureInfo,
+  Notification
+} from './AccountPageSimple.styles';
 
 const AccountPageSimple = () => {
   const { userProfile, loading, updateProfile } = useUserProfile();
@@ -430,21 +60,21 @@ const AccountPageSimple = () => {
     website: ''
   });
 
+  const buildProfileFormData = (profileData, metadata, fullName) => ({
+    displayName: metadata.displayName || profileData.displayName || fullName || '',
+    bio: metadata.bio || profileData.bio || '',
+    phone: metadata.phone || profileData.phone || '',
+    company: metadata.company || profileData.company || '',
+    jobTitle: metadata.jobTitle || profileData.jobTitle || '',
+    location: metadata.location || profileData.location || '',
+    website: metadata.website || profileData.website || '',
+  });
+
   useEffect(() => {
-    if (userProfile && !loading && user) {
-      const metadata = user.unsafeMetadata || {};
-      
-      setFormData({
-        displayName: metadata.displayName || userProfile.displayName || user.fullName || '',
-        bio: metadata.bio || userProfile.bio || '',
-        phone: metadata.phone || userProfile.phone || '',
-        company: metadata.company || userProfile.company || '',
-        jobTitle: metadata.jobTitle || userProfile.jobTitle || '',
-        location: metadata.location || userProfile.location || '',
-        website: metadata.website || userProfile.website || ''
-      });
-    }
-  }, [userProfile, loading, user]);
+    if (loading || !userProfile || !user) return;
+    const metadata = user.unsafeMetadata || {};
+    setFormData(buildProfileFormData(userProfile, metadata, user.fullName));
+  }, [loading, user, userProfile]);
 
   const showNotification = (message, type = 'success') => {
     setNotification({ message, type });
@@ -463,7 +93,6 @@ const AccountPageSimple = () => {
     try {
       setIsSaving(true);
       await user.setProfileImage({ file });
-      // Force Clerk à rafraîchir l'objet user récupéré
       await user.reload();
       showNotification('Photo de profil mise à jour avec succès !');
     } catch (error) {
@@ -477,27 +106,27 @@ const AccountPageSimple = () => {
   const handleSave = async (e) => {
     e.preventDefault();
     setIsSaving(true);
+
     try {
       if (user) {
+        const [firstName = '', ...lastNameParts] = formData.displayName.split(' ');
+        const lastName = lastNameParts.join(' ');
+
         try {
-          // On tente d'abord de mettre à jour les infos standard de base Clerk
           await user.update({
-            firstName: formData.displayName.split(' ')[0] || '',
-            lastName: formData.displayName.split(' ').slice(1).join(' ') || ''
+            firstName,
+            lastName,
           });
         } catch (clerkError) {
-          // On ignore l'erreur si le "First and Last Name" n'est pas activé dans le panel Clerk de l'utilisateur
           console.warn("Mise à jour standard Clerk ignorée (paramètre first_name/last_name non activé sur votre dashboard Clerk): ", clerkError);
         }
 
-        // Ensuite on sauvegarde de force la totalité des champs persos sur Clerk
         await user.update({
-          unsafeMetadata: formData
+          unsafeMetadata: formData,
         });
-        await user.reload(); // on rafraichit l'utilisateur local Clerk
+        await user.reload();
       }
-      
-      // Persistance secondaire (base de données locale)
+
       await updateProfile(formData);
       showNotification('Profil mis à jour avec succès !');
     } catch (error) {

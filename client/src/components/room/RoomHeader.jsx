@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Shield, Signal, Users, Cpu, Activity } from 'lucide-react';
+import { Shield, Signal, Users, Cpu, Copy, Check } from 'lucide-react';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
+import { InviteModal } from './InviteModal';
 
 const HeaderContainer = styled.header`
   height: 72px;
@@ -34,7 +35,7 @@ const SecureBadge = styled.div`
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background-color: #ecfdf5;
+  background-color: ${THEME.accentSoft};
   color: #059669;
   padding: 0.375rem 0.875rem;
   border-radius: 9999px;
@@ -43,11 +44,30 @@ const SecureBadge = styled.div`
   border: 1px solid rgba(16, 185, 129, 0.2);
 `;
 
+const InviteButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: ${THEME.accentSoft};
+  color: #3b82f6;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  padding: 0.4rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: ${THEME.accentSoft};
+  }
+`;
+
 const ConnectionStatus = styled.div`
   display: flex;
   align-items: center;
   gap: 2rem;
-  
+
   .status-item {
     display: flex;
     align-items: center;
@@ -55,7 +75,7 @@ const ConnectionStatus = styled.div`
     font-size: 0.875rem;
     color: ${THEME.textDim};
     font-weight: 500;
-    
+
     svg {
       width: 18px;
       height: 18px;
@@ -64,6 +84,12 @@ const ConnectionStatus = styled.div`
 `;
 
 export const RoomHeader = ({ roomName, isSecure, participantCount, quality }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenInvite = () => {
+    setIsModalOpen(true);
+  };
+
   return (
     <HeaderContainer>
       <RoomInfo>
@@ -76,6 +102,9 @@ export const RoomHeader = ({ roomName, isSecure, participantCount, quality }) =>
             </SecureBadge>
           )}
         </RoomName>
+        <InviteButton onClick={handleOpenInvite} title="Inviter des participants">
+          Inviter
+        </InviteButton>
       </RoomInfo>
 
       <ConnectionStatus>
@@ -83,10 +112,10 @@ export const RoomHeader = ({ roomName, isSecure, participantCount, quality }) =>
           <Users />
           <span>{participantCount || 1}</span>
         </div>
-        
+
         <div className="status-item" title="Qualité du signal">
           <Signal className={quality === 'excellent' ? 'text-green-500' : 'text-yellow-500'} />
-          <span>{quality === 'excellent' ? 'HD Stable' : 'Standard'}</span>
+          <span>{quality === 'excellent' ? 'HD Stable' : 'Standard'}</span>     
         </div>
 
         <div className="status-item" title="Performance">
@@ -94,6 +123,10 @@ export const RoomHeader = ({ roomName, isSecure, participantCount, quality }) =>
           <span>Optimisé</span>
         </div>
       </ConnectionStatus>
-    </HeaderContainer>
-  );
+
+      <InviteModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
+    </HeaderContainer>  );
 };

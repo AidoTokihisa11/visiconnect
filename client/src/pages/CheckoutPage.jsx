@@ -353,7 +353,6 @@ const CheckoutPage = () => {
     country: ''
   });
 
-  // Récupération du plan depuis l'URL
   const selectedPlan = searchParams.get('plan') || 'starter';
   
   const plans = {
@@ -404,11 +403,12 @@ const CheckoutPage = () => {
 
   const currentPlan = plans[selectedPlan] || plans.starter;
 
-  const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((previousData) => ({
+      ...previousData,
+      [name]: value
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -422,7 +422,7 @@ const CheckoutPage = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          plan: selectedPlan === 'starter' ? 'pro' : selectedPlan, // using 'pro' for our dev mapping
+          plan: selectedPlan === 'starter' ? 'pro' : selectedPlan,
           billingCycle: isAnnual ? 'annual' : 'monthly',
         }),
       });

@@ -349,27 +349,26 @@ export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState(null);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     setIsSubmitting(true);
     setStatus(null);
 
-    const formData = new FormData(e.target);
+    const form = event.currentTarget;
+    const formData = new FormData(form);
 
-    // Clef Web3Forms
     formData.append("access_key", "d56fc4c3-11c1-47e6-94ca-6e855cbb6872");
 
-    // Tri B2B
     const category = formData.get("category");
     const company = formData.get("company") || "Particulier/Indépendant";
     const firstName = formData.get("firstName");
     const lastName = formData.get("lastName");
-
-    // L'objet formatté permet un tri instantané dans tes mails
     const emailSubject = `[${category}] - Demande de ${firstName} ${lastName} (${company})`;
 
     formData.append("subject", emailSubject);
     formData.append("from_name", "Direction VisioConnect");
+
+    let nextStatus = "error";
 
     try {
       const response = await fetch("https://api.web3forms.com/submit", {
@@ -378,20 +377,18 @@ export default function ContactPage() {
       });
 
       const data = await response.json();
+      nextStatus = data.success ? "success" : "error";
 
-      if (data.success) {
-        setStatus("success");
-        e.target.reset();
-      } else {
-        setStatus("error");
+      if (nextStatus === "success") {
+        form.reset();
       }
     } catch (error) {
       console.error(error);
-      setStatus("error");
     } finally {
+      setStatus(nextStatus);
       setIsSubmitting(false);
-      // Fait disparaître le message de réussite au bout de 7 secondes
-      if (status !== "error") {
+
+      if (nextStatus === "success") {
         setTimeout(() => setStatus(null), 7000);
       }
     }

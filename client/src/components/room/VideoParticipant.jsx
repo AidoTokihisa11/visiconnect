@@ -5,7 +5,7 @@ import { VideoTrack } from '@livekit/components-react';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 
 const CardContainer = styled.div`
-  background-color: #0b203b;
+  background-color: ${THEME.cardBg};
   border-radius: 12px;
   overflow: hidden;
   position: relative;
@@ -14,7 +14,7 @@ const CardContainer = styled.div`
   aspect-ratio: 16/9;
   max-height: 100%;
   
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   border: 1px solid ${props => props.$isActive ? THEME.accent : THEME.border};
   transition: all 0.3s ease;
 
@@ -31,7 +31,7 @@ const Placeholder = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: ${THEME.cardBg};
+  background: ${THEME.cardBg}; border: 1px solid ${THEME.border};
   color: ${THEME.textDim};
 `;
 
@@ -39,7 +39,7 @@ const UserLabel = styled.div`
   position: absolute;
   bottom: 1rem;
   left: 1rem;
-  background-color: rgba(12, 35, 64, 0.92);
+  background-color: ${THEME.panelBg};
   backdrop-filter: blur(4px);
   padding: 0.4rem 0.8rem;
   border-radius: 6px;
@@ -66,7 +66,7 @@ const StatusIcon = styled.div`
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background-color: rgba(12, 35, 64, 0.92);
+  background-color: ${THEME.panelBg};
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;

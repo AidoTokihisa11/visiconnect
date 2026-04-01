@@ -37,7 +37,7 @@ import ChangelogPage from './pages/ChangelogPage';
 import BlogPage from './pages/BlogPage';
 import PartnersPage from './pages/PartnersPage';
 import DocsPage from './pages/DocsPage';
-import DeveloperPage from './pages/DeveloperPageV2';
+import DeveloperPage from './pages/DeveloperPageV2.jsx';
 import AIChatbot from './components/AIChatbot';
 import { useNotifications } from './components/Notification';
 import ScrollToTop from './components/ScrollToTop';

@@ -97,13 +97,14 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
   };
 
   const handleSubmit = () => {
-    // Ici on intégrerait avec l'API
+    const meetingId = Math.random().toString(36).slice(2, 11);
+    window.location.href = "/room/" + meetingId;
     onClose();
   };
 
   const generateMeetingLink = () => {
     const meetingId = Math.random().toString(36).slice(2, 11);
-    return `https://visio-pro.com/room/${meetingId}`;
+    return `${window.location.origin}/room/${formData.title ? "room-" + Math.random().toString(36).slice(2,8) : "demo-" + Math.random().toString(36).slice(2,8)}`;
   };
 
   if (!isOpen) return null;

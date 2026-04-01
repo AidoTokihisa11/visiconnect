@@ -2,10 +2,5 @@ import { useAuth } from '../contexts/AuthContext';
 
 export const useAuthUser = () => {
   const { user, loading } = useAuth();
-
-  const refreshUser = () => {
-    // Dans le système Convex (ou mock), la réactivité est automatique.
-  };
-
-  return { user, loading, refreshUser };
+  return { user, loading };
 };

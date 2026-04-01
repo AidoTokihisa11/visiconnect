@@ -1,9 +1,32 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { useAuthUser } from '../hooks/useAuthUser';
 import { useLanguage } from './LanguageContext';
 import { debounce } from 'lodash';
 
 const AdminContext = createContext();
+
+const CONTENT_KEY = 'visiconnect_content';
+const UI_CONFIG_KEY = 'visiconnect_ui_config';
+const TRANSLATIONS_KEY = 'visiconnect_translations';
+const DEFAULT_UI_CONFIG = {
+    primaryColor: '#2563eb',
+    secondaryColor: '#475569',
+    chatbotPosition: 'right',
+    backToTopPosition: 'right',
+};
+
+const readStorageJson = (key, fallback) => {
+    try {
+        const value = localStorage.getItem(key);
+        return value ? JSON.parse(value) : fallback;
+    } catch {
+        return fallback;
+    }
+};
+
+const writeStorageJson = (key, value) => {
+    localStorage.setItem(key, JSON.stringify(value));
+};
 
 export const useAdmin = () => {
     const context = useContext(AdminContext);
@@ -16,82 +39,95 @@ export const useAdmin = () => {
 export const AdminProvider = ({ children }) => {
     const { user } = useAuthUser();
     const { language } = useLanguage();
-    const isAdmin = user?.role === 'admin' || user?.email?.includes('admin'); // Simple check for now
+    const isAdmin = user?.role === 'admin' || user?.email?.includes('admin');
     
     const [isLiveEdit, setIsLiveEdit] = useState(false);
-    const [uiConfig, setUiConfig] = useState({
-        primaryColor: '#2563eb',
-        secondaryColor: '#475569',
-        chatbotPosition: 'right', // 'left' | 'right'
-        backToTopPosition: 'right', // 'left' | 'right'
-    });
+    const [uiConfig, setUiConfig] = useState(DEFAULT_UI_CONFIG);
 
     const [contentMap, setContentMap] = useState({});
     const [translations, setTranslations] = useState({});
     const [isChatbotOpen, setIsChatbotOpen] = useState(false);
 
-    // Load from local storage on mount
     useEffect(() => {
-        const storedContent = localStorage.getItem('visiconnect_content');
-        const storedConfig = localStorage.getItem('visiconnect_ui_config');
-        const storedTranslations = localStorage.getItem('visiconnect_translations');
-        
-        if (storedContent) setContentMap(JSON.parse(storedContent));
-        if (storedConfig) setUiConfig(JSON.parse(storedConfig));
-        if (storedTranslations) setTranslations(JSON.parse(storedTranslations));
+        setContentMap(readStorageJson(CONTENT_KEY, {}));
+        setUiConfig(readStorageJson(UI_CONFIG_KEY, DEFAULT_UI_CONFIG));
+        setTranslations(readStorageJson(TRANSLATIONS_KEY, {}));
     }, []);
 
-    // Save to local storage
     const saveContent = useCallback(debounce((newMap) => {
-        localStorage.setItem('visiconnect_content', JSON.stringify(newMap));
+        writeStorageJson(CONTENT_KEY, newMap);
     }, 500), []);
 
-    const updateContent = (key, value) => {
-        const newMap = { ...contentMap, [key]: value };
-        setContentMap(newMap);
-        saveContent(newMap);
-    };
+    useEffect(() => {
+        return () => saveContent.cancel();
+    }, [saveContent]);
 
-    const updateUiConfig = (key, value) => {
-        const newConfig = { ...uiConfig, [key]: value };
-        setUiConfig(newConfig);
-        localStorage.setItem('visiconnect_ui_config', JSON.stringify(newConfig));
-        
-        // Apply CSS variables
+    const updateContent = useCallback((key, value) => {
+        setContentMap((prevMap) => {
+            const nextMap = { ...prevMap, [key]: value };
+            saveContent(nextMap);
+            return nextMap;
+        });
+    }, [saveContent]);
+
+    const updateUiConfig = useCallback((key, value) => {
+        setUiConfig((prevConfig) => {
+            const nextConfig = { ...prevConfig, [key]: value };
+            writeStorageJson(UI_CONFIG_KEY, nextConfig);
+            return nextConfig;
+        });
+
         if (key === 'primaryColor') {
             document.documentElement.style.setProperty('--primary', value);
         }
-    };
+    }, []);
 
-    const updateTranslation = (key, value) => {
+    const updateTranslation = useCallback((key, value) => {
         const langKey = language ? `${language}:${key}` : key;
-        const newTrans = { ...translations, [langKey]: value };
-        setTranslations(newTrans);
-        localStorage.setItem('visiconnect_translations', JSON.stringify(newTrans));
-    };
+        setTranslations((prevTranslations) => {
+            const nextTranslations = { ...prevTranslations, [langKey]: value };
+            writeStorageJson(TRANSLATIONS_KEY, nextTranslations);
+            return nextTranslations;
+        });
+    }, [language]);
 
-    const t = (key, defaultValue) => {
+    const t = useCallback((key, defaultValue) => {
         const langKey = language ? `${language}:${key}` : key;
-        // Check for language-specific override first
         if (translations[langKey]) return translations[langKey];
-        // Don't fall back to global key (old behavior) because it breaks other languages if the global key is in a specific language
         return defaultValue || key;
-    };
+    }, [language, translations]);
+
+    const toggleLiveEdit = useCallback(() => {
+        setIsLiveEdit((previousValue) => !previousValue);
+    }, []);
+
+    const adminContextValue = useMemo(() => ({
+        isAdmin,
+        isLiveEdit,
+        toggleLiveEdit,
+        uiConfig,
+        updateUiConfig,
+        contentMap,
+        updateContent,
+        updateTranslation,
+        t,
+        isChatbotOpen,
+        setIsChatbotOpen,
+    }), [
+        contentMap,
+        isAdmin,
+        isChatbotOpen,
+        isLiveEdit,
+        t,
+        toggleLiveEdit,
+        uiConfig,
+        updateContent,
+        updateTranslation,
+        updateUiConfig,
+    ]);
 
     return (
-        <AdminContext.Provider value={{
-            isAdmin,
-            isLiveEdit,
-            toggleLiveEdit: () => setIsLiveEdit(prev => !prev),
-            uiConfig,
-            updateUiConfig,
-            contentMap,
-            updateContent,
-            updateTranslation,
-            t,
-            isChatbotOpen,
-            setIsChatbotOpen
-        }}>
+        <AdminContext.Provider value={adminContextValue}>
             {children}
         </AdminContext.Provider>
     );

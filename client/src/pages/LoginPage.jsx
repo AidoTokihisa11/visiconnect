@@ -308,7 +308,7 @@ const LoginPage = () => {
   }, [isLoggedIn, navigate])
   const { signIn, loginAsDev, signInWithProvider, error: authError } = useAuth()
   
-  const [formData, setFormData] = useState({
+  const [credentials, setCredentials] = useState({
     email: '',
     password: ''
   })
@@ -316,11 +316,12 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    })
+  const syncCredentialsInput = (event) => {
+    const { name, value } = event.target
+    setCredentials((previousCredentials) => ({
+      ...previousCredentials,
+      [name]: value
+    }))
     setError('')
   }
 
@@ -330,7 +331,7 @@ const LoginPage = () => {
     setError('')
 
     try {
-      const { data, error: signInError } = await signIn(formData.email, formData.password)
+      const { data, error: signInError } = await signIn(credentials.email, credentials.password)
       
       if (signInError) {
         setError(signInError.message)
@@ -351,7 +352,7 @@ const LoginPage = () => {
     try {
       setLoading(true)
       const { error: oauthError } = await signInWithProvider(provider)
-      
+
       if (oauthError) {
         setError(oauthError.message)
       }
@@ -360,6 +361,11 @@ const LoginPage = () => {
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleDeveloperAccess = () => {
+    loginAsDev()
+    navigate('/')
   }
 
   const containerVariants = {
@@ -415,8 +421,8 @@ const LoginPage = () => {
                     type="email"
                     id="email"
                     name="email"
-                    value={formData.email}
-                    onChange={handleChange}
+                    value={credentials.email}
+                    onChange={syncCredentialsInput}
                     placeholder="votre@email.com"
                     required
                     autoComplete="email"
@@ -436,8 +442,8 @@ const LoginPage = () => {
                     type={showPassword ? 'text' : 'password'}
                     id="password"
                     name="password"
-                    value={formData.password}
-                    onChange={handleChange}
+                    value={credentials.password}
+                    onChange={syncCredentialsInput}
                     placeholder="••••••••"
                     required
                     autoComplete="current-password"
@@ -478,10 +484,7 @@ const LoginPage = () => {
 
             <DevButton 
                type="button" 
-               onClick={() => {
-                 loginAsDev();
-                 navigate('/');
-               }}
+               onClick={handleDeveloperAccess}
             >
               🔑 Accès Développeur (Local)
             </DevButton>
@@ -520,9 +523,4 @@ const LoginPage = () => {
   )
 }
 
-
-
-;
-
-
-export default LoginPage;
+export default LoginPage

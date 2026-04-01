@@ -8,7 +8,7 @@ import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 
 const BottomBar = styled.div`
   height: 80px;
-  background-color: rgba(12, 35, 64, 0.95);
+  background-color: ${THEME.panelBg}; backdrop-filter: blur(12px); border-top: 1px solid ${THEME.border};
   backdrop-filter: blur(12px);
   border-top: 1px solid ${THEME.border};
   display: flex;
@@ -28,7 +28,7 @@ const ControlButton = styled.button`
   height: 48px;
   border-radius: 12px;
   border: none;
-  background-color: ${props => props.$active ? props.$activeColor || THEME.accent : THEME.accentSoft};
+  background-color: ${props => props.$active ? props.$activeColor || THEME.accent : THEME.cardBg};
   color: ${props => props.$active ? '#fff' : THEME.text};
   display: flex;
   align-items: center;
@@ -39,7 +39,7 @@ const ControlButton = styled.button`
   border: 1px solid ${THEME.border};
 
   &:hover {
-    background-color: ${props => props.$active ? props.$activeColor : '#214875'};
+    background-color: ${props => props.$active ? props.$activeColor : THEME.border};
     transform: translateY(-2px);
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   }

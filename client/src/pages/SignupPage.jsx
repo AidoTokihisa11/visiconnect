@@ -338,18 +338,18 @@ const SignupPage = () => {
   const navigate = useNavigate()
   const { isLoggedIn, signUp, signInWithGoogle, signInWithGithub, verifyEmailCode } = useAuth()
 
-  const [formData, setFormData] = useState({ email: '', password: '' })
+  const [registrationForm, setRegistrationForm] = useState({ email: '', password: '' })
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [pendingVerification, setPendingVerification] = useState(false)
-  const [code, setCode] = useState("")
+  const [code, setCode] = useState('')
 
-  const criteria = {
-    length: formData.password.length >= 8,
-    uppercase: /[A-Z]/.test(formData.password),
-    number: /[0-9]/.test(formData.password),
-    special: /[^A-Za-z0-9]/.test(formData.password)
+  const passwordRules = {
+    length: registrationForm.password.length >= 8,
+    uppercase: /[A-Z]/.test(registrationForm.password),
+    number: /[0-9]/.test(registrationForm.password),
+    special: /[^A-Za-z0-9]/.test(registrationForm.password)
   }
 
   React.useEffect(() => {
@@ -358,19 +358,20 @@ const SignupPage = () => {
     }
   }, [isLoggedIn, pendingVerification, navigate])
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
+  const syncRegistrationInput = (event) => {
+    const { name, value } = event.target
+    setRegistrationForm((previousForm) => ({ ...previousForm, [name]: value }))
     if (error) setError('')
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!formData.email || !formData.password) {
+    if (!registrationForm.email || !registrationForm.password) {
       setError('Veuillez remplir tous les champs')
       return
     }
-    const allCriteriaMet = Object.values(criteria).every(Boolean)
-    if (!allCriteriaMet) {
+    const allPasswordRulesPassed = Object.values(passwordRules).every(Boolean)
+    if (!allPasswordRulesPassed) {
        setError('Le mot de passe ne respecte pas tous les critères de sécurité')
        return
     }
@@ -378,7 +379,7 @@ const SignupPage = () => {
     setLoading(true)
     setError('')
 
-    const result = await signUp(formData.email, formData.password)
+    const result = await signUp(registrationForm.email, registrationForm.password)
 
     if (result.error) {
       setError(result.error.message || 'Erreur lors de la création')
@@ -456,8 +457,8 @@ const SignupPage = () => {
                       type="email"
                       name="email"
                       placeholder="nom@entreprise.com"
-                      value={formData.email}
-                      onChange={handleChange}
+                      value={registrationForm.email}
+                      onChange={syncRegistrationInput}
                       required
                     />
                   </InputWrapper>
@@ -471,8 +472,8 @@ const SignupPage = () => {
                       type={showPassword ? "text" : "password"}
                       name="password"
                       placeholder="Créez un mot de passe fort"
-                      value={formData.password}
-                      onChange={handleChange}
+                      value={registrationForm.password}
+                      onChange={syncRegistrationInput}
                       required
                     />
                     <PasswordToggle type="button" onClick={() => setShowPassword(!showPassword)}>
@@ -480,19 +481,19 @@ const SignupPage = () => {
                     </PasswordToggle>
                   </InputWrapper>
 
-                  {formData.password.length > 0 && (
+                  {registrationForm.password.length > 0 && (
                     <PasswordCriteria>
-                      <Criterion $met={criteria.length}>
-                        {criteria.length ? <Check size={14}/> : <X size={14}/>} 8 caractères min
+                      <Criterion $met={passwordRules.length}>
+                        {passwordRules.length ? <Check size={14}/> : <X size={14}/>} 8 caractères min
                       </Criterion>
-                      <Criterion $met={criteria.uppercase}>
-                        {criteria.uppercase ? <Check size={14}/> : <X size={14}/>} 1 Majuscule
+                      <Criterion $met={passwordRules.uppercase}>
+                        {passwordRules.uppercase ? <Check size={14}/> : <X size={14}/>} 1 Majuscule
                       </Criterion>
-                      <Criterion $met={criteria.number}>
-                        {criteria.number ? <Check size={14}/> : <X size={14}/>} 1 Chiffre
+                      <Criterion $met={passwordRules.number}>
+                        {passwordRules.number ? <Check size={14}/> : <X size={14}/>} 1 Chiffre
                       </Criterion>
-                      <Criterion $met={criteria.special}>
-                        {criteria.special ? <Check size={14}/> : <X size={14}/>} 1 Caractère spécial
+                      <Criterion $met={passwordRules.special}>
+                        {passwordRules.special ? <Check size={14}/> : <X size={14}/>} 1 Caractère spécial
                       </Criterion>
                     </PasswordCriteria>
                   )}
@@ -500,7 +501,7 @@ const SignupPage = () => {
 
                 <SubmitButton
                   type="submit"
-                  disabled={loading || (formData.password.length > 0 && !Object.values(criteria).every(Boolean))}
+                  disabled={loading || (registrationForm.password.length > 0 && !Object.values(passwordRules).every(Boolean))}
                   whileTap={{ scale: 0.98 }}
                 >
                   {loading ? 'Création en cours...' : 'Créer mon compte'}
@@ -542,7 +543,7 @@ const SignupPage = () => {
                 <Title>Vérifiez votre email</Title>
                 <Subtitle style={{ marginBottom: '1.5rem', lineHeight: '1.5' }}>
                   Nous avons envoyé un code à 6 chiffres à<br/>
-                  <strong style={{ color: '#0f172a' }}>{formData.email}</strong>
+                  <strong style={{ color: '#0f172a' }}>{registrationForm.email}</strong>
                 </Subtitle>
 
                 <Form onSubmit={handleVerify}>

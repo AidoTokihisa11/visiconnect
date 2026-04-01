@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import translationService from '../i18n/translationService';
 
 const LanguageContext = createContext();
@@ -12,40 +12,36 @@ export const useLanguage = () => {
 };
 
 export const LanguageProvider = ({ children }) => {
-    // Current language state
     const [language, setLanguage] = useState(translationService.getCurrentLanguage());
 
     useEffect(() => {
-        // Subscribe to language changes
-        const handleLanguageChange = (event) => {
-            if (event.detail && event.detail.language) {
-                setLanguage(event.detail.language);
-            }
+        const onLanguageChanged = (event) => {
+            const nextLanguage = event?.detail?.language;
+            if (!nextLanguage) return;
+            setLanguage(nextLanguage);
         };
 
-        window.addEventListener('languageChanged', handleLanguageChange);
-        
-        // Initial load check
+        window.addEventListener('languageChanged', onLanguageChanged);
         translationService.loadTranslations();
 
         return () => {
-            window.removeEventListener('languageChanged', handleLanguageChange);
+            window.removeEventListener('languageChanged', onLanguageChanged);
         };
     }, []);
 
-    const value = {
+    const contextValue = useMemo(() => ({
         language,
-        currentLanguage: language, // Add for compatibility
-        changeLanguage: (lang) => translationService.setLanguage(lang),
-        t: (key, params) => translationService.t(key, params),
+        currentLanguage: language,
+        changeLanguage: (nextLanguage) => translationService.setLanguage(nextLanguage),
+        t: (translationKey, params) => translationService.t(translationKey, params),
         availableLanguages: translationService.getAvailableLanguages(),
         formatDate: (date, options) => translationService.formatDate(date, options),
         formatNumber: (number, options) => translationService.formatNumber(number, options),
-        formatCurrency: (amount, currency) => translationService.formatCurrency(amount, currency)
-    };
+        formatCurrency: (amount, currency) => translationService.formatCurrency(amount, currency),
+    }), [language]);
 
     return (
-        <LanguageContext.Provider value={value}>
+        <LanguageContext.Provider value={contextValue}>
             {children}
         </LanguageContext.Provider>
     );

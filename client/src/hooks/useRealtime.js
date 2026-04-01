@@ -2,14 +2,6 @@ import { useEffect, useState, useCallback, useRef } from 'react'
 import RealtimeService from '../services/RealtimeService'
 import { useAuth } from '../contexts/AuthContext'
 
-/**
- * useRealtime Hook
- * Hook personnalisé pour gérer les connexions Realtime Supabase dans les meetings
- * 
- * @param {string} meetingId - ID du meeting
- * @param {boolean} enabled - Activer/désactiver le realtime (default: true)
- * @returns {Object} État et méthodes pour la communication en temps réel
- */
 export const useRealtime = (meetingId, enabled = true) => {
   const { user, userProfile } = useAuth()
   const authUserId = userProfile?.id || user?.id
@@ -22,7 +14,6 @@ export const useRealtime = (meetingId, enabled = true) => {
   const [error, setError] = useState(null)
   const channelRef = useRef(null)
 
-  // Load initial messages
   const loadMessages = useCallback(async () => {
     if (!meetingId) return
 
@@ -35,7 +26,6 @@ export const useRealtime = (meetingId, enabled = true) => {
     }
   }, [meetingId])
 
-  // Subscribe to realtime updates
   useEffect(() => {
     if (!meetingId || !enabled || !authUserId) {
       setIsLoading(false)
@@ -46,61 +36,31 @@ export const useRealtime = (meetingId, enabled = true) => {
 
     const setupRealtime = async () => {
       try {
-        // Load initial messages
         await loadMessages()
 
-        // Subscribe to meeting channel
         const channel = RealtimeService.subscribeMeeting(
           meetingId,
           {
-            // Meeting updates
-            onMeetingUpdate: (payload) => {
-              if (!mounted) return
-              // Vous pouvez émettre un événement ou callback ici si nécessaire
-            },
-
-            // New messages
             onNewMessage: (message) => {
               if (!mounted) return
               setMessages((prev) => {
-                // Éviter les doublons
                 const exists = prev.some((m) => m.id === message.id)
                 if (exists) return prev
                 return [...prev, message]
               })
             },
 
-            // Presence sync (participants list)
             onPresenceSync: (state) => {
               if (!mounted) return
-              const users = Object.values(state).flat()
-              setParticipants(users)
+              setParticipants(Object.values(state).flat())
             },
 
-            // User joined
-            onUserJoin: ({ newPresences }) => {
-              if (!mounted) return
-            },
-
-            // User left
-            onUserLeave: ({ leftPresences }) => {
-              if (!mounted) return
-            },
-
-            // Custom broadcasts
-            onBroadcast: (payload) => {
-              if (!mounted) return
-              // Gérer les événements personnalisés ici
-            },
-
-            // Connection established
             onSubscribed: () => {
               if (!mounted) return
               setIsConnected(true)
               setIsLoading(false)
             },
 
-            // Connection error
             onError: (err) => {
               if (!mounted) return
               setError(err.message)
@@ -126,16 +86,12 @@ export const useRealtime = (meetingId, enabled = true) => {
 
     setupRealtime()
 
-    // Cleanup
     return () => {
       mounted = false
-      if (meetingId) {
-        RealtimeService.unsubscribeMeeting(meetingId)
-      }
+      RealtimeService.unsubscribeMeeting(meetingId)
     }
   }, [meetingId, enabled, authUserId, authUserName, authUserAvatar, loadMessages])
 
-  // Send message
   const sendMessage = useCallback(
     async (messageText, type = 'text') => {
       if (!authUserId || !meetingId || !messageText.trim()) {
@@ -159,7 +115,6 @@ export const useRealtime = (meetingId, enabled = true) => {
     [meetingId, authUserId]
   )
 
-  // Broadcast custom event
   const broadcast = useCallback(
     async (event, payload) => {
       if (!meetingId) return
@@ -174,7 +129,6 @@ export const useRealtime = (meetingId, enabled = true) => {
     [meetingId]
   )
 
-  // Update presence
   const updatePresence = useCallback(
     async (status) => {
       if (!meetingId) return
@@ -189,16 +143,12 @@ export const useRealtime = (meetingId, enabled = true) => {
     [meetingId]
   )
 
-  // Get current participants count
   const participantsCount = participants.length
-
-  // Get current user from participants
   const currentUser = participants.find(
-    (p) => p.user_id === userProfile?.id || p.user_id === user?.id
+    (participant) => participant.user_id === authUserId
   )
 
   return {
-    // État
     participants,
     participantsCount,
     messages,
@@ -206,25 +156,14 @@ export const useRealtime = (meetingId, enabled = true) => {
     isLoading,
     error,
     currentUser,
-
-    // Méthodes
     sendMessage,
     broadcast,
     updatePresence,
     loadMessages,
-
-    // Channel ref (pour usage avancé)
     channel: channelRef.current
   }
 }
 
-/**
- * usePresence Hook
- * Hook simplifié pour gérer uniquement la présence en ligne
- * 
- * @param {string} meetingId - ID du meeting
- * @returns {Object} État de présence
- */
 export const usePresence = (meetingId) => {
   const { user, userProfile } = useAuth()
   const authUserId = userProfile?.id || user?.id
@@ -271,13 +210,6 @@ export const usePresence = (meetingId) => {
   }
 }
 
-/**
- * useMessages Hook
- * Hook simplifié pour gérer uniquement les messages
- * 
- * @param {string} meetingId - ID du meeting
- * @returns {Object} Messages et méthode d'envoi
- */
 export const useMessages = (meetingId) => {
   const { userProfile } = useAuth()
   const userProfileId = userProfile?.id
@@ -291,14 +223,12 @@ export const useMessages = (meetingId) => {
 
     const setupMessages = async () => {
       try {
-        // Load initial messages
         const initialMessages = await RealtimeService.getMessages(meetingId)
         if (mounted) {
           setMessages(initialMessages)
           setIsLoading(false)
         }
 
-        // Subscribe to new messages
         RealtimeService.subscribeMeeting(meetingId, {
           onNewMessage: (message) => {
             if (!mounted) return

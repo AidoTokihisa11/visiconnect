@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAdmin } from '../../contexts/AdminContext';
 import styled from 'styled-components';
 import { Pencil } from 'lucide-react';
@@ -62,7 +62,6 @@ export const EditableText = ({
     ...props 
 }) => {
     const { isLiveEdit, contentMap, updateContent, updateTranslation, t } = useAdmin();
-    const [isEditing, setIsEditing] = useState(false);
     
     // Determine initial value logic
     const getInitialValue = () => {
@@ -76,7 +75,7 @@ export const EditableText = ({
 
     useEffect(() => {
         setValue(getInitialValue());
-    }, [contentMap, translationKey, t, id, defaultValue]);
+    }, [children, contentMap, translationKey, t, id, defaultValue]);
 
     if (!isLiveEdit) {
         return (
@@ -86,8 +85,8 @@ export const EditableText = ({
         );
     }
 
-    const handleChange = (e) => {
-        const newValue = e.target.value;
+    const handleValueChange = (event) => {
+        const newValue = event.target.value;
         setValue(newValue);
         if (translationKey) {
             updateTranslation(translationKey, newValue);
@@ -104,7 +103,7 @@ export const EditableText = ({
             {type === 'textarea' ? (
                 <TextArea 
                     value={value} 
-                    onChange={handleChange}
+                    onChange={handleValueChange}
                     className={className}
                     {...props}
                 />
@@ -112,7 +111,7 @@ export const EditableText = ({
                 <input
                     type="text"
                     value={value}
-                    onChange={handleChange}
+                    onChange={handleValueChange}
                     className={className}
                     style={{
                         width: '100%',

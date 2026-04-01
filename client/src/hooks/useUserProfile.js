@@ -2,16 +2,35 @@ import { useState, useEffect } from 'react';
 import UserAPIService from '../services/UserAPIService';
 import { useAuthUser } from './useAuthUser';
 
-// Hook pour gérer les données utilisateur complètes depuis la base de données
+const buildFallbackProfile = (authUser) => ({
+  ...authUser,
+  stats: {
+    totalMeetings: 0,
+    totalParticipants: 0,
+    totalMinutes: 0,
+    meetingsThisMonth: 0,
+  },
+});
+
 export const useUserProfile = () => {
   const { user: authUser, loading: authLoading } = useAuthUser();
+  const authEmail = authUser?.email;
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const mergeProfile = (nextValues) => {
+    setUserProfile((previousProfile) => ({
+      ...previousProfile,
+      ...nextValues,
+    }));
+  };
+
   useEffect(() => {
+    if (authLoading) return;
+
     const fetchUserProfile = async () => {
-      if (!authUser?.email) {
+      if (!authEmail) {
         setUserProfile(null);
         setLoading(false);
         return;
@@ -20,123 +39,82 @@ export const useUserProfile = () => {
       try {
         setLoading(true);
         setError(null);
-        
+
         const profile = await UserAPIService.getUserProfile();
         setUserProfile(profile);
-        
-      } catch (error) {
-        console.error('❌ Erreur chargement profil:', error);
-        setError(error.message);
-        
-        // En cas d'erreur, utiliser les données d'authentification de base
+      } catch (loadError) {
+        console.error('Erreur chargement profil:', loadError);
+        setError(loadError.message);
+
         if (authUser) {
-          setUserProfile({
-            ...authUser,
-            stats: {
-              totalMeetings: 0,
-              totalParticipants: 0,
-              totalMinutes: 0,
-              meetingsThisMonth: 0
-            }
-          });
+          setUserProfile(buildFallbackProfile(authUser));
         }
       } finally {
         setLoading(false);
       }
     };
 
-    if (!authLoading) {
-      fetchUserProfile();
-    }
-  }, [authUser, authLoading]);
+    fetchUserProfile();
+  }, [authEmail, authLoading, authUser]);
 
-  // Fonction pour mettre à jour le profil
   const updateProfile = async (updates) => {
     try {
       setError(null);
       const result = await UserAPIService.updateUserProfile(updates);
-      
-      // Mettre à jour l'état local
-      setUserProfile(prev => ({
-        ...prev,
-        ...result.user
-      }));
-      
+      mergeProfile(result.user);
       return result;
-    } catch (error) {
-      setError(error.message);
-      throw error;
+    } catch (updateError) {
+      setError(updateError.message);
+      throw updateError;
     }
   };
 
-  // Fonction pour mettre à jour les notifications
   const updateNotifications = async (settings) => {
     try {
       setError(null);
       const result = await UserAPIService.updateNotificationSettings(settings);
-      
-      // Mettre à jour l'état local
-      setUserProfile(prev => ({
-        ...prev,
-        ...result.settings
-      }));
-      
+      mergeProfile(result.settings);
       return result;
-    } catch (error) {
-      setError(error.message);
-      throw error;
+    } catch (updateError) {
+      setError(updateError.message);
+      throw updateError;
     }
   };
 
-  // Fonction pour mettre à jour la confidentialité
   const updatePrivacy = async (settings) => {
     try {
       setError(null);
       const result = await UserAPIService.updatePrivacySettings(settings);
-      
-      // Mettre à jour l'état local
-      setUserProfile(prev => ({
-        ...prev,
-        ...result.settings
-      }));
-      
+      mergeProfile(result.settings);
       return result;
-    } catch (error) {
-      setError(error.message);
-      throw error;
+    } catch (updateError) {
+      setError(updateError.message);
+      throw updateError;
     }
   };
 
-  // Fonction pour mettre à jour le 2FA
   const updateTwoFactor = async (enabled) => {
     try {
       setError(null);
       const result = await UserAPIService.updateTwoFactorAuth(enabled);
-      
-      // Mettre à jour l'état local
-      setUserProfile(prev => ({
-        ...prev,
-        twoFactorEnabled: result.twoFactorEnabled
-      }));
-      
+      mergeProfile({ twoFactorEnabled: result.twoFactorEnabled });
       return result;
-    } catch (error) {
-      setError(error.message);
-      throw error;
+    } catch (updateError) {
+      setError(updateError.message);
+      throw updateError;
     }
   };
 
-  // Fonction pour rafraîchir le profil
   const refreshProfile = async () => {
-    if (!authUser?.email) return;
-    
+    if (!authEmail) return;
+
     try {
       setLoading(true);
       setError(null);
       const profile = await UserAPIService.getUserProfile();
       setUserProfile(profile);
-    } catch (error) {
-      setError(error.message);
+    } catch (refreshError) {
+      setError(refreshError.message);
     } finally {
       setLoading(false);
     }

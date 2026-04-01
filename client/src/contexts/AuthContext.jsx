@@ -145,8 +145,10 @@ export const AuthProvider = ({ children }) => {
     loading: !(clerkLoaded && isAuthLoaded && !isConvexLoading),
     signIn: signInWithEmail,   
     signUp: signUpWithEmail,   
-    verifyEmailCode,
-    logout
+    verifyEmailCode,    signInWithProvider,
+    signInWithGoogle,
+    signInWithGithub,
+    signInWithDiscord,    logout
   };
 
   // On bloque seulement le chargement critique global pour éviter un rendu prématuré

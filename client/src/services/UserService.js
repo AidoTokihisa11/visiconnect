@@ -1,36 +1,29 @@
 const USER_STORAGE_KEY = 'visiconnect_user';
 
+const readUserFromStorage = () => {
+  const storedUser = localStorage.getItem(USER_STORAGE_KEY);
+  if (!storedUser) return null;
+
+  try {
+    return JSON.parse(storedUser);
+  } catch {
+    localStorage.removeItem(USER_STORAGE_KEY);
+    return null;
+  }
+};
+
 const UserService = {
-  getUser: () => {
-    try {
-      const storedUser = localStorage.getItem(USER_STORAGE_KEY);
-      return storedUser ? JSON.parse(storedUser) : null;
-    } catch (error) {
-      console.error('Error getting user from storage:', error);
-      return null;
-    }
-  },
+  getUser: readUserFromStorage,
 
   saveUser: (user) => {
-    try {
-      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
-    } catch (error) {
-      console.error('Error saving user to storage:', error);
-    }
+    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
   },
 
   clearUser: () => {
-    try {
-      localStorage.removeItem(USER_STORAGE_KEY);
-    } catch (error) {
-      console.error('Error clearing user from storage:', error);
-    }
+    localStorage.removeItem(USER_STORAGE_KEY);
   },
-  
-  isAuthenticated: () => {
-    const user = UserService.getUser();
-    return !!user;
-  }
+
+  isAuthenticated: () => Boolean(readUserFromStorage()),
 };
 
 export default UserService;

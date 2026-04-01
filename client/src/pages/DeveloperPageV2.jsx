@@ -1,781 +1,1225 @@
-import React, { useState, useEffect, useRef } from 'react';
-import styled, { createGlobalStyle } from 'styled-components';
-import { motion, useScroll, useSpring } from 'framer-motion';
+import React from 'react';
+import styled, { keyframes } from 'styled-components';
 import { 
-  Github, Mail, Code2, Database, Layout, 
-  Terminal, Server, Globe, Brain, Zap, 
-  ArrowRight, Video, User, CheckCircle,
-  Briefcase, GraduationCap, MapPin, Linkedin,
-  Download, ExternalLink, Star
+  Code2, Layout, Server, Zap, Shield, Heart, 
+  Terminal, ArrowRight, CheckCircle2, Compass, Layers,
+  Database, Wrench, MonitorSmartphone, Github, ExternalLink,
+  Briefcase, GraduationCap, Coffee, Rocket, Star, Code, Play
 } from 'lucide-react';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 
-// --- Global Styles & Theme (Light Mode) ---
-const GlobalStyle = createGlobalStyle`
-  body {
-    background-color: #ffffff;
-    color: #0f172a;
-    overflow-x: hidden;
-    cursor: default;
-  }
+const fadeUp = keyframes`
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
 `;
 
-const THEME = {
-  primary: '#2563eb', // Blue 600
-  primaryDark: '#1e40af', // Blue 800
-  secondary: '#475569', // Slate 600
-  accent: '#10b981', // Emerald 500
-  purple: '#7c3aed', // Violet 600
-  text: '#0f172a', // Slate 900
-  textMuted: '#64748b', // Slate 500
-  border: '#e2e8f0', // Slate 200
-  bg: '#ffffff',
-  bgAlt: '#f8fafc', // Slate 50
-  cardBg: 'rgba(255, 255, 255, 0.8)',
-  glass: 'rgba(255, 255, 255, 0.7)',
-  shadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-  shadowLg: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
-};
+const float = keyframes`
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+`;
+
+const pulseGlow = keyframes`
+  0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); }
+  70% { box-shadow: 0 0 0 20px rgba(37, 99, 235, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+`;
 
 const PageWrapper = styled.div`
   min-height: 100vh;
-  background-color: ${THEME.bg};
-  color: ${THEME.text};
-  font-family: 'Inter', sans-serif;
+  background-color: #ffffff;
+  color: #0f172a;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+`;
+
+/* --- HERO SECTION --- */
+const HeroSection = styled.section`
+  padding: 10rem 2rem 8rem;
+  background: radial-gradient(120% 100% at 50% 0%, #eff6ff 0%, #ffffff 100%);
+  position: relative;
   overflow: hidden;
 `;
 
-const Container = styled.div`
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 2rem;
-  position: relative;
-  z-index: 2;
-`;
-
-const Section = styled.section`
-  padding: 8rem 0;
-  position: relative;
-  background: ${props => props.$alt ? THEME.bgAlt : 'transparent'};
-  
-  @media (max-width: 768px) {
-    padding: 4rem 0;
-  }
-`;
-
-// --- Background Grid ---
-const GridBackground = styled.div`
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  z-index: 0;
+const AnimatedBackgroundGrid = styled.div`
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: linear-gradient(rgba(37, 99, 235, 0.03) 1px, transparent 1px),
+  linear-gradient(90deg, rgba(37, 99, 235, 0.03) 1px, transparent 1px);
   background-size: 40px 40px;
-  background-image: 
-    linear-gradient(to right, #f1f5f9 1px, transparent 1px),
-    linear-gradient(to bottom, #f1f5f9 1px, transparent 1px);
-  mask-image: radial-gradient(circle at center, black 60%, transparent 100%);
-  opacity: 0.6;
-  pointer-events: none;
-`;
-
-// --- Typography & Components ---
-const SectionTitle = styled(motion.h2)`
-  font-size: 3.5rem;
-  font-weight: 800;
-  margin-bottom: 1.5rem;
-  color: ${THEME.text};
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-  span { color: ${THEME.primary}; }
-  @media (max-width: 768px) { 
-    font-size: 2.25rem; 
-    text-align: center; /* Center titles on mobile */
-  }
-`;
-
-const SectionSubtitle = styled.p`
-  font-size: 1.25rem;
-  color: ${THEME.textMuted};
-  max-width: 600px;
-  line-height: 1.6;
-  margin-bottom: 4rem;
-  @media (max-width: 768px) { 
-    font-size: 1rem; 
-    margin-bottom: 3rem; 
-    text-align: center; 
-    margin-left: auto;
-    margin-right: auto;
-  }
-`;
-
-const Badge = styled(motion.span)`
-  display: inline-flex;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  border-radius: 9999px;
-  background: #eff6ff;
-  color: ${THEME.primary};
-  border: 1px solid #dbeafe;
-  font-size: 0.875rem;
-  font-weight: 600;
-  margin-bottom: 2rem;
-`;
-
-const ButtonGroup = styled(motion.div)`
-  display: flex;
-  gap: 1rem;
-  margin-top: 2rem;
-  @media (max-width: 768px) { flex-direction: column; width: 100%; }
-`;
-
-const PrimaryButton = styled(motion.a)`
-  padding: 1rem 2.5rem;
-  border-radius: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  text-decoration: none;
-  font-size: 1rem;
-  transition: all 0.2s;
-  background-color: ${THEME.primary};
-  color: white;
-  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
-  &:hover { 
-    background-color: ${THEME.primaryDark};
-    transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4);
-  }
-`;
-
-const SecondaryButton = styled(motion.a)`
-  padding: 1rem 2.5rem;
-  border-radius: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  text-decoration: none;
-  font-size: 1rem;
-  transition: all 0.2s;
-  background-color: white;
-  color: ${THEME.text};
-  border: 1px solid ${THEME.border};
-  &:hover {
-    border-color: ${THEME.textMuted};
-    background-color: #f8fafc;
-    transform: translateY(-2px);
-  }
-`;
-
-// --- Hero Section ---
-const HeroWrapper = styled.section`
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  position: relative;
-  padding-top: 60px;
-  
-  @media (max-width: 768px) {
-    min-height: auto;
-    padding: 6rem 0 4rem;
-  }
+  z-index: 0;
 `;
 
 const HeroGrid = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
   gap: 4rem;
   align-items: center;
-  
-  @media (max-width: 1024px) {
+  position: relative;
+  z-index: 1;
+
+  @media (max-width: 992px) {
     grid-template-columns: 1fr;
     text-align: center;
-    gap: 3rem;
-  }
-  
-  @media (max-width: 640px) {
-    gap: 2rem;
   }
 `;
 
 const HeroContent = styled.div`
-  max-width: 700px;
-  @media (max-width: 1024px) { 
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center; 
-  }
+  animation: ${fadeUp} 0.8s ease-out;
 `;
 
-const Name = styled(motion.h1)`
-  font-size: clamp(2.5rem, 6vw, 6rem);
-  font-weight: 800;
-  line-height: 1.1;
-  margin-bottom: 1.5rem;
-  letter-spacing: -0.03em;
-  color: ${THEME.text};
-  word-wrap: break-word; /* Ensure clear wrapping */
-  
-  .highlight {
-    color: ${THEME.primary};
-    position: relative;
-    white-space: normal; /* Allow wrapping if needed */
-    display: inline-block; /* Helps with background skew */
-    
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: 8px;
-      left: 0;
-      width: 100%;
-      height: 12px;
-      background-color: rgba(37, 99, 235, 0.1);
-      z-index: -1;
-      transform: skewX(-10deg);
-    }
-  }
-
-  /* Specific mobile adjustments */
-  @media (max-width: 640px) {
-    font-size: 2.5rem; /* Set a specific size for mobile */
-    word-break: break-word; /* Prepare for very long words if any */
-    
-    .highlight {
-      white-space: normal;
-    }
-  }
-`;
-
-const HeroCard = styled(motion.div)`
-  background: white;
-  border: 1px solid ${THEME.border};
-  border-radius: 24px;
-  padding: 2.5rem;
-  box-shadow: ${THEME.shadowLg};
-  position: relative;
-  overflow: hidden;
-  
-  @media (max-width: 1024px) {
-    max-width: 600px;
-    margin: 0 auto;
-  }
-`;
-
-// --- Terminal Component ---
-const TerminalWrapper = styled(motion.div)`
-  width: 100%;
-  background: #1e293b; 
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: ${THEME.shadowLg};
-  font-family: 'Fira Code', 'Consolas', monospace;
-  color: #f8fafc;
-  font-size: 0.9rem;
-`;
-
-const TerminalHeader = styled.div`
-  background: #0f172a;
-  padding: 0.75rem 1rem;
-  display: flex;
+const Badge = styled.div`
+  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  
-  .dot { width: 12px; height: 12px; border-radius: 50%; }
-  .red { background: #ef4444; }
-  .yellow { background: #f59e0b; }
-  .green { background: #10b981; }
-  .title { margin-left: auto; color: #64748b; font-size: 0.75rem; }
+  padding: 0.5rem 1rem;
+  background: white;
+  border: 1px solid #bfdbfe;
+  color: #1e40af;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.1);
 `;
 
-const TerminalBody = styled.div`
-  padding: 1.5rem;
-  min-height: 250px;
-  
-  @media (max-width: 640px) {
-    padding: 1rem;
-    min-height: 200px;
+const Title = styled.h1`
+  font-size: clamp(3rem, 5vw, 5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  color: #0f172a;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+
+  span {
+    background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: block;
   }
 `;
 
-// --- Experience Timeline ---
-const TimelineSection = styled.div`
-  max-width: 800px;
-  margin: 0 auto;
+const Subtitle = styled.p`
+  font-size: 1.25rem;
+  color: #475569;
+  line-height: 1.7;
+  margin-bottom: 2.5rem;
+  max-width: 600px;
+
+  @media (max-width: 992px) {
+    margin: 0 auto 2.5rem;
+  }
 `;
 
-const TimelineItem = styled(motion.div)`
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 1rem;
+  
+  @media (max-width: 992px) {
+    justify-content: center;
+  }
+  @media (max-width: 640px) {
+    flex-direction: column;
+  }
+`;
+
+const PrimaryButton = styled.button`
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+  box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.3);
+
+  &:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 15px 35px -5px rgba(37, 99, 235, 0.4);
+  }
+`;
+
+const SecondaryButton = styled.button`
+  background: white;
+  color: #0f172a;
+  border: 1px solid #cbd5e1;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #f8fafc;
+    border-color: #94a3b8;
+  }
+`;
+
+const HeroVisual = styled.div`
   position: relative;
-  padding-left: 3rem;
-  padding-bottom: 3rem;
-  border-left: 2px solid ${THEME.border};
-  
-  &:last-child {
-    border-left: 2px solid transparent;
+  height: 450px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: ${float} 6s ease-in-out infinite;
+
+  @media (max-width: 992px) {
+    display: none;
   }
-  
-  @media (max-width: 640px) {
-    padding-left: 1.5rem;
-    padding-bottom: 2.5rem;
-  }
-  
+`;
+
+const CircleGraphic = styled.div`
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, #eff6ff, #93c5fd, #2563eb, #eff6ff);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 20px 40px rgba(37, 99, 235, 0.15);
+
   &::before {
     content: '';
     position: absolute;
-    left: -6px;
-    top: 0;
-    width: 10px;
-    height: 10px;
-    background: ${THEME.primary};
+    width: 350px;
+    height: 350px;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
     border-radius: 50%;
-    box-shadow: 0 0 0 4px white;
   }
 `;
 
-const JobYear = styled.span`
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: ${THEME.accent};
-  background: #ecfdf5;
-  padding: 0.25rem 0.75rem;
-  border-radius: 99px;
-  margin-bottom: 0.5rem;
-  display: inline-block;
+const CenterIcon = styled.div`
+  position: relative;
+  z-index: 2;
+  color: white;
+  background: #2563eb;
+  padding: 2rem;
+  border-radius: 50%;
+  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.4);
+  animation: ${pulseGlow} 2s infinite;
 `;
 
-const JobTitle = styled.h3`
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: ${THEME.text};
-  margin-bottom: 0.25rem;
+/* --- GLOBAL SECTIONS --- */
+const Section = styled.section`
+  padding: 8rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
 `;
 
-const JobCompany = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-weight: 500;
-  color: ${THEME.textMuted};
-  margin-bottom: 1rem;
+const SectionAlt = styled.section`
+  padding: 8rem 2rem;
+  background-color: #f8fafc;
+  border-top: 1px solid #f1f5f9;
+  border-bottom: 1px solid #f1f5f9;
 `;
 
-// --- Bento Grid ---
-const BentoGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: minmax(180px, auto);
-  gap: 1.5rem;
+const SectionHeader = styled.div`
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 5rem;
+
+  h2 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    color: #475569;
+    font-size: 1.15rem;
+    line-height: 1.7;
+  }
+`;
+
+/* --- ABOUT ME TIMELINE --- */
+const TimelineWrapper = styled.div`
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: calc(50% - 1px);
+    height: 100%;
+    width: 2px;
+    background: #e2e8f0;
+
+    @media (max-width: 768px) {
+      left: 28px;
+    }
+  }
+`;
+
+const TimelineItem = styled.div`
+  position: relative;
+  width: 50%;
+  padding-right: 3rem;
+  margin-bottom: 4rem;
   
-  @media (max-width: 1024px) { grid-template-columns: repeat(2, 1fr); }
-  @media (max-width: 640px) { 
-    grid-template-columns: 1fr;
-    gap: 1rem; 
+  &:nth-child(even) {
+    margin-left: auto;
+    padding-right: 0;
+    padding-left: 3rem;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    padding-left: 5rem !important;
+    padding-right: 0 !important;
+    margin-left: 0 !important;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  .dot {
+    position: absolute;
+    right: -14px;
+    top: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #2563eb;
+    border: 4px solid #eff6ff;
+    box-shadow: 0 0 0 4px white;
+    z-index: 2;
+
+    @media (max-width: 768px) {
+      left: 14px;
+      right: auto;
+    }
+  }
+
+  &:nth-child(even) .dot {
+    left: -14px;
+    right: auto;
+
+    @media (max-width: 768px) {
+      left: 14px;
+    }
+  }
+
+  .content-box {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 24px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+    transition: transform 0.3s;
+
+    &:hover {
+      transform: translateY(-5px);
+      border-color: #bfdbfe;
+      box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.1);
+    }
+  }
+
+  .year {
+    display: inline-block;
+    background: #eff6ff;
+    color: #2563eb;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    border: 1px solid #bfdbfe;
+  }
+
+  h4 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    color: #475569;
+    line-height: 1.7;
+    margin: 0;
+    font-size: 1.05rem;
   }
 `;
 
-const BentoCard = styled(motion.div)`
+/* --- SKILLS GRID --- */
+const SkillsContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const SkillCategory = styled.div`
   background: white;
-  border: 1px solid ${THEME.border};
-  border-radius: 20px;
-  padding: 1.5rem;
+  padding: 2.5rem;
+  border-radius: 24px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.1);
+    border-color: #bfdbfe;
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #f1f5f9;
+
+    .icon-box {
+      width: 50px;
+      height: 50px;
+      background: #eff6ff;
+      color: #2563eb;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    h3 {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0;
+    }
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+
+    li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #475569;
+      font-weight: 500;
+
+      .bar-bg {
+        width: 120px;
+        height: 6px;
+        background: #f1f5f9;
+        border-radius: 999px;
+        overflow: hidden;
+
+        .bar-fill {
+          height: 100%;
+          background: #2563eb;
+          border-radius: 999px;
+        }
+      }
+    }
+  }
+`;
+
+/* --- PREMIUM PROJECTS SHOWCASE (ALTERNATING LAYOUT) --- */
+const ProjectsList = styled.div`
   display: flex;
   flex-direction: column;
-  transition: all 0.3s ease;
-  overflow: hidden;
-  position: relative;
-  
-  &:hover {
-    border-color: ${THEME.primary};
-    transform: translateY(-4px);
-    box-shadow: ${THEME.shadowLg};
-  }
-  
-  &.col-span-2 { grid-column: span 2; }
-  &.row-span-2 { grid-row: span 2; }
-  
-  @media (max-width: 640px) {
-    padding: 1.25rem;
-    &.col-span-2 { grid-column: span 1; }
-    &.row-span-2 { grid-row: span 1; min-height: auto; }
-  }
+  gap: 8rem;
+  margin-top: 3rem;
 `;
 
-const TechList = styled.div`
+const FeatureProject = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: auto;
-  padding-top: 1rem;
-`;
+  align-items: center;
+  gap: 5rem;
+  flex-direction: ${props => props.reverse ? 'row-reverse' : 'row'};
 
-const TechTag = styled.span`
-  background: ${THEME.bgAlt};
-  color: ${THEME.textMuted};
-  padding: 0.25rem 0.75rem;
-  border-radius: 6px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  border: 1px solid ${THEME.border};
-`;
-
-const BlinkCursor = styled.span`
-  display: inline-block;
-  width: 2px;
-  height: 1.2em;
-  background-color: ${THEME.primary};
-  margin-left: 2px;
-  vertical-align: middle;
-  animation: blink 1s infinite;
-  
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    gap: 3rem;
   }
 `;
 
-// --- Interactive Terminal ---
-const InteractiveTerminal = () => {
-    const [history, setHistory] = useState([
-        { type: 'output', content: 'VisioConnect System v2.4.0' },
-        { type: 'output', content: 'Copyright (c) 2025 Theo Garces' },
-        { type: 'output', content: 'Type "help" to see available commands.' }
-    ]);
-    const [input, setInput] = useState('');
-    const bottomRef = useRef(null);
+const ProjectVisual = styled.div`
+  flex: 1.2;
+  position: relative;
+  width: 100%;
 
-    const handleCommand = (e) => {
-        if (e.key === 'Enter') {
-            const cmd = input.trim().toLowerCase();
-            const newHistory = [...history, { type: 'input', content: input }];
-            
-            let response = '';
-            switch(cmd) {
-                case 'help':
-                    response = 'Available commands: about, skills, contact, clear';
-                    break;
-                case 'about':
-                    response = 'Full Stack Developer based in France via Coda School. Passionate about performant UIs and real-time systems.';
-                    break;
-                case 'skills':
-                    response = 'Frontend: React, Tailwind, Framer Motion\nBackend: Node.js, Python, Supabase\nDevOps: Docker, Vercel, AWS';
-                    break;
-                case 'contact':
-                    response = 'Email: theo.garces@coda-student.school\nGitHub: github.com/theogarces';
-                    break;
-                case 'clear':
-                    setHistory([]);
-                    setInput('');
-                    return;
-                default:
-                    response = `command not found: ${cmd}`;
-            }
-            newHistory.push({ type: 'output', content: response });
-            setHistory(newHistory);
-            setInput('');
+  &::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 20px;
+    ${props => props.reverse ? 'left: -20px;' : 'right: -20px;'}
+    background: ${props => props.glowColor || '#eff6ff'};
+    border-radius: 24px;
+    z-index: -1;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  &:hover::after {
+    transform: translate(${props => props.reverse ? '10px, -10px' : '-10px, -10px'});
+  }
+
+  @media (max-width: 1024px) {
+    &::after {
+      top: 15px;
+      left: 15px;
+      right: auto;
+    }
+    &:hover::after {
+      transform: translate(-5px, -5px);
+    }
+  }
+`;
+
+const BrowserFrame = styled.div`
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);
+
+  .header {
+    height: 48px;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    padding: 0 1.2rem;
+    gap: 0.5rem;
+
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .red { background: #ef4444; border: 1px solid #d83c31; }
+    .yellow { background: #f59e0b; border: 1px solid #dda021; }
+    .green { background: #10b981; border: 1px solid #23a076; }
+    
+    .url-bar {
+      margin-left: 1rem;
+      background: white;
+      height: 28px;
+      flex: 1;
+      max-width: 300px;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      padding: 0 1rem;
+      font-size: 0.75rem;
+      color: #94a3b8;
+      font-family: monospace;
+    }
+  }
+
+  .img-wrapper {
+    position: relative;
+    overflow: hidden;
+    background: #f1f5f9;
+
+    img {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      object-position: top;
+      display: block;
+      transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(15,23,42,0.6);
+      backdrop-filter: blur(2px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: all 0.4s ease;
+
+      span {
+        background: white;
+        color: #0f172a;
+        padding: 1rem 2rem;
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        transform: translateY(20px);
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      }
+    }
+  }
+
+  &:hover {
+    .img-wrapper img { transform: scale(1.05); }
+    .img-wrapper .overlay { opacity: 1; }
+    .img-wrapper .overlay span { transform: translateY(0); }
+  }
+`;
+
+const ProjectInfo = styled.div`
+  flex: 1;
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: #eff6ff;
+    color: #2563eb;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    border: 1px solid #bfdbfe;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  h3 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    color: #475569;
+    font-size: 1.15rem;
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+  }
+
+  .stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 3rem;
+
+    span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.2rem;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #334155;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      transition: all 0.2s;
+
+      &:hover {
+        border-color: #cbd5e1;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      }
+
+      svg { color: #64748b; }
+    }
+  }
+
+  .actions {
+    display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+
+    a {
+      padding: 1rem 2rem;
+      border-radius: 14px;
+      font-weight: 600;
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+
+      &.btn-primary {
+        background: #0f172a;
+        color: white;
+        box-shadow: 0 10px 25px -5px rgba(15,23,42,0.3);
+
+        &:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 15px 30px -5px rgba(15,23,42,0.4);
+          background: #1e293b;
         }
-    };
+      }
 
-    useEffect(() => {
-        bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [history]);
+      &.btn-secondary {
+        background: white;
+        color: #0f172a;
+        border: 2px solid #e2e8f0;
 
-    return (
-        <TerminalWrapper>
-            <TerminalHeader>
-                <div className="dot red" />
-                <div className="dot yellow" />
-                <div className="dot green" />
-                <div className="title">bash — visitor@visiconnect</div>
-            </TerminalHeader>
-            <TerminalBody onClick={() => document.getElementById('term-input').focus()}>
-                {history.map((line, i) => (
-                    <div key={i} style={{ marginBottom: '0.5rem', lineHeight: 1.5, color: line.type === 'input' ? '#f8fafc' : '#94a3b8' }}>
-                        {line.type === 'input' && <span style={{color: '#10b981', marginRight: '0.5rem'}}>$</span>}
-                        <span style={{ whiteSpace: 'pre-wrap' }}>{line.content}</span>
-                    </div>
-                ))}
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <span style={{color: '#10b981', marginRight: '0.5rem'}}>$</span>
-                    <input 
-                        id="term-input"
-                        autoFocus
-                        style={{ 
-                            background: 'transparent', border: 'none', color: 'white', 
-                            fontFamily: 'inherit', outline: 'none', width: '100%' 
-                        }}
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        onKeyDown={handleCommand}
-                    />
-                </div>
-                <div ref={bottomRef} />
-            </TerminalBody>
-        </TerminalWrapper>
-    );
-};
+        &:hover {
+          background: #f8fafc;
+          border-color: #cbd5e1;
+          transform: translateY(-3px);
+        }
+      }
+    }
+  }
+`;
+
+/* --- STATS SECTION --- */
+const StatsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  background: linear-gradient(135deg, #1e40af, #2563eb);
+  border-radius: 32px;
+  padding: 5rem 2rem;
+  color: white;
+  text-align: center;
+  box-shadow: 0 25px 50px -12px rgba(37, 99, 235, 0.4);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%; right: -50%; bottom: -50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  @media (max-width: 992px) {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 4rem 2rem;
+  }
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-item {
+    position: relative;
+    z-index: 1;
+
+    .icon-wrapper {
+      width: 64px;
+      height: 64px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      backdrop-filter: blur(10px);
+    }
+
+    h5 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.05em;
+    }
+    span {
+      color: #bfdbfe;
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+  }
+`;
+
+/* --- PHILOSOPHY --- */
+const PhilosophyCard = styled.div`
+  display: flex;
+  gap: 4rem;
+  align-items: center;
+  background: white;
+  padding: 4rem;
+  border-radius: 32px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 20px 40px -15px rgba(0,0,0,0.05);
+
+  @media (max-width: 992px) {
+    flex-direction: column;
+    padding: 3rem 2rem;
+  }
+
+  .content {
+    flex: 1;
+    
+    h3 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 1.5rem;
+    }
+
+    p {
+      color: #475569;
+      font-size: 1.15rem;
+      line-height: 1.8;
+      margin-bottom: 2rem;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+
+      li {
+        display: flex;
+        gap: 1.25rem;
+        align-items: flex-start;
+
+        .check-box {
+          background: #eff6ff;
+          color: #2563eb;
+          padding: 0.75rem;
+          border-radius: 12px;
+          display: flex;
+        }
+
+        .text {
+          strong {
+            display: block;
+            color: #0f172a;
+            font-size: 1.15rem;
+            margin-bottom: 0.25rem;
+          }
+          span {
+            color: #64748b;
+            font-size: 1rem;
+            line-height: 1.6;
+            display: block;
+          }
+        }
+      }
+    }
+  }
+
+  .visual {
+    flex: 1;
+    position: relative;
+    img {
+      width: 100%;
+      border-radius: 20px;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);
+    }
+    
+    .floating-badge {
+      position: absolute;
+      bottom: -20px;
+      right: -20px;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 16px;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      
+      strong {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #0f172a;
+      }
+      span {
+        color: #64748b;
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+    }
+  }
+`;
 
 export default function DeveloperPageV2() {
-    const { scrollYProgress } = useScroll();
-    const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
-    const [greeting, setGreeting] = useState('');
-    const fullGreeting = "Full Stack Developer.";
+  return (
+    <PageWrapper>
+      <HeaderClean />
+      
+      {/* 1. HERO SECTION */}
+      <HeroSection>
+        <AnimatedBackgroundGrid />
+        <HeroGrid>
+          <HeroContent>
+            <Badge>
+              <Rocket size={18} />
+              Développeur Full-Stack & UI/UX Autodidacte
+            </Badge>
+            <Title>
+              Bâtir des interfaces 
+              <span>qui ont du sens.</span>
+            </Title>
+            <Subtitle>
+              Passionné, acharné et 100% autodidacte. Je transforme des idées complexes en applications web fluides, performantes et centrées sur l'utilisateur. Du design Figma jusqu'au déploiement en production.
+            </Subtitle>
+            <ButtonGroup>
+              <PrimaryButton>
+                Voir mes projets
+                <ArrowRight size={18} />
+              </PrimaryButton>
+              <SecondaryButton>
+                Me contacter
+              </SecondaryButton>
+            </ButtonGroup>
+          </HeroContent>
 
-    useEffect(() => {
-        let i = 0;
-        const interval = setInterval(() => {
-            setGreeting(fullGreeting.slice(0, i));
-            i++; 
-            if (i > fullGreeting.length) clearInterval(interval);
-        }, 100);
-        return () => clearInterval(interval);
-    }, []);
+          <HeroVisual>
+            <CircleGraphic>
+              <CenterIcon>
+                <Code size={56} strokeWidth={2} />
+              </CenterIcon>
+            </CircleGraphic>
+          </HeroVisual>
+        </HeroGrid>
+      </HeroSection>
 
-    return (
-        <PageWrapper>
-            <GlobalStyle />
-            <motion.div style={{ scaleX, position: 'fixed', top: 0, left: 0, right: 0, height: 4, background: THEME.primary, transformOrigin: '0%', zIndex: 9999 }} />
-            <HeaderClean />
-            <GridBackground />
+      {/* 2. HISTOIRE & TIMELINE */}
+      <SectionAlt>
+        <SectionHeader>
+          <h2>Comment Tout a Commencé</h2>
+          <p>Je n'ai pas suivi la voie traditionnelle. Mon parcours est fait de passion pure, de longues nuits d'apprentissage et d'une détermination sans faille. Voici mon évolution.</p>
+        </SectionHeader>
 
-            {/* --- HERO SECTION --- */}
-            <HeroWrapper>
-                <Container>
-                    <HeroGrid>
-                        <HeroContent>
-                            <Badge initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-                                <span style={{width: 8, height: 8, background: '#10b981', borderRadius: '50%', marginRight: 8, display: 'inline-block'}} />
-                                Available for September 2025
-                            </Badge>
-                            
-                            <Name initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-                                Théo Garcès
-                                <br />
-                                <span className="highlight">{greeting}</span><BlinkCursor />
-                            </Name>
-                            
-                            <motion.p 
-                                initial={{ opacity: 0 }} 
-                                animate={{ opacity: 1 }} 
-                                transition={{ delay: 0.3 }}
-                                style={{ fontSize: '1.25rem', color: THEME.textMuted, lineHeight: 1.6, marginBottom: '2.5rem' }}
-                            >
-                                Crafting resilient digital experiences. Specialized in <strong>React Ecosystems</strong> and <strong>Scalable Node.js Backend</strong> architectures.
-                            </motion.p>
+        <TimelineWrapper>
+          <TimelineItem>
+            <div className="dot" />
+            <div className="content-box">
+              <span className="year">L'Étincelle</span>
+              <h4>La découverte du Web</h4>
+              <p>Au commencement, c'était le besoin de comprendre. Je voulais savoir ce qu'il se passait derrière les sites que je visitais tous les jours. J'ai écrit ma première balise HTML, puis mon premier fichier CSS. L'écran de mon navigateur a changé de couleur, et cette magie immédiate m'a rendu accro.</p>
+            </div>
+          </TimelineItem>
 
-                            <ButtonGroup initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-                                <PrimaryButton href="#contact">
-                                    Start a Project <ArrowRight size={20} />
-                                </PrimaryButton>
-                                <SecondaryButton href="/cv-theo-garces.pdf" download>
-                                    <Download size={20} /> Resume
-                                </SecondaryButton>
-                            </ButtonGroup>
-                        </HeroContent>
+          <TimelineItem>
+            <div className="dot" />
+            <div className="content-box">
+              <span className="year">L'Immersion</span>
+              <h4>Maîtrise du JavaScript & de l'UI</h4>
+              <p>Le statique c'est bien, le dynamique c'est mieux. J'ai plongé tête la première dans le JavaScript. Au lieu de survoler la théorie, j'ai cloné des dizaines d'interfaces complexes. J'ai passé des heures à peaufiner des animations et ajuster le pixel-perfect.</p>
+            </div>
+          </TimelineItem>
 
-                        <HeroCard initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }}>
-                           <InteractiveTerminal />
-                        </HeroCard>
-                    </HeroGrid>
-                </Container>
-            </HeroWrapper>
+          <TimelineItem>
+            <div className="dot" />
+            <div className="content-box">
+              <span className="year">La Révolution</span>
+              <h4>L'écosystème React & Modern web</h4>
+              <p>Découverte de l'écosystème React et changement complet de paradigme. J'ai appris à penser en "composants". J'ai absorbé les concepts de Hooks, les state managers et la création de vastes Single Page Applications.</p>
+            </div>
+          </TimelineItem>
 
-            {/* --- SKILLS BENTO GRID --- */}
-            <Section $alt id="skills">
-                <Container>
-                    <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-                        <SectionTitle>Technical <span>Arsenal</span></SectionTitle>
-                        <SectionSubtitle style={{ margin: '0 auto' }}>
-                           My toolset is constantly evolving. Here is what I currently use to bring ideas to life.
-                        </SectionSubtitle>
-                    </div>
+          <TimelineItem>
+            <div className="dot" />
+            <div className="content-box">
+              <span className="year">L'Architecture</span>
+              <h4>Le Back-End & Les Données</h4>
+              <p>Pour construire de vrais produits, je devais maîtriser la mécanique sous le capot. J'ai alors attaqué Node.js, Express, les schémas de BDD complexes, PostgreSQL et le temps réel. Sécuriser les API est devenu passionnant.</p>
+            </div>
+          </TimelineItem>
 
-                    <BentoGrid>
-                        <BentoCard className="col-span-2 row-span-2">
-                             <div style={{ background: '#eff6ff', width: 50, height: 50, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', color: THEME.primary }}>
-                                 <Layout size={28} />
-                             </div>
-                             <h3 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '1rem' }}>Frontend Mastery</h3>
-                             <p style={{ color: THEME.textMuted, lineHeight: 1.6, flex: 1 }}>
-                                Building pixel-perfect, accessible, and responsive interfaces. I focus on component reusability and modern state management patterns.
-                             </p>
-                             <TechList>
-                                 {['React 18', 'TypeScript', 'Tailwind CSS', 'Framer Motion', 'Zustand', 'Next.js'].map(t => (
-                                     <TechTag key={t}>{t}</TechTag>
-                                 ))}
-                             </TechList>
-                        </BentoCard>
+          <TimelineItem>
+            <div className="dot" />
+            <div className="content-box">
+              <span className="year">Aujourd'hui</span>
+              <h4>Full-Stack & Ingénierie</h4>
+              <p>Aujourd'hui, je crée des plateformes entières et exigeantes. Je suis capable de concevoir, développer, et déployer des architectures complètes en m'assurant que le code final est performant, sécurisé, et testé.</p>
+            </div>
+          </TimelineItem>
+        </TimelineWrapper>
+      </SectionAlt>
 
-                        <BentoCard>
-                             <Database size={28} color={THEME.accent} style={{ marginBottom: '1rem' }} />
-                             <h3 style={{ fontSize: '1.25rem', fontWeight: 700 }}>Backend</h3>
-                             <p style={{ color: THEME.textMuted, fontSize: '0.9rem', marginTop: '0.5rem' }}>REST & GraphQL APIs that scale securely.</p>
-                             <TechList>
-                                 {['Node.js', 'PostgreSQL', 'Supabase'].map(t => <TechTag key={t}>{t}</TechTag>)}
-                             </TechList>
-                        </BentoCard>
+      {/* 3. COMPETENCES REELLES (BENTO GRID) */}
+      <Section>
+        <SectionHeader>
+          <h2>Mon Arsenal Technique</h2>
+          <p>Des compétences acquises sur le terrain et en résolvant de vrais problèmes. Voici mes outils de prédilection.</p>
+        </SectionHeader>
 
-                        <BentoCard>
-                             <Globe size={28} color={THEME.purple} style={{ marginBottom: '1rem' }} />
-                             <h3 style={{ fontSize: '1.25rem', fontWeight: 700 }}>Realtime</h3>
-                             <p style={{ color: THEME.textMuted, fontSize: '0.9rem', marginTop: '0.5rem' }}>Live collaboration features.</p>
-                             <TechList>
-                                 <TechTag>WebRTC</TechTag>
-                                 <TechTag>Socket.io</TechTag>
-                             </TechList>
-                        </BentoCard>
+        <SkillsContainer>
+          {/* Frontend */}
+          <SkillCategory>
+            <div className="header">
+              <div className="icon-box"><MonitorSmartphone size={28} /></div>
+              <h3>Front-End & UI</h3>
+            </div>
+            <ul>
+              <li>React / Next.js <div className="bar-bg"><div className="bar-fill" style={{width: '95%'}}/></div></li>
+              <li>Javascript / ES6+ <div className="bar-bg"><div className="bar-fill" style={{width: '90%'}}/></div></li>
+              <li>Tailwind / Styled-Comp <div className="bar-bg"><div className="bar-fill" style={{width: '95%'}}/></div></li>
+              <li>HTML5 / CSS3 <div className="bar-bg"><div className="bar-fill" style={{width: '98%'}}/></div></li>
+              <li>Framer Motion / GSAP <div className="bar-bg"><div className="bar-fill" style={{width: '80%'}}/></div></li>
+              <li>Zustand / Context API <div className="bar-bg"><div className="bar-fill" style={{width: '88%'}}/></div></li>
+            </ul>
+          </SkillCategory>
 
-                        <BentoCard className="col-span-2">
-                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                                 <h3 style={{ fontSize: '1.25rem', fontWeight: 700 }}>AI Integration</h3>
-                                 <Brain size={28} color="#f59e0b" />
-                             </div>
-                             <p style={{ color: THEME.textMuted }}>Leveraging LLMs and semantic search to build smarter applications.</p>
-                             <TechList>
-                                 <TechTag>OpenAI API</TechTag>
-                                 <TechTag>LangChain</TechTag>
-                                 <TechTag>Pinecone</TechTag>
-                             </TechList>
-                        </BentoCard>
-                    </BentoGrid>
-                </Container>
-            </Section>
+          {/* Backend */}
+          <SkillCategory>
+            <div className="header">
+              <div className="icon-box"><Database size={28} /></div>
+              <h3>Back-End & DB</h3>
+            </div>
+            <ul>
+              <li>Node.js / Express <div className="bar-bg"><div className="bar-fill" style={{width: '85%'}}/></div></li>
+              <li>PostgreSQL / SQL <div className="bar-bg"><div className="bar-fill" style={{width: '80%'}}/></div></li>
+              <li>Convex (BaaS Temps Réel) <div className="bar-bg"><div className="bar-fill" style={{width: '90%'}}/></div></li>
+              <li>APIs REST / Webhooks <div className="bar-bg"><div className="bar-fill" style={{width: '92%'}}/></div></li>
+              <li>WebRTC / LiveKit <div className="bar-bg"><div className="bar-fill" style={{width: '80%'}}/></div></li>
+              <li>JWT / OAuth / Auth <div className="bar-bg"><div className="bar-fill" style={{width: '85%'}}/></div></li>
+            </ul>
+          </SkillCategory>
 
-            {/* --- EXPERIENCE --- */}
-            <Section id="projects">
-                <Container>
-                    <HeroGrid>
-                        <div>
-                            <SectionTitle>My <span>Journey</span></SectionTitle>
-                            <SectionSubtitle>
-                                From academic foundations to real-world applications.
-                            </SectionSubtitle>
-                            
-                            <TimelineSection>
-                                <TimelineItem initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
-                                    <JobYear>2024 - Present</JobYear>
-                                    <JobTitle>Coda School: Full Stack Bootcamp</JobTitle>
-                                    <JobCompany><MapPin size={16} /> Paris / Remote</JobCompany>
-                                    <p style={{ color: THEME.textMuted, lineHeight: 1.6 }}>
-                                        Intensive training in modern web development. Building production-ready applications like VisioConnect and more. 
-                                        Mastering the MERN stack and Agile methodologies.
-                                    </p>
-                                </TimelineItem>
-                                
-                                <TimelineItem initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}>
-                                    <JobYear>2022 - 2024</JobYear>
-                                    <JobTitle>Freelance Web Developer</JobTitle>
-                                    <JobCompany><Briefcase size={16} /> Remote</JobCompany>
-                                    <p style={{ color: THEME.textMuted, lineHeight: 1.6 }}>
-                                        Developed custom websites and e-commerce solutions for small businesses, ensuring SEO optimization and performance.
-                                    </p>
-                                </TimelineItem>
-                            </TimelineSection>
-                        </div>
-                        
-                        <div>
-                             <BentoCard style={{ background: THEME.primary, color: 'white', border: 'none', textAlign: 'center', padding: '3rem 2rem' }}>
-                                 <Star size={48} style={{ margin: '0 auto 1.5rem', opacity: 0.9 }} />
-                                 <h3 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '1rem', color: 'white' }}>Open to Work</h3>
-                                 <p style={{ opacity: 0.9, lineHeight: 1.6, marginBottom: '2rem' }}>
-                                     I am currently looking for an apprenticeship (Alternance) starting September 2025. 
-                                     I bring passion, quick learning, and a solid technical foundation.
-                                 </p>
-                                 <SecondaryButton href="#contact" style={{ color: THEME.primary, borderColor: 'white' }}>
-                                     Let's Talk
-                                 </SecondaryButton>
-                             </BentoCard>
-                        </div>
-                    </HeroGrid>
-                </Container>
-            </Section>
+          {/* Outils & DevOps */}
+          <SkillCategory>
+            <div className="header">
+              <div className="icon-box"><Wrench size={28} /></div>
+              <h3>Outils & Workflow</h3>
+            </div>
+            <ul>
+              <li>Git / GitHub <div className="bar-bg"><div className="bar-fill" style={{width: '90%'}}/></div></li>
+              <li>Vite / Webpack Pipeline <div className="bar-bg"><div className="bar-fill" style={{width: '85%'}}/></div></li>
+              <li>Figma / UX-UI Design <div className="bar-bg"><div className="bar-fill" style={{width: '85%'}}/></div></li>
+              <li>Vercel / Netlify <div className="bar-bg"><div className="bar-fill" style={{width: '90%'}}/></div></li>
+              <li>Postman / API Testing <div className="bar-bg"><div className="bar-fill" style={{width: '90%'}}/></div></li>
+              <li>VS Code / CLI Bash <div className="bar-bg"><div className="bar-fill" style={{width: '95%'}}/></div></li>
+            </ul>
+          </SkillCategory>
+        </SkillsContainer>
+      </Section>
 
-            {/* --- PROJECTS SHOWCASE --- */}
-            <Section $alt>
-                 <Container>
-                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end', marginBottom: '3rem', flexWrap: 'wrap', gap: '1rem' }}>
-                         <div style={{ width: '100%' }}>
-                             <SectionTitle>Featured <span>Work</span></SectionTitle>
-                             <SectionSubtitle style={{ marginBottom: '1rem' }}>Things I've built lately.</SectionSubtitle>
-                         </div>
-                         <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-                             <SecondaryButton href="https://github.com/theogarces" target="_blank">
-                                 View GitHub <ExternalLink size={16} />
-                             </SecondaryButton>
-                         </div>
-                     </div>
+      {/* 4. PREMIUM PROJECTS (STRIPE/VERCEL STYLE) */}
+      <SectionAlt>
+        <SectionHeader>
+          <h2>Projets Majeurs & Réalisations</h2>
+          <p>Plongez dans les détails de mes créations les plus techniques. Des architectures complexes aux interfaces pixel-perfect.</p>
+        </SectionHeader>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
-                        <BentoCard>
-                            <div style={{ height: 200, background: '#e2e8f0', borderRadius: 12, marginBottom: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-                                {/* Placeholder for project image */}
-                                <Video size={64} color={THEME.textMuted} opacity={0.5} />
-                            </div>
-                            <h3 style={{ fontSize: '1.5rem', fontWeight: 700 }}>VisioConnect</h3>
-                            <p style={{ color: THEME.textMuted, margin: '0.5rem 0 1rem' }}>
-                                A seamless video conferencing platform with real-time chat, whiteboard, and screen sharing capabilities.
-                            </p>
-                            <div style={{ display: 'flex', gap: '1rem', marginTop: 'auto' }}>
-                                <a href="#" style={{ color: THEME.primary, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4, textDecoration: 'none' }}>Live Demo <ArrowRight size={16}/></a>
-                            </div>
-                        </BentoCard>
+        <ProjectsList>
+          
+          {/* Projet 1 */}
+          <FeatureProject>
+            <ProjectVisual glowColor="#dbeafe">
+              <BrowserFrame>
+                <div className="header">
+                  <div className="dot red" />
+                  <div className="dot yellow" />
+                  <div className="dot green" />
+                  <div className="url-bar">app.visioconnect.com</div>
+                </div>
+                <div className="img-wrapper">
+                  <img src="https://images.unsplash.com/photo-1587620962725-abab7fe55159?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="VisioConnect Dashboard" />
+                  <div className="overlay">
+                    <span><Play size={20} /> Aperçu Live</span>
+                  </div>
+                </div>
+              </BrowserFrame>
+            </ProjectVisual>
+            
+            <ProjectInfo>
+              <div className="badge">Application SaaS Complète</div>
+              <h3>VisioConnect Platform</h3>
+              <p>Une infrastructure de visioconférence et de collaboration en temps réel redoutablement performante. De la conception du player vidéo WebRTC au tableau blanc bidirectionnel, chaque pixel a été pensé pour réduire la latence et maximiser l'expérience utilisateur.</p>
+              
+              <div className="stack">
+                <span><Layout size={16}/> React.js</span>
+                <span><Server size={16}/> Node.js</span>
+                <span><Zap size={16}/> LiveKit</span>
+                <span><Database size={16}/> Convex</span>
+                <span><MonitorSmartphone size={16}/> Tailwind CSS</span>
+              </div>
 
-                        <BentoCard>
-                            <div style={{ height: 200, background: '#e2e8f0', borderRadius: 12, marginBottom: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-                                <Brain size={64} color={THEME.textMuted} opacity={0.5} />
-                             </div>
-                             <h3 style={{ fontSize: '1.5rem', fontWeight: 700 }}>Smart Chunking Engine</h3>
-                             <p style={{ color: THEME.textMuted, margin: '0.5rem 0 1rem' }}>
-                                 Python-based utility for splitting large codebases into semantic chunks for LLM processing context windows.
-                             </p>
-                             <div style={{ display: 'flex', gap: '1rem', marginTop: 'auto' }}>
-                                 <a href="#" style={{ color: THEME.primary, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4, textDecoration: 'none' }}>View Code <Github size={16}/></a>
-                             </div>
-                         </BentoCard>
-                     </div>
-                 </Container>
-            </Section>
+              <div className="actions">
+                <a href="#" className="btn-primary">Découvrir le projet <ArrowRight size={18}/></a>
+                <a href="#" className="btn-secondary"><Github size={18}/> Code source</a>
+              </div>
+            </ProjectInfo>
+          </FeatureProject>
 
-            {/* --- CTA --- */}
-            <Section id="contact">
-                <Container>
-                    <motion.div 
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        style={{ 
-                            background: '#0f172a', 
-                            borderRadius: '32px', 
-                            padding: 'clamp(3rem, 5vw, 5rem) 2rem', 
-                            textAlign: 'center',
-                            color: 'white',
-                            position: 'relative',
-                            overflow: 'hidden'
-                        }}
-                    >
-                         <div style={{ position: 'relative', zIndex: 2 }}>
-                             <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: 800, marginBottom: '1.5rem', color: 'white' }}>Ready to Collaborate?</h2>
-                             <p style={{ fontSize: '1.25rem', color: '#94a3b8', maxWidth: '600px', margin: '0 auto 3rem' }}>
-                                 I'm available for freelance projects or full-time opportunities. Let's build something amazing together.
-                             </p>
-                             <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
-                                 <PrimaryButton href="mailto:theo.garces@coda-student.school" style={{ background: 'white', color: '#0f172a' }}>
-                                     Email Me
-                                 </PrimaryButton>
-                                 <SecondaryButton href="https://linkedin.com/in/theogarces" target="_blank" style={{ background: 'transparent', color: 'white', borderColor: '#334155' }}>
-                                     <Linkedin size={20} /> LinkedIn
-                                 </SecondaryButton>
-                             </div>
-                         </div>
-                    </motion.div>
-                </Container>
-            </Section>
+          {/* Projet 2 */}
+          <FeatureProject reverse>
+            <ProjectVisual glowColor="#f3e8ff">
+              <BrowserFrame>
+                <div className="header">
+                  <div className="dot red" />
+                  <div className="dot yellow" />
+                  <div className="dot green" />
+                  <div className="url-bar">dashboard.financeflow.io</div>
+                </div>
+                <div className="img-wrapper">
+                  <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="E-Commerce Interface" />
+                  <div className="overlay">
+                    <span><Play size={20} /> Aperçu Live</span>
+                  </div>
+                </div>
+              </BrowserFrame>
+            </ProjectVisual>
+            
+            <ProjectInfo>
+              <div className="badge">Big Data & Architecture</div>
+              <h3>FinanceFlow Analytics</h3>
+              <p>Une interface d'administration ultra-rapide capable de traiter et visualiser des milliers de lignes de base de données sans broncher. Des graphiques interactifs en temps réel, un système de filtres complexe et une API de traitement lourd construite pour la haute disponibilité.</p>
+              
+              <div className="stack">
+                <span><Layout size={16}/> Next.js</span>
+                <span><Code2 size={16}/> TypeScript</span>
+                <span><Database size={16}/> PostgreSQL</span>
+                <span><Database size={16}/> Prisma ORM</span>
+                <span><Layout size={16}/> Recharts</span>
+              </div>
 
-            <FooterClean />
-        </PageWrapper>
-    );
+              <div className="actions">
+                <a href="#" className="btn-primary">Explorer la démo <ArrowRight size={18}/></a>
+                <a href="#" className="btn-secondary"><Github size={18}/> Architecture</a>
+              </div>
+            </ProjectInfo>
+          </FeatureProject>
+
+          {/* Projet 3 */}
+          <FeatureProject>
+            <ProjectVisual glowColor="#dcfce7">
+              <BrowserFrame>
+                <div className="header">
+                  <div className="dot red" />
+                  <div className="dot yellow" />
+                  <div className="dot green" />
+                  <div className="url-bar">studio.nexusai.dev</div>
+                </div>
+                <div className="img-wrapper">
+                  <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="AI Agent Builder" />
+                  <div className="overlay">
+                    <span><Play size={20} /> Aperçu Live</span>
+                  </div>
+                </div>
+              </BrowserFrame>
+            </ProjectVisual>
+            
+            <ProjectInfo>
+              <div className="badge">Intelligence Artificielle</div>
+              <h3>Nexus AI Studio</h3>
+              <p>Un générateur de composants et un assistant de productivité dopé à l'intelligence artificielle. Connexion directe aux modèles d'OpenAI pour générer des interfaces à la volée, gérer des prompts complexes et intégrer de l'automatisation dans le workflow des développeurs.</p>
+              
+              <div className="stack">
+                <span><Layout size={16}/> React.js</span>
+                <span><Zap size={16}/> OpenAI API</span>
+                <span><Server size={16}/> Express</span>
+                <span><Wrench size={16}/> Vite</span>
+                <span><Code2 size={16}/> AI Engineering</span>
+              </div>
+
+              <div className="actions">
+                <a href="#" className="btn-primary">Lancer le Studio <ArrowRight size={18}/></a>
+                <a href="#" className="btn-secondary"><Github size={18}/> Repository</a>
+              </div>
+            </ProjectInfo>
+          </FeatureProject>
+
+        </ProjectsList>
+      </SectionAlt>
+
+      {/* 5. PHILOSOPHIE DU CODE */}
+      <Section>
+        <PhilosophyCard>
+          <div className="content">
+            <h3>Ma Philosophie du Code</h3>
+            <p>Être autodidacte m'a appris la règle la plus capitale : ce n'est pas le framework qui compte, c'est l'approche pour résoudre le problème. Un beau code est un choix architectural assumé. Voici mes 3 règles d'or.</p>
+            
+            <ul>
+              <li>
+                <div className="check-box"><Star size={24} /></div>
+                <div className="text">
+                  <strong>Qualité, Solidité & Lisibilité</strong>
+                  <span>Le code est lu beaucoup plus souvent qu'il n'est écrit. J'écris pour mes pairs et pour mon « moi » du futur. Les nommages doivent être limpides, les composants strictement isolés et DRY.</span>
+                </div>
+              </li>
+              <li>
+                <div className="check-box"><Zap size={24} /></div>
+                <div className="text">
+                  <strong>Performance Pure</strong>
+                  <span>Une fonction ne doit pas juste "marcher". Optimiser les algorithmes, réduire les re-renders inutiles, lazzy-loader les immenses assets et bien structurer son bundle est ce qui fait la différence.</span>
+                </div>
+              </li>
+              <li>
+                <div className="check-box"><Heart size={24} /></div>
+                <div className="text">
+                  <strong>Focus sur l'Utilisateur Final (UX)</strong>
+                  <span>Une application parfaitement codée au backend ne sert à rien si l'interface frustre l'utilisateur. Feedback visuels, accessibilité, loaders, gestion chirurgicale des erreurs... Je soigne les détails.</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div className="visual">
+            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Code Philosophy setup" />
+            <div className="floating-badge">
+              <strong>100%</strong>
+              <span>Apprentissage Continu</span>
+            </div>
+          </div>
+        </PhilosophyCard>
+      </Section>
+
+      {/* 6. STATISTIQUES MASSIVES */}
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem 10rem' }}>
+        <StatsGrid>
+          <div className="stat-item">
+            <div className="icon-wrapper"><GraduationCap size={36} /></div>
+            <h5>0</h5>
+            <span>Bootcamps, 100% Autodidacte</span>
+          </div>
+          <div className="stat-item">
+            <div className="icon-wrapper"><Code2 size={36} /></div>
+            <h5>100k+</h5>
+            <span>Lignes de code écrites</span>
+          </div>
+          <div className="stat-item">
+            <div className="icon-wrapper"><Briefcase size={36} /></div>
+            <h5>15+</h5>
+            <span>Projets & Prototypes</span>
+          </div>
+          <div className="stat-item">
+            <div className="icon-wrapper"><Coffee size={36} /></div>
+            <h5>∞</h5>
+            <span>Tasses de café & Bugs résolus</span>
+          </div>
+        </StatsGrid>
+      </div>
+
+      <FooterClean />
+    </PageWrapper>
+  );
 }

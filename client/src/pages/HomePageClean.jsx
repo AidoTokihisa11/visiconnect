@@ -1,17 +1,22 @@
-import React, { useState, useEffect, useRef } from 'react';
+
+import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
-import { useAuthUser } from '../hooks/useAuthUser';
 import { useTranslation } from '../hooks/useTranslation';
+import { useHomePageData } from '../hooks/useHomePageData';
 import FeaturesCarousel3D from '../components/home/FeaturesCarousel3D';
 import KeyStats from '../components/home/KeyStats';
 import TechBentoGrid from '../components/home/TechBentoGrid';
 import IndieBadge from '../components/home/IndieBadge';
 import ProofArea from '../components/home/ProofArea';
 import { EditableText } from '../components/Admin/EditableContent';
+import BannerSlider from '../components/home/BannerSlider';
+import FeatureCard from '../components/home/FeatureCard';
+import TestimonialCard from '../components/home/TestimonialCard';
+import PricingCard from '../components/home/PricingCard';
 
 import { 
   Video, Users, Shield, Zap, Globe, Check, 
@@ -40,204 +45,6 @@ const SHADOWS = {
   xl: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04)',
   glow: '0 0 20px rgba(37, 99, 235, 0.15)',
 };
-
-/* --- NEW COMPONENTS & STYLES --- */
-
-const GlassCard = styled(motion.div)`
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow: ${SHADOWS.lg};
-  border-radius: 16px;
-  overflow: hidden;
-`;
-
-const FeatureCardPremium = styled(motion.div)`
-  background: linear-gradient(145deg, ${COLORS.white}, #fcfcfc);
-  border-radius: 20px;
-  padding: 2rem;
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  box-shadow: ${SHADOWS.md}, inset 0 0 0 1px rgba(255,255,255,0.5);
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  position: relative;
-  overflow: hidden;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-
-  &:hover {
-    transform: translateY(-8px);
-    box-shadow: ${SHADOWS.xl}, ${SHADOWS.glow};
-    border-color: ${COLORS.primary}; // Slight active border
-  }
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 6px;
-    background: linear-gradient(90deg, ${COLORS.primary}, #60a5fa);
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  &:hover::before {
-    opacity: 1;
-  }
-`;
-
-const IconWrapperPremium = styled.div`
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
-  background: ${props => props.$bg || 'rgba(37, 99, 235, 0.1)'};
-  color: ${props => props.$color || COLORS.primary};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1.5rem;
-  font-size: 1.5rem;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2);
-`;
-
-const CounterBadge = styled(motion.div)`
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: ${COLORS.white};
-  padding: 0.5rem 1rem;
-  border-radius: 9999px;
-  box-shadow: ${SHADOWS.sm};
-  border: 1px solid ${COLORS.border};
-  font-weight: 600;
-  font-size: 0.875rem;
-  color: ${COLORS.dark};
-  
-  span.highlight {
-    color: ${COLORS.primary};
-    font-weight: 800;
-  }
-`;
-
-const SliderContainer = styled.div`
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  border-radius: 24px;
-  box-shadow: ${SHADOWS.xl};
-`;
-
-const SlideTrack = styled(motion.div)`
-  display: flex;
-  cursor: grab;
-  &:active { cursor: grabbing; }
-`;
-
-const SlideItem = styled.div`
-  min-width: 100%;
-  padding: 4rem 2rem;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  text-align: center;
-  position: relative;
-  
-  /* Mock UI Preview */
-  .preview-ui {
-    width: 100%;
-    max-width: 800px;
-    height: 400px;
-    background: ${COLORS.white};
-    border-radius: 16px;
-    box-shadow: ${SHADOWS.lg};
-    border: 1px solid ${COLORS.border};
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    position: relative;
-    
-    .ui-header {
-      height: 40px;
-      border-bottom: 1px solid ${COLORS.border};
-      display: flex;
-      align-items: center;
-      padding: 0 1rem;
-      gap: 0.5rem;
-      background: #f1f5f9;
-      
-      .dot { width: 8px; height: 8px; border-radius: 50%; background: #cbd5e1; }
-    }
-    
-    .ui-body {
-      flex: 1;
-      padding: 2rem;
-      display: grid;
-      place-items: center;
-      background: radial-gradient(circle at center, #f8fafc 0%, #ffffff 100%);
-      
-      h3 { font-size: 2rem; color: ${COLORS.primary}; margin-bottom: 1rem; }
-      p { color: ${COLORS.lightText}; max-width: 400px; }
-    }
-  }
-`;
-
-const SliderNav = styled.div`
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 0.5rem;
-  z-index: 10;
-`;
-
-const SliderDot = styled.button`
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  border: none;
-  background: ${props => props.active ? COLORS.primary : 'rgba(0,0,0,0.2)'};
-  cursor: pointer;
-  transition: all 0.3s;
-  
-  &:hover {
-    transform: scale(1.2);
-  }
-`;
-
-const SliderArrow = styled.button`
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(255,255,255,0.8);
-  backdrop-filter: blur(4px);
-  border: 1px solid ${COLORS.border};
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s;
-  z-index: 10;
-  color: ${COLORS.dark};
-  box-shadow: ${SHADOWS.md};
-  
-  &:hover {
-    background: ${COLORS.white};
-    transform: translateY(-50%) scale(1.1);
-  }
-  
-  &.prev { left: 1rem; }
-  &.next { right: 1rem; }
-`;
 
 /* --- STYLED COMPONENTS --- */
 
@@ -465,7 +272,6 @@ const HeroImage = styled.div`
   overflow: hidden;
   box-shadow: ${SHADOWS.md};
   
-  /* Add a subtle pattern overlay */
   &::before {
     content: '';
     position: absolute;
@@ -606,68 +412,6 @@ const LiveIndicator = styled.div`
   }
 `;
 
-const BannerSlider = () => {
-  const [current, setCurrent] = useState(0);
-  const slides = [
-    { title: "Dashboard Intuitif", desc: "Contrôlez vos réunions en un clic.", color: "#3b82f6" },
-    { title: "Mode Studio", desc: "Qualité 4K sans compromis.", color: "#8b5cf6" },
-    { title: "Analytiques", desc: "Suivez l'engagement en temps réel.", color: "#10b981" },
-  ];
-
-  const handleNext = () => setCurrent(prev => (prev + 1) % slides.length);
-  const handlePrev = () => setCurrent(prev => (prev - 1 + slides.length) % slides.length);
-
-  return (
-    <SliderContainer>
-       <AnimatePresence mode='wait'>
-          <SlideTrack
-            key={current}
-            initial={{ opacity: 0, x: 100 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -100 }}
-            transition={{ duration: 0.5 }}
-          >
-            <SlideItem>
-              <div className="preview-ui">
-                <div className="ui-header">
-                  <div className="dot" style={{ background: '#ef4444' }} />
-                  <div className="dot" style={{ background: '#f59e0b' }} />
-                  <div className="dot" style={{ background: '#10b981' }} />
-                </div>
-                <div className="ui-body">
-                  <motion.h3 
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.2 }}
-                    style={{ color: slides[current].color }}
-                  >
-                    {slides[current].title}
-                  </motion.h3>
-                  <motion.p
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.3 }}
-                  >
-                    {slides[current].desc}
-                  </motion.p>
-                </div>
-              </div>
-            </SlideItem>
-          </SlideTrack>
-      </AnimatePresence>
-      
-      <SliderArrow className="prev" onClick={handlePrev}><ChevronLeft size={24} /></SliderArrow>
-      <SliderArrow className="next" onClick={handleNext}><ChevronRight size={24} /></SliderArrow>
-
-      <SliderNav>
-        {slides.map((_, idx) => (
-          <SliderDot key={idx} active={idx === current} onClick={() => setCurrent(idx)} />
-        ))}
-      </SliderNav>
-    </SliderContainer>
-  );
-};
-
 // --- TRUSTED SECTION ---
 const TrustedSection = styled.section`
   padding: 4rem 1.5rem;
@@ -726,6 +470,22 @@ const StatsContainer = styled.div`
   justify-content: center;
   flex-wrap: wrap;
   gap: 2rem;
+`;
+
+const CounterBadge = styled(motion.div)`
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  text-align: center;
+  white-space: nowrap;
+  
+  .highlight {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: ${COLORS.primary};
+  }
 `;
 
 const StatItemPill = ({ icon: Icon, value, label }) => (
@@ -789,20 +549,6 @@ const FeaturesGrid = styled.div`
   }
 `;
 
-
-
-const FeatureTitle = styled.h3`
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: ${COLORS.dark};
-  margin-bottom: 0.75rem;
-`;
-
-const FeatureText = styled.p`
-  color: ${COLORS.lightText};
-  line-height: 1.6;
-`;
-
 // --- TESTIMONIALS SECTION ---
 const TestimonialsSection = styled.section`
   padding: 5rem 1.5rem;
@@ -827,60 +573,6 @@ const TestimonialsGrid = styled.div`
   }
 `;
 
-const TestimonialCard = styled.div`
-  background-color: ${COLORS.background};
-  padding: 2rem;
-  border-radius: 12px;
-  border: 1px solid ${COLORS.border};
-`;
-
-const QuoteIcon = styled.div`
-  color: ${COLORS.primary};
-  margin-bottom: 1.5rem;
-  opacity: 0.2;
-`;
-
-const TestimonialText = styled.p`
-  font-size: 1.125rem;
-  line-height: 1.6;
-  color: ${COLORS.text};
-  font-style: italic;
-  margin-bottom: 2rem;
-`;
-
-const TestimonialAuthor = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-`;
-
-const AuthorAvatar = styled.div`
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background-color: ${COLORS.dark};
-  color: ${COLORS.white};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-`;
-
-const AuthorInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const AuthorName = styled.div`
-  font-weight: 700;
-  color: ${COLORS.dark};
-`;
-
-const AuthorTitle = styled.div`
-  font-size: 0.875rem;
-  color: ${COLORS.lightText};
-`;
-
 // --- PRICING SECTION ---
 const PricingSectionWrapper = styled.section`
   padding: 5rem 1.5rem;
@@ -896,94 +588,10 @@ const PricingGrid = styled.div`
   gap: 2rem;
 `;
 
-const PricingCard = styled.div`
-  background-color: ${COLORS.white};
-  border: 1px solid ${props => props.$popular ? COLORS.primary : COLORS.border};
-  border-radius: 16px;
-  padding: 2.5rem;
-  position: relative;
-  box-shadow: ${props => props.$popular ? SHADOWS.lg : SHADOWS.sm};
-  display: flex;
-  flex-direction: column;
-`;
-
-const PopularBadge = styled.div`
-  position: absolute;
-  top: -12px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: ${COLORS.primary};
-  color: ${COLORS.white};
-  padding: 0.25rem 1rem;
-  border-radius: 20px;
-  font-size: 0.875rem;
-  font-weight: 600;
-`;
-
-const PlanName = styled.h3`
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: ${COLORS.dark};
-  margin-bottom: 0.5rem;
-`;
-
-const PlanPrice = styled.div`
-  font-size: 3rem;
-  font-weight: 800;
-  color: ${COLORS.dark};
-  margin-bottom: 2rem;
-  
-  span {
-    font-size: 1rem;
-    font-weight: 500;
-    color: ${COLORS.lightText};
-  }
-`;
-
-const FeatureList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0 0 2rem 0;
-  flex-grow: 1;
-`;
-
-const FeatureItem = styled.li`
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-  color: ${COLORS.text};
-  font-size: 1rem;
-  
-  svg {
-    color: ${COLORS.success};
-    flex-shrink: 0;
-  }
-`;
-
-const PricingButton = styled.button`
-  width: 100%;
-  padding: 1rem;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.2s;
-  
-  background-color: ${props => props.$primary ? COLORS.primary : COLORS.white};
-  color: ${props => props.$primary ? COLORS.white : COLORS.primary};
-  border: 1px solid ${COLORS.primary};
-  
-  &:hover {
-    background-color: ${props => props.$primary ? '#1d4ed8' : '#eff6ff'};
-    border-color: ${props => props.$primary ? '#1d4ed8' : COLORS.primary};
-  }
-`;
-
 // --- ABOUT SECTION ---
 const AboutSection = styled.section`
   padding: 5rem 1.5rem;
-  background-color: ${COLORS.background}; // Slate 50 as requested
+  background-color: ${COLORS.background};
   border-top: 1px solid ${COLORS.border};
 `;
 
@@ -1100,6 +708,7 @@ const ContactLink = styled.a`
 
 export default function HomePageClean() {
   const { t } = useTranslation();
+  const { sliderData, featuresData, testimonialsData, pricingData, contactLinks } = useHomePageData();
 
   return (
     <PageContainer>
@@ -1120,7 +729,7 @@ export default function HomePageClean() {
               <Button to="/signup" $variant="primary" style={{ padding: '0.875rem 1.5rem', fontSize: '1.125rem' }}>
                 {t('hero.startFree')}
               </Button>
-              <Button to="/room/demo-pro-room" style={{ padding: '0.875rem 1.5rem', fontSize: '1.125rem', backgroundColor: '#0f172a', color: 'white', border: '1px solid #0f172a', display: 'flex', alignItems: 'center' }}>
+              <Button to={`/room/demo-${Math.random().toString(36).substring(2, 9)}`} style={{ padding: '0.875rem 1.5rem', fontSize: '1.125rem', backgroundColor: '#0f172a', color: 'white', border: '1px solid #0f172a', display: 'flex', alignItems: 'center' }}>
                 <Zap size={18} style={{ marginRight: '8px' }} />
                 {t('hero.testRoom')}
               </Button>
@@ -1132,7 +741,6 @@ export default function HomePageClean() {
           </HeroContent>
 
           <HeroImage>
-             {/* Enhanced UI representation */}
              <div style={{ position: 'relative', width: '90%', height: '80%', background: '#fff', borderRadius: '8px', boxShadow: SHADOWS.sm, border: `1px solid ${COLORS.border}`, overflow: 'hidden', zIndex: 1 }}>
                 <div style={{ height: '40px', borderBottom: `1px solid ${COLORS.border}`, display: 'flex', alignItems: 'center', padding: '0 1rem', gap: '0.5rem', background: '#f8fafc' }}>
                     <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#ef4444' }}></div>
@@ -1213,6 +821,9 @@ export default function HomePageClean() {
 
       <KeyStats />
 
+      {/* BANNER SLIDER SECTION */}
+      <BannerSlider slides={sliderData} />
+
       {/* FEATURES SECTION */}
       <FeaturesSection id="features">
         <SectionHeader>
@@ -1230,58 +841,17 @@ export default function HomePageClean() {
         </SectionHeader>
 
         <FeaturesGrid>
-            {[
-                { 
-                    icon: Video, 
-                    title: t('homeFeatures.video.title'), 
-                    text: t('homeFeatures.video.text'),
-                    items: t('homeFeatures.video.items', { returnObjects: true }),
-                    color: "#3b82f6"
-                },
-                { 
-                    icon: Shield, 
-                    title: t('homeFeatures.security.title'), 
-                    text: t('homeFeatures.security.text'),
-                    items: t('homeFeatures.security.items', { returnObjects: true }),
-                    color: "#10b981"
-                },
-                { 
-                    icon: Zap, 
-                    title: t('homeFeatures.instant.title'), 
-                    text: t('homeFeatures.instant.text'),
-                    items: t('homeFeatures.instant.items', { returnObjects: true }),
-                    color: "#f59e0b"
-                },
-                { 
-                    icon: Users, 
-                    title: t('homeFeatures.collaboration.title'), 
-                    text: t('homeFeatures.collaboration.text'),
-                    items: t('homeFeatures.collaboration.items', { returnObjects: true }),
-                    color: "#8b5cf6"
-                }
-            ].map((feature, index) => (
-                <FeatureCardPremium
+            {featuresData?.map((feature, index) => (
+                <FeatureCard
                     key={index}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    viewport={{ once: true }}
-                >
-                    <IconWrapperPremium $bg={`${feature.color}15`} $color={feature.color}>
-                        <feature.icon size={28} />
-                    </IconWrapperPremium>
-                    <FeatureTitle>{feature.title}</FeatureTitle>
-                    <FeatureText>
-                        {feature.text}
-                    </FeatureText>
-                    <div style={{ marginTop: 'auto', paddingTop: '1.5rem' }}>
-                        {(Array.isArray(feature.items) ? feature.items : []).map((item, i) => (
-                            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem', fontSize: '0.875rem', color: COLORS.lightText }}>
-                                <Check size={14} color={feature.color} /> {item}
-                            </div>
-                        ))}
-                    </div>
-                </FeatureCardPremium>
+                    icon={feature.icon}
+                    title={feature.title}
+                    description={feature.description}
+                    items={Array.isArray(feature.items) ? feature.items : []}
+                    iconBg={feature.iconBg}
+                    iconColor={feature.iconColor}
+                    delay={index * 0.1}
+                />
             ))}
         </FeaturesGrid>
       </FeaturesSection>
@@ -1291,54 +861,22 @@ export default function HomePageClean() {
       {/* TESTIMONIALS SECTION */}
       <TestimonialsSection>
         <SectionHeader>
-            <SectionTitle>Ce que disent nos utilisateurs</SectionTitle>
+            <SectionTitle>{t('testimonials.title')}</SectionTitle>
             <SectionSubtitle>
-                Ils ont transformé leur manière de travailler grâce à VisioConnect.
+                {t('testimonials.subtitle')}
             </SectionSubtitle>
         </SectionHeader>
 
         <TestimonialsGrid>
-            <TestimonialCard>
-                <div style={{ color: COLORS.primary, fontSize: '3rem', lineHeight: '1rem', marginBottom: '1rem', fontFamily: 'serif' }}>"</div>
-                <TestimonialText>
-                    "La qualité vidéo est incomparable, même avec une connexion 4G. C'est devenu notre outil indispensable pour les réunions d'équipe quotidiennes."
-                </TestimonialText>
-                <TestimonialAuthor>
-                    <AuthorAvatar>JB</AuthorAvatar>
-                    <AuthorInfo>
-                        <AuthorName>Jean Benoit</AuthorName>
-                        <AuthorTitle>CTO @ StartupFlow</AuthorTitle>
-                    </AuthorInfo>
-                </TestimonialAuthor>
-            </TestimonialCard>
-
-            <TestimonialCard>
-                <div style={{ color: COLORS.primary, fontSize: '3rem', lineHeight: '1rem', marginBottom: '1rem', fontFamily: 'serif' }}>"</div>
-                <TestimonialText>
-                    "Simple, efficace et surtout sécurisé. On a pu l'adopter en 5 minutes sans formation. Le partage d'écran est ultra fluide."
-                </TestimonialText>
-                <TestimonialAuthor>
-                    <AuthorAvatar style={{ background: COLORS.primary }}>AL</AuthorAvatar>
-                    <AuthorInfo>
-                        <AuthorName>Alice Lambert</AuthorName>
-                        <AuthorTitle>Freelance Designer</AuthorTitle>
-                    </AuthorInfo>
-                </TestimonialAuthor>
-            </TestimonialCard>
-
-            <TestimonialCard>
-                <div style={{ color: COLORS.primary, fontSize: '3rem', lineHeight: '1rem', marginBottom: '1rem', fontFamily: 'serif' }}>"</div>
-                <TestimonialText>
-                    "Enfin une alternative européenne crédible qui respecte nos données. Le support est réactif et les fonctionnalités s'améliorent chaque semaine."
-                </TestimonialText>
-                <TestimonialAuthor>
-                    <AuthorAvatar style={{ background: '#10b981' }}>MS</AuthorAvatar>
-                    <AuthorInfo>
-                        <AuthorName>Marc Simon</AuthorName>
-                        <AuthorTitle>Manager @ BigCorp</AuthorTitle>
-                    </AuthorInfo>
-                </TestimonialAuthor>
-            </TestimonialCard>
+            {testimonialsData?.map((testimonial, index) => (
+                <TestimonialCard
+                    key={index}
+                    quote={testimonial.quote}
+                    author={testimonial.author}
+                    title={testimonial.title}
+                    avatar={testimonial.avatar}
+                />
+            ))}
         </TestimonialsGrid>
       </TestimonialsSection>
 
@@ -1352,39 +890,18 @@ export default function HomePageClean() {
         </SectionHeader>
 
         <PricingGrid>
-            <PricingCard>
-                <PlanName>{t('pricing.free.title')}</PlanName>
-                <PlanPrice>{t('pricing.free.price')} <span>{t('pricing.perMonth')}</span></PlanPrice>
-                <FeatureList>
-                    {t('pricing.free.features', { returnObjects: true }).map((feature, i) => (
-                        <FeatureItem key={i}><Check size={18} /> {feature}</FeatureItem>
-                    ))}
-                </FeatureList>
-                <PricingButton as={Link} to="/signup">{t('pricing.free.action')}</PricingButton>
-            </PricingCard>
-
-            <PricingCard $popular>
-                <PopularBadge>{t('pricing.popularBadge')}</PopularBadge>
-                <PlanName>{t('pricing.pro.title')}</PlanName>
-                <PlanPrice>{t('pricing.pro.price')} <span>{t('pricing.perMonth')}</span></PlanPrice>
-                <FeatureList>
-                    {t('pricing.pro.features', { returnObjects: true }).map((feature, i) => (
-                        <FeatureItem key={i}><Check size={18} /> {feature}</FeatureItem>
-                    ))}
-                </FeatureList>
-                <PricingButton $primary as={Link} to="/signup?plan=pro">{t('pricing.pro.action')}</PricingButton>
-            </PricingCard>
-
-            <PricingCard>
-                <PlanName>{t('pricing.enterprise.title')}</PlanName>
-                <PlanPrice>{t('pricing.enterprise.price')}</PlanPrice>
-                <FeatureList>
-                    {t('pricing.enterprise.features', { returnObjects: true }).map((feature, i) => (
-                        <FeatureItem key={i}><Check size={18} /> {feature}</FeatureItem>
-                    ))}
-                </FeatureList>
-                <PricingButton as={Link} to="/contact">{t('pricing.enterprise.action')}</PricingButton>
-            </PricingCard>
+            {pricingData?.map((plan, index) => (
+                <PricingCard
+                    key={index}
+                    planName={plan.planName}
+                    price={plan.price}
+                    description={plan.description}
+                    features={Array.isArray(plan.features) ? plan.features : []}
+                    ctaText={plan.ctaText}
+                    ctaLink={plan.ctaLink}
+                    isPopular={plan.isPopular}
+                />
+            ))}
         </PricingGrid>
       </PricingSectionWrapper>
 
@@ -1452,19 +969,13 @@ export default function HomePageClean() {
              {t('contactDescription')}
           </SectionSubtitle>
           
-          <ContactActions>
-             <ContactLink href="mailto:contact.visioconnect@gmail.com">
-                <Mail size={32} />
-                <span>Email</span>
-             </ContactLink>
-             <ContactLink href="https://github.com" target="_blank" rel="noopener noreferrer">
-                <Github size={32} />
-                <span>GitHub</span>
-             </ContactLink>
-             <ContactLink href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
-                <Linkedin size={32} />
-                <span>LinkedIn</span>
-             </ContactLink>
+         <ContactActions>
+            {contactLinks?.map((link, index) => (
+                <ContactLink key={index} href={link.href} target={link.target} rel={link.rel}>
+                  {link.icon && <link.icon size={24} />}
+                  <span>{link.label}</span>
+                </ContactLink>
+            ))}
           </ContactActions>
         </ContactContainer>
       </ContactSection>

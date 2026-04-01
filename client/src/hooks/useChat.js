@@ -1,15 +1,11 @@
-// client/src/hooks/useChat.js
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 
-export const useChat = (roomId, user, socket) => {
-  // L'argument socket est ignoré car Convex remplace complètement les WebSockets natifs
-
+export const useChat = (roomId, user, _socket) => {
   const [localMessages, setLocalMessages] = useState([]);
   const hasWarnedRef = useRef(false);
 
-  // Récupération réactive des messages depuis Convex
   let rawMessages = null;
   try {
     rawMessages = useQuery(api.messages.getByMeetingId, roomId ? { meetingId: roomId } : "skip");
@@ -25,7 +21,6 @@ export const useChat = (roomId, user, socket) => {
   const userId = user?.id || 'anonymous';
   const userName = user?.name || 'Utilisateur';
 
-  // Formatage des messages pour rester compatible avec l'ancienne UI
   const messages = useMemo(() => {
     const source = Array.isArray(rawMessages) ? rawMessages : localMessages;
     if (!source) return [];
@@ -66,5 +61,4 @@ export const useChat = (roomId, user, socket) => {
   }, [roomId, hasUser, userId, userName, sendMessageMutation]);
 
   return { messages: messages || [], sendMessage };
-
 };
