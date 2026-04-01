@@ -27,7 +27,7 @@ export const useRoomToken = (roomName, participantName) => {
 
       try {
         const apiBase = import.meta.env.VITE_API_URL || '';
-        const response = await fetch(`${apiBase}/api/livekit/token`, {
+        const response = await fetch(`${apiBase}/api/livekit-token`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ roomName, participantName }),
