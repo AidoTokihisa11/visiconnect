@@ -3,15 +3,18 @@ import { useAuth } from '../contexts/AuthContext';
 
 export const useRoomProtection = (roomId) => {
   const { user, session } = useAuth();
-  const hasAccessIdentity = Boolean(user || session);
-  const [isAuthorized, setIsAuthorized] = useState(false);
-  const [loading, setLoading] = useState(true);
+  
+  // Pour le moment, tout le monde peut accéder à la salle (invités inclus).
+  // Si plus tard tu as des salles privées, tu pourras ajouter une vérification ici
+  // (ex: vérifier en BDD si la salle est privée).
+  const [isAuthorized, setIsAuthorized] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!roomId) return;
-    setIsAuthorized(hasAccessIdentity);
+    setIsAuthorized(true);
     setLoading(false);
-  }, [hasAccessIdentity, roomId]);
+  }, [roomId]);
 
   return { isAuthorized, loading, user };
 };
