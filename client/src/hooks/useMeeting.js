@@ -26,7 +26,9 @@ export const useRoomToken = (roomName, participantName) => {
       }
 
       try {
-        const apiBase = import.meta.env.VITE_API_URL || '';
+        // En local on utilise VITE_API_URL (ex: localhost:3001), mais en prod on utilise le chemin relatif (/api)
+        // pour passer par les Netlify Functions locales et éviter totalement CORS.
+        const apiBase = import.meta.env.PROD ? '' : (import.meta.env.VITE_API_URL || '');
         const response = await fetch(`${apiBase}/api/livekit-token`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
