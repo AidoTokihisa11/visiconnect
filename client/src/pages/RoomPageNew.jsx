@@ -7,7 +7,7 @@ import { useRoomToken } from '../hooks/useMeeting';
 import { useRoomProtection } from '../hooks/useRoomProtection';
 import { useLiveKit4K } from '../hooks/useLiveKit4K';
 import { MeetingRoom } from '../components/room/MeetingRoom';
-import { Video, ArrowRight, Shield, AlertTriangle } from 'lucide-react';
+import { Video, ArrowRight, Shield, AlertTriangle, Lock, Key, Sparkles } from 'lucide-react';
 import '@livekit/components-styles';
 
 const PageContainer = styled.div`
@@ -92,7 +92,7 @@ export default function RoomPageNew() {
   const [guestName, setGuestName] = useState('');
   const [betaCode, setBetaCode] = useState('');
   const [betaError, setBetaError] = useState(false);
-  const [hasSubmittedName, setHasSubmittedName] = useState(false);
+  const [isBetaValidated, setIsBetaValidated] = useState(false);
 
   // Configuration of the Beta Password
   const EXPECTED_BETA_CODE = import.meta.env.VITE_BETA_CODE || 'VISIO-BETA-26';
@@ -128,90 +128,102 @@ export default function RoomPageNew() {
   }
 
   // Determine final identity
-  const participantName = user?.email || (hasSubmittedName ? guestName : null);
+  const participantName = user?.email || guestName;
 
-  // If we don't have an identity yet, show the beautiful "PreJoin" name prompt
-  if (!participantName) {
+  // We explicitly check BOTH that the beta code is validated AND the user has a name
+  if (!isBetaValidated || !participantName) {
     return (
-      <div className="flex min-h-screen w-full items-center justify-center bg-slate-50 p-4 font-sans relative overflow-hidden">
-        {/* Modern Background Gradients */}
-        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-300/30 blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-indigo-300/20 blur-[120px] pointer-events-none" />
-        
-        <div className="relative w-full max-w-[420px] bg-white backdrop-blur-2xl border border-slate-200 shadow-[0_0_40px_rgba(37,99,235,0.1)] rounded-3xl p-8 z-10 transition-all duration-500">
-          <div className="mx-auto w-16 h-16 bg-gradient-to-br from-blue-500/20 to-indigo-500/20 border border-blue-500/30 rounded-2xl flex items-center justify-center mb-6 shadow-inner">
-            <Video className="w-8 h-8 text-blue-400" />
+      <div className="flex min-h-screen w-full items-center justify-center bg-[#090a0f] p-4 font-sans relative overflow-hidden">
+        {/* Deep, Premium Dark Mode Gradients */}
+        <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-blue-600/10 blur-[140px] pointer-events-none" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-violet-600/10 blur-[140px] pointer-events-none" />
+
+        {/* Ambient glow behind card */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-blue-500/20 blur-[100px] rounded-full" />
+
+        <div className="relative w-full max-w-[440px] bg-white/[0.02] backdrop-blur-3xl border border-white/[0.05] shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-3xl p-10 z-10 transition-all duration-500">
+          <div className="mx-auto w-20 h-20 bg-gradient-to-b from-white/[0.08] to-transparent border border-white/[0.05] rounded-2xl flex items-center justify-center mb-8 shadow-inner relative overflow-hidden">
+            <div className="absolute inset-0 bg-blue-500/10 opacity-50 blur-xl"></div>
+            <Lock className="w-8 h-8 text-blue-400 relative z-10" strokeWidth={1.5} />
+            <Sparkles className="w-4 h-4 text-blue-300 absolute top-4 right-4 opacity-70" />
           </div>
-          
-          <h2 className="text-2xl font-bold text-slate-900 text-center mb-2 tracking-tight">Rejoindre la réunion</h2>
-          <p className="text-slate-400 text-center mb-8 text-[15px] leading-relaxed">
-            Vous avez été invité à la salle <br/>
-            <span className="font-semibold text-blue-700 bg-blue-50 border border-blue-100 px-3 py-1 rounded-md mx-1 mt-2 inline-block shadow-sm">{roomId}</span>
+
+          <h2 className="text-2xl font-bold text-white text-center mb-3 tracking-tight">Accès Bêta Privée</h2>
+          <p className="text-slate-400 text-center mb-10 text-[15px] leading-relaxed">
+            Bienvenue sur VisiConnect. Veuillez entrer votre code d'accès pour rejoindre la salle <span className="font-semibold text-blue-400 ml-1">#{roomId.split('-')[1] || roomId}</span>.
           </p>
 
-          <form 
-            onSubmit={(e) => { 
-              e.preventDefault(); 
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
               if (betaCode.trim().toUpperCase() !== EXPECTED_BETA_CODE) {
                 setBetaError(true);
                 return;
               }
               setBetaError(false);
-              if (guestName.trim()) setHasSubmittedName(true); 
-            }} 
+              if (!user?.email && !guestName.trim()) return;
+              setIsBetaValidated(true);
+            }}
             className="space-y-6"
           >
-            <div className="space-y-4">
+            <div className="space-y-5">
               <div className="space-y-2 text-left">
-                <label className="text-xs font-semibold tracking-wider text-slate-400 uppercase ml-1">Code d'accès Bêta</label>
-                <input
-                  type="text"
-                  placeholder="Entrez le code secret..."
-                  value={betaCode}
-                  onChange={(e) => {
-                     setBetaCode(e.target.value);
-                     setBetaError(false);
-                  }}
-                  className={`w-full bg-white border ${betaError ? 'border-red-400 ring-2 ring-red-500/20' : 'border-slate-200 hover:border-blue-400'} text-slate-900 rounded-xl px-4 py-3.5 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-[15px] shadow-sm`}
-                  autoFocus
-                  required
-                />
+                <label className="text-[11px] font-semibold tracking-widest text-slate-400 uppercase ml-1 block">Clé d'autorisation</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <Key className={`w-5 h-5 ${betaError ? 'text-red-400' : 'text-slate-500'}`} />
+                  </div>
+                  <input
+                    type="password"
+                    placeholder="Entrez le code secret..."
+                    value={betaCode}
+                    onChange={(e) => {
+                       setBetaCode(e.target.value);
+                       setBetaError(false);
+                    }}
+                    className={`w-full bg-black/40 border ${betaError ? 'border-red-500/50 focus:border-red-500' : 'border-white/10 focus:border-blue-500/50'} text-white rounded-xl py-3.5 pl-12 pr-4 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500/50 transition-all text-sm font-medium tracking-wide`}
+                    autoFocus
+                    required
+                  />
+                </div>
                 <AnimatePresence>
                   {betaError && (
-                    <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-xs text-red-500 font-medium ml-1 mt-1">
-                      Code bêta incorrect !
+                    <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-xs text-red-400 font-medium ml-1 mt-2">
+                      Ce code d'accès est invalide.
                     </motion.p>
                   )}
                 </AnimatePresence>
               </div>
 
-              <div className="space-y-2 text-left">
-                <label className="text-xs font-semibold tracking-wider text-slate-400 uppercase ml-1">Comment vous appelez-vous ?</label>
-                <input
-                  type="text"
-                  placeholder="Ex: Jean Dupont"
-                  value={guestName}
-                  onChange={(e) => setGuestName(e.target.value)}
-                  className="w-full bg-white border border-slate-200 hover:border-blue-400 text-slate-900 rounded-xl px-4 py-3.5 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-[15px] shadow-sm"
-                  required
-                />
-              </div>
+              {!user?.email && (
+                <div className="space-y-2 text-left">
+                  <label className="text-[11px] font-semibold tracking-widest text-slate-400 uppercase ml-1 block">Votre pseudo</label>
+                  <input
+                    type="text"
+                    placeholder="Ex: Jean Dupont"
+                    value={guestName}
+                    onChange={(e) => setGuestName(e.target.value)}
+                    className="w-full bg-black/40 border border-white/10 focus:border-blue-500/50 text-white rounded-xl px-4 py-3.5 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500/50 transition-all text-sm"
+                    required
+                  />
+                </div>
+              )}
             </div>
-            
+
             <button
               type="submit"
-              disabled={!guestName.trim() || !betaCode.trim()}
-              className="w-full bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:bg-slate-200 disabled:text-slate-400 text-white font-medium rounded-xl px-4 py-3.5 transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 disabled:transform-none disabled:shadow-none"
+              disabled={(!user?.email && !guestName.trim()) || !betaCode.trim()}
+              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 disabled:from-white/5 disabled:to-white/5 disabled:text-slate-500 text-white font-medium rounded-xl px-4 py-4 transition-all flex items-center justify-center gap-2 shadow-lg disabled:shadow-none hover:shadow-blue-500/25 mt-4"
             >
-              <span>Entrer dans la salle</span>
+              <span className="text-[15px]">Déverrouiller et Rejoindre</span>
               <ArrowRight className="w-5 h-5" />
             </button>
           </form>
-          
-          <div className="mt-8 pt-6 border-t border-slate-100 text-center">
-            <div className="flex items-center justify-center gap-2 text-xs text-slate-400">
+
+          <div className="mt-10 pt-6 border-t border-white/[0.05] text-center">
+            <div className="flex items-center justify-center gap-2 text-xs text-slate-500">
               <Shield className="w-4 h-4" />
-              <span>Chiffrement de bout en bout activé</span>
+              <span>Protégé par cryptage de bout en bout (E2EE)</span>
             </div>
           </div>
         </div>
@@ -219,6 +231,5 @@ export default function RoomPageNew() {
     );
   }
 
-  // Load the active room now that we have a name
-  return <ActiveRoom roomId={roomId} participantName={participantName} />;
+  // Load the active room now that we have a name and beta validated
 }
