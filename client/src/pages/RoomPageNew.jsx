@@ -8,6 +8,7 @@ import { useRoomProtection } from '../hooks/useRoomProtection';
 import { useLiveKit4K } from '../hooks/useLiveKit4K';
 import { MeetingRoom } from '../components/room/MeetingRoom';
 import { Video, ArrowRight, Shield, AlertTriangle, Lock, Key, Sparkles } from 'lucide-react';
+import { BETA_CODES } from '../config/betaCodes';
 import '@livekit/components-styles';
 
 const PageContainer = styled.div`
@@ -94,8 +95,8 @@ export default function RoomPageNew() {
   const [betaError, setBetaError] = useState(false);
   const [isBetaValidated, setIsBetaValidated] = useState(false);
 
-  // Configuration of the Beta Password
-  const EXPECTED_BETA_CODE = import.meta.env.VITE_BETA_CODE || 'VISIO-BETA-26';
+  // Use the unique BETA_CODES list plus a potential env master key for the admin
+  const MASTER_KEY = import.meta.env.VITE_BETA_CODE || 'VISIO-MASTER-26';
 
   // If loading auth
   if (authLoading) {
@@ -133,34 +134,36 @@ export default function RoomPageNew() {
   // We explicitly check BOTH that the beta code is validated AND the user has a name
   if (!isBetaValidated || !participantName) {
     return (
-      <div className="flex min-h-screen w-full items-center justify-center bg-[#090a0f] p-4 font-sans relative overflow-hidden">
-        {/* Deep, Premium Dark Mode Gradients */}
-        <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-blue-600/10 blur-[140px] pointer-events-none" />
-        <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-violet-600/10 blur-[140px] pointer-events-none" />
+      <div className="flex min-h-screen w-full items-center justify-center bg-slate-50 p-4 font-sans relative overflow-hidden">
+        {/* Soft elegant background graphics */}
+        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-400/20 blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-cyan-400/20 blur-[120px] pointer-events-none" />
 
-        {/* Ambient glow behind card */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-blue-500/20 blur-[100px] rounded-full" />
-
-        <div className="relative w-full max-w-[440px] bg-white/[0.02] backdrop-blur-3xl border border-white/[0.05] shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-3xl p-10 z-10 transition-all duration-500">
-          <div className="mx-auto w-20 h-20 bg-gradient-to-b from-white/[0.08] to-transparent border border-white/[0.05] rounded-2xl flex items-center justify-center mb-8 shadow-inner relative overflow-hidden">
-            <div className="absolute inset-0 bg-blue-500/10 opacity-50 blur-xl"></div>
-            <Lock className="w-8 h-8 text-blue-400 relative z-10" strokeWidth={1.5} />
-            <Sparkles className="w-4 h-4 text-blue-300 absolute top-4 right-4 opacity-70" />
+        <div className="relative w-full max-w-[440px] bg-white border border-slate-200 shadow-2xl rounded-3xl p-10 z-10 transition-all duration-500">
+          <div className="mx-auto w-20 h-20 bg-blue-50 border border-blue-100 rounded-2xl flex items-center justify-center mb-8 shadow-inner relative overflow-hidden">
+            <Lock className="w-8 h-8 text-blue-600 relative z-10" />
+            <Sparkles className="w-4 h-4 text-blue-400 absolute top-4 right-4 opacity-70" />
           </div>
 
-          <h2 className="text-2xl font-bold text-white text-center mb-3 tracking-tight">Accès Bêta Privée</h2>
-          <p className="text-slate-400 text-center mb-10 text-[15px] leading-relaxed">
-            Bienvenue sur VisiConnect. Veuillez entrer votre code d'accès pour rejoindre la salle <span className="font-semibold text-blue-400 ml-1">#{roomId.split('-')[1] || roomId}</span>.
+          <h2 className="text-2xl font-bold text-slate-900 text-center mb-3 tracking-tight">Accès Bêta Privée</h2>
+          <p className="text-slate-500 text-center mb-10 text-[15px] leading-relaxed">
+            Bienvenue sur VisiConnect. Veuillez entrer votre code unique pour rejoindre la salle <span className="font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 border border-blue-100 rounded-md ml-1 shadow-sm">#{roomId.split('-')[1] || roomId}</span>.
           </p>
 
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              if (betaCode.trim().toUpperCase() !== EXPECTED_BETA_CODE) {
+              const upperCode = betaCode.trim().toUpperCase();
+              
+              // Validate against the list of 100 codes OR the Master Admin key
+              const isValid = BETA_CODES.includes(upperCode) || upperCode === MASTER_KEY;
+
+              if (!isValid) {
                 setBetaError(true);
                 return;
               }
               setBetaError(false);
+              
               if (!user?.email && !guestName.trim()) return;
               setIsBetaValidated(true);
             }}
@@ -171,24 +174,24 @@ export default function RoomPageNew() {
                 <label className="text-[11px] font-semibold tracking-widest text-slate-400 uppercase ml-1 block">Clé d'autorisation</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Key className={`w-5 h-5 ${betaError ? 'text-red-400' : 'text-slate-500'}`} />
+                    <Key className={`w-5 h-5 ${betaError ? 'text-red-500' : 'text-slate-400'}`} />
                   </div>
                   <input
                     type="password"
-                    placeholder="Entrez le code secret..."
+                    placeholder="Entrez le code..."
                     value={betaCode}
                     onChange={(e) => {
                        setBetaCode(e.target.value);
                        setBetaError(false);
                     }}
-                    className={`w-full bg-black/40 border ${betaError ? 'border-red-500/50 focus:border-red-500' : 'border-white/10 focus:border-blue-500/50'} text-white rounded-xl py-3.5 pl-12 pr-4 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500/50 transition-all text-sm font-medium tracking-wide`}
+                    className={`w-full bg-white border ${betaError ? 'border-red-300 ring-2 ring-red-500/20' : 'border-slate-200 focus:border-blue-500'} text-slate-900 rounded-xl py-3.5 pl-12 pr-4 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all text-[15px] shadow-sm tracking-widest uppercase font-medium`}
                     autoFocus
                     required
                   />
                 </div>
                 <AnimatePresence>
                   {betaError && (
-                    <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-xs text-red-400 font-medium ml-1 mt-2">
+                    <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-xs text-red-500 font-medium ml-1 mt-2">
                       Ce code d'accès est invalide.
                     </motion.p>
                   )}
@@ -203,7 +206,7 @@ export default function RoomPageNew() {
                     placeholder="Ex: Jean Dupont"
                     value={guestName}
                     onChange={(e) => setGuestName(e.target.value)}
-                    className="w-full bg-black/40 border border-white/10 focus:border-blue-500/50 text-white rounded-xl px-4 py-3.5 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500/50 transition-all text-sm"
+                    className="w-full bg-white border border-slate-200 focus:border-blue-500 text-slate-900 rounded-xl px-4 py-3.5 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all text-[15px] shadow-sm"
                     required
                   />
                 </div>
@@ -213,16 +216,16 @@ export default function RoomPageNew() {
             <button
               type="submit"
               disabled={(!user?.email && !guestName.trim()) || !betaCode.trim()}
-              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 disabled:from-white/5 disabled:to-white/5 disabled:text-slate-500 text-white font-medium rounded-xl px-4 py-4 transition-all flex items-center justify-center gap-2 shadow-lg disabled:shadow-none hover:shadow-blue-500/25 mt-4"
+              className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:bg-slate-200 disabled:text-slate-400 text-white font-medium rounded-xl px-4 py-4 transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 disabled:transform-none disabled:shadow-none mt-4 text-[15px]"
             >
-              <span className="text-[15px]">Déverrouiller et Rejoindre</span>
+              <span>Déverrouiller et Rejoindre</span>
               <ArrowRight className="w-5 h-5" />
             </button>
           </form>
 
-          <div className="mt-10 pt-6 border-t border-white/[0.05] text-center">
-            <div className="flex items-center justify-center gap-2 text-xs text-slate-500">
-              <Shield className="w-4 h-4" />
+          <div className="mt-10 pt-6 border-t border-slate-100 text-center">
+            <div className="flex items-center justify-center gap-2 text-xs text-slate-500 font-medium">
+              <Shield className="w-4 h-4 text-slate-400" />
               <span>Protégé par cryptage de bout en bout (E2EE)</span>
             </div>
           </div>
