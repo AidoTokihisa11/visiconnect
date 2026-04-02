@@ -39,7 +39,7 @@ module.exports = async function handler(req, res) {
       apiKey,
       apiSecret,
       {
-        identity: `guest_${String(Date.now()).slice(-6)}_${Math.random().toString(36).substring(2, 6)}`,
+        identity: participantName || `guest_${String(Date.now()).slice(-6)}_${Math.random().toString(36).substring(2, 6)}`,
         name: participantName || 'Guest',
       }
     );

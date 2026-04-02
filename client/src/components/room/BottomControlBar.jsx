@@ -115,17 +115,17 @@ const MobileMoreMenu = styled.div`
     display: ${props => props.$isOpen ? 'flex' : 'none'};
     flex-wrap: wrap;
     position: absolute;
-    bottom: 70px;
+    bottom: calc(100% + 15px);
     right: 0;
-    width: 280px;
-    background-color: rgba(20, 20, 20, 0.95);
+    width: 250px;
+    background-color: rgba(30, 30, 30, 0.95);
     backdrop-filter: blur(12px);
     border-radius: 16px;
     padding: 1rem;
     gap: 0.75rem;
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-    z-index: 30;
+    z-index: 100;
     
     /* Make buttons look like icons inside */
     > button {

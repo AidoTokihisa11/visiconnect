@@ -71,7 +71,7 @@ function ActiveRoom({ roomId, participantName }) {
       >
         <MeetingRoom
            roomId={roomId}
-           user={{ id: `guest_${Date.now()}`, name: participantName }}
+           user={{ id: participantName, name: participantName }}
            onLeave={() => navigate('/')}
         />
       </LiveKitRoom>
