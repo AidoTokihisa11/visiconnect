@@ -1,8 +1,6 @@
-import Stripe from 'stripe';
+const Stripe = require('stripe');
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // 1. Configuration CORS pour Vercel
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -21,6 +19,8 @@ export default async function handler(req, res) {
   if (!process.env.STRIPE_SECRET_KEY) {
     return res.status(500).json({ error: 'STRIPE_SECRET_KEY non configurée dans Vercel.' });
   }
+
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY.trim());
 
   try {
     const { plan, billingCycle } = req.body || {};
@@ -43,7 +43,7 @@ export default async function handler(req, res) {
 
     // Default to the referring origin or host
     const PROTOCOL = process.env.NODE_ENV === 'development' ? 'http' : 'https';
-    const origin = req.headers.origin || req.headers.referer?.replace(/\/$/, '') || `${PROTOCOL}://${req.headers.host}`;
+    const origin = req.headers.origin || (req.headers.referer ? req.headers.referer.replace(/\/$/, '') : `${PROTOCOL}://${req.headers.host}`);
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -73,4 +73,4 @@ export default async function handler(req, res) {
     console.error('Erreur création session Stripe:', error.message);
     return res.status(500).json({ error: error.message });
   }
-}
+};

@@ -1,6 +1,6 @@
-import { AccessToken } from 'livekit-server-sdk';
+const { AccessToken } = require('livekit-server-sdk');
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // 1. Configuration CORS pour Vercel
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -27,8 +27,8 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing roomName or participantName' });
     }
 
-    const apiKey = (process.env.LIVEKIT_API_KEY || '').replace(/['"]+/g, '').trim();
-    const apiSecret = (process.env.LIVEKIT_API_SECRET || '').replace(/['"]+/g, '').trim();
+    const apiKey = String(process.env.LIVEKIT_API_KEY || '').replace(/['"]+/g, '').trim();
+    const apiSecret = String(process.env.LIVEKIT_API_SECRET || '').replace(/['"]+/g, '').trim();
 
     if (!apiKey || !apiSecret) {
       console.warn('⚠️ Missing LiveKit API Keys - Returning mock token for local dev');
@@ -51,7 +51,7 @@ export default async function handler(req, res) {
       canSubscribe: true 
     });
     
-    // Some versions of livekit-server-sdk return a string or promise
+    // Résolution compatible avec toutes les versions du SDK
     const token = await Promise.resolve(at.toJwt());
 
     return res.status(200).json({ token });
@@ -59,4 +59,4 @@ export default async function handler(req, res) {
     console.error("Token creation failed:", error);
     return res.status(500).json({ error: 'Could not create token', details: String(error) });
   }
-}
+};
