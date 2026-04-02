@@ -13,15 +13,15 @@ export const useLiveKit4K = () => {
     const preset540 = VideoPresets?.h540 || { width: 960, height: 540, frameRate: 30 };
 
     return {
-      adaptiveStream: false,
-      dynacast: false,
+      adaptiveStream: true, // IMPORTANT: Allows clients to only download the resolution they need based on screen size
+      dynacast: true,      // IMPORTANT: Pauses video sending if no one is looking at it, smartly manages bandwidth
       videoCaptureDefaults: {
         resolution: preset4K.resolution,
         frameRate: 60,
         facingMode: 'user',
       },
       publishDefaults: {
-        simulcast: false,
+        simulcast: true,   // IMPORTANT: Sends multiple quality layers (low, med, high) so bad networks don't stutter
         videoEncoding: {
           maxBitrate: 12000000,
           maxFramerate: 60,
