@@ -11,7 +11,8 @@ import '@livekit/components-styles';
 
 const PageContainer = styled.div`
   width: 100vw;
-  height: 100vh;
+  height: 100vh; /* Fallback for browsers that do not support dvh */
+  height: 100dvh;
   background-color: #f4f7fb;
   color: #1e293b;
   display: flex;

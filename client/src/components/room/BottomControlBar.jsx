@@ -16,18 +16,17 @@ const BottomBar = styled.div`
   justify-content: center;
   gap: 1rem;
   padding: 0 1rem;
-  z-index: 20;
+  z-index: 60; /* Higher than PiP video z-index (50) to show More Menu over video */
 
   @media (max-width: 768px) {
     position: absolute;
-    bottom: 20px;
+    bottom: env(safe-area-inset-bottom, 20px);
     left: 50%;
     transform: translateX(-50%);
     right: auto;
-    justify-content: flex-start;
-    overflow-x: auto;
+    justify-content: center;
+    overflow: visible; /* Prevents clipping the absolute popup menu */
     white-space: nowrap;
-    -webkit-overflow-scrolling: touch;
     height: auto;
     padding: 0.5rem 1rem;
     gap: 0.5rem;
