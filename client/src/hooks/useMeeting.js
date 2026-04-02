@@ -18,8 +18,8 @@ export const useRoomToken = (roomName, participantName) => {
     if (!roomName || !participantName) return;
 
     const fetchToken = async () => {
-      // Bypass token fetch if in demo/local mode (no API URL or explicit demo flag)
-      if (import.meta.env.VITE_DEMO_MODE === 'true' || !import.meta.env.VITE_API_URL) {
+      // Bypass token fetch if explicit demo flag is true
+      if (import.meta.env.VITE_DEMO_MODE === 'true') {
         console.warn('⚠️ Demo Mode: Skipping API token fetch. Using mock token if available.');
         setToken(null); 
         return;
