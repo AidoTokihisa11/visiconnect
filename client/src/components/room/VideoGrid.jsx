@@ -59,6 +59,17 @@ export const VideoGrid = ({ localParticipant, isLocalCameraEnabled, isLocalMicEn
           overrideCameraEnabled={isLocalCameraEnabled}
           overrideMicEnabled={isLocalMicEnabled}
           isPiP={hasRemoteParticipants}
+        />
+      )}
+
+      {/* Screen shares and published cameras */}
+      {tracks?.map((track) => {
+        if (track.participant.identity === localParticipant?.identity) return null;
+        // Use publication sid + identity to uniquely identify screen vs camera
+        const key = `${track.participant.identity}-${track.publication?.sid || track.source}`;
+        return (
+          <VideoParticipant
+            key={key}
             trackRef={track}
             participant={track.participant}
             isSpeaking={track.participant.isSpeaking}
