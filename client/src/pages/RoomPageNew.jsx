@@ -311,4 +311,10 @@ export default function RoomPageNew() {
   }
 
   // Load the active room now that we have a name and beta validated
+  return (
+    <ActiveRoom 
+      roomId={roomId}
+      participantName={participantName}
+    />
+  );
 }
