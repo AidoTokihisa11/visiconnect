@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 import { LiveKitRoom } from '@livekit/components-react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useRoomToken } from '../hooks/useMeeting';
 import { useRoomProtection } from '../hooks/useRoomProtection';
 import { useLiveKit4K } from '../hooks/useLiveKit4K';
@@ -89,7 +90,12 @@ export default function RoomPageNew() {
   
   // 2. Guest state
   const [guestName, setGuestName] = useState('');
+  const [betaCode, setBetaCode] = useState('');
+  const [betaError, setBetaError] = useState(false);
   const [hasSubmittedName, setHasSubmittedName] = useState(false);
+
+  // Configuration of the Beta Password
+  const EXPECTED_BETA_CODE = import.meta.env.VITE_BETA_CODE || 'VISIO-BETA-26';
 
   // If loading auth
   if (authLoading) {
@@ -143,23 +149,59 @@ export default function RoomPageNew() {
             <span className="font-semibold text-blue-700 bg-blue-50 border border-blue-100 px-3 py-1 rounded-md mx-1 mt-2 inline-block shadow-sm">{roomId}</span>
           </p>
 
-          <form onSubmit={(e) => { e.preventDefault(); if (guestName.trim()) setHasSubmittedName(true); }} className="space-y-6">
-            <div className="space-y-2 text-left">
-              <label className="text-xs font-semibold tracking-wider text-slate-400 uppercase ml-1">Comment vous appelez-vous ?</label>
-              <input 
-                type="text" 
-                placeholder="Ex: Jean Dupont" 
-                value={guestName}
-                onChange={(e) => setGuestName(e.target.value)}
-                className="w-full bg-white border border-slate-200 hover:border-blue-400 text-slate-900 rounded-xl px-4 py-3.5 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-[15px] shadow-sm"    
-                autoFocus
-                required
-              />
+          <form 
+            onSubmit={(e) => { 
+              e.preventDefault(); 
+              if (betaCode.trim().toUpperCase() !== EXPECTED_BETA_CODE) {
+                setBetaError(true);
+                return;
+              }
+              setBetaError(false);
+              if (guestName.trim()) setHasSubmittedName(true); 
+            }} 
+            className="space-y-6"
+          >
+            <div className="space-y-4">
+              <div className="space-y-2 text-left">
+                <label className="text-xs font-semibold tracking-wider text-slate-400 uppercase ml-1">Code d'accès Bêta</label>
+                <input
+                  type="text"
+                  placeholder="Entrez le code secret..."
+                  value={betaCode}
+                  onChange={(e) => {
+                     setBetaCode(e.target.value);
+                     setBetaError(false);
+                  }}
+                  className={`w-full bg-white border ${betaError ? 'border-red-400 ring-2 ring-red-500/20' : 'border-slate-200 hover:border-blue-400'} text-slate-900 rounded-xl px-4 py-3.5 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-[15px] shadow-sm`}
+                  autoFocus
+                  required
+                />
+                <AnimatePresence>
+                  {betaError && (
+                    <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-xs text-red-500 font-medium ml-1 mt-1">
+                      Code bêta incorrect !
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              <div className="space-y-2 text-left">
+                <label className="text-xs font-semibold tracking-wider text-slate-400 uppercase ml-1">Comment vous appelez-vous ?</label>
+                <input
+                  type="text"
+                  placeholder="Ex: Jean Dupont"
+                  value={guestName}
+                  onChange={(e) => setGuestName(e.target.value)}
+                  className="w-full bg-white border border-slate-200 hover:border-blue-400 text-slate-900 rounded-xl px-4 py-3.5 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-[15px] shadow-sm"
+                  required
+                />
+              </div>
             </div>
-            <button 
-              type="submit" 
-              disabled={!guestName.trim()}
-              className="w-full bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:bg-slate-200 disabled:text-slate-400 text-white font-medium rounded-xl px-4 py-3.5 transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 disabled:transform-none disabled:shadow-none"       
+            
+            <button
+              type="submit"
+              disabled={!guestName.trim() || !betaCode.trim()}
+              className="w-full bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:bg-slate-200 disabled:text-slate-400 text-white font-medium rounded-xl px-4 py-3.5 transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 disabled:transform-none disabled:shadow-none"
             >
               <span>Entrer dans la salle</span>
               <ArrowRight className="w-5 h-5" />
