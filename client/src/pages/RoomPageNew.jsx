@@ -70,9 +70,29 @@ function ActiveRoom({ roomId, participantName }) {
   const navigate = useNavigate();
   const { token, error: tokenError } = useRoomToken(roomId, participantName);
   const { options: roomOptions, videoOptions } = useLiveKit4K();
+  const [mediaError, setMediaError] = useState(false);
 
   const liveKitUrl = import.meta.env.VITE_LIVEKIT_WS_URL || import.meta.env.VITE_LIVEKIT_URL || 'ws://localhost:7880';
   const isUsableToken = typeof token === 'string' && token.length > 0 && !token.includes('mock_token_due_to_missing_keys');
+
+  if (mediaError) {
+    return (
+      <div className="flex min-h-screen w-full items-center justify-center bg-slate-50 p-4 font-sans">
+        <div className="max-w-md w-full bg-white border border-red-100 shadow-xl rounded-2xl p-8 text-center">
+          <div className="mx-auto w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-6">
+            <AlertTriangle size={32} />
+          </div>
+          <h2 className="text-xl font-bold text-slate-900 mb-3">Accès à la caméra refusé</h2>
+          <p className="text-slate-500 mb-8">
+            VisiConnect a besoin de votre permission pour utiliser la caméra ou le microphone. Veuillez autoriser l'accès dans les paramètres de votre navigateur et rafraîchir la page.
+          </p>
+          <button onClick={() => window.location.reload()} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl py-3 transition-colors">
+            Rafraîchir la page
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (!token && !tokenError) {
     return (
@@ -116,10 +136,14 @@ function ActiveRoom({ roomId, participantName }) {
           audio={true}
           options={roomOptions}
           data-lk-theme="default"
+          onMediaDeviceFailure={(e) => {
+            console.error("LiveKit Media Device Failure:", e);
+            setMediaError(true);
+          }}
           onError={(e) => {
             console.error("LiveKit Room Error:", e);
-            if (e.message?.includes("Permission denied") || e.name === "NotAllowedError") {
-               console.warn("Camera/Mic permission was denied.");
+            if (e?.message?.includes("Permission denied") || e?.name === "NotAllowedError") {
+               setMediaError(true);
             }
           }}
         >
