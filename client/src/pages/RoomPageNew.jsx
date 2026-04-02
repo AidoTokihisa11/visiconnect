@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Component } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 import { LiveKitRoom } from '@livekit/components-react';
@@ -21,6 +21,50 @@ const PageContainer = styled.div`
   overflow: hidden;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
 `;
+
+class LiveKitErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, errorType: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    if (error?.message?.includes("Permission denied") || error?.name === "NotAllowedError") {
+       return { hasError: true, errorType: 'permission' };
+    }
+    return { hasError: true, errorType: 'unknown' };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("LiveKit React Error Boundary caught an error:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      if (this.state.errorType === 'permission') {
+         return (
+           <div className="flex min-h-screen w-full items-center justify-center bg-slate-50 p-4 font-sans">
+             <div className="max-w-md w-full bg-white border border-red-100 shadow-xl rounded-2xl p-8 text-center">
+               <div className="mx-auto w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-6">
+                 <AlertTriangle size={32} />
+               </div>
+               <h2 className="text-xl font-bold text-slate-900 mb-3">Accès à la caméra refusé</h2>
+               <p className="text-slate-500 mb-8">
+                 VisiConnect a besoin de votre permission pour utiliser la caméra ou le microphone. Veuillez autoriser l'accès dans les paramètres de votre navigateur et rafraîchir la page.  
+               </p>
+               <button onClick={() => window.location.reload()} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl py-3 transition-colors">
+                 Rafraîchir la page
+               </button>
+             </div>
+           </div>
+         );
+      }
+      // Fallback
+      return <div className="p-10 text-center">Une erreur inattendue est survenue avec la visioconférence. <button onClick={() => window.location.reload()} className="mt-4 text-blue-500 underline">Rafraîchir</button></div>;
+    }
+    return this.props.children;
+  }
+}
 
 function ActiveRoom({ roomId, participantName }) {
   const navigate = useNavigate();
@@ -63,21 +107,29 @@ function ActiveRoom({ roomId, participantName }) {
 
   return (
     <PageContainer>
-      <LiveKitRoom
-        token={token}
-        serverUrl={liveKitUrl}
-        connect={isUsableToken}
-        video={videoOptions}
-        audio={true}
-        options={roomOptions}
-        data-lk-theme="default"
-      >
-        <MeetingRoom
-           roomId={roomId}
-           user={{ id: participantName, name: participantName }}
-           onLeave={() => navigate('/')}
-        />
-      </LiveKitRoom>
+      <LiveKitErrorBoundary>
+        <LiveKitRoom
+          token={token}
+          serverUrl={liveKitUrl}
+          connect={isUsableToken}
+          video={videoOptions}
+          audio={true}
+          options={roomOptions}
+          data-lk-theme="default"
+          onError={(e) => {
+            console.error("LiveKit Room Error:", e);
+            if (e.message?.includes("Permission denied") || e.name === "NotAllowedError") {
+               console.warn("Camera/Mic permission was denied.");
+            }
+          }}
+        >
+          <MeetingRoom
+             roomId={roomId}
+             user={{ id: participantName, name: participantName }}
+             onLeave={() => navigate('/')}
+          />
+        </LiveKitRoom>
+      </LiveKitErrorBoundary>
     </PageContainer>
   );
 }
