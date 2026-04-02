@@ -59,27 +59,32 @@ export const StatsMonitor = ({ participant }) => {
     let mounted = true;
     const interval = setInterval(async () => {
       // Find the first video track
-      if (!participant.videoTracks) return;
-      const tracks = Array.from(participant.videoTracks.values());
-      const videoTrackPub = tracks.find(t => t.kind === 'video' && t.track);
-      
+      if (!participant.videoTrackPublications) return;
+      const tracks = Array.from(participant.videoTrackPublications.values());
+      const videoTrackPub = tracks.find(pub => pub.kind === 'video' && pub.track);
+
       if (videoTrackPub && videoTrackPub.track && mounted) {
          try {
-             // Simpler approach: use video element or track settings if available
+             // Use mediaStreamTrack settings to get actual dimensions sent to hardware
              const settings = videoTrackPub.track.mediaStreamTrack.getSettings();
              const width = settings.width || 0;
              const height = settings.height || 0;
-             
-             // Get current bitrate from LiveKit stats if possible, else simplified
-             setStats({
-                 resolution: width && height ? `${width}x${height}` : 'Calculating...',
-                 codec: 'VP9 (Requested)', // Hard to get exact codec from track settings in one line without iterating reports
-                 bitrate: 'Dynamic', // Placeholder for real metrics if needed
-             });
+
+             if (width && height) {
+                 setStats({
+                     resolution: `${width}p`, // e.g. 2160p or 1080p
+                     codec: 'VP9/H.264',
+                     bitrate: 'Dynamic',
+                 });
+             } else {
+                 setStats(prev => ({ ...prev, resolution: 'Initializing...' }));
+             }
 
          } catch (e) {
              console.error("Stats error", e);
          }
+      } else {
+         setStats(prev => ({ ...prev, resolution: 'Off / Unknown' }));
       }
     }, 2000);
 
