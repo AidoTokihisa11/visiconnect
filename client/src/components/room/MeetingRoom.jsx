@@ -8,7 +8,6 @@ import { X, ChevronRight, BarChart2, Bot } from 'lucide-react';
 // Hooks
 import { useMeeting } from '../../hooks/useMeeting';
 import { useChat } from '../../hooks/useChat';
-import { useSocket } from '../../hooks/useSocket';
 import { usePricing } from '../../hooks/usePricing';
 
 // Components
@@ -145,11 +144,10 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
     selectedDevices,
     controls,
   } = useMeeting(roomSettings.maxQualityLock);
-  
-  const socket = useSocket(roomId, user);
-  const { messages, sendMessage } = useChat(roomId, user, socket);
+
+  const { messages, sendMessage } = useChat(roomId, user, null);
   usePricing(onLeave);
-  
+
   // -- UI State --
   const [showStats, setShowStats] = useState(false);
   const [whiteboardOpen, setWhiteboardOpen] = useState(false);
