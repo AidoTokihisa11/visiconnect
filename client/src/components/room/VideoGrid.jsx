@@ -14,12 +14,18 @@ const GridContainer = styled.div`
   overflow-y: auto;
   width: 100%;
   height: calc(100% - 80px);
+  position: relative;
 
   @media (max-width: 768px) {
     padding: 0.5rem;
     gap: 0.5rem;
-    height: auto;
-    padding-bottom: 90px; /* Leave space for bottom bar */
+    height: 100%;
+    padding-bottom: 90px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: stretch;
+    justify-content: stretch;
   }
 
   &::-webkit-scrollbar { width: 6px; }
@@ -32,10 +38,12 @@ export const VideoGrid = ({ localParticipant, isLocalCameraEnabled, isLocalMicEn
 
   // Find participants who are remote and have NO tracks in the tracks array
   const activeTrackIdentities = new Set(tracks?.map(t => t.participant.identity) || []);
-  const tracklessParticipants = allParticipants.filter(p => 
-    p.identity !== localParticipant?.identity && 
+  const tracklessParticipants = allParticipants.filter(p =>
+    p.identity !== localParticipant?.identity &&
     !activeTrackIdentities.has(p.identity)
   );
+
+  const hasRemoteParticipants = tracks?.some(t => t.participant.identity !== localParticipant?.identity) || tracklessParticipants.length > 0;
 
   return (
     <GridContainer>
@@ -43,24 +51,14 @@ export const VideoGrid = ({ localParticipant, isLocalCameraEnabled, isLocalMicEn
       {localParticipant && (
         <VideoParticipant
           participant={localParticipant}
-          trackRef={{ participant: localParticipant, source: 'camera' }}        
+          trackRef={{ participant: localParticipant, source: 'camera' }}
           isLocal={true}
           isSpeaking={localParticipant.isSpeaking}
           videoFit={videoFit}
           showLabel={showParticipantLabels}
           overrideCameraEnabled={isLocalCameraEnabled}
           overrideMicEnabled={isLocalMicEnabled}
-        />
-      )}
-
-      {/* Screen shares and published cameras */}
-      {tracks?.map((track) => {
-        if (track.participant.identity === localParticipant?.identity) return null;
-        // Use publication sid + identity to uniquely identify screen vs camera
-        const key = `${track.participant.identity}-${track.publication?.sid || track.source}`;
-        return (
-          <VideoParticipant
-            key={key}
+          isPiP={hasRemoteParticipants}
             trackRef={track}
             participant={track.participant}
             isSpeaking={track.participant.isSpeaking}

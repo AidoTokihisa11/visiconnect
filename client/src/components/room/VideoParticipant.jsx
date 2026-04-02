@@ -15,19 +15,24 @@ const CardContainer = styled.div`
   max-height: 100%;
   
   @media (max-width: 768px) {
-    border-radius: 8px;
+    border-radius: 16px;
     flex-basis: 100%;
-  }
-  
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid ${props => props.$isActive ? THEME.accent : THEME.border};
-  transition: all 0.3s ease;
+    aspect-ratio: auto;
+    flex: 1; /* Allow vertically stacking full height */
+    min-height: 0;
 
-  video {
-    width: 100%;
-    height: 100%;
-    object-fit: ${props => props.$videoFit || 'cover'};
-  }
+    /* Picture-in-Picture layout for local user when there are remote participants */
+    ${props => props.$isPiP && `
+      position: absolute;
+      bottom: 100px;
+      right: 16px;
+      width: 120px;
+      height: 160px;
+      flex: none;
+      z-index: 50;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+      border: 2px solid rgba(255,255,255,0.1);
+    `}
 `;
 
 const Placeholder = styled.div`
@@ -85,22 +90,23 @@ const StatusIcon = styled.div`
   }
 `;
 
-export const VideoParticipant = ({ 
-  trackRef, 
-  participant, 
-  isLocal = false, 
+export const VideoParticipant = ({
+  trackRef,
+  participant,
+  isLocal = false,
   isSpeaking = false,
   videoFit = 'cover',
   showLabel = true,
   overrideCameraEnabled,
   overrideMicEnabled,
+  isPiP = false,
 }) => {
   // Determine if camera/mic are enabled
   const isCameraEnabled = overrideCameraEnabled !== undefined ? overrideCameraEnabled : (participant?.isCameraEnabled ?? false);
   const isMicEnabled = overrideMicEnabled !== undefined ? overrideMicEnabled : (participant?.isMicrophoneEnabled ?? false);
 
   return (
-    <CardContainer $isActive={isSpeaking || isMicEnabled} $videoFit={videoFit}>
+    <CardContainer $isActive={isSpeaking || isMicEnabled} $videoFit={videoFit} $isPiP={isPiP}>
       {isCameraEnabled ? (
         <VideoTrack trackRef={trackRef} style={{ width: '100%', height: '100%', objectFit: videoFit }} />
       ) : (

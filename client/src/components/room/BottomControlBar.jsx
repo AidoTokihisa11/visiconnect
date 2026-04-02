@@ -20,18 +20,23 @@ const BottomBar = styled.div`
 
   @media (max-width: 768px) {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    right: auto;
     justify-content: flex-start;
     overflow-x: auto;
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
     height: auto;
-    padding: 0.75rem 1rem;
-    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+    padding: 0.5rem 1rem;
     gap: 0.5rem;
-    
+    border-radius: 30px;
+    background-color: rgba(20, 20, 20, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    max-width: 95%;
+
     &::-webkit-scrollbar {
       display: none;
     }
@@ -55,9 +60,12 @@ const ControlButton = styled.button`
   border: 1px solid ${props => props.$active ? 'transparent' : THEME.border};
 
   @media (max-width: 768px) {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: ${props => props.$active ? (props.$activeColor || THEME.accent) : 'rgba(255, 255, 255, 0.1)'};
+    border: none;
+    color: #fff;
   }
 
   &:hover {
@@ -75,23 +83,11 @@ const EndCallButton = styled(ControlButton)`
   background-color: ${THEME.danger};
   width: 64px;
   border-radius: 16px;
-  
+
   @media (max-width: 768px) {
     width: 56px;
-  }
-
-  &:hover {
-    background-color: #dc2626;
-  }
-`;
-
-const Separator = styled.div`
-  flex-shrink: 0;
-  width: 1px; 
-  height: 40px; 
-  background: ${THEME.border}; 
-  margin: 0 1.5rem;
-  
+    height: 48px;
+    border-radius: 24px;
   @media (max-width: 768px) {
     margin: 0 0.5rem;
     height: 30px;
