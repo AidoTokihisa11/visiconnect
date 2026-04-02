@@ -138,7 +138,9 @@ function ActiveRoom({ roomId, participantName }) {
           data-lk-theme="default"
           onMediaDeviceFailure={(e) => {
             console.error("LiveKit Media Device Failure:", e);
-            setMediaError(true);
+            if (e?.message?.includes("Permission denied") || e?.name === "NotAllowedError") {
+              setMediaError(true);
+            }
           }}
           onError={(e) => {
             console.error("LiveKit Room Error:", e);
