@@ -39,8 +39,7 @@ export const useLiveKit4K = () => {
   }, []);
 
   const videoOptions = useMemo(() => ({
-    resolution: VideoPresets?.h2160?.resolution || { width: 3840, height: 2160, frameRate: 60 },
-    frameRate: 60,
+    resolution: VideoPresets?.h1080 || { width: 1920, height: 1080, frameRate: 30 },
     facingMode: 'user'
   }), []);
 

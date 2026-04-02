@@ -1,7 +1,7 @@
 import React, { useState, Component } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
-import { LiveKitRoom } from '@livekit/components-react';
+import { LiveKitRoom, PreJoin } from '@livekit/components-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRoomToken } from '../hooks/useMeeting';
 import { useRoomProtection } from '../hooks/useRoomProtection';
@@ -71,6 +71,7 @@ function ActiveRoom({ roomId, participantName }) {
   const { token, error: tokenError } = useRoomToken(roomId, participantName);
   const { options: roomOptions, videoOptions } = useLiveKit4K();
   const [mediaError, setMediaError] = useState(false);
+  const [preJoinChoices, setPreJoinChoices] = useState(null);
 
   const liveKitUrl = import.meta.env.VITE_LIVEKIT_WS_URL || import.meta.env.VITE_LIVEKIT_URL || 'ws://localhost:7880';
   const isUsableToken = typeof token === 'string' && token.length > 0 && !token.includes('mock_token_due_to_missing_keys');
@@ -125,6 +126,25 @@ function ActiveRoom({ roomId, participantName }) {
     );
   }
 
+  if (!preJoinChoices) {
+    return (
+      <div className="flex min-h-screen w-full items-center justify-center bg-[#1e293b] font-sans" data-lk-theme="default">
+        <PreJoin
+          defaults={{
+            audioEnabled: true,
+            videoEnabled: true,
+          }}
+          onSubmit={(values) => {
+            setPreJoinChoices(values);
+          }}
+          onError={(err) => {
+             console.error("Erreur de périphériques dans la PreJoin :", err);
+          }}
+        />
+      </div>
+    );
+  }
+
   return (
     <PageContainer>
       <LiveKitErrorBoundary>
@@ -132,8 +152,8 @@ function ActiveRoom({ roomId, participantName }) {
           token={token}
           serverUrl={liveKitUrl}
           connect={isUsableToken}
-          video={videoOptions}
-          audio={true}
+          video={preJoinChoices.videoEnabled}
+          audio={preJoinChoices.audioEnabled}
           options={roomOptions}
           data-lk-theme="default"
           onMediaDeviceFailure={(e) => {
