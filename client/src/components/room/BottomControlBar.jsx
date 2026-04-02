@@ -17,19 +17,19 @@ const BottomBar = styled.div`
   gap: 1rem;
   padding: 0 1rem;
   z-index: 20;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  
+
   @media (max-width: 768px) {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
     justify-content: flex-start;
     overflow-x: auto;
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
     height: auto;
-    padding: 1rem;
-    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    padding: 0.75rem 1rem;
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
     gap: 0.5rem;
     
     &::-webkit-scrollbar {
@@ -44,7 +44,7 @@ const ControlButton = styled.button`
   height: 48px;
   border-radius: 12px;
   border: none;
-  background-color: ${props => props.$active ? props.$activeColor || THEME.accent : THEME.cardBg};
+  background-color: ${props => props.$active ? (props.$activeColor || THEME.accent) : THEME.cardBg};
   color: ${props => props.$active ? '#fff' : THEME.text};
   display: flex;
   align-items: center;
@@ -52,15 +52,15 @@ const ControlButton = styled.button`
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-  border: 1px solid ${THEME.border};
+  border: 1px solid ${props => props.$active ? 'transparent' : THEME.border};
 
   @media (max-width: 768px) {
     width: 44px;
     height: 44px;
+    border-radius: 10px;
   }
 
   &:hover {
-    background-color: ${props => props.$active ? props.$activeColor : THEME.border};
     transform: translateY(-2px);
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   }
@@ -115,12 +115,12 @@ export const ControlBar = ({
 }) => {
   return (
     <BottomBar>
-        <ControlButton onClick={controls.toggleMic} $active={!isMicrophoneEnabled} $activeColor={THEME.danger} title="Micro">
-          {isMicrophoneEnabled ? <Mic /> : <MicOff />}
+        <ControlButton onClick={controls.toggleMic} $active={isMicrophoneEnabled} $activeColor={THEME.accent} title="Micro">
+          {isMicrophoneEnabled ? <Mic /> : <MicOff color={THEME.danger} />}
         </ControlButton>
         
-        <ControlButton onClick={controls.toggleCamera} $active={!isCameraEnabled} $activeColor={THEME.danger} title="Caméra">
-          {isCameraEnabled ? <Video /> : <VideoOff />}
+        <ControlButton onClick={controls.toggleCamera} $active={isCameraEnabled} $activeColor={THEME.accent} title="Caméra">
+          {isCameraEnabled ? <Video /> : <VideoOff color={THEME.danger} />}
         </ControlButton>
 
         <ControlButton onClick={controls.toggleScreenShare} $active={isScreenShareEnabled} $activeColor={THEME.accent} title="Partager l'écran">

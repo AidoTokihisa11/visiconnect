@@ -92,43 +92,26 @@ export const useMeeting = (maxQualityLock = true) => {
   );
 
   const toggleMic = useCallback(async () => {
-    if (localParticipant) {
+    if (!localParticipant) return;
+
+    try {
       await localParticipant.setMicrophoneEnabled(!isMicrophoneEnabled);
+    } catch (err) {
+      console.error('Erreur lors de l’activation du micro:', err);
+      alert('Impossible d’accéder au microphone. Veuillez vérifier vos permissions.');
     }
   }, [localParticipant, isMicrophoneEnabled]);
 
   const toggleCamera = useCallback(async () => {
     if (!localParticipant) return;
-    
-    if (isCameraEnabled) {
-      // Désactiver la caméra
-      await localParticipant.setCameraEnabled(false);
-    } else {
-      // Activer la caméra en priorité max qualité avec fallback matériel
-      try {
-        const targetResolution = maxQualityLock
-          ? { width: 3840, height: 2160, frameRate: 60 }
-          : { width: 1920, height: 1080, frameRate: 30 };
 
-        await localParticipant.setCameraEnabled(true, {
-          resolution: targetResolution,
-        });
-      } catch (e4k) {
-        console.warn('High resolution camera failed, falling back to 1080p', e4k);
-        try {
-          await localParticipant.setCameraEnabled(true, {
-            resolution: { width: 1920, height: 1080, frameRate: 30 },
-          });
-        } catch (e1080) {
-          console.warn('1080p camera failed, falling back to 720p', e1080);
-          await localParticipant.setCameraEnabled(true, {
-            resolution: { width: 1280, height: 720, frameRate: 30 },
-          });
-        }
-      }
+    try {
+      await localParticipant.setCameraEnabled(!isCameraEnabled);
+    } catch (err) {
+      console.error('Erreur lors de l’activation de la caméra:', err);
+      alert('Impossible d’accéder à la caméra. Veuillez vérifier vos permissions.');
     }
-  }, [localParticipant, isCameraEnabled, maxQualityLock]);
-
+  }, [localParticipant, isCameraEnabled]);
   const toggleScreenShare = useCallback(async () => {
     if (localParticipant) {
       await localParticipant.setScreenShareEnabled(!isScreenShareEnabled, {

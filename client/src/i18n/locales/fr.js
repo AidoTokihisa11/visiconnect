@@ -648,6 +648,22 @@ const frTranslations = {
     time: "il y a 24 min",
     hd: "HD",
     participants: "8"
+  },
+  testimonials: {
+    title: "Ils font confiance à Visiconnect",
+    subtitle: "Des entreprises de toutes tailles utilisent notre plateforme pour transformer leur communication et collaborer efficacement.",
+    items: {
+      1: {
+        content: "La qualité 4K est dingue. On se sent vraiment dans la même pièce !",
+        name: "Sophie Dupont",
+        role: "Chef de projet Web"
+      },
+      2: {
+        content: "Idéal pour nos développeurs en télétravail. Super fluide !",
+        name: "Marc Lemaire",
+        role: "Tech Lead"
+      }
+    }
   }
 };
 
