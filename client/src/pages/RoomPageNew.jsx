@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useRoomToken } from '../hooks/useMeeting';
 import { useRoomProtection } from '../hooks/useRoomProtection';
 import { useLiveKit4K } from '../hooks/useLiveKit4K';
+import { useSafeLayout } from '../hooks/useSafeLayout';
 import { MeetingRoom } from '../components/room/MeetingRoom';
 import { Video, ArrowRight, Shield, AlertTriangle, Lock, Key, Sparkles } from 'lucide-react';
 import { BETA_CODES } from '../config/betaCodes';
@@ -15,6 +16,7 @@ const PageContainer = styled.div`
   width: 100vw;
   height: 100vh; /* Fallback for browsers that do not support dvh */
   height: 100dvh;
+  height: calc(var(--vh, 1vh) * 100);
   background-color: #f4f7fb;
   color: #1e293b;
   display: flex;
@@ -43,7 +45,7 @@ class LiveKitErrorBoundary extends Component {
     if (this.state.hasError) {
       if (this.state.errorType === 'permission') {
          return (
-           <div className="flex min-h-screen w-full items-center justify-center bg-slate-50 p-4 font-sans">
+           <div className="flex min-h-[100dvh] w-full items-center justify-center bg-slate-50 p-4 font-sans">
              <div className="max-w-md w-full bg-white border border-red-100 shadow-xl rounded-2xl p-8 text-center">
                <div className="mx-auto w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-6">
                  <AlertTriangle size={32} />
@@ -76,7 +78,7 @@ function ActiveRoom({ roomId, participantName }) {
 
   if (!token && !tokenError) {
     return (
-      <div className="flex min-h-screen w-full items-center justify-center bg-slate-50 font-sans">
+      <div className="flex min-h-[100dvh] w-full items-center justify-center bg-slate-50 font-sans">
         <div className="flex flex-col items-center gap-4">
           <div className="w-10 h-10 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>
           <p className="text-slate-600 font-medium tracking-wide">Préparation de la salle sécurisée...</p>
@@ -87,7 +89,7 @@ function ActiveRoom({ roomId, participantName }) {
 
   if (!isUsableToken) {
     return (
-      <div className="flex min-h-screen w-full items-center justify-center bg-slate-50 p-4 font-sans relative overflow-hidden">
+      <div className="flex min-h-[100dvh] w-full items-center justify-center bg-slate-50 p-4 font-sans relative overflow-hidden">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-red-400/10 blur-[120px] pointer-events-none" />
         <div className="relative w-full max-w-md bg-white backdrop-blur-xl border border-slate-200 shadow-2xl rounded-2xl p-8 z-10">
           <div className="mx-auto w-16 h-16 bg-red-50 border border-red-100 rounded-2xl flex items-center justify-center mb-6 shadow-inner">
@@ -135,7 +137,8 @@ function ActiveRoom({ roomId, participantName }) {
 }
 
 export default function RoomPageNew() {
-  const { roomId } = useParams();
+  useSafeLayout(); // Intégration Full Compatibility (100dvh dynamique + WakeLock)
+  
   const navigate = useNavigate();
   
   // 1. Protection & Auth check
@@ -153,7 +156,7 @@ export default function RoomPageNew() {
   // If loading auth
   if (authLoading) {
     return (
-      <div className="flex min-h-screen w-full items-center justify-center bg-slate-50">
+      <div className="flex min-h-[100dvh] w-full items-center justify-center bg-slate-50">
         <div className="w-8 h-8 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>
       </div>
     );
@@ -162,7 +165,7 @@ export default function RoomPageNew() {
   // Guard: Redirect unauthorized users (if room is private and user not logged in)
   if (!isAuthorized) {
     return (
-      <div className="flex min-h-screen w-full items-center justify-center bg-slate-50 p-4 font-sans relative overflow-hidden">
+      <div className="flex min-h-[100dvh] w-full items-center justify-center bg-slate-50 p-4 font-sans relative overflow-hidden">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-red-400/10 blur-[120px] pointer-events-none" />
         <div className="relative w-full max-w-md bg-white backdrop-blur-xl border border-slate-200 shadow-2xl rounded-2xl p-8 z-10">
           <div className="mx-auto w-16 h-16 bg-red-50 border border-red-100 rounded-2xl flex items-center justify-center mb-6 shadow-inner">
@@ -186,7 +189,7 @@ export default function RoomPageNew() {
   // We explicitly check BOTH that the beta code is validated AND the user has a name
   if (!isBetaValidated || !participantName) {
     return (
-      <div className="flex min-h-screen w-full items-center justify-center bg-slate-50 p-4 font-sans relative overflow-hidden">
+      <div className="flex min-h-[100dvh] w-full items-center justify-center bg-slate-50 p-4 font-sans relative overflow-hidden" data-lk-theme="default">
         {/* Soft elegant background graphics */}
         <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-400/20 blur-[120px] pointer-events-none" />
         <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-cyan-400/20 blur-[120px] pointer-events-none" />

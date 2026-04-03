@@ -72,6 +72,12 @@ const ControlButton = styled.button`
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   }
 
+  /* Rendu Accessible: Focus Clavier */
+  &:focus-visible {
+    outline: 2px solid #3b82f6; /* Tailwind blue-500 */
+    outline-offset: 2px;
+  }
+
   svg {
     width: 20px;
     height: 20px;
@@ -175,15 +181,15 @@ export const ControlBar = ({
   return (
     <BottomBar>
         {/* Core Mobile Buttons (Like Native App) */}
-        <EndCallButton onClick={onLeave} $active title="Quitter">
+        <EndCallButton className="focus-visible-ring" onClick={onLeave} $active title="Quitter" aria-label="Quitter la réunion">
           <Phone style={{ transform: 'rotate(135deg)' }} />
         </EndCallButton>
 
-        <ControlButton onClick={controls.toggleCamera} $active={isCameraEnabled} $activeColor={THEME.accent} title="Caméra">
-          {isCameraEnabled ? <Video /> : <VideoOff color={THEME.danger} />}
+        <ControlButton className="focus-visible-ring" onClick={controls.toggleCamera} $active={isCameraEnabled} $activeColor={THEME.accent} title={isCameraEnabled ? "Désactiver la caméra" : "Activer la caméra"} aria-label={isCameraEnabled ? "Désactiver la caméra" : "Activer la caméra"}>
+          {isCameraEnabled ? <Video /> : <VideoOff color={THEME.danger} />}     
         </ControlButton>
 
-        <ControlButton onClick={controls.toggleMic} $active={isMicrophoneEnabled} $activeColor={THEME.accent} title="Micro">
+        <ControlButton className="focus-visible-ring" onClick={controls.toggleMic} $active={isMicrophoneEnabled} $activeColor={THEME.accent} title={isMicrophoneEnabled ? "Désactiver le micro" : "Activer le micro"} aria-label={isMicrophoneEnabled ? "Désactiver le micro" : "Activer le micro"}>
           {isMicrophoneEnabled ? <Mic /> : <MicOff color={THEME.danger} />}
         </ControlButton>
 

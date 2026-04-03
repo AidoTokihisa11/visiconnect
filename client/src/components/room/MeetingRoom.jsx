@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { AnimatePresence, motion } from 'framer-motion';
-import { RoomAudioRenderer } from '@livekit/components-react';
+import { RoomAudioRenderer, StartAudio } from '@livekit/components-react';
 import { X, ChevronRight, BarChart2, Bot } from 'lucide-react';
 
 // Hooks
@@ -316,8 +316,14 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
         )}
       </AnimatePresence>
 
-      {/* Audio Rendering */}
+      {/* Audio Rendering & Safari iOS Low Power Mode Fallback */}
       <RoomAudioRenderer />
+      
+      {/* Apparaît uniquement si Safari IOS / Chrome bloque l'autoplay audio en arrière-plan */}
+      <StartAudio 
+        label="Démarrer l'audio" 
+        className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white font-medium py-3 px-6 rounded-full shadow-2xl z-[999] animate-bounce hover:bg-blue-700 transition" 
+      />
     </MainContent>
   );
 };

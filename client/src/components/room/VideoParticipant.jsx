@@ -108,7 +108,18 @@ export const VideoParticipant = ({
   return (
     <CardContainer $isActive={isSpeaking || isMicEnabled} $videoFit={videoFit} $isPiP={isPiP}>
       {isCameraEnabled ? (
-        <VideoTrack trackRef={trackRef} style={{ width: '100%', height: '100%', objectFit: videoFit }} />
+        <VideoTrack 
+          trackRef={trackRef} 
+          playsInline={true} // Obligatoire pour iOS (surtout Low Power Mode)
+          disablePictureInPicture={true} // Évite les bugs natifs mobiles
+          style={{ 
+            width: '100%', 
+            height: '100%', 
+            objectFit: videoFit,
+            transform: 'translateZ(0)', // Force l'accélération GPU sur Chrome Android
+            willChange: 'transform'     // Optimisation GPU pour éviter les lags
+          }} 
+        />
       ) : (
         <Placeholder>
           <VideoOff size={64} style={{ opacity: 0.5 }} />

@@ -521,3 +521,16 @@ body::before {
 .tooltip:hover::before {
   opacity: 1;
 }
+
+/* ---- Accessibilité et Compatibilité Cross-Browser ---- */
+@layer utilities {
+  /* Meilleur retour visuel clavier pour l'accessibilité (a11y) */
+  .focus-visible-ring {
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2;
+  }
+}
+
+/* Optimisation Safari iOS / WebKit - Empêcher le rebond élastique sur la page de réunion */
+body {
+  overscroll-behavior-y: none;
+}
