@@ -1,58 +1,69 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check, X, AlertCircle, Info } from 'lucide-react';
+import { CheckCircle2, XCircle, AlertTriangle, Info, X } from 'lucide-react';
 
 const NotificationContainer = styled.div`
   position: fixed;
-  top: 2rem;
+  bottom: 2rem;
   right: 2rem;
   z-index: 9999;
   display: flex;
   flex-direction: column;
   gap: 1rem;
   max-width: 400px;
+  pointer-events: none;
+
+  @media (max-width: 640px) {
+    bottom: 1rem;
+    right: 1rem;
+    left: 1rem;
+    max-width: 100%;
+  }
 `;
 
 const NotificationCard = styled(motion.div)`
-  background: ${props => 
-    props.type === 'success' ? 'linear-gradient(135deg, #00ff88, #00e67a)' :
-    props.type === 'error' ? 'linear-gradient(135deg, #ff4444, #e63946)' :
-    props.type === 'warning' ? 'linear-gradient(135deg, #f9ca24, #f0932b)' :
-    'linear-gradient(135deg, #3498db, #2980b9)'
-  };
-  color: #3b82f6;
-  padding: 1rem 1.5rem;
+  background: white;
   border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 40px -10px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.05);
   display: flex;
-  align-items: center;
-  gap: 1rem;
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid #f1f5f9;
+  pointer-events: auto;
+  overflow: hidden;
+  position: relative;
 `;
 
 const IconWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
   flex-shrink: 0;
+  margin-top: 0.125rem;
+  
+  color: ${props =>
+    props.$type === 'success' ? '#10b981' :
+    props.$type === 'error' ? '#ef4444' :
+    props.$type === 'warning' ? '#f59e0b' :
+    '#3b82f6'
+  };
 `;
 
 const Content = styled.div`
   flex: 1;
-  
+
   .title {
     font-weight: 600;
     font-size: 0.95rem;
     margin-bottom: 0.25rem;
+    color: #0f172a;
   }
-  
+
   .message {
-    font-size: 0.85rem;
-    opacity: 0.9;
+    font-size: 0.875rem;
+    color: #475569;
     line-height: 1.4;
   }
 `;
@@ -60,47 +71,62 @@ const Content = styled.div`
 const CloseButton = styled.button`
   background: none;
   border: none;
-  color: #3b82f6;
+  color: #94a3b8;
   cursor: pointer;
   padding: 0.25rem;
-  border-radius: 4px;
-  opacity: 0.7;
-  transition: opacity 0.2s ease;
-  
+  border-radius: 6px;
+  margin-top: -0.25rem;
+  margin-right: -0.25rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   &:hover {
-    opacity: 1;
+    color: #0f172a;
+    background: #f1f5f9;
   }
 `;
 
-const ProgressBar = styled(motion.div)`
+const ProgressBarWrapper = styled.div`
   position: absolute;
   bottom: 0;
   left: 0;
+  width: 100%;
   height: 3px;
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 0 0 12px 12px;
+  background: #f1f5f9;
+`;
+
+const ProgressBar = styled(motion.div)`
+  height: 100%;
+  background: ${props =>
+    props.$type === 'success' ? '#10b981' :
+    props.$type === 'error' ? '#ef4444' :
+    props.$type === 'warning' ? '#f59e0b' :
+    '#3b82f6'
+  };
 `;
 
 const getIcon = (type) => {
   switch (type) {
     case 'success':
-      return <Check size={20} />;
+      return <CheckCircle2 size={20} />;
     case 'error':
-      return <X size={20} />;
+      return <XCircle size={20} />;
     case 'warning':
-      return <AlertCircle size={20} />;
+      return <AlertTriangle size={20} />;
     default:
       return <Info size={20} />;
   }
 };
 
-const Notification = ({ 
-  id, 
-  type = 'info', 
-  title, 
-  message, 
-  duration = 5000, 
-  onClose 
+const Notification = ({
+  id,
+  type = 'info',
+  title,
+  message,
+  duration = 5000,
+  onClose
 }) => {
   const [isVisible, setIsVisible] = useState(true);
 
@@ -123,32 +149,34 @@ const Notification = ({
     <AnimatePresence>
       {isVisible && (
         <NotificationCard
-          type={type}
-          initial={{ opacity: 0, x: 300, scale: 0.8 }}
-          animate={{ opacity: 1, x: 0, scale: 1 }}
-          exit={{ opacity: 0, x: 300, scale: 0.8 }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
+          initial={{ opacity: 0, y: 50, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
+          transition={{ type: "spring", stiffness: 400, damping: 30 }}
           layout
         >
-          <IconWrapper>
+          <IconWrapper $type={type}>
             {getIcon(type)}
           </IconWrapper>
-          
+
           <Content>
             {title && <div className="title">{title}</div>}
             <div className="message">{message}</div>
           </Content>
-          
+
           <CloseButton onClick={handleClose}>
             <X size={16} />
           </CloseButton>
-          
+
           {duration > 0 && (
-            <ProgressBar
-              initial={{ width: '100%' }}
-              animate={{ width: '0%' }}
-              transition={{ duration: duration / 1000, ease: "linear" }}
-            />
+            <ProgressBarWrapper>
+              <ProgressBar
+                $type={type}
+                initial={{ width: '100%' }}
+                animate={{ width: '0%' }}
+                transition={{ duration: duration / 1000, ease: "linear" }}
+              />
+            </ProgressBarWrapper>
           )}
         </NotificationCard>
       )}
