@@ -6,6 +6,7 @@ import {
   Globe
 } from 'lucide-react';
 import { useTranslation } from '../hooks/useTranslation';
+import { useCookieConsent } from '../contexts/CookieConsentContext';
 
 const COLORS = {
   primary: 'hsl(var(--primary))',
@@ -148,6 +149,7 @@ const ExLink = styled.a`
 
 export default function FooterClean() {
   const { t } = useTranslation();
+  const { setShowBanner } = useCookieConsent();
   return (
     <FooterContainer>
       <FooterContent>
@@ -195,11 +197,18 @@ export default function FooterClean() {
 
         {/* Legal */}
         <FooterSection>
-          <FooterTitle>{t('navigation.legal')}</FooterTitle>
-          <FooterLink to="/privacy">{t('navigation.privacy')}</FooterLink>
-          <FooterLink to="/terms">{t('navigation.terms')}</FooterLink>
-          <FooterLink to="/security">{t('navigation.security')}</FooterLink>
-          <FooterLink to="/cookies">{t('navigation.cookies')}</FooterLink>
+          <FooterTitle>{t('navigation.legal', 'Légal')}</FooterTitle>
+          <FooterLink to="/privacy">{t('navigation.privacy', 'Confidentialité')}</FooterLink>
+          <FooterLink to="/terms">{t('navigation.terms', 'Conditions')}</FooterLink>
+          <FooterLink to="/security">{t('navigation.security', 'Sécurité')}</FooterLink>
+          <button 
+            onClick={() => setShowBanner(true)} 
+            style={{ textAlign: 'left', background: 'none', border: 'none', color: COLORS.secondary, padding: 0, cursor: 'pointer', fontSize: '0.875rem' }}
+            onMouseOver={(e) => e.target.style.color = COLORS.primary}
+            onMouseOut={(e) => e.target.style.color = COLORS.secondary}
+          >
+            {t('navigation.manageCookies', 'Gérer les cookies')}
+          </button>
         </FooterSection>
       </FooterContent>
 
