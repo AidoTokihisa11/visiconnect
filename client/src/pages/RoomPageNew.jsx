@@ -137,7 +137,7 @@ function ActiveRoom({ roomId, participantName }) {
 }
 
 export default function RoomPageNew() {
-  useSafeLayout(); // Intégration Full Compatibility (100dvh dynamique + WakeLock)
+  const { roomId } = useParams();
   
   const navigate = useNavigate();
   
