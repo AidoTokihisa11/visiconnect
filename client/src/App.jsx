@@ -51,7 +51,20 @@ const AppContainer = styled.div`
 `;
 
 function App() {
-  const { NotificationProvider } = useNotifications();
+  const { addNotification, NotificationProvider } = useNotifications();
+
+  React.useEffect(() => {
+    const handleNotify = (e) => {
+      addNotification({
+        type: e.detail.type || 'info',
+        title: e.detail.title || 'Notification',
+        message: e.detail.message,
+        duration: e.detail.duration || 5000,
+      });
+    };
+    window.addEventListener('app-notify', handleNotify);
+    return () => window.removeEventListener('app-notify', handleNotify);
+  }, [addNotification]);
 
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">

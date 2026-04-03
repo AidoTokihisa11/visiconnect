@@ -53,4 +53,16 @@ export default defineSchema({
     isRead: v.boolean(),
     createdAt: v.number(),
   }).index("by_user", ["targetUserId"]),
+  
+  cookieConsents: defineTable({
+    sessionId: v.string(),
+    userId: v.optional(v.string()), // ID Clerk facultatif
+    essential: v.boolean(),
+    analytics: v.boolean(),
+    marketing: v.boolean(),
+    preferences: v.boolean(),
+    timestamp: v.number(),
+  }).index("by_session", ["sessionId"])
+    .index("by_user", ["userId"]),
+});
 });
