@@ -42,6 +42,8 @@ import AIChatbot from './components/AIChatbot';
 import { useNotifications } from './components/Notification';
 import ScrollToTop from './components/ScrollToTop';
 import BackToTopButton from './components/BackToTopButton';
+import { CookieConsentProvider } from './contexts/CookieConsentContext';
+import { CookieBanner } from './components/ui/CookieBanner';
 
 const AppContainer = styled.div`
   min-height: 100vh;
@@ -53,10 +55,11 @@ function App() {
 
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-      <LanguageProvider>
-        <AppContainer>
-            <Router
-              future={{
+      <CookieConsentProvider>
+        <LanguageProvider>
+          <AppContainer>
+              <Router
+                future={{
                 v7_startTransition: true,
                 v7_relativeSplatPath: true
               }}
@@ -108,8 +111,10 @@ function App() {
                 </AuthProvider>
             </Router>
             <NotificationProvider />
+            <CookieBanner />
           </AppContainer>
-      </LanguageProvider>
+        </LanguageProvider>
+      </CookieConsentProvider>
     </ThemeProvider>
   );
 }
