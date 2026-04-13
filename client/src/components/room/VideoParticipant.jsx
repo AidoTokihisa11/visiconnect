@@ -107,9 +107,9 @@ export const VideoParticipant = ({
 
   return (
     <CardContainer $isActive={isSpeaking || isMicEnabled} $videoFit={videoFit} $isPiP={isPiP}>
-      {isCameraEnabled ? (
-        <VideoTrack 
-          trackRef={trackRef} 
+      {isCameraEnabled && trackRef ? (
+        <VideoTrack
+          trackRef={trackRef}
           playsInline={true} // Obligatoire pour iOS (surtout Low Power Mode)
           disablePictureInPicture={true} // Évite les bugs natifs mobiles
           style={{ 
