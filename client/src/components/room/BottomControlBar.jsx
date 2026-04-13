@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import {
   Mic, MicOff, Video, VideoOff, Phone, Monitor, MonitorOff,
-  MessageSquare, Sparkles, Layout, Activity, BarChart2, Settings2, MoreHorizontal, VideoIcon, EyeOff, PieChart, Users
+  MessageSquare, Sparkles, Focus, Layout, Activity, BarChart2, Settings2, MoreHorizontal, VideoIcon, EyeOff, PieChart, Users
 } from 'lucide-react';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 
@@ -155,9 +155,27 @@ const DesktopOnlyWrapper = styled.div`
 
 const MobileOnlyWrapper = styled.div`
   display: none;
-  
+
   @media (max-width: 768px) {
     display: contents;
+  }
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.25rem 0.5rem;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  @media (max-width: 768px) {
+    border-radius: 30px;
+    background: transparent;
+    padding: 0;
+    border: none;
+    gap: 0.5rem;
   }
 `;
 
@@ -189,9 +207,22 @@ export const ControlBar = ({
           <Phone style={{ transform: 'rotate(135deg)' }} />
         </EndCallButton>
 
-        <ControlButton className="focus-visible-ring" onClick={controls.toggleCamera} $active={isCameraEnabled} $activeColor={THEME.accent} title={isCameraEnabled ? "Désactiver la caméra" : "Activer la caméra"} aria-label={isCameraEnabled ? "Désactiver la caméra" : "Activer la caméra"}>
-          {isCameraEnabled ? <Video /> : <VideoOff color={THEME.danger} />}     
-        </ControlButton>
+        <ButtonGroup>
+          <ControlButton className="focus-visible-ring" onClick={controls.toggleCamera} $active={isCameraEnabled} $activeColor={THEME.accent} title={isCameraEnabled ? "Désactiver la caméra" : "Activer la caméra"} aria-label={isCameraEnabled ? "Désactiver la caméra" : "Activer la caméra"}>
+            {isCameraEnabled ? <Video /> : <VideoOff color={THEME.danger} />}
+          </ControlButton>
+          <ControlButton 
+            className="focus-visible-ring" 
+            onClick={toggleBlur} 
+            $active={isBlurEnabled} 
+            $activeColor={THEME.accent} 
+            title="Effets vidéo (Flou d'arrière-plan)"
+            disabled={!isCameraEnabled}
+            style={{ opacity: isCameraEnabled ? 1 : 0.5 }}
+          >
+            <Focus />
+          </ControlButton>
+        </ButtonGroup>
 
         <ControlButton className="focus-visible-ring" onClick={controls.toggleMic} $active={isMicrophoneEnabled} $activeColor={THEME.accent} title={isMicrophoneEnabled ? "Désactiver le micro" : "Activer le micro"} aria-label={isMicrophoneEnabled ? "Désactiver le micro" : "Activer le micro"}>
           {isMicrophoneEnabled ? <Mic /> : <MicOff color={THEME.danger} />}
@@ -207,9 +238,6 @@ export const ControlBar = ({
             <Layout />
           </ControlButton>
 
-          <ControlButton onClick={toggleBlur} $active={isBlurEnabled} $activeColor={THEME.accent} title="Flouter l'arrière-plan">
-            <Sparkles />
-          </ControlButton>
 
           <ControlButton onClick={toggleRecording} $active={isRecording} $activeColor={THEME.danger} title={isRecording ? "Arrêter l'enregistrement" : "Démarrer l'enregistrement"}>
             <VideoIcon />
