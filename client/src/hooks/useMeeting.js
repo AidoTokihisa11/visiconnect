@@ -73,7 +73,6 @@ export const useRoomToken = (roomName, participantName) => {
 export const useMeeting = (maxQualityLock = true) => {
   const room = useRoomContext();
   const { localParticipant, isCameraEnabled, isMicrophoneEnabled, isScreenShareEnabled } = useLocalParticipant();
-  } = useLocalParticipant();
   const remoteParticipants = useParticipants();
   const [devices, setDevices] = useState({
     cameras: [],
