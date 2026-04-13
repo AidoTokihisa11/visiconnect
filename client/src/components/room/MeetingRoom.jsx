@@ -10,7 +10,7 @@ import { useMeeting } from '../../hooks/useMeeting';
 import { useChat } from '../../hooks/useChat';
 import { usePricing } from '../../hooks/usePricing';
 import { useQuery } from 'convex/react';
-import { api } from '../../../../convex/_generated/api';
+import { api } from '../../../convex/_generated/api';
 
 // Components
 import { RoomHeader } from './RoomHeader';

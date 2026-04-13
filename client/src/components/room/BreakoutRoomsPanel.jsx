@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useQuery, useMutation } from 'convex/react';
-import { api } from '../../../../convex/_generated/api';
+import { api } from '../../../convex/_generated/api';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 import { X, Plus, Trash2, Users, ArrowRight } from 'lucide-react';
 
