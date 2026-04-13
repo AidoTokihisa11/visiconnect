@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import {
   Mic, MicOff, Video, VideoOff, Phone, Monitor, MonitorOff,
-  MessageSquare, Sparkles, Layout, Activity, BarChart2, Settings2, MoreHorizontal
+  MessageSquare, Sparkles, Layout, Activity, BarChart2, Settings2, MoreHorizontal, VideoIcon, EyeOff, PieChart, Users
 } from 'lucide-react';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 
@@ -174,6 +174,10 @@ export const ControlBar = ({
   sidePanelOpen,
   activePanel,
   togglePanel,
+  isRecording,
+  toggleRecording,
+  isBlurEnabled,
+  toggleBlur,
   onLeave
 }) => {
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
@@ -203,6 +207,14 @@ export const ControlBar = ({
             <Layout />
           </ControlButton>
 
+          <ControlButton onClick={toggleBlur} $active={isBlurEnabled} $activeColor={THEME.accent} title="Flouter l'arrière-plan">
+            <Sparkles />
+          </ControlButton>
+
+          <ControlButton onClick={toggleRecording} $active={isRecording} $activeColor={THEME.danger} title={isRecording ? "Arrêter l'enregistrement" : "Démarrer l'enregistrement"}>
+            <VideoIcon />
+          </ControlButton>
+
           <ControlButton onClick={() => setShowStats(!showStats)} $active={showStats} $activeColor="#10b981" title="Stats / Debug (4K)">
             <Activity />
           </ControlButton>
@@ -213,6 +225,12 @@ export const ControlBar = ({
             <Sparkles />
           </ControlButton>
 
+          <ControlButton onClick={() => togglePanel('polls')} $active={activePanel === 'polls' && sidePanelOpen} $activeColor={THEME.accent} title="Sondages">
+            <PieChart />          </ControlButton>
+
+          <ControlButton onClick={() => togglePanel('breakout')} $active={activePanel === 'breakout' && sidePanelOpen} $activeColor={THEME.accent} title="Salles de sous-commission">
+            <Users />
+          </ControlButton>
           <ControlButton onClick={() => togglePanel('analytics')} $active={activePanel === 'analytics' && sidePanelOpen} $activeColor={THEME.accent} title="Analytics">
             <BarChart2 />
           </ControlButton>
@@ -242,6 +260,12 @@ export const ControlBar = ({
             </ControlButton>
             <ControlButton onClick={() => { togglePanel('ai'); setIsMoreMenuOpen(false); }} $active={activePanel === 'ai' && sidePanelOpen} $activeColor={THEME.accent}>
               <Sparkles />
+            </ControlButton>
+            <ControlButton onClick={() => { togglePanel('polls'); setIsMoreMenuOpen(false); }} $active={activePanel === 'polls' && sidePanelOpen} $activeColor={THEME.accent}>
+              <PieChart />
+            </ControlButton>
+            <ControlButton onClick={() => { togglePanel('breakout'); setIsMoreMenuOpen(false); }} $active={activePanel === 'breakout' && sidePanelOpen} $activeColor={THEME.accent}>
+              <Users />
             </ControlButton>
             <ControlButton onClick={() => { toggleWhiteboard(); setIsMoreMenuOpen(false); }} $active={whiteboardOpen} $activeColor={THEME.accent}>
               <Layout />

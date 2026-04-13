@@ -1,0 +1,10 @@
+--- client/src/components/room/BottomControlBar.jsx
++++ client/src/components/room/BottomControlBar.jsx
+@@ -83,7 +83,7 @@
+   togglePanel,
+   isRecording,
+   toggleRecording,
+   isBlurEnabled,
+   toggleBlur,
+   onLeave
+ }) => {

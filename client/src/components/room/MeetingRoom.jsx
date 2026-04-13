@@ -3,12 +3,14 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { AnimatePresence, motion } from 'framer-motion';
 import { RoomAudioRenderer, StartAudio } from '@livekit/components-react';
-import { X, ChevronRight, BarChart2, Bot } from 'lucide-react';
+import { X, ChevronRight, BarChart2, Bot, PieChart } from 'lucide-react';
 
 // Hooks
 import { useMeeting } from '../../hooks/useMeeting';
 import { useChat } from '../../hooks/useChat';
 import { usePricing } from '../../hooks/usePricing';
+import { useQuery } from 'convex/react';
+import { api } from '../../../../convex/_generated/api';
 
 // Components
 import { RoomHeader } from './RoomHeader';
@@ -20,6 +22,9 @@ import { AnalyticsPanel } from './AnalyticsPanel';
 import { AIChatPanel } from './AIChatPanel';
 import { RoomSettingsPanel } from './RoomSettingsPanel';
 import { MeetingChat } from './MeetingChat';
+import PollsPanel from './PollsPanel';
+import BreakoutRoomsPanel from './BreakoutRoomsPanel';
+import { useRecording } from '../../hooks/useRecording';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 
 // Layout Styled Components
@@ -118,6 +123,24 @@ const WhiteboardOverlay = styled(motion.div)`
 `;
 
 export const MeetingRoom = ({ onLeave, roomId, user }) => {
+  const originalRoomId = new URLSearchParams(window.location.search).get('parent') || roomId;
+
+  const activeBreakout = useQuery(api.breakout.getActiveBreakout, { meetingId: originalRoomId });
+
+  useEffect(() => {
+    if (!activeBreakout || !user?.identity) return;
+    
+    const assignedRoom = activeBreakout.rooms.find(r => 
+      r.participants.includes(user.identity) || r.participants.includes(user.email)
+    );
+    
+    if (assignedRoom && roomId === originalRoomId) {
+      window.location.href = `/room/${originalRoomId}-${assignedRoom.id}?parent=${originalRoomId}`;
+    } else if (!assignedRoom && roomId !== originalRoomId) {
+      window.location.href = `/room/${originalRoomId}`; 
+    }
+  }, [activeBreakout, roomId, originalRoomId, user]);
+
   const [roomSettings, setRoomSettings] = useState(() => {
     try {
       const stored = localStorage.getItem('visiconnect_room_settings');
@@ -139,6 +162,8 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
     isCameraEnabled,
     isMicrophoneEnabled,
     isScreenShareEnabled,
+    isBlurEnabled,
+    toggleBlur,
     tracks, 
     devices,
     selectedDevices,
@@ -154,6 +179,9 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
   const [sidePanelOpen, setSidePanelOpen] = useState(false);
   const [activePanel, setActivePanel] = useState('chat'); // 'chat' | 'ai' | 'analytics' | 'settings'
   const [messageText, setMessageText] = useState('');
+  
+  const { isRecording, toggleRecording } = useRecording();
+
   useEffect(() => {
     localStorage.setItem('visiconnect_room_settings', JSON.stringify(roomSettings));
   }, [roomSettings]);
@@ -261,6 +289,10 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
          sidePanelOpen={sidePanelOpen}
          activePanel={activePanel}
          togglePanel={togglePanel}
+         isRecording={isRecording}
+         toggleRecording={toggleRecording}
+         isBlurEnabled={isBlurEnabled}
+         toggleBlur={toggleBlur}
          onLeave={onLeave}
       />
 
@@ -277,6 +309,8 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
             <PanelHeader>
               <h3>
                 {activePanel === 'chat' && <><ChevronRight size={20} /> Discussion</>}
+                {activePanel === 'polls' && <><PieChart size={20} /> Sondages</>}
+                {activePanel === 'breakout' && <><Users size={20} /> Salles de sous-commission</>}
                 {activePanel === 'ai' && <><Bot size={20} /> Assistant IA</>}
                 {activePanel === 'analytics' && <><BarChart2 size={20} /> Analytics</>}
                 {activePanel === 'settings' && <><ChevronRight size={20} /> Parametres</>}
@@ -298,7 +332,9 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
                    onSendMessage={handleSendMessage}
                  />
                )}
-               
+               {activePanel === 'polls' && <PollsPanel meetingId={originalRoomId} currentUser={{ identity: localParticipant?.identity }} onClose={() => togglePanel('polls')} />}
+               {activePanel === 'breakout' && <BreakoutRoomsPanel meetingId={originalRoomId} activeParticipants={remoteParticipants.concat(localParticipant ? [localParticipant] : [])} onClose={() => togglePanel('breakout')} />}
+
                {activePanel === 'ai' && <AIChatPanel responseStyle={roomSettings.aiResponseStyle} roomMessages={messages} roomId={roomId} />}
                {activePanel === 'analytics' && <AnalyticsPanel />}
                {activePanel === 'settings' && (

@@ -1,0 +1,45 @@
+--- client/src/components/room/MeetingRoom.jsx
++++ client/src/components/room/MeetingRoom.jsx
+@@ -48,6 +48,7 @@
+ // Wrapper Component to handle Route Params
+ export default function RoomWrapper() {
+   const { roomId } = useParams();
++  const originalRoomId = new URLSearchParams(window.location.search).get('parent') || roomId;
+   
+   return (
+     <MeetingRoomContentWrapper roomId={roomId} />
+@@ -58,6 +59,7 @@
+ function MeetingRoomContentWrapper({ roomId }) {
+   const navigate = useNavigate();
+   const { user } = useAuthUser();
++  const originalRoomId = new URLSearchParams(window.location.search).get('parent') || roomId;
+ 
+   // Setup Token
+   const [token, setToken] = useState("");
+@@ -69,6 +71,21 @@
+     setToken(devToken);
+   }, [roomId]);
+ 
++  // Check for assigned breakouts
++  const activeBreakout = useQuery(api.breakout.getActiveBreakout, { meetingId: originalRoomId });
++  
++  useEffect(() => {
++    if (!activeBreakout || !user?.id) return;
++    
++    // Find if user is assigned to any room
++    const assignedRoom = activeBreakout.rooms.find(r => r.participants.includes(user.id) || r.participants.includes(user.identity));
++    
++    if (assignedRoom && roomId === originalRoomId) {
++      navigate(`/room/${originalRoomId}-${assignedRoom.id}?parent=${originalRoomId}`);
++    } else if (!assignedRoom && roomId !== originalRoomId) {
++      navigate(`/room/${originalRoomId}`); // Breakout closed, return to main
++    }
++  }, [activeBreakout, roomId, originalRoomId, user, navigate]);
++
+   // Configuration states
+   const [activePanel, setActivePanel] = useState('chat');
+   const [sidePanelOpen, setSidePanelOpen] = useState(false);
+@@ -107,6 +124,19 @@
+   // -- Render --
+   if (!token) {
+     return (

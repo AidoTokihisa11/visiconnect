@@ -6,6 +6,7 @@ import {
   useParticipants
 } from '@livekit/components-react';
 import { Track } from 'livekit-client';
+import { BackgroundBlur } from '@livekit/track-processors';
 
 /**
  * Hook to fetch LiveKit token
@@ -72,6 +73,7 @@ export const useRoomToken = (roomName, participantName) => {
 export const useMeeting = (maxQualityLock = true) => {
   const room = useRoomContext();
   const { localParticipant, isCameraEnabled, isMicrophoneEnabled, isScreenShareEnabled } = useLocalParticipant();
+  } = useLocalParticipant();
   const remoteParticipants = useParticipants();
   const [devices, setDevices] = useState({
     cameras: [],
@@ -83,7 +85,9 @@ export const useMeeting = (maxQualityLock = true) => {
     microphoneId: '',
     speakerId: '',
   });
-  
+
+  const [isBlurEnabled, setIsBlurEnabled] = useState(false);
+
   // Get all camera and screen share tracks
   // This hook automatically handles updates when tracks are published/subscribed
   const tracks = useTracks(
@@ -119,6 +123,26 @@ export const useMeeting = (maxQualityLock = true) => {
       });
     }
   }, [localParticipant, isScreenShareEnabled]);
+
+  const toggleBlur = useCallback(async () => {
+    if (!localParticipant) return;
+    
+    try {
+      const videoTrack = localParticipant.getTrackPublication(Track.Source.Camera)?.videoTrack;
+      if (!videoTrack) return;
+      
+      if (isBlurEnabled) {
+         await videoTrack.setProcessor(null);
+         setIsBlurEnabled(false);
+      } else {
+         const blur = BackgroundBlur(10, { delegate: 'GPU' });
+         await videoTrack.setProcessor(blur);
+         setIsBlurEnabled(true);
+      }
+    } catch (err) {
+      console.error('Failed to toggle blur', err);
+    }
+  }, [localParticipant, isBlurEnabled]);
 
   const refreshDevices = useCallback(async () => {
     if (!navigator?.mediaDevices?.enumerateDevices) return;
@@ -201,6 +225,8 @@ export const useMeeting = (maxQualityLock = true) => {
     isCameraEnabled,
     isMicrophoneEnabled,
     isScreenShareEnabled,
+    isBlurEnabled,
+    toggleBlur,
     remoteParticipants,
     tracks,
     activeSpeakerId: room?.activeSpeaker?.identity,

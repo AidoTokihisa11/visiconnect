@@ -8,8 +8,10 @@
  * @module
  */
 
+import type * as breakout from "../breakout.js";
 import type * as messages from "../messages.js";
 import type * as notifications from "../notifications.js";
+import type * as polls from "../polls.js";
 import type * as whiteboard from "../whiteboard.js";
 
 import type {
@@ -19,8 +21,10 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  breakout: typeof breakout;
   messages: typeof messages;
   notifications: typeof notifications;
+  polls: typeof polls;
   whiteboard: typeof whiteboard;
 }>;
 
