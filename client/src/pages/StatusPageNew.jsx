@@ -192,7 +192,7 @@ const StatusPageNew = () => {
         <Container>
           <SystemGrid>
             <SystemCard>
-              <SystemName>API Visiconnect</SystemName>
+              <SystemName>API VisioConnect</SystemName>
               <StatusIndicator status="operational">Opérationnel</StatusIndicator>
             </SystemCard>
             <SystemCard>

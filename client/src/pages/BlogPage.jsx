@@ -206,7 +206,7 @@ const BlogPage = () => {
         {
             id: 3,
             title: "Sécurité des données : notre priorité",
-            excerpt: "Un aperçu approfondi de la manière dont Visiconnect chiffre vos communications et protège vos données sensibles.",
+            excerpt: "Un aperçu approfondi de la manière dont VisioConnect chiffre vos communications et protège vos données sensibles.",
             category: "Sécurité",
             date: "08 Fév 2024",
             author: "Sophie B.",
@@ -247,7 +247,7 @@ const BlogPage = () => {
             <MainContent>
                 <Hero>
                     <SectionHeader>
-                        <h1>Le Blog Visiconnect</h1>
+                        <h1>Le Blog VisioConnect</h1>
                         <p>
                             Actualités, conseils et insights sur le monde du travail collaboratif et de la communication.
                         </p>

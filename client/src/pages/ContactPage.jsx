@@ -418,7 +418,7 @@ export default function ContactPage() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          {/* Panneau d'Information (Couleurs claires Visiconnect) */}
+          {/* Panneau d'Information (Couleurs claires VisioConnect) */}
           <LeftPanel>
             <PanelContent>
               <h3>Informations </h3>

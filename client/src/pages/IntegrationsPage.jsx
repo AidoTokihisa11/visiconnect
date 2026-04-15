@@ -160,12 +160,12 @@ const FilterButton = styled.button`
 
 const INTEGRATIONS = [
   { name: 'Slack', desc: 'Lancez des réunions directement depuis vos canaux Slack avec la commande /visi.', icon: '💬' },
-  { name: 'Google Calendar', desc: 'Ajoutez automatiquement des liens Visiconnect à vos invitations de calendrier.', icon: '📅' },
-  { name: 'Microsoft Teams', desc: 'Intégrez Visiconnect comme onglet dans vos équipes Teams.', icon: '👥' },
+  { name: 'Google Calendar', desc: 'Ajoutez automatiquement des liens VisioConnect à vos invitations de calendrier.', icon: '📅' },
+  { name: 'Microsoft Teams', desc: 'Intégrez VisioConnect comme onglet dans vos équipes Teams.', icon: '👥' },
   { name: 'Trello', desc: 'Associez des réunions à vos cartes Trello pour un contexte immédiat.', icon: '📋' },
   { name: 'Notion', desc: 'Intégrez vos enregistrements de réunions directement dans vos pages Notion.', icon: '📝' },
   { name: 'Figma', desc: 'Collaborez sur vos designs en temps réel avec la vidéo intégrée.', icon: '🎨' },
-  { name: 'Zapier', desc: 'Connectez Visiconnect à plus de 3000 applications via Zapier.', icon: '⚡' },
+  { name: 'Zapier', desc: 'Connectez VisioConnect à plus de 3000 applications via Zapier.', icon: '⚡' },
   { name: 'Salesforce', desc: 'Enregistrez automatiquement vos appels clients dans vos fiches contacts.', icon: '☁️' },
 ];
 
@@ -176,7 +176,7 @@ const IntegrationsPage = () => {
       <MainContent>
         <Hero>
           <Title>Connectez vos outils préférés</Title>
-          <Subtitle>Visiconnect s'intègre parfaitement à votre flux de travail existant.</Subtitle>
+          <Subtitle>VisioConnect s'intègre parfaitement à votre flux de travail existant.</Subtitle>
           
           <CategoryFilter>
             <FilterButton active>Tous</FilterButton>

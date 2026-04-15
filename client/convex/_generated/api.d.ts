@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as breakout from "../breakout.js";
 import type * as cookies from "../cookies.js";
 import type * as messages from "../messages.js";
 import type * as notifications from "../notifications.js";
@@ -21,6 +22,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  breakout: typeof breakout;
   cookies: typeof cookies;
   messages: typeof messages;
   notifications: typeof notifications;

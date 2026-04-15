@@ -172,7 +172,7 @@ const CommunityPage = () => {
       <HeaderClean />
       <MainContent>
         <Hero>
-          <Title>Communauté Visiconnect</Title>
+          <Title>Communauté VisioConnect</Title>
           <Subtitle>Rejoignez des milliers de créateurs, développeurs et professionnels.</Subtitle>
         </Hero>
 
@@ -206,7 +206,7 @@ const CommunityPage = () => {
           </ForumHeader>
           <TopicList>
             <TopicItem>
-              <TopicTitle>Comment intégrer Visiconnect dans une app React ?</TopicTitle>
+              <TopicTitle>Comment intégrer VisioConnect dans une app React ?</TopicTitle>
               <TopicMeta>32 rép • il y a 2h</TopicMeta>
             </TopicItem>
             <TopicItem>

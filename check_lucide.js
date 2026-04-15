@@ -1,2 +1,2 @@
 const fs = require('fs');
-console.log("Checking lucide package");
+console.log('Testing lucide icons');

@@ -74,7 +74,47 @@ app.post('/api/stripe/webhook', express.raw({type: 'application/json'}), (req, r
 });
 
 app.use(express.json());
+  // === EMAIL LOGIC (RESEND) ===
+  const { Resend } = require('resend');
+  const fs = require('fs');
+  const path = require('path');
+  // Le token est mis en dur pour l'instant selon ta demande, 
+  // mais idéalement il faudra le passer dans process.env.RESEND_API_KEY
+  const resend = new Resend('re_f7CXkPZ1_FouifSQZycKkbcStAoZkGgW8');
 
+  app.post('/api/send-email', async (req, res) => {
+    try {
+      const { to, subject, html } = req.body;
+
+      // 1. Préparation de la pièce jointe (PDF)
+      const attachments = [];
+      const pdfPath = path.join(__dirname, 'public', 'Guide_Beta_VisioConnect.pdf');
+      
+      // On vérifie si le fichier existe pour éviter que le serveur plante
+      // s'il n'y est pas encore
+      if (fs.existsSync(pdfPath)) {
+        const pdfBuffer = fs.readFileSync(pdfPath);
+        attachments.push({
+          filename: 'Guide_Beta_VisioConnect.pdf', // Le nom affiché dans la boîte mail
+          content: pdfBuffer,
+        });
+      }
+
+      // 2. Envoi de l'email avec Resend
+      const data = await resend.emails.send({
+        from: 'VisioConnect <onboarding@resend.dev>', // Adresse de test fournie par Resend    
+        to: to || 'theo.garces.aido@gmail.com', // Ton email par défaut
+        subject: subject || 'Votre accès Bêta VisioConnect',
+        html: html || '<p>Bienvenue sur <strong>VisioConnect</strong> !</p>',
+        attachments: attachments.length > 0 ? attachments : undefined
+      });
+
+      res.status(200).json({ success: true, data });
+    } catch (error) {
+      console.error('Erreur lors de l\'envoi de l\'email :', error);
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
 app.post('/api/ai/chat', async (req, res) => {
   const { messages = [], style = 'balanced', purpose = 'chat' } = req.body || {};
 
@@ -97,7 +137,7 @@ app.post('/api/ai/chat', async (req, res) => {
   const systemPrompt =
     purpose === 'summary'
       ? `Tu es un assistant de reunion. Produis un resume strictement base sur le transcript. ${stylePrompt} Sections: Vue d'ensemble, Decisions, Actions, Questions ouvertes.`
-      : `Tu es l'assistant IA de VisiConnect. ${stylePrompt}`;
+      : `Tu es l'assistant IA de VisioConnect. ${stylePrompt}`;
 
   const payload = {
     messages: [{ role: 'system', content: systemPrompt }, ...messages],
@@ -167,13 +207,13 @@ app.post('/api/create-checkout-session', async (req, res) => {
   // ou utiliser des prix dynamiques comme ici pour le test
   if (plan === 'starter') {
     amount = 0; // 0.00 EUR
-    name = 'VisiConnect Starter';
+    name = 'VisioConnect Starter';
   } else if (plan === 'pro') {
     amount = billingCycle === 'annual' ? 14400 : 1500; // 144.00 ou 15.00 EUR
-    name = 'VisiConnect Pro';
+    name = 'VisioConnect Pro';
   } else if (plan === 'business') {
     amount = billingCycle === 'annual' ? 34800 : 3500; // 348.00 ou 35.00 EUR
-    name = 'VisiConnect Business';
+    name = 'VisioConnect Business';
   } else {
     return res.status(400).json({ error: 'Plan invalide' });
   }
@@ -325,7 +365,7 @@ app.get('/health', (req, res) => {
 // Démarrage du serveur
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
-  console.log(`🚀 Serveur VisiConnect démarré sur le port ${PORT}`);
+  console.log(`🚀 Serveur VisioConnect démarré sur le port ${PORT}`);
   console.log(`📊 Interface de santé: http://localhost:${PORT}/health`);
   console.log(`🔐 Authentification: Supabase (client-side)`);
   console.log(`💾 Stockage: Supabase (pas de DB PostgreSQL directe sur backend)`);

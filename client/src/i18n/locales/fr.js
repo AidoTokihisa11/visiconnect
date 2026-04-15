@@ -650,7 +650,7 @@ const frTranslations = {
     participants: "8"
   },
   testimonials: {
-    title: "Ils font confiance à Visiconnect",
+    title: "Ils font confiance à VisioConnect",
     subtitle: "Des entreprises de toutes tailles utilisent notre plateforme pour transformer leur communication et collaborer efficacement.",
     items: {
       1: {

@@ -212,7 +212,7 @@ const DocsPage = () => {
                 <HeaderSection>
                     <Title>Documentation</Title>
                     <Subtitle>
-                        Tout ce dont vous avez besoin pour configurer, utiliser et intégrer Visiconnect dans votre entreprise.
+                        Tout ce dont vous avez besoin pour configurer, utiliser et intégrer VisioConnect dans votre entreprise.
                     </Subtitle>
                     <SearchBar>
                         <SearchInput type="text" placeholder="Rechercher dans la documentation..." />
@@ -240,7 +240,7 @@ const DocsPage = () => {
                         <IconBox bgColor="#eff6ff" color="#2563eb">⚙️</IconBox>
                         <CardTitle>API & Intégrations</CardTitle>
                         <CardDesc>
-                            Documentation technique pour les développeurs souhaitant intégrer Visiconnect à leurs outils.
+                            Documentation technique pour les développeurs souhaitant intégrer VisioConnect à leurs outils.
                         </CardDesc>
                         <LinkList>
                             <LinkItem><a href="#api-ref">Référence API REST</a></LinkItem>

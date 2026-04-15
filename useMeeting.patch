@@ -1,0 +1,10 @@
+--- client/src/hooks/useMeeting.js
++++ client/src/hooks/useMeeting.js
+@@ -73,7 +73,6 @@
+ export const useMeeting = (maxQualityLock = true) => {
+   const room = useRoomContext();
+   const { localParticipant, isCameraEnabled, isMicrophoneEnabled, isScreenShareEnabled } = useLocalParticipant();
+-  } = useLocalParticipant();
+   const remoteParticipants = useParticipants();
+   const [devices, setDevices] = useState({
+     cameras: [],

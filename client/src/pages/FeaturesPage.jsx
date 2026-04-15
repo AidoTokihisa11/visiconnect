@@ -231,7 +231,7 @@ const FeaturesPage = () => {
 
         <CallToAction 
              title="Prêt à transformer vos communications ?"
-             description="Rejoignez des milliers d'équipes qui font confiance à Visiconnect pour leurs réunions."
+             description="Rejoignez des milliers d'équipes qui font confiance à VisioConnect pour leurs réunions."
              buttonText="Commencer Gratuitement"
              buttonLink="/register"
         />

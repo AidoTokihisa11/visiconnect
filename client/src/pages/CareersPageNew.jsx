@@ -194,7 +194,7 @@ const CareersPageNew = () => {
       <HeaderClean />
       <MainContent>
         <Hero>
-          <Title>Rejoignez l'aventure Visiconnect</Title>
+          <Title>Rejoignez l'aventure VisioConnect</Title>
           <Subtitle>Construisez avec nous le futur de la collaboration vidéo.</Subtitle>
         </Hero>
 

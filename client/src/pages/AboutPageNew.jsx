@@ -222,13 +222,13 @@ const AboutPageNew = () => {
           <SectionTitle>Notre Histoire</SectionTitle>
           <StoryContainer>
             <TextBlock>
-              Visiconnect est né d'un constat simple : la communication vidéo est devenue essentielle, mais les outils existants étaient soit trop complexes, soit peu sécurisés, soit trop coûteux.
+              VisioConnect est né d'un constat simple : la communication vidéo est devenue essentielle, mais les outils existants étaient soit trop complexes, soit peu sécurisés, soit trop coûteux.
             </TextBlock>
             <TextBlock>
               Nous avons rassemblé une équipe d'ingénieurs passionnés et de designers pour créer une plateforme qui met l'utilisateur au premier plan. Après des mois de développement intensif, nous avons lancé une solution qui combine la plus haute qualité vidéo avec une interface d'une simplicité enfantine.
             </TextBlock>
             <TextBlock>
-              Aujourd'hui, Visiconnect aide des milliers d'entreprises, d'écoles et de familles à rester proches, peu importe la distance qui les sépare.
+              Aujourd'hui, VisioConnect aide des milliers d'entreprises, d'écoles et de familles à rester proches, peu importe la distance qui les sépare.
             </TextBlock>
           </StoryContainer>
         </Section>

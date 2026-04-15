@@ -200,7 +200,7 @@ const UserGuidePageNew = () => {
       <MainContent>
         <Hero>
           <Title>Guide Utilisateur</Title>
-          <Subtitle>Tout ce que vous devez savoir pour maîtriser Visiconnect.</Subtitle>
+          <Subtitle>Tout ce que vous devez savoir pour maîtriser VisioConnect.</Subtitle>
           <SearchBar placeholder="Rechercher un article..." />
         </Hero>
 

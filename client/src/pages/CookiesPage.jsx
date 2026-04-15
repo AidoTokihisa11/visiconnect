@@ -33,7 +33,7 @@ const CookiesPage = () => {
         <LegalLayout title={t('cookiePolicy')} lastUpdated="21 Février 2024">
             <SectionTitle>1. Introduction</SectionTitle>
             <Paragraph>
-              Chez Visiconnect, nous croyons en la transparence sur la façon dont nous utilisons vos données. Cette politique fournit des informations détaillées sur la manière et le moment où nous utilisons des cookies.
+              Chez VisioConnect, nous croyons en la transparence sur la façon dont nous utilisons vos données. Cette politique fournit des informations détaillées sur la manière et le moment où nous utilisons des cookies.
             </Paragraph>
 
             <SectionTitle>2. Qu'est-ce qu'un cookie ?</SectionTitle>

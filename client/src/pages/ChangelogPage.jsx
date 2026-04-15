@@ -230,7 +230,7 @@ const ChangelogPage = () => {
             date: '1 Novembre 2023',
             title: 'Lancement Officiel',
             notes: [
-                'Lancement public de Visiconnect.',
+                'Lancement public de VisioConnect.',
                 'Appels audio et vidéo illimités.',
                 'Messagerie instantanée sécurisée.',
                 'Gestion des équipes.'
@@ -247,7 +247,7 @@ const ChangelogPage = () => {
                     <SectionHeader>
                         <h1>Nouveautés</h1>
                         <p>
-                            Découvrez les dernières mises à jour, améliorations et corrections de Visiconnect. Nous travaillons constamment pour améliorer votre expérience.
+                            Découvrez les dernières mises à jour, améliorations et corrections de VisioConnect. Nous travaillons constamment pour améliorer votre expérience.
                         </p>
                     </SectionHeader>
                 </Hero>
