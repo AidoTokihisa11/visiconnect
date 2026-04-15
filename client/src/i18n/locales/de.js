@@ -1,4 +1,3 @@
-// German translations
 const deTranslations = {
   common: {
     loading: "Laden...",
@@ -33,7 +32,6 @@ const deTranslations = {
     register: "Registrieren",
     forgotPassword: "Passwort vergessen?",
   },
-
   navigation: {
     home: "Startseite",
     features: "Funktionen",
@@ -50,17 +48,20 @@ const deTranslations = {
     terms: "Nutzungsbedingungen",
     cookies: "Cookies",
     security: "Sicherheit",
+    demo: "Demo",
+    developers: "Entwickler",
   },
-
   hero: {
     title: "Die Videokonferenz-Plattform der nächsten Generation",
     subtitle:
-      "Verbinden Sie sich einfach mit Ihren Teams durch unsere fortschrittliche und intuitive Videokonferenz-Lösung",
+      "Treten Sie einfach mit Ihren Teams in Kontakt durch unsere fortschrittliche und intuitive Videokonferenzlösung",
     startFree: "Kostenlos starten",
     watchDemo: "Demo ansehen",
     trustedBy: "Vertraut von über {{count}} Unternehmen weltweit",
+    title1: "Videokonferenzen ",
+    title2: "einfach professionell.",
+    testRoom: "Test Room Pro",
   },
-
   features: {
     title: "Leistungsstarke Funktionen",
     subtitle: "Alles was Sie für produktive Meetings brauchen",
@@ -93,7 +94,6 @@ const deTranslations = {
       description: "Ende-zu-Ende-Verschlüsselung und Sicherheitskontrollen",
     },
   },
-
   pricing: {
     title: "Einfache und transparente Preise",
     subtitle: "Wählen Sie den Plan, der zu Ihren Bedürfnissen passt",
@@ -139,7 +139,6 @@ const deTranslations = {
     getStarted: "Loslegen",
     contactSales: "Vertrieb kontaktieren",
   },
-
   auth: {
     login: {
       title: "Anmelden",
@@ -177,7 +176,6 @@ const deTranslations = {
       backToLogin: "Zurück zur Anmeldung",
     },
   },
-
   meeting: {
     title: "Meeting",
     participants: "Teilnehmer",
@@ -195,7 +193,6 @@ const deTranslations = {
     joinedMeeting: "{{name}} ist dem Meeting beigetreten",
     leftMeeting: "{{name}} hat das Meeting verlassen",
   },
-
   tutorial: {
     title: "Erste Schritte Guide",
     welcome: "Willkommen bei VisiConnect!",
@@ -220,7 +217,6 @@ const deTranslations = {
     finish: "Fertig",
     skip: "Guide überspringen",
   },
-
   errors: {
     network: "Netzwerkverbindungsfehler",
     unauthorized: "Nicht autorisierter Zugriff",
@@ -233,7 +229,6 @@ const deTranslations = {
     contactSupport:
       "Kontaktieren Sie den Support, wenn das Problem weiterhin besteht",
   },
-
   success: {
     accountCreated: "Konto erfolgreich erstellt!",
     passwordReset: "Reset-E-Mail gesendet",
@@ -242,56 +237,45 @@ const deTranslations = {
     meetingCreated: "Meeting erfolgreich erstellt",
     profileUpdated: "Profil aktualisiert",
   },
-
-  // HomePage spezifische Schlüssel
   featureHDVideo: "HD-Video",
   featureHDVideoDesc: "Hochauflösende Videoqualität für kristallklare Meetings",
   featureHDBenefit1: "Auflösung bis zu 4K",
   featureHDBenefit2: "Studio-Audioqualität",
   featureHDBenefit3: "Automatische Optimierung",
-
   featureSecurity: "Erweiterte Sicherheit",
   featureSecurityDesc: "Maximaler Schutz mit Ende-zu-Ende-Verschlüsselung",
   featureSecurityBenefit1: "AES-256-Verschlüsselung",
   featureSecurityBenefit2: "Sichere Authentifizierung",
   featureSecurityBenefit3: "DSGVO-Konformität",
-
   featureMultiparticipants: "Mehrere Teilnehmer",
   featureMultiparticipantsDesc:
     "Meetings mit mehreren Teilnehmern gleichzeitig",
   featureMultiparticipantsBenefit1: "Bis zu 50 Teilnehmer",
   featureMultiparticipantsBenefit2: "Berechtigungsverwaltung",
   featureMultiparticipantsBenefit3: "Adaptive Rasteransicht",
-
   featurePerformance: "Optimale Leistung",
   featurePerformanceDesc:
     "Fortschrittliche Technologie für ein reibungsloses Erlebnis",
   featurePerformanceBenefit1: "Ultra-niedrige Latenz",
   featurePerformanceBenefit2: "Bandbreitenoptimierung",
   featurePerformanceBenefit3: "Automatische Anpassung",
-
   featureAccessibility: "Barrierefreiheit",
   featureAccessibilityDesc: "Plattform für alle zugänglich, überall",
   featureAccessibilityBenefit1: "Kompatibel mit allen Geräten",
   featureAccessibilityBenefit2: "Intuitive Benutzeroberfläche",
   featureAccessibilityBenefit3: "Multi-Browser-Unterstützung",
-
   featureInterface: "Moderne Benutzeroberfläche",
   featureInterfaceDesc:
     "Sauberes Design und außergewöhnliche Benutzererfahrung",
   featureInterfaceBenefit1: "Responsives Design",
   featureInterfaceBenefit2: "Intuitive Navigation",
   featureInterfaceBenefit3: "Anpassbare Themes",
-
-  // Preispläne
   freePlan: "Kostenloser Plan",
   proPlan: "Pro Plan",
   maxParticipants: "maximale Teilnehmer",
   duration: "Meeting-Minuten",
   unlimited: "unbegrenzt",
   getStarted: "Loslegen",
-
-  // Statistiken
   statValue1: "3",
   statLabel1: "Aktive Tester",
   statValue2: "2024",
@@ -300,20 +284,14 @@ const deTranslations = {
   statLabel3: "Ziel-Verfügbarkeit",
   statValue4: "♥",
   statLabel4: "Mit Leidenschaft gemacht",
-
-  // Verschiedene Texte
   copyrightText: "© 2024 VisioConnect. Entwickelt mit ♥ von Théo Garcès.",
   developmentStatus: "Plattform in Entwicklung - Beta-Version",
-
-  // Hero section
   heroTitle: "Videokonferenz",
   heroSubtitle: "Einfach & Effektiv",
   heroDescription:
     "VisioConnect - Videokonferenz-Plattform entwickelt von Théo Garcès. Einfache und effektive Lösung für Ihre Online-Meetings, derzeit getestet von einem kleinen Team von 3 Personen. Moderne Benutzeroberfläche, zuverlässige Technologie.",
   testPlatform: "Plattform testen",
   seeFeatures: "Funktionen ansehen",
-
-  // Pricing section
   choosePlan: "Wählen Sie Ihren Plan",
   flexibleSolutions:
     "Flexible Lösungen für alle Ihre Bedürfnisse, vom persönlichen Gebrauch bis hin zu großen Unternehmen",
@@ -336,8 +314,6 @@ const deTranslations = {
   directSupport: "Direkter Support mit Théo",
   needsAdaptation: "Anpassung an Bedürfnisse",
   contactMe: "Kontaktieren Sie mich",
-
-  // Pages and common translations
   aboutPageTitle: "Über uns",
   aboutPageSubtitle:
     "Entdecken Sie die Geschichte und Vision hinter VisioConnect",
@@ -396,8 +372,6 @@ const deTranslations = {
   cookieTypes: "Verwendete Cookie-Typen",
   essentialCookies: "Wesentliche Cookies",
   analyticsCookies: "Analyse-Cookies",
-
-  // Integrations section
   integrations: {
     title: "Integrationen",
     subtitle:
@@ -435,6 +409,128 @@ const deTranslations = {
       description:
         "Vollständige Integration mit GitHub für Code-Review und Team-Projektmanagement.",
     },
+  },
+  homeFeatures: {
+    video: {
+      title: "Immersive Besprechungsräume",
+      text: "Ultra-flüssige 4K-Qualität, die jede Nuance einfängt. Unsere Engine passt sich automatisch an Ihre Bandbreite an und garantiert keine Aussetzer.",
+      items: [
+        "Bis zu 4k Unterstützung",
+        "KI-Rauschunterdrückung",
+        "VP9 / AV1 Codec",
+      ],
+    },
+    security: {
+      title: "Bankenklasse Sicherheit",
+      text: "End-to-End-Verschlüsselung für alle Anrufe. Ihre Gespräche bleiben jederzeit privat und sicher.",
+      items: [
+        "E2E-Verschlüsselung",
+        "DSGVO-konform",
+        "Keine Daten gespeichert",
+      ],
+    },
+    meetings: {
+      title: "Sofortige Meetings",
+      text: "Starten Sie in Sekunden mit einem Link. Gäste müssen nichts herunterladen oder installieren.",
+      items: ["1-Klick-Links", "Kein Konto erforderlich", "Mobile-kompatibel"],
+    },
+    collaboration: {
+      title: "Team-Zusammenarbeit",
+      text: "Einfache Bildschirmfreigabe, gemeinsames Whiteboard und integrierter Chat für Echtzeit-Produktivität.",
+      items: ["Bildschirmfreigabe", "Gemeinsames Whiteboard", "Echtzeit-Chat"],
+    },
+    instant: {
+      title: "Sofortiger Start",
+      text: "Keine Installation, kein Konto erforderlich",
+      items: ["Teilbare URL", "Sofortiger Zugriff", "Ohne Registrierung"],
+    },
+  },
+  architecture: {
+    title: "Zuverlässige Architektur",
+    subtitle: "Auf den leistungsstärksten offenen Standards aufgebaut.",
+    webrtc: {
+      title: "Powered by WebRTC",
+      desc: "Der weltweite Standard für Echtzeitkommunikation. Keine Plugins, keine Installationen, nur Ihr Browser.",
+      tags: "PeerConnection API • ICE Candidates • DTLS",
+    },
+    sfu: {
+      title: "SFU Architektur",
+      desc: "Selective Forwarding Unit Server, der die Bandbreite für jeden Teilnehmer optimiert und massive Gruppenanrufe ohne Client-Überlastung ermöglicht.",
+    },
+    latency: {
+      title: "Niedrige Latenz",
+      desc: "Latenz < 50ms im lokalen Netzwerk dank UDP-First Optimierung.",
+    },
+    encryption: {
+      title: "E2E Verschlüsselung",
+      desc: "Ihre Medien-Streams sind Ende-zu-Ende verschlüsselt.",
+    },
+  },
+  proofArea: {
+    label: "Early-Access-Phase für HD-Pioniere",
+  },
+  keyStats: {
+    teams: "Beta-Teams",
+    native: "Native App",
+    latency: "Durchschn. Latenz",
+    uptime: "Uptime",
+  },
+  ui: {
+    presentation: "Q3 Präsentation",
+    screenShare: "Bildschirmfreigabe",
+    network: "Globales Netzwerk optimiert",
+    meeting: "Tägliches Standup",
+    live: "LIVE",
+    time: "Vor 24 Min",
+    hd: "HD",
+    plus: "5",
+    participants: "8",
+  },
+  testimonials: {
+    0: {
+      quote:
+        "VisioConnect hat unsere Meetings verändert. Einfach, effektiv, stressfrei.",
+      author: "Marie Dubois",
+      title: "Gründerin von TechStart",
+    },
+    title: "Sie vertrauen VisioConnect",
+    subtitle:
+      "Unternehmen jeder Größe nutzen unsere Plattform für effektive Zusammenarbeit.",
+    items: {
+      1: {
+        content:
+          "Die 4K-Qualität ist einfach verrückt. Man fühlt sich wirklich im selben Raum!",
+        name: "Marie Dubois",
+        role: "Gründerin TechStart",
+      },
+      2: {
+        content: "Perfekt für unsere Remote-Entwickler. Sehr flüssig!",
+        name: "Jean Martin",
+        role: "CTO",
+      },
+      3: {
+        content:
+          "Kein Äquivalent auf dem Markt für diesen Preis. Wirkliche Profi-Qualität.",
+        name: "Sophie Leclerc",
+        role: "Verkaufsdirektorin",
+      },
+    },
+  },
+  footer: {
+    rights: "Alle Rechte vorbehalten",
+    developedWith: "Mit Herzblut entwickelt von einem unabhängigen Ingenieur.",
+    optimizedFor: "Optimiert für reine Leistung, nicht für die Masse.",
+    product: "Produkt",
+    company: "Unternehmen",
+    legal: "Rechtliches",
+  },
+  slider: {
+    title1: "Intuitives Dashboard",
+    desc1: "Kontrollieren Sie Ihre Meetings mit einem Klick.",
+    title2: "Studio Modus",
+    desc2: "4K-Qualität ohne Kompromisse.",
+    title3: "Analytik",
+    desc3: "Verfolgen Sie das Engagement in Echtzeit.",
   },
 };
 
