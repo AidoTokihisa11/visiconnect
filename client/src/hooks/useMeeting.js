@@ -85,8 +85,8 @@ export const useMeeting = (maxQualityLock = true) => {
     speakerId: '',
   });
 
-  const [isBlurEnabled,
-      blurRadius, setIsBlurEnabled] = useState(false);    const [blurRadius, setBlurRadius] = useState(10); // Intensité par défaut : 10 (Moyen)
+    const [isBlurEnabled, setIsBlurEnabled] = useState(false);
+    const [blurRadius, setBlurRadius] = useState(10); // Intensité par défaut : 10 (Moyen)
   // Get all camera and screen share tracks
   // This hook automatically handles updates when tracks are published/subscribed
   const tracks = useTracks(
@@ -148,14 +148,13 @@ const toggleBlur = useCallback(async (newRadius) => {
       } catch (err) {
         console.error('Failed to toggle blur', err);
       }
-    }, [localParticipant, isBlurEnabled,
-      blurRadius, blurRadius]);
+    }, [localParticipant, isBlurEnabled, blurRadius]);
 
-  const refreshDevices = useCallback(async () => {
-    if (!navigator?.mediaDevices?.enumerateDevices) return;
-    try {
-      const list = await navigator.mediaDevices.enumerateDevices();
-      const cameras = list.filter((d) => d.kind === 'videoinput');
+    const refreshDevices = useCallback(async () => {
+      if (!navigator?.mediaDevices?.enumerateDevices) return;
+      try {
+        const list = await navigator.mediaDevices.enumerateDevices();
+        const cameras = list.filter((d) => d.kind === 'videoinput');
       const microphones = list.filter((d) => d.kind === 'audioinput');
       const speakers = list.filter((d) => d.kind === 'audiooutput');
 
