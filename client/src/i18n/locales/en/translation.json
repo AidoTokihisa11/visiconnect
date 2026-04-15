@@ -16,7 +16,7 @@
     "pricing": "Pricing",
     "demo": "Demo",
     "developers": "Developers",
-    "contact": "Contact", 
+    "contact": "Contact",
     "dashboard": "Dashboard",
     "admin": "Admin"
   },
@@ -36,7 +36,7 @@
   },
   "auth": {
     "login_title": "Login",
-    "signup_title": "Create Account", 
+    "signup_title": "Create Account",
     "email_placeholder": "your@email.com",
     "password_placeholder": "••••••••",
     "success_login": "Login successful!",

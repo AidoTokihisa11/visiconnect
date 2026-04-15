@@ -12,7 +12,7 @@
   },
   "navigation": {
     "home": "Accueil",
-    "features": "Fonctionnalités", 
+    "features": "Fonctionnalités",
     "pricing": "Tarifs",
     "demo": "Démo",
     "developers": "Développeurs",
@@ -24,7 +24,7 @@
     "overview": "Vue d'ensemble",
     "users": "Utilisateurs",
     "database": "Base de données",
-    "settings": "Paramètres", 
+    "settings": "Paramètres",
     "metrics": "Métriques Système",
     "api_latency": "Latence API",
     "active_session": "Session Active",
@@ -45,7 +45,7 @@
   },
   "notifications": {
     "language_changed": "Langue changée en Français",
-    "cache_cleared": "Cache vidé avec succès", 
+    "cache_cleared": "Cache vidé avec succès",
     "error_occurred": "Une erreur est survenue"
   }
 }
