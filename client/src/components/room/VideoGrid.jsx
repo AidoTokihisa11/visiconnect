@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { VideoParticipant } from './VideoParticipant';
 import { useParticipants } from '@livekit/components-react';
+import { Track } from 'livekit-client';
 
 const GridContainer = styled.div`
   flex: 1;
@@ -35,7 +36,14 @@ const GridContainer = styled.div`
 
 export const VideoGrid = ({ localParticipant, isLocalCameraEnabled, isLocalMicEnabled, tracks, videoFit = 'cover', showParticipantLabels = true }) => {
   const allParticipants = useParticipants();
-
+    // Memoize the local trackRef to prevent infinite rendering loops in LiveKit VideoTrack
+    const localTrackRef = useMemo(() => {
+        if (!localParticipant) return null;
+        return {
+            participant: localParticipant,
+            source: Track.Source.Camera,
+        };
+    }, [localParticipant]);
   // Find participants who are remote and have NO tracks in the tracks array
   const activeTrackIdentities = new Set(tracks?.map(t => t.participant.identity) || []);
   const tracklessParticipants = allParticipants.filter(p =>
@@ -48,13 +56,10 @@ export const VideoGrid = ({ localParticipant, isLocalCameraEnabled, isLocalMicEn
   return (
     <GridContainer>
       {/* Local Participant */}
-      {localParticipant && (
-        <VideoParticipant
-          participant={localParticipant}
-          trackRef={{ participant: localParticipant, source: 'camera' }}
-          isLocal={true}
-          isSpeaking={localParticipant.isSpeaking}
-          videoFit={videoFit}
+        {localParticipant && localTrackRef && (
+          <VideoParticipant
+            participant={localParticipant}
+            trackRef={localTrackRef}
           showLabel={showParticipantLabels}
           overrideCameraEnabled={isLocalCameraEnabled}
           overrideMicEnabled={isLocalMicEnabled}

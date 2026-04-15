@@ -179,6 +179,29 @@ const ButtonGroup = styled.div`
   }
 `;
 
+const BlurSliderContainer = styled.div`
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: ${THEME.panelBg};
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid ${THEME.border};
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  z-index: 100;
+  color: ${THEME.text};
+  font-size: 0.85rem;
+
+  input[type="range"] {
+    width: 100px;
+    cursor: pointer;
+  }
+`;
+
 export const ControlBar = ({
   localParticipant,
   isCameraEnabled,
@@ -195,10 +218,12 @@ export const ControlBar = ({
   isRecording,
   toggleRecording,
   isBlurEnabled,
+  blurRadius,
   toggleBlur,
   onLeave
 }) => {
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
+  const [showBlurSlider, setShowBlurSlider] = useState(false);
 
   return (
     <BottomBar>
@@ -207,16 +232,45 @@ export const ControlBar = ({
           <Phone style={{ transform: 'rotate(135deg)' }} />
         </EndCallButton>
 
-        <ButtonGroup>
+        <ButtonGroup style={{ position: 'relative' }}>
+          {showBlurSlider && isCameraEnabled && (
+            <BlurSliderContainer>
+              <label htmlFor="blurSlider">Intensité:</label>
+              <input
+                id="blurSlider"
+                type="range"
+                min="0"
+                max="25"
+                step="1"
+                value={blurRadius}
+                onChange={(e) => toggleBlur(parseInt(e.target.value, 10))}
+              />
+            </BlurSliderContainer>
+          )}
           <ControlButton className="focus-visible-ring" onClick={controls.toggleCamera} $active={isCameraEnabled} $activeColor={THEME.accent} title={isCameraEnabled ? "Désactiver la caméra" : "Activer la caméra"} aria-label={isCameraEnabled ? "Désactiver la caméra" : "Activer la caméra"}>
             {isCameraEnabled ? <Video /> : <VideoOff color={THEME.danger} />}
           </ControlButton>
           <ControlButton 
             className="focus-visible-ring" 
-            onClick={toggleBlur} 
+            onClick={() => {
+              if (!isBlurEnabled) {
+                toggleBlur(10); // Standard par défaut quand on active au clic long ou rapide
+              } else {
+                toggleBlur(0); // Désactive
+                setShowBlurSlider(false);
+              }
+            }}
+            onContextMenu={(e) => {
+              e.preventDefault();
+              if (isCameraEnabled) setShowBlurSlider(!showBlurSlider);
+            }}
+            onDoubleClick={(e) => {
+              e.preventDefault();
+              if (isCameraEnabled) setShowBlurSlider(!showBlurSlider);
+            }}
             $active={isBlurEnabled} 
             $activeColor={THEME.accent} 
-            title="Effets vidéo (Flou d'arrière-plan)"
+            title="Effets vidéo : clic pour basculer, double-clic ou clic droit pour l'intensité"
             disabled={!isCameraEnabled}
             style={{ opacity: isCameraEnabled ? 1 : 0.5 }}
           >

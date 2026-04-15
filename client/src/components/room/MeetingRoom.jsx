@@ -163,6 +163,7 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
     isMicrophoneEnabled,
     isScreenShareEnabled,
     isBlurEnabled,
+      blurRadius,
     toggleBlur,
     tracks, 
     devices,
@@ -292,6 +293,7 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
          isRecording={isRecording}
          toggleRecording={toggleRecording}
          isBlurEnabled={isBlurEnabled}
+           blurRadius={blurRadius}
          toggleBlur={toggleBlur}
          onLeave={onLeave}
       />

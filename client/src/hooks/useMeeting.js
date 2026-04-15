@@ -85,8 +85,8 @@ export const useMeeting = (maxQualityLock = true) => {
     speakerId: '',
   });
 
-  const [isBlurEnabled, setIsBlurEnabled] = useState(false);
-
+  const [isBlurEnabled,
+      blurRadius, setIsBlurEnabled] = useState(false);    const [blurRadius, setBlurRadius] = useState(10); // Intensité par défaut : 10 (Moyen)
   // Get all camera and screen share tracks
   // This hook automatically handles updates when tracks are published/subscribed
   const tracks = useTracks(
@@ -123,25 +123,33 @@ export const useMeeting = (maxQualityLock = true) => {
     }
   }, [localParticipant, isScreenShareEnabled]);
 
-  const toggleBlur = useCallback(async () => {
-    if (!localParticipant) return;
-    
-    try {
-      const videoTrack = localParticipant.getTrackPublication(Track.Source.Camera)?.videoTrack;
-      if (!videoTrack) return;
-      
-      if (isBlurEnabled) {
-         await videoTrack.setProcessor(null);
-         setIsBlurEnabled(false);
-      } else {
-         const blur = BackgroundBlur(10, { delegate: 'GPU' });
-         await videoTrack.setProcessor(blur);
-         setIsBlurEnabled(true);
+const toggleBlur = useCallback(async (newRadius) => {
+      if (!localParticipant) return;
+
+      try {
+        const videoTrack = localParticipant.getTrackPublication(Track.Source.Camera)?.videoTrack;
+        if (!videoTrack) return;
+
+        // If radius is provided, apply it. Otherwise toggle using current radius.
+        const targetRadius = typeof newRadius === 'number' ? newRadius : blurRadius;
+        const shouldDisable = typeof newRadius !== 'number' ? isBlurEnabled : newRadius === 0;
+
+        if (shouldDisable) {
+           await videoTrack.setProcessor(null);
+           setIsBlurEnabled(false);
+        } else {
+           const blur = BackgroundBlur(targetRadius, { delegate: 'GPU' });
+           await videoTrack.setProcessor(blur);
+           setIsBlurEnabled(true);
+           if (typeof newRadius === 'number') {
+             setBlurRadius(newRadius);
+           }
+        }
+      } catch (err) {
+        console.error('Failed to toggle blur', err);
       }
-    } catch (err) {
-      console.error('Failed to toggle blur', err);
-    }
-  }, [localParticipant, isBlurEnabled]);
+    }, [localParticipant, isBlurEnabled,
+      blurRadius, blurRadius]);
 
   const refreshDevices = useCallback(async () => {
     if (!navigator?.mediaDevices?.enumerateDevices) return;
@@ -225,6 +233,7 @@ export const useMeeting = (maxQualityLock = true) => {
     isMicrophoneEnabled,
     isScreenShareEnabled,
     isBlurEnabled,
+      blurRadius,
     toggleBlur,
     remoteParticipants,
     tracks,
