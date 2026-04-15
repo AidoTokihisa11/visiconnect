@@ -31,7 +31,8 @@ const enTranslations = {
     login: "Login",
     register: "Sign Up",
     forgotPassword: "Forgot Password?",
-    lastUpdated: "Last Updated: {{date}}",
+    lastUpdated: "Last updated : {{date}}",
+    allRightsReserved: "All rights reserved",
   },
   navigation: {
     home: "Home",
@@ -142,6 +143,7 @@ const enTranslations = {
         "HD audio and video",
         "Screen sharing",
       ],
+      action: "Start for Free",
     },
     pro: {
       title: "Pro",
@@ -154,6 +156,7 @@ const enTranslations = {
         "Chat and whiteboard",
         "Priority support",
       ],
+      action: "Try Pro",
     },
     enterprise: {
       title: "Enterprise",
@@ -166,9 +169,11 @@ const enTranslations = {
         "Dedicated support",
         "Guaranteed SLA",
       ],
+      action: "Contact Sales",
     },
     getStarted: "Get Started",
     contactSales: "Contact Sales",
+    popularBadge: "Popular",
   },
   auth: {
     login: {
@@ -729,6 +734,17 @@ const enTranslations = {
     title3: "Analytics",
     desc3: "Track engagement in real-time.",
   },
+  philosophyValue: "Open Source",
+  passionLabel: "Passion",
+  scopeLabel: "Scope",
+  globalValue: "Global",
+  fullNamePlaceholder: "Full Name",
+  subjectPlaceholder: "Subject",
+  sending: "Sending...",
+  messageSent: "Message sent!",
+  footerIntegrations: "Integrations",
+  footerChangelog: "Changelog",
+  footerPartners: "Partners",
 };
 
 export default enTranslations;
