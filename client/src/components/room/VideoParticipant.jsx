@@ -33,6 +33,7 @@ const CardContainer = styled.div`
       box-shadow: 0 8px 30px rgba(0,0,0,0.3);
       border: 2px solid rgba(255,255,255,0.1);
     `}
+  }
 `;
 
 const Placeholder = styled.div`
@@ -101,13 +102,16 @@ export const VideoParticipant = ({
   overrideMicEnabled,
   isPiP = false,
 }) => {
-  // Determine if camera/mic are enabled
-  const isCameraEnabled = overrideCameraEnabled !== undefined ? overrideCameraEnabled : (participant?.isCameraEnabled ?? false);
+  // Use trackRef properties directly if available, otherwise fallback to participant flags
+  const isVideoEnabled = trackRef?.publication 
+    ? !trackRef.publication.isMuted 
+    : (overrideCameraEnabled !== undefined ? overrideCameraEnabled : (participant?.isCameraEnabled ?? false));
+    
   const isMicEnabled = overrideMicEnabled !== undefined ? overrideMicEnabled : (participant?.isMicrophoneEnabled ?? false);
 
   return (
     <CardContainer $isActive={isSpeaking || isMicEnabled} $videoFit={videoFit} $isPiP={isPiP}>
-      {isCameraEnabled && trackRef ? (
+      {isVideoEnabled && trackRef ? (
         <VideoTrack
           trackRef={trackRef}
           playsInline={true} // Obligatoire pour iOS (surtout Low Power Mode)

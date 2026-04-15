@@ -91,9 +91,7 @@ export const useMeeting = (maxQualityLock = true) => {
   // This hook automatically handles updates when tracks are published/subscribed
   const tracks = useTracks(
     [Track.Source.Camera, Track.Source.ScreenShare],
-    { onlySubscribed: false } // ensure we get notified even if auto-subscribe delays
-  );
-
+      { onlySubscribed: true } // Default to true to prevent sending null tracks to VideoTrack
   const toggleMic = useCallback(async () => {
     if (!localParticipant) return;
 
@@ -128,7 +126,10 @@ const toggleBlur = useCallback(async (newRadius) => {
 
       try {
         const videoTrack = localParticipant.getTrackPublication(Track.Source.Camera)?.videoTrack;
-        if (!videoTrack) return;
+        if (!videoTrack || videoTrack.isMuted || !videoTrack.mediaStreamTrack) {
+            console.warn("Flux inactif ou aucune source média. Flou bloqué.");
+            return;
+          }
 
         // If radius is provided, apply it. Otherwise toggle using current radius.
         const targetRadius = typeof newRadius === 'number' ? newRadius : blurRadius;
@@ -138,7 +139,7 @@ const toggleBlur = useCallback(async (newRadius) => {
            await videoTrack.setProcessor(null);
            setIsBlurEnabled(false);
         } else {
-           const blur = BackgroundBlur(targetRadius, { delegate: 'GPU' });
+           const blur = BackgroundBlur(targetRadius);      
            await videoTrack.setProcessor(blur);
            setIsBlurEnabled(true);
            if (typeof newRadius === 'number') {
