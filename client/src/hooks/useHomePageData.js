@@ -18,7 +18,7 @@ export const useHomePageData = () => {
     },
     {
       title: t('slider.title3', 'Analytiques'),
-      description: t('slider.desc3', 'Suivez l\\'engagement en temps réel.'),
+      description: t('slider.desc3', "Suivez l'engagement en temps réel."),
       color: "#10b981"
     },
   ];
@@ -30,7 +30,7 @@ export const useHomePageData = () => {
       title: t('homeFeatures.video.title', 'Réunions vidéo haute définition'),  
       description: t('homeFeatures.video.text', 'Streaming en HD avec compression intelligente'),
       items: t('homeFeatures.video.items', { returnObjects: true, defaultValue: [
-        'Jusqu\\'à 1080p en HD',
+        "Jusqu'à 1080p en HD",
         'Codec optimisé VP9',
         'Adaptative bitrate'
       ]}) || [],
@@ -44,7 +44,7 @@ export const useHomePageData = () => {
       items: t('homeFeatures.security.items', { returnObjects: true, defaultValue: [
         'Chiffrement E2E',
         'Conformité RGPD',
-        'Logs d\\'accès complets'
+        'Logs d\'ccès complets'
       ]}) || [],
       iconBg: 'rgba(34, 197, 94, 0.1)',
       iconColor: '#22c55e'
@@ -52,7 +52,7 @@ export const useHomePageData = () => {
     {
       icon: Zap,
       title: t('homeFeatures.instant.title', 'Démarrage instantané'),
-      description: t('homeFeatures.instant.text', 'Pas d\\'installation, pas de compte'),
+      description: t('homeFeatures.instant.text', 'Pas d\'nstallation, pas de compte'),
       items: t('homeFeatures.instant.items', { returnObjects: true, defaultValue: [
         'URL partageable',
         'Accès immédiat',
@@ -64,9 +64,9 @@ export const useHomePageData = () => {
     {
       icon: Users,
       title: t('homeFeatures.collaboration.title', 'Collaboration en temps réel'),
-      description: t('homeFeatures.collaboration.text', 'Partage d\\'écran, chat, tableau blanc'),
+      description: t('homeFeatures.collaboration.text', 'Partage d\'cran, chat, tableau blanc'),
       items: t('homeFeatures.collaboration.items', { returnObjects: true, defaultValue: [
-        'Partage d\\'écran HD',
+        'Partage d\'cran HD',
         'Chat intégré',
         'Tableau blanc collaboratif'
       ]}) || [],
@@ -88,7 +88,7 @@ export const useHomePageData = () => {
       title: t('testimonials.1.title', 'CTO, Solutions Digitales')
     },
     {
-      quote: t('testimonials.2.quote', 'Pas d\\'équivalent sur le marché pour ce prix. Qualité professionnelle, vraiment.'),
+      quote: t('testimonials.2.quote', 'Pas d\'quivalent sur le marché pour ce prix. Qualité professionnelle, vraiment.'),
       author: t('testimonials.2.author', 'Sophie Leclerc'),
       title: t('testimonials.2.title', 'Directrice Commerciale, Conseil RH')    
     },
@@ -101,7 +101,7 @@ export const useHomePageData = () => {
       price: '0',
       description: t('pricing.free.description', 'Pour tester'),
       features: t('pricing.free.features', { returnObjects: true, defaultValue: [
-        'Jusqu\\'à 2 participants',
+        'Jusqu\' 2 participants',
         'Réunions courtes (15 min)',
         'Quality vidéo standard',
         'Chat basique'
@@ -115,10 +115,10 @@ export const useHomePageData = () => {
       price: '29',
       description: t('pricing.pro.description', 'Pour les équipes'),
       features: t('pricing.pro.features', { returnObjects: true, defaultValue: [
-        'Jusqu\\'à 10 participants',
+        'Jusqu\' 10 participants',
         'Réunions illimitées',
         'HD 1080p',
-        'Partage d\\'écran',
+        'Partage d\'cran',
         'Enregistrement (1h/mois)',
         'Support par email'
       ]}) || [],

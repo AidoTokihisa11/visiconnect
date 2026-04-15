@@ -1,10 +1,7 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Target, Users, Heart, Globe, Award, Shield } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import { Trans } from 'react-i18next';
-import { useTranslation } from 'react-i18next';
-import { Trans } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import CallToAction from '../components/CallToAction';
