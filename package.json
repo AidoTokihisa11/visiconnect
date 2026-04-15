@@ -32,8 +32,11 @@
     "url": "https://github.com/AidoTokihisa11/visiconnect.git"
   },
   "devDependencies": {
+    "@babel/plugin-syntax-jsx": "^7.28.6",
+    "@babel/preset-react": "^7.28.5",
     "@react-email/preview-server": "^5.2.10",
     "@vitejs/plugin-react": "^5.1.4",
+    "bing-translate-api": "^4.2.0",
     "concurrently": "^9.2.1",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
