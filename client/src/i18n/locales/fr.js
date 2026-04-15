@@ -640,6 +640,7 @@ const frTranslations = {
     }
   },
   ui: {
+    plus: "5",
     presentation: "Présentation Q3",
     screenShare: "Partage d'écran",
     network: "Réseau Global Optimisé",
@@ -665,6 +666,76 @@ const frTranslations = {
       }
     }
   }
+,
+  "about": {
+    "hero": {
+      "title1": "Connecter le monde avec ",
+      "title2": "Simplicité et Sécurité",
+      "subtitle": "Notre mission est de rendre la communication vidéo accessible, fluide et sécurisée pour tous, partout dans le monde."
+    },
+    "story": {
+      "title": "Notre Histoire",
+      "p1": "VisioConnect est né d'un constat simple : la communication vidéo est devenue essentielle, mais les outils existants étaient soit trop complexes, soit peu sécurisés, soit trop coûteux.",
+      "p2": "Nous avons rassemblé une équipe d'ingénieurs passionnés et de designers pour créer une plateforme qui met l'utilisateur au premier plan. Après des mois de développement intensif, nous avons lancé une solution qui combine la plus haute qualité vidéo avec une interface d'une simplicité enfantine.",
+      "p3": "Aujourd'hui, VisioConnect aide des milliers d'entreprises, d'écoles et de familles à rester proches, peu importe la distance qui les sépare."
+    },
+    "values": {
+      "title": "Nos Valeurs",
+      "v1_title": "Simplicité Radicale",
+      "v1_text": "Nous croyons que la technologie doit s'effacer pour laisser place à la conversation. Chaque fonctionnalité est conçue pour être intuitive.",
+      "v2_title": "Confidentialité Totale",
+      "v2_text": "Vos données vous appartiennent. Nous ne vendons pas vos informations et nous chiffrons toutes vos communications par défaut.",
+      "v3_title": "Accessibilité Universelle",
+      "v3_text": "Nous travaillons dur pour que notre service fonctionne parfaitement, même sur des connexions lentes ou des appareils plus anciens."
+    },
+    "stats": {
+      "users": "Utilisateurs",
+      "countries": "Pays",
+      "uptime": "Disponibilité",
+      "support": "Support"
+    },
+    "cta": {
+      "title": "Rejoignez la révolution",
+      "description": "Découvrez comment VisioConnect peut transformer vos réunions dès aujourd'hui.",
+      "button": "Essayer gratuitement"
+    }
+  }
+
+,
+  "about": {
+    "hero": {
+      "title1": "Connecter le monde avec ",
+      "title2": "Simplicité et Sécurité",
+      "subtitle": "Notre mission est de rendre la communication vidéo accessible, fluide et sécurisée pour tous, partout dans le monde."
+    },
+    "story": {
+      "title": "Notre Histoire",
+      "p1": "VisioConnect est né d'un constat simple : la communication vidéo est devenue essentielle, mais les outils existants étaient soit trop complexes, soit peu sécurisés, soit trop coûteux.",
+      "p2": "Nous avons rassemblé une équipe d'ingénieurs passionnés et de designers pour créer une plateforme qui met l'utilisateur au premier plan. Après des mois de développement intensif, nous avons lancé une solution qui combine la plus haute qualité vidéo avec une interface d'une simplicité enfantine.",
+      "p3": "Aujourd'hui, VisioConnect aide des milliers d'entreprises, d'écoles et de familles à rester proches, peu importe la distance qui les sépare."
+    },
+    "values": {
+      "title": "Nos Valeurs",
+      "v1_title": "Simplicité Radicale",
+      "v1_text": "Nous croyons que la technologie doit s'effacer pour laisser place à la conversation. Chaque fonctionnalité est conçue pour être intuitive.",
+      "v2_title": "Confidentialité Totale",
+      "v2_text": "Vos données vous appartiennent. Nous ne vendons pas vos informations et nous chiffrons toutes vos communications par défaut.",
+      "v3_title": "Accessibilité Universelle",
+      "v3_text": "Nous travaillons dur pour que notre service fonctionne parfaitement, même sur des connexions lentes ou des appareils plus anciens."
+    },
+    "stats": {
+      "users": "Utilisateurs",
+      "countries": "Pays",
+      "uptime": "Disponibilité",
+      "support": "Support"
+    },
+    "cta": {
+      "title": "Rejoignez la révolution",
+      "description": "Découvrez comment VisioConnect peut transformer vos réunions dès aujourd'hui.",
+      "button": "Essayer gratuitement"
+    }
+  }
+
 };
 
 export default frTranslations;

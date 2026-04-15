@@ -791,7 +791,7 @@ export default function HomePageClean() {
                     <div>JD</div>
                     <div>AS</div>
                     <div>MR</div>
-                    <div style={{ backgroundColor: '#f1f5f9', color: '#64748b', fontSize: '10px' }}>+5</div>
+                    <div style={{ backgroundColor: '#f1f5f9', color: '#64748b', fontSize: '10px' }}>+{t("ui.plus", "5")}</div>
                   </AvatarGroup>
                   <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500 }}>
                     {t('ui.time')}

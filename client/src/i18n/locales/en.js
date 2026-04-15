@@ -57,6 +57,8 @@ const enTranslations = {
   },
 
   hero: {
+    titleLine1: 'Video conferencing',
+    titleLine2: 'Simply professional.',
     title: 'Next-generation video conferencing platform',
     subtitle: 'Connect easily with your teams using our advanced and intuitive video conferencing solution',
     startFree: 'Start Free',
@@ -633,6 +635,76 @@ const enTranslations = {
     hd: "HD",
     participants: "8"
   }
+,
+  "about": {
+    "hero": {
+      "title1": "Connecting the world with ",
+      "title2": "Simplicity and Security",
+      "subtitle": "Our mission is to make video communication accessible, fluid, and secure for everyone, everywhere."
+    },
+    "story": {
+      "title": "Our Story",
+      "p1": "VisioConnect was born from a simple observation: video communication has become essential, but existing tools were either too complex, unsecure, or too expensive.",
+      "p2": "We gathered a team of passionate engineers and designers to build a platform that puts the user first. After months of intensive development, we launched a solution that combines the highest video quality with a dead-simple interface.",
+      "p3": "Today, VisioConnect helps thousands of businesses, schools, and families stay close, no matter the distance."
+    },
+    "values": {
+      "title": "Our Values",
+      "v1_title": "Radical Simplicity",
+      "v1_text": "We believe technology should step aside to make room for the conversation. Every feature is designed to be intuitive.",
+      "v2_title": "Total Privacy",
+      "v2_text": "Your data belongs to you. We don't sell your information and we encrypt all your communications by default.",
+      "v3_title": "Universal Accessibility",
+      "v3_text": "We work hard so our service works perfectly, even on slow connections or older devices."
+    },
+    "stats": {
+      "users": "Users",
+      "countries": "Countries",
+      "uptime": "Uptime",
+      "support": "Support"
+    },
+    "cta": {
+      "title": "Join the revolution",
+      "description": "Discover how VisioConnect can transform your meetings today.",
+      "button": "Try for free"
+    }
+  }
+
+,
+  "about": {
+    "hero": {
+      "title1": "Connecting the world with ",
+      "title2": "Simplicity and Security",
+      "subtitle": "Our mission is to make video communication accessible, fluid, and secure for everyone, everywhere."
+    },
+    "story": {
+      "title": "Our Story",
+      "p1": "VisioConnect was born from a simple observation: video communication has become essential, but existing tools were either too complex, unsecure, or too expensive.",
+      "p2": "We gathered a team of passionate engineers and designers to build a platform that puts the user first. After months of intensive development, we launched a solution that combines the highest video quality with a dead-simple interface.",
+      "p3": "Today, VisioConnect helps thousands of businesses, schools, and families stay close, no matter the distance."
+    },
+    "values": {
+      "title": "Our Values",
+      "v1_title": "Radical Simplicity",
+      "v1_text": "We believe technology should step aside to make room for the conversation. Every feature is designed to be intuitive.",
+      "v2_title": "Total Privacy",
+      "v2_text": "Your data belongs to you. We don't sell your information and we encrypt all your communications by default.",
+      "v3_title": "Universal Accessibility",
+      "v3_text": "We work hard so our service works perfectly, even on slow connections or older devices."
+    },
+    "stats": {
+      "users": "Users",
+      "countries": "Countries",
+      "uptime": "Uptime",
+      "support": "Support"
+    },
+    "cta": {
+      "title": "Join the revolution",
+      "description": "Discover how VisioConnect can transform your meetings today.",
+      "button": "Try for free"
+    }
+  }
+
 };
 
 export default enTranslations;
