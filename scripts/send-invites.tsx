@@ -10,13 +10,17 @@ const resend = new Resend('re_f7CXkPZ1_FouifSQZycKkbcStAoZkGgW8');
 
 // LISTE DES BÊTA TESTEURS À PERSONNALISER
 const betaTesters = [
-  {
-    name: "rozenn guillemet",
-    email: "theogarces33@gmail.com",
-    betaCode: "VC-4G5I-NN83"
-  },
-  // Tu peux ajouter d'autres testeurs ici :
-  // { name: "Alice", email: "alice@exemple.com", betaCode: "VC-ALI-4567" },
+  { name: "Andreas Dohin", email: "andreassan654@gmail.com", betaCode: "VC-QDKZ-JP8F" },
+  { name: "Yesmine Ben Dhaou", email: "yesminebendhaou@gmail.com", betaCode: "VC-JBQ4-LQDP" },
+  { name: "Leopold Brillet", email: "leopold.brillet@gmail.com", betaCode: "VC-XM53-IH7S" },
+  { name: "Alexandra Doucet", email: "alexandra.durman8@gmail.com", betaCode: "VC-H8RF-R1RT" },
+  { name: "Wisllor PIERRE SAINT", email: "kevallionkpg@gmail.com", betaCode: "VC-149B-PMSQ" },
+  { name: "Marine SEGURET", email: "msleeenss@gmail.com", betaCode: "VC-OPDK-JQ84" },
+  { name: "Maxine M", email: "kuroyasha.m@gmail.com", betaCode: "VC-GINM-6UDA" },
+  { name: "Maëlle Guillemet", email: "guillemet.maelle@gmail.com", betaCode: "VC-WLLZ-9Y0O" },
+  { name: "Isabelle DUCASSE", email: "isadgarces@gmail.com", betaCode: "VC-V8W2-VH59" },
+  { name: "Jacqueline Guillemet", email: "biotilande@sfr.fr", betaCode: "VC-AXDI-IGT5" },
+  { name: "Mickaël Guillemet", email: "groovemachinenation@gmail.com", betaCode: "VC-IP4Q-SFSZ" }
 ];
 
 async function sendInvites() {
