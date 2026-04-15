@@ -1,6 +1,5 @@
 export const BETA_CODES = [
   "VC-92TQ-LO56",
-  "VC-TPG2-9HZ4",
   "VC-VXOQ-1LZU",
   "VC-BIQE-QS1J",
   "VC-61Z2-CH5Q",

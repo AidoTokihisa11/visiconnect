@@ -14,7 +14,7 @@ import {
 } from '@react-email/components';
 
 export const MeetingInviteEmail = ({
-  inviteeName = "Thomas",
+  inviteeName = "Theo",
   hostName = "L'équipe VisioConnect",
   roomLink = "https://visioconnect-1.vercel.app/room/demo-123",
   roomName = "Point de Synchronisation",
@@ -117,6 +117,13 @@ export const MeetingInviteEmail = ({
               <Text style={{ color: '#334155', fontSize: '15px', lineHeight: '24px', margin: '0' }}>
                 <strong style={{ color: '#0f172a' }}>2. Validez le code bêta :</strong><br/>
                 Collez ou saisissez le code exclusif écrit plus haut pour débloquer l'application.
+              </Text>
+            </Section>
+
+            {/* MENTION DU PDF JOINT */}
+            <Section style={{ backgroundColor: '#f0fdfa', border: '1px solid #ccfbf1', borderLeft: '4px solid #14b8a6', borderRadius: '4px', padding: '15px', marginBottom: '30px' }}>
+              <Text style={{ color: '#0f766e', fontSize: '14px', lineHeight: '22px', margin: '0' }}>
+                <strong>📎 Guide Bêta Inclus :</strong> Pour vous accompagner, nous avons glissé en <strong>pièce jointe de cet e-mail</strong> votre guide officiel au format PDF. Ouvrez-le pour découvrir vos missions de test exclusives !
               </Text>
             </Section>
 

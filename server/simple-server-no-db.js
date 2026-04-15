@@ -102,7 +102,7 @@ app.use(express.json());
 
       // 2. Envoi de l'email avec Resend
       const data = await resend.emails.send({
-        from: 'VisioConnect <onboarding@resend.dev>', // Adresse de test fournie par Resend    
+        from: 'VisioConnect <contact@visioconnect.pro>', // Votre nouveau domaine officiel
         to: to || 'theo.garces.aido@gmail.com', // Ton email par défaut
         subject: subject || 'Votre accès Bêta VisioConnect',
         html: html || '<p>Bienvenue sur <strong>VisioConnect</strong> !</p>',
