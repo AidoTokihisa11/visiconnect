@@ -1,3 +1,4 @@
+import { AIImageEnhancer } from '../lib/AIImageEnhancer';
 import { RoomEvent, VideoPresets, Track, createLocalVideoTrack } from 'livekit-client';
 
 /**
@@ -6,25 +7,38 @@ import { RoomEvent, VideoPresets, Track, createLocalVideoTrack } from 'livekit-c
  */
 export const publishSmartMedia = async (room) => {
   try {
-    // Détection de la puissance matérielle (heuristique basique : cœurs CPU + largeur écran)
-    const has4KHardware = typeof navigator !== 'undefined' 
-      && navigator.hardwareConcurrency >= 8 
+    const has4KHardware = typeof navigator !== 'undefined'
+      && navigator.hardwareConcurrency >= 8
       && window.screen.width >= 2560;
 
     const targetResolution = has4KHardware ? VideoPresets.h2160.resolution : VideoPresets.h1080.resolution;
 
-    // Création de la track locale
+    // 1. Création de la track locale pure
     const localVideoTrack = await createLocalVideoTrack({
       resolution: targetResolution,
       facingMode: 'user',
     });
 
-    // Publication avec priorité maximale pour survivre à la congestion réseau
+    // 2. Application de l'AI Image Enhancer (Auto-Lighting / Smart Upscaling)
+    const isMobile = typeof navigator !== 'undefined' && /Mobi|Android/i.test(navigator.userAgent);
+    
+    // Le processeur va Bypass automatiquement si le CPU mobile est trop faible (Thermal Throttling)
+    const enhancer = new AIImageEnhancer();
+    // Le TrackProcessor LiveKit attend un init qui renvoie un object contenant `processedTrack` ou s'attache
+    await enhancer.init({ track: localVideoTrack.mediaStreamTrack });
+    
+    // Injection du track traité dans le clone local de LiveKit s'il a bien été généré
+    if (enhancer.processedTrack && enhancer.processedTrack !== localVideoTrack.mediaStreamTrack) {
+        // Remplacement de la piste WebRTC sous-jacente par notre version traitée (WebGL/Canvas)
+        localVideoTrack.mediaStreamTrack = enhancer.processedTrack;
+    }
+
+    // 3. Publication avec priorité maximale
     await room.localParticipant.publishTrack(localVideoTrack, {
       simulcast: true,
       name: 'camera',
       source: Track.Source.Camera,
-      priority: 'high', // Empêche le navigateur de sacrifier ce flux
+      priority: 'high',
     });
 
     return localVideoTrack;
