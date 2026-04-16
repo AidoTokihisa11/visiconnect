@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import {
   Mic, MicOff, Video, VideoOff, Phone, Monitor, MonitorOff,
-  MessageSquare, Sparkles, Focus, Layout, Activity, BarChart2, Settings2, MoreHorizontal, VideoIcon, EyeOff, PieChart, Users
+  MessageSquare, Sparkles, Focus, Layout, Activity, BarChart2, Settings2, MoreHorizontal, VideoIcon, EyeOff, PieChart, Users,
   ChevronUp,
 } from 'lucide-react';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
