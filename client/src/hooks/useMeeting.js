@@ -1,3 +1,4 @@
+import { AIEngineManager } from '../lib/AIEngineManager';
 import { AIVideoProcessor } from '../lib/AIVideoEngine';
 import { setupAntiFreezeListeners } from './LiveKitEngine';
 import { useState, useCallback, useEffect } from 'react';
@@ -76,7 +77,15 @@ export const useMeeting = (maxQualityLock = true) => {
   const room = useRoomContext();
 
   // WebRTC Anti-Freeze Optimization
-  useEffect(() => {
+  
+    // Pre-Warming de l'IA (Non Bloquant via Web Worker)
+    useEffect(() => {
+        const manager = new AIEngineManager();
+        manager.onReady((ready) => setIsAiReady(ready));
+        manager.init(); // Déclenche le téléchargement/compilation WASM en background absolu
+    }, []);
+
+    useEffect(() => {
     setupAntiFreezeListeners(room);
   }, [room]);
   const { localParticipant, isCameraEnabled, isMicrophoneEnabled, isScreenShareEnabled } = useLocalParticipant();
@@ -87,7 +96,10 @@ export const useMeeting = (maxQualityLock = true) => {
     speakers: [],
   });
   
+    
+    const [isAiReady, setIsAiReady] = useState(false);
     const [isAIEnhanced, setIsAIEnhanced] = useState(false);
+    
     const [activeAiProcessor, setActiveAiProcessor] = useState(null);
     const [blurProcessor, setBlurProcessor] = useState(null);
     

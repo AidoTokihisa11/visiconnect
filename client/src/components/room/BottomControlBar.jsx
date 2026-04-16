@@ -221,6 +221,7 @@ export const ControlBar = ({
   isBlurEnabled,
   blurRadius,
   toggleBlur,
+  isAiReady,
   isAIEnhanced,
   toggleAIVideoEngine,
   onLeave
@@ -275,7 +276,7 @@ export const ControlBar = ({
               $active={isBlurEnabled} 
               $activeColor={THEME.accent} 
               title="Activer/Désactiver le flou d'arrière-plan"
-              disabled={!isCameraEnabled}
+              disabled={!isCameraEnabled || !isAiReady}
               style={{ opacity: isCameraEnabled ? 1 : 0.5, borderRadius: '50px 0 0 50px', paddingRight: '12px' }}
             >
               <Focus />
@@ -287,7 +288,7 @@ export const ControlBar = ({
               }}
               $active={isBlurEnabled} 
               $activeColor={THEME.accent}
-              disabled={!isCameraEnabled}
+              disabled={!isCameraEnabled || !isAiReady}
               style={{ opacity: isCameraEnabled ? 1 : 0.5, borderRadius: '0 50px 50px 0', padding: '0 10px', borderLeft: '1px solid rgba(255,255,255,0.1)' }}
               title="Réglages du flou"
             >
@@ -299,9 +300,10 @@ export const ControlBar = ({
         {/* IA Smart Enhancer Button */}
         <ButtonGroup>
           <ControlButton
+            disabled={!isAiReady}
             $active={isAIEnhanced}
             onClick={toggleAIVideoEngine}
-            title={isAIEnhanced ? "Désactiver l'IA (Auto-Lighting & Upscaling)" : "Activer l'IA vidéo (Netteté & Auto-Lighting)"}
+            title={!isAiReady ? "Modèles d'IA en cours de chargement..." : (isAIEnhanced ? "Désactiver l'IA" : "Activer l'IA vidéo")}
             style={{
               background: isAIEnhanced ? 'linear-gradient(135deg, #10B981, #059669)' : undefined,
               borderColor: isAIEnhanced ? 'transparent' : undefined,
