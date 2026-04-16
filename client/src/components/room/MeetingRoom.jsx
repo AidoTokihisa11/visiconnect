@@ -167,6 +167,7 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
     toggleBlur,
     isAIEnhanced,
     toggleAIVideoEngine,
+    tracks,
     devices,
     selectedDevices,
     controls,
