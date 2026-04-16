@@ -27,10 +27,10 @@ async function initializeAIModels() {
     try {
         console.log("[Worker] Démarrage du chargement et compilation WASM/WebGL...");
         
-        // 1. Import dynamique des CDN MediaPipe
-        importScripts('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/vision_bundle.js');
+        // 1. Import dynamique des CDN MediaPipe (Vite Module compatible)
+        const vision = await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/vision_bundle.mjs');
         
-        const { FaceDetector, ImageSegmenter, FilesetResolver } = self.MediaPipeTasksVision;
+        const { FaceDetector, ImageSegmenter, FilesetResolver } = vision;
 
         // 2. Compilation des Wasm Resolvers
         const vision = await FilesetResolver.forVisionTasks(
