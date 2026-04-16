@@ -24,7 +24,7 @@ export const publishSmartMedia = async (room) => {
       simulcast: true,
       name: 'camera',
       source: Track.Source.Camera,
-      priority: Track.Priority.High, // Empêche le navigateur de sacrifier ce flux
+      priority: 'high', // Empêche le navigateur de sacrifier ce flux
     });
 
     return localVideoTrack;
@@ -44,7 +44,7 @@ export const setupAntiFreezeListeners = (room) => {
   room.on(RoomEvent.TrackSubscribed, (track, publication, participant) => {
     if (track.kind === Track.Kind.Video) {
       // Demande agressive au SFU de générer une Keyframe (PLI - Picture Loss Indication)
-      track.setVideoPriority(Track.Priority.High);
+      track.setVideoPriority('high');
       
       // On s'assure que le flux n'est pas "downcasted" par défaut le temps de l'abonnement
       if (typeof track.setDowncasted === 'function') {
