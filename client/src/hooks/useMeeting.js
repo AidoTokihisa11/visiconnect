@@ -305,6 +305,7 @@ const toggleAIVideoEngine = useCallback(async () => {
   }, [setActiveDevice]);
 
   return {
+    isAiReady,
     isAIEnhanced,
     toggleAIVideoEngine,
     room,
