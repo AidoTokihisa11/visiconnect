@@ -1,20 +1,21 @@
-import { useTranslation as useI18Next } from 'react-i18next';
+import { useTranslate, useTolgee } from '@tolgee/react';
 
 const AVAILABLE_LANGUAGES = [
-  { code: 'fr', name: 'FranÃ§ais', flag: 'ðŸ‡«ðŸ‡·' },
-  { code: 'en', name: 'English', flag: 'ðŸ‡ºðŸ‡¸' },
-  { code: 'de', name: 'Deutsch', flag: 'ðŸ‡©ðŸ‡ª' },
-  { code: 'es', name: 'EspaÃ±ol', flag: 'ðŸ‡ªðŸ‡¸' },
-  { code: 'ru', name: 'Ð ÑƒÑÑÐºÐ¸Ð¹', flag: 'ðŸ‡·ðŸ‡º' },
+  { code: 'fr', name: 'FranÃ§ais', flag: 'í·«í··' },
+  { code: 'en', name: 'English', flag: 'í·ºí·¸' },
+  { code: 'de', name: 'Deutsch', flag: 'í·©í·ª' },
+  { code: 'es', name: 'EspaÃ±ol', flag: 'í·ªí·¸' },
+  { code: 'ru', name: 'Ð ÑƒÑÑÐºÐ¸Ð¹', flag: 'í··í·º' },
 ];
 
 export const useTranslation = () => {
-  const { t, i18n } = useI18Next();
+  const { t } = useTranslate();
+  const tolgee = useTolgee(['language']);
 
   return {
     t,
-    language: i18n.language,
-    changeLanguage: i18n.changeLanguage,
+    language: tolgee.getLanguage(),
+    changeLanguage: (lang) => tolgee.changeLanguage(lang),
     getAvailableLanguages: () => AVAILABLE_LANGUAGES,
   };
 };

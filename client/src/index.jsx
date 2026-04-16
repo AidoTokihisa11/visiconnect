@@ -2,7 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import './i18n';
+import './tolgeeSetup';
+import { TolgeeProvider } from "@tolgee/react";
+import tolgee from './tolgeeSetup';
 import { ConvexReactClient } from "convex/react";
 import { ClerkProvider, useAuth } from "@clerk/react";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
@@ -14,10 +16,12 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <React.StrictMode>
-    <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
-      <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
-        <App />
-      </ConvexProviderWithClerk>
-    </ClerkProvider>
+    <TolgeeProvider tolgee={tolgee} fallback="Chargement...">
+      <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
+        <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
+          <App />
+        </ConvexProviderWithClerk>
+      </ClerkProvider>
+    </TolgeeProvider>
   </React.StrictMode>
 );
