@@ -86,7 +86,12 @@ export const useMeeting = (maxQualityLock = true) => {
     microphones: [],
     speakers: [],
   });
-  const [selectedDevices, setSelectedDevices] = useState({
+  
+    const [isAIEnhanced, setIsAIEnhanced] = useState(false);
+    const [activeAiProcessor, setActiveAiProcessor] = useState(null);
+    const [blurProcessor, setBlurProcessor] = useState(null);
+    
+    const [selectedDevices, setSelectedDevices] = useState({
     cameraId: '',
     microphoneId: '',
     speakerId: '',
@@ -130,37 +135,87 @@ export const useMeeting = (maxQualityLock = true) => {
     }
   }, [localParticipant, isScreenShareEnabled]);
 
-const toggleBlur = useCallback(async (newRadius) => {
-      if (!localParticipant) return;
 
-      try {
-        const videoTrack = localParticipant.getTrackPublication(Track.Source.Camera)?.videoTrack;
-        if (!videoTrack || videoTrack.isMuted || !videoTrack.mediaStreamTrack) {
-            console.warn("Flux inactif ou aucune source média. Flou bloqué.");
-            return;
+const toggleBlur = useCallback(async (newRadius) => {
+    if (!localParticipant) return;
+
+    try {
+      const videoTrack = localParticipant.getTrackPublication(Track.Source.Camera)?.videoTrack;
+      if (!videoTrack || videoTrack.isMuted || !videoTrack.mediaStreamTrack) {
+          console.warn("Flux inactif ou aucune source media. Flou bloqué.");
+          return;
+      }
+
+      const targetRadius = typeof newRadius === 'number' ? newRadius : blurRadius;
+      const shouldDisable = typeof newRadius !== 'number' ? isBlurEnabled : newRadius === 0;
+
+      if (shouldDisable) {
+         await videoTrack.setProcessor(null);
+         setIsBlurEnabled(false);
+         // If we are turning off blur, maybe clear the AI conflict flag too
+      } else {
+         // Prevent conflict: If AI is active, turn it off
+         if (isAIEnhanced) {
+             setIsAIEnhanced(false);
+         }
+         
+         // Reuse existing processor if possible to prevent massive WASM reload freezes
+         let processor = blurProcessor;
+         if (!processor) {
+             // Let UI render first before blocking thread
+             await new Promise(resolve => setTimeout(resolve, 50));
+             processor = BackgroundBlur(targetRadius);
+             setBlurProcessor(processor);
+         }
+         
+         await videoTrack.setProcessor(processor);
+         setIsBlurEnabled(true);
+         
+         if (typeof newRadius === 'number') {
+             setBlurRadius(newRadius);
+         }
+      }
+    } catch (err) {
+      console.error('Failed to toggle blur', err);
+    }
+}, [localParticipant, isBlurEnabled, blurRadius, blurProcessor, isAIEnhanced]);
+
+const toggleAIVideoEngine = useCallback(async () => {
+    if (!localParticipant) return;
+
+    try {
+      const videoTrack = localParticipant.getTrackPublication(Track.Source.Camera)?.videoTrack;
+      if (!videoTrack || videoTrack.isMuted || !videoTrack.mediaStreamTrack) {
+          console.warn("Flux inactif ou aucune source media. IA bloquée.");
+          return;
+      }
+
+      if (isAIEnhanced) {
+          // Disable AI 
+          await videoTrack.setProcessor(null);
+          setIsAIEnhanced(false);
+      } else {
+          // Prevent conflict: If Blur is active, turn it off
+          if (isBlurEnabled) {
+              setIsBlurEnabled(false);
           }
 
-        // If radius is provided, apply it. Otherwise toggle using current radius.
-        const targetRadius = typeof newRadius === 'number' ? newRadius : blurRadius;
-        const shouldDisable = typeof newRadius !== 'number' ? isBlurEnabled : newRadius === 0;
-
-        if (shouldDisable) {
-           await videoTrack.setProcessor(null);
-           setIsBlurEnabled(false);
-        } else {
-           // Delay the heavy WebAssembly/TensorFlow initialization to let React render the UI first
-           await new Promise(resolve => setTimeout(resolve, 50));
-           const blur = BackgroundBlur(targetRadius);      
-           await videoTrack.setProcessor(blur);
-           setIsBlurEnabled(true);
-           if (typeof newRadius === 'number') {
-             setBlurRadius(newRadius);
-           }
-        }
-      } catch (err) {
-        console.error('Failed to toggle blur', err);
+          // Let UI render first
+          await new Promise(resolve => setTimeout(resolve, 50));
+          
+          let processor = activeAiProcessor;
+          if (!processor) {
+              processor = new AIVideoProcessor();
+              setActiveAiProcessor(processor);
+          }
+          await videoTrack.setProcessor(processor);
+          setIsAIEnhanced(true);
       }
-    }, [localParticipant, isBlurEnabled, blurRadius]);
+    } catch (err) {
+      console.error('Failed to toggle AI Engine', err);
+    }
+}, [localParticipant, isAIEnhanced, activeAiProcessor, isBlurEnabled]);
+
 
     const refreshDevices = useCallback(async () => {
       if (!navigator?.mediaDevices?.enumerateDevices) return;
@@ -238,6 +293,8 @@ const toggleBlur = useCallback(async (newRadius) => {
   }, [setActiveDevice]);
 
   return {
+    isAIEnhanced,
+    toggleAIVideoEngine,
     room,
     localParticipant,
     isCameraEnabled,
