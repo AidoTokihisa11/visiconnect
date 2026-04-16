@@ -562,3 +562,4 @@ select {
     height: 100dvh;
   }
 }
+.ai-video-render { contain: strict; backface-visibility: hidden; transform: translateZ(0); will-change: transform, opacity; }
