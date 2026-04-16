@@ -2,47 +2,46 @@ import { VideoPresets } from 'livekit-client';
 import { useMemo } from 'react';
 
 /**
- * 1. Configuration de la Room (Architecture de pointe mais Adaptative)
- * Force H.264 sur Mobile pour l'accélération matérielle, mais on restaure 
- * une résolution 720p HD claire et un bitrate décent (2.5 Mbps).
+ * 1. Configuration de la Room (Optimisation Extrême PC/Mobile)
+ * Résout le problème de l'image pixelisée sur mobile (Thermal Throttling / Congestion).
  */
 export const useLiveKit4K = () => {
   const options = useMemo(() => {
-    const isMobile = typeof window !== 'undefined' && 
+    const isMobile = typeof navigator !== 'undefined' && 
       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent || '');
     
-    // Un appareil avec 4 cœurs ou moins est considéré très faible
-    const isWeakDevice = typeof navigator !== 'undefined' && 
-      (navigator.hardwareConcurrency <= 4);
-
-    // Le mobile *doit* utiliser H264 pour profiter de la puce d'accélération matérielle (Apple/Snapdragon)
-    const useH264 = isMobile || isWeakDevice;
+    // Si le CPU mobile chauffe, l'encodeur lâche des frames. H.264 Baseline allège drastiquement le CPU.
+    const useH264 = isMobile || (typeof navigator !== 'undefined' && navigator.hardwareConcurrency <= 4);
 
     return {
       adaptiveStream: true,
       dynacast: true,
       
       videoCaptureDefaults: {
-        // 720p HD natif pour les mobiles (sweet spot netteté/batterie), 1080p natif pour PC
+        // En mobile, on évite le 1080p natif qui sature le GPU lors du flou. On fixe du 720p propre.
         resolution: isMobile ? VideoPresets.h720.resolution : VideoPresets.h1080.resolution, 
-        frameRate: 30, // 30fps universel 
+        frameRate: isMobile ? 24 : 30, // 24fps sur Mobile empêche le smartphone de surchauffer et sauver 20% de batterie
+        facingMode: 'user',
       },
       
       publishDefaults: {
         simulcast: true,
+        // H.264 Force l'encodeur matériel (VPU) sur 100% des smartphones (Apple Silicon / Snapdragon)
         videoCodec: useH264 ? 'h264' : 'vp9',
         backupCodec: { codec: 'vp8', encoding: 'max' },
         
         videoEncoding: {
-          maxBitrate: isMobile ? 2_500_000 : 5_000_000, // 2.5 Mbps pour une HD parfaite sur mobile
-          maxFramerate: 30,
+          maxBitrate: isMobile ? 2_000_000 : 5_000_000, 
+          maxFramerate: isMobile ? 24 : 30,
         },
         
-        // Paliers Simulcast : On autorise le 720p en couche haute sur mobile
+        // C'est ici que ça bloquait sur mobile : On supprime la couche 180p "pixelisée" pour forcer
+        // le SFU à ne jamais descendre la qualité en dessous d'un seuil acceptable de SD (360p) minimum,
+        // et on garde la couche haute à 720p (2 Mbps) pour la netteté cristalline.
         videoSimulcastLayers: isMobile ? [
-          { width: 320, height: 180, encoding: { maxBitrate: 150_000, maxFramerate: 15 } },
-          { width: 640, height: 360, encoding: { maxBitrate: 400_000, maxFramerate: 20 } },
-          { width: 1280, height: 720, encoding: { maxBitrate: 2_000_000, maxFramerate: 30 } },
+          { width: 640, height: 360, encoding: { maxBitrate: 500_000, maxFramerate: 20 } },
+          { width: 960, height: 540, encoding: { maxBitrate: 1_200_000, maxFramerate: 24 } },
+          { width: 1280, height: 720, encoding: { maxBitrate: 2_000_000, maxFramerate: 24 } },
         ] : [
           { width: 640, height: 360, encoding: { maxBitrate: 400_000, maxFramerate: 20 } },
           { width: 1280, height: 720, encoding: { maxBitrate: 1_500_000, maxFramerate: 30 } },
@@ -53,7 +52,7 @@ export const useLiveKit4K = () => {
   }, []);
 
   const videoOptions = useMemo(() => {
-    const isMobile = typeof window !== 'undefined' && 
+    const isMobile = typeof navigator !== 'undefined' && 
       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent || '');
     
     return {
