@@ -1,21 +1,12 @@
-import { useTranslate, useTolgee } from '@tolgee/react';
-
-const AVAILABLE_LANGUAGES = [
-  { code: 'fr', name: 'FranÃ§ais', flag: 'í·«í··' },
-  { code: 'en', name: 'English', flag: 'í·ºí·¸' },
-  { code: 'de', name: 'Deutsch', flag: 'í·©í·ª' },
-  { code: 'es', name: 'EspaÃ±ol', flag: 'í·ªí·¸' },
-  { code: 'ru', name: 'Ð ÑƒÑÑÐºÐ¸Ð¹', flag: 'í··í·º' },
-];
+import { useLanguage } from '../contexts/LanguageContext';
 
 export const useTranslation = () => {
-  const { t } = useTranslate();
-  const tolgee = useTolgee(['language']);
+  const { t, currentLanguage, changeLanguage, availableLanguages } = useLanguage();
 
   return {
     t,
-    language: tolgee.getLanguage(),
-    changeLanguage: (lang) => tolgee.changeLanguage(lang),
-    getAvailableLanguages: () => AVAILABLE_LANGUAGES,
+    language: currentLanguage,
+    changeLanguage,
+    getAvailableLanguages: () => availableLanguages,
   };
 };

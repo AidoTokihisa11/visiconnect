@@ -63,55 +63,6 @@ const HeroSubtitle = styled.p`
   line-height: 1.6;
 `;
 
-// --- BILLING TOGGLE ---
-const BillingToggleContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 4rem;
-`;
-
-const ToggleLabel = styled.span`
-  font-weight: 600;
-  color: ${props => props.$active ? COLORS.dark : COLORS.lightText};
-  cursor: pointer;
-  transition: color 0.2s;
-`;
-
-const ToggleSwitch = styled.div`
-  width: 56px;
-  height: 32px;
-  background-color: ${COLORS.primary};
-  border-radius: 9999px;
-  position: relative;
-  cursor: pointer;
-  transition: background-color 0.2s;
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 4px;
-    left: ${props => props.$isAnnual ? '28px' : '4px'};
-    width: 24px;
-    height: 24px;
-    background-color: white;
-    border-radius: 50%;
-    transition: left 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-`;
-
-const DiscountBadge = styled.span`
-  background-color: #dbeafe;
-  color: ${COLORS.primary};
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 0.25rem 0.5rem;
-  border-radius: 999px;
-  text-transform: uppercase;
-`;
-
 // --- PRICING CARDS ---
 const PricingGrid = styled.div`
   display: grid;
@@ -403,7 +354,7 @@ const FAQList = [
 
 const PricingPage = () => {
   const { t } = useTranslation();
-  const [isAnnual, setIsAnnual] = useState(true);
+  
   const [openFAQ, setOpenFAQ] = useState(null);
 
   useEffect(() => {
@@ -416,7 +367,7 @@ const PricingPage = () => {
 
   const handleSubscribe = async (e, plan) => {
     e.preventDefault();
-    const billingCycle = isAnnual ? 'annual' : 'monthly';
+    const billingCycle = 'monthly';
     
     try {
       const apiUrl = import.meta.env.PROD 
@@ -458,12 +409,7 @@ const PricingPage = () => {
           Des tarifications transparentes. Aucun frais caché. Annulez à tout moment.
         </HeroSubtitle>
 
-        <BillingToggleContainer>
-          <ToggleLabel onClick={() => setIsAnnual(false)} $active={!isAnnual}>Mensuel</ToggleLabel>
-          <ToggleSwitch $isAnnual={isAnnual} onClick={() => setIsAnnual(!isAnnual)} />
-          <ToggleLabel onClick={() => setIsAnnual(true)} $active={isAnnual}>Annuel</ToggleLabel>
-          <DiscountBadge>-20%</DiscountBadge>
-        </BillingToggleContainer>
+        
       </HeroSection>
 
       <PricingGrid>
@@ -497,7 +443,7 @@ const PricingPage = () => {
           <PlanTitle>Pro</PlanTitle>
           <PlanDescription>Pour les équipes agiles et les freelances.</PlanDescription>
           <Price>
-            <span className="currency">€</span>{isAnnual ? '12' : '15'}
+            <span className="currency">€</span>15
             <span className="period">/mois par utilisateur</span>
           </Price>
           <FeatureList>
@@ -521,7 +467,7 @@ const PricingPage = () => {
           <PlanTitle>Business</PlanTitle>
           <PlanDescription>Pour les organisations à grande échelle.</PlanDescription>
           <Price>
-            <span className="currency">€</span>{isAnnual ? '29' : '35'}
+            <span className="currency">€</span>35
             <span className="period">/mois par utilisateur</span>
           </Price>
           <FeatureList>

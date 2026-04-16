@@ -1,9 +1,9 @@
 // Translation service for VisiConnect
-import frTranslations from './locales/fr.js';
-import enTranslations from './locales/en.js';
-import deTranslations from './locales/de.js';
-import esTranslations from './locales/es.js';
-import ruTranslations from './locales/ru.js';
+import frTranslations from './fr.json';
+import enTranslations from './en.json';
+import deTranslations from './de.json';
+import esTranslations from './es.json';
+import ruTranslations from './ru.json';
 
 class TranslationService {
   constructor() {
