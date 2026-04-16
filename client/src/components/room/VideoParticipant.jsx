@@ -168,7 +168,7 @@ export const VideoParticipant = React.memo(({
     <CardContainer $isActive={isSpeaking || isMicEnabled} $videoFit={videoFit} $isPiP={isPiP}>
       {isVideoEnabled && trackRef ? (
         <VideoPlayer
-          track={trackRef?.publication?.track ?? trackRef?.track ?? trackRef}
+          track={trackRef?.publication?.videoTrack ?? trackRef?.publication?.track ?? trackRef?.track ?? (typeof trackRef?.attach === 'function' ? trackRef : null)}
           isLocal={isLocal}
           videoFit={videoFit}
         />
