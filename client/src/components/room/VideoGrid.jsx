@@ -71,7 +71,7 @@ export const VideoGrid = ({ localParticipant, isLocalCameraEnabled, isLocalMicEn
       {tracks?.map((track) => {
         if (track.participant.identity === localParticipant?.identity) return null;
         // Use publication sid + identity to uniquely identify screen vs camera
-        const key = `${track.participant.identity}-${track.publication?.sid || track.source}`;
+        const key = `${track.participant.identity}-${track.source}`;
         return (
           <VideoParticipant
             key={key}

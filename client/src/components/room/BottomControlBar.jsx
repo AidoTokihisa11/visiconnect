@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import {
   Mic, MicOff, Video, VideoOff, Phone, Monitor, MonitorOff,
   MessageSquare, Sparkles, Focus, Layout, Activity, BarChart2, Settings2, MoreHorizontal, VideoIcon, EyeOff, PieChart, Users
+  ChevronUp,
 } from 'lucide-react';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 
@@ -232,51 +233,68 @@ export const ControlBar = ({
           <Phone style={{ transform: 'rotate(135deg)' }} />
         </EndCallButton>
 
+        
+        
         <ButtonGroup style={{ position: 'relative' }}>
           {showBlurSlider && isCameraEnabled && (
             <BlurSliderContainer>
-              <label htmlFor="blurSlider">Intensité:</label>
+              <label htmlFor="blurSlider" style={{fontWeight: 'bold', marginRight: '5px'}}>Flou</label>
               <input
                 id="blurSlider"
                 type="range"
-                min="0"
+                min="5"
                 max="25"
-                step="1"
-                value={blurRadius}
-                onChange={(e) => toggleBlur(parseInt(e.target.value, 10))}
+                step="5"
+                defaultValue={blurRadius}
+                onMouseUp={(e) => {
+                  toggleBlur(parseInt(e.target.value, 10));
+                }}
+                onTouchEnd={(e) => {
+                  toggleBlur(parseInt(e.target.value, 10));
+                }}
               />
+              <span style={{marginLeft: '5px'}}>{blurRadius}%</span>
             </BlurSliderContainer>
           )}
           <ControlButton className="focus-visible-ring" onClick={controls.toggleCamera} $active={isCameraEnabled} $activeColor={THEME.accent} title={isCameraEnabled ? "Désactiver la caméra" : "Activer la caméra"} aria-label={isCameraEnabled ? "Désactiver la caméra" : "Activer la caméra"}>
             {isCameraEnabled ? <Video /> : <VideoOff color={THEME.danger} />}
           </ControlButton>
-          <ControlButton 
-            className="focus-visible-ring" 
-            onClick={() => {
-              if (!isBlurEnabled) {
-                toggleBlur(10); // Standard par défaut quand on active au clic long ou rapide
-              } else {
-                toggleBlur(0); // Désactive
-                setShowBlurSlider(false);
-              }
-            }}
-            onContextMenu={(e) => {
-              e.preventDefault();
-              if (isCameraEnabled) setShowBlurSlider(!showBlurSlider);
-            }}
-            onDoubleClick={(e) => {
-              e.preventDefault();
-              if (isCameraEnabled) setShowBlurSlider(!showBlurSlider);
-            }}
-            $active={isBlurEnabled} 
-            $activeColor={THEME.accent} 
-            title="Effets vidéo : clic pour basculer, double-clic ou clic droit pour l'intensité"
-            disabled={!isCameraEnabled}
-            style={{ opacity: isCameraEnabled ? 1 : 0.5 }}
-          >
-            <Focus />
-          </ControlButton>
+          <div style={{ display: 'flex', borderRadius: '50px', background: isBlurEnabled ? THEME.accent : THEME.panelBg, overflow: 'hidden' }}>
+            <ControlButton 
+              className="focus-visible-ring" 
+              onClick={() => {
+                if (!isBlurEnabled) {
+                  toggleBlur(10); 
+                } else {
+                  toggleBlur(0); 
+                  setShowBlurSlider(false);
+                }
+              }}
+              $active={isBlurEnabled} 
+              $activeColor={THEME.accent} 
+              title="Activer/Désactiver le flou d'arrière-plan"
+              disabled={!isCameraEnabled}
+              style={{ opacity: isCameraEnabled ? 1 : 0.5, borderRadius: '50px 0 0 50px', paddingRight: '12px' }}
+            >
+              <Focus />
+            </ControlButton>
+            <ControlButton
+              className="focus-visible-ring"
+              onClick={() => {
+                 if (isCameraEnabled) setShowBlurSlider(!showBlurSlider);
+              }}
+              $active={isBlurEnabled} 
+              $activeColor={THEME.accent}
+              disabled={!isCameraEnabled}
+              style={{ opacity: isCameraEnabled ? 1 : 0.5, borderRadius: '0 50px 50px 0', padding: '0 10px', borderLeft: '1px solid rgba(255,255,255,0.1)' }}
+              title="Réglages du flou"
+            >
+              <ChevronUp size={16} />
+            </ControlButton>
+          </div>
         </ButtonGroup>
+
+
 
         <ControlButton className="focus-visible-ring" onClick={controls.toggleMic} $active={isMicrophoneEnabled} $activeColor={THEME.accent} title={isMicrophoneEnabled ? "Désactiver le micro" : "Activer le micro"} aria-label={isMicrophoneEnabled ? "Désactiver le micro" : "Activer le micro"}>
           {isMicrophoneEnabled ? <Mic /> : <MicOff color={THEME.danger} />}

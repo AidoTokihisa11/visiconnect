@@ -1,3 +1,4 @@
+import { setupAntiFreezeListeners } from './LiveKitEngine';
 import { useState, useCallback, useEffect } from 'react';
 import { 
   useRoomContext, 
@@ -72,6 +73,11 @@ export const useRoomToken = (roomName, participantName) => {
  */
 export const useMeeting = (maxQualityLock = true) => {
   const room = useRoomContext();
+
+  // WebRTC Anti-Freeze Optimization
+  useEffect(() => {
+    setupAntiFreezeListeners(room);
+  }, [room]);
   const { localParticipant, isCameraEnabled, isMicrophoneEnabled, isScreenShareEnabled } = useLocalParticipant();
   const remoteParticipants = useParticipants();
   const [devices, setDevices] = useState({

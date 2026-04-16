@@ -14,18 +14,18 @@ export const BETA_CODES = [
   "VC-6K99-1Q3V",
   "VC-Q37C-SCFO",
   "VC-8CD2-2Z6V",
-  "VC-QDKZ-JP8F",
-  "VC-JBQ4-LQDP",
-  "VC-XM53-IH7S",
-  "VC-H8RF-R1RT",
-  "VC-149B-PMSQ",
-  "VC-OPDK-JQ84",
-  "VC-GINM-6UDA",
-  "VC-WLLZ-9Y0O",
+
+
+
+
+
+
+
+
   "VC-KED0-C9V7",
-  "VC-V8W2-VH59",
-  "VC-AXDI-IGT5",
-  "VC-IP4Q-SFSZ",
+
+
+
   "VC-6803-BS6Q",
   "VC-LXEI-O0V5",
   "VC-MQUM-K8OF",
@@ -44,15 +44,15 @@ export const BETA_CODES = [
   "VC-ENEV-2PSH",
   "VC-1K7Q-Y1W2",
   "VC-5BHQ-JSLF",
-  "VC-CD0B-5CPM",
-  "VC-4U56-MIZR",
-  "VC-J5PR-E9ZF",
-  "VC-LIMD-E6PT",
-  "VC-P1GL-QBCT",
-  "VC-5LR2-FCII",
-  "VC-PI6L-YQCB",
-  "VC-QGYQ-P2SX",
-  "VC-9M66-LDU1",
+
+
+
+
+
+
+
+
+
   "VC-BRU0-JX2H",
   "VC-QTU6-VOWY",
   "VC-N7GX-ZSTX",
