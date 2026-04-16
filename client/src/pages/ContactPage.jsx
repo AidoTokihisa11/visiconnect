@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import HeaderClean from "../components/HeaderClean";
 import FooterClean from "../components/FooterClean";
+import { useTranslation } from "../hooks/useTranslation";
 
 const PageLayout = styled.div`
   min-height: 100vh;
@@ -346,6 +347,7 @@ const AlertBox = styled(motion.div)`
 `;
 
 export default function ContactPage() {
+  const { t } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState(null);
 
@@ -404,12 +406,10 @@ export default function ContactPage() {
           transition={{ duration: 0.4 }}
         >
           <h1>
-            Prenez contact avec <span>notre équipe</span>
+            {t('contact.header.title_part1')} <span>{t('contact.header.title_part2')}</span>
           </h1>
           <p>
-            Que vous ayez besoin d'une démonstration sur mesure, d'une
-            assistance technique ou d'informations sur nos tarifs
-            professionnels, nous sommes à votre écoute.
+            {t('contact.header.subtitle')}
           </p>
         </MainHeader>
 
@@ -421,18 +421,15 @@ export default function ContactPage() {
           {/* Panneau d'Information (Couleurs claires VisioConnect) */}
           <LeftPanel>
             <PanelContent>
-              <h3>Informations </h3>
-              <p className="desc">
-                Remplissez ce formulaire et un expert dédié prendra contact avec
-                vous dans les 24h ouvrées.
-              </p>
+              <h3>{t('contact.info.title')}</h3>
+              <p className="desc">{t('contact.info.desc')}</p>
 
               <InfoBlock>
                 <div className="icon-container">
                   <Mail size={20} strokeWidth={2.5} />
                 </div>
                 <div className="text-container">
-                  <h4>Email Professionnel</h4>
+                  <h4>{t('contact.info.email_title')}</h4>
                   <a href="mailto:theo.garces.aido@gmail.com">
                     theo.garces.aido@gmail.com
                   </a>
@@ -444,8 +441,8 @@ export default function ContactPage() {
                   <Briefcase size={20} strokeWidth={2.5} />
                 </div>
                 <div className="text-container">
-                  <h4>Département Entreprise</h4>
-                  <p>Ligne prioritaire pour les projets et accords-cadres.</p>
+                  <h4>{t('contact.info.enterprise_title')}</h4>
+                  <p>{t('contact.info.enterprise_desc')}</p>
                 </div>
               </InfoBlock>
 
@@ -454,7 +451,7 @@ export default function ContactPage() {
                   <MapPin size={20} strokeWidth={2.5} />
                 </div>
                 <div className="text-container">
-                  <h4>Heures de service</h4>
+                  <h4>{t('contact.info.hours_title')}</h4>
                   <p>
                     Lundi au Vendredi
                     <br />
@@ -478,7 +475,7 @@ export default function ContactPage() {
                 >
                   <CheckCircle2 size={24} />
                   <div>
-                    <strong>Message envoyé avec succès !</strong>
+                    <strong>{t('contact.form.success_title')}</strong>
                     <br />
                     Notre équipe reviendra vers vous rapidement.
                   </div>
@@ -494,7 +491,7 @@ export default function ContactPage() {
                 >
                   <AlertCircle size={24} />
                   <div>
-                    <strong>Une erreur est survenue.</strong>
+                    <strong>{t('contact.form.error_title')}</strong>
                     <br />
                     Veuillez réessayer ou nous contacter directement par e-mail.
                   </div>
@@ -505,22 +502,22 @@ export default function ContactPage() {
             <Form onSubmit={handleSubmit}>
               <FormRow>
                 <FormGroup>
-                  <label htmlFor="firstName">Prénom</label>
+                  <label htmlFor="firstName">{t('contact.form.first_name')}</label>
                   <Input
                     type="text"
                     id="firstName"
                     name="firstName"
-                    placeholder="Jean"
+                    placeholder={t('contact.form.first_name_placeholder')}
                     required
                   />
                 </FormGroup>
                 <FormGroup>
-                  <label htmlFor="lastName">Nom</label>
+                  <label htmlFor="lastName">{t('contact.form.last_name')}</label>
                   <Input
                     type="text"
                     id="lastName"
                     name="lastName"
-                    placeholder="Dupont"
+                    placeholder={t('contact.form.last_name_placeholder')}
                     required
                   />
                 </FormGroup>
@@ -528,12 +525,12 @@ export default function ContactPage() {
 
               <FormRow>
                 <FormGroup>
-                  <label htmlFor="email">Email professionnel</label>
+                  <label htmlFor="email">{t('contact.form.email')}</label>
                   <Input
                     type="email"
                     id="email"
                     name="email"
-                    placeholder="jean.dupont@societe.com"
+                    placeholder={t('contact.form.email_placeholder')}
                     required
                   />
                 </FormGroup>
@@ -551,18 +548,18 @@ export default function ContactPage() {
               </FormRow>
 
               <FormGroup>
-                <label htmlFor="company">Nom de l'entreprise</label>
+                <label htmlFor="company">{t('contact.form.company')}</label>
                 <Input
                   type="text"
                   id="company"
                   name="company"
-                  placeholder="Société ou Indépendant"
+                  placeholder={t('contact.form.company_placeholder')}
                   required
                 />
               </FormGroup>
 
               <FormGroup>
-                <label htmlFor="category">Nature de la demande</label>
+                <label htmlFor="category">{t('contact.form.category')}</label>
                 <SelectWrapper>
                   <select
                     id="category"
@@ -573,15 +570,15 @@ export default function ContactPage() {
                     <option value="" disabled>
                       Sélectionnez un sujet...
                     </option>
-                    <option value="Démo">Demander une démonstration</option>
+                    <option value="Démo">{t('contact.form.category_options.demo')}</option>
                     <option value="Tarifs">
                       Question sur les tarifs (Devis)
                     </option>
                     <option value="Partenariat">
                       Proposition de partenariat
                     </option>
-                    <option value="Support">Support technique</option>
-                    <option value="Autre">Autre demande</option>
+                    <option value="Support">{t('contact.form.category_options.support')}</option>
+                    <option value="Autre">{t('contact.form.category_options.other')}</option>
                   </select>
                   <div className="icon-right">
                     <svg
@@ -601,11 +598,11 @@ export default function ContactPage() {
               </FormGroup>
 
               <FormGroup>
-                <label htmlFor="message">Votre message</label>
+                <label htmlFor="message">{t('contact.form.message')}</label>
                 <TextArea
                   id="message"
                   name="message"
-                  placeholder="Décrivez votre projet ou votre besoin en détail..."
+                  placeholder={t('contact.form.message_placeholder')}
                   required
                 ></TextArea>
               </FormGroup>
@@ -616,7 +613,7 @@ export default function ContactPage() {
                 whileHover={{ scale: isSubmitting ? 1 : 1.01 }}
                 whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
               >
-                {isSubmitting ? "Envoi en cours..." : "Envoyer la demande"}
+                {isSubmitting ? t('contact.form.submitting') : t('contact.form.submit_button')}
               </SubmitBtn>
             </Form>
           </RightPanel>

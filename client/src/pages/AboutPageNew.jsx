@@ -201,6 +201,8 @@ const StatLabel = styled.div`
 `;
 
 const AboutPageNew = () => {
+  const { t } = useTranslation();
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -211,53 +213,53 @@ const AboutPageNew = () => {
       <MainContent>
         <HeroSection>
           <HeroTitle>
-            Connecter le monde avec <br />
-            <span>Simplicité et Sécurité</span>
+            {t('about.hero.title_part1')} <br />
+            <span>{t('about.hero.title_part2')}</span>
           </HeroTitle>
           <HeroSubtitle>
-            Notre mission est de rendre la communication vidéo accessible, fluide et sécurisée pour tous, partout dans le monde.
+            {t('about.hero.subtitle')}
           </HeroSubtitle>
         </HeroSection>
 
         <Section>
-          <SectionTitle>Notre Histoire</SectionTitle>
+          <SectionTitle>{t('about.story.title')}</SectionTitle>
           <StoryContainer>
             <TextBlock>
-              VisioConnect est né d'un constat simple : la communication vidéo est devenue essentielle, mais les outils existants étaient soit trop complexes, soit peu sécurisés, soit trop coûteux.
+              {t('about.story.paragraph1')}
             </TextBlock>
             <TextBlock>
-              Nous avons rassemblé une équipe d'ingénieurs passionnés et de designers pour créer une plateforme qui met l'utilisateur au premier plan. Après des mois de développement intensif, nous avons lancé une solution qui combine la plus haute qualité vidéo avec une interface d'une simplicité enfantine.
+              {t('about.story.paragraph2')}
             </TextBlock>
             <TextBlock>
-              Aujourd'hui, VisioConnect aide des milliers d'entreprises, d'écoles et de familles à rester proches, peu importe la distance qui les sépare.
+              {t('about.story.paragraph3')}
             </TextBlock>
           </StoryContainer>
         </Section>
 
         <Section style={{ backgroundColor: '#fff', borderTop: `1px solid ${COLORS.border}`, borderBottom: `1px solid ${COLORS.border}` }}>
-          <SectionTitle>Nos Valeurs</SectionTitle>
+          <SectionTitle>{t('about.values.title')}</SectionTitle>
           <ValuesGrid>
             <ValueCard>
               <IconBox><Target size={24} /></IconBox>
-              <ValueTitle>Simplicité Radicale</ValueTitle>
+              <ValueTitle>{t('about.values.simplicity.title')}</ValueTitle>
               <ValueText>
-                Nous croyons que la technologie doit s'effacer pour laisser place à la conversation. Chaque fonctionnalité est conçue pour être intuitive.
+                {t('about.values.simplicity.description')}
               </ValueText>
             </ValueCard>
 
             <ValueCard>
               <IconBox><Shield size={24} /></IconBox>
-              <ValueTitle>Confidentialité Totale</ValueTitle>
+              <ValueTitle>{t('about.values.privacy.title')}</ValueTitle>
               <ValueText>
-                Vos données vous appartiennent. Nous ne vendons pas vos informations et nous chiffrons toutes vos communications par défaut.
+                {t('about.values.privacy.description')}
               </ValueText>
             </ValueCard>
 
             <ValueCard>
               <IconBox><Heart size={24} /></IconBox>
-              <ValueTitle>Accessibilité Universelle</ValueTitle>
+              <ValueTitle>{t('about.values.accessibility.title')}</ValueTitle>
               <ValueText>
-                Nous travaillons dur pour que notre service fonctionne parfaitement, même sur des connexions lentes ou des appareils plus anciens.
+                {t('about.values.accessibility.description')}
               </ValueText>
             </ValueCard>
           </ValuesGrid>
@@ -267,29 +269,27 @@ const AboutPageNew = () => {
           <StatsGrid>
             <StatItem>
               <StatNumber>1M+</StatNumber>
-              <StatLabel>Utilisateurs</StatLabel>
+              <StatLabel>{t('about.stats.users')}</StatLabel>
             </StatItem>
             <StatItem>
               <StatNumber>150+</StatNumber>
-              <StatLabel>Pays</StatLabel>
+              <StatLabel>{t('about.stats.countries')}</StatLabel>
             </StatItem>
             <StatItem>
               <StatNumber>99.9%</StatNumber>
-              <StatLabel>Disponibilité</StatLabel>
+              <StatLabel>{t('about.stats.uptime')}</StatLabel>
             </StatItem>
             <StatItem>
               <StatNumber>24/7</StatNumber>
-              <StatLabel>Support</StatLabel>
+              <StatLabel>{t('about.stats.support')}</StatLabel>
             </StatItem>
           </StatsGrid>
         </StatsSection>
-        
-        <CallToAction 
-            title="Rejoignez la révolution" 
-            description="Découvrez comment VisioConnect peut transformer vos réunions dès aujourd'hui."
-            buttonText="Essayer gratuitement"
-        />
-      </MainContent>
+
+        <CallToAction
+            title={t('about.cta.title')}
+            description={t('about.cta.description')}
+            buttonText={t('about.cta.button')}          />      </MainContent>
       <FooterClean />
     </PageContainer>
   );

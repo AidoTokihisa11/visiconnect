@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
+import { useTranslation } from '../hooks/useTranslation';
 import CallToAction from '../components/CallToAction';
 
 const stripePromise = loadStripe('pk_test_51T5EwZ8YZRxeQjiW412gOFLsaZ4fn6ArvMjf74OphD9WhovPuRDde4qOGwrpdwlnFQIt1apdfwnWNfjbt6n0CkkB00p9k8z1MO');
@@ -387,20 +388,21 @@ const FAQAnswer = styled.div`
 // --- DATA ---
 const FAQList = [
   {
-    q: "Puis-je changer de forfait à tout moment ?",
-    a: "Oui, vous pouvez passer à un forfait supérieur ou inférieur à tout moment. Les modifications prennent effet immédiatement ou à la fin de votre cycle de facturation actuel."
+    q: "pricing.faq.q1.question",
+    a: "pricing.faq.q1.answer"
   },
   {
-    q: "Y a-t-il une période d'essai gratuite ?",
-    a: "Absolument. Tous nos plans payants incluent une période d'essai de 14 jours, sans carte bancaire requise."
+    q: "pricing.faq.q2.question",
+    a: "pricing.faq.q2.answer"
   },
   {
-    q: "Quels modes de paiement acceptez-vous ?",
-    a: "Nous acceptons toutes les principales cartes de crédit (Visa, Mastercard, Amex) ainsi que PayPal pour les abonnements annuels."
+    q: "pricing.faq.q4.question",
+    a: "pricing.faq.q4.answer"
   }
 ];
 
 const PricingPage = () => {
+  const { t } = useTranslation();
   const [isAnnual, setIsAnnual] = useState(true);
   const [openFAQ, setOpenFAQ] = useState(null);
 
@@ -471,7 +473,7 @@ const PricingPage = () => {
           <PlanDescription>Pour découvrir la plateforme sans engagement.</PlanDescription>
           <Price>
             <span className="currency">€</span>0
-            <span className="period">/mois</span>
+            <span className="period">{t('pricing.plans.free.period')}</span>
           </Price>
           <FeatureList>
             <FeatureItem><Check size={18} /> Jusqu'à 3 participants</FeatureItem>
@@ -525,7 +527,7 @@ const PricingPage = () => {
           <FeatureList>
             <FeatureItem><Check size={18} /> Jusqu'à 200 participants</FeatureItem>
             <FeatureItem><Check size={18} /> Stockage illimité</FeatureItem>
-            <FeatureItem><Check size={18} /> Salles de sous-commission</FeatureItem>
+            <FeatureItem><Check size={18} /> {t('pricing.features.breakout_rooms')}</FeatureItem>
             <FeatureItem><Check size={18} /> SSO & Admin Avancé</FeatureItem>
             <FeatureItem><Check size={18} /> Transcriptions Illimitées</FeatureItem>
           </FeatureList>
@@ -540,59 +542,59 @@ const PricingPage = () => {
       </PricingGrid>
 
       <ComparisonSection>
-        <TableTitle>Comparatif Détaillé</TableTitle>
+        <TableTitle>{t('pricing.compare.title')}</TableTitle>
         <TableWrapper>
           <Table>
             <thead>
               <tr>
-                <th>Fonctionnalité</th>
-                <th>Starter</th>
-                <th>Pro</th>
-                <th>Business</th>
+                <th>{t('pricing.compare.feature')}</th>
+                <th>{t('pricing.compare.starter')}</th>
+                <th>{t('pricing.compare.pro')}</th>
+                <th>{t('pricing.compare.business')}</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>Participants Max</td>
+                <td>{t('pricing.compare.max_participants')}</td>
                 <td>3</td>
                 <td>50</td>
                 <td>200</td>
               </tr>
               <tr>
-                <td>Durée Limite</td>
+                <td>{t('pricing.compare.duration')}</td>
                 <td>45 min</td>
-                <td>Illimitée</td>
-                <td>Illimitée</td>
+                <td>{t('pricing.compare.unlimited')}</td>
+                <td>{t('pricing.compare.unlimited')}</td>
               </tr>
               <tr>
-                <td>Qualité Vidéo</td>
+                <td>{t('pricing.compare.quality')}</td>
                 <td>720p</td>
                 <td>1080p</td>
-                <td>4K (si dispo)</td>
+                <td>4K ({t('pricing.compare.if_available')})</td>
               </tr>
               <tr>
-                <td>Support</td>
-                <td>Communauté</td>
+                <td>{t('pricing.compare.support')}</td>
+                <td>{t('pricing.compare.support_community')}</td>
                 <td>Email (24h)</td>
-                <td>Téléphone/Chat (1h)</td>
+                <td>{t('pricing.compare.support_phone')}</td>
               </tr>
               <tr>
-                <td>Enregistrement Cloud</td>
+                <td>{t('pricing.compare.recording')}</td>
                 <td>-</td>
                 <td>5 Go</td>
-                <td>Illimité</td>
+                <td>{t('pricing.compare.unlimited')}</td>
               </tr>
               <tr>
-                <td>Transcriptions IA</td>
+                <td>{t('pricing.compare.transcription')}</td>
                 <td>-</td>
-                <td>10 heures</td>
-                <td>Illimitées</td>
+                <td>10 {t('pricing.compare.hours')}</td>
+                <td>{t('pricing.compare.unlimited')}</td>
               </tr>
               <tr>
                 <td>SSO (Single Sign-On)</td>
                 <td>-</td>
                 <td>-</td>
-                <td>Inclus</td>
+                <td>{t('pricing.compare.included')}</td>
               </tr>
             </tbody>
           </Table>
@@ -600,24 +602,24 @@ const PricingPage = () => {
       </ComparisonSection>
 
       <FAQSection>
-        <FAQTitle>Questions Fréquentes</FAQTitle>
+        <FAQTitle>{t('pricing.faq.title')}</FAQTitle>
         {FAQList.map((item, index) => (
           <FAQItem key={index}>
             <FAQQuestion onClick={() => toggleFAQ(index)}>
-              {item.q}
+              {t(item.q)}
               {openFAQ === index ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
             </FAQQuestion>
             <FAQAnswer $isOpen={openFAQ === index}>
-              {item.a}
+              {t(item.a)}
             </FAQAnswer>
           </FAQItem>
         ))}
       </FAQSection>
 
-      <CallToAction 
-         title="Vous avez d'autres questions ?"
-         description="Notre équipe commerciale est à votre disposition pour trouver l'offre qui correspond parfaitement à vos besoins."
-         buttonText="Contacter les ventes"
+      <CallToAction
+         title={t('pricing.cta.title')}
+         description={t('pricing.cta.description')}
+         buttonText={t('pricing.cta.button')}
          buttonLink="/contact"
       />
 
