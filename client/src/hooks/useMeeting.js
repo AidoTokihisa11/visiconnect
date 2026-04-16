@@ -147,6 +147,8 @@ const toggleBlur = useCallback(async (newRadius) => {
            await videoTrack.setProcessor(null);
            setIsBlurEnabled(false);
         } else {
+           // Delay the heavy WebAssembly/TensorFlow initialization to let React render the UI first
+           await new Promise(resolve => setTimeout(resolve, 50));
            const blur = BackgroundBlur(targetRadius);      
            await videoTrack.setProcessor(blur);
            setIsBlurEnabled(true);
