@@ -92,60 +92,6 @@ const StatusIcon = styled.div`
 `;
 
 
-export const VideoPlayer = React.memo(({ track, isLocal = false, videoFit = 'cover' }) => {
-  const videoEl = React.useRef(null);
-
-  React.useEffect(() => {
-    if (!videoEl.current || !track) return;
-
-    const el = videoEl.current;
-
-    // 1. Attachement natif WebRTC (Contourne l'attribut srcObject de React)
-    const attachedElement = track.attach(el);
-
-    // 2. Offloading GPU (Force la création d'un calque de composition matériel)
-    attachedElement.style.willChange = 'transform, opacity';
-    attachedElement.style.backfaceVisibility = 'hidden';
-    attachedElement.style.objectFit = videoFit;
-    
-    // Accélération 3D : L'utilisation de translateZ(0) pousse le rendu sur le GPU
-    attachedElement.style.transform = isLocal 
-      ? 'scaleX(-1) translateZ(0)' // Mode miroir pour la caméra locale
-      : 'translateZ(0)';
-
-    // Cleanup critique : Évite la surcharge du garbage collector et les fuites de mémoire
-    return () => {
-      if (track) {
-        track.detach(el);
-      }
-      // Réinitialise le flux pour s'assurer que l'élément vidéo est purgé
-      el.srcObject = null;
-    };
-  }, [track, isLocal, videoFit]);
-
-  return (
-    <div 
-      className="video-container-zero-render" 
-      style={{ 
-        width: '100%', 
-        height: '100%', 
-        backgroundColor: '#050505',
-        contain: 'strict'
-      }}
-    >
-      <video 
-        ref={videoEl} 
-        autoPlay 
-        playsInline 
-        muted={isLocal} 
-        style={{ width: '100%', height: '100%', display: 'block' }}
-      />
-    </div>
-  );
-});
-
-VideoPlayer.displayName = 'VideoPlayer';
-
 export const VideoParticipant = React.memo(({
   trackRef,
   participant,
@@ -167,10 +113,18 @@ export const VideoParticipant = React.memo(({
   return (
     <CardContainer $isActive={isSpeaking || isMicEnabled} $videoFit={videoFit} $isPiP={isPiP}>
       {isVideoEnabled && trackRef ? (
-        <VideoPlayer
-          track={trackRef?.publication?.videoTrack ?? trackRef?.publication?.track ?? trackRef?.track ?? (typeof trackRef?.attach === 'function' ? trackRef : null)}
-          isLocal={isLocal}
-          videoFit={videoFit}
+        <VideoTrack
+          trackRef={trackRef}
+          playsInline={true}
+          disablePictureInPicture={true}
+          style={{ 
+            width: '100%', 
+            height: '100%', 
+            objectFit: videoFit,
+            transform: 'translateZ(0)', 
+            willChange: 'transform, opacity',
+            backfaceVisibility: 'hidden'
+          }} 
         />
       ) : (
         <Placeholder>
