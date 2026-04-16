@@ -1,3 +1,4 @@
+import { AIVideoProcessor } from '../lib/AIVideoEngine';
 import { setupAntiFreezeListeners } from './LiveKitEngine';
 import { useState, useCallback, useEffect } from 'react';
 import { 

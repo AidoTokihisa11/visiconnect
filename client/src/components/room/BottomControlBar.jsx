@@ -294,6 +294,23 @@ export const ControlBar = ({
           </div>
         </ButtonGroup>
 
+        {/* IA Smart Enhancer Button */}
+        <ButtonGroup>
+          <ControlButton
+            $active={isAIEnhanced}
+            onClick={toggleAIVideoEngine}
+            title={isAIEnhanced ? "Désactiver l'IA (Auto-Lighting & Upscaling)" : "Activer l'IA vidéo (Netteté & Auto-Lighting)"}
+            style={{
+              background: isAIEnhanced ? 'linear-gradient(135deg, #10B981, #059669)' : undefined,
+              borderColor: isAIEnhanced ? 'transparent' : undefined,
+              color: isAIEnhanced ? 'white' : undefined,
+            }}
+          >
+            <Sparkles size={22} strokeWidth={isAIEnhanced ? 2.5 : 2} />
+          </ControlButton>
+        </ButtonGroup>
+
+
 
 
         <ControlButton className="focus-visible-ring" onClick={controls.toggleMic} $active={isMicrophoneEnabled} $activeColor={THEME.accent} title={isMicrophoneEnabled ? "Désactiver le micro" : "Activer le micro"} aria-label={isMicrophoneEnabled ? "Désactiver le micro" : "Activer le micro"}>
