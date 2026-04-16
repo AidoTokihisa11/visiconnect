@@ -1,6 +1,29 @@
 // videoWorker.js - Web Worker dédié pour l'IA (Initialisation et Inférence)
 // Ce Worker tourne sur un thread séparé pour ne jamais bloquer l'UI React.
 
+// ============================================================================
+// FIX POUR VITE ET MODULE WORKERS
+// Un Worker lancé avec { type: 'module' } (comme le force Vite) ne peut pas 
+// utiliser "importScripts". Or, Mediapipe l'utilise en interne pour charger  
+// son runner WASM. Ce polyfill bloque intelligemment le worker via XHR 
+// synchrone, télécharge le WASM, et l'injecte dans le contexte global !
+// ============================================================================
+self.importScripts = function(...urls) {
+    urls.forEach(url => {
+        console.log(`[Worker Polyfill] Chargement synchrone via XHR de : ${url}`);
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url, false); // "false" rend la requête synchrone ! Toléré uniquement en Web Worker.
+        xhr.send(null);
+        if (xhr.status >= 200 && xhr.status < 300) {
+            const code = xhr.responseText + '\nif(typeof ModuleFactory !== "undefined") { self.ModuleFactory = ModuleFactory; }';
+            const globalEval = eval;
+            globalEval(code); // Injecte le code dans le WorkerGlobalScope
+        } else {
+            throw new Error(`[Worker Polyfill] Échec du téléchargement ${url}: ${xhr.statusText}`);
+        }
+    });
+};
+
 let faceDetector = null;
 let selfieSegmentation = null;
 let isReady = false;
