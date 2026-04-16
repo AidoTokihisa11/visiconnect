@@ -33,12 +33,12 @@ async function initializeAIModels() {
         const { FaceDetector, ImageSegmenter, FilesetResolver } = vision;
 
         // 2. Compilation des Wasm Resolvers
-        const vision = await FilesetResolver.forVisionTasks(
+        const visionFileset = await FilesetResolver.forVisionTasks(
             "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm"
         );
 
         // 3. Pré-chargement du Face Detector (AIVideoEngine)
-        faceDetector = await FaceDetector.createFromOptions(vision, {
+        faceDetector = await FaceDetector.createFromOptions(visionFileset, {
             baseOptions: {
                 modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/latest/blaze_face_short_range.tflite",
                 delegate: "GPU" 
@@ -48,7 +48,7 @@ async function initializeAIModels() {
         });
 
         // 4. Pré-chargement de la Segmentation (BackgroundBlur)
-        selfieSegmentation = await ImageSegmenter.createFromOptions(vision, {
+        selfieSegmentation = await ImageSegmenter.createFromOptions(visionFileset, {
             baseOptions: {
                 modelAssetPath: "https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_segmenter/float16/latest/selfie_segmenter.tflite",
                 delegate: "GPU"
