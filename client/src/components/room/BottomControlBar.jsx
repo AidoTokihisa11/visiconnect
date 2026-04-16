@@ -221,6 +221,8 @@ export const ControlBar = ({
   isBlurEnabled,
   blurRadius,
   toggleBlur,
+  isAIEnhanced,
+  toggleAIVideoEngine,
   onLeave
 }) => {
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);

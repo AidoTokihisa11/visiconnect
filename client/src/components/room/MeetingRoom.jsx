@@ -295,6 +295,8 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
          isBlurEnabled={isBlurEnabled}
            blurRadius={blurRadius}
          toggleBlur={toggleBlur}
+         isAIEnhanced={isAIEnhanced}
+         toggleAIVideoEngine={toggleAIVideoEngine}
          onLeave={onLeave}
       />
 
