@@ -60,22 +60,32 @@ export class AIVideoProcessor {
     this.videoElement.srcObject = new MediaStream([this.sourceTrack]);
     await this.videoElement.play();
 
-    // Utilisation de OffscreenCanvas si disponible (Zero-Copy GPU)
-    if (typeof OffscreenCanvas !== 'undefined') {
-      this.offscreenCanvas = new OffscreenCanvas(1, 1);
-      this.offscreenCtx = this.offscreenCanvas.getContext('2d', { alpha: false });
-    }
-
-    this.canvas = document.createElement('canvas');
-    this.ctx = this.canvas.getContext('2d', { alpha: false });
-
+    // Détection mobile
     const isMobile = typeof navigator !== 'undefined' && /Mobi|Android/i.test(navigator.userAgent);
-    const fps = isMobile ? 24 : 30;
+    this.isMobile = isMobile;
+    
+    // MOBILE: Mode passthrough léger - pas de canvas processing lourd
+    // Le canvas est nécessaire pour captureStream mais on minimise le traitement
+    this.canvas = document.createElement('canvas');
+    this.ctx = this.canvas.getContext('2d', { 
+      alpha: false,
+      // Optimisations mobile: désactiver les features coûteuses
+      desynchronized: isMobile, // Permet le rendu sans synchronisation (plus rapide)
+      willReadFrequently: !isMobile // Uniquement desktop pour getImageData
+    });
+
+    const fps = isMobile ? 20 : 30; // Mobile: 20fps pour économiser CPU
     const stream = this.canvas.captureStream(fps);
     this.processedTrack = stream.getVideoTracks()[0];
 
-    // Chargement asynchrone de l'IA
-    this.loadAIModels();
+    // MOBILE: Délais le chargement IA de 2 secondes pour laisser WebRTC s'établir
+    if (isMobile) {
+      console.log('[AIVideoEngine] Mobile: Mode léger activé, IA différée');
+      setTimeout(() => this.loadAIModels(), 2000);
+    } else {
+      // Desktop: Chargement immédiat
+      this.loadAIModels();
+    }
 
     this.processFrame();
     return { track: this.processedTrack };
@@ -247,7 +257,9 @@ export class AIVideoProcessor {
       this.fpsDrops = Math.max(0, this.fpsDrops - 0.2);
     }
 
-    if (this.fpsDrops > 15 && !this.thermalGuardActive) {
+    // MOBILE: Seuil thermique plus agressif (10 au lieu de 15)
+    const thermalThreshold = this.isMobile ? 10 : 15;
+    if (this.fpsDrops > thermalThreshold && !this.thermalGuardActive) {
       console.warn("[AIVideoEngine] DANGER THERMIQUE: Dégradation vers 'Low-Power Mode'...");
       this.thermalGuardActive = true;
     } 
@@ -260,18 +272,16 @@ export class AIVideoProcessor {
       this.canvas.width = videoWidth;
       this.canvas.height = videoHeight;
       this.detectedResolution = Math.min(videoWidth, videoHeight);
-      
-      if (this.offscreenCanvas) {
-        this.offscreenCanvas.width = videoWidth;
-        this.offscreenCanvas.height = videoHeight;
-      }
     }
 
     this.frameCount++;
+    
+    // MOBILE: Skip frames pour économiser CPU (traiter 1 frame sur 2)
+    const skipFrame = this.isMobile && (this.frameCount % 2 === 0);
 
     // --- 2. PIPELINE DE RENDU ---
-    if (this.thermalGuardActive) {
-      // MODE DÉGRADÉ : Pass-through matériel
+    if (this.thermalGuardActive || skipFrame) {
+      // MODE DÉGRADÉ / SKIP : Pass-through matériel simple
       this.ctx.filter = 'none';
       this.ctx.drawImage(this.videoElement, 0, 0, videoWidth, videoHeight);
     } else {
@@ -288,13 +298,15 @@ export class AIVideoProcessor {
         }
       }
 
-      // B. Auto-Relighting Sigmoïde (tous les 10 frames)
-      if (this.frameCount % 10 === 0) {
+      // B. Auto-Relighting Sigmoïde (tous les 10 frames desktop, 20 mobile)
+      const relightInterval = this.isMobile ? 20 : 10;
+      if (this.frameCount % relightInterval === 0) {
         this.computeRelightingSigmoid();
       }
       
-      // C. Analyse Pixelisation + Estimation Bitrate (tous les 30 frames)
-      if (this.frameCount % 30 === 0) {
+      // C. Analyse Pixelisation + Estimation Bitrate (tous les 30 frames desktop, 60 mobile)
+      const analyzeInterval = this.isMobile ? 60 : 30;
+      if (this.frameCount % analyzeInterval === 0) {
         this.analyzePixelation();
         // Estimation bitrate asynchrone (non-bloquant)
         this.estimateBitrate();

@@ -76,18 +76,11 @@ export const useRoomToken = (roomName, participantName) => {
 export const useMeeting = (maxQualityLock = true) => {
   const room = useRoomContext();
 
-  // WebRTC Anti-Freeze Optimization
-  
-    // Pre-Warming de l'IA (Non Bloquant via Web Worker)
-    useEffect(() => {
-        const manager = new AIEngineManager();
-        manager.onReady((ready) => setIsAiReady(ready));
-        manager.init(); // Déclenche le téléchargement/compilation WASM en background absolu
-    }, []);
+  // Détection mobile pour éviter le pre-warming IA (cause de freeze)
+  const isMobile = typeof navigator !== 'undefined' &&
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent || '');
 
-    useEffect(() => {
-    setupAntiFreezeListeners(room);
-  }, [room]);
+  // === ÉTATS (déclarés AVANT les useEffect) ===
   const { localParticipant, isCameraEnabled, isMicrophoneEnabled, isScreenShareEnabled } = useLocalParticipant();
   const remoteParticipants = useParticipants();
   const [devices, setDevices] = useState({
@@ -96,9 +89,29 @@ export const useMeeting = (maxQualityLock = true) => {
     speakers: [],
   });
   
+  const [isAiReady, setIsAiReady] = useState(false);
+  const [isAIEnhanced, setIsAIEnhanced] = useState(false);
+
+  // === EFFECTS (après les états) ===
+  
+  // Pre-Warming de l'IA - DÉSACTIVÉ SUR MOBILE pour éviter le freeze au join
+  // Sur mobile, l'IA sera chargée uniquement quand l'utilisateur clique sur le bouton
+  useEffect(() => {
+    // MOBILE: Skip pre-warming - le chargement WASM de 30MB freeze le téléphone
+    if (isMobile) {
+      console.log('[useMeeting] Mobile détecté: Pre-warming IA désactivé pour éviter freeze');
+      setIsAiReady(true); // Permettre l'activation manuelle
+      return;
+    }
     
-    const [isAiReady, setIsAiReady] = useState(false);
-    const [isAIEnhanced, setIsAIEnhanced] = useState(false);
+    const manager = new AIEngineManager();
+    manager.onReady((ready) => setIsAiReady(ready));
+    manager.init(); // Desktop uniquement
+  }, [isMobile]);
+
+  useEffect(() => {
+    setupAntiFreezeListeners(room);
+  }, [room]);
     
     const [activeAiProcessor, setActiveAiProcessor] = useState(null);
     const [blurProcessor, setBlurProcessor] = useState(null);
