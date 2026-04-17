@@ -43,7 +43,7 @@ const MainContent = styled.div`
 const SidePanel = styled(motion.div)`
   width: ${props => props.wide ? '600px' : '400px'};
   background-color: ${THEME.panelBg};
-  border-left: 1px solid #cbd5e1; box-shadow: -4px 0 20px rgba(37, 99, 235, 0.05);
+  border-left: 1px solid #cbd5e1;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -56,7 +56,15 @@ const SidePanel = styled(motion.div)`
 
   @media (max-width: 768px) {
     width: 100%;
-    z-index: 60;
+    /* Keep it slightly above the mobile bottom bar */
+    height: calc(100% - 90px);
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.3);
+    top: auto;
+    bottom: 90px;
+    z-index: 55;
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
   }
 `;
 
@@ -114,12 +122,17 @@ const ChatInput = styled.input`
 
 const WhiteboardOverlay = styled(motion.div)`
   position: absolute;
-  top: 72px;
+  top: 72px; /* Height of header */
   left: 0;
   right: 0;
-  bottom: 80px;
+  bottom: 80px; /* Desktop bottom bar height */
   background: ${THEME.bg};
   z-index: 40;
+
+  @media (max-width: 768px) {
+    top: 60px; /* Mobile header height */
+    bottom: 90px; /* Mobile bottom bar */
+  }
 `;
 
 export const MeetingRoom = ({ onLeave, roomId, user }) => {
