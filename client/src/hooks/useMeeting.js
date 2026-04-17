@@ -97,16 +97,23 @@ export const useMeeting = (maxQualityLock = true) => {
   // Pre-Warming de l'IA - DÉSACTIVÉ SUR MOBILE pour éviter le freeze au join
   // Sur mobile, l'IA sera chargée uniquement quand l'utilisateur clique sur le bouton
   useEffect(() => {
-    // MOBILE: Skip pre-warming - le chargement WASM de 30MB freeze le téléphone
+    // MOBILE: Skip pre-warming complètement - pas de Worker, pas de WASM
     if (isMobile) {
       console.log('[useMeeting] Mobile détecté: Pre-warming IA désactivé pour éviter freeze');
-      setIsAiReady(true); // Permettre l'activation manuelle
+      setIsAiReady(false); // L'IA n'est pas disponible sur mobile par défaut
       return;
     }
     
+    // DESKTOP: Lazy loading de l'IA (le Worker est créé seulement dans init())
     const manager = new AIEngineManager();
     manager.onReady((ready) => setIsAiReady(ready));
-    manager.init(); // Desktop uniquement
+    
+    // Délai pour laisser WebRTC s'établir avant de charger l'IA
+    const timer = setTimeout(() => {
+      manager.init();
+    }, 2000); // 2 secondes après le join
+    
+    return () => clearTimeout(timer);
   }, [isMobile]);
 
   useEffect(() => {
