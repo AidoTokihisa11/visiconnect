@@ -1,8 +1,51 @@
-import React from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
-import { Mic, MicOff, VideoOff, Activity } from 'lucide-react';
+import { Mic, MicOff, VideoOff, Activity, Move } from 'lucide-react';
 import { VideoTrack } from '@livekit/components-react';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
+
+// 📱 PiP Draggable Container - Position absolue contrôlée par state
+const DraggablePiPContainer = styled.div`
+  position: fixed !important;
+  width: 100px;
+  height: 140px;
+  z-index: 100;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  border: 2px solid rgba(255,255,255,0.15);
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: ${THEME.cardBg};
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+  transition: ${props => props.$isDragging ? 'none' : 'box-shadow 0.2s ease'};
+  
+  &:active {
+    cursor: grabbing;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+  }
+  
+  /* Indicateur de drag */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 4px;
+    background: rgba(255,255,255,0.4);
+    border-radius: 2px;
+    z-index: 10;
+    opacity: 0.7;
+  }
+  
+  /* Landscape mobile: plus petit */
+  @media (max-width: 768px) and (orientation: landscape) {
+    width: 90px;
+    height: 70px;
+  }
+`;
 
 const CardContainer = styled.div`
   background-color: ${THEME.cardBg};
@@ -13,6 +56,8 @@ const CardContainer = styled.div`
   max-width: 800px;
   aspect-ratio: 16/9;
   max-height: 100%;
+  width: 100%;
+  height: 100%;
   
   @media (max-width: 768px) {
     border-radius: 16px;
@@ -20,32 +65,6 @@ const CardContainer = styled.div`
     aspect-ratio: auto;
     flex: 1;
     min-height: 0;
-
-    /* 📱 PIP Mobile: Self-view fixée en bas à droite */
-    ${props => props.$isPiP && `
-      position: fixed !important;
-      bottom: calc(100px + env(safe-area-inset-bottom, 0px));
-      right: 12px;
-      width: 100px;
-      height: 140px;
-      flex: none !important;
-      z-index: 100;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-      border: 2px solid rgba(255,255,255,0.15);
-      border-radius: 12px;
-      aspect-ratio: auto;
-      max-width: none;
-    `}
-  }
-  
-  /* Landscape mobile: PIP plus petit */
-  @media (max-width: 768px) and (orientation: landscape) {
-    ${props => props.$isPiP && `
-      width: 90px;
-      height: 70px;
-      bottom: 80px;
-      right: 8px;
-    `}
   }
 `;
 
@@ -123,8 +142,128 @@ export const VideoParticipant = React.memo(({
     
   const isMicEnabled = overrideMicEnabled !== undefined ? overrideMicEnabled : (participant?.isMicrophoneEnabled ?? false);
 
-  return (
-    <CardContainer $isActive={isSpeaking || isMicEnabled} $videoFit={videoFit} $isPiP={isPiP}>
+  // 📱 État pour la position du PiP déplaçable
+  const [pipPosition, setPipPosition] = useState({ x: null, y: null });
+  const [isDragging, setIsDragging] = useState(false);
+  const dragRef = useRef(null);
+  const dragStartRef = useRef({ x: 0, y: 0, posX: 0, posY: 0 });
+
+  // Initialiser la position par défaut (bas droite)
+  useEffect(() => {
+    if (isPiP && pipPosition.x === null) {
+      const defaultX = window.innerWidth - 112; // 100px width + 12px margin
+      const defaultY = window.innerHeight - 240; // bottom: 100px (bar) + 140px (height)
+      setPipPosition({ x: defaultX, y: defaultY });
+    }
+  }, [isPiP, pipPosition.x]);
+
+  // Gestion du touch start
+  const handleTouchStart = useCallback((e) => {
+    if (!isPiP) return;
+    e.preventDefault();
+    const touch = e.touches[0];
+    dragStartRef.current = {
+      x: touch.clientX,
+      y: touch.clientY,
+      posX: pipPosition.x,
+      posY: pipPosition.y,
+    };
+    setIsDragging(true);
+  }, [isPiP, pipPosition]);
+
+  // Gestion du touch move
+  const handleTouchMove = useCallback((e) => {
+    if (!isDragging || !isPiP) return;
+    e.preventDefault();
+    const touch = e.touches[0];
+    const deltaX = touch.clientX - dragStartRef.current.x;
+    const deltaY = touch.clientY - dragStartRef.current.y;
+    
+    // Calculer les nouvelles positions avec limites
+    const pipWidth = 100;
+    const pipHeight = 140;
+    const maxX = window.innerWidth - pipWidth - 8;
+    const maxY = window.innerHeight - pipHeight - 100; // 100px pour la barre du bas
+    const minX = 8;
+    const minY = 60; // Espace pour le header
+    
+    const newX = Math.max(minX, Math.min(maxX, dragStartRef.current.posX + deltaX));
+    const newY = Math.max(minY, Math.min(maxY, dragStartRef.current.posY + deltaY));
+    
+    setPipPosition({ x: newX, y: newY });
+  }, [isDragging, isPiP]);
+
+  // Gestion du touch end avec snap aux coins
+  const handleTouchEnd = useCallback(() => {
+    if (!isDragging || !isPiP) return;
+    setIsDragging(false);
+    
+    // Snap vers le coin le plus proche (optionnel - snap horizontal uniquement)
+    const pipWidth = 100;
+    const centerX = pipPosition.x + pipWidth / 2;
+    const screenCenterX = window.innerWidth / 2;
+    
+    // Snap à gauche ou à droite
+    const snapX = centerX < screenCenterX ? 8 : window.innerWidth - pipWidth - 8;
+    setPipPosition(prev => ({ ...prev, x: snapX }));
+  }, [isDragging, isPiP, pipPosition]);
+
+  // Mouse events pour desktop (optionnel mais utile pour tester)
+  const handleMouseDown = useCallback((e) => {
+    if (!isPiP) return;
+    e.preventDefault();
+    dragStartRef.current = {
+      x: e.clientX,
+      y: e.clientY,
+      posX: pipPosition.x,
+      posY: pipPosition.y,
+    };
+    setIsDragging(true);
+  }, [isPiP, pipPosition]);
+
+  // Écouter mousemove et mouseup globalement
+  useEffect(() => {
+    if (!isDragging) return;
+
+    const handleMouseMove = (e) => {
+      const deltaX = e.clientX - dragStartRef.current.x;
+      const deltaY = e.clientY - dragStartRef.current.y;
+      
+      const pipWidth = 100;
+      const pipHeight = 140;
+      const maxX = window.innerWidth - pipWidth - 8;
+      const maxY = window.innerHeight - pipHeight - 100;
+      const minX = 8;
+      const minY = 60;
+      
+      const newX = Math.max(minX, Math.min(maxX, dragStartRef.current.posX + deltaX));
+      const newY = Math.max(minY, Math.min(maxY, dragStartRef.current.posY + deltaY));
+      
+      setPipPosition({ x: newX, y: newY });
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+      // Snap horizontal
+      const pipWidth = 100;
+      const centerX = pipPosition.x + pipWidth / 2;
+      const screenCenterX = window.innerWidth / 2;
+      const snapX = centerX < screenCenterX ? 8 : window.innerWidth - pipWidth - 8;
+      setPipPosition(prev => ({ ...prev, x: snapX }));
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+    
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging, pipPosition.x]);
+
+  // Contenu vidéo commun
+  const videoContent = (
+    <>
       {isVideoEnabled && trackRef ? (
         <VideoTrack
           trackRef={trackRef}
@@ -141,25 +280,54 @@ export const VideoParticipant = React.memo(({
         />
       ) : (
         <Placeholder>
-          <VideoOff size={64} style={{ opacity: 0.5 }} />
+          <VideoOff size={isPiP ? 32 : 64} style={{ opacity: 0.5 }} />
         </Placeholder>
       )}
 
-      <StatusIcons>
-        {!isMicEnabled && (
-          <StatusIcon $active>
-            <MicOff size={16} />
-          </StatusIcon>
-        )}
-        {/* We can add connection quality here later */}
-      </StatusIcons>
+      {!isPiP && (
+        <StatusIcons>
+          {!isMicEnabled && (
+            <StatusIcon $active>
+              <MicOff size={16} />
+            </StatusIcon>
+          )}
+        </StatusIcons>
+      )}
 
-      {showLabel && (
+      {showLabel && !isPiP && (
         <UserLabel>
           {isMicEnabled ? <Mic size={14} color="#059669" /> : <MicOff size={14} color="#dc2626" />}
           {participant?.identity || 'Inconnu'} {isLocal && '(Vous)'}
         </UserLabel>
       )}
+    </>
+  );
+
+  // 📱 Rendu PiP déplaçable sur mobile
+  if (isPiP) {
+    return (
+      <DraggablePiPContainer
+        ref={dragRef}
+        $isDragging={isDragging}
+        style={{
+          left: pipPosition.x ?? 'auto',
+          top: pipPosition.y ?? 'auto',
+          right: pipPosition.x === null ? '12px' : 'auto',
+          bottom: pipPosition.y === null ? 'calc(100px + env(safe-area-inset-bottom, 0px))' : 'auto',
+        }}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onMouseDown={handleMouseDown}
+      >
+        {videoContent}
+      </DraggablePiPContainer>
+    );
+  }
+
+  return (
+    <CardContainer $isActive={isSpeaking || isMicEnabled} $videoFit={videoFit}>
+      {videoContent}
     </CardContainer>
   );
 });
