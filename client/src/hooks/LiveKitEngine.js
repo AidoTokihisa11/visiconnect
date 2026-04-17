@@ -1,5 +1,5 @@
 import { AIImageEnhancer } from '../lib/AIImageEnhancer';
-import { RoomEvent, VideoPresets, Track, createLocalVideoTrack } from 'livekit-client';
+import { RoomEvent, VideoPresets, Track, createLocalVideoTrack, VideoQuality } from 'livekit-client';
 
 /**
  * 2. Logique de Publication Intelligente (publishSmartMedia)
@@ -60,7 +60,7 @@ export const setupAntiFreezeListeners = (room) => {
       // Demande agressive au SFU de générer une Keyframe (PLI - Picture Loss Indication)
       // track.setVideoPriority('high'); // Removed: setVideoPriority is not a function on RemoteTrack. Use publication.setVideoQuality(VideoQuality.HIGH) if needed.
       if (typeof publication.setVideoQuality === 'function') {
-        publication.setVideoQuality(2); // VideoQuality.HIGH
+        publication.setVideoQuality(VideoQuality.HIGH);
       }
       
       // On s'assure que le flux n'est pas "downcasted" par défaut le temps de l'abonnement
