@@ -5,7 +5,7 @@ import { LiveKitRoom } from '@livekit/components-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRoomToken } from '../hooks/useMeeting';
 import { useRoomProtection } from '../hooks/useRoomProtection';
-import { useAILiveKit } from '../hooks/useAILiveKit';
+import { useLiveKit4K } from '../hooks/useLiveKit4K';  // v4.0 Anti-Pixelisation
 import { useSafeLayout } from '../hooks/useSafeLayout';
 import { MeetingRoom } from '../components/room/MeetingRoom';
 import { Video, ArrowRight, Shield, AlertTriangle, Lock, Key, Sparkles } from 'lucide-react';
@@ -71,7 +71,7 @@ class LiveKitErrorBoundary extends Component {
 function ActiveRoom({ roomId, participantName }) {
   const navigate = useNavigate();
   const { token, error: tokenError } = useRoomToken(roomId, participantName);
-  const { options: roomOptions, videoOptions } = useAILiveKit();
+  const { options: roomOptions, videoOptions } = useLiveKit4K();  // v4.0 Anti-Pixelisation
 
   const liveKitUrl = import.meta.env.VITE_LIVEKIT_WS_URL || import.meta.env.VITE_LIVEKIT_URL || 'ws://localhost:7880';
   const isUsableToken = typeof token === 'string' && token.length > 0 && !token.includes('mock_token_due_to_missing_keys');
