@@ -8,12 +8,17 @@ const resend = new Resend('re_f7CXkPZ1_FouifSQZycKkbcStAoZkGgW8');
 
 // LISTE DES BÊTA TESTEURS À PERSONNALISER
 const betaTesters = [
-  { name: "Rozenn Guillemet", email: "roz.guill07@gmail.com", betaCode: "VC-QDKZ-JP8F" },
+  { name: "Theo Garces", email: "theogarces33@gmail.com", betaCode: "VC-KED0-C9V7" },
 ];
 
 async function sendInvites() {
-  console.log(`��� Début de l'envoi des invitations bêta pour ${betaTesters.length} utilisateur(s)...`);
+  console.log(`\n🚀 Début de l'envoi des invitations bêta pour ${betaTesters.length} utilisateur(s)...`);
+  
+  const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
   for (const tester of betaTesters) {
+    await delay(300); // Pause de 300ms (max de requêtes)
+    
     try {
       console.log(`⏳ Envoi à ${tester.name} (${tester.email})...`);
       

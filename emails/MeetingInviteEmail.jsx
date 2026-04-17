@@ -12,16 +12,16 @@ import {
 } from '@react-email/components';
 
 const t = {
-  previewText: "Mise à jour importante concernant la Bêta de VisioConnect",
-  hello: "Bonjour",
-  introText: "Nous vous contactons pour vous informer que le lancement de la phase Bêta de VisioConnect, initialement prévu pour le 17 avril, est reporté.",
-  reasonTitle: "Contexte de ce report",
-  reasonText: "Lors de nos vérifications de pré-déploiement, une instabilité serveur inattendue a été détectée. Notre engagement est de vous garantir une expérience totalement fluide et sécurisée pour cette Bêta, nos développeurs travaillent activement pour consolider l'infrastructure avant l'ouverture des accès.",
-  newDateTitle: "Planification et accès",
-  newDateText: "La plateforme sera par conséquent accessible <strong style=\"color: #1e3a8a;\">ce samedi, ou au plus tard ce dimanche, à partir de 10h30</strong>. Un e-mail de confirmation vous sera envoyé dès que l'environnement sera pleinement opérationnel.",
-  apologyText: "Nous vous présentons nos sincères excuses pour ce délai. La qualité de votre expérience reste notre priorité absolue, et nous vous remercions chaleureusement pour votre compréhension.",
-  footerText: "Ce message vous a été envoyé dans le cadre de votre participation à la Bêta privée.",
-  footerCopyright: "VisioConnect — L'excellence de la communication."
+  previewText: "Important update regarding the VisioConnect Beta",
+  hello: "Hello",
+  introText: "We are contacting you to inform you that the launch of the VisioConnect Beta phase, initially scheduled for April 17th, has been postponed.",
+  reasonTitle: "Context of this postponement",
+  reasonText: "During our pre-deployment checks, an unexpected server instability was detected. Our commitment is to guarantee you a completely smooth and secure experience for this Beta, and our developers are actively working to consolidate the infrastructure before granting access.",
+  newDateTitle: "Schedule and access",
+  newDateText: "The platform will consequently be accessible <strong style=\"color: #1e3a8a;\">this Saturday, or at the latest this Sunday, starting at 10:30 AM</strong>. A confirmation email will be sent to you as soon as the environment is fully operational.<br/><br/>To compensate for this delay, <strong>Beta access has been extended until April 26th</strong>.",
+  apologyText: "We offer our sincere apologies for this delay. The quality of your experience remains our absolute priority, and we warmly thank you for your understanding.",
+  footerText: "This message was sent to you as part of your participation in the private Beta.",
+  footerCopyright: "VisioConnect — Communication excellence."
 };
 
 export const MeetingInviteEmail = ({
@@ -30,7 +30,7 @@ export const MeetingInviteEmail = ({
   return (
     <Html>
       <Head>
-        <title>Mise à jour Bêta - VisioConnect</title>
+        <title>Beta Update - VisioConnect</title>
         <Font
           fontFamily="Inter"
           fallbackFontFamily="Helvetica, Arial, sans-serif"
@@ -58,7 +58,7 @@ export const MeetingInviteEmail = ({
           {/* EN-TÊTE ÉLÉGANT */}
           <Section style={header}>
             <Text style={headerText}>VisioConnect</Text>
-            <Text style={headerSubText}>COMMUNICATION OFFICIELLE</Text>
+            <Text style={headerSubText}>OFFICIAL COMMUNICATION</Text>
           </Section>
 
           {/* CORPS DU MESSAGE */}
@@ -81,14 +81,10 @@ export const MeetingInviteEmail = ({
             <Text style={paragraph}>{t.apologyText}</Text>
             
             <Text style={signoff}>
-              L'équipe de direction,<br />
+              The Management Team,<br />
               <span style={{ fontWeight: 600, color: '#2563eb', display: 'inline-block', marginTop: '6px' }}>VisioConnect</span>
             </Text>
           </Section>
-
-          <Hr style={divider} />
-
-          {/* PIED DE PAGE MINIMALISTE */}
           <Section style={footer}>
             <Text style={footerText}>{t.footerText}</Text>
             <Text style={footerCopyright}>© {new Date().getFullYear()} {t.footerCopyright}</Text>

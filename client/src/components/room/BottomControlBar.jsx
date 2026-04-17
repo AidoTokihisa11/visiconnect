@@ -228,9 +228,34 @@ export const ControlBar = ({
 }) => {
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
   const [showBlurSlider, setShowBlurSlider] = useState(false);
+  const [showBlurToast, setShowBlurToast] = useState(false);
 
   return (
     <BottomBar>
+        {/* Toast Notification */}
+        <div style={{
+          position: 'absolute',
+          bottom: '80px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          background: 'rgba(15, 23, 42, 0.9)',
+          backdropFilter: 'blur(8px)',
+          color: 'white',
+          padding: '10px 20px',
+          borderRadius: '8px',
+          fontSize: '14px',
+          fontWeight: '500',
+          boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.2)',
+          zIndex: 1000,
+          pointerEvents: 'none',
+          transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+          opacity: showBlurToast ? 1 : 0,
+          visibility: showBlurToast ? 'visible' : 'hidden',
+          translateY: showBlurToast ? '0px' : '10px'
+        }}>
+          Background blur will be available soon
+        </div>
+
         {/* Core Mobile Buttons (Like Native App) */}
         <EndCallButton className="focus-visible-ring" onClick={onLeave} $active title="Quitter" aria-label="Quitter la réunion">
           <Phone style={{ transform: 'rotate(135deg)' }} />
@@ -239,60 +264,23 @@ export const ControlBar = ({
         
         
         <ButtonGroup style={{ position: 'relative' }}>
-          {showBlurSlider && isCameraEnabled && (
-            <BlurSliderContainer>
-              <label htmlFor="blurSlider" style={{fontWeight: 'bold', marginRight: '5px'}}>Flou</label>
-              <input
-                id="blurSlider"
-                type="range"
-                min="5"
-                max="25"
-                step="5"
-                defaultValue={blurRadius}
-                onMouseUp={(e) => {
-                  toggleBlur(parseInt(e.target.value, 10));
-                }}
-                onTouchEnd={(e) => {
-                  toggleBlur(parseInt(e.target.value, 10));
-                }}
-              />
-              <span style={{marginLeft: '5px'}}>{blurRadius}%</span>
-            </BlurSliderContainer>
-          )}
           <ControlButton className="focus-visible-ring" onClick={controls.toggleCamera} $active={isCameraEnabled} $activeColor={THEME.accent} title={isCameraEnabled ? "Désactiver la caméra" : "Activer la caméra"} aria-label={isCameraEnabled ? "Désactiver la caméra" : "Activer la caméra"}>
             {isCameraEnabled ? <Video /> : <VideoOff color={THEME.danger} />}
           </ControlButton>
-          <div style={{ display: 'flex', borderRadius: '50px', background: isBlurEnabled ? THEME.accent : THEME.panelBg, overflow: 'hidden' }}>
+          <div style={{ display: 'flex', borderRadius: '50px', background: THEME.panelBg, overflow: 'hidden' }}>
             <ControlButton 
               className="focus-visible-ring" 
               onClick={() => {
-                if (!isBlurEnabled) {
-                  toggleBlur(10); 
-                } else {
-                  toggleBlur(0); 
-                  setShowBlurSlider(false);
-                }
+                setShowBlurToast(true);
+                setTimeout(() => setShowBlurToast(false), 3000);
               }}
-              $active={isBlurEnabled} 
+              $active={false} 
               $activeColor={THEME.accent} 
-              title="Activer/Désactiver le flou d'arrière-plan"
-              disabled={!isCameraEnabled || !isAiReady}
-              style={{ opacity: isCameraEnabled ? 1 : 0.5, borderRadius: '50px 0 0 50px', paddingRight: '12px' }}
+              title="Assistant d'arrière-plan intelligent"
+              disabled={!isCameraEnabled}
+              style={{ opacity: isCameraEnabled ? 1 : 0.5, borderRadius: '50px', padding: '0 15px' }}
             >
               <Focus />
-            </ControlButton>
-            <ControlButton
-              className="focus-visible-ring"
-              onClick={() => {
-                 if (isCameraEnabled) setShowBlurSlider(!showBlurSlider);
-              }}
-              $active={isBlurEnabled} 
-              $activeColor={THEME.accent}
-              disabled={!isCameraEnabled || !isAiReady}
-              style={{ opacity: isCameraEnabled ? 1 : 0.5, borderRadius: '0 50px 50px 0', padding: '0 10px', borderLeft: '1px solid rgba(255,255,255,0.1)' }}
-              title="Réglages du flou"
-            >
-              <ChevronUp size={16} />
             </ControlButton>
           </div>
         </ButtonGroup>
