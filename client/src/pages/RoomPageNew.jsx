@@ -17,11 +17,19 @@ const PageContainer = styled.div`
   height: 100vh; /* Fallback for browsers that do not support dvh */
   height: 100dvh;
   height: calc(var(--vh, 1vh) * 100);
-  background-color: #f4f7fb;
-  color: #1e293b;
+  /* Dark background pour éviter bande blanche */
+  background-color: #0f172a;
+  color: #ffffff;
   display: flex;
   overflow: hidden;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  /* Empêcher tout scroll */
+  overscroll-behavior: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 `;
 
 class LiveKitErrorBoundary extends Component {

@@ -150,6 +150,18 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
+/* Room page: Force dark background to prevent white bands */
+[data-lk-theme],
+[data-lk-theme] * {
+  box-sizing: border-box;
+}
+
+/* Override body background when in room */
+body:has([data-lk-theme]) {
+  background-color: #0f172a !important;
+  overflow: hidden !important;
+}
+
 /* Suppression des backgrounds animés complexes */
 body::before {
   content: none;

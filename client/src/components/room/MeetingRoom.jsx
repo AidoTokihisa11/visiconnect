@@ -32,20 +32,16 @@ const MainContent = styled.div`
   flex-direction: column;
   position: relative;
   width: 100%;
-  /* Full-Viewport: 100dvh prend en compte les barres de navigation mobiles */
-  height: 100dvh;
-  height: calc(var(--vh, 1vh) * 100); /* Fallback pour Safari ancien */
-  max-height: 100dvh;
+  /* Remplir le PageContainer (qui est déjà 100dvh) */
+  flex: 1;
+  min-height: 0; /* Crucial: permet au flex de shrink */
   background-color: ${THEME.bg};
   color: ${THEME.text};
   overflow: hidden;
   
-  /* Mobile: Bloquer tout scroll parasite */
+  /* Empêcher tout scroll */
   @media (max-width: 768px) {
-    height: 100dvh;
-    height: calc(var(--vh, 1vh) * 100);
-    min-height: auto;
-    max-height: 100dvh;
+    min-height: 0;
     touch-action: none;
   }
 `;

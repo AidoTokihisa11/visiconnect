@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import {
   Mic, MicOff, Video, VideoOff, Phone, Monitor, MonitorOff,
-  MessageSquare, Sparkles, Layout, Activity, Settings2, MoreHorizontal, VideoIcon, PieChart, Users,
-  Hand,
+  MessageSquare, Sparkles, Layout, Activity, Settings2, MoreHorizontal, Circle, PieChart, Users,
+  Hand, Bot,
 } from 'lucide-react';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 
@@ -326,6 +326,13 @@ export const ControlBar = ({
   const [showBlurSlider, setShowBlurSlider] = useState(false);
   const [showBlurToast, setShowBlurToast] = useState(false);
 
+  // Auto-close mobile menu when panel opens
+  useEffect(() => {
+    if (sidePanelOpen) {
+      setIsMoreMenuOpen(false);
+    }
+  }, [sidePanelOpen]);
+
   // Show "coming soon" notification once when camera is enabled
   useEffect(() => {
     if (isCameraEnabled && !window.hasSeenBlurToast) {
@@ -423,7 +430,7 @@ export const ControlBar = ({
 
 
           <ControlButton onClick={toggleRecording} $active={isRecording} $activeColor={THEME.danger} title={isRecording ? "Arrêter l'enregistrement" : "Démarrer l'enregistrement"}>
-            <VideoIcon />
+            <Circle fill={isRecording ? '#ef4444' : 'none'} />
           </ControlButton>
 
           <ControlButton onClick={() => setShowStats(!showStats)} $active={showStats} $activeColor="#10b981" title="Stats / Debug (4K)">
@@ -433,7 +440,7 @@ export const ControlBar = ({
           <Separator />
           
           <ControlButton onClick={() => togglePanel('ai')} $active={activePanel === 'ai' && sidePanelOpen} $activeColor={THEME.accent} title="Assistant IA">
-            <Sparkles />
+            <Bot />
           </ControlButton>
 
           <ControlButton onClick={() => togglePanel('polls')} $active={activePanel === 'polls' && sidePanelOpen} $activeColor={THEME.accent} title="Sondages">

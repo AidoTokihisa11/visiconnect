@@ -5,6 +5,7 @@ import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 import { InviteModal } from './InviteModal';
 
 const HeaderContainer = styled.header`
+  flex-shrink: 0; /* Ne jamais shrink */
   height: 72px;
   padding: 0 2rem;
   display: flex;
@@ -13,6 +14,11 @@ const HeaderContainer = styled.header`
   border-bottom: 1px solid ${THEME.border};
   background-color: ${THEME.cardBg};
   z-index: 10;
+  
+  @media (max-width: 768px) {
+    height: 60px;
+    padding: 0 1rem;
+  }
 `;
 
 const RoomInfo = styled.div`
