@@ -103,6 +103,41 @@ const ControlButton = styled.button`
   }
 `;
 
+// Badge de notification (pastille rouge)
+const NotificationBadge = styled.span`
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 18px;
+  height: 18px;
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  border: 2px solid ${THEME.panelBg};
+  animation: badgePop 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  z-index: 10;
+  
+  @keyframes badgePop {
+    0% { transform: scale(0); }
+    100% { transform: scale(1); }
+  }
+  
+  @media (max-width: 768px) {
+    top: -2px;
+    right: -2px;
+    min-width: 16px;
+    height: 16px;
+    font-size: 9px;
+    border: 2px solid rgba(25, 25, 30, 0.98);
+  }
+`;
+
 const EndCallButton = styled(ControlButton)`
   background-color: ${THEME.danger};
   width: 64px;
@@ -280,7 +315,10 @@ export const ControlBar = ({
   isAiReady,
   isAIEnhanced,
   toggleAIVideoEngine,
-  onLeave
+  onLeave,
+  // Notifications
+  unreadChat = 0,
+  unreadPolls = 0,
 }) => {
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
   const [showBlurSlider, setShowBlurSlider] = useState(false);
@@ -397,7 +435,9 @@ export const ControlBar = ({
           </ControlButton>
 
           <ControlButton onClick={() => togglePanel('polls')} $active={activePanel === 'polls' && sidePanelOpen} $activeColor={THEME.accent} title="Sondages">
-            <PieChart />          </ControlButton>
+            <PieChart />
+            {unreadPolls > 0 && <NotificationBadge>{unreadPolls}</NotificationBadge>}
+          </ControlButton>
 
           <ControlButton onClick={() => togglePanel('breakout')} $active={activePanel === 'breakout' && sidePanelOpen} $activeColor={THEME.accent} title="Salles de sous-commission">
             <Users />
@@ -408,6 +448,7 @@ export const ControlBar = ({
 
           <ControlButton onClick={() => togglePanel('chat')} $active={activePanel === 'chat' && sidePanelOpen} $activeColor={THEME.accent} title="Chat">
             <MessageSquare />
+            {unreadChat > 0 && <NotificationBadge>{unreadChat > 99 ? '99+' : unreadChat}</NotificationBadge>}
           </ControlButton>
 
           <ControlButton onClick={() => togglePanel('settings')} $active={activePanel === 'settings' && sidePanelOpen} $activeColor={THEME.accent} title="Paramètres">
@@ -422,6 +463,9 @@ export const ControlBar = ({
           </ControlButton>
           <ControlButton onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)} title="Plus d'options">
             <MoreHorizontal />
+            {(unreadChat > 0 || unreadPolls > 0) && !isMoreMenuOpen && (
+              <NotificationBadge>{(unreadChat + unreadPolls) > 99 ? '99+' : (unreadChat + unreadPolls)}</NotificationBadge>
+            )}
           </ControlButton>
 
           
@@ -430,6 +474,7 @@ export const ControlBar = ({
             <ControlButton onClick={() => { togglePanel('chat'); setIsMoreMenuOpen(false); }} $active={activePanel === 'chat' && sidePanelOpen} $activeColor={THEME.accent}>
               <MessageSquare />
               <span>Chat</span>
+              {unreadChat > 0 && <NotificationBadge style={{ top: '4px', right: '4px' }}>{unreadChat > 99 ? '99+' : unreadChat}</NotificationBadge>}
             </ControlButton>
             <ControlButton onClick={() => { togglePanel('ai'); setIsMoreMenuOpen(false); }} $active={activePanel === 'ai' && sidePanelOpen} $activeColor={THEME.accent}>
               <Sparkles />
@@ -438,6 +483,7 @@ export const ControlBar = ({
             <ControlButton onClick={() => { togglePanel('polls'); setIsMoreMenuOpen(false); }} $active={activePanel === 'polls' && sidePanelOpen} $activeColor={THEME.accent}>
               <PieChart />
               <span>Sondages</span>
+              {unreadPolls > 0 && <NotificationBadge style={{ top: '4px', right: '4px' }}>{unreadPolls}</NotificationBadge>}
             </ControlButton>
             <ControlButton onClick={() => { togglePanel('breakout'); setIsMoreMenuOpen(false); }} $active={activePanel === 'breakout' && sidePanelOpen} $activeColor={THEME.accent}>
               <Users />

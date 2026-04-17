@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { AnimatePresence, motion } from 'framer-motion';
 import { RoomAudioRenderer, StartAudio } from '@livekit/components-react';
-import { X, ChevronRight, BarChart2, Bot, PieChart } from 'lucide-react';
+import { X, ChevronRight, BarChart2, Bot, PieChart, MessageSquare, Users } from 'lucide-react';
 
 // Hooks
 import { useMeeting } from '../../hooks/useMeeting';
@@ -37,6 +37,109 @@ const MainContent = styled.div`
   background-color: ${THEME.bg};
   color: ${THEME.text};
   overflow: hidden;
+`;
+
+// Toast Notification
+const ToastNotification = styled(motion.div)`
+  position: fixed;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: ${props => props.$type === 'poll' ? 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)' : 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)'};
+  color: white;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  
+  @media (max-width: 768px) {
+    top: 70px;
+    padding: 10px 18px;
+    font-size: 13px;
+    max-width: calc(100% - 32px);
+  }
+`;
+
+// Poll Popup (Auto-display when new poll is created)
+const PollPopupOverlay = styled(motion.div)`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+`;
+
+const PollPopupCard = styled(motion.div)`
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+  border-radius: 20px;
+  padding: 24px;
+  max-width: 400px;
+  width: 100%;
+  color: white;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  
+  h3 {
+    margin: 0 0 8px;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  p {
+    margin: 0 0 20px;
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.9);
+  }
+  
+  .poll-meta {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 16px;
+  }
+`;
+
+const PollPopupButton = styled.button`
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  
+  &.primary {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    border: none;
+    color: white;
+    flex: 1;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+    }
+  }
+  
+  &.secondary {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  }
 `;
 
 // Side Panel Styles
@@ -197,6 +300,18 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
   const [activePanel, setActivePanel] = useState('chat'); // 'chat' | 'ai' | 'analytics' | 'settings'
   const [messageText, setMessageText] = useState('');
   
+  // -- Notifications State --
+  const [unreadChat, setUnreadChat] = useState(0);
+  const [unreadPolls, setUnreadPolls] = useState(0);
+  const [toast, setToast] = useState(null); // { message: string, type: 'chat' | 'poll' }
+  const [pollPopup, setPollPopup] = useState(null); // Nouveau sondage à afficher
+  const lastMessageCountRef = React.useRef(0);
+  const lastPollCountRef = React.useRef(0);
+  const currentUserId = user?.id || localParticipant?.identity;
+
+  // Query des sondages pour les notifications
+  const polls = useQuery(api.polls.getPolls, originalRoomId ? { meetingId: originalRoomId } : "skip") || [];
+
   const { isRecording, toggleRecording } = useRecording();
 
   useEffect(() => {
@@ -208,6 +323,81 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
       setShowStats(true);
     }
   }, [roomSettings.showStatsDefault]);
+
+  // -- Track new messages for notifications --
+  useEffect(() => {
+    if (!messages || messages.length === 0) return;
+    
+    const newCount = messages.length;
+    const previousCount = lastMessageCountRef.current;
+    
+    if (newCount > previousCount && previousCount > 0) {
+      const newMessages = messages.slice(previousCount);
+      const otherMessages = newMessages.filter(m => m.senderId !== currentUserId);
+      
+      if (otherMessages.length > 0) {
+        // Chat is closed or not active - show notification
+        const isChatOpen = sidePanelOpen && activePanel === 'chat';
+        if (!isChatOpen) {
+          setUnreadChat(prev => prev + otherMessages.length);
+        }
+        
+        // Show toast for the last new message
+        const lastMsg = otherMessages[otherMessages.length - 1];
+        const senderName = lastMsg.sender?.split('@')[0] || 'Quelqu\'un';
+        setToast({ message: `Nouveau message de ${senderName}`, type: 'chat' });
+        setTimeout(() => setToast(null), 3000);
+      }
+    }
+    
+    lastMessageCountRef.current = newCount;
+  }, [messages, sidePanelOpen, activePanel, currentUserId]);
+
+  // -- Reset unread when opening panels --
+  useEffect(() => {
+    if (sidePanelOpen && activePanel === 'chat') {
+      setUnreadChat(0);
+    }
+    if (sidePanelOpen && activePanel === 'polls') {
+      setUnreadPolls(0);
+      setPollPopup(null); // Fermer le popup si on ouvre le panel
+    }
+  }, [sidePanelOpen, activePanel]);
+
+  // -- Track new polls for notifications and auto-popup --
+  useEffect(() => {
+    if (!polls || polls.length === 0) return;
+    
+    const newCount = polls.length;
+    const previousCount = lastPollCountRef.current;
+    
+    if (newCount > previousCount && previousCount > 0) {
+      // Nouveau sondage créé
+      const activePolls = polls.filter(p => p.isActive);
+      const newestPoll = activePolls[activePolls.length - 1];
+      
+      if (newestPoll && newestPoll.createdBy !== currentUserId) {
+        // Ce n'est pas mon sondage - afficher notification
+        const isPollsOpen = sidePanelOpen && activePanel === 'polls';
+        
+        if (!isPollsOpen) {
+          setUnreadPolls(prev => prev + 1);
+          // Afficher le popup de sondage
+          setPollPopup({
+            id: newestPoll._id,
+            question: newestPoll.question,
+            createdBy: newestPoll.createdBy
+          });
+        }
+        
+        // Toast notification
+        setToast({ message: `Nouveau sondage: "${newestPoll.question.slice(0, 30)}${newestPoll.question.length > 30 ? '...' : ''}"`, type: 'poll' });
+        setTimeout(() => setToast(null), 4000);
+      }
+    }
+    
+    lastPollCountRef.current = newCount;
+  }, [polls, sidePanelOpen, activePanel, currentUserId]);
 
   const updateSetting = (key, value) => {
     setRoomSettings((prev) => ({ ...prev, [key]: value }));
@@ -237,6 +427,61 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
 
   return (
     <MainContent>
+       {/* Toast Notifications */}
+       <AnimatePresence>
+         {toast && (
+           <ToastNotification
+             $type={toast.type}
+             initial={{ opacity: 0, y: -20, x: '-50%' }}
+             animate={{ opacity: 1, y: 0, x: '-50%' }}
+             exit={{ opacity: 0, y: -20, x: '-50%' }}
+           >
+             {toast.type === 'chat' ? <MessageSquare size={18} /> : <PieChart size={18} />}
+             {toast.message}
+           </ToastNotification>
+         )}
+       </AnimatePresence>
+
+       {/* Poll Popup - Affichage automatique d'un nouveau sondage */}
+       <AnimatePresence>
+         {pollPopup && (
+           <PollPopupOverlay
+             initial={{ opacity: 0 }}
+             animate={{ opacity: 1 }}
+             exit={{ opacity: 0 }}
+             onClick={() => setPollPopup(null)}
+           >
+             <PollPopupCard
+               initial={{ scale: 0.9, y: 20 }}
+               animate={{ scale: 1, y: 0 }}
+               exit={{ scale: 0.9, y: 20 }}
+               onClick={e => e.stopPropagation()}
+             >
+               <h3><PieChart size={22} /> Nouveau Sondage!</h3>
+               <p className="poll-meta">Créé par {pollPopup.createdBy?.split('@')[0] || 'Quelqu\'un'}</p>
+               <p>{pollPopup.question}</p>
+               <div style={{ display: 'flex', gap: '12px' }}>
+                 <PollPopupButton 
+                   className="primary"
+                   onClick={() => {
+                     togglePanel('polls');
+                     setPollPopup(null);
+                   }}
+                 >
+                   Voter maintenant
+                 </PollPopupButton>
+                 <PollPopupButton 
+                   className="secondary"
+                   onClick={() => setPollPopup(null)}
+                 >
+                   Plus tard
+                 </PollPopupButton>
+               </div>
+             </PollPopupCard>
+           </PollPopupOverlay>
+         )}
+       </AnimatePresence>
+
        {/* 1. Header */}
        <RoomHeader 
          roomName={room?.name} 
@@ -313,12 +558,14 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
          isRecording={isRecording}
          toggleRecording={toggleRecording}
          isBlurEnabled={isBlurEnabled}
-           blurRadius={blurRadius}
+         blurRadius={blurRadius}
          toggleBlur={toggleBlur}
          isAiReady={isAiReady}
          isAIEnhanced={isAIEnhanced}
          toggleAIVideoEngine={toggleAIVideoEngine}
          onLeave={onLeave}
+         unreadChat={unreadChat}
+         unreadPolls={unreadPolls}
       />
 
       {/* 5. Side Panel (Chat / AI / Analytics) */}
@@ -355,6 +602,7 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
                    messageText={messageText}
                    setMessageText={setMessageText}
                    onSendMessage={handleSendMessage}
+                   currentUserId={user?.id || localParticipant?.identity}
                  />
                )}
                {activePanel === 'polls' && <PollsPanel meetingId={originalRoomId} currentUser={{ identity: localParticipant?.identity }} onClose={() => togglePanel('polls')} />}

@@ -27,6 +27,7 @@ const MessagesArea = styled.div`
 const MessageBubbleWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  /* Style WhatsApp: MES messages à DROITE, autres à GAUCHE */
   align-items: ${(props) => (props.$isMe ? 'flex-end' : 'flex-start')};
   max-width: 100%;
   animation: fadeIn 0.3s ease;
@@ -54,13 +55,15 @@ const MessageBubble = styled.div`
   padding: 0.85rem 1.15rem;
   font-size: 0.925rem;
   line-height: 1.5;
+  /* MES messages: bleu, AUTRES: gris clair */
   color: ${(props) => (props.$isMe ? '#ffffff' : THEME.text)};
-  background: ${(props) => (props.$isMe ? THEME.accent : THEME.cardBg)};
-  border: 1px solid ${(props) => (props.$isMe ? 'transparent' : '#bfdbfe')};
+  background: ${(props) => (props.$isMe ? 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)' : THEME.cardBg)};
+  border: 1px solid ${(props) => (props.$isMe ? 'transparent' : '#e2e8f0')};
   border-radius: 16px;
+  /* Coins arrondis style iMessage */
   border-bottom-right-radius: ${(props) => (props.$isMe ? '4px' : '16px')};
   border-bottom-left-radius: ${(props) => (props.$isMe ? '16px' : '4px')};
-  box-shadow: ${(props) => (props.$isMe ? '0 4px 12px rgba(0, 82, 204, 0.2)' : '0 2px 6px rgba(0,0,0,0.02)')};
+  box-shadow: ${(props) => (props.$isMe ? '0 4px 12px rgba(59, 130, 246, 0.3)' : '0 2px 6px rgba(0,0,0,0.04)')};
   word-break: break-word;
 `;
 
@@ -132,7 +135,7 @@ const SendButton = styled.button`
   }
 `;
 
-export const MeetingChat = ({ messages, messageText, setMessageText, onSendMessage }) => {
+export const MeetingChat = ({ messages, messageText, setMessageText, onSendMessage, currentUserId }) => {
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -177,7 +180,8 @@ export const MeetingChat = ({ messages, messageText, setMessageText, onSendMessa
           </div>
         ) : (
           messages.map((msg, idx) => {
-            const isMe = msg.sender === 'me';
+            // Détection correcte: comparer senderId avec currentUserId
+            const isMe = msg.senderId === currentUserId || msg.sender === 'me';
             let displayName = msg.sender;
             if (isMe) displayName = 'Vous';
             else if (displayName && displayName.includes('@')) displayName = displayName.split('@')[0];

@@ -94,13 +94,14 @@ export const useMeeting = (maxQualityLock = true) => {
 
   // === EFFECTS (après les états) ===
   
-  // Pre-Warming de l'IA - DÉSACTIVÉ SUR MOBILE pour éviter le freeze au join
-  // Sur mobile, l'IA sera chargée uniquement quand l'utilisateur clique sur le bouton
+  // Pre-Warming de l'IA
+  // Sur mobile: chargement à la demande seulement (quand l'utilisateur clique)
+  // Sur desktop: pré-chargement 2s après le join
   useEffect(() => {
-    // MOBILE: Skip pre-warming complètement - pas de Worker, pas de WASM
     if (isMobile) {
-      console.log('[useMeeting] Mobile détecté: Pre-warming IA désactivé pour éviter freeze');
-      setIsAiReady(false); // L'IA n'est pas disponible sur mobile par défaut
+      console.log('[useMeeting] Mobile détecté: IA disponible en mode lazy-load (chargement à la demande)');
+      // L'IA EST maintenant disponible sur mobile, mais ne sera chargée que quand l'user clique
+      setIsAiReady(true);
       return;
     }
     
@@ -232,11 +233,13 @@ const toggleAIVideoEngine = useCallback(async () => {
               setIsBlurEnabled(false);
           }
 
-          // Let UI render first
-          await new Promise(resolve => setTimeout(resolve, 50));
+          // Délai plus long sur mobile pour éviter les freezes
+          const delay = isMobile ? 150 : 50;
+          await new Promise(resolve => setTimeout(resolve, delay));
           
           let processor = activeAiProcessor;
           if (!processor) {
+              console.log('[useMeeting] Création du processeur IA...');
               processor = new AIVideoProcessor();
               setActiveAiProcessor(processor);
           }
@@ -246,7 +249,7 @@ const toggleAIVideoEngine = useCallback(async () => {
     } catch (err) {
       console.error('Failed to toggle AI Engine', err);
     }
-}, [localParticipant, isAIEnhanced, activeAiProcessor, isBlurEnabled]);
+}, [localParticipant, isAIEnhanced, activeAiProcessor, isBlurEnabled, isMobile]);
 
 
     const refreshDevices = useCallback(async () => {
