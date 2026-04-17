@@ -12,16 +12,16 @@ import {
 } from '@react-email/components';
 
 const t = {
-  previewText: "Important update regarding the VisioConnect Beta",
-  hello: "Hello",
-  introText: "We are contacting you to inform you that the launch of the VisioConnect Beta phase, initially scheduled for April 17th, has been postponed.",
-  reasonTitle: "Context of this postponement",
-  reasonText: "During our pre-deployment checks, an unexpected server instability was detected. Our commitment is to guarantee you a completely smooth and secure experience for this Beta, and our developers are actively working to consolidate the infrastructure before granting access.",
-  newDateTitle: "Schedule and access",
-  newDateText: "The platform will consequently be accessible <strong style=\"color: #1e3a8a;\">this Saturday, or at the latest this Sunday, starting at 10:30 AM</strong>. A confirmation email will be sent to you as soon as the environment is fully operational.<br/><br/>To compensate for this delay, <strong>Beta access has been extended until April 26th</strong>.",
-  apologyText: "We offer our sincere apologies for this delay. The quality of your experience remains our absolute priority, and we warmly thank you for your understanding.",
-  footerText: "This message was sent to you as part of your participation in the private Beta.",
-  footerCopyright: "VisioConnect — Communication excellence."
+  previewText: "Petite mise à jour sur la bêta VisioConnect",
+  hello: "Salut",
+  introText: "Petit message pour vous prévenir : le lancement de la bêta VisioConnect, prévu le 17 avril, prend un peu de retard.",
+  reasonTitle: "Ce qui s'est passé",
+  reasonText: "Pendant nos derniers tests, on a détecté une instabilité serveur. Plutôt que de vous lancer sur quelque chose de bancal, on préfère prendre quelques jours pour consolider le tout.",
+  newDateTitle: "Nouvelle date",
+  newDateText: "La plateforme sera accessible <strong style=\"color: #1e3a8a;\">ce samedi, ou au plus tard dimanche, dès 10h30</strong>. Vous recevrez un email dès que c'est bon.<br/><br/>Pour compenser ce délai, <strong>l'accès bêta est prolongé jusqu'au 26 avril</strong>.",
+  apologyText: "Désolé pour ce petit contretemps. On préfère ça plutôt que de vous faire tester un truc qui plante. Merci pour votre patience !",
+  footerText: "Vous recevez cet email car vous participez à la bêta privée.",
+  footerCopyright: "VisioConnect — Fait avec ♥ par Théo"
 };
 
 export const MeetingInviteEmail = ({
@@ -58,7 +58,7 @@ export const MeetingInviteEmail = ({
           {/* EN-TÊTE ÉLÉGANT */}
           <Section style={header}>
             <Text style={headerText}>VisioConnect</Text>
-            <Text style={headerSubText}>OFFICIAL COMMUNICATION</Text>
+            <Text style={headerSubText}>BÊTA PRIVÉE</Text>
           </Section>
 
           {/* CORPS DU MESSAGE */}
@@ -81,8 +81,8 @@ export const MeetingInviteEmail = ({
             <Text style={paragraph}>{t.apologyText}</Text>
             
             <Text style={signoff}>
-              The Management Team,<br />
-              <span style={{ fontWeight: 600, color: '#2563eb', display: 'inline-block', marginTop: '6px' }}>VisioConnect</span>
+              À très vite,<br />
+              <span style={{ fontWeight: 600, color: '#2563eb', display: 'inline-block', marginTop: '6px' }}>Théo \u2014 VisioConnect</span>
             </Text>
           </Section>
           <Section style={footer}>

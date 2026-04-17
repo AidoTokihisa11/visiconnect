@@ -70,39 +70,39 @@
     "title": "Tout pour des réunions réussies",
     "subtitle": "Des fonctionnalités puissantes conçues pour les équipes modernes. Sécurisé, fiable et facile à utiliser.",
     "video": {
-      "title": "Salles de réunion immersives",
-      "text": "Qualité 4K ultra-fluide qui capte chaque nuance. Notre moteur s'adapte automatiquement à votre bande passante, garantissant zéro coupure.",
+      "title": "Vidéo nette, son clair",
+      "text": "Jusqu'à 1080p adaptatif : notre moteur ajuste la qualité en temps réel selon votre connexion. Pas de promesses en l'air, juste une image stable.",
       "items": [
-        "Support jusqu'à 4k",
-        "Suppression du bruit AI",
-        "Codec VP9 / AV1"
+        "HD adaptative (jusqu'à 1080p)",
+        "Suppression du bruit IA",
+        "Codecs VP9 / AV1"
       ]
     },
     "security": {
-      "title": "Sécurité de haut niveau",
-      "text": "Chiffrement de bout en bout pour tous les appels. Vos conversations restent privées et sécurisées en tout temps.",
+      "title": "Vos échanges restent privés",
+      "text": "Chiffrement via LiveKit (DTLS-SRTP). On ne stocke pas vos appels, on ne les monétise pas. Simple.",
       "items": [
-        "Chiffrement E2E",
+        "Chiffrement DTLS-SRTP",
         "Conforme RGPD",
-        "Aucune donnée stockée"
+        "Aucun enregistrement par défaut"
       ]
     },
     "instant": {
-      "title": "Réunions Instantanées",
-      "text": "Démarrez en quelques secondes avec un lien partageable. Aucun téléchargement ni installation requis pour les invités.",
+      "title": "Prêt en 3 secondes",
+      "text": "Un lien, un clic, vous y êtes. Vos invités n'ont rien à installer, même sur téléphone.",
       "items": [
-        "Liens en 1-clic",
-        "Pas de compte requis",
-        "Compatible mobile"
+        "Lien unique partageable",
+        "Zéro inscription requise",
+        "Fonctionne sur mobile"
       ]
     },
     "collaboration": {
-      "title": "Collaboration d'équipe",
-      "text": "Partage d'écran facile, tableau blanc collaboratif et chat intégré pour une productivité en temps réel.",
+      "title": "Travaillez ensemble, vraiment",
+      "text": "Partagez votre écran, dessinez sur le tableau blanc, discutez dans le chat. Tout est là, sans jongler entre 10 apps.",
       "items": [
         "Partage d'écran",
-        "Tableau blanc collaboratif",
-        "Chat en temps réel"
+        "Tableau blanc",
+        "Chat intégré"
       ]
     },
     "meetings": {
@@ -153,7 +153,7 @@
     "free": {
       "title": "Gratuit",
       "price": "0€",
-      "action": "Démarrer Gratuitement",
+      "action": "Créer ma réunion",
       "features": [
         "Jusqu'à 40 min par réunion",
         "Jusqu'à 100 participants",
@@ -164,7 +164,7 @@
     "pro": {
       "title": "Pro",
       "price": "12€",
-      "action": "Essayer Pro",
+      "action": "Passer à Pro",
       "features": [
         "Durée de réunion illimitée",
         "Jusqu'à 150 participants",
@@ -176,7 +176,7 @@
     "enterprise": {
       "title": "Entreprise",
       "price": "Sur mesure",
-      "action": "Contacter les Ventes",
+      "action": "Discutons",
       "features": [
         "Tout ce qui est inclus dans Pro",
         "Jusqu'à 300 participants",
@@ -302,7 +302,7 @@
   "featureMultiparticipantsBenefit3": "Vue en grille adaptative",
   "featurePerformance": "Performance optimale",
   "featurePerformanceDesc": "Technologie avancée pour une expérience fluide",
-  "featurePerformanceBenefit1": "Latence ultra-faible",
+  "featurePerformanceBenefit1": "Latence < 200ms (selon réseau)",
   "featurePerformanceBenefit2": "Optimisation bande passante",
   "featurePerformanceBenefit3": "Adaptation automatique",
   "featureAccessibility": "Accessibilité",
@@ -360,9 +360,9 @@
   "aboutProject": "À propos du projet",
   "projectDescription": "VisioConnect est né de ma passion pour les technologies de communication moderne. En tant que développeur full-stack, j'ai voulu créer une solution qui combine innovation technologique et expérience utilisateur exceptionnelle.",
   "myVision": "Ma vision",
-  "visionDescription": "Démocratiser l'accès à des outils de communication professionnels de haute qualité. Chaque équipe, quelle que soit sa taille, mérite une technologie qui amplifie sa collaboration.",
+  "visionDescription": "Offrir une visio pro sans la complexité. Que vous soyez 3 ou 30, vous méritez un outil qui marche — pas un usine à gaz.",
   "technologiesUsed": "Technologies",
-  "techDescription": "React.js, WebRTC, Supabase Realtime, Node.js, AI/ML pour l'optimisation vidéo, et bien d'autres technologies cutting-edge pour une expérience fluide.",
+  "techDescription": "React, LiveKit (WebRTC), Convex pour le temps réel, et un soupçon d'IA pour nettoyer l'audio. Pas de buzzwords, juste du code qui tourne.",
   "creationYear": "Année de création",
   "philosophy": "Philosophie",
   "philosophyValue": "Open Source",

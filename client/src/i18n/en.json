@@ -70,39 +70,39 @@
     "title": "Everything for successful meetings",
     "subtitle": "Powerful features designed for modern teams. Secure, reliable, and easy to use.",
     "video": {
-      "title": "Immersive Meeting Rooms",
-      "text": "Ultra-smooth 4K quality that captures every nuance. Our engine automatically adapts to your bandwidth, guaranteeing zero dropouts.",
+      "title": "Clear Video, Clean Audio",
+      "text": "Up to 1080p adaptive: our engine adjusts quality in real-time based on your connection. No empty promises, just a stable picture.",
       "items": [
-        "Up to 4k support",
+        "Adaptive HD (up to 1080p)",
         "AI noise suppression",
         "VP9 / AV1 Codec"
       ]
     },
     "security": {
-      "title": "Bank-grade Security",
-      "text": "End-to-End encryption for all calls. Your conversations remain private and secure at all times.",
+      "title": "Your Calls Stay Private",
+      "text": "Encrypted via LiveKit (DTLS-SRTP). We don't store your calls, we don't monetize them. Simple.",
       "items": [
-        "E2E Encryption",
+        "DTLS-SRTP Encryption",
         "GDPR compliant",
-        "No data stored"
+        "No recording by default"
       ]
     },
     "instant": {
-      "title": "Instant Start",
-      "text": "No installation, no account needed",
+      "title": "Ready in 3 Seconds",
+      "text": "One link, one click, you're in. Your guests don't need to install anything, even on mobile.",
       "items": [
-        "Shareable URL",
-        "Immediate access",
-        "No registration"
+        "Unique shareable link",
+        "Zero signup required",
+        "Works on mobile"
       ]
     },
     "collaboration": {
-      "title": "Team Collaboration",
-      "text": "Easy screen sharing, collaborative whiteboard, and built-in chat for real-time productivity.",
+      "title": "Work Together, For Real",
+      "text": "Share your screen, draw on the whiteboard, chat in the sidebar. Everything's here, no juggling between 10 apps.",
       "items": [
         "Screen sharing",
-        "Collaborative whiteboard",
-        "Real-time chat"
+        "Whiteboard",
+        "Built-in chat"
       ]
     },
     "meetings": {
@@ -160,7 +160,7 @@
         "HD audio and video",
         "Screen sharing"
       ],
-      "action": "Start for Free"
+      "action": "Start a meeting"
     },
     "pro": {
       "title": "Pro",
@@ -173,7 +173,7 @@
         "Chat and whiteboard",
         "Priority support"
       ],
-      "action": "Try Pro"
+      "action": "Go Pro"
     },
     "enterprise": {
       "title": "Enterprise",
@@ -186,7 +186,7 @@
         "Dedicated support",
         "Guaranteed SLA"
       ],
-      "action": "Contact Sales"
+      "action": "Let's talk"
     },
     "getStarted": "Get Started",
     "contactSales": "Contact Sales",
