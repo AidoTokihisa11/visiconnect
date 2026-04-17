@@ -18,20 +18,33 @@ const CardContainer = styled.div`
     border-radius: 16px;
     flex-basis: 100%;
     aspect-ratio: auto;
-    flex: 1; /* Allow vertically stacking full height */
+    flex: 1;
     min-height: 0;
 
-    /* Picture-in-Picture layout for local user when there are remote participants */
+    /* 📱 PIP Mobile: Self-view fixée en bas à droite */
     ${props => props.$isPiP && `
-      position: absolute;
-      bottom: 100px;
-      right: 16px;
-      width: 120px;
-      height: 160px;
-      flex: none;
-      z-index: 50;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
-      border: 2px solid rgba(255,255,255,0.1);
+      position: fixed !important;
+      bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+      right: 12px;
+      width: 100px;
+      height: 140px;
+      flex: none !important;
+      z-index: 100;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      border: 2px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      aspect-ratio: auto;
+      max-width: none;
+    `}
+  }
+  
+  /* Landscape mobile: PIP plus petit */
+  @media (max-width: 768px) and (orientation: landscape) {
+    ${props => props.$isPiP && `
+      width: 90px;
+      height: 70px;
+      bottom: 80px;
+      right: 8px;
     `}
   }
 `;

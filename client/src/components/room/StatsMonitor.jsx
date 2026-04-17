@@ -20,6 +20,11 @@ const StatsContainer = styled(motion.div)`
   font-size: 0.8rem;
   box-shadow: 0 10px 24px -10px rgba(29, 78, 216, 0.35);
 
+  /* 📱 MOBILE: Cacher complètement l'overlay stats */
+  @media (max-width: 768px) {
+    display: none !important;
+  }
+
   h4 {
     margin: 0 0 0.5rem 0;
     color: ${THEME.accent};

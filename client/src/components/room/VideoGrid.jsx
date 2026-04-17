@@ -125,12 +125,18 @@ export const VideoGrid = ({ localParticipant, isLocalCameraEnabled, isLocalMicEn
 
   const hasRemoteParticipants = tracks?.some(t => t.participant.identity !== localParticipant?.identity) || tracklessParticipants.length > 0;
   
-  // Calcul du nombre total de participants pour le grid
-  const totalParticipants = 1 + (tracks?.filter(t => t.participant.identity !== localParticipant?.identity).length || 0) + tracklessParticipants.length;
+  // 📱 Détection mobile pour le calcul de grille
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+  
+  // Calcul du nombre de participants DANS LA GRILLE (exclut local en PIP sur mobile)
+  const remoteCount = (tracks?.filter(t => t.participant.identity !== localParticipant?.identity).length || 0) + tracklessParticipants.length;
+  
+  // Sur mobile avec des remote participants, le local est en PIP donc ne compte pas dans la grille
+  const totalParticipants = (isMobile && hasRemoteParticipants) ? remoteCount : (1 + remoteCount);
 
   return (
     <GridContainer $participantCount={totalParticipants} $isLandscape={isLandscape}>
-      {/* Local Participant */}
+      {/* Local Participant - En PIP sur mobile quand il y a des remotes */}
       {localParticipant && localTrackRef && (
         <VideoParticipant
           participant={localParticipant}
@@ -138,7 +144,8 @@ export const VideoGrid = ({ localParticipant, isLocalCameraEnabled, isLocalMicEn
           showLabel={showParticipantLabels}
           overrideCameraEnabled={isLocalCameraEnabled}
           overrideMicEnabled={isLocalMicEnabled}
-          isPiP={hasRemoteParticipants}
+          isPiP={isMobile && hasRemoteParticipants}
+          isLocal={true}
         />
       )}
 
