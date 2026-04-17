@@ -71,6 +71,10 @@ const ChatInputContainer = styled.div`
   padding: 1rem 1.25rem 1.5rem;
   background-color: ${THEME.panelBg}; // slightly off-white for depth
   border-top: 1px solid ${THEME.border};
+  
+  @media (max-width: 768px) {
+    padding: 0.75rem 1rem calc(env(safe-area-inset-bottom, 12px) + 0.75rem);
+  }
 `;
 
 const InputWrapper = styled.div`

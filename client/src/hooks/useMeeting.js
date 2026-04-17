@@ -95,13 +95,13 @@ export const useMeeting = (maxQualityLock = true) => {
   // === EFFECTS (après les états) ===
   
   // Pre-Warming de l'IA
-  // Sur mobile: chargement à la demande seulement (quand l'utilisateur clique)
+  // Sur mobile: IA DÉSACTIVÉE pour éviter les freezes
   // Sur desktop: pré-chargement 2s après le join
   useEffect(() => {
     if (isMobile) {
-      console.log('[useMeeting] Mobile détecté: IA disponible en mode lazy-load (chargement à la demande)');
-      // L'IA EST maintenant disponible sur mobile, mais ne sera chargée que quand l'user clique
-      setIsAiReady(true);
+      console.log('[useMeeting] Mobile détecté: IA DÉSACTIVÉE pour éviter les freezes');
+      // L'IA est désactivée sur mobile car elle cause des freezes
+      setIsAiReady(false);
       return;
     }
     

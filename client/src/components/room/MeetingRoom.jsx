@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { AnimatePresence, motion } from 'framer-motion';
 import { RoomAudioRenderer, StartAudio } from '@livekit/components-react';
-import { X, ChevronRight, BarChart2, Bot, PieChart, MessageSquare, Users } from 'lucide-react';
+import { X, ChevronRight, Bot, PieChart, MessageSquare, Users, Hand } from 'lucide-react';
 
 // Hooks
 import { useMeeting } from '../../hooks/useMeeting';
@@ -18,7 +18,6 @@ import { VideoGrid } from './VideoGrid';
 import { ControlBar } from './BottomControlBar';
 import { StatsMonitor } from './StatsMonitor';
 import { WhiteboardWrapper } from './WhiteboardWrapper';
-import { AnalyticsPanel } from './AnalyticsPanel';
 import { AIChatPanel } from './AIChatPanel';
 import { RoomSettingsPanel } from './RoomSettingsPanel';
 import { MeetingChat } from './MeetingChat';
@@ -297,7 +296,7 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
   const [showStats, setShowStats] = useState(false);
   const [whiteboardOpen, setWhiteboardOpen] = useState(false);
   const [sidePanelOpen, setSidePanelOpen] = useState(false);
-  const [activePanel, setActivePanel] = useState('chat'); // 'chat' | 'ai' | 'analytics' | 'settings'
+  const [activePanel, setActivePanel] = useState('chat'); // 'chat' | 'ai' | 'settings'
   const [messageText, setMessageText] = useState('');
   
   // -- Notifications State --
@@ -308,6 +307,9 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
   const lastMessageCountRef = React.useRef(0);
   const lastPollCountRef = React.useRef(0);
   const currentUserId = user?.id || localParticipant?.identity;
+  
+  // -- Raise Hand State --
+  const [isHandRaised, setIsHandRaised] = useState(false);
 
   // Query des sondages pour les notifications
   const polls = useQuery(api.polls.getPolls, originalRoomId ? { meetingId: originalRoomId } : "skip") || [];
@@ -423,6 +425,18 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
       sendMessage(messageText);
       setMessageText('');
     }
+  };
+
+  // Toggle main levée + notification
+  const handleRaiseHand = () => {
+    setIsHandRaised(prev => {
+      const newState = !prev;
+      if (newState) {
+        setToast({ message: '🖐️ Main levée !', type: 'hand' });
+        setTimeout(() => setToast(null), 3000);
+      }
+      return newState;
+    });
   };
 
   return (
@@ -566,13 +580,15 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
          onLeave={onLeave}
          unreadChat={unreadChat}
          unreadPolls={unreadPolls}
+         isHandRaised={isHandRaised}
+         onRaiseHand={handleRaiseHand}
       />
 
-      {/* 5. Side Panel (Chat / AI / Analytics) */}
+      {/* 5. Side Panel (Chat / AI) */}
       <AnimatePresence>
         {sidePanelOpen && (
           <SidePanel
-            wide={activePanel === 'analytics' || roomSettings.widePanel}
+            wide={roomSettings.widePanel}
             initial={{ x: '100%', opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: '100%', opacity: 0 }}
@@ -584,7 +600,6 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
                 {activePanel === 'polls' && <><PieChart size={20} /> Sondages</>}
                 {activePanel === 'breakout' && <><Users size={20} /> Salles de sous-commission</>}
                 {activePanel === 'ai' && <><Bot size={20} /> Assistant IA</>}
-                {activePanel === 'analytics' && <><BarChart2 size={20} /> Analytics</>}
                 {activePanel === 'settings' && <><ChevronRight size={20} /> Parametres</>}
               </h3>
               <button 
@@ -609,7 +624,6 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
                {activePanel === 'breakout' && <BreakoutRoomsPanel meetingId={originalRoomId} activeParticipants={remoteParticipants.concat(localParticipant ? [localParticipant] : [])} onClose={() => togglePanel('breakout')} />}
 
                {activePanel === 'ai' && <AIChatPanel responseStyle={roomSettings.aiResponseStyle} roomMessages={messages} roomId={roomId} />}
-               {activePanel === 'analytics' && <AnalyticsPanel />}
                {activePanel === 'settings' && (
                  <RoomSettingsPanel
                    settings={roomSettings}
