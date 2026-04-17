@@ -5,10 +5,11 @@ import { useParticipants } from '@livekit/components-react';
 import { Track } from 'livekit-client';
 
 /**
- * Dynamic Grid Container avec gestion responsive améliorée
+ * Dynamic Grid Container avec gestion responsive améliorée v5.1
  * - CSS Grid adaptatif selon le nombre de participants
  * - Support changement d'orientation mobile
  * - SafeArea iOS respectée
+ * - Mode flexbox column sur mobile portrait pour éviter chevauchements
  */
 const GridContainer = styled.div`
   flex: 1;
@@ -33,28 +34,33 @@ const GridContainer = styled.div`
   justify-content: center;
 
   @media (max-width: 768px) {
+    /* 📱 v5.1: Utiliser Flexbox en mode column sur mobile portrait */
+    display: ${props => props.$isLandscape ? 'grid' : 'flex'};
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    
     padding: 0.5rem;
-    padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
     padding-left: max(0.5rem, env(safe-area-inset-left, 0px));
     padding-right: max(0.5rem, env(safe-area-inset-right, 0px));
     gap: 0.5rem;
     height: 100%;
+    overflow-y: auto;
     
-    /* Portrait: Stack vertical pour 1-2 participants */
+    /* Portrait: Stack vertical avec flexbox */
     grid-template-columns: ${props => {
       const count = props.$participantCount || 1;
       const isLandscape = props.$isLandscape;
       
       if (isLandscape) {
-        // Landscape: disposition horizontale
+        // Landscape: disposition horizontale en grid
         if (count === 1) return '1fr';
         if (count === 2) return 'repeat(2, 1fr)';
         return 'repeat(2, 1fr)';
       } else {
-        // Portrait: disposition verticale privilégiée
-        if (count === 1) return '1fr';
-        if (count === 2) return '1fr';
-        return 'repeat(2, 1fr)';
+        // Portrait: géré par flexbox
+        return '1fr';
       }
     }};
     
@@ -65,14 +71,15 @@ const GridContainer = styled.div`
       if (isLandscape) {
         return 'minmax(150px, 1fr)';
       } else {
-        if (count <= 2) return 'minmax(35vh, 1fr)';
-        return 'minmax(25vh, 1fr)';
+        if (count <= 2) return 'minmax(40vh, 1fr)';
+        return 'minmax(30vh, 1fr)';
       }
     }};
   }
   
-  /* Landscape mobile */
+  /* Landscape mobile: retour au grid */
   @media (max-width: 768px) and (orientation: landscape) {
+    display: grid;
     padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px));
     grid-auto-rows: minmax(40vh, 1fr);
   }

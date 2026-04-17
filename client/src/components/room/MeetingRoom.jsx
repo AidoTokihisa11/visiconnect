@@ -278,7 +278,11 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
 
       <AnimatePresence>
         {showStats && localParticipant && (
-            <StatsMonitor participant={localParticipant} />
+            <StatsMonitor 
+              participant={localParticipant} 
+              showStats={showStats}
+              onClose={() => setShowStats(false)}
+            />
         )}
       </AnimatePresence>
 

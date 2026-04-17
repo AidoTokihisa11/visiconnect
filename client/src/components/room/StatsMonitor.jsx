@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
-import { Activity } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Activity, X } from 'lucide-react';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 
+/* 🖥️ Desktop: Overlay positionné */
 const StatsContainer = styled(motion.div)`
   position: absolute;
   top: 80px;
@@ -20,7 +21,7 @@ const StatsContainer = styled(motion.div)`
   font-size: 0.8rem;
   box-shadow: 0 10px 24px -10px rgba(29, 78, 216, 0.35);
 
-  /* 📱 MOBILE: Cacher complètement l'overlay stats */
+  /* 📱 MOBILE: Cacher l'overlay (utilise modal à la place) */
   @media (max-width: 768px) {
     display: none !important;
   }
@@ -50,7 +51,83 @@ const StatsContainer = styled(motion.div)`
   }
 `;
 
-export const StatsMonitor = ({ participant }) => {
+/* 📱 Mobile: Modal centrée avec backdrop */
+const MobileModalBackdrop = styled(motion.div)`
+  display: none;
+  
+  @media (max-width: 768px) {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+`;
+
+const MobileModalContent = styled(motion.div)`
+  background: rgba(12, 35, 64, 0.98);
+  backdrop-filter: blur(12px);
+  border: 1px solid ${THEME.border};
+  padding: 1.5rem;
+  border-radius: 20px;
+  color: ${THEME.text};
+  width: 100%;
+  max-width: 320px;
+  font-family: monospace;
+  font-size: 0.9rem;
+  box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.5);
+
+  h4 {
+    margin: 0 0 1rem 0;
+    color: ${THEME.accent};
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 1rem;
+  }
+  
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    
+    span:first-child {
+      color: ${THEME.textDim};
+    }
+    
+    span:last-child {
+      font-weight: 600;
+      color: #4ade80;
+    }
+  }
+`;
+
+const CloseButton = styled.button`
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem;
+  color: ${THEME.text};
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  
+  &:active {
+    transform: scale(0.95);
+    background: rgba(255, 255, 255, 0.15);
+  }
+`;
+
+export const StatsMonitor = ({ participant, showStats = false, onClose }) => {
   const [stats, setStats] = useState({
     resolution: 'Unknown',
     codec: 'Checking...',
@@ -100,23 +177,69 @@ export const StatsMonitor = ({ participant }) => {
   }, [participant]);
   
   return (
-    <StatsContainer initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-        <h4><Activity size={16} /> Flux Vidéo (Test)</h4>
-        <div className="stat-row">
-            <span>Résolution</span>
-            <span style={{ color: '#4ade80' }}>{stats.resolution}</span>
-        </div>
-        <div className="stat-row">
-            <span>Codec</span>
-            <span>{stats.codec}</span>
-        </div>
-        <div className="stat-row">
-            <span>Mode</span>
-            <span>Simulcast Enabled</span>
-        </div>
-        <div style={{ marginTop: '0.5rem', fontSize: '0.7rem', color: THEME.textDim }}>
-            *La résolution s'adapte à la bande passante (4K &rarr; 1080p &rarr; 540p)
-        </div>
-    </StatsContainer>
+    <>
+      {/* 🖥️ Desktop: Overlay classique */}
+      <StatsContainer initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
+          <h4><Activity size={16} /> Flux Vidéo (Test)</h4>
+          <div className="stat-row">
+              <span>Résolution</span>
+              <span style={{ color: '#4ade80' }}>{stats.resolution}</span>
+          </div>
+          <div className="stat-row">
+              <span>Codec</span>
+              <span>{stats.codec}</span>
+          </div>
+          <div className="stat-row">
+              <span>Mode</span>
+              <span>Simulcast Enabled</span>
+          </div>
+          <div style={{ marginTop: '0.5rem', fontSize: '0.7rem', color: THEME.textDim }}>
+              *La résolution s'adapte à la bande passante (4K &rarr; 1080p &rarr; 540p)
+          </div>
+      </StatsContainer>
+      
+      {/* 📱 Mobile: Modal centrée */}
+      <AnimatePresence>
+        {showStats && (
+          <MobileModalBackdrop
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+          >
+            <MobileModalContent
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              onClick={e => e.stopPropagation()}
+            >
+              <h4>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <Activity size={18} /> Stats Vidéo
+                </span>
+                <CloseButton onClick={onClose}>
+                  <X size={18} />
+                </CloseButton>
+              </h4>
+              <div className="stat-row">
+                  <span>Résolution</span>
+                  <span>{stats.resolution}</span>
+              </div>
+              <div className="stat-row">
+                  <span>Codec</span>
+                  <span>{stats.codec}</span>
+              </div>
+              <div className="stat-row">
+                  <span>Mode</span>
+                  <span>Optimisé Mobile</span>
+              </div>
+              <div style={{ marginTop: '1rem', fontSize: '0.75rem', color: THEME.textDim, textAlign: 'center' }}>
+                  La qualité s'adapte automatiquement à votre connexion
+              </div>
+            </MobileModalContent>
+          </MobileModalBackdrop>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
