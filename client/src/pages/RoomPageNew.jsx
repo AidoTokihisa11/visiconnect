@@ -141,6 +141,9 @@ export default function RoomPageNew() {
   
   const navigate = useNavigate();
   
+  // Apply SafeLayout for mobile viewport fixes (--vh CSS variable)
+  useSafeLayout();
+  
   // 1. Protection & Auth check
   const { isAuthorized, loading: authLoading, user } = useRoomProtection(roomId);
   

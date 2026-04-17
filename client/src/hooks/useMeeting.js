@@ -92,6 +92,72 @@ export const useMeeting = (maxQualityLock = true) => {
   const [isAiReady, setIsAiReady] = useState(false);
   const [isAIEnhanced, setIsAIEnhanced] = useState(false);
 
+  // === PRIVACY LOCKS: Verrous d'intention pour caméra/micro ===
+  // Persiste dans sessionStorage pour survivre aux changements d'onglet
+  const [isCameraManualMute, setIsCameraManualMute] = useState(() => {
+    try {
+      return sessionStorage.getItem('visi_cam_mute') === 'true';
+    } catch { return false; }
+  });
+  
+  const [isMicManualMute, setIsMicManualMute] = useState(() => {
+    try {
+      return sessionStorage.getItem('visi_mic_mute') === 'true';
+    } catch { return false; }
+  });
+
+  // Persister les verrous dans sessionStorage
+  useEffect(() => {
+    try {
+      sessionStorage.setItem('visi_cam_mute', isCameraManualMute ? 'true' : 'false');
+    } catch {}
+  }, [isCameraManualMute]);
+
+  useEffect(() => {
+    try {
+      sessionStorage.setItem('visi_mic_mute', isMicManualMute ? 'true' : 'false');
+    } catch {}
+  }, [isMicManualMute]);
+
+  // === PRIVACY GUARD: Bloquer l'auto-unmute sur visibilitychange/focus ===
+  useEffect(() => {
+    if (!localParticipant) return;
+
+    const handleVisibilityChange = async () => {
+      // Si l'utilisateur a manuellement coupé sa caméra/micro, ne JAMAIS rallumer
+      if (document.visibilityState === 'visible') {
+        // Délai pour laisser LiveKit gérer d'abord
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        if (isCameraManualMute && isCameraEnabled) {
+          console.log('[Privacy Guard] Caméra manuellement coupée - blocage auto-unmute');
+          try {
+            await localParticipant.setCameraEnabled(false);
+          } catch (e) {
+            console.warn('[Privacy Guard] Impossible de couper la caméra:', e);
+          }
+        }
+        
+        if (isMicManualMute && isMicrophoneEnabled) {
+          console.log('[Privacy Guard] Micro manuellement coupé - blocage auto-unmute');
+          try {
+            await localParticipant.setMicrophoneEnabled(false);
+          } catch (e) {
+            console.warn('[Privacy Guard] Impossible de couper le micro:', e);
+          }
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleVisibilityChange);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleVisibilityChange);
+    };
+  }, [localParticipant, isCameraManualMute, isMicManualMute, isCameraEnabled, isMicrophoneEnabled]);
+
   // === EFFECTS (après les états) ===
   
   // Pre-Warming de l'IA
@@ -143,7 +209,10 @@ export const useMeeting = (maxQualityLock = true) => {
     if (!localParticipant) return;
 
     try {
-      await localParticipant.setMicrophoneEnabled(!isMicrophoneEnabled);
+      const newState = !isMicrophoneEnabled;
+      await localParticipant.setMicrophoneEnabled(newState);
+      // Privacy Lock: Met à jour le verrou d'intention
+      setIsMicManualMute(!newState);
     } catch (err) {
       console.error('Erreur lors de l’activation du micro:', err);
       alert('Impossible d’accéder au microphone. Veuillez vérifier vos permissions.');
@@ -154,7 +223,10 @@ export const useMeeting = (maxQualityLock = true) => {
     if (!localParticipant) return;
 
     try {
-      await localParticipant.setCameraEnabled(!isCameraEnabled);
+      const newState = !isCameraEnabled;
+      await localParticipant.setCameraEnabled(newState);
+      // Privacy Lock: Met à jour le verrou d'intention
+      setIsCameraManualMute(!newState);
     } catch (err) {
       console.error('Erreur lors de l’activation de la caméra:', err);
       alert('Impossible d’accéder à la caméra. Veuillez vérifier vos permissions.');

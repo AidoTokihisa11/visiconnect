@@ -12,7 +12,9 @@ import { Track } from 'livekit-client';
  * - Mode flexbox column sur mobile portrait pour éviter chevauchements
  */
 const GridContainer = styled.div`
+  /* flex: 1 permet à la grille de se réduire automatiquement pour laisser la BottomBar visible */
   flex: 1;
+  min-height: 0; /* CRUCIAL: permet au flex child de shrink en dessous de son contenu */
   padding: 1rem;
   display: grid;
   /* Grid adaptatif basé sur le nombre de participants */
@@ -24,29 +26,31 @@ const GridContainer = styled.div`
     if (count <= 6) return 'repeat(3, 1fr)';
     return 'repeat(4, 1fr)';
   }};
-  grid-auto-rows: minmax(200px, 1fr);
+  grid-auto-rows: minmax(150px, 1fr);
   gap: 1rem;
   overflow-y: auto;
+  overflow-x: hidden;
   width: 100%;
-  height: calc(100% - 80px);
   position: relative;
   align-content: center;
   justify-content: center;
 
   @media (max-width: 768px) {
-    /* 📱 v5.1: Utiliser Flexbox en mode column sur mobile portrait */
+    /* 📱 v5.1: Zero-scroll mobile - la grille shrink, la BottomBar reste fixe */
     display: ${props => props.$isLandscape ? 'grid' : 'flex'};
     flex-direction: column;
     align-items: stretch;
     justify-content: flex-start;
     
     padding: 0.5rem;
-    padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+    /* Padding bottom réduit - pas besoin de compenser la BottomBar car flex gère ça */
+    padding-bottom: 0.5rem;
     padding-left: max(0.5rem, env(safe-area-inset-left, 0px));
     padding-right: max(0.5rem, env(safe-area-inset-right, 0px));
     gap: 0.5rem;
-    height: 100%;
+    /* NE PAS mettre height: 100% - laisser flex: 1 + min-height: 0 gérer */
     overflow-y: auto;
+    overflow-x: hidden;
     
     /* Portrait: Stack vertical avec flexbox */
     grid-template-columns: ${props => {

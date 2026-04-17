@@ -28,14 +28,26 @@ import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 
 // Layout Styled Components
 const MainContent = styled.div`
-  flex: 1;
   display: flex;
   flex-direction: column;
   position: relative;
-  height: 100%;
+  width: 100%;
+  /* Full-Viewport: 100dvh prend en compte les barres de navigation mobiles */
+  height: 100dvh;
+  height: calc(var(--vh, 1vh) * 100); /* Fallback pour Safari ancien */
+  max-height: 100dvh;
   background-color: ${THEME.bg};
   color: ${THEME.text};
   overflow: hidden;
+  
+  /* Mobile: Bloquer tout scroll parasite */
+  @media (max-width: 768px) {
+    height: 100dvh;
+    height: calc(var(--vh, 1vh) * 100);
+    min-height: auto;
+    max-height: 100dvh;
+    touch-action: none;
+  }
 `;
 
 // Toast Notification
@@ -158,12 +170,14 @@ const SidePanel = styled(motion.div)`
 
   @media (max-width: 768px) {
     width: 100%;
-    /* Keep it slightly above the mobile bottom bar */
-    height: calc(100% - 90px);
+    /* Mobile: Le panel s'affiche au-dessus de la vidéo, mais PAS au-dessus de la BottomBar */
+    /* Calcul: 100dvh - hauteur BottomBar (70px) - SafeArea */
+    height: calc(100dvh - 70px - env(safe-area-inset-bottom, 12px));
+    max-height: calc(100dvh - 70px - env(safe-area-inset-bottom, 12px));
     border-radius: 20px 20px 0 0;
     box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.3);
-    top: auto;
-    bottom: 90px;
+    top: 0;
+    bottom: auto;
     z-index: 55;
     border-left: none;
     border-top: 1px solid rgba(255, 255, 255, 0.1);

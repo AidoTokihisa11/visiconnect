@@ -8,6 +8,8 @@ import {
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 
 const BottomBar = styled.div`
+  /* Desktop: hauteur fixe, flex-shrink: 0 pour ne jamais shrink */
+  flex-shrink: 0;
   height: 80px;
   background-color: ${THEME.panelBg};
   backdrop-filter: blur(12px);
@@ -20,24 +22,21 @@ const BottomBar = styled.div`
   z-index: 60;
 
   @media (max-width: 768px) {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    transform: none;
+    /* Mobile: NE PLUS utiliser position absolute - rester dans le flux flex */
+    position: relative;
     width: 100%;
-    max-width: 100%;
     height: auto;
+    min-height: 70px;
     justify-content: space-evenly;
     overflow: visible;
     white-space: nowrap;
-    padding: 0.75rem 0.5rem calc(env(safe-area-inset-bottom, 15px) + 0.5rem) 0.5rem;
+    padding: 0.75rem 0.5rem calc(env(safe-area-inset-bottom, 12px) + 0.5rem) 0.5rem;
     gap: 0;
-    border-radius: 24px 24px 0 0;
-    background-color: rgba(15, 15, 20, 0.95);
+    border-radius: 0;
+    background-color: rgba(15, 15, 20, 0.98);
     border: none;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
 
     &::-webkit-scrollbar {
       display: none;

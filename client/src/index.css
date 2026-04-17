@@ -119,6 +119,8 @@
 
 html {
   scroll-behavior: smooth;
+  /* Empêcher le bounce scroll sur iOS */
+  overscroll-behavior: none;
 }
 
 body {
@@ -130,6 +132,22 @@ body {
   color: var(--text-primary);
   overflow-x: hidden;
   line-height: 1.6;
+  /* Empêcher scroll parasite mobile */
+  overscroll-behavior: none;
+}
+
+/* Full-Viewport: Fix pour Safari iOS */
+@supports (height: 100dvh) {
+  .room-viewport {
+    height: 100dvh;
+  }
+}
+
+/* Touch action pour désactiver pull-to-refresh dans la room */
+.room-viewport,
+[data-lk-theme] {
+  touch-action: pan-x pan-y;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Suppression des backgrounds animés complexes */

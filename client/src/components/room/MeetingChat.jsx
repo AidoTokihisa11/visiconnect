@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Send, User as UserIcon } from 'lucide-react';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
@@ -8,7 +8,9 @@ const ChatContainer = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background-color: ${THEME.panelBg}; // slightly off-white for depth
+  background-color: ${THEME.panelBg};
+  /* Mobile keyboard fix: ajuste la hauteur dynamiquement */
+  transition: height 0.15s ease-out;
 `;
 
 const MessagesArea = styled.div`
@@ -27,8 +29,8 @@ const MessagesArea = styled.div`
 const MessageBubbleWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  /* Style WhatsApp: MES messages à DROITE, autres à GAUCHE */
-  align-items: ${(props) => (props.$isMe ? 'flex-end' : 'flex-start')};
+  /* Asymétrie des bulles: MES messages à GAUCHE, les AUTRES à DROITE */
+  align-items: ${(props) => (props.$isMe ? 'flex-start' : 'flex-end')};
   max-width: 100%;
   animation: fadeIn 0.3s ease;
 
@@ -55,25 +57,31 @@ const MessageBubble = styled.div`
   padding: 0.85rem 1.15rem;
   font-size: 0.925rem;
   line-height: 1.5;
-  /* MES messages: bleu, AUTRES: gris clair */
+  /* MES messages (GAUCHE): bleu, AUTRES (DROITE): gris clair */
   color: ${(props) => (props.$isMe ? '#ffffff' : THEME.text)};
   background: ${(props) => (props.$isMe ? 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)' : THEME.cardBg)};
   border: 1px solid ${(props) => (props.$isMe ? 'transparent' : '#e2e8f0')};
   border-radius: 16px;
-  /* Coins arrondis style iMessage */
-  border-bottom-right-radius: ${(props) => (props.$isMe ? '4px' : '16px')};
-  border-bottom-left-radius: ${(props) => (props.$isMe ? '16px' : '4px')};
+  /* Coins arrondis style iMessage - inversés pour MES messages à gauche */
+  border-bottom-left-radius: ${(props) => (props.$isMe ? '4px' : '16px')};
+  border-bottom-right-radius: ${(props) => (props.$isMe ? '16px' : '4px')};
   box-shadow: ${(props) => (props.$isMe ? '0 4px 12px rgba(59, 130, 246, 0.3)' : '0 2px 6px rgba(0,0,0,0.04)')};
   word-break: break-word;
 `;
 
 const ChatInputContainer = styled.div`
   padding: 1rem 1.25rem 1.5rem;
-  background-color: ${THEME.panelBg}; // slightly off-white for depth
+  background-color: ${THEME.panelBg};
   border-top: 1px solid ${THEME.border};
+  flex-shrink: 0; /* Ne jamais shrink le container d'input */
   
   @media (max-width: 768px) {
-    padding: 0.75rem 1rem calc(env(safe-area-inset-bottom, 12px) + 0.75rem);
+    padding: 0.75rem 1rem calc(env(safe-area-inset-bottom, 8px) + 0.5rem);
+    /* Ajustement dynamique pour clavier mobile via prop */
+    padding-bottom: ${props => props.$keyboardHeight > 0 
+      ? `${props.$keyboardHeight + 8}px` 
+      : 'calc(env(safe-area-inset-bottom, 8px) + 0.5rem)'};
+    transition: padding-bottom 0.15s ease-out;
   }
 `;
 
@@ -142,12 +150,43 @@ const SendButton = styled.button`
 export const MeetingChat = ({ messages, messageText, setMessageText, onSendMessage, currentUserId }) => {
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
+  const containerRef = useRef(null);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
 
+  // Auto-scroll vers le bas quand nouveaux messages
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages]);
+
+  // Mobile Keyboard Fix: Utilise VisualViewport API pour ajuster dynamiquement
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.visualViewport) return;
+
+    const viewport = window.visualViewport;
+    
+    const handleResize = () => {
+      // Calcule la hauteur du clavier
+      const currentKeyboardHeight = window.innerHeight - viewport.height;
+      setKeyboardHeight(Math.max(0, currentKeyboardHeight));
+      
+      // Scroll le container pour garder l'input visible
+      if (inputRef.current && currentKeyboardHeight > 0) {
+        setTimeout(() => {
+          inputRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
+      }
+    };
+
+    viewport.addEventListener('resize', handleResize);
+    viewport.addEventListener('scroll', handleResize);
+
+    return () => {
+      viewport.removeEventListener('resize', handleResize);
+      viewport.removeEventListener('scroll', handleResize);
+    };
+  }, []);
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -206,7 +245,7 @@ export const MeetingChat = ({ messages, messageText, setMessageText, onSendMessa
         )}
       </MessagesArea>
 
-      <ChatInputContainer>
+      <ChatInputContainer $keyboardHeight={keyboardHeight}>
         <InputWrapper>
           <ChatInput
             ref={inputRef}
