@@ -563,3 +563,51 @@ select {
   }
 }
 .ai-video-render { contain: strict; backface-visibility: hidden; transform: translateZ(0); will-change: transform, opacity; }
+
+/* === AI BUTTON PULSE ANIMATION === */
+@keyframes aiPulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.5), 0 4px 15px rgba(16, 185, 129, 0.3);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.7), 0 6px 20px rgba(16, 185, 129, 0.5);
+    transform: scale(1.02);
+  }
+}
+
+.ai-button-active {
+  animation: aiPulse 2s ease-in-out infinite;
+}
+
+/* === SAFE AREA - iPhone X+ / Android Notch === */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  /* Bottom safe area pour les barres de contrôle */
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 20px);
+  }
+  
+  /* Left/Right safe area pour les éléments latéraux */
+  .safe-area-horizontal {
+    padding-left: env(safe-area-inset-left, 0);
+    padding-right: env(safe-area-inset-right, 0);
+  }
+  
+  /* Full safe area pour les conteneurs plein écran */
+  .safe-area-all {
+    padding-top: env(safe-area-inset-top, 0);
+    padding-bottom: env(safe-area-inset-bottom, 20px);
+    padding-left: env(safe-area-inset-left, 0);
+    padding-right: env(safe-area-inset-right, 0);
+  }
+}
+
+/* Mobile touch target minimum (WCAG 2.5.5) */
+@media (max-width: 768px) {
+  button, 
+  [role="button"],
+  .btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}

@@ -1,14 +1,14 @@
 import { Track } from 'livekit-client';
 
 /**
- * 🎯 AIVideoEngine v2.0 (Staff Engineer Architecture)
- * Pipeline WebRTC "Full AI-Autonomous" avec optimisations avancées.
+ * 🎯 AIVideoEngine v3.0 (Staff Engineer Architecture)
+ * Pipeline WebRTC "Full AI-Autonomous" avec optimisations anti-pixelisation.
  * 
- * OPTIMISATIONS v2.0:
- * - OffscreenCanvas + transferToImageBitmap (Zero-Copy GPU)
- * - Sharpening adaptatif basé sur la pixelisation détectée
+ * OPTIMISATIONS v3.0:
+ * - Sharpening BITRATE-AWARE: Réduit l'accentuation quand le flux est compressé
  * - Low-Light Boost avec courbe sigmoïde naturelle
  * - Détection visage tous les 5 frames (FaceDetector GPU)
+ * - Mode dégradé automatique si thermal throttling détecté
  */
 export class AIVideoProcessor {
   constructor() {
@@ -34,11 +34,13 @@ export class AIVideoProcessor {
     this.modelLoading = false;
     this.modelLoaded = false;
     
-    // --- Adaptive Enhancement ---
+    // --- Adaptive Enhancement v3.0 ---
     this.exposureGain = 1.0;
     this.detectedResolution = 0;      // Résolution réelle détectée
     this.sharpnessIntensity = 1.08;   // Intensité du sharpening (1.0-1.25)
     this.pixelationScore = 0;         // Score de pixelisation (0-100)
+    this.estimatedBitrate = 2000000;  // Bitrate estimé (défaut 2Mbps)
+    this.lastBitrateCheck = 0;        // Timestamp dernière estimation
     
     // --- Zero-Copy Optimization ---
     this.offscreenCanvas = null;
@@ -135,8 +137,8 @@ export class AIVideoProcessor {
 
   /**
    * Analyse la pixelisation de l'image pour ajuster le sharpening.
-   * Si l'image est très compressée, on réduit le sharpening pour éviter
-   * d'accentuer les artefacts JPEG/WebRTC.
+   * Si l'image est très compressée ou le bitrate bas, on réduit le sharpening
+   * pour éviter d'accentuer les artefacts JPEG/WebRTC.
    */
   analyzePixelation() {
     try {
@@ -171,18 +173,58 @@ export class AIVideoProcessor {
       // Score de pixelisation (0-100)
       this.pixelationScore = Math.min(100, (blockScore / 4) * 100);
       
-      // Ajustement du sharpening basé sur la résolution ET la pixelisation
-      const resolutionFactor = this.detectedResolution < 480 ? 0.8 : 
-                               this.detectedResolution < 720 ? 0.9 : 1.0;
+      // === SHARPENING BITRATE-AWARE v3.0 ===
+      // Facteur résolution: réduire sur basse résolution
+      const resolutionFactor = this.detectedResolution < 480 ? 0.7 : 
+                               this.detectedResolution < 720 ? 0.85 : 1.0;
       
-      const pixelationFactor = this.pixelationScore > 50 ? 0.85 : 
-                               this.pixelationScore > 25 ? 0.92 : 1.0;
+      // Facteur pixelisation: réduire si artefacts détectés
+      const pixelationFactor = this.pixelationScore > 50 ? 0.75 : 
+                               this.pixelationScore > 25 ? 0.88 : 1.0;
       
-      // Sharpening adaptatif: 1.02 (très pixelisé) à 1.15 (haute qualité)
-      this.sharpnessIntensity = 1.0 + (0.15 * resolutionFactor * pixelationFactor);
+      // Facteur bitrate: réduire si bitrate bas (évite d'accentuer compression)
+      // < 1Mbps = très compressé, 1-2Mbps = compressé, > 2Mbps = OK
+      const bitrateFactor = this.estimatedBitrate < 1_000_000 ? 0.6 :
+                            this.estimatedBitrate < 2_000_000 ? 0.8 : 1.0;
+      
+      // Sharpening adaptatif: 1.0 (très pixelisé/compressé) à 1.12 (haute qualité)
+      // Plafonné à 1.12 pour éviter l'aspect artificiel
+      const combinedFactor = resolutionFactor * pixelationFactor * bitrateFactor;
+      this.sharpnessIntensity = 1.0 + (0.12 * combinedFactor);
       
     } catch (e) {
-      this.sharpnessIntensity = 1.08; // Fallback
+      this.sharpnessIntensity = 1.05; // Fallback conservateur
+    }
+  }
+
+  /**
+   * Estimation du bitrate basée sur l'activité de la piste vidéo.
+   * Utilise getStats() si disponible, sinon heuristique.
+   */
+  async estimateBitrate() {
+    try {
+      // Vérifier si on a accès aux stats WebRTC
+      if (this.sourceTrack && typeof this.sourceTrack.getStats === 'function') {
+        const stats = await this.sourceTrack.getStats();
+        if (stats) {
+          // Chercher le rapport de type 'outbound-rtp' ou 'inbound-rtp'
+          for (const report of stats.values()) {
+            if (report.type === 'outbound-rtp' && report.kind === 'video') {
+              const bitrate = report.targetBitrate || report.bitrate || 2_000_000;
+              this.estimatedBitrate = bitrate;
+              return;
+            }
+          }
+        }
+      }
+      
+      // Heuristique: estimer basé sur résolution et framerate
+      const pixels = this.canvas.width * this.canvas.height;
+      const estimatedBps = pixels * 0.07; // ~0.07 bits per pixel (H.264 typ.)
+      this.estimatedBitrate = Math.max(500_000, Math.min(8_000_000, estimatedBps));
+      
+    } catch (e) {
+      this.estimatedBitrate = 2_000_000; // Fallback 2Mbps
     }
   }
 
@@ -251,9 +293,11 @@ export class AIVideoProcessor {
         this.computeRelightingSigmoid();
       }
       
-      // C. Analyse Pixelisation (tous les 30 frames)
+      // C. Analyse Pixelisation + Estimation Bitrate (tous les 30 frames)
       if (this.frameCount % 30 === 0) {
         this.analyzePixelation();
+        // Estimation bitrate asynchrone (non-bloquant)
+        this.estimateBitrate();
       }
 
       // D. Sharpening Adaptatif + Relight

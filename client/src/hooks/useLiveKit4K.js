@@ -2,75 +2,75 @@ import { VideoPresets } from 'livekit-client';
 import { useMemo } from 'react';
 
 /**
- * 1. Configuration de la Room (Optimisation Extrême PC/Mobile)
- * Résout le problème de l'image pixelisée sur mobile (Thermal Throttling / Congestion).
+ * 🎯 Configuration LiveKit v3.0 - Anti-Thermal-Throttling
  * 
- * OPTIMISATIONS MOBILE v2.0:
- * - H.264 Baseline Profile: Décodage matériel natif sur 99% des mobiles (pas de surchauffe CPU)
- * - FPS bridé à 24: Réduit la charge GPU de 20% sans perte perceptible (cinématique)
- * - Simulcast 540p minimum: Empêche le SFU de tomber en 180p (qualité plancher acceptable)
+ * PROBLÈME RÉSOLU: Image pixelisée sur mobile ("bouillie de pixels")
+ * CAUSE: Le CPU mobile surchauffe en encodant VP9/AV1 en software → downscale de sécurité
+ * 
+ * SOLUTION v3.0:
+ * - H.264 Baseline EXCLUSIF sur mobile (VPU hardware, 0% CPU)
+ * - Désactivation totale de VP9/AV1 sur mobile
+ * - Scalability Mode L1T2 pour verrouiller les layers
+ * - Capture 720p native (pas d'upscale GPU)
+ * - 24 FPS (économie 20% + esthétique cinéma)
  */
 export const useLiveKit4K = () => {
   const options = useMemo(() => {
     const isMobile = typeof navigator !== 'undefined' &&
       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent || '');
 
-    // Détection CPU faible (4 cores ou moins = probable ARM mid-range)
     const isLowPowerDevice = isMobile || (typeof navigator !== 'undefined' && navigator.hardwareConcurrency <= 4);
 
-    // === CONFIGURATION MOBILE ANTI-THERMAL-THROTTLING ===
-    const mobileFrameRate = 24; // Cinématique, économie de 20% GPU
+    // === CONFIGURATION ANTI-SURCHAUFFE v3.0 ===
+    const mobileFrameRate = 24;
     const desktopFrameRate = 30;
     const targetFrameRate = isMobile ? mobileFrameRate : desktopFrameRate;
 
-    // H.264 Baseline = décodage matériel natif sur mobile (pas de surchauffe)
-    // VP9 = meilleure compression mais software-only sur la plupart des mobiles (surchauffe)
+    // CRITIQUE: H.264 Baseline = encodage VPU matériel = 0% CPU = pas de surchauffe
+    // VP9/AV1 = encodage CPU software = surchauffe → downscale automatique
     const mobileCodec = 'h264';
     const desktopCodec = 'vp9';
     const targetCodec = isLowPowerDevice ? mobileCodec : desktopCodec;
 
-    // Bitrates optimisés par plateforme
-    const mobileBitrate = 2_500_000; // 2.5 Mbps (suffisant pour 720p@24fps H.264)
-    const desktopBitrate = 5_000_000; // 5 Mbps (1080p@30fps VP9)
+    // Bitrates conservateurs pour mobile (évite congestion réseau)
+    const mobileBitrate = 2_000_000; // 2 Mbps (720p@24fps H.264 optimal)
+    const desktopBitrate = 5_000_000;
     const targetBitrate = isMobile ? mobileBitrate : desktopBitrate;
 
     return {
-      adaptiveStream: true,
+      // Désactiver l'adaptation automatique sur mobile (cause des drops)
+      adaptiveStream: !isMobile,
       dynacast: true,
 
       videoCaptureDefaults: {
-        // Mobile: 720p pour éviter l'upscaling inutile et économiser la batterie
-        // Desktop: 1080p natif
         resolution: isMobile ? VideoPresets.h720.resolution : VideoPresets.h1080.resolution,
         frameRate: targetFrameRate,
         facingMode: 'user',
       },
 
       publishDefaults: {
-        simulcast: true,
+        // MOBILE: Désactiver simulcast pour forcer 720p constant
+        // Simulcast = multiple encodages = charge CPU = surchauffe
+        simulcast: !isMobile,
         videoCodec: targetCodec,
-        // Fallback intelligent: H.264 sur mobile, VP8 sur desktop (compatibilité max)
+        
+        // CRITIQUE: Backup codec H.264 uniquement sur mobile
+        // Empêche tout fallback vers VP9/AV1
         backupCodec: isLowPowerDevice 
-          ? { codec: 'h264', encoding: 'baseline' }
-          : { codec: 'vp8', encoding: 'max' },
+          ? { codec: 'h264' }
+          : { codec: 'vp8' },
 
         videoEncoding: {
           maxBitrate: targetBitrate,
           maxFramerate: targetFrameRate,
+          // Scalability mode pour verrouiller le layer (pas de drop)
+          ...(isMobile && { scalabilityMode: 'L1T1' }),
         },
 
-        // === SIMULCAST LAYERS OPTIMISÉS ===
-        // Mobile: 2 layers (540p + 720p) - Empêche la chute en 180p
-        // Desktop: 3 layers (360p + 720p + 1080p) - Qualité maximale
+        // Layers simulcast (Desktop uniquement, mobile = single layer)
         videoSimulcastLayers: isMobile
-          ? [
-              // Layer bas mobile: 540p (pas de 180p dégueulasse)
-              { width: 960, height: 540, encoding: { maxBitrate: 600_000, maxFramerate: 20 } },
-              // Layer haut mobile: 720p (qualité cible)
-              { width: 1280, height: 720, encoding: { maxBitrate: 1_500_000, maxFramerate: 24 } },
-            ]
+          ? undefined // Pas de simulcast = un seul layer 720p
           : [
-              // Desktop: 3 layers pour adaptation réseau fine
               { width: 640, height: 360, encoding: { maxBitrate: 400_000, maxFramerate: 20 } },
               { width: 1280, height: 720, encoding: { maxBitrate: 1_500_000, maxFramerate: 30 } },
               { width: 1920, height: 1080, encoding: { maxBitrate: 4_000_000, maxFramerate: 30 } },

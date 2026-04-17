@@ -334,7 +334,7 @@ export const ControlBar = ({
           </ControlButton>
         </ButtonGroup>
 
-        {/* IA Smart Enhancer Button - Touch target optimisé */}
+        {/* IA Smart Enhancer Button - Touch target optimisé + Animation */}
         <ButtonGroup>
           <ControlButton
             disabled={!isAiReady}
@@ -342,14 +342,22 @@ export const ControlBar = ({
             onClick={toggleAIVideoEngine}
             title={!isAiReady ? "Modèles d'IA en cours de chargement..." : (isAIEnhanced ? "Désactiver l'IA" : "Activer l'IA vidéo")}
             aria-label={isAIEnhanced ? "Désactiver l'amélioration IA" : "Activer l'amélioration IA"}
+            className={isAIEnhanced ? 'ai-button-active' : ''}
             style={{
-              background: isAIEnhanced ? 'linear-gradient(135deg, #10B981, #059669)' : undefined,
+              background: isAIEnhanced 
+                ? 'linear-gradient(135deg, #10B981 0%, #059669 50%, #047857 100%)' 
+                : !isAiReady 
+                  ? 'rgba(100, 100, 100, 0.3)' 
+                  : undefined,
               borderColor: isAIEnhanced ? 'transparent' : undefined,
-              color: isAIEnhanced ? 'white' : undefined,
-              /* Zone de touch élargie sur mobile */
+              color: isAIEnhanced ? 'white' : !isAiReady ? '#888' : undefined,
               minWidth: '52px',
               minHeight: '48px',
-              boxShadow: isAIEnhanced ? '0 4px 15px rgba(16, 185, 129, 0.3)' : undefined,
+              animation: isAIEnhanced ? 'aiPulse 2s ease-in-out infinite' : 'none',
+              boxShadow: isAIEnhanced 
+                ? '0 0 20px rgba(16, 185, 129, 0.5), 0 4px 15px rgba(16, 185, 129, 0.3)' 
+                : undefined,
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
             }}
           >
             <Sparkles size={22} strokeWidth={isAIEnhanced ? 2.5 : 2} />
