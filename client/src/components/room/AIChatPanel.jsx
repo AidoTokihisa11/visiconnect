@@ -1,10 +1,11 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, User, Sparkles, FileText, Download, Wand2 } from 'lucide-react';
+import { Send, User, Sparkles, FileText, Download, Wand2, Loader2 } from 'lucide-react';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 
-const AI_PROXY_URL = `${import.meta.env.VITE_API_URL || ''}/api/ai/chat`;
+// API route - uses relative path for Vercel serverless functions
+const AI_PROXY_URL = '/api/ai/chat';
 
 const PanelContainer = styled.div`
   display: flex;
@@ -140,22 +141,56 @@ const ActionButton = styled.button`
   }
 `;
 
+const ThinkingContainer = styled(motion.div)`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: ${THEME.accentSoft};
+  border: 1px solid ${THEME.border};
+  border-radius: 12px;
+  width: fit-content;
+  margin-left: 2.75rem;
+`;
+
+const ThinkingText = styled.span`
+  font-size: 0.85rem;
+  color: ${THEME.textDim};
+  font-style: italic;
+`;
+
+const SpinnerIcon = styled(motion.div)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${THEME.accent};
+`;
+
 const TypingIndicator = () => (
-  <motion.div
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    style={{ display: 'flex', gap: '4px', padding: '10px 12px', background: THEME.accentSoft, border: `1px solid ${THEME.border}`, borderRadius: '12px', width: 'fit-content', marginLeft: '2.75rem' }}
+  <ThinkingContainer
+    initial={{ opacity: 0, y: 10 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0 }}
   >
-    {[0, 1, 2].map((dot) => (
-      <motion.div
-        key={dot}
-        style={{ width: '6px', height: '6px', backgroundColor: '#94a3b8', borderRadius: '50%' }}
-        animate={{ y: [0, -5, 0] }}
-        transition={{ duration: 0.6, repeat: Infinity, delay: dot * 0.2 }}
-      />
-    ))}
-  </motion.div>
+    <SpinnerIcon
+      animate={{ rotate: 360 }}
+      transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+    >
+      <Loader2 size={16} />
+    </SpinnerIcon>
+    <ThinkingText>L'IA réfléchit...</ThinkingText>
+  </ThinkingContainer>
 );
+
+const ErrorMessage = styled.div`
+  padding: 10px 14px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 10px;
+  color: #ef4444;
+  font-size: 0.85rem;
+  margin-left: 2.75rem;
+`;
 
 const localKnowledgeAnswer = (text, style) => {
   const q = text.toLowerCase();
@@ -261,14 +296,19 @@ export const AIChatPanel = ({ responseStyle = 'balanced', roomMessages = [], roo
     {
       id: 1,
       sender: 'ai',
-      text: 'Bonjour. Je suis votre assistant room. Je peux vous aider sur qualite video, audio, settings, et resolution camera max.',
+      text: 'Bonjour ! Je suis votre assistant VisiConnect. Posez-moi vos questions sur la vidéo, l\'audio, les paramètres ou toute fonctionnalité de la room.',
     },
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [meetingSummary, setMeetingSummary] = useState('');
+  const [aiError, setAiError] = useState(null);
+  const chatEndRef = useRef(null);
 
-  const hasServerAIProxy = useMemo(() => Boolean(import.meta.env.VITE_API_URL), []);
+  // Auto-scroll to bottom when new messages arrive
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, isTyping]);
 
   const handleSend = async () => {
     if (!inputValue.trim() || isTyping) return;
@@ -278,22 +318,24 @@ export const AIChatPanel = ({ responseStyle = 'balanced', roomMessages = [], roo
     setMessages((prev) => [...prev, userMsg]);
     setInputValue('');
     setIsTyping(true);
+    setAiError(null);
 
     try {
-      let aiText = '';
-      if (hasServerAIProxy) {
-        const conversation = [...messages, userMsg]
-          .slice(-10)
-          .map((m) => ({ role: m.sender === 'ai' ? 'assistant' : 'user', content: m.text }));
-        aiText = await fetchLLMResponse(conversation, responseStyle, 'chat');
-      } else {
-        aiText = localKnowledgeAnswer(userText, responseStyle);
-      }
-
+      // Build conversation history for context
+      const conversation = [...messages, userMsg]
+        .slice(-10)
+        .map((m) => ({ role: m.sender === 'ai' ? 'assistant' : 'user', content: m.text }));
+      
+      const aiText = await fetchLLMResponse(conversation, responseStyle, 'chat');
       setMessages((prev) => [...prev, { id: Date.now() + 1, sender: 'ai', text: aiText }]);
     } catch (e) {
+      console.error('[AIChatPanel] Error:', e);
+      // Try local fallback first
       const fallback = localKnowledgeAnswer(userText, responseStyle);
       setMessages((prev) => [...prev, { id: Date.now() + 1, sender: 'ai', text: fallback }]);
+      setAiError("L'IA distante est momentanément indisponible. Réponse locale utilisée.");
+      // Clear error after 5 seconds
+      setTimeout(() => setAiError(null), 5000);
     } finally {
       setIsTyping(false);
     }
@@ -302,6 +344,8 @@ export const AIChatPanel = ({ responseStyle = 'balanced', roomMessages = [], roo
   const generateMeetingSummary = async () => {
     if (isTyping) return;
     setIsTyping(true);
+    setAiError(null);
+    
     try {
       const latestRoomMessages = (roomMessages || []).slice(-30);
       const transcript = latestRoomMessages
@@ -311,32 +355,30 @@ export const AIChatPanel = ({ responseStyle = 'balanced', roomMessages = [], roo
       if (!transcript.trim()) {
         const fallback = '# Resume de reunion\n\nAucun message de reunion disponible pour le moment.';
         setMeetingSummary(fallback);
-        setMessages((prev) => [...prev, { id: Date.now(), sender: 'ai', text: 'Aucun message room a resumer pour le moment.' }]);
+        setMessages((prev) => [...prev, { id: Date.now(), sender: 'ai', text: 'Aucun message room à résumer pour le moment.' }]);
         return;
       }
 
       let summary = '';
       const summaryPrompt = [
-        {
-          role: 'system',
-          content:
-            'Tu es un assistant de reunion en francais. Produis un resume STRICTEMENT base sur le transcript fourni (sans inventer). Format attendu: sections claires, puces courtes, ton professionnel. Sections: Vue d\'ensemble, Decisions prises, Actions a faire (avec proprietaire si mentionne), Questions ouvertes.',
-        },
         { role: 'user', content: `Transcript de reunion:\n\n${transcript}` },
       ];
 
-      if (hasServerAIProxy) {
+      try {
         summary = await fetchLLMResponse(summaryPrompt, responseStyle, 'summary');
-      } else {
+      } catch (e) {
+        // Fallback to local summary
         summary = localSummary(latestRoomMessages);
+        setAiError("Résumé local généré (IA distante indisponible)");
+        setTimeout(() => setAiError(null), 5000);
       }
 
       setMeetingSummary(normalizeMarkdownForDisplay(summary));
-      setMessages((prev) => [...prev, { id: Date.now(), sender: 'ai', text: 'Resume de reunion genere. Utilise le bouton Export Markdown pour le telecharger.' }]);
+      setMessages((prev) => [...prev, { id: Date.now(), sender: 'ai', text: 'Résumé de réunion généré ! Utilise le bouton Export Markdown pour le télécharger.' }]);
     } catch (e) {
       const fallback = localSummary(roomMessages);
       setMeetingSummary(fallback);
-      setMessages((prev) => [...prev, { id: Date.now(), sender: 'ai', text: 'Generation LLM indisponible, resume local genere.' }]);
+      setMessages((prev) => [...prev, { id: Date.now(), sender: 'ai', text: 'Résumé local généré.' }]);
     } finally {
       setIsTyping(false);
     }
@@ -345,14 +387,19 @@ export const AIChatPanel = ({ responseStyle = 'balanced', roomMessages = [], roo
   return (
     <PanelContainer>
       <TopHint>
-        {hasServerAIProxy
-          ? `Mode LLM actif via serveur (${import.meta.env.VITE_API_URL}).`
-          : 'Mode fallback local actif. Definis VITE_API_URL pour activer l\'IA distante.'}
+        <Sparkles size={14} style={{ display: 'inline', marginRight: '6px', verticalAlign: 'middle' }} />
+        Assistant IA VisiConnect — GROQ + OpenRouter
       </TopHint>
+
+      {aiError && (
+        <ErrorMessage>
+          {aiError}
+        </ErrorMessage>
+      )}
 
       <ActionRow>
         <ActionButton type='button' onClick={generateMeetingSummary} disabled={isTyping}>
-          <Wand2 size={14} /> Resume auto
+          <Wand2 size={14} /> Résumé auto
         </ActionButton>
         <ActionButton type='button' onClick={() => asMarkdownDownload(meetingSummary || localSummary(roomMessages), roomId)}>
           <Download size={14} /> Export Markdown
@@ -393,6 +440,7 @@ export const AIChatPanel = ({ responseStyle = 'balanced', roomMessages = [], roo
           ))}
         </AnimatePresence>
         {isTyping && <TypingIndicator />}
+        <div ref={chatEndRef} />
       </ChatHistory>
 
       <InputArea>
