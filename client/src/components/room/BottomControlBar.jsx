@@ -443,6 +443,10 @@ export const ControlBar = ({
             <Bot />
           </ControlButton>
 
+          <ControlButton onClick={() => togglePanel('aiFeatures')} $active={activePanel === 'aiFeatures' && sidePanelOpen} $activeColor="#8b5cf6" title="Fonctionnalités IA">
+            <Sparkles />
+          </ControlButton>
+
           <ControlButton onClick={() => togglePanel('polls')} $active={activePanel === 'polls' && sidePanelOpen} $activeColor={THEME.accent} title="Sondages">
             <PieChart />
             {unreadPolls > 0 && <NotificationBadge>{unreadPolls}</NotificationBadge>}
@@ -485,6 +489,10 @@ export const ControlBar = ({
               <MessageSquare />
               <span>Chat</span>
               {unreadChat > 0 && <NotificationBadge style={{ top: '4px', right: '4px' }}>{unreadChat > 99 ? '99+' : unreadChat}</NotificationBadge>}
+            </ControlButton>
+            <ControlButton onClick={() => { togglePanel('aiFeatures'); setIsMoreMenuOpen(false); }} $active={activePanel === 'aiFeatures' && sidePanelOpen} $activeColor="#8b5cf6">
+              <Sparkles />
+              <span>IA</span>
             </ControlButton>
             <ControlButton onClick={() => { togglePanel('polls'); setIsMoreMenuOpen(false); }} $active={activePanel === 'polls' && sidePanelOpen} $activeColor={THEME.accent}>
               <PieChart />

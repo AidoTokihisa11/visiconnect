@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { AnimatePresence, motion } from 'framer-motion';
 import { RoomAudioRenderer, StartAudio } from '@livekit/components-react';
-import { X, ChevronRight, Bot, PieChart, MessageSquare, Users, Hand } from 'lucide-react';
+import { X, ChevronRight, Bot, PieChart, MessageSquare, Users, Hand, Sparkles } from 'lucide-react';
 
 // Hooks
 import { useMeeting } from '../../hooks/useMeeting';
@@ -19,6 +19,7 @@ import { ControlBar } from './BottomControlBar';
 import { StatsMonitor } from './StatsMonitor';
 import { WhiteboardWrapper } from './WhiteboardWrapper';
 import { AIChatPanel } from './AIChatPanel';
+import { AIFeaturesPanel } from './AIFeaturesPanel';
 import { RoomSettingsPanel } from './RoomSettingsPanel';
 import { MeetingChat } from './MeetingChat';
 import PollsPanel from './PollsPanel';
@@ -307,7 +308,7 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
   const [showStats, setShowStats] = useState(false);
   const [whiteboardOpen, setWhiteboardOpen] = useState(false);
   const [sidePanelOpen, setSidePanelOpen] = useState(false);
-  const [activePanel, setActivePanel] = useState('chat'); // 'chat' | 'ai' | 'settings'
+  const [activePanel, setActivePanel] = useState('chat'); // 'chat' | 'ai' | 'aiFeatures' | 'settings' | 'polls' | 'breakout'
   const [messageText, setMessageText] = useState('');
   
   // -- Notifications State --
@@ -611,6 +612,7 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
                 {activePanel === 'polls' && <><PieChart size={20} /> Sondages</>}
                 {activePanel === 'breakout' && <><Users size={20} /> Salles de sous-commission</>}
                 {activePanel === 'ai' && <><Bot size={20} /> Assistant IA</>}
+                {activePanel === 'aiFeatures' && <><Sparkles size={20} /> Fonctionnalités IA</>}
                 {activePanel === 'settings' && <><ChevronRight size={20} /> Parametres</>}
               </h3>
               <button 
@@ -635,6 +637,7 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
                {activePanel === 'breakout' && <BreakoutRoomsPanel meetingId={originalRoomId} activeParticipants={remoteParticipants.concat(localParticipant ? [localParticipant] : [])} onClose={() => togglePanel('breakout')} />}
 
                {activePanel === 'ai' && <AIChatPanel responseStyle={roomSettings.aiResponseStyle} roomMessages={messages} roomId={roomId} />}
+               {activePanel === 'aiFeatures' && <AIFeaturesPanel />}
                {activePanel === 'settings' && (
                  <RoomSettingsPanel
                    settings={roomSettings}

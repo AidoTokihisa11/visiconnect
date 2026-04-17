@@ -114,7 +114,24 @@ export const useLiveKit4K = () => {
                 } 
               },
             ],
-      }
+      },
+
+      // 🔇 v5.2: Configuration Audio avec Noise Suppression native LiveKit
+      audioCaptureDefaults: {
+        // Active le traitement audio natif du navigateur
+        echoCancellation: true,
+        noiseSuppression: true,
+        autoGainControl: true,
+        // Paramètres avancés WebRTC
+        channelCount: 1, // Mono pour la voix (économie bande passante)
+        sampleRate: 48000, // 48kHz standard WebRTC
+      },
+
+      audioDefaults: {
+        // Paramètres d'encodage audio
+        dtx: true, // Discontinuous Transmission - économise bande passante pendant les silences
+        red: true, // Redundant coding pour résilience perte paquets
+      },
     };
   }, []);
 
