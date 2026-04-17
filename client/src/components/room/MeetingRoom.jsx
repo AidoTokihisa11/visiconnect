@@ -32,15 +32,16 @@ const MainContent = styled.div`
   flex-direction: column;
   position: relative;
   width: 100%;
-  /* Remplir le PageContainer (qui est déjà 100dvh) */
+  height: 100%;
+  /* Remplir le PageContainer */
   flex: 1;
-  min-height: 0; /* Crucial: permet au flex de shrink */
+  min-height: 0;
   background-color: ${THEME.bg};
   color: ${THEME.text};
   overflow: hidden;
   
-  /* Empêcher tout scroll */
   @media (max-width: 768px) {
+    height: 100%;
     min-height: 0;
     touch-action: none;
   }

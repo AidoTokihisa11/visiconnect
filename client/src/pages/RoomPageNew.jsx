@@ -14,16 +14,15 @@ import '@livekit/components-styles';
 
 const PageContainer = styled.div`
   width: 100vw;
-  height: 100vh; /* Fallback for browsers that do not support dvh */
+  height: 100vh;
   height: 100dvh;
   height: calc(var(--vh, 1vh) * 100);
-  /* Dark background pour éviter bande blanche */
   background-color: #0f172a;
   color: #ffffff;
   display: flex;
+  flex-direction: column;
   overflow: hidden;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  /* Empêcher tout scroll */
   overscroll-behavior: none;
   position: fixed;
   top: 0;
