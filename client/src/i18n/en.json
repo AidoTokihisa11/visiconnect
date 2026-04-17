@@ -55,54 +55,54 @@
     "dashboard": "Dashboard"
   },
   "hero": {
-    "titleLine1": "Video conferencing",
-    "titleLine2": "Simply professional.",
+    "titleLine1": "Next-generation",
+    "titleLine2": "video conferencing.",
     "title": "Next-generation video conferencing platform",
-    "subtitle": "Connect with your teams easily using our advanced and intuitive video conferencing solution",
-    "startFree": "Start for free",
-    "watchDemo": "Watch demo",
-    "trustedBy": "Trusted by over {{count}} companies worldwide",
-    "title1": "Video conferencing ",
-    "title2": "simply professional.",
-    "testRoom": "Test Room Pro"
+    "subtitle": "HD quality, instant start, built-in security. Join your teams in one click, from any device.",
+    "startFree": "Try for free",
+    "watchDemo": "See it in action",
+    "trustedBy": "Already adopted by {{count}}+ teams",
+    "title1": "Next-generation ",
+    "title2": "video conferencing.",
+    "testRoom": "Launch a demo"
   },
   "homeFeatures": {
-    "title": "Everything for successful meetings",
-    "subtitle": "Powerful features designed for modern teams. Secure, reliable, and easy to use.",
+    "title": "Built for performance",
+    "subtitle": "A complete suite of professional tools for efficient, secure, and frictionless meetings.",
     "video": {
-      "title": "Clear Video, Clean Audio",
-      "text": "Up to 1080p adaptive: our engine adjusts quality in real-time based on your connection. No empty promises, just a stable picture.",
+      "title": "Exceptional video quality",
+      "text": "Adaptive HD resolution up to 1080p. Our intelligent engine optimizes quality in real-time to ensure smooth video, whatever your connection.",
       "items": [
-        "Adaptive HD (up to 1080p)",
-        "AI noise suppression",
-        "VP9 / AV1 Codec"
+        "Adaptive HD up to 1080p",
+        "AI-powered noise suppression",
+        "Next-gen VP9/AV1 codecs"
       ]
     },
     "security": {
-      "title": "Your Calls Stay Private",
-      "text": "Encrypted via LiveKit (DTLS-SRTP). We don't store your calls, we don't monetize them. Simple.",
+      "title": "Enterprise-grade security",
+      "text": "Your communications are protected by end-to-end DTLS-SRTP encryption. GDPR compliant, no data is stored or exploited.",
       "items": [
-        "DTLS-SRTP Encryption",
-        "GDPR compliant",
-        "No recording by default"
+        "DTLS-SRTP encryption",
+        "100% GDPR compliant",
+        "Zero data storage"
       ]
     },
     "instant": {
-      "title": "Ready in 3 Seconds",
-      "text": "One link, one click, you're in. Your guests don't need to install anything, even on mobile.",
+      "title": "Instant launch",
+      "text": "Create a meeting in 3 seconds. Share the link, participants join immediately — no download, no account required.",
       "items": [
-        "Unique shareable link",
-        "Zero signup required",
-        "Works on mobile"
+        "Secure unique link",
+        "No installation needed",
+        "All devices compatible"
       ]
     },
     "collaboration": {
-      "title": "Work Together, For Real",
-      "text": "Share your screen, draw on the whiteboard, chat in the sidebar. Everything's here, no juggling between 10 apps.",
+      "title": "Real-time collaboration",
+      "text": "Instant screen sharing, interactive whiteboard, and built-in chat. All your productivity tools unified in one interface.",
       "items": [
-        "Screen sharing",
-        "Whiteboard",
-        "Built-in chat"
+        "HD screen sharing",
+        "Collaborative whiteboard",
+        "Real-time chat"
       ]
     },
     "meetings": {
@@ -144,49 +144,49 @@
     }
   },
   "pricing": {
-    "title": "Simple and transparent pricing",
-    "subtitle": "Choose the plan that fits your needs",
+    "title": "Clear and flexible pricing",
+    "subtitle": "Plans tailored to every need. Start free, scale at your pace.",
     "monthly": "Monthly",
     "yearly": "Yearly",
     "perMonth": "/month",
     "perUser": "per user",
     "free": {
-      "title": "Free",
+      "title": "Starter",
       "price": "$0",
       "description": "Perfect to get started",
       "features": [
-        "Up to 3 participants",
-        "40-minute meetings",
+        "Meetings up to 40 minutes",
+        "Up to 100 participants",
         "HD audio and video",
         "Screen sharing"
       ],
-      "action": "Start a meeting"
+      "action": "Get started now"
     },
     "pro": {
-      "title": "Pro",
+      "title": "Professional",
       "price": "$12",
       "description": "For growing teams",
       "features": [
-        "Up to 50 participants",
         "Unlimited meetings",
-        "Cloud recording",
-        "Chat and whiteboard",
-        "Priority support"
+        "Up to 150 participants",
+        "Cloud recording (1GB)",
+        "Advanced administration",
+        "Custom branding"
       ],
-      "action": "Go Pro"
+      "action": "Upgrade to Pro"
     },
     "enterprise": {
       "title": "Enterprise",
       "price": "Custom",
       "description": "For large organizations",
       "features": [
-        "Unlimited participants",
-        "SSO and integrations",
-        "Advanced administration",
-        "Dedicated support",
-        "Guaranteed SLA"
+        "All Professional features",
+        "Up to 300 participants",
+        "Unlimited storage",
+        "SSO authentication",
+        "24/7 dedicated support"
       ],
-      "action": "Let's talk"
+      "action": "Contact our team"
     },
     "getStarted": "Get Started",
     "contactSales": "Contact Sales",

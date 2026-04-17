@@ -55,54 +55,54 @@
     "dashboard": "Tableau de bord"
   },
   "hero": {
-    "title": "Visioconférence simplement professionnelle.",
-    "titleLine1": "Visioconférence",
-    "titleLine2": "simplement professionnelle.",
-    "subtitle": "Connectez-vous avec vos équipes grâce à notre solution de visioconférence avancée et intuitive",
-    "startFree": "Démarrer gratuitement",
-    "testRoom": "Test Room Pro",
-    "watchDemo": "Voir la démo",
-    "trustedBy": "Utilisé par plus de {{count}} entreprises dans le monde",
-    "title1": "Visioconférence ",
-    "title2": "simplement professionnelle."
+    "title": "La visioconférence nouvelle génération.",
+    "titleLine1": "La visioconférence",
+    "titleLine2": "nouvelle génération.",
+    "subtitle": "Qualité HD, démarrage instantané, sécurité intégrée. Rejoignez vos équipes en un clic, depuis n'importe quel appareil.",
+    "startFree": "Essayer gratuitement",
+    "testRoom": "Lancer une démo",
+    "watchDemo": "Voir en action",
+    "trustedBy": "Déjà adopté par {{count}}+ équipes",
+    "title1": "La visioconférence ",
+    "title2": "nouvelle génération."
   },
   "homeFeatures": {
-    "title": "Tout pour des réunions réussies",
-    "subtitle": "Des fonctionnalités puissantes conçues pour les équipes modernes. Sécurisé, fiable et facile à utiliser.",
+    "title": "Conçu pour la performance",
+    "subtitle": "Une suite complète d'outils professionnels pour des réunions efficaces, sécurisées et sans friction.",
     "video": {
-      "title": "Vidéo nette, son clair",
-      "text": "Jusqu'à 1080p adaptatif : notre moteur ajuste la qualité en temps réel selon votre connexion. Pas de promesses en l'air, juste une image stable.",
+      "title": "Qualité vidéo exceptionnelle",
+      "text": "Résolution HD adaptative jusqu'à 1080p. Notre moteur intelligent optimise la qualité en temps réel pour garantir une image fluide, quelle que soit votre connexion.",
       "items": [
-        "HD adaptative (jusqu'à 1080p)",
-        "Suppression du bruit IA",
-        "Codecs VP9 / AV1"
+        "HD adaptative jusqu'à 1080p",
+        "Suppression du bruit par IA",
+        "Codecs nouvelle génération VP9/AV1"
       ]
     },
     "security": {
-      "title": "Vos échanges restent privés",
-      "text": "Chiffrement via LiveKit (DTLS-SRTP). On ne stocke pas vos appels, on ne les monétise pas. Simple.",
+      "title": "Sécurité de niveau entreprise",
+      "text": "Vos communications sont protégées par un chiffrement DTLS-SRTP de bout en bout. Conforme RGPD, aucune donnée n'est stockée ni exploitée.",
       "items": [
         "Chiffrement DTLS-SRTP",
-        "Conforme RGPD",
-        "Aucun enregistrement par défaut"
+        "100% conforme RGPD",
+        "Aucun stockage de données"
       ]
     },
     "instant": {
-      "title": "Prêt en 3 secondes",
-      "text": "Un lien, un clic, vous y êtes. Vos invités n'ont rien à installer, même sur téléphone.",
+      "title": "Démarrage instantané",
+      "text": "Créez une réunion en 3 secondes. Partagez le lien, vos participants rejoignent immédiatement — sans téléchargement, sans compte requis.",
       "items": [
-        "Lien unique partageable",
-        "Zéro inscription requise",
-        "Fonctionne sur mobile"
+        "Lien unique sécurisé",
+        "Aucune installation requise",
+        "Compatible tous appareils"
       ]
     },
     "collaboration": {
-      "title": "Travaillez ensemble, vraiment",
-      "text": "Partagez votre écran, dessinez sur le tableau blanc, discutez dans le chat. Tout est là, sans jongler entre 10 apps.",
+      "title": "Collaboration en temps réel",
+      "text": "Partage d'écran instantané, tableau blanc interactif et chat intégré. Tous vos outils de productivité réunis dans une seule interface.",
       "items": [
-        "Partage d'écran",
-        "Tableau blanc",
-        "Chat intégré"
+        "Partage d'écran HD",
+        "Tableau blanc collaboratif",
+        "Chat temps réel"
       ]
     },
     "meetings": {
@@ -144,45 +144,45 @@
     }
   },
   "pricing": {
-    "title": "Prix simples et transparents",
-    "subtitle": "Choisissez le plan qui vous correspond. Sans frais cachés.",
+    "title": "Tarification claire et flexible",
+    "subtitle": "Des formules adaptées à chaque besoin. Commencez gratuitement, évoluez à votre rythme.",
     "monthly": "Mensuel",
     "yearly": "Annuel",
     "perMonth": "/ mois",
     "popularBadge": "Populaire",
     "free": {
-      "title": "Gratuit",
+      "title": "Starter",
       "price": "0€",
-      "action": "Créer ma réunion",
+      "action": "Commencer maintenant",
       "features": [
-        "Jusqu'à 40 min par réunion",
+        "Réunions jusqu'à 40 minutes",
         "Jusqu'à 100 participants",
-        "Chat Privé & Groupe",
-        "Tableau Blanc Basique"
+        "Chat privé et groupe",
+        "Tableau blanc interactif"
       ]
     },
     "pro": {
-      "title": "Pro",
+      "title": "Professionnel",
       "price": "12€",
-      "action": "Passer à Pro",
+      "action": "Passer au Pro",
       "features": [
-        "Durée de réunion illimitée",
+        "Réunions illimitées",
         "Jusqu'à 150 participants",
-        "Enregistrement Cloud (1Go)",
-        "Gestion Utilisateurs Avancée",
-        "Branding Personnalisé"
+        "Enregistrement cloud (1 Go)",
+        "Administration avancée",
+        "Personnalisation de marque"
       ]
     },
     "enterprise": {
       "title": "Entreprise",
-      "price": "Sur mesure",
-      "action": "Discutons",
+      "price": "Sur devis",
+      "action": "Contacter l'équipe",
       "features": [
-        "Tout ce qui est inclus dans Pro",
+        "Toutes les fonctionnalités Pro",
         "Jusqu'à 300 participants",
-        "Enregistrement Illimité",
-        "Intégration SSO",
-        "Support Dédié 24/7"
+        "Stockage illimité",
+        "Authentification SSO",
+        "Support dédié 24/7"
       ]
     },
     "getStarted": "Commencer",
@@ -358,19 +358,19 @@
   "needsAdaptation": "Adaptation aux besoins",
   "contactMe": "Me contacter",
   "aboutProject": "À propos du projet",
-  "projectDescription": "VisioConnect est né de ma passion pour les technologies de communication moderne. En tant que développeur full-stack, j'ai voulu créer une solution qui combine innovation technologique et expérience utilisateur exceptionnelle.",
+  "projectDescription": "VisioConnect est une plateforme de visioconférence développée avec les technologies les plus récentes. Notre objectif : offrir une expérience de communication fluide, sécurisée et accessible à tous les professionnels.",
   "myVision": "Ma vision",
-  "visionDescription": "Offrir une visio pro sans la complexité. Que vous soyez 3 ou 30, vous méritez un outil qui marche — pas un usine à gaz.",
+  "visionDescription": "Rendre la visioconférence professionnelle accessible à tous. Que vous soyez une startup de 3 personnes ou une équipe de 100, vous méritez des outils qui fonctionnent sans compromis.",
   "technologiesUsed": "Technologies",
-  "techDescription": "React, LiveKit (WebRTC), Convex pour le temps réel, et un soupçon d'IA pour nettoyer l'audio. Pas de buzzwords, juste du code qui tourne.",
+  "techDescription": "Architecture moderne basée sur React, LiveKit (WebRTC) et Convex. Optimisation audio par intelligence artificielle pour une qualité sonore professionnelle.",
   "creationYear": "Année de création",
   "philosophy": "Philosophie",
   "philosophyValue": "Open Source",
   "passionLabel": "Passion",
   "scopeLabel": "Portée",
   "globalValue": "Global",
-  "contactTitle": "Restons connectés",
-  "contactDescription": "Une question, une suggestion, ou envie de collaborer ? N'hésitez pas à me contacter !",
+  "contactTitle": "Une question ?",
+  "contactDescription": "Notre équipe est disponible pour répondre à vos questions et vous accompagner dans votre projet.",
   "fullNamePlaceholder": "Nom complet",
   "emailPlaceholder": "Votre adresse email",
   "subjectPlaceholder": "Sujet",
