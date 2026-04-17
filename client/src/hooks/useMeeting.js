@@ -158,6 +158,70 @@ export const useMeeting = (maxQualityLock = true) => {
     };
   }, [localParticipant, isCameraManualMute, isMicManualMute, isCameraEnabled, isMicrophoneEnabled]);
 
+  // === PRIVACY CRITICAL: Cleanup complet à la fermeture de page ===
+  // Coupe IMMEDIATEMENT caméra/micro quand l'utilisateur ferme l'onglet/navigateur
+  useEffect(() => {
+    if (!localParticipant) return;
+
+    const forceStopAllMedia = () => {
+      console.log('[Privacy] Page unload - Arrêt immédiat de tous les flux média');
+      
+      // Méthode 1: LiveKit API
+      try {
+        localParticipant.setCameraEnabled(false);
+        localParticipant.setMicrophoneEnabled(false);
+        localParticipant.setScreenShareEnabled(false);
+      } catch (e) {
+        console.warn('[Privacy] LiveKit cleanup error:', e);
+      }
+      
+      // Méthode 2: Arrêt direct des MediaStreamTracks (fallback robuste)
+      try {
+        const tracks = localParticipant.getTrackPublications();
+        tracks.forEach(pub => {
+          if (pub.track?.mediaStreamTrack) {
+            pub.track.mediaStreamTrack.stop();
+          }
+        });
+      } catch (e) {
+        console.warn('[Privacy] Direct track stop error:', e);
+      }
+      
+      // Méthode 3: Arrêt de TOUS les streams actifs du navigateur
+      try {
+        navigator.mediaDevices?.getUserMedia({ audio: false, video: false })
+          .catch(() => {}); // Force release
+      } catch (e) {}
+    };
+
+    // beforeunload: fermeture d'onglet, refresh, navigation
+    const handleBeforeUnload = (e) => {
+      forceStopAllMedia();
+    };
+
+    // pagehide: plus fiable sur mobile (Safari iOS)
+    const handlePageHide = (e) => {
+      forceStopAllMedia();
+    };
+
+    // unload: fallback
+    const handleUnload = () => {
+      forceStopAllMedia();
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('pagehide', handlePageHide);
+    window.addEventListener('unload', handleUnload);
+
+    return () => {
+      // Cleanup aussi à la destruction du composant (navigation React)
+      forceStopAllMedia();
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('pagehide', handlePageHide);
+      window.removeEventListener('unload', handleUnload);
+    };
+  }, [localParticipant]);
+
   // === EFFECTS (après les états) ===
   
   // Pre-Warming de l'IA

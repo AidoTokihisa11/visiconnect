@@ -131,11 +131,22 @@ function ActiveRoom({ roomId, participantName }) {
           onError={(e) => {
             console.error("LiveKit Room Error:", e);
           }}
+          onDisconnected={() => {
+            // Cleanup automatique à la déconnexion
+            console.log('[Privacy] Room disconnected - cleanup done by LiveKit');
+          }}
         >
           <MeetingRoom
              roomId={roomId}
              user={{ id: participantName, name: participantName }}
-             onLeave={() => navigate('/')}
+             onLeave={async () => {
+               // Nettoyer les verrous de session avant de quitter
+               try {
+                 sessionStorage.removeItem('visi_cam_mute');
+                 sessionStorage.removeItem('visi_mic_mute');
+               } catch (e) {}
+               navigate('/');
+             }}
           />
         </LiveKitRoom>
       </LiveKitErrorBoundary>
