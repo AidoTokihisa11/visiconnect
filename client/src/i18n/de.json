@@ -55,16 +55,16 @@
     "dashboard": "Dashboard"
   },
   "hero": {
-    "title": "Die Videokonferenz-Plattform der nächsten Generation",
-    "subtitle": "Treten Sie einfach mit Ihren Teams in Kontakt durch unsere fortschrittliche und intuitive Videokonferenzlösung",
-    "startFree": "Kostenlos starten",
-    "watchDemo": "Demo ansehen",
-    "trustedBy": "Vertraut von über {{count}} Unternehmen weltweit",
-    "title1": "Videokonferenzen ",
-    "title2": "einfach professionell.",
-    "testRoom": "Test Room Pro",
+    "title": "Videokonferenz der nächsten Generation",
+    "subtitle": "HD-Qualität, sofortiger Start, integrierte Sicherheit. Treten Sie Ihrem Team mit einem Klick bei, von jedem Gerät aus.",
+    "startFree": "Kostenlos testen",
+    "watchDemo": "In Aktion sehen",
+    "trustedBy": "Bereits von {{count}}+ Teams genutzt",
+    "title1": "Videokonferenz ",
+    "title2": "der nächsten Generation.",
+    "testRoom": "Demo starten",
     "titleLine1": "Videokonferenz",
-    "titleLine2": "einfach professionell."
+    "titleLine2": "der nächsten Generation."
   },
   "features": {
     "title": "Leistungsstarke Funktionen",
@@ -393,51 +393,53 @@
     }
   },
   "homeFeatures": {
+    "title": "Für Leistung gebaut",
+    "subtitle": "Eine komplette Suite professioneller Tools für effiziente, sichere und reibungslose Meetings.",
     "video": {
-      "title": "Immersive Besprechungsräume",
-      "text": "Ultra-flüssige 4K-Qualität, die jede Nuance einfängt. Unsere Engine passt sich automatisch an Ihre Bandbreite an und garantiert keine Aussetzer.",
+      "title": "Hervorragende Videoqualität",
+      "text": "Adaptive HD-Auflösung bis 1080p. Unsere intelligente Engine optimiert die Qualität in Echtzeit für flüssiges Video bei jeder Verbindung.",
       "items": [
-        "Bis zu 4k Unterstützung",
-        "KI-Rauschunterdrückung",
-        "VP9 / AV1 Codec"
+        "Adaptives HD bis 1080p",
+        "KI-gestützte Rauschunterdrückung",
+        "Nächste Generation VP9/AV1 Codecs"
       ]
     },
     "security": {
-      "title": "Bankenklasse Sicherheit",
-      "text": "End-to-End-Verschlüsselung für alle Anrufe. Ihre Gespräche bleiben jederzeit privat und sicher.",
+      "title": "Sicherheit auf Unternehmensebene",
+      "text": "Ihre Kommunikation ist durch End-to-End DTLS-SRTP-Verschlüsselung geschützt. DSGVO-konform, keine Daten werden gespeichert.",
       "items": [
-        "E2E-Verschlüsselung",
-        "DSGVO-konform",
-        "Keine Daten gespeichert"
+        "DTLS-SRTP Verschlüsselung",
+        "100% DSGVO-konform",
+        "Keine Datenspeicherung"
+      ]
+    },
+    "instant": {
+      "title": "Sofortiger Start",
+      "text": "Erstellen Sie ein Meeting in 3 Sekunden. Teilen Sie den Link, Teilnehmer treten sofort bei — kein Download, kein Konto erforderlich.",
+      "items": [
+        "Sicherer einzigartiger Link",
+        "Keine Installation nötig",
+        "Alle Geräte kompatibel"
+      ]
+    },
+    "collaboration": {
+      "title": "Echtzeit-Zusammenarbeit",
+      "text": "Sofortige Bildschirmfreigabe, interaktives Whiteboard und integrierter Chat. Alle Ihre Produktivitätstools in einer Oberfläche vereint.",
+      "items": [
+        "HD Bildschirmfreigabe",
+        "Kollaboratives Whiteboard",
+        "Echtzeit-Chat"
       ]
     },
     "meetings": {
       "title": "Sofortige Meetings",
-      "text": "Starten Sie in Sekunden mit einem Link. Gäste müssen nichts herunterladen oder installieren.",
+      "text": "Starten Sie in Sekunden mit einem Link. Gäste müssen nichts herunterladen.",
       "items": [
         "1-Klick-Links",
         "Kein Konto erforderlich",
         "Mobile-kompatibel"
       ]
-    },
-    "collaboration": {
-      "title": "Team-Zusammenarbeit",
-      "text": "Einfache Bildschirmfreigabe, gemeinsames Whiteboard und integrierter Chat für Echtzeit-Produktivität.",
-      "items": [
-        "Bildschirmfreigabe",
-        "Gemeinsames Whiteboard",
-        "Echtzeit-Chat"
-      ]
-    },
-    "instant": {
-      "title": "Sofortige Meetings",
-      "text": "Starten Sie in Sekunden mit einem teilbaren Link.",
-      "items": [
-        "1-Klick-Links",
-        "Kein Konto erforderlich",
-        "Handy-kompatibel"
-      ]
-    },
+    }
     "title": "Alles für erfolgreiche Meetings",
     "subtitle": "Leistungsstarke Funktionen für moderne Teams. Sicher, zuverlässig und einfach zu bedienen."
   },

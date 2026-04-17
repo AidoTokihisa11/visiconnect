@@ -178,6 +178,63 @@ body::before {
   border-radius: 4px;
 }
 
+/* ========================================
+   INTERNATIONALISATION - Gestion des textes longs
+   (Allemand ~30% plus long, Russe texte variable)
+   ======================================== */
+
+/* Activation des césures automatiques pour les langues longues */
+html[lang="de"],
+html[lang="ru"] {
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+}
+
+/* Boutons et CTA: éviter les débordements */
+button,
+[role="button"],
+.btn,
+a[class*="button" i] {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* Exception: Boutons qui peuvent wrapper sur mobile */
+@media (max-width: 640px) {
+  button,
+  [role="button"] {
+    white-space: normal;
+    word-break: break-word;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
+}
+
+/* Titres: gestion du wrap intelligent */
+h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+/* Cards et conteneurs: flex shrink pour textes longs */
+[class*="card" i],
+[class*="feature" i] {
+  min-width: 0; /* Permet au flexbox de shrinker correctement */
+}
+
+/* Navigation: truncate si trop long */
+nav a,
+[role="navigation"] a {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 ::-webkit-scrollbar-thumb {
   background: var(--primary-gradient);
   border-radius: 4px;

@@ -55,16 +55,16 @@
     "dashboard": "Panel de control"
   },
   "hero": {
-    "title": "Plataforma de videoconferencia de próxima generación",
-    "subtitle": "Conéctese fácilmente con sus equipos gracias a nuestra solución avanzada e intuitiva de videoconferencia",
-    "startFree": "Comenzar gratis",
-    "watchDemo": "Ver demo",
-    "trustedBy": "Confiado por más de {{count}} empresas en todo el mundo",
+    "title": "Videoconferencia de nueva generación",
+    "subtitle": "Calidad HD, inicio instantáneo, seguridad integrada. Únete a tu equipo con un clic, desde cualquier dispositivo.",
+    "startFree": "Probar gratis",
+    "watchDemo": "Ver en acción",
+    "trustedBy": "Ya adoptado por {{count}}+ equipos",
     "title1": "Videoconferencia ",
-    "title2": "simplemente profesional.",
-    "testRoom": "Test Room Pro",
+    "title2": "de nueva generación.",
+    "testRoom": "Lanzar demo",
     "titleLine1": "Videoconferencia",
-    "titleLine2": "simplemente profesional."
+    "titleLine2": "de nueva generación."
   },
   "features": {
     "title": "Características poderosas",
@@ -428,53 +428,53 @@
     }
   },
   "homeFeatures": {
+    "title": "Diseñado para el rendimiento",
+    "subtitle": "Un conjunto completo de herramientas profesionales para reuniones eficientes, seguras y sin fricción.",
     "video": {
-      "title": "Salas de reuniones inmersivas",
-      "text": "Calidad 4K ultra fluida que captura cada matiz. Nuestro motor se adapta automáticamente a su ancho de banda, garantizando cero cortes.",
+      "title": "Calidad de video excepcional",
+      "text": "Resolución HD adaptativa hasta 1080p. Nuestro motor inteligente optimiza la calidad en tiempo real para garantizar video fluido, sea cual sea tu conexión.",
       "items": [
-        "Soporte hasta 4k",
-        "Supresión de ruido IA",
-        "Códec VP9 / AV1"
+        "HD adaptativo hasta 1080p",
+        "Supresión de ruido con IA",
+        "Códecs de nueva generación VP9/AV1"
       ]
     },
     "security": {
-      "title": "Seguridad de grado bancario",
-      "text": "Cifrado de extremo a extremo para todas las llamadas. Sus conversaciones permanecen privadas y seguras en todo momento.",
+      "title": "Seguridad empresarial",
+      "text": "Tus comunicaciones están protegidas por cifrado DTLS-SRTP de extremo a extremo. Compatible con RGPD, ningún dato se almacena ni explota.",
       "items": [
-        "Cifrado E2E",
-        "Compatible con RGPD",
-        "Sin almacenamiento de datos"
+        "Cifrado DTLS-SRTP",
+        "100% compatible con RGPD",
+        "Cero almacenamiento de datos"
+      ]
+    },
+    "instant": {
+      "title": "Inicio instantáneo",
+      "text": "Crea una reunión en 3 segundos. Comparte el enlace, los participantes se unen inmediatamente — sin descargas, sin cuenta requerida.",
+      "items": [
+        "Enlace único seguro",
+        "Sin instalación necesaria",
+        "Compatible con todos los dispositivos"
+      ]
+    },
+    "collaboration": {
+      "title": "Colaboración en tiempo real",
+      "text": "Compartir pantalla instantáneo, pizarra interactiva y chat integrado. Todas tus herramientas de productividad unificadas en una sola interfaz.",
+      "items": [
+        "Compartir pantalla HD",
+        "Pizarra colaborativa",
+        "Chat en tiempo real"
       ]
     },
     "meetings": {
       "title": "Reuniones instantáneas",
-      "text": "Comience en segundos con un enlace. Los invitados no necesitan descargar ni instalar nada.",
+      "text": "Comienza en segundos con un enlace. Los invitados no necesitan descargar nada.",
       "items": [
         "Enlaces en 1 clic",
         "No se requiere cuenta",
         "Compatible con móviles"
       ]
-    },
-    "collaboration": {
-      "title": "Colaboración en equipo",
-      "text": "Comparte pantalla fácilmente, pizarra colaborativa y chat integrado para productividad en tiempo real.",
-      "items": [
-        "Compartir pantalla",
-        "Pizarra colaborativa",
-        "Chat en tiempo real"
-      ]
-    },
-    "instant": {
-      "title": "Reuniones Instantáneas",
-      "text": "Comience en segundos con un enlace para compartir. No requiere descargas ni instalaciones para los invitados.",
-      "items": [
-        "Enlaces de un clic",
-        "No se requiere cuenta",
-        "Compatible con móviles"
-      ]
-    },
-    "title": "Todo para reuniones exitosas",
-    "subtitle": "Funciones potentes diseñadas para equipos modernos. Seguro, confiable y fácil de usar."
+    }
   },
   "architecture": {
     "title": "Arquitectura confiable",
