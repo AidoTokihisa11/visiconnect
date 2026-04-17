@@ -58,7 +58,10 @@ export const setupAntiFreezeListeners = (room) => {
   room.on(RoomEvent.TrackSubscribed, (track, publication, participant) => {
     if (track.kind === Track.Kind.Video) {
       // Demande agressive au SFU de générer une Keyframe (PLI - Picture Loss Indication)
-      track.setVideoPriority('high');
+      // track.setVideoPriority('high'); // Removed: setVideoPriority is not a function on RemoteTrack. Use publication.setVideoQuality(VideoQuality.HIGH) if needed.
+      if (typeof publication.setVideoQuality === 'function') {
+        publication.setVideoQuality(2); // VideoQuality.HIGH
+      }
       
       // On s'assure que le flux n'est pas "downcasted" par défaut le temps de l'abonnement
       if (typeof track.setDowncasted === 'function') {
