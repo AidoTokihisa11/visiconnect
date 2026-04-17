@@ -62,18 +62,28 @@ const ControlButton = styled.button`
   border: 1px solid ${props => props.$active ? 'transparent' : THEME.border};   
 
   @media (max-width: 768px) {
-    width: 44px; /* Slightly smaller for mobile to fit 6 buttons */
-    height: 44px;
-    border-radius: 12px; /* Apple-like squircle */
+    /* Touch target minimum 48x48 pour accessibilité iOS/Android */
+    min-width: 48px;
+    min-height: 48px;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
     background-color: ${props => props.$active ? (props.$activeColor || THEME.accent) : 'rgba(255, 255, 255, 0.08)'};
     padding: 0;
     border: none;
     color: #fff;
+    /* Touch feedback amélioré */
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
+    touch-action: manipulation;
     
-    /* Make sure SVG scales well */
     svg {
       width: 22px;
       height: 22px;
+    }
+    
+    &:active {
+      transform: scale(0.95);
+      background-color: ${props => props.$active ? (props.$activeColor || THEME.accent) : 'rgba(255, 255, 255, 0.15)'};
     }
   }
 
@@ -129,12 +139,14 @@ const MobileMoreMenu = styled.div`
     display: ${props => props.$isOpen ? 'flex' : 'none'};
     flex-wrap: wrap;
     position: absolute;
-    bottom: calc(100% + 15px);
-    left: 15px;
-    right: 15px;
+    /* Respect de la SafeArea iPhone */
+    bottom: calc(100% + 15px + env(safe-area-inset-bottom, 0px));
+    left: max(15px, env(safe-area-inset-left, 15px));
+    right: max(15px, env(safe-area-inset-right, 15px));
     width: auto;
     background-color: rgba(25, 25, 30, 0.98);
     backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-radius: 24px;
     padding: 1.5rem 1rem;
     gap: 1rem 0;
@@ -142,6 +154,13 @@ const MobileMoreMenu = styled.div`
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
     z-index: 100;
     justify-content: flex-start;
+    /* Animation d'entrée */
+    animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
     > button {
       width: 25%;
@@ -150,6 +169,10 @@ const MobileMoreMenu = styled.div`
       background: transparent;
       gap: 0.5rem;
       height: auto;
+      /* Touch target minimum 48x48 */
+      min-height: 72px;
+      padding: 8px 4px;
+      touch-action: manipulation;
       
       span {
         font-size: 0.7rem;
@@ -166,6 +189,10 @@ const MobileMoreMenu = styled.div`
         background: rgba(255, 255, 255, 0.08);
         border-radius: 50%;
         box-sizing: content-box;
+      }
+      
+      &:active {
+        transform: scale(0.95);
       }
       
       &:active svg {
@@ -307,17 +334,22 @@ export const ControlBar = ({
           </ControlButton>
         </ButtonGroup>
 
-        {/* IA Smart Enhancer Button */}
+        {/* IA Smart Enhancer Button - Touch target optimisé */}
         <ButtonGroup>
           <ControlButton
             disabled={!isAiReady}
             $active={isAIEnhanced}
             onClick={toggleAIVideoEngine}
             title={!isAiReady ? "Modèles d'IA en cours de chargement..." : (isAIEnhanced ? "Désactiver l'IA" : "Activer l'IA vidéo")}
+            aria-label={isAIEnhanced ? "Désactiver l'amélioration IA" : "Activer l'amélioration IA"}
             style={{
               background: isAIEnhanced ? 'linear-gradient(135deg, #10B981, #059669)' : undefined,
               borderColor: isAIEnhanced ? 'transparent' : undefined,
               color: isAIEnhanced ? 'white' : undefined,
+              /* Zone de touch élargie sur mobile */
+              minWidth: '52px',
+              minHeight: '48px',
+              boxShadow: isAIEnhanced ? '0 4px 15px rgba(16, 185, 129, 0.3)' : undefined,
             }}
           >
             <Sparkles size={22} strokeWidth={isAIEnhanced ? 2.5 : 2} />
