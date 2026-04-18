@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, User, Sparkles, FileText, Download, Wand2, Loader2 } from 'lucide-react';
+import { Send, User, Sparkles, FileText, Download, Wand2, Loader2, ListTodo, Key } from 'lucide-react';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
+import { getSmartNotesService } from '../../services/ai';
 
 // API route - uses relative path for Vercel serverless functions
 const AI_PROXY_URL = '/api/ai/chat';
@@ -347,34 +348,39 @@ export const AIChatPanel = ({ responseStyle = 'balanced', roomMessages = [], roo
     setAiError(null);
     
     try {
-      const latestRoomMessages = (roomMessages || []).slice(-30);
-      const transcript = latestRoomMessages
-        .map((m) => `- ${m.sender || 'Inconnu'}: ${m.text}`)
-        .join('\n');
-
-      if (!transcript.trim()) {
-        const fallback = '# Resume de reunion\n\nAucun message de reunion disponible pour le moment.';
+      const latestRoomMessages = (roomMessages || []).slice(-50);
+      
+      if (!latestRoomMessages.length) {
+        const fallback = '# Résumé de réunion\n\nAucun message de réunion disponible pour le moment.';
         setMeetingSummary(fallback);
-        setMessages((prev) => [...prev, { id: Date.now(), sender: 'ai', text: 'Aucun message room à résumer pour le moment.' }]);
+        setMessages((prev) => [...prev, { id: Date.now(), sender: 'ai', text: 'Aucun message à résumer pour le moment.' }]);
         return;
       }
 
-      let summary = '';
-      const summaryPrompt = [
-        { role: 'user', content: `Transcript de reunion:\n\n${transcript}` },
-      ];
-
       try {
-        summary = await fetchLLMResponse(summaryPrompt, responseStyle, 'summary');
+        // 🤖 Utilise SmartNotesService pour un résumé structuré
+        const smartNotes = getSmartNotesService();
+        const result = await smartNotes.generateMeetingSummary({
+          chatMessages: latestRoomMessages,
+          meetingTitle: `Réunion - ${new Date().toLocaleDateString('fr-FR')}`,
+          duration: 'En cours',
+        });
+        
+        setMeetingSummary(normalizeMarkdownForDisplay(result.summary));
+        setMessages((prev) => [...prev, { 
+          id: Date.now(), 
+          sender: 'ai', 
+          text: `✨ Résumé généré avec ${result.model}! Utilise le bouton Export Markdown pour le télécharger.` 
+        }]);
       } catch (e) {
+        console.warn('[AIChatPanel] SmartNotesService error, fallback to local:', e);
         // Fallback to local summary
-        summary = localSummary(latestRoomMessages);
+        const summary = localSummary(latestRoomMessages);
+        setMeetingSummary(summary);
         setAiError("Résumé local généré (IA distante indisponible)");
         setTimeout(() => setAiError(null), 5000);
+        setMessages((prev) => [...prev, { id: Date.now(), sender: 'ai', text: 'Résumé local généré.' }]);
       }
-
-      setMeetingSummary(normalizeMarkdownForDisplay(summary));
-      setMessages((prev) => [...prev, { id: Date.now(), sender: 'ai', text: 'Résumé de réunion généré ! Utilise le bouton Export Markdown pour le télécharger.' }]);
     } catch (e) {
       const fallback = localSummary(roomMessages);
       setMeetingSummary(fallback);

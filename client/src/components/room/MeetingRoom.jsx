@@ -20,6 +20,8 @@ import { StatsMonitor } from './StatsMonitor';
 import { WhiteboardWrapper } from './WhiteboardWrapper';
 import { AIChatPanel } from './AIChatPanel';
 import { AIFeaturesPanel } from './AIFeaturesPanel';
+import { TranscriptionWidget } from './TranscriptionWidget';
+import { useAISettings } from '../../hooks/useAISettings';
 import { RoomSettingsPanel } from './RoomSettingsPanel';
 import { MeetingChat } from './MeetingChat';
 import PollsPanel from './PollsPanel';
@@ -322,6 +324,10 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
   
   // -- Raise Hand State --
   const [isHandRaised, setIsHandRaised] = useState(false);
+  
+  // 🤖 AI Features State
+  const { settings: aiSettings } = useAISettings();
+  const [showTranscription, setShowTranscription] = useState(false);
 
   // Query des sondages pour les notifications
   const polls = useQuery(api.polls.getPolls, originalRoomId ? { meetingId: originalRoomId } : "skip") || [];
@@ -377,6 +383,13 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
       setPollPopup(null); // Fermer le popup si on ouvre le panel
     }
   }, [sidePanelOpen, activePanel]);
+
+  // 🤖 Auto-show transcription when enabled in AI settings
+  useEffect(() => {
+    if (aiSettings?.transcription?.enabled && !showTranscription) {
+      setShowTranscription(true);
+    }
+  }, [aiSettings?.transcription?.enabled]);
 
   // -- Track new polls for notifications and auto-popup --
   useEffect(() => {
@@ -652,6 +665,13 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
           </SidePanel>
         )}
       </AnimatePresence>
+
+      {/* 🤖 Transcription Widget - Affiche les sous-titres en temps réel */}
+      {showTranscription && (
+        <TranscriptionWidget 
+          onClose={() => setShowTranscription(false)} 
+        />
+      )}
 
       {/* Audio Rendering & Safari iOS Low Power Mode Fallback */}
       <RoomAudioRenderer />

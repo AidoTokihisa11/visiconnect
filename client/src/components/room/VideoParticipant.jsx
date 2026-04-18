@@ -1,8 +1,10 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { Mic, MicOff, VideoOff, Activity, Move } from 'lucide-react';
 import { VideoTrack } from '@livekit/components-react';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
+import { useAISettings } from '../../hooks/useAISettings';
+import { getVideoEnhancementService } from '../../services/ai';
 
 // 📱 PiP Draggable Container - Position absolue contrôlée par state
 const DraggablePiPContainer = styled.div`
@@ -135,6 +137,18 @@ export const VideoParticipant = React.memo(({
   overrideMicEnabled,
   isPiP = false,
 }) => {
+  // 🤖 AI Video Enhancement
+  const { settings } = useAISettings();
+  const videoFilter = useMemo(() => {
+    if (settings?.videoEnhancement?.enabled) {
+      const service = getVideoEnhancementService();
+      service.enable();
+      service.applyPreset(settings.videoEnhancement?.preset || 'balanced');
+      return service.getCSSFilter();
+    }
+    return 'none';
+  }, [settings?.videoEnhancement?.enabled, settings?.videoEnhancement?.preset]);
+
   // Use trackRef properties directly if available, otherwise fallback to participant flags
   const isVideoEnabled = trackRef?.publication 
     ? !trackRef.publication.isMuted 
@@ -275,7 +289,8 @@ export const VideoParticipant = React.memo(({
             objectFit: videoFit,
             transform: 'translateZ(0)', 
             willChange: 'transform, opacity',
-            backfaceVisibility: 'hidden'
+            backfaceVisibility: 'hidden',
+            filter: videoFilter, // 🤖 AI Video Enhancement
           }} 
         />
       ) : (
