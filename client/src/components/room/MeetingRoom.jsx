@@ -170,17 +170,16 @@ const SidePanel = styled(motion.div)`
 
   @media (max-width: 768px) {
     width: 100%;
-    /* Mobile: Le panel s'affiche au-dessus de la vidéo, mais PAS au-dessus de la BottomBar */
-    /* Calcul: 100dvh - hauteur BottomBar (70px) - SafeArea */
-    height: calc(100dvh - 70px - env(safe-area-inset-bottom, 12px));
-    max-height: calc(100dvh - 70px - env(safe-area-inset-bottom, 12px));
-    border-radius: 20px 20px 0 0;
-    box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.3);
+    /* Mobile: Le panel s'affiche entre le haut et la BottomBar */
     top: 0;
-    bottom: auto;
+    bottom: calc(70px + env(safe-area-inset-bottom, 12px));
+    height: auto;
+    max-height: none;
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
     z-index: 55;
     border-left: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 `;
 

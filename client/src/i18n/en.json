@@ -190,7 +190,41 @@
     },
     "getStarted": "Get Started",
     "contactSales": "Contact Sales",
-    "popularBadge": "Popular"
+    "popularBadge": "Popular",
+    "compare": {
+      "title": "Compare our plans",
+      "feature": "Feature",
+      "starter": "Starter",
+      "pro": "Pro",
+      "business": "Business",
+      "max_participants": "Max participants",
+      "duration": "Meeting duration",
+      "unlimited": "Unlimited",
+      "quality": "Video quality",
+      "if_available": "if available",
+      "support": "Support",
+      "support_community": "Community",
+      "support_phone": "Priority phone",
+      "recording": "Cloud recording",
+      "transcription": "AI Transcription",
+      "hours": "hours",
+      "included": "Included"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "q1": {
+        "question": "Can I change plans at any time?",
+        "answer": "Yes, you can upgrade or downgrade your subscription at any time. The change takes effect immediately and the difference is calculated pro rata."
+      },
+      "q2": {
+        "question": "Is there a minimum commitment?",
+        "answer": "No, our subscriptions have no commitment. You can cancel at any time from your account settings."
+      },
+      "q4": {
+        "question": "How does the free trial work?",
+        "answer": "The Starter plan is free forever. You can try all Pro features for 14 days without a credit card."
+      }
+    }
   },
   "auth": {
     "login": {

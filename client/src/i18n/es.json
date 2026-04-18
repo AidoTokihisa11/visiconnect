@@ -141,7 +141,41 @@
     },
     "getStarted": "Comenzar",
     "contactSales": "Contactar ventas",
-    "popularBadge": "Popular"
+    "popularBadge": "Popular",
+    "compare": {
+      "title": "Compara nuestros planes",
+      "feature": "Característica",
+      "starter": "Starter",
+      "pro": "Pro",
+      "business": "Business",
+      "max_participants": "Participantes máx.",
+      "duration": "Duración de reuniones",
+      "unlimited": "Ilimitado",
+      "quality": "Calidad de video",
+      "if_available": "si disponible",
+      "support": "Soporte",
+      "support_community": "Comunidad",
+      "support_phone": "Teléfono prioritario",
+      "recording": "Grabación en la nube",
+      "transcription": "Transcripción IA",
+      "hours": "horas",
+      "included": "Incluido"
+    },
+    "faq": {
+      "title": "Preguntas frecuentes",
+      "q1": {
+        "question": "¿Puedo cambiar de plan en cualquier momento?",
+        "answer": "Sí, puede actualizar o reducir su suscripción en cualquier momento. El cambio se aplica inmediatamente y la diferencia se calcula proporcionalmente."
+      },
+      "q2": {
+        "question": "¿Hay un compromiso mínimo?",
+        "answer": "No, nuestras suscripciones no tienen compromiso. Puede cancelar en cualquier momento desde la configuración de su cuenta."
+      },
+      "q4": {
+        "question": "¿Cómo funciona la prueba gratuita?",
+        "answer": "El plan Starter es gratuito para siempre. Puede probar todas las funciones Pro durante 14 días sin tarjeta de crédito."
+      }
+    }
   },
   "auth": {
     "login": {

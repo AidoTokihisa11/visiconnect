@@ -141,7 +141,41 @@
     },
     "getStarted": "Loslegen",
     "contactSales": "Vertrieb kontaktieren",
-    "popularBadge": "Beliebt"
+    "popularBadge": "Beliebt",
+    "compare": {
+      "title": "Unsere Pläne vergleichen",
+      "feature": "Funktion",
+      "starter": "Starter",
+      "pro": "Pro",
+      "business": "Business",
+      "max_participants": "Max. Teilnehmer",
+      "duration": "Meeting-Dauer",
+      "unlimited": "Unbegrenzt",
+      "quality": "Videoqualität",
+      "if_available": "falls verfügbar",
+      "support": "Support",
+      "support_community": "Community",
+      "support_phone": "Prioritäts-Telefon",
+      "recording": "Cloud-Aufzeichnung",
+      "transcription": "KI-Transkription",
+      "hours": "Stunden",
+      "included": "Enthalten"
+    },
+    "faq": {
+      "title": "Häufig gestellte Fragen",
+      "q1": {
+        "question": "Kann ich jederzeit den Plan wechseln?",
+        "answer": "Ja, Sie können Ihr Abonnement jederzeit upgraden oder downgraden. Die Änderung wird sofort wirksam und die Differenz wird anteilig berechnet."
+      },
+      "q2": {
+        "question": "Gibt es eine Mindestlaufzeit?",
+        "answer": "Nein, unsere Abonnements sind ohne Verpflichtung. Sie können jederzeit über Ihre Kontoeinstellungen kündigen."
+      },
+      "q4": {
+        "question": "Wie funktioniert die kostenlose Testversion?",
+        "answer": "Der Starter-Plan ist dauerhaft kostenlos. Sie können alle Pro-Funktionen 14 Tage lang ohne Kreditkarte testen."
+      }
+    }
   },
   "auth": {
     "login": {

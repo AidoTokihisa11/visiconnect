@@ -186,7 +186,41 @@
       ]
     },
     "getStarted": "Commencer",
-    "contactSales": "Contacter les ventes"
+    "contactSales": "Contacter les ventes",
+    "compare": {
+      "title": "Comparez nos offres",
+      "feature": "Fonctionnalité",
+      "starter": "Starter",
+      "pro": "Pro",
+      "business": "Business",
+      "max_participants": "Participants max",
+      "duration": "Durée des réunions",
+      "unlimited": "Illimité",
+      "quality": "Qualité vidéo",
+      "if_available": "si disponible",
+      "support": "Support",
+      "support_community": "Communauté",
+      "support_phone": "Téléphone prioritaire",
+      "recording": "Enregistrement cloud",
+      "transcription": "Transcription IA",
+      "hours": "heures",
+      "included": "Inclus"
+    },
+    "faq": {
+      "title": "Questions fréquentes",
+      "q1": {
+        "question": "Puis-je changer de formule à tout moment ?",
+        "answer": "Oui, vous pouvez upgrader ou downgrader votre abonnement à tout moment. Le changement prend effet immédiatement et la différence est calculée au prorata."
+      },
+      "q2": {
+        "question": "Y a-t-il un engagement minimum ?",
+        "answer": "Non, nos abonnements sont sans engagement. Vous pouvez résilier à tout moment depuis votre espace client."
+      },
+      "q4": {
+        "question": "Comment fonctionne l'essai gratuit ?",
+        "answer": "L'offre Starter est gratuite et illimitée dans le temps. Vous pouvez tester toutes les fonctionnalités Pro pendant 14 jours sans carte bancaire requise."
+      }
+    }
   },
   "auth": {
     "login": {
