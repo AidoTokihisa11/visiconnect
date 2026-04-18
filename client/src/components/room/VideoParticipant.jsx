@@ -142,8 +142,8 @@ export const VideoParticipant = React.memo(({
   const videoFilter = useMemo(() => {
     if (settings?.videoEnhancement?.enabled) {
       const service = getVideoEnhancementService();
-      service.enable();
-      service.applyPreset(settings.videoEnhancement?.preset || 'balanced');
+      service.setEnabled(true);
+      service.applyPreset(settings.videoEnhancement?.preset || 'natural');
       return service.getCSSFilter();
     }
     return 'none';
