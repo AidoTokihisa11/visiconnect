@@ -238,62 +238,63 @@ export default function RoomPageNew() {
   // We explicitly check BOTH that the beta code is validated AND the user has a name
   if (!isBetaValidated || !participantName) {
     return (
-      <div className="flex min-h-[100dvh] w-full items-center justify-center p-4 font-sans relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)' }} data-lk-theme="default">
-        {/* Animated background orbs */}
-        <div className="absolute top-[-15%] left-[-5%] w-[45%] h-[45%] rounded-full bg-blue-500/15 blur-[100px] pointer-events-none animate-pulse" style={{ animationDuration: '4s' }} />
-        <div className="absolute bottom-[-15%] right-[-5%] w-[40%] h-[40%] rounded-full bg-indigo-500/15 blur-[100px] pointer-events-none animate-pulse" style={{ animationDuration: '6s' }} />
-        <div className="absolute top-[30%] right-[20%] w-[20%] h-[20%] rounded-full bg-cyan-400/10 blur-[80px] pointer-events-none animate-pulse" style={{ animationDuration: '5s' }} />
+      <div className="flex min-h-[100dvh] w-full items-center justify-center bg-slate-50 p-4 font-sans relative overflow-hidden" data-lk-theme="default">
+        {/* Background blobs */}
+        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-400/20 blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-cyan-400/20 blur-[120px] pointer-events-none" />
 
-        {/* Subtle grid pattern */}
-        <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle, #94a3b8 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
+        {/* Dot pattern */}
+        <div className="absolute inset-0 pointer-events-none opacity-[0.04]" style={{ backgroundImage: 'radial-gradient(circle, #64748b 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
 
         <motion.div
-          initial={{ opacity: 0, y: 20, scale: 0.98 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35 }}
           className="relative w-full max-w-[460px] z-10"
         >
-          {/* Glass card */}
-          <div className="backdrop-blur-xl border border-white/10 shadow-2xl rounded-3xl p-10 relative overflow-hidden" style={{ background: 'linear-gradient(145deg, rgba(30,41,59,0.9) 0%, rgba(15,23,42,0.95) 100%)' }}>
-            {/* Top accent line */}
-            <div className="absolute top-0 left-[10%] right-[10%] h-[2px] rounded-full" style={{ background: 'linear-gradient(90deg, transparent, #3b82f6, #8b5cf6, transparent)' }} />
+          {/* Card */}
+          <div className="bg-white border border-slate-200 shadow-xl shadow-slate-200/50 rounded-3xl overflow-hidden">
+            {/* Top colored strip */}
+            <div className="h-1.5 bg-blue-600" />
 
-            {/* Icon */}
-            <div className="mx-auto w-16 h-16 rounded-2xl flex items-center justify-center mb-7 relative" style={{ background: 'linear-gradient(135deg, #1d4ed8 0%, #7c3aed 100%)', boxShadow: '0 8px 32px rgba(59,130,246,0.3)' }}>
-              <Lock className="w-7 h-7 text-white" />
-              <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-emerald-400 border-2 border-slate-900 flex items-center justify-center">
-                <Sparkles className="w-3 h-3 text-slate-900" />
+            <div className="p-10">
+              {/* Header row: icon + badge */}
+              <div className="flex items-start justify-between mb-8">
+                <div className="w-14 h-14 bg-blue-50 border border-blue-100 rounded-2xl flex items-center justify-center shadow-sm relative">
+                  <Lock className="w-6 h-6 text-blue-600" />
+                  <Sparkles className="w-3.5 h-3.5 text-blue-400 absolute -top-1 -right-1" />
+                </div>
+                <span className="font-mono text-blue-600 bg-blue-50 border border-blue-100 px-2.5 py-1 rounded-lg text-[12px] font-semibold shadow-sm">#{roomId.split('-')[1] || roomId}</span>
               </div>
-            </div>
 
-            {/* Title */}
-            <h2 className="text-2xl font-bold text-white text-center mb-2 tracking-tight">{t('room.beta.title')}</h2>
-            <p className="text-slate-400 text-center mb-8 text-[14px] leading-relaxed">
-              {t('room.beta.subtitle')} <span className="font-mono text-blue-400 bg-blue-500/10 px-2 py-0.5 border border-blue-500/20 rounded-md text-[13px]">#{roomId.split('-')[1] || roomId}</span>
-            </p>
+              {/* Title + subtitle */}
+              <h2 className="text-[22px] font-bold text-slate-900 mb-2 tracking-tight">{t('room.beta.title')}</h2>
+              <p className="text-slate-500 mb-8 text-[14px] leading-relaxed">{t('room.beta.subtitle')}</p>
 
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                const upperCode = betaCode.trim().toUpperCase();
-                const isValid = BETA_CODES.includes(upperCode) || upperCode === MASTER_KEY;
-                if (!isValid) {
-                  setBetaError(true);
-                  return;
-                }
-                setBetaError(false);
-                if (!user?.email && !guestName.trim()) return;
-                setIsBetaValidated(true);
-              }}
-              className="space-y-5"
-            >
-              <div className="space-y-4">
+              {/* Divider */}
+              <div className="border-t border-slate-100 mb-8" />
+
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const upperCode = betaCode.trim().toUpperCase();
+                  const isValid = BETA_CODES.includes(upperCode) || upperCode === MASTER_KEY;
+                  if (!isValid) {
+                    setBetaError(true);
+                    return;
+                  }
+                  setBetaError(false);
+                  if (!user?.email && !guestName.trim()) return;
+                  setIsBetaValidated(true);
+                }}
+                className="space-y-5"
+              >
                 {/* Beta code input */}
-                <div className="space-y-2 text-left">
-                  <label className="text-[11px] font-semibold tracking-widest text-slate-500 uppercase ml-1 block">{t('room.beta.keyLabel')}</label>
+                <div className="space-y-2">
+                  <label className="text-[11px] font-semibold tracking-widest text-slate-400 uppercase block">{t('room.beta.keyLabel')}</label>
                   <div className="relative group">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <Key className={`w-4 h-4 transition-colors ${betaError ? 'text-red-400' : 'text-slate-500 group-focus-within:text-blue-400'}`} />
+                      <Key className={`w-4 h-4 transition-colors ${betaError ? 'text-red-500' : 'text-slate-400 group-focus-within:text-blue-500'}`} />
                     </div>
                     <input
                       type="password"
@@ -303,14 +304,14 @@ export default function RoomPageNew() {
                         setBetaCode(e.target.value);
                         setBetaError(false);
                       }}
-                      className={`w-full border text-white rounded-xl py-3.5 pl-11 pr-4 placeholder-slate-600 focus:outline-none transition-all text-[15px] tracking-widest uppercase font-medium ${betaError ? 'border-red-500/50 bg-red-500/5 ring-1 ring-red-500/20' : 'border-white/10 bg-white/5 focus:border-blue-500/50 focus:bg-white/[0.07] focus:ring-1 focus:ring-blue-500/20'}`}
+                      className={`w-full bg-slate-50 border text-slate-900 rounded-xl py-3.5 pl-11 pr-4 placeholder-slate-400 focus:outline-none focus:bg-white transition-all text-[15px] tracking-widest uppercase font-medium ${betaError ? 'border-red-300 ring-2 ring-red-500/20' : 'border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'}`}
                       autoFocus
                       required
                     />
                   </div>
                   <AnimatePresence>
                     {betaError && (
-                      <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="text-xs text-red-400 font-medium ml-1 mt-1.5 flex items-center gap-1.5">
+                      <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="text-xs text-red-500 font-medium ml-1 mt-1 flex items-center gap-1.5">
                         <AlertTriangle className="w-3 h-3" />
                         {t('room.beta.invalidKey')}
                       </motion.p>
@@ -320,52 +321,44 @@ export default function RoomPageNew() {
 
                 {/* Guest name input */}
                 {!user?.email && (
-                  <div className="space-y-2 text-left">
-                    <label className="text-[11px] font-semibold tracking-widest text-slate-500 uppercase ml-1 block">{t('room.beta.pseudoLabel')}</label>
+                  <div className="space-y-2">
+                    <label className="text-[11px] font-semibold tracking-widest text-slate-400 uppercase block">{t('room.beta.pseudoLabel')}</label>
                     <input
                       type="text"
                       placeholder={t('room.beta.pseudoPlaceholder')}
                       value={guestName}
                       onChange={(e) => setGuestName(e.target.value)}
-                      className="w-full border border-white/10 bg-white/5 focus:border-blue-500/50 focus:bg-white/[0.07] text-white rounded-xl px-4 py-3.5 placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-blue-500/20 transition-all text-[15px]"
+                      className="w-full bg-slate-50 border border-slate-200 focus:border-blue-500 focus:bg-white text-slate-900 rounded-xl px-4 py-3.5 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all text-[15px]"
                       required
                     />
                   </div>
                 )}
-              </div>
 
-              {/* Submit button */}
-              <button
-                type="submit"
-                disabled={(!user?.email && !guestName.trim()) || !betaCode.trim()}
-                className="w-full text-white font-semibold rounded-xl px-4 py-4 transition-all flex items-center justify-center gap-2.5 mt-6 text-[15px] disabled:opacity-30 disabled:cursor-not-allowed disabled:transform-none group"
-                style={{
-                  background: (!user?.email && !guestName.trim()) || !betaCode.trim()
-                    ? 'rgba(255,255,255,0.05)'
-                    : 'linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)',
-                  boxShadow: (!user?.email && !guestName.trim()) || !betaCode.trim()
-                    ? 'none'
-                    : '0 8px 32px rgba(37,99,235,0.3), 0 2px 8px rgba(124,58,237,0.2)',
-                }}
-              >
-                <span>{t('room.beta.submit')}</span>
-                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-              </button>
-            </form>
+                {/* Submit */}
+                <button
+                  type="submit"
+                  disabled={(!user?.email && !guestName.trim()) || !betaCode.trim()}
+                  className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-40 disabled:bg-slate-200 disabled:text-slate-400 text-white font-semibold rounded-xl px-4 py-4 transition-all flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg disabled:shadow-none mt-2 text-[15px] group"
+                >
+                  <span>{t('room.beta.submit')}</span>
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+                </button>
+              </form>
+            </div>
 
-            {/* Footer */}
-            <div className="mt-8 pt-5 border-t border-white/5 text-center">
-              <div className="flex items-center justify-center gap-2 text-[11px] text-slate-500 font-medium">
-                <Shield className="w-3.5 h-3.5 text-emerald-500/60" />
-                <span>{t('room.beta.e2ee')}</span>
+            {/* Footer bar */}
+            <div className="bg-slate-50 border-t border-slate-100 px-10 py-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-[11px] text-slate-400 font-medium">
+                  <Shield className="w-3.5 h-3.5 text-slate-400" />
+                  <span>{t('room.beta.e2ee')}</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-[11px] text-slate-400 font-medium">
+                  <Video className="w-3.5 h-3.5" />
+                  <span>VisiConnect</span>
+                </div>
               </div>
             </div>
-          </div>
-
-          {/* VisiConnect branding below card */}
-          <div className="flex items-center justify-center gap-2 mt-6 opacity-40">
-            <Video className="w-4 h-4 text-slate-400" />
-            <span className="text-[12px] text-slate-400 font-medium tracking-wide">VisiConnect</span>
           </div>
         </motion.div>
       </div>
