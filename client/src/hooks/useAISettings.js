@@ -5,49 +5,63 @@
  * avec persistance localStorage
  */
 
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { 
   AISettingsStorage, 
   DEFAULT_AI_SETTINGS, 
   checkAICapabilities 
 } from '../services/ai';
 
-export const useAISettings = () => {
-  const [settings, setSettings] = useState(DEFAULT_AI_SETTINGS);
-  const [capabilities, setCapabilities] = useState({});
+const AI_SETTINGS_EVENT = 'aiSettingsChanged';
 
-  // Charge les paramètres au montage
+export const useAISettings = () => {
+  // Lazy init: charge directement depuis localStorage (pas de flash)
+  const [settings, setSettings] = useState(() => AISettingsStorage.get());
+  const [capabilities] = useState(() => checkAICapabilities());
+  const isSelfUpdate = useRef(false);
+
+  // Synchronise cet instance quand une autre modifie les settings
   useEffect(() => {
-    setSettings(AISettingsStorage.get());
-    setCapabilities(checkAICapabilities());
+    const sync = () => {
+      if (isSelfUpdate.current) { isSelfUpdate.current = false; return; }
+      setSettings(AISettingsStorage.get());
+    };
+    window.addEventListener(AI_SETTINGS_EVENT, sync);
+    return () => window.removeEventListener(AI_SETTINGS_EVENT, sync);
+  }, []);
+
+  const notifyOthers = useCallback(() => {
+    isSelfUpdate.current = true;
+    window.dispatchEvent(new CustomEvent(AI_SETTINGS_EVENT));
   }, []);
 
   // Met à jour un groupe de paramètres
   const updateSettings = useCallback((key, value) => {
-    setSettings(prev => {
-      const updated = { ...prev, [key]: { ...prev[key], ...value } };
-      AISettingsStorage.set(updated);
-      return updated;
-    });
-  }, []);
+    const current = AISettingsStorage.get();
+    const updated = { ...current, [key]: { ...current[key], ...value } };
+    AISettingsStorage.set(updated);
+    setSettings(updated);
+    notifyOthers();
+  }, [notifyOthers]);
 
   // Toggle une fonctionnalité
   const toggleFeature = useCallback((key) => {
-    setSettings(prev => {
-      const updated = {
-        ...prev,
-        [key]: { ...prev[key], enabled: !prev[key]?.enabled },
-      };
-      AISettingsStorage.set(updated);
-      return updated;
-    });
-  }, []);
+    const current = AISettingsStorage.get();
+    const updated = {
+      ...current,
+      [key]: { ...current[key], enabled: !current[key]?.enabled },
+    };
+    AISettingsStorage.set(updated);
+    setSettings(updated);
+    notifyOthers();
+  }, [notifyOthers]);
 
   // Réinitialise aux valeurs par défaut
   const resetToDefaults = useCallback(() => {
     const defaults = AISettingsStorage.reset();
     setSettings(defaults);
-  }, []);
+    notifyOthers();
+  }, [notifyOthers]);
 
   // Vérifie si une fonctionnalité est disponible ET activée
   const isFeatureEnabled = useCallback((key) => {
@@ -85,10 +99,11 @@ export const useAISettings = () => {
       Object.keys(presets[presetName]).forEach(key => {
         updated[key] = { ...updated[key], ...presets[presetName][key] };
       });
-      setSettings(updated);
       AISettingsStorage.set(updated);
+      setSettings(updated);
+      notifyOthers();
     }
-  }, []);
+  }, [notifyOthers]);
 
   // Calcule si le device est "lent" (mobile ou faible RAM)
   const isLowEndDevice = useMemo(() => {

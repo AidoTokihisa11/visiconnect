@@ -204,7 +204,8 @@ const PanelHeader = styled.div`
 
 const PanelContent = styled.div`
   flex: 1;
-  overflow: hidden; 
+  min-height: 0;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 `;

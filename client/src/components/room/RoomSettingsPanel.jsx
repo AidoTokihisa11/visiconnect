@@ -8,8 +8,10 @@ const Wrapper = styled.div`
   flex-direction: column;
   gap: 1rem;
   padding: 1rem;
+  padding-bottom: 80px;
   background: ${THEME.panelBg};
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
 `;
 
