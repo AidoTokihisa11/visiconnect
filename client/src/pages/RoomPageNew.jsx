@@ -238,7 +238,7 @@ export default function RoomPageNew() {
   // We explicitly check BOTH that the beta code is validated AND the user has a name
   if (!isBetaValidated || !participantName) {
     return (
-      <div className="flex w-full items-center justify-center bg-slate-50 p-4 sm:p-4 px-3 font-sans relative overflow-y-auto" style={{ minHeight: '100svh', minHeight: '100dvh' }} data-lk-theme="default">
+      <div className="flex w-full items-center justify-center bg-slate-50 p-4 sm:p-4 px-3 font-sans relative overflow-y-auto" style={{ minHeight: '100dvh' }} data-lk-theme="default">
         {/* Background blobs */}
         <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-400/20 blur-[120px] pointer-events-none" />
         <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-cyan-400/20 blur-[120px] pointer-events-none" />
