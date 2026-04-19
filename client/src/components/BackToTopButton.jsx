@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { ArrowUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAdmin } from '../contexts/AdminContext';
+import { useLocation } from 'react-router-dom';
 
 const Button = styled(motion.button)`
   position: fixed;
@@ -28,6 +29,10 @@ const Button = styled(motion.button)`
 const BackToTopButton = () => {
     const { uiConfig, isChatbotOpen } = useAdmin();
     const [isVisible, setIsVisible] = useState(false);
+    const location = useLocation();
+
+    // Hide on room pages
+    const isRoomPage = location.pathname.startsWith('/room/');
 
     useEffect(() => {
         const toggleVisibility = () => {
@@ -79,6 +84,8 @@ const BackToTopButton = () => {
       
       return styles;
     };
+
+    if (isRoomPage) return null;
 
     return (
         <AnimatePresence>
