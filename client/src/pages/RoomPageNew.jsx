@@ -1,4 +1,4 @@
-import React, { useState, Component } from 'react';
+import React, { useState, useEffect, Component } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 import { LiveKitRoom } from '@livekit/components-react';
@@ -184,7 +184,20 @@ export default function RoomPageNew() {
   const [guestName, setGuestName] = useState('');
   const [betaCode, setBetaCode] = useState('');
   const [betaError, setBetaError] = useState(false);
-  const [isBetaValidated, setIsBetaValidated] = useState(false);
+  // Whitelist: ces identifiants bypass le code beta
+  const WHITELIST = ['AidoTokihisa41'];
+  const isWhitelisted = !!(
+    (user?.email && WHITELIST.some(id => user.email.toLowerCase().includes(id.toLowerCase())))
+    || WHITELIST.includes(user?.username)
+    || WHITELIST.includes(user?.id)
+  );
+
+  const [isBetaValidated, setIsBetaValidated] = useState(isWhitelisted);
+
+  // Auto-validate quand user se charge en async et est dans la whitelist
+  useEffect(() => {
+    if (isWhitelisted && !isBetaValidated) setIsBetaValidated(true);
+  }, [isWhitelisted]);
 
   // Use the unique BETA_CODES list plus a potential env master key for the admin
   const MASTER_KEY = import.meta.env.VITE_BETA_CODE || 'VISIO-MASTER-26';
