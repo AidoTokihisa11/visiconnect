@@ -110,7 +110,7 @@ const IconButton = styled.button`
   }
 `;
 
-export default function PollsPanel({ meetingId, currentUser, onClose }) {
+export default function PollsPanel({ meetingId, currentUser, onClose, onPollCreated }) {
   const polls = useQuery(api.polls.getPolls, { meetingId }) || [];
   const createPoll = useMutation(api.polls.createPoll);
   const votePoll = useMutation(api.polls.votePoll);
@@ -134,6 +134,8 @@ export default function PollsPanel({ meetingId, currentUser, onClose }) {
     setIsCreating(false);
     setQuestion("");
     setOptions(["", ""]);
+    // Auto-close panel after successful creation
+    if (onPollCreated) onPollCreated();
   };
 
   const totalVotes = (poll) => poll.options.reduce((acc, curr) => acc + curr.votes, 0);

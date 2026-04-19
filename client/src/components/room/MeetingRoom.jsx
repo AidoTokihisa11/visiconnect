@@ -313,6 +313,24 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
   const [activePanel, setActivePanel] = useState('chat'); // 'chat' | 'ai' | 'aiFeatures' | 'settings' | 'polls' | 'breakout'
   const [messageText, setMessageText] = useState('');
   
+  // -- Notification Sound --
+  const playNotifSound = React.useCallback(() => {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
+      osc.frequency.setValueAtTime(1100, ctx.currentTime + 0.08);
+      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.25);
+    } catch {}
+  }, []);
+  
   // -- Notifications State --
   const [unreadChat, setUnreadChat] = useState(0);
   const [unreadPolls, setUnreadPolls] = useState(0);
@@ -362,11 +380,12 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
           setUnreadChat(prev => prev + otherMessages.length);
         }
         
-        // Show toast for the last new message
+        // Show toast + sound for the last new message
         const lastMsg = otherMessages[otherMessages.length - 1];
         const senderName = lastMsg.sender?.split('@')[0] || 'Quelqu\'un';
         setToast({ message: `Nouveau message de ${senderName}`, type: 'chat' });
         setTimeout(() => setToast(null), 3000);
+        playNotifSound();
       }
     }
     
@@ -441,9 +460,10 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
           });
         }
         
-        // Toast notification
+        // Toast notification + sound
         setToast({ message: `Nouveau sondage: "${newestPoll.question.slice(0, 30)}${newestPoll.question.length > 30 ? '...' : ''}"`, type: 'poll' });
         setTimeout(() => setToast(null), 4000);
+        playNotifSound();
       }
     }
     
@@ -473,6 +493,8 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
     if (messageText.trim()) {
       sendMessage(messageText);
       setMessageText('');
+      // Auto-close panel after sending
+      setTimeout(() => setSidePanelOpen(false), 350);
     }
   };
 
@@ -670,7 +692,7 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
                    currentUserId={user?.id || localParticipant?.identity}
                  />
                )}
-               {activePanel === 'polls' && <PollsPanel meetingId={originalRoomId} currentUser={{ identity: localParticipant?.identity }} onClose={() => togglePanel('polls')} />}
+               {activePanel === 'polls' && <PollsPanel meetingId={originalRoomId} currentUser={{ identity: localParticipant?.identity }} onClose={() => togglePanel('polls')} onPollCreated={() => setTimeout(() => setSidePanelOpen(false), 350)} />}
                {activePanel === 'breakout' && <BreakoutRoomsPanel meetingId={originalRoomId} activeParticipants={remoteParticipants.concat(localParticipant ? [localParticipant] : [])} onClose={() => togglePanel('breakout')} />}
 
                {activePanel === 'ai' && <AIChatPanel responseStyle={roomSettings.aiResponseStyle} roomMessages={messages} roomId={roomId} />}
