@@ -167,6 +167,10 @@ const SidePanel = styled(motion.div)`
   right: 0;
   top: 0;
   bottom: 0;
+  transition: opacity 0.4s ease, filter 0.4s ease;
+  opacity: ${props => props.$fading ? 0.35 : 1};
+  filter: ${props => props.$fading ? 'blur(1px)' : 'none'};
+  pointer-events: ${props => props.$fading ? 'none' : 'auto'};
 
   @media (max-width: 768px) {
     width: 100%;
@@ -312,6 +316,8 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
   const [sidePanelOpen, setSidePanelOpen] = useState(false);
   const [activePanel, setActivePanel] = useState('chat'); // 'chat' | 'ai' | 'aiFeatures' | 'settings' | 'polls' | 'breakout'
   const [messageText, setMessageText] = useState('');
+  const [panelFading, setPanelFading] = useState(false);
+  const fadeTimerRef = React.useRef(null);
   
   // -- Notification Sound --
   const playNotifSound = React.useCallback(() => {
@@ -477,8 +483,10 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
   // -- Handlers --
   const togglePanel = (panel) => {
     if (activePanel === panel && sidePanelOpen) {
+      cancelPanelFadeOut();
       setSidePanelOpen(false);
     } else {
+      cancelPanelFadeOut();
       setActivePanel(panel);
       setSidePanelOpen(true);
     }
@@ -493,10 +501,27 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
     if (messageText.trim()) {
       sendMessage(messageText);
       setMessageText('');
-      // Auto-close panel after sending
-      setTimeout(() => setSidePanelOpen(false), 350);
+      startPanelFadeOut();
     }
   };
+
+  // -- "Magnetic Fade-out": panel fades to ghost, then closes --
+  const startPanelFadeOut = React.useCallback(() => {
+    if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current);
+    setPanelFading(true);
+    fadeTimerRef.current = setTimeout(() => {
+      setSidePanelOpen(false);
+      setPanelFading(false);
+    }, 1500);
+  }, []);
+
+  const cancelPanelFadeOut = React.useCallback(() => {
+    if (fadeTimerRef.current) {
+      clearTimeout(fadeTimerRef.current);
+      fadeTimerRef.current = null;
+    }
+    setPanelFading(false);
+  }, []);
 
   // Toggle main levée + notification
   const handleRaiseHand = () => {
@@ -660,10 +685,13 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
         {sidePanelOpen && (
           <SidePanel
             wide={roomSettings.widePanel}
+            $fading={panelFading}
             initial={{ x: '100%', opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
+            animate={{ x: 0, opacity: panelFading ? 0.35 : 1 }}
             exit={{ x: '100%', opacity: 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            onMouseEnter={panelFading ? cancelPanelFadeOut : undefined}
+            onTouchStart={panelFading ? cancelPanelFadeOut : undefined}
           >
             <PanelHeader>
               <h3>
@@ -692,7 +720,7 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
                    currentUserId={user?.id || localParticipant?.identity}
                  />
                )}
-               {activePanel === 'polls' && <PollsPanel meetingId={originalRoomId} currentUser={{ identity: localParticipant?.identity }} onClose={() => togglePanel('polls')} onPollCreated={() => setTimeout(() => setSidePanelOpen(false), 350)} />}
+               {activePanel === 'polls' && <PollsPanel meetingId={originalRoomId} currentUser={{ identity: localParticipant?.identity }} onClose={() => togglePanel('polls')} onPollCreated={startPanelFadeOut} />}
                {activePanel === 'breakout' && <BreakoutRoomsPanel meetingId={originalRoomId} activeParticipants={remoteParticipants.concat(localParticipant ? [localParticipant] : [])} onClose={() => togglePanel('breakout')} />}
 
                {activePanel === 'ai' && <AIChatPanel responseStyle={roomSettings.aiResponseStyle} roomMessages={messages} roomId={roomId} />}

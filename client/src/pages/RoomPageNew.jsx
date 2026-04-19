@@ -238,7 +238,7 @@ export default function RoomPageNew() {
   // We explicitly check BOTH that the beta code is validated AND the user has a name
   if (!isBetaValidated || !participantName) {
     return (
-      <div className="flex min-h-[100dvh] w-full items-center justify-center bg-slate-50 p-4 font-sans relative overflow-hidden" data-lk-theme="default">
+      <div className="flex w-full items-center justify-center bg-slate-50 p-4 sm:p-4 px-3 font-sans relative overflow-y-auto" style={{ minHeight: '100svh', minHeight: '100dvh' }} data-lk-theme="default">
         {/* Background blobs */}
         <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-400/20 blur-[120px] pointer-events-none" />
         <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-cyan-400/20 blur-[120px] pointer-events-none" />
@@ -250,13 +250,13 @@ export default function RoomPageNew() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35 }}
-          className="relative w-full max-w-[480px] z-10"
+          className="relative w-full max-w-[480px] z-10 my-4"
         >
           {/* Card */}
           <div className="bg-white border border-slate-200 shadow-xl shadow-slate-200/50 rounded-3xl overflow-hidden">
 
-            {/* Hero header section */}
-            <div className="bg-blue-50 border-b border-blue-100 px-10 pt-10 pb-8 relative overflow-hidden">
+            {/* Hero header section - compact on small screens */}
+            <div className="bg-blue-50 border-b border-blue-100 px-6 sm:px-10 pt-6 sm:pt-10 pb-5 sm:pb-8 relative overflow-hidden">
               {/* Decorative rings behind icon */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] rounded-full border border-blue-200/40 pointer-events-none" />
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] h-[280px] rounded-full border border-blue-200/20 pointer-events-none" />
@@ -269,32 +269,32 @@ export default function RoomPageNew() {
 
               <div className="relative z-10 text-center">
                 {/* Beta badge */}
-                <div className="inline-flex items-center gap-1.5 bg-white border border-blue-200 rounded-full px-3 py-1 mb-5 shadow-sm">
+                <div className="inline-flex items-center gap-1.5 bg-white border border-blue-200 rounded-full px-3 py-1 mb-4 sm:mb-5 shadow-sm">
                   <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
                   <span className="text-[11px] font-bold tracking-wider text-blue-600 uppercase">Beta</span>
                 </div>
 
                 {/* Icon cluster */}
-                <div className="mx-auto w-16 h-16 bg-white border border-blue-200 rounded-2xl flex items-center justify-center shadow-md mb-5 relative">
-                  <Lock className="w-7 h-7 text-blue-600" />
+                <div className="mx-auto w-14 h-14 sm:w-16 sm:h-16 bg-white border border-blue-200 rounded-2xl flex items-center justify-center shadow-md mb-4 sm:mb-5 relative">
+                  <Lock className="w-6 h-6 sm:w-7 sm:h-7 text-blue-600" />
                   <div className="absolute -top-1.5 -right-1.5 w-6 h-6 bg-blue-600 rounded-lg flex items-center justify-center shadow-sm">
                     <Sparkles className="w-3.5 h-3.5 text-white" />
                   </div>
                 </div>
 
-                <h2 className="text-[22px] font-bold text-slate-900 mb-1.5 tracking-tight">{t('room.beta.title')}</h2>
-                <p className="text-slate-500 text-[14px] leading-relaxed max-w-[320px] mx-auto">{t('room.beta.subtitle')}</p>
+                <h2 className="text-[20px] sm:text-[22px] font-bold text-slate-900 mb-1 sm:mb-1.5 tracking-tight">{t('room.beta.title')}</h2>
+                <p className="text-slate-500 text-[13px] sm:text-[14px] leading-relaxed max-w-[320px] mx-auto">{t('room.beta.subtitle')}</p>
               </div>
             </div>
 
             {/* Room ID bar */}
-            <div className="bg-slate-50 border-b border-slate-100 px-10 py-3 flex items-center justify-between">
+            <div className="bg-slate-50 border-b border-slate-100 px-6 sm:px-10 py-2.5 sm:py-3 flex items-center justify-between">
               <span className="text-[11px] font-semibold tracking-wider text-slate-400 uppercase">Room ID</span>
               <span className="font-mono text-blue-600 bg-white border border-slate-200 px-3 py-1 rounded-lg text-[13px] font-bold shadow-sm">#{roomId.split('-')[1] || roomId}</span>
             </div>
 
             {/* Form section */}
-            <div className="px-10 py-8">
+            <div className="px-6 sm:px-10 py-6 sm:py-8">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -308,7 +308,7 @@ export default function RoomPageNew() {
                   if (!user?.email && !guestName.trim()) return;
                   setIsBetaValidated(true);
                 }}
-                className="space-y-5"
+                className="space-y-4 sm:space-y-5"
               >
                 {/* Beta code input */}
                 <div className="space-y-2">
@@ -325,7 +325,7 @@ export default function RoomPageNew() {
                         setBetaCode(e.target.value);
                         setBetaError(false);
                       }}
-                      className={`w-full bg-slate-50 border text-slate-900 rounded-xl py-3.5 pl-11 pr-4 placeholder-slate-400 focus:outline-none focus:bg-white transition-all text-[15px] tracking-widest uppercase font-medium ${betaError ? 'border-red-300 ring-2 ring-red-500/20' : 'border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'}`}
+                      className={`w-full bg-slate-50 border text-slate-900 rounded-xl py-3 sm:py-3.5 pl-11 pr-4 placeholder-slate-400 focus:outline-none focus:bg-white transition-all text-[15px] tracking-widest uppercase font-medium ${betaError ? 'border-red-300 ring-2 ring-red-500/20' : 'border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'}`}
                       autoFocus
                       required
                     />
@@ -349,17 +349,17 @@ export default function RoomPageNew() {
                       placeholder={t('room.beta.pseudoPlaceholder')}
                       value={guestName}
                       onChange={(e) => setGuestName(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 focus:border-blue-500 focus:bg-white text-slate-900 rounded-xl px-4 py-3.5 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all text-[15px]"
+                      className="w-full bg-slate-50 border border-slate-200 focus:border-blue-500 focus:bg-white text-slate-900 rounded-xl px-4 py-3 sm:py-3.5 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all text-[15px]"
                       required
                     />
                   </div>
                 )}
 
-                {/* Submit */}
+                {/* Submit - always visible, sticky on mobile with keyboard */}
                 <button
                   type="submit"
                   disabled={(!user?.email && !guestName.trim()) || !betaCode.trim()}
-                  className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-40 disabled:bg-slate-200 disabled:text-slate-400 text-white font-semibold rounded-xl px-4 py-4 transition-all flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg disabled:shadow-none mt-2 text-[15px] group"
+                  className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-40 disabled:bg-slate-200 disabled:text-slate-400 text-white font-semibold rounded-xl px-4 py-3.5 sm:py-4 transition-all flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg disabled:shadow-none mt-2 text-[15px] group"
                 >
                   <Lock className="w-4 h-4" />
                   <span>{t('room.beta.submit')}</span>
@@ -369,7 +369,7 @@ export default function RoomPageNew() {
             </div>
 
             {/* Footer bar */}
-            <div className="bg-slate-50 border-t border-slate-100 px-10 py-4">
+            <div className="bg-slate-50 border-t border-slate-100 px-6 sm:px-10 py-3 sm:py-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-[11px] text-slate-400 font-medium">
                   <Shield className="w-3.5 h-3.5 text-blue-400" />
