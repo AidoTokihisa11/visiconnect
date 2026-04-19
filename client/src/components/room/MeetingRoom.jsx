@@ -386,10 +386,34 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
 
   // 🤖 Auto-show transcription when enabled in AI settings
   useEffect(() => {
-    if (aiSettings?.transcription?.enabled && !showTranscription) {
+    if (aiSettings?.transcription?.enabled) {
       setShowTranscription(true);
+    } else {
+      setShowTranscription(false);
     }
   }, [aiSettings?.transcription?.enabled]);
+
+  // 🤖 Bridge: AI Features Panel → Background Blur (via useMeeting)
+  const blurBridgeInit = React.useRef(true);
+  useEffect(() => {
+    if (blurBridgeInit.current) { blurBridgeInit.current = false; return; }
+    const wantBlur = !!aiSettings?.backgroundBlur?.enabled;
+    if (wantBlur && !isBlurEnabled) {
+      toggleBlur(aiSettings?.backgroundBlur?.blurAmount || 10);
+    } else if (!wantBlur && isBlurEnabled) {
+      toggleBlur(0);
+    }
+  }, [aiSettings?.backgroundBlur?.enabled]);
+
+  // 🤖 Bridge: AI Features Panel → Video Enhancement (via useMeeting)
+  const aiBridgeInit = React.useRef(true);
+  useEffect(() => {
+    if (aiBridgeInit.current) { aiBridgeInit.current = false; return; }
+    const wantAI = !!aiSettings?.videoEnhancement?.enabled;
+    if (wantAI !== isAIEnhanced) {
+      toggleAIVideoEngine();
+    }
+  }, [aiSettings?.videoEnhancement?.enabled]);
 
   // -- Track new polls for notifications and auto-popup --
   useEffect(() => {
