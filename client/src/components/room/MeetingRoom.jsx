@@ -153,7 +153,7 @@ const PollPopupButton = styled.button`
   }
 `;
 
-// Side Panel Styles
+// Side Panel Styles — Premium GPU-accelerated transitions
 const SidePanel = styled(motion.div)`
   width: ${props => props.wide ? '600px' : '400px'};
   background-color: ${THEME.panelBg};
@@ -167,14 +167,14 @@ const SidePanel = styled(motion.div)`
   right: 0;
   top: 0;
   bottom: 0;
-  transition: opacity 0.4s ease, filter 0.4s ease;
+  will-change: transform, opacity;
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), filter 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   opacity: ${props => props.$fading ? 0.35 : 1};
-  filter: ${props => props.$fading ? 'blur(1px)' : 'none'};
+  filter: ${props => props.$fading ? 'blur(2px)' : 'none'};
   pointer-events: ${props => props.$fading ? 'none' : 'auto'};
 
   @media (max-width: 768px) {
     width: 100%;
-    /* Mobile: Le panel s'affiche entre le haut et la BottomBar */
     top: 0;
     bottom: calc(70px + env(safe-area-inset-bottom, 12px));
     height: auto;
@@ -686,10 +686,18 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
           <SidePanel
             wide={roomSettings.widePanel}
             $fading={panelFading}
-            initial={{ x: '100%', opacity: 0 }}
-            animate={{ x: 0, opacity: panelFading ? 0.35 : 1 }}
-            exit={{ x: '100%', opacity: 0 }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            initial={{ x: '100%', opacity: 0, scale: 0.95 }}
+            animate={{ 
+              x: 0, 
+              opacity: panelFading ? 0.35 : 1, 
+              scale: 1,
+            }}
+            exit={{ x: '100%', opacity: 0, scale: 0.95 }}
+            transition={{ 
+              type: "tween",
+              duration: 0.35,
+              ease: [0.4, 0, 0.2, 1],
+            }}
             onMouseEnter={panelFading ? cancelPanelFadeOut : undefined}
             onTouchStart={panelFading ? cancelPanelFadeOut : undefined}
           >

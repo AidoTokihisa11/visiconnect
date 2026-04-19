@@ -1,7 +1,7 @@
 import { AIEngineManager } from '../lib/AIEngineManager';
 import { AIVideoProcessor } from '../lib/AIVideoEngine';
 import { setupAntiFreezeListeners } from './LiveKitEngine';
-import { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { 
   useRoomContext, 
   useLocalParticipant, 
@@ -119,42 +119,84 @@ export const useMeeting = (maxQualityLock = true) => {
     } catch {}
   }, [isMicManualMute]);
 
-  // === PRIVACY GUARD: Bloquer l'auto-unmute sur visibilitychange/focus ===
+  // === PRIVACY GUARD: Bloquer l'auto-unmute ET couper les flux quand l'onglet est caché ===
+  // Réfs pour stocker l'état avant la mise en arrière-plan (restauration au retour)
+  const wasEnabledBeforeHide = useRef({ camera: false, mic: false });
+
   useEffect(() => {
     if (!localParticipant) return;
 
     const handleVisibilityChange = async () => {
-      // Si l'utilisateur a manuellement coupé sa caméra/micro, ne JAMAIS rallumer
-      if (document.visibilityState === 'visible') {
-        // Délai pour laisser LiveKit gérer d'abord
-        await new Promise(resolve => setTimeout(resolve, 100));
+      if (document.visibilityState === 'hidden') {
+        // === ONGLET CACHÉ: Stopper immédiatement caméra & micro (RGPD / vie privée) ===
+        console.log('[Privacy Guard] Onglet caché — arrêt des flux média');
         
-        if (isCameraManualMute && isCameraEnabled) {
-          console.log('[Privacy Guard] Caméra manuellement coupée - blocage auto-unmute');
+        // Sauvegarder l'état actuel AVANT de couper
+        wasEnabledBeforeHide.current = {
+          camera: isCameraEnabled && !isCameraManualMute,
+          mic: isMicrophoneEnabled && !isMicManualMute,
+        };
+
+        try {
+          if (isCameraEnabled) await localParticipant.setCameraEnabled(false);
+        } catch (e) {
+          console.warn('[Privacy Guard] Erreur arrêt caméra:', e);
+        }
+        try {
+          if (isMicrophoneEnabled) await localParticipant.setMicrophoneEnabled(false);
+        } catch (e) {
+          console.warn('[Privacy Guard] Erreur arrêt micro:', e);
+        }
+
+        // Fallback: arrêt direct des MediaStreamTracks (Safari iOS)
+        try {
+          const pubs = localParticipant.getTrackPublications();
+          pubs.forEach(pub => {
+            if (pub.track?.mediaStreamTrack && pub.track.source !== Track.Source.ScreenShare) {
+              pub.track.mediaStreamTrack.stop();
+            }
+          });
+        } catch (e) {
+          console.warn('[Privacy Guard] Fallback track.stop() erreur:', e);
+        }
+
+      } else if (document.visibilityState === 'visible') {
+        // === ONGLET VISIBLE: Restaurer les flux si l'utilisateur ne les avait pas coupés manuellement ===
+        console.log('[Privacy Guard] Onglet visible — restauration des flux');
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        if (wasEnabledBeforeHide.current.camera && !isCameraManualMute) {
           try {
-            await localParticipant.setCameraEnabled(false);
+            await localParticipant.setCameraEnabled(true);
+            console.log('[Privacy Guard] Caméra restaurée');
           } catch (e) {
-            console.warn('[Privacy Guard] Impossible de couper la caméra:', e);
+            console.warn('[Privacy Guard] Impossible de restaurer la caméra:', e);
           }
         }
         
-        if (isMicManualMute && isMicrophoneEnabled) {
-          console.log('[Privacy Guard] Micro manuellement coupé - blocage auto-unmute');
+        if (wasEnabledBeforeHide.current.mic && !isMicManualMute) {
           try {
-            await localParticipant.setMicrophoneEnabled(false);
+            await localParticipant.setMicrophoneEnabled(true);
+            console.log('[Privacy Guard] Micro restauré');
           } catch (e) {
-            console.warn('[Privacy Guard] Impossible de couper le micro:', e);
+            console.warn('[Privacy Guard] Impossible de restaurer le micro:', e);
           }
+        }
+
+        // Si l'utilisateur a manuellement coupé, ne JAMAIS rallumer
+        if (isCameraManualMute && isCameraEnabled) {
+          try { await localParticipant.setCameraEnabled(false); } catch {}
+        }
+        if (isMicManualMute && isMicrophoneEnabled) {
+          try { await localParticipant.setMicrophoneEnabled(false); } catch {}
         }
       }
     };
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
-    window.addEventListener('focus', handleVisibilityChange);
     
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
-      window.removeEventListener('focus', handleVisibilityChange);
     };
   }, [localParticipant, isCameraManualMute, isMicManualMute, isCameraEnabled, isMicrophoneEnabled]);
 
