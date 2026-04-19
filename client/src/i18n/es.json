@@ -175,6 +175,56 @@
         "question": "¿Cómo funciona la prueba gratuita?",
         "answer": "El plan Starter es gratuito para siempre. Puede probar todas las funciones Pro durante 14 días sin tarjeta de crédito."
       }
+    },
+    "cta": {
+      "title": "¿Listo para empezar?",
+      "description": "Únase a miles de equipos que ya usan VisioConnect para sus reuniones.",
+      "button": "Empezar gratis"
+    },
+    "plans": {
+      "free": {
+        "period": "/ mes"
+      }
+    },
+    "features": {
+      "breakout_rooms": "Salas de grupos"
+    }
+  },
+  "contact": {
+    "header": {
+      "title_part1": "Contáctenos",
+      "title_part2": "",
+      "subtitle": "¿Tiene una pregunta, necesita una demo o soporte? Nuestro equipo está aquí para ayudarle."
+    },
+    "info": {
+      "title": "Información de contacto",
+      "desc": "No dude en contactarnos por email o mediante el formulario a continuación.",
+      "email_title": "Email",
+      "enterprise_title": "Empresas",
+      "enterprise_desc": "Para consultas empresariales, contacte a nuestro equipo comercial.",
+      "hours_title": "Horario"
+    },
+    "form": {
+      "success_title": "¡Mensaje enviado con éxito!",
+      "error_title": "Error al enviar el mensaje.",
+      "first_name": "Nombre",
+      "first_name_placeholder": "Su nombre",
+      "last_name": "Apellido",
+      "last_name_placeholder": "Su apellido",
+      "email": "Email",
+      "email_placeholder": "su@email.com",
+      "company": "Empresa",
+      "company_placeholder": "Su empresa (opcional)",
+      "category": "Categoría",
+      "category_options": {
+        "demo": "Solicitud de demo",
+        "support": "Soporte técnico",
+        "other": "Otro"
+      },
+      "message": "Mensaje",
+      "message_placeholder": "Describa su solicitud...",
+      "submitting": "Enviando...",
+      "submit_button": "Enviar mensaje"
     }
   },
   "auth": {
@@ -557,6 +607,16 @@
       "author": "Marie Dubois",
       "title": "Fundadora de TechStart"
     },
+    "1": {
+      "quote": "La mejor solución para nuestros clientes. Interfaz intuitiva, soporte reactivo.",
+      "author": "Jean Martin",
+      "title": "CTO, Soluciones Digitales"
+    },
+    "2": {
+      "quote": "Sin equivalente en el mercado por este precio. Calidad verdaderamente profesional.",
+      "author": "Sophie Leclerc",
+      "title": "Directora Comercial, Consultoría RH"
+    },
     "title": "Confían en VisioConnect",
     "subtitle": "Empresas de todos los tamaños utilizan nuestra plataforma para una colaboración efectiva.",
     "items": {
@@ -752,13 +812,18 @@
     "hero": {
       "title1": "Conectando al mundo",
       "title2": "con simplicidad",
+      "title_part1": "Conectando al mundo",
+      "title_part2": "con simplicidad",
       "subtitle": "Sostenibilidad y comunicación"
     },
     "story": {
       "title": "Nuestra historia",
       "p1": "Conectamos...",
       "p2": "Conectamos...",
-      "p3": "Avanzamos..."
+      "p3": "Avanzamos...",
+      "paragraph1": "Conectamos...",
+      "paragraph2": "Conectamos...",
+      "paragraph3": "Avanzamos..."
     },
     "values": {
       "title": "Valores",
@@ -767,7 +832,19 @@
       "v2_title": "Privacidad",
       "v2_text": "Datos seguros.",
       "v3_title": "Escalabilidad",
-      "v3_text": "Escalabilidad."
+      "v3_text": "Escalabilidad.",
+      "simplicity": {
+        "title": "Simplicidad",
+        "description": "Diseño simple."
+      },
+      "privacy": {
+        "title": "Privacidad",
+        "description": "Datos seguros."
+      },
+      "accessibility": {
+        "title": "Escalabilidad",
+        "description": "Escalabilidad."
+      }
     },
     "stats": {
       "users": "Usuarios",

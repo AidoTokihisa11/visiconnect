@@ -175,6 +175,56 @@
         "question": "Wie funktioniert die kostenlose Testversion?",
         "answer": "Der Starter-Plan ist dauerhaft kostenlos. Sie können alle Pro-Funktionen 14 Tage lang ohne Kreditkarte testen."
       }
+    },
+    "cta": {
+      "title": "Bereit loszulegen?",
+      "description": "Schließen Sie sich Tausenden von Teams an, die VisioConnect bereits nutzen.",
+      "button": "Kostenlos starten"
+    },
+    "plans": {
+      "free": {
+        "period": "/ Monat"
+      }
+    },
+    "features": {
+      "breakout_rooms": "Breakout-Räume"
+    }
+  },
+  "contact": {
+    "header": {
+      "title_part1": "Kontaktieren",
+      "title_part2": " Sie uns",
+      "subtitle": "Haben Sie eine Frage, benötigen Sie eine Demo oder Unterstützung? Unser Team ist für Sie da."
+    },
+    "info": {
+      "title": "Kontaktinformationen",
+      "desc": "Zögern Sie nicht, uns per E-Mail oder über das untenstehende Formular zu kontaktieren.",
+      "email_title": "E-Mail",
+      "enterprise_title": "Unternehmen",
+      "enterprise_desc": "Für Unternehmensanfragen kontaktieren Sie unser Vertriebsteam.",
+      "hours_title": "Öffnungszeiten"
+    },
+    "form": {
+      "success_title": "Nachricht erfolgreich gesendet!",
+      "error_title": "Fehler beim Senden der Nachricht.",
+      "first_name": "Vorname",
+      "first_name_placeholder": "Ihr Vorname",
+      "last_name": "Nachname",
+      "last_name_placeholder": "Ihr Nachname",
+      "email": "E-Mail",
+      "email_placeholder": "ihre@email.com",
+      "company": "Unternehmen",
+      "company_placeholder": "Ihr Unternehmen (optional)",
+      "category": "Kategorie",
+      "category_options": {
+        "demo": "Demo-Anfrage",
+        "support": "Technischer Support",
+        "other": "Sonstiges"
+      },
+      "message": "Nachricht",
+      "message_placeholder": "Beschreiben Sie Ihre Anfrage...",
+      "submitting": "Wird gesendet...",
+      "submit_button": "Nachricht senden"
     }
   },
   "auth": {
@@ -524,6 +574,16 @@
       "author": "Marie Dubois",
       "title": "Gründerin von TechStart"
     },
+    "1": {
+      "quote": "Die beste Lösung für unsere Kunden. Intuitive Oberfläche, reaktionsschneller Support.",
+      "author": "Jean Martin",
+      "title": "CTO, Digitale Lösungen"
+    },
+    "2": {
+      "quote": "Kein Äquivalent auf dem Markt für diesen Preis. Wirklich professionelle Qualität.",
+      "author": "Sophie Leclerc",
+      "title": "Verkaufsdirektorin, HR-Beratung"
+    },
     "title": "Sie vertrauen VisioConnect",
     "subtitle": "Unternehmen jeder Größe nutzen unsere Plattform für effektive Zusammenarbeit.",
     "items": {
@@ -719,13 +779,18 @@
     "hero": {
       "title1": "Verbinden der Welt",
       "title2": "Sicherheit",
+      "title_part1": "Verbinden der Welt",
+      "title_part2": "Sicherheit",
       "subtitle": "Mission"
     },
     "story": {
       "title": "Geschichte",
       "p1": "Wir glauben...",
       "p2": "Ingenieure...",
-      "p3": "Heute..."
+      "p3": "Heute...",
+      "paragraph1": "Wir glauben...",
+      "paragraph2": "Ingenieure...",
+      "paragraph3": "Heute..."
     },
     "values": {
       "title": "Werte",
@@ -734,7 +799,19 @@
       "v2_title": "Datenschutz",
       "v2_text": "Sicher.",
       "v3_title": "Zugang",
-      "v3_text": "Barrierefrei."
+      "v3_text": "Barrierefrei.",
+      "simplicity": {
+        "title": "Einfachheit",
+        "description": "Einfach."
+      },
+      "privacy": {
+        "title": "Datenschutz",
+        "description": "Sicher."
+      },
+      "accessibility": {
+        "title": "Zugang",
+        "description": "Barrierefrei."
+      }
     },
     "stats": {
       "users": "Benutzer",

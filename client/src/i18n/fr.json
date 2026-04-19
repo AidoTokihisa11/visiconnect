@@ -220,6 +220,56 @@
         "question": "Comment fonctionne l'essai gratuit ?",
         "answer": "L'offre Starter est gratuite et illimitée dans le temps. Vous pouvez tester toutes les fonctionnalités Pro pendant 14 jours sans carte bancaire requise."
       }
+    },
+    "cta": {
+      "title": "Prêt à commencer ?",
+      "description": "Rejoignez des milliers d'équipes qui utilisent déjà VisioConnect pour leurs réunions.",
+      "button": "Commencer gratuitement"
+    },
+    "plans": {
+      "free": {
+        "period": "/ mois"
+      }
+    },
+    "features": {
+      "breakout_rooms": "Salles de sous-groupes"
+    }
+  },
+  "contact": {
+    "header": {
+      "title_part1": "Contactez",
+      "title_part2": "-nous",
+      "subtitle": "Une question, une demande de démo ou besoin d'assistance ? Notre équipe est à votre écoute."
+    },
+    "info": {
+      "title": "Informations de contact",
+      "desc": "N'hésitez pas à nous contacter par email ou via le formulaire ci-dessous.",
+      "email_title": "Email",
+      "enterprise_title": "Entreprises",
+      "enterprise_desc": "Pour les demandes entreprises, contactez notre équipe commerciale.",
+      "hours_title": "Horaires"
+    },
+    "form": {
+      "success_title": "Message envoyé avec succès !",
+      "error_title": "Erreur lors de l'envoi du message.",
+      "first_name": "Prénom",
+      "first_name_placeholder": "Votre prénom",
+      "last_name": "Nom",
+      "last_name_placeholder": "Votre nom",
+      "email": "Email",
+      "email_placeholder": "votre@email.com",
+      "company": "Entreprise",
+      "company_placeholder": "Votre entreprise (optionnel)",
+      "category": "Catégorie",
+      "category_options": {
+        "demo": "Demande de démo",
+        "support": "Support technique",
+        "other": "Autre"
+      },
+      "message": "Message",
+      "message_placeholder": "Décrivez votre demande...",
+      "submitting": "Envoi en cours...",
+      "submit_button": "Envoyer le message"
     }
   },
   "auth": {
@@ -649,6 +699,21 @@
   "testimonials": {
     "title": "Ils font confiance à VisioConnect",
     "subtitle": "Des entreprises de toutes tailles utilisent notre plateforme pour une collaboration efficace.",
+    "0": {
+      "quote": "VisioConnect a transformé nos réunions. Simple, efficace, sans prise de tête.",
+      "author": "Marie Dubois",
+      "title": "Fondatrice de TechStart"
+    },
+    "1": {
+      "quote": "La meilleure solution pour nos clients. Interface intuitive, support réactif.",
+      "author": "Jean Martin",
+      "title": "CTO, Solutions Digitales"
+    },
+    "2": {
+      "quote": "Pas d'équivalent sur le marché pour ce prix. Qualité professionnelle, vraiment.",
+      "author": "Sophie Leclerc",
+      "title": "Directrice Commerciale, Conseil RH"
+    },
     "items": {
       "1": {
         "content": "La qualité 4K est juste folle. On se croirait vraiment dans la même pièce !",
@@ -671,13 +736,18 @@
     "hero": {
       "title1": "Connecter le monde avec ",
       "title2": "Simplicité et Sécurité",
+      "title_part1": "Connecter le monde avec ",
+      "title_part2": "Simplicité et Sécurité",
       "subtitle": "Notre mission est de rendre la communication vidéo accessible, fluide et sécurisée pour tous, partout dans le monde."
     },
     "story": {
       "title": "Notre Histoire",
       "p1": "VisioConnect est né d'un constat simple : la communication vidéo est devenue essentielle, mais les outils existants étaient soit trop complexes, soit peu sécurisés, soit trop coûteux.",
       "p2": "Nous avons rassemblé une équipe d'ingénieurs passionnés et de designers pour créer une plateforme qui met l'utilisateur au premier plan. Après des mois de développement intensif, nous avons lancé une solution qui combine la plus haute qualité vidéo avec une interface d'une simplicité enfantine.",
-      "p3": "Aujourd'hui, VisioConnect aide des milliers d'entreprises, d'écoles et de familles à rester proches, peu importe la distance qui les sépare."
+      "p3": "Aujourd'hui, VisioConnect aide des milliers d'entreprises, d'écoles et de familles à rester proches, peu importe la distance qui les sépare.",
+      "paragraph1": "VisioConnect est né d'un constat simple : la communication vidéo est devenue essentielle, mais les outils existants étaient soit trop complexes, soit peu sécurisés, soit trop coûteux.",
+      "paragraph2": "Nous avons rassemblé une équipe d'ingénieurs passionnés et de designers pour créer une plateforme qui met l'utilisateur au premier plan. Après des mois de développement intensif, nous avons lancé une solution qui combine la plus haute qualité vidéo avec une interface d'une simplicité enfantine.",
+      "paragraph3": "Aujourd'hui, VisioConnect aide des milliers d'entreprises, d'écoles et de familles à rester proches, peu importe la distance qui les sépare."
     },
     "values": {
       "title": "Nos Valeurs",
@@ -686,7 +756,19 @@
       "v2_title": "Confidentialité Totale",
       "v2_text": "Vos données vous appartiennent. Nous ne vendons pas vos informations et nous chiffrons toutes vos communications par défaut.",
       "v3_title": "Accessibilité Universelle",
-      "v3_text": "Nous travaillons dur pour que notre service fonctionne parfaitement, même sur des connexions lentes ou des appareils plus anciens."
+      "v3_text": "Nous travaillons dur pour que notre service fonctionne parfaitement, même sur des connexions lentes ou des appareils plus anciens.",
+      "simplicity": {
+        "title": "Simplicité Radicale",
+        "description": "Nous croyons que la technologie doit s'effacer pour laisser place à la conversation. Chaque fonctionnalité est conçue pour être intuitive."
+      },
+      "privacy": {
+        "title": "Confidentialité Totale",
+        "description": "Vos données vous appartiennent. Nous ne vendons pas vos informations et nous chiffrons toutes vos communications par défaut."
+      },
+      "accessibility": {
+        "title": "Accessibilité Universelle",
+        "description": "Nous travaillons dur pour que notre service fonctionne parfaitement, même sur des connexions lentes ou des appareils plus anciens."
+      }
     },
     "stats": {
       "users": "Utilisateurs",

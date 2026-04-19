@@ -224,6 +224,56 @@
         "question": "How does the free trial work?",
         "answer": "The Starter plan is free forever. You can try all Pro features for 14 days without a credit card."
       }
+    },
+    "cta": {
+      "title": "Ready to get started?",
+      "description": "Join thousands of teams already using VisioConnect for their meetings.",
+      "button": "Get started for free"
+    },
+    "plans": {
+      "free": {
+        "period": "/month"
+      }
+    },
+    "features": {
+      "breakout_rooms": "Breakout rooms"
+    }
+  },
+  "contact": {
+    "header": {
+      "title_part1": "Contact",
+      "title_part2": " Us",
+      "subtitle": "Have a question, need a demo, or need support? Our team is here to help."
+    },
+    "info": {
+      "title": "Contact Information",
+      "desc": "Feel free to reach out via email or using the form below.",
+      "email_title": "Email",
+      "enterprise_title": "Enterprise",
+      "enterprise_desc": "For enterprise inquiries, contact our sales team.",
+      "hours_title": "Hours"
+    },
+    "form": {
+      "success_title": "Message sent successfully!",
+      "error_title": "Error sending message.",
+      "first_name": "First Name",
+      "first_name_placeholder": "Your first name",
+      "last_name": "Last Name",
+      "last_name_placeholder": "Your last name",
+      "email": "Email",
+      "email_placeholder": "your@email.com",
+      "company": "Company",
+      "company_placeholder": "Your company (optional)",
+      "category": "Category",
+      "category_options": {
+        "demo": "Demo request",
+        "support": "Technical support",
+        "other": "Other"
+      },
+      "message": "Message",
+      "message_placeholder": "Describe your request...",
+      "submitting": "Sending...",
+      "submit_button": "Send message"
     }
   },
   "auth": {
@@ -645,13 +695,18 @@
     "hero": {
       "title1": "Connecting the world with ",
       "title2": "Simplicity and Security",
+      "title_part1": "Connecting the world with ",
+      "title_part2": "Simplicity and Security",
       "subtitle": "Our mission is to make video communication accessible, fluid, and secure for everyone, everywhere."
     },
     "story": {
       "title": "Our Story",
       "p1": "VisioConnect was born from a simple observation: video communication has become essential, but existing tools were either too complex, unsecure, or too expensive.",
       "p2": "We gathered a team of passionate engineers and designers to build a platform that puts the user first. After months of intensive development, we launched a solution that combines the highest video quality with a dead-simple interface.",
-      "p3": "Today, VisioConnect helps thousands of businesses, schools, and families stay close, no matter the distance."
+      "p3": "Today, VisioConnect helps thousands of businesses, schools, and families stay close, no matter the distance.",
+      "paragraph1": "VisioConnect was born from a simple observation: video communication has become essential, but existing tools were either too complex, unsecure, or too expensive.",
+      "paragraph2": "We gathered a team of passionate engineers and designers to build a platform that puts the user first. After months of intensive development, we launched a solution that combines the highest video quality with a dead-simple interface.",
+      "paragraph3": "Today, VisioConnect helps thousands of businesses, schools, and families stay close, no matter the distance."
     },
     "values": {
       "title": "Our Values",
@@ -660,7 +715,19 @@
       "v2_title": "Total Privacy",
       "v2_text": "Your data belongs to you. We don't sell your information and we encrypt all your communications by default.",
       "v3_title": "Universal Accessibility",
-      "v3_text": "We work hard so our service works perfectly, even on slow connections or older devices."
+      "v3_text": "We work hard so our service works perfectly, even on slow connections or older devices.",
+      "simplicity": {
+        "title": "Radical Simplicity",
+        "description": "We believe technology should step aside to make room for the conversation. Every feature is designed to be intuitive."
+      },
+      "privacy": {
+        "title": "Total Privacy",
+        "description": "Your data belongs to you. We don't sell your information and we encrypt all your communications by default."
+      },
+      "accessibility": {
+        "title": "Universal Accessibility",
+        "description": "We work hard so our service works perfectly, even on slow connections or older devices."
+      }
     },
     "stats": {
       "users": "Users",
@@ -700,6 +767,16 @@
       "quote": "VisioConnect transformed our meetings. Simple, effective, no headache.",
       "author": "Marie Dubois",
       "title": "Founder of TechStart"
+    },
+    "1": {
+      "quote": "The best solution for our clients. Intuitive interface, responsive support.",
+      "author": "Jean Martin",
+      "title": "CTO, Digital Solutions"
+    },
+    "2": {
+      "quote": "No equivalent on the market at this price. Truly professional quality.",
+      "author": "Sophie Leclerc",
+      "title": "Commercial Director, HR Consulting"
     },
     "title": "They trust VisioConnect",
     "subtitle": "Companies of all sizes use our platform for effective collaboration.",
