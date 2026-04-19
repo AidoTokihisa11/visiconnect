@@ -490,9 +490,13 @@ export const ControlBar = ({
               <span>Chat</span>
               {unreadChat > 0 && <NotificationBadge style={{ top: '4px', right: '4px' }}>{unreadChat > 99 ? '99+' : unreadChat}</NotificationBadge>}
             </ControlButton>
+            <ControlButton onClick={() => { togglePanel('ai'); setIsMoreMenuOpen(false); }} $active={activePanel === 'ai' && sidePanelOpen} $activeColor={THEME.accent}>
+              <Bot />
+              <span>Assistant IA</span>
+            </ControlButton>
             <ControlButton onClick={() => { togglePanel('aiFeatures'); setIsMoreMenuOpen(false); }} $active={activePanel === 'aiFeatures' && sidePanelOpen} $activeColor="#8b5cf6">
               <Sparkles />
-              <span>IA</span>
+              <span>IA Features</span>
             </ControlButton>
             <ControlButton onClick={() => { togglePanel('polls'); setIsMoreMenuOpen(false); }} $active={activePanel === 'polls' && sidePanelOpen} $activeColor={THEME.accent}>
               <PieChart />
@@ -510,6 +514,10 @@ export const ControlBar = ({
             <ControlButton onClick={() => { toggleWhiteboard(); setIsMoreMenuOpen(false); }} $active={whiteboardOpen} $activeColor={THEME.accent}>
               <Layout />
               <span>Tableau</span>
+            </ControlButton>
+            <ControlButton onClick={() => { toggleRecording(); setIsMoreMenuOpen(false); }} $active={isRecording} $activeColor={THEME.danger}>
+              <Circle fill={isRecording ? '#ef4444' : 'none'} />
+              <span>Enregistrer</span>
             </ControlButton>
             <ControlButton onClick={() => { togglePanel('settings'); setIsMoreMenuOpen(false); }} $active={activePanel === 'settings' && sidePanelOpen} $activeColor={THEME.accent}>
               <Settings2 />

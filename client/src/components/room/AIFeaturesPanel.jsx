@@ -88,7 +88,6 @@ const FeatureCard = styled.div`
   background: ${THEME.cardBg};
   border: 1px solid ${props => props.$enabled ? THEME.accent : THEME.border};
   border-radius: 12px;
-  overflow: hidden;
   transition: all 0.2s;
 
   ${props => props.$enabled && `
@@ -168,14 +167,8 @@ const Switch = styled.button`
 `;
 
 const ExpandedContent = styled.div`
-  padding: 0 0.85rem 0.85rem;
+  padding: 0.5rem 0.85rem 0.85rem;
   border-top: 1px solid ${THEME.border};
-  animation: slideDown 0.2s ease;
-
-  @keyframes slideDown {
-    from { opacity: 0; max-height: 0; }
-    to { opacity: 1; max-height: 200px; }
-  }
 `;
 
 const OptionRow = styled.div`
