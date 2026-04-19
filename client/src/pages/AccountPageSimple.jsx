@@ -10,6 +10,7 @@ import FooterClean from '../components/FooterClean';
 import { useUserProfile } from '../hooks/useUserProfile';
 import { useClerk, useUser } from '@clerk/react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from '../hooks/useTranslation';
 import {
   PageWrapper,
   ContentContainer,
@@ -44,6 +45,7 @@ const AccountPageSimple = () => {
   const { signOut } = useClerk();
   const { user } = useUser();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   
   const [activeTab, setActiveTab] = useState('profile');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -94,10 +96,10 @@ const AccountPageSimple = () => {
       setIsSaving(true);
       await user.setProfileImage({ file });
       await user.reload();
-      showNotification('Photo de profil mise à jour avec succès !');
+      showNotification(t('account.messages.avatarSuccess'));
     } catch (error) {
       console.error('Erreur image:', error);
-      showNotification('Erreur lors du changement de photo. La taille doit être inférieure à 10MB.', 'error');
+      showNotification(t('account.messages.avatarError'), 'error');
     } finally {
       setIsSaving(false);
     }
@@ -128,10 +130,10 @@ const AccountPageSimple = () => {
       }
 
       await updateProfile(formData);
-      showNotification('Profil mis à jour avec succès !');
+      showNotification(t('account.messages.saveSuccess'));
     } catch (error) {
       console.error('Update error:', error);
-      showNotification('Erreur lors de la sauvegarde.', 'error');
+      showNotification(t('account.messages.saveError'), 'error');
     } finally {
       setIsSaving(false);
     }
@@ -180,29 +182,29 @@ const AccountPageSimple = () => {
           </UploadButton>
         </AvatarWrapper>
         <ProfilePictureInfo>
-          <h3>Photo de profil</h3>
-          <p>Personnalisez votre avatar public. Formats acceptés : JPG, PNG, GIF, WEBP (Max 10MB).</p>
+          <h3>{t('account.avatar.title')}</h3>
+          <p>{t('account.avatar.desc')}</p>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.75rem', padding: '0.4rem 0.75rem', background: '#f1f5f9', borderRadius: '2rem', fontSize: '0.8rem', color: '#475569', fontWeight: '500' }}>
-            <Shield size={14} color="#2563eb" /> Sécurité gérée par Clerk
+            <Shield size={14} color="#2563eb" /> {t('account.securityManaged')}
           </div>
         </ProfilePictureInfo>
       </ProfilePictureSection>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
         <FormGroup>
-          <Label><User size={18} /> Pseudo / Nom d'affichage</Label>
+          <Label><User size={18} /> {t('account.fields.displayName')}</Label>
           <InputWrapper>
             <Input 
               name="displayName"
               value={formData.displayName}
               onChange={handleInputChange}
-              placeholder="Ex: TheoG"
+              placeholder={t('account.placeholders.displayName')}
             />
           </InputWrapper>
         </FormGroup>
 
         <FormGroup>
-          <Label><Mail size={18} /> Adresse Email (Lecture seule)</Label>
+          <Label><Mail size={18} /> {t('account.fields.email')}</Label>
           <InputWrapper>
             <Input 
               type="email"
@@ -213,76 +215,76 @@ const AccountPageSimple = () => {
         </FormGroup>
 
         <FormGroup>
-          <Label><Phone size={18} /> Téléphone</Label>
+          <Label><Phone size={18} /> {t('account.fields.phone')}</Label>
           <InputWrapper>
             <Input 
               name="phone"
               value={formData.phone}
               onChange={handleInputChange}
-              placeholder="+33 6 12 34 56 78"
+              placeholder={t('account.placeholders.phone')}
             />
           </InputWrapper>
         </FormGroup>
         
         <FormGroup>
-          <Label><MapPin size={18} /> Localisation</Label>
+          <Label><MapPin size={18} /> {t('account.fields.location')}</Label>
           <InputWrapper>
             <Input 
               name="location"
               value={formData.location}
               onChange={handleInputChange}
-              placeholder="Paris, France"
+              placeholder={t('account.placeholders.location')}
             />
           </InputWrapper>
         </FormGroup>
 
         <FormGroup>
-          <Label><Building size={18} /> Entreprise</Label>
+          <Label><Building size={18} /> {t('account.fields.company')}</Label>
           <InputWrapper>
             <Input 
               name="company"
               value={formData.company}
               onChange={handleInputChange}
-              placeholder="Nom de l'entreprise"
+              placeholder={t('account.placeholders.company')}
             />
           </InputWrapper>
         </FormGroup>
 
         <FormGroup>
-          <Label><Briefcase size={18} /> Poste / Profession</Label>
+          <Label><Briefcase size={18} /> {t('account.fields.position')}</Label>
           <InputWrapper>
             <Input 
               name="jobTitle"
               value={formData.jobTitle}
               onChange={handleInputChange}
-              placeholder="Développeur, CEO..."
+              placeholder={t('account.placeholders.position')}
             />
           </InputWrapper>
         </FormGroup>
       </div>
       
       <FormGroup style={{ marginTop: '0.5rem' }}>
-        <Label><LinkIcon size={18} /> Site Web</Label>
+        <Label><LinkIcon size={18} /> {t('account.fields.website')}</Label>
         <InputWrapper>
           <Input 
             name="website"
             value={formData.website}
             onChange={handleInputChange}
-            placeholder="https://mon-site.fr"
+            placeholder={t('account.placeholders.website')}
           />
         </InputWrapper>
       </FormGroup>
 
       <FormGroup>
-        <Label>Description (Bio)</Label>
+        <Label>{t('account.fields.bio')}</Label>
         <TextArea 
           name="bio"
           value={formData.bio}
           onChange={handleInputChange}
-          placeholder="Parlez de vous, vos compétences, vos passions..."
+          placeholder={t('account.placeholders.bio')}
         />
         <p style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '0.5rem' }}>
-          Apparaît sur votre profil public si vous en avez un.
+          {t('account.bioHint')}
         </p>
       </FormGroup>
 
@@ -295,7 +297,7 @@ const AccountPageSimple = () => {
              setFormData(prev => ({...prev, displayName: user?.fullName || ''}));
           }}
         >
-          Annuler
+          {t('account.cancel')}
         </Button>
         <Button 
           type="submit" 
@@ -303,7 +305,7 @@ const AccountPageSimple = () => {
           whileTap={{ scale: 0.98 }}
         >
           {isSaving ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />}
-          {isSaving ? 'Enregistrement...' : 'Enregistrer'}
+          {isSaving ? t('account.saving') : t('account.save')}
         </Button>
       </ButtonsContainer>
     </motion.form>
@@ -319,8 +321,8 @@ const AccountPageSimple = () => {
           transition={{ duration: 0.5 }}
         >
           <HeaderSection>
-            <Title>Tableau de bord</Title>
-            <Subtitle>Gérez votre profil et vos préférences de compte.</Subtitle>
+            <Title>{t('account.dashboard')}</Title>
+            <Subtitle>{t('account.subtitle')}</Subtitle>
           </HeaderSection>
         </motion.div>
 
@@ -334,9 +336,9 @@ const AccountPageSimple = () => {
             <MobileNavToggle onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <Menu size={20} color="#2563eb" />
-                <span>{activeTab === 'profile' ? 'Mon Profil' : 'Sécurité & Connexion'}</span>
+                <span>{activeTab === 'profile' ? t('account.tabs.profile') : t('account.tabs.security')}</span>
               </div>
-              <span style={{ fontSize: '0.8rem', color: '#64748b', background: '#f1f5f9', padding: '0.2rem 0.5rem', borderRadius: '1rem' }}>Menu</span>
+              <span style={{ fontSize: '0.8rem', color: '#64748b', background: '#f1f5f9', padding: '0.2rem 0.5rem', borderRadius: '1rem' }}>{t('account.menu')}</span>
             </MobileNavToggle>
 
             <Card style={{ padding: '0.5rem' }}>
@@ -345,17 +347,17 @@ const AccountPageSimple = () => {
                   $active={activeTab === 'profile'}
                   onClick={() => { setActiveTab('profile'); setIsMobileMenuOpen(false); }}
                 >
-                  <User size={20} /> Mon Profil
+                  <User size={20} /> {t('account.tabs.profile')}
                 </NavItem>
                 <NavItem
                   $active={activeTab === 'security'}
                   onClick={() => { setActiveTab('security'); setIsMobileMenuOpen(false); }}
                 >
-                  <Shield size={20} /> Sécurité & Connexion
+                  <Shield size={20} /> {t('account.tabs.security')}
                 </NavItem>
                 <div style={{ height: '1px', background: '#e2e8f0', margin: '0.5rem 0' }} />
                 <NavItem onClick={handleSignOut} style={{ color: '#ef4444', borderLeftColor: 'transparent' }}>
-                  <LogOut size={20} /> Déconnexion
+                  <LogOut size={20} /> {t('account.logout')}
                 </NavItem>
               </NavMenu>
             </Card>
@@ -369,7 +371,7 @@ const AccountPageSimple = () => {
           >
             <CardHeader>
               <CardTitle>
-                {activeTab === 'profile' ? 'Informations Personnelles' : 'Sécurité du compte'}
+                {activeTab === 'profile' ? t('account.personalInfo') : t('account.securityTitle')}
               </CardTitle>
             </CardHeader>
             <CardBody>
@@ -401,10 +403,10 @@ const AccountPageSimple = () => {
                     <Shield size={64} color="#2563eb" style={{ margin: '0 auto 1.5rem auto', opacity: 0.9 }} />
                   </motion.div>
                   <h3 style={{ fontSize: '1.5rem', fontWeight: '700', marginBottom: '1rem', color: '#0f172a' }}>
-                    Sécurité gérée par Clerk
+                    {t('account.securityManaged')}
                   </h3>
                   <p style={{ color: '#64748b', maxWidth: '450px', margin: '0 auto', lineHeight: '1.6', fontSize: '1.05rem' }}>
-                    La sécurité de votre compte (mot de passe, authentification multi-facteurs) est gérée de manière totalement sécurisée et transparente par notre fournisseur d'identité partenaire.
+                    {t('account.securityDesc')}
                   </p>
                 </div>
                   </motion.div>

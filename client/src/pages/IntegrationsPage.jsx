@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import CallToAction from '../components/CallToAction';
+import { useTranslation } from '../hooks/useTranslation';
 
 const COLORS = {
   primary: 'hsl(var(--primary))',
@@ -158,32 +159,34 @@ const FilterButton = styled.button`
   }
 `;
 
-const INTEGRATIONS = [
-  { name: 'Slack', desc: 'Lancez des réunions directement depuis vos canaux Slack avec la commande /visi.', icon: '💬' },
-  { name: 'Google Calendar', desc: 'Ajoutez automatiquement des liens VisioConnect à vos invitations de calendrier.', icon: '📅' },
-  { name: 'Microsoft Teams', desc: 'Intégrez VisioConnect comme onglet dans vos équipes Teams.', icon: '👥' },
-  { name: 'Trello', desc: 'Associez des réunions à vos cartes Trello pour un contexte immédiat.', icon: '📋' },
-  { name: 'Notion', desc: 'Intégrez vos enregistrements de réunions directement dans vos pages Notion.', icon: '📝' },
-  { name: 'Figma', desc: 'Collaborez sur vos designs en temps réel avec la vidéo intégrée.', icon: '🎨' },
-  { name: 'Zapier', desc: 'Connectez VisioConnect à plus de 3000 applications via Zapier.', icon: '⚡' },
-  { name: 'Salesforce', desc: 'Enregistrez automatiquement vos appels clients dans vos fiches contacts.', icon: '☁️' },
-];
-
 const IntegrationsPage = () => {
+  const { t } = useTranslation();
+
+  const INTEGRATIONS = [
+    { name: 'Slack', desc: t('integrations.items.slack.desc'), icon: '💬' },
+    { name: 'Google Calendar', desc: t('integrations.items.google_calendar.desc'), icon: '📅' },
+    { name: 'Microsoft Teams', desc: t('integrations.items.teams.desc'), icon: '👥' },
+    { name: 'Trello', desc: t('integrations.items.trello.desc'), icon: '📋' },
+    { name: 'Notion', desc: t('integrations.items.notion.desc'), icon: '📝' },
+    { name: 'Figma', desc: t('integrations.items.figma.desc'), icon: '🎨' },
+    { name: 'Zapier', desc: t('integrations.items.zapier.desc'), icon: '⚡' },
+    { name: 'Salesforce', desc: t('integrations.items.salesforce.desc'), icon: '☁️' },
+  ];
+
   return (
     <PageContainer>
       <HeaderClean />
       <MainContent>
         <Hero>
-          <Title>Connectez vos outils préférés</Title>
-          <Subtitle>VisioConnect s'intègre parfaitement à votre flux de travail existant.</Subtitle>
+          <Title>{t('integrations.hero.title')}</Title>
+          <Subtitle>{t('integrations.hero.subtitle')}</Subtitle>
           
           <CategoryFilter>
-            <FilterButton active>Tous</FilterButton>
-            <FilterButton>Communication</FilterButton>
-            <FilterButton>Productivité</FilterButton>
-            <FilterButton>CRM</FilterButton>
-            <FilterButton>Développement</FilterButton>
+            <FilterButton active>{t('integrations.filters.all')}</FilterButton>
+            <FilterButton>{t('integrations.filters.communication')}</FilterButton>
+            <FilterButton>{t('integrations.filters.productivity')}</FilterButton>
+            <FilterButton>{t('integrations.filters.crm')}</FilterButton>
+            <FilterButton>{t('integrations.filters.development')}</FilterButton>
           </CategoryFilter>
         </Hero>
 
@@ -193,15 +196,15 @@ const IntegrationsPage = () => {
               <IconWrapper>{app.icon}</IconWrapper>
               <IntegrationName>{app.name}</IntegrationName>
               <IntegrationDesc>{app.desc}</IntegrationDesc>
-              <InstallButton>Installer</InstallButton>
+              <InstallButton>{t('integrations.install')}</InstallButton>
             </IntegrationCard>
           ))}
         </IntegrationsGrid>
 
         <CallToAction 
-             title="Vous ne trouvez pas votre outil ?"
-             description="Nous ajoutons régulièrement de nouvelles intégrations. Une suggestion ?"
-             buttonText="Contactez l'équipe"
+             title={t('integrations.cta.title')}
+             description={t('integrations.cta.description')}
+             buttonText={t('integrations.cta.button')}
              buttonLink="/contact"
         />
 

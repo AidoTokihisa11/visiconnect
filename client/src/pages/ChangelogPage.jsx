@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import CallToAction from '../components/CallToAction';
+import { useTranslation } from '../hooks/useTranslation';
 
 const COLORS = {
   primary: 'hsl(var(--primary))',
@@ -190,50 +191,52 @@ const List = styled.ul`
 `;
 
 const ChangelogPage = () => {
+    const { t } = useTranslation();
+
     const changes = [
         {
-            version: 'v2.0.0',
-            date: '21 Février 2024',
-            title: 'Refonte Complète du Design',
+            version: t('changelog.versions.0.version'),
+            date: t('changelog.versions.0.date'),
+            title: t('changelog.versions.0.title'),
             notes: [
-                'Nouveau design system "Clean" pour une meilleure lisibilité.',
-                'Interface utilisateur plus moderne et épurée.',
-                'Optimisation des performances de chargement.',
-                'Nouveau mode sombre natif.'
+                t('changelog.versions.0.notes.0'),
+                t('changelog.versions.0.notes.1'),
+                t('changelog.versions.0.notes.2'),
+                t('changelog.versions.0.notes.3'),
             ],
             latest: true
         },
         {
-            version: 'v1.5.0',
-            date: '10 Janvier 2024',
-            title: 'Amélioration de la Vidéo',
+            version: t('changelog.versions.1.version'),
+            date: t('changelog.versions.1.date'),
+            title: t('changelog.versions.1.title'),
             notes: [
-                'Support de la vidéo 4K pour les comptes Pro.',
-                'Réduction de la latence de 30%.',
-                'Nouveaux filtres de caméra en temps réel.'
+                t('changelog.versions.1.notes.0'),
+                t('changelog.versions.1.notes.1'),
+                t('changelog.versions.1.notes.2'),
             ],
             latest: false
         },
         {
-            version: 'v1.2.0',
-            date: '5 Décembre 2023',
-            title: 'Outils de Collaboration',
+            version: t('changelog.versions.2.version'),
+            date: t('changelog.versions.2.date'),
+            title: t('changelog.versions.2.title'),
             notes: [
-                'Ajout du tableau blanc interactif.',
-                'Partage d\'écran optimisé pour le texte.',
-                'Sondages en direct pendant les réunions.'
+                t('changelog.versions.2.notes.0'),
+                t('changelog.versions.2.notes.1'),
+                t('changelog.versions.2.notes.2'),
             ],
             latest: false
         },
         {
-            version: 'v1.0.0',
-            date: '1 Novembre 2023',
-            title: 'Lancement Officiel',
+            version: t('changelog.versions.3.version'),
+            date: t('changelog.versions.3.date'),
+            title: t('changelog.versions.3.title'),
             notes: [
-                'Lancement public de VisioConnect.',
-                'Appels audio et vidéo illimités.',
-                'Messagerie instantanée sécurisée.',
-                'Gestion des équipes.'
+                t('changelog.versions.3.notes.0'),
+                t('changelog.versions.3.notes.1'),
+                t('changelog.versions.3.notes.2'),
+                t('changelog.versions.3.notes.3'),
             ],
             latest: false
         }
@@ -245,9 +248,9 @@ const ChangelogPage = () => {
             <MainContent>
                 <Hero>
                     <SectionHeader>
-                        <h1>Nouveautés</h1>
+                        <h1>{t('changelog.hero.title')}</h1>
                         <p>
-                            Découvrez les dernières mises à jour, améliorations et corrections de VisioConnect. Nous travaillons constamment pour améliorer votre expérience.
+                            {t('changelog.hero.subtitle')}
                         </p>
                     </SectionHeader>
                 </Hero>
@@ -272,9 +275,9 @@ const ChangelogPage = () => {
                 </TimelineContainer>
 
                 <CallToAction 
-                    title="Vous avez une idée ?"
-                    description="Votre feedback est précieux. Suggérez-nous de nouvelles fonctionnalités."
-                    buttonText="Suggérer une fonctionnalité"
+                    title={t('changelog.cta.title')}
+                    description={t('changelog.cta.description')}
+                    buttonText={t('changelog.cta.button')}
                     buttonLink="/contact"
                 />
             </MainContent>

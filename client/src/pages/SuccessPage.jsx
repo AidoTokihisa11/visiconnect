@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useTranslation } from '../hooks/useTranslation';
 import { CheckCircle } from 'lucide-react';
 import styled from 'styled-components';
 
@@ -48,6 +49,7 @@ const Button = styled.button`
 const SuccessPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { t } = useTranslation();
   const sessionId = searchParams.get('session_id');
 
   useEffect(() => {
@@ -59,12 +61,12 @@ const SuccessPage = () => {
   return (
     <Container>
       <CheckCircle size={80} color="#10b981" />
-      <Title>Paiement réussi !</Title>
+      <Title>{t('success.title')}</Title>
       <Subtitle>
-        Merci pour votre confiance. Votre abonnement a été activé avec succès et vous pouvez commencer à profiter de VisiConnect.
+        {t('success.description')}
       </Subtitle>
       <Button onClick={() => navigate('/dashboard')}>
-        Accéder au tableau de bord
+        {t('success.button')}
       </Button>
     </Container>
   );

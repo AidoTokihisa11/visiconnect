@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
+import { useTranslation } from '../hooks/useTranslation';
 
 const COLORS = {
   primary: 'hsl(var(--primary))',
@@ -140,79 +141,30 @@ const GuideLink = styled.li`
   }
 `;
 
-const guides = [
-  {
-    category: "Premiers pas",
-    icon: "🚀",
-    articles: [
-      "Créer votre compte",
-      "Configurer votre profil",
-      "Lancer votre première réunion",
-      "Inviter des participants"
-    ]
-  },
-  {
-    category: "Pendant la réunion",
-    icon: "🎥",
-    articles: [
-      "Partager votre écran",
-      "Utiliser le tableau blanc",
-      "Enregistrer la session",
-      "Gérer les participants"
-    ]
-  },
-  {
-    category: "Fonctionnalités avancées",
-    icon: "⚡",
-    articles: [
-      "Transcription en direct",
-      "Traduction automatique",
-      "Intégrations (Slack, Calendar)",
-      "Mode webinaire"
-    ]
-  },
-  {
-    category: "Paramètres & Compte",
-    icon: "⚙️",
-    articles: [
-      "Gérer les notifications",
-      "Facturation et abonnements",
-      "Sécurité et confidentialité",
-      "Supprimer mon compte"
-    ]
-  },
-  {
-    category: "Résolution de problèmes",
-    icon: "🔧",
-    articles: [
-      "Problèmes audio/vidéo",
-      "Problèmes de connexion",
-      "Navigateurs supportés",
-      "Contacter le support"
-    ]
-  }
-];
+const icons = ["🚀", "🎥", "⚡", "⚙️", "🔧"];
+const itemCounts = [4, 4, 4, 4, 4];
 
 const UserGuidePageNew = () => {
+  const { t } = useTranslation();
   return (
     <PageContainer>
       <HeaderClean />
       <MainContent>
         <Hero>
-          <Title>Guide Utilisateur</Title>
-          <Subtitle>Tout ce que vous devez savoir pour maîtriser VisioConnect.</Subtitle>
-          <SearchBar placeholder="Rechercher un article..." />
+          <Title>{t('userGuide.hero.title')}</Title>
+          <Subtitle>{t('userGuide.hero.subtitle')}</Subtitle>
+          <SearchBar placeholder={t('userGuide.search')} />
         </Hero>
 
         <Section>
           <Grid>
-            {guides.map((section, idx) => (
+            {icons.map((icon, idx) => (
               <Card key={idx}>
-                <CategoryIcon>{section.icon}</CategoryIcon>
-                <CategoryTitle>{section.category}</CategoryTitle>
+                <CategoryIcon>{icon}</CategoryIcon>
+                <CategoryTitle>{t(`userGuide.sections.${idx}.title`)}</CategoryTitle>
                 <GuideList>
-                  {section.articles.map((article, i) => (
-                    <GuideLink key={i}>{article}</GuideLink>
+                  {Array.from({ length: itemCounts[idx] }).map((_, i) => (
+                    <GuideLink key={i}>{t(`userGuide.sections.${idx}.items.${i}`)}</GuideLink>
                   ))}
                 </GuideList>
               </Card>

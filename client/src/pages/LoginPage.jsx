@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
 import { useAuth } from '../contexts/AuthContext'
+import { useTranslation } from '../hooks/useTranslation'
 import { FaGoogle, FaGithub } from 'react-icons/fa'
 import { Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
 
@@ -302,6 +303,7 @@ const ErrorMessage = styled.div`
 
 const LoginPage = () => {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const { isLoggedIn } = useAuth()
   React.useEffect(() => {
     if (isLoggedIn) navigate("/")
@@ -342,7 +344,7 @@ const LoginPage = () => {
         navigate('/')
       }
     } catch (err) {
-      setError(err.message || 'Une erreur est survenue lors de la connexion')
+      setError(err.message || t('login.error'))
     } finally {
       setLoading(false)
     }
@@ -395,8 +397,8 @@ const LoginPage = () => {
           <Header>
             <motion.div variants={itemVariants}>
               <Logo>VisioConnect</Logo>
-              <Title>Bon retour parmi nous</Title>
-              <Subtitle>Connectez-vous pour continuer vers votre espace</Subtitle>
+              <Title>{t('login.title')}</Title>
+              <Subtitle>{t('login.subtitle')}</Subtitle>
             </motion.div>
           </Header>
 
@@ -413,7 +415,7 @@ const LoginPage = () => {
             <motion.div variants={itemVariants}>
               <FormGroup>
                 <Label htmlFor="email">
-                  Email
+                  {t('login.email')}
                 </Label>
                 <InputWrapper>
                   <IconWrapper><Mail size={18} /></IconWrapper>
@@ -423,7 +425,7 @@ const LoginPage = () => {
                     name="email"
                     value={credentials.email}
                     onChange={syncCredentialsInput}
-                    placeholder="votre@email.com"
+                    placeholder={t('login.emailPlaceholder')}
                     required
                     autoComplete="email"
                   />
@@ -434,7 +436,7 @@ const LoginPage = () => {
             <motion.div variants={itemVariants}>
               <FormGroup>
                 <Label htmlFor="password">
-                  Mot de passe
+                  {t('login.password')}
                 </Label>
                 <InputWrapper>
                   <IconWrapper><Lock size={18} /></IconWrapper>
@@ -461,7 +463,7 @@ const LoginPage = () => {
 
             <motion.div variants={itemVariants}>
               <ForgotPassword>
-                <Link to="/forgot-password">Mot de passe oublié ?</Link>
+                <Link to="/forgot-password">{t('login.forgotPassword')}</Link>
               </ForgotPassword>
             </motion.div>
 
@@ -472,21 +474,21 @@ const LoginPage = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                {loading ? 'Connexion en cours...' : 'Se connecter'}
+                {loading ? t('login.loading') : t('login.submit')}
               </SubmitButton>
             </motion.div>
           </Form>
 
           <motion.div variants={itemVariants}>
             <Divider>
-              <span>ou continuer avec</span>
+              <span>{t('login.orContinue')}</span>
             </Divider>
 
             <DevButton 
                type="button" 
                onClick={handleDeveloperAccess}
             >
-              🔑 Accès Développeur (Local)
+              {t('login.devAccess')}
             </DevButton>
 
             <OAuthButtons>
@@ -513,8 +515,8 @@ const LoginPage = () => {
             </OAuthButtons>
 
             <Footer>
-              Pas encore de compte ?{' '}
-              <Link to="/signup">Créer un compte</Link>
+              {t('login.noAccount')}{' '}
+              <Link to="/signup">{t('login.createAccount')}</Link>
             </Footer>
           </motion.div>
         </LoginCard>

@@ -3,6 +3,7 @@ import LanguageSelector from '../components/LanguageSelector';
 import { AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import FooterClean from '../components/FooterClean';
+import { useTranslation } from '../hooks/useTranslation';
 import {
   Video,
   ArrowLeft,
@@ -142,13 +143,13 @@ const upcomingEvents = [
   }
 ];
 
-const weekDays = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
-const months = [
-  'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
-  'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
-];
+// weekDays and months are defined inside the component using t()
 
 const SchedulerPageNew = () => {
+  const { t } = useTranslation();
+  const weekDays = [t('scheduler.days.0'), t('scheduler.days.1'), t('scheduler.days.2'), t('scheduler.days.3'), t('scheduler.days.4'), t('scheduler.days.5'), t('scheduler.days.6')];
+  const months = [t('scheduler.months.0'), t('scheduler.months.1'), t('scheduler.months.2'), t('scheduler.months.3'), t('scheduler.months.4'), t('scheduler.months.5'), t('scheduler.months.6'), t('scheduler.months.7'), t('scheduler.months.8'), t('scheduler.months.9'), t('scheduler.months.10'), t('scheduler.months.11')];
+
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState('month');
   const [showNewEventModal, setShowNewEventModal] = useState(false);
@@ -202,12 +203,12 @@ const SchedulerPageNew = () => {
           </Logo>
           
           <NavLinks>
-            <NavLink to="/">Accueil</NavLink>
-            <NavLink to="/features">Fonctionnalités</NavLink>
-            <NavLink to="/pricing">Tarifs</NavLink>
-            <NavLink to="/about">À propos</NavLink>
-            <NavLink to="/contact">Contact</NavLink>
-            <NavLink to="/scheduler" className="active">Planificateur</NavLink>
+            <NavLink to="/">{t('scheduler.nav.home')}</NavLink>
+            <NavLink to="/features">{t('scheduler.nav.features')}</NavLink>
+            <NavLink to="/pricing">{t('scheduler.nav.pricing')}</NavLink>
+            <NavLink to="/about">{t('scheduler.nav.about')}</NavLink>
+            <NavLink to="/contact">{t('scheduler.nav.contact')}</NavLink>
+            <NavLink to="/scheduler" className="active">{t('scheduler.nav.scheduler')}</NavLink>
           </NavLinks>
 
           <BackButton
@@ -217,7 +218,7 @@ const SchedulerPageNew = () => {
             whileTap={{ scale: 0.95 }}
           >
             <ArrowLeft size={20} />
-            Retour
+            {t('scheduler.back')}
           </BackButton>
         
           <LanguageSelector /></Nav>
@@ -227,10 +228,9 @@ const SchedulerPageNew = () => {
         <HeroSection>
           <HeroContent>
             <HeroText>
-              <Title>Planificateur de Réunions</Title>
+              <Title>{t('scheduler.title')}</Title>
               <Subtitle>
-                Organisez et gérez toutes vos réunions VisioConnect en un seul endroit. 
-                Interface intuitive pour une planification efficace.
+                {t('scheduler.subtitle')}
               </Subtitle>
               
               <QuickActions>
@@ -241,17 +241,17 @@ const SchedulerPageNew = () => {
                   whileTap={{ scale: 0.98 }}
                 >
                   <Plus size={20} />
-                  Nouvelle réunion
+                  {t('scheduler.newMeeting')}
                 </ActionButton>
                 
                 <ActionButton whileHover={{ scale: 1.02 }}>
                   <Calendar size={20} />
-                  Synchroniser calendrier
+                  {t('scheduler.syncCalendar')}
                 </ActionButton>
                 
                 <ActionButton whileHover={{ scale: 1.02 }}>
                   <Settings size={20} />
-                  Paramètres
+                  {t('scheduler.settings')}
                 </ActionButton>
               </QuickActions>
             </HeroText>
@@ -292,19 +292,19 @@ const SchedulerPageNew = () => {
                   active={view === 'month'}
                   onClick={() => setView('month')}
                 >
-                  Mois
+                  {t('scheduler.views.month')}
                 </ViewButton>
                 <ViewButton 
                   active={view === 'week'}
                   onClick={() => setView('week')}
                 >
-                  Semaine
+                  {t('scheduler.views.week')}
                 </ViewButton>
                 <ViewButton 
                   active={view === 'day'}
                   onClick={() => setView('day')}
                 >
-                  Jour
+                  {t('scheduler.views.day')}
                 </ViewButton>
               </ViewSelector>
             </CalendarControls>
@@ -342,7 +342,7 @@ const SchedulerPageNew = () => {
         <Sidebar>
           <SidebarTitle>
             <Bell size={20} />
-            Prochaines réunions
+            {t('scheduler.upcoming')}
           </SidebarTitle>
           
           {upcomingEvents.map(event => (
@@ -355,7 +355,7 @@ const SchedulerPageNew = () => {
               <EventTitle>{event.title}</EventTitle>
               <EventDetails>
                 <Users size={14} />
-                {event.attendees} participants
+                {event.attendees} {t('scheduler.participants')}
                 {event.location && (
                   <>
                     <MapPin size={14} />
@@ -383,7 +383,7 @@ const SchedulerPageNew = () => {
               onClick={(e) => e.stopPropagation()}
             >
               <ModalHeader>
-                <ModalTitle>Nouvelle réunion</ModalTitle>
+                <ModalTitle>{t('scheduler.modal.title')}</ModalTitle>
                 <CloseButton onClick={() => setShowNewEventModal(false)}>
                   <X size={18} />
                 </CloseButton>
@@ -391,17 +391,17 @@ const SchedulerPageNew = () => {
               
               <ModalBody>
                 <FormGroup>
-                  <Label>Titre de la réunion</Label>
+                  <Label>{t('scheduler.modal.meetingTitle')}</Label>
                   <Input
                     type="text"
-                    placeholder="Ex: Réunion équipe marketing"
+                    placeholder={t('scheduler.modal.meetingTitlePlaceholder')}
                     value={newEvent.title}
                     onChange={(e) => setNewEvent(prev => ({ ...prev, title: e.target.value }))}
                   />
                 </FormGroup>
 
                 <FormGroup>
-                  <Label>Date</Label>
+                  <Label>{t('scheduler.modal.date')}</Label>
                   <Input
                     type="date"
                     value={newEvent.date}
@@ -410,7 +410,7 @@ const SchedulerPageNew = () => {
                 </FormGroup>
 
                 <FormGroup>
-                  <Label>Heure</Label>
+                  <Label>{t('scheduler.modal.time')}</Label>
                   <Input
                     type="time"
                     value={newEvent.time}
@@ -419,56 +419,56 @@ const SchedulerPageNew = () => {
                 </FormGroup>
 
                 <FormGroup>
-                  <Label>Durée</Label>
+                  <Label>{t('scheduler.modal.duration')}</Label>
                   <Select
                     value={newEvent.duration}
                     onChange={(e) => setNewEvent(prev => ({ ...prev, duration: e.target.value }))}
                   >
-                    <option value="">Sélectionner la durée</option>
-                    <option value="30">30 minutes</option>
-                    <option value="60">1 heure</option>
-                    <option value="90">1h30</option>
-                    <option value="120">2 heures</option>
+                    <option value="">{t('scheduler.modal.selectDuration')}</option>
+                    <option value="30">{t('scheduler.modal.duration30')}</option>
+                    <option value="60">{t('scheduler.modal.duration60')}</option>
+                    <option value="90">{t('scheduler.modal.duration90')}</option>
+                    <option value="120">{t('scheduler.modal.duration120')}</option>
                   </Select>
                 </FormGroup>
 
                 <FormGroup>
-                  <Label>Type de réunion</Label>
+                  <Label>{t('scheduler.modal.meetingType')}</Label>
                   <Select
                     value={newEvent.type}
                     onChange={(e) => setNewEvent(prev => ({ ...prev, type: e.target.value }))}
                   >
-                    <option value="meeting">Réunion d'équipe</option>
-                    <option value="call">Appel client</option>
-                    <option value="presentation">Présentation</option>
-                    <option value="training">Formation</option>
+                    <option value="meeting">{t('scheduler.modal.typeMeeting')}</option>
+                    <option value="call">{t('scheduler.modal.typeCall')}</option>
+                    <option value="presentation">{t('scheduler.modal.typePresentation')}</option>
+                    <option value="training">{t('scheduler.modal.typeTraining')}</option>
                   </Select>
                 </FormGroup>
 
                 <FormGroup>
-                  <Label>Lieu</Label>
+                  <Label>{t('scheduler.modal.location')}</Label>
                   <Input
                     type="text"
-                    placeholder="Ex: Salle de conférence A ou En ligne"
+                    placeholder={t('scheduler.modal.locationPlaceholder')}
                     value={newEvent.location}
                     onChange={(e) => setNewEvent(prev => ({ ...prev, location: e.target.value }))}
                   />
                 </FormGroup>
 
                 <FormGroup>
-                  <Label>Participants (emails)</Label>
+                  <Label>{t('scheduler.modal.attendees')}</Label>
                   <Input
                     type="text"
-                    placeholder="marie@exemple.com, paul@exemple.com"
+                    placeholder={t('scheduler.modal.attendeesPlaceholder')}
                     value={newEvent.attendees}
                     onChange={(e) => setNewEvent(prev => ({ ...prev, attendees: e.target.value }))}
                   />
                 </FormGroup>
 
                 <FormGroup>
-                  <Label>Description</Label>
+                  <Label>{t('scheduler.modal.description')}</Label>
                   <TextArea
-                    placeholder="Agenda et objectifs de la réunion..."
+                    placeholder={t('scheduler.modal.descriptionPlaceholder')}
                     value={newEvent.description}
                     onChange={(e) => setNewEvent(prev => ({ ...prev, description: e.target.value }))}
                   />
@@ -477,7 +477,7 @@ const SchedulerPageNew = () => {
 
               <ModalActions>
                 <ActionButton onClick={() => setShowNewEventModal(false)}>
-                  Annuler
+                  {t('scheduler.modal.cancel')}
                 </ActionButton>
                 <ActionButton 
                   primary
@@ -485,7 +485,7 @@ const SchedulerPageNew = () => {
                   disabled={!newEvent.title || !newEvent.date || !newEvent.time}
                 >
                   <Save size={16} />
-                  Créer la réunion
+                  {t('scheduler.modal.create')}
                 </ActionButton>
               </ModalActions>
             </ModalContent>

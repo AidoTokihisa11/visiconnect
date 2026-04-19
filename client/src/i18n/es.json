@@ -322,7 +322,10 @@
     "settingsSaved": "Configuración guardada",
     "invitationSent": "Invitación enviada",
     "meetingCreated": "Reunión creada exitosamente",
-    "profileUpdated": "Perfil actualizado"
+    "profileUpdated": "Perfil actualizado",
+    "title": "¡Pago exitoso!",
+    "description": "Gracias por su confianza. Su suscripción ha sido activada.",
+    "button": "Ir al panel"
   },
   "featureHDVideo": "Video HD",
   "featureHDVideoDesc": "Calidad de video de alta definición para reuniones cristalinas",
@@ -509,6 +512,49 @@
     },
     "github": {
       "description": "Integración completa con GitHub."
+    },
+    "hero": {
+      "title": "Conecte sus herramientas favoritas",
+      "subtitle": "VisioConnect se integra perfectamente en su flujo de trabajo."
+    },
+    "filters": {
+      "all": "Todos",
+      "communication": "Comunicación",
+      "productivity": "Productividad",
+      "crm": "CRM",
+      "development": "Desarrollo"
+    },
+    "items": {
+      "slack": {
+        "desc": "Lance reuniones desde Slack con el comando /visi."
+      },
+      "google_calendar": {
+        "desc": "Agregue automáticamente enlaces de VisioConnect a sus invitaciones."
+      },
+      "teams": {
+        "desc": "Integre VisioConnect como pestaña en Teams."
+      },
+      "trello": {
+        "desc": "Vincule reuniones a sus tarjetas de Trello."
+      },
+      "notion": {
+        "desc": "Inserte grabaciones directamente en Notion."
+      },
+      "figma": {
+        "desc": "Colabore en diseños en tiempo real con video integrado."
+      },
+      "zapier": {
+        "desc": "Conecte VisioConnect a más de 3000 apps con Zapier."
+      },
+      "salesforce": {
+        "desc": "Registre automáticamente llamadas de clientes."
+      }
+    },
+    "install": "Instalar",
+    "cta": {
+      "title": "¿No encuentra su herramienta?",
+      "description": "Agregamos integraciones regularmente.",
+      "button": "Contactar al equipo"
     }
   },
   "homeFeatures": {
@@ -672,11 +718,179 @@
   "sending": "Enviando...",
   "messageSent": "¡Mensaje enviado!",
   "product": "Producto",
-  "scheduler": "Planificador",
+  "scheduler": {
+    "days": {
+      "0": "Dom",
+      "1": "Lun",
+      "2": "Mar",
+      "3": "Mié",
+      "4": "Jue",
+      "5": "Vie",
+      "6": "Sáb"
+    },
+    "months": {
+      "0": "Enero",
+      "1": "Febrero",
+      "2": "Marzo",
+      "3": "Abril",
+      "4": "Mayo",
+      "5": "Junio",
+      "6": "Julio",
+      "7": "Agosto",
+      "8": "Septiembre",
+      "9": "Octubre",
+      "10": "Noviembre",
+      "11": "Diciembre"
+    },
+    "nav": {
+      "home": "Home",
+      "features": "Features",
+      "pricing": "Pricing",
+      "about": "About",
+      "contact": "Contact",
+      "scheduler": "Scheduler"
+    },
+    "back": "Volver",
+    "title": "Planificador de Reuniones",
+    "subtitle": "Organice todas sus reuniones en un solo lugar.",
+    "newMeeting": "Nueva reunión",
+    "syncCalendar": "Sincronizar calendario",
+    "settings": "Configuración",
+    "views": {
+      "month": "Mes",
+      "week": "Semana",
+      "day": "Día"
+    },
+    "upcoming": "Próximas reuniones",
+    "participants": "participantes",
+    "modal": {
+      "title": "Nueva reunión",
+      "meetingTitle": "Título",
+      "meetingTitlePlaceholder": "Ej: Reunión de equipo",
+      "date": "Fecha",
+      "time": "Hora",
+      "duration": "Duración",
+      "selectDuration": "Seleccionar duración",
+      "duration30": "30 minutos",
+      "duration60": "1 hora",
+      "duration90": "1h30",
+      "duration120": "2 horas",
+      "meetingType": "Tipo",
+      "typeMeeting": "Reunión de equipo",
+      "typeCall": "Llamada cliente",
+      "typePresentation": "Presentación",
+      "typeTraining": "Formación",
+      "location": "Lugar",
+      "locationPlaceholder": "Ej: Sala de conferencias",
+      "attendees": "Participantes (emails)",
+      "attendeesPlaceholder": "maria@ejemplo.com",
+      "description": "Descripción",
+      "descriptionPlaceholder": "Agenda y objetivos...",
+      "cancel": "Cancelar",
+      "create": "Crear reunión"
+    }
+  },
   "serviceStatus": "Estado del servicio",
   "enterprise": "Empresa",
-  "community": "Comunidad",
-  "userGuide": "Guía de usuario",
+  "community": {
+    "hero": {
+      "title": "Comunidad VisioConnect",
+      "subtitle": "Únase a miles de desarrolladores y profesionales."
+    },
+    "social": {
+      "discord": {
+        "title": "Discord",
+        "desc": "Únase a nuestro servidor para chatear en vivo.",
+        "button": "Unirse al servidor"
+      },
+      "twitter": {
+        "title": "X / Twitter",
+        "desc": "Síganos para las últimas novedades.",
+        "button": "Seguir @visiconnect"
+      },
+      "linkedin": {
+        "title": "LinkedIn",
+        "desc": "Manténgase conectado con nuestras novedades.",
+        "button": "Seguirnos"
+      }
+    },
+    "forum": {
+      "title": "Últimas Discusiones del Foro",
+      "viewAll": "Ver todo",
+      "posts": {
+        "0": {
+          "title": "¿Cómo integrar VisioConnect en una app React?",
+          "meta": "32 resp • hace 2h"
+        },
+        "1": {
+          "title": "Mejores prácticas para webinars de +500 personas",
+          "meta": "15 resp • hace 4h"
+        },
+        "2": {
+          "title": "Idea: Pizarra infinita",
+          "meta": "89 resp • hace 1d"
+        },
+        "3": {
+          "title": "¡Compartan sus configuraciones de trabajo remoto!",
+          "meta": "124 resp • hace 2d"
+        }
+      }
+    }
+  },
+  "userGuide": {
+    "hero": {
+      "title": "Guía de Usuario",
+      "subtitle": "Todo lo que necesita saber sobre VisioConnect."
+    },
+    "search": "Buscar un artículo...",
+    "sections": {
+      "0": {
+        "title": "Primeros pasos",
+        "items": {
+          "0": "Crear su cuenta",
+          "1": "Configurar su perfil",
+          "2": "Iniciar su primera reunión",
+          "3": "Invitar participantes"
+        }
+      },
+      "1": {
+        "title": "Durante la reunión",
+        "items": {
+          "0": "Compartir su pantalla",
+          "1": "Usar la pizarra",
+          "2": "Grabar la sesión",
+          "3": "Gestionar participantes"
+        }
+      },
+      "2": {
+        "title": "Funciones avanzadas",
+        "items": {
+          "0": "Transcripción en vivo",
+          "1": "Traducción automática",
+          "2": "Integraciones (Slack, Calendar)",
+          "3": "Modo webinar"
+        }
+      },
+      "3": {
+        "title": "Configuración y Cuenta",
+        "items": {
+          "0": "Gestionar notificaciones",
+          "1": "Facturación y suscripciones",
+          "2": "Seguridad y privacidad",
+          "3": "Eliminar mi cuenta"
+        }
+      },
+      "4": {
+        "title": "Solución de problemas",
+        "items": {
+          "0": "Problemas de audio/video",
+          "1": "Problemas de conexión",
+          "2": "Navegadores compatibles",
+          "3": "Contactar soporte"
+        }
+      }
+    }
+  },
   "legalSecurity": "Legal y Seguridad",
   "privacyPolicy": "Política de privacidad",
   "termsOfUse": "Condiciones de uso",
@@ -856,6 +1070,916 @@
       "title": "Únete",
       "description": "Prueba hoy",
       "button": "Empezar"
+    }
+  },
+  "featuresPage": {
+    "hero": {
+      "title": "Funcionalidades Potentes",
+      "subtitle": "Todo lo que necesita para comunicaciones de video fluidas, seguras y profesionales."
+    },
+    "items": {
+      "hd_video": {
+        "title": "Video HD cristalino",
+        "desc": "Disfrute de video HD fluido, incluso con ancho de banda limitado."
+      },
+      "security": {
+        "title": "Seguridad de vanguardia",
+        "desc": "Cifrado de extremo a extremo y protocolos avanzados."
+      },
+      "performance": {
+        "title": "Rendimiento ultrarrápido",
+        "desc": "Latencia mínima y conexión instantánea."
+      },
+      "group": {
+        "title": "Reuniones de grupo",
+        "desc": "Equipos grandes sin perder calidad. Ideal para webinars y conferencias."
+      },
+      "global": {
+        "title": "Accesibilidad global",
+        "desc": "Conéctese desde cualquier lugar del mundo."
+      },
+      "mobile": {
+        "title": "Compatible con móviles",
+        "desc": "Experiencia fluida en iOS, Android y tablets."
+      },
+      "admin": {
+        "title": "Controles de administrador",
+        "desc": "Herramientas potentes: sala de espera, silenciar y más."
+      },
+      "audio": {
+        "title": "Audio de alta fidelidad",
+        "desc": "Supresión de ruido de fondo y mejora vocal."
+      },
+      "ui": {
+        "title": "Interfaz intuitiva",
+        "desc": "Diseño limpio centrado en la conversación."
+      }
+    },
+    "cta": {
+      "title": "¿Listo para transformar sus comunicaciones?",
+      "description": "Únase a miles de equipos que confían en VisioConnect.",
+      "button": "Comenzar Gratis"
+    }
+  },
+  "login": {
+    "title": "Bienvenido de nuevo",
+    "subtitle": "Inicie sesión para continuar",
+    "email": "Email",
+    "emailPlaceholder": "su@email.com",
+    "password": "Contraseña",
+    "forgotPassword": "¿Olvidó su contraseña?",
+    "loading": "Iniciando sesión...",
+    "submit": "Iniciar sesión",
+    "orContinue": "o continuar con",
+    "devAccess": "🔑 Acceso Desarrollador (Local)",
+    "noAccount": "¿No tiene cuenta?",
+    "createAccount": "Crear una cuenta",
+    "error": "Ocurrió un error al iniciar sesión"
+  },
+  "signup": {
+    "backHome": "Volver al inicio",
+    "title": "Crear una cuenta",
+    "subtitle": "Únase a nosotros y simplifique sus videollamadas.",
+    "email": "Email profesional",
+    "emailPlaceholder": "nombre@empresa.com",
+    "password": "Contraseña",
+    "passwordPlaceholder": "Cree una contraseña segura",
+    "criteria": {
+      "length": "8 caracteres mín",
+      "uppercase": "1 Mayúscula",
+      "number": "1 Número",
+      "special": "1 Carácter especial"
+    },
+    "loading": "Creando...",
+    "submit": "Crear mi cuenta",
+    "orSignupWith": "O registrarse con",
+    "hasAccount": "¿Ya tiene cuenta?",
+    "login": "Iniciar sesión",
+    "verifyTitle": "Verifique su email",
+    "verifySubtitle": "Enviamos un código de 6 dígitos a",
+    "verifying": "Verificando...",
+    "validateCode": "Validar código",
+    "errorFields": "Complete todos los campos",
+    "errorPassword": "La contraseña no cumple los criterios",
+    "errorCode": "Código inválido",
+    "errorCreate": "Error al crear la cuenta",
+    "rightPanel": {
+      "title": "Innovación al servicio de la conexión.",
+      "desc": "Cree espacios de trabajo colaborativos."
+    }
+  },
+  "blog": {
+    "hero": {
+      "title": "El Blog de VisioConnect",
+      "subtitle": "Noticias, consejos e insights sobre trabajo colaborativo."
+    },
+    "posts": {
+      "0": {
+        "title": "El futuro del trabajo híbrido",
+        "excerpt": "Cómo las empresas se adaptan al trabajo remoto.",
+        "category": "Tendencias",
+        "date": "20 Feb 2024",
+        "author": "Marie D."
+      },
+      "1": {
+        "title": "5 consejos para reuniones más efectivas",
+        "excerpt": "Mejores prácticas para aumentar la productividad.",
+        "category": "Productividad",
+        "date": "15 Feb 2024",
+        "author": "Thomas L."
+      },
+      "2": {
+        "title": "Seguridad de datos: nuestra prioridad",
+        "excerpt": "Cómo VisioConnect cifra y protege sus datos.",
+        "category": "Seguridad",
+        "date": "08 Feb 2024",
+        "author": "Sophie B."
+      },
+      "3": {
+        "title": "Nueva función: Pizarra",
+        "excerpt": "Colabore visualmente con nuestra pizarra interactiva.",
+        "category": "Producto",
+        "date": "01 Feb 2024",
+        "author": "Lucas M."
+      },
+      "4": {
+        "title": "Cómo configurar su espacio de trabajo",
+        "excerpt": "Guía para optimizar su entorno de trabajo remoto.",
+        "category": "Guía",
+        "date": "28 Ene 2024",
+        "author": "Camille R."
+      },
+      "5": {
+        "title": "Entrevista: El futuro de la comunicación",
+        "excerpt": "Conversación con nuestro CEO sobre los próximos 10 años.",
+        "category": "Entrevista",
+        "date": "20 Ene 2024",
+        "author": "Alex P."
+      }
+    },
+    "cta": {
+      "title": "¿Quiere escribir para nosotros?",
+      "description": "Comparta sus ideas con la comunidad VisioConnect.",
+      "button": "Proponer un artículo"
+    }
+  },
+  "demo": {
+    "hero": {
+      "eyebrow": "Demo inmersiva de la plataforma",
+      "title": "Descubra la videoconferencia del mañana,",
+      "titleHighlight": "impulsada por IA",
+      "subtitle": "Sumérjase en un entorno de colaboración premium.",
+      "launchDemo": "Iniciar demo en vivo",
+      "schedulePresentation": "Programar presentación",
+      "meta": {
+        "latency": "Muy baja latencia",
+        "ai": "Asistente IA integrado",
+        "enterprise": "Diseñado para empresas"
+      }
+    },
+    "highlights": {
+      "0": {
+        "title": "Video fluido y ultra HD",
+        "desc": "Calidad hasta 4K, adaptada dinámicamente."
+      },
+      "1": {
+        "title": "Asistente IA exclusivo",
+        "desc": "Transcripción en tiempo real, resúmenes y agente interactivo."
+      },
+      "2": {
+        "title": "Control y Seguridad",
+        "desc": "Cifrado robusto con separación estricta de flujos."
+      },
+      "3": {
+        "title": "Conexión instantánea",
+        "desc": "Únase desde cualquier navegador sin instalación."
+      }
+    },
+    "workflow": {
+      "0": {
+        "title": "Haga clic y únase",
+        "desc": "Sin formularios: entre con un clic."
+      },
+      "1": {
+        "title": "Pruebe las funciones",
+        "desc": "Active la cámara, chatee con la IA, use la pizarra."
+      },
+      "2": {
+        "title": "Pase al siguiente nivel",
+        "desc": "¿Convencido? Nuestro equipo le acompaña."
+      }
+    },
+    "usecases": {
+      "0": {
+        "title": "Reuniones directivas",
+        "desc": "Entorno confidencial, estable y premium."
+      },
+      "1": {
+        "title": "Colaboración remota",
+        "desc": "Reduzca la fricción técnica para equipos globales."
+      },
+      "2": {
+        "title": "Soporte y relación con clientes",
+        "desc": "Punto de contacto reactivo con transcripción automática."
+      },
+      "3": {
+        "title": "Presentaciones comerciales",
+        "desc": "Genere confianza con una solución moderna."
+      }
+    },
+    "proof": {
+      "0": {
+        "label": "Latencia objetivo",
+        "value": "29 ms"
+      },
+      "1": {
+        "label": "Video",
+        "value": "Hasta 4K adaptativo"
+      },
+      "2": {
+        "label": "IA integrada",
+        "value": "Resúmenes y Acciones"
+      },
+      "3": {
+        "label": "Acceso",
+        "value": "Sin instalación"
+      }
+    },
+    "sections": {
+      "difference": {
+        "label": "Lo que marca la diferencia",
+        "title": "Una plataforma construida para la excelencia",
+        "text": "Reinventamos la videoconferencia como herramienta inmersiva e inteligente."
+      },
+      "workflow": {
+        "label": "Recorrido",
+        "title": "Cómo funciona la demo",
+        "text": "En segundos, está en videoconferencia."
+      },
+      "usecases": {
+        "label": "Casos de uso",
+        "title": "Pensado para su día a día",
+        "text": "Descubra cómo se adapta a sus necesidades."
+      }
+    },
+    "darkband": {
+      "label": "Bajo el capó",
+      "title": "Arquitectura para el rendimiento",
+      "text": "Nuestra solución se basa en los estándares más exigentes.",
+      "bullets": {
+        "0": "Enrutamiento de video optimizado (SFU)",
+        "1": "Códecs de última generación",
+        "2": "Procesamiento de IA en tiempo real",
+        "3": "Infraestructura redundante de alta disponibilidad"
+      }
+    },
+    "metrics": {
+      "eyebrow": "Señal principal",
+      "value": "Listo para 4K",
+      "caption": "Infraestructura diseñada para rendimiento puro.",
+      "tiles": {
+        "0": {
+          "label": "Bitrate de video",
+          "value": "2.4 Mbps"
+        },
+        "1": {
+          "label": "RTT promedio",
+          "value": "29 ms"
+        },
+        "2": {
+          "label": "Audio",
+          "value": "Opus 48 kHz"
+        },
+        "3": {
+          "label": "Colaboración",
+          "value": "Chat + IA + compartir"
+        }
+      }
+    },
+    "cta": {
+      "title": "¿Listo para probar la diferencia?",
+      "description": "Únase a nuestra sala demo o programe una llamada.",
+      "button": "Iniciar sala demo"
+    }
+  },
+  "careers": {
+    "hero": {
+      "title": "Únase a la aventura VisioConnect",
+      "subtitle": "Construya el futuro de la colaboración por video."
+    },
+    "values": {
+      "0": {
+        "title": "Innovación",
+        "desc": "Empujamos los límites de la tecnología."
+      },
+      "1": {
+        "title": "Transparencia",
+        "desc": "Comunicación abierta y honesta."
+      },
+      "2": {
+        "title": "Impacto",
+        "desc": "Impacto positivo en cómo trabaja el mundo."
+      },
+      "title": "Nuestros Valores"
+    },
+    "jobs": {
+      "0": {
+        "title": "Desarrollador Full Stack Senior",
+        "dept": "Ingeniería",
+        "location": "París / Remoto",
+        "type": "Tiempo completo"
+      },
+      "1": {
+        "title": "Product Manager",
+        "dept": "Producto",
+        "location": "París",
+        "type": "Tiempo completo"
+      },
+      "2": {
+        "title": "Customer Success Manager",
+        "dept": "Ventas",
+        "location": "Lyon",
+        "type": "Tiempo completo"
+      },
+      "3": {
+        "title": "DevOps Engineer",
+        "dept": "Infraestructura",
+        "location": "Remoto",
+        "type": "Freelance"
+      },
+      "title": "Posiciones Abiertas",
+      "apply": "Postularse"
+    },
+    "cta": {
+      "title": "¿No encuentra la posición adecuada?",
+      "description": "Siempre buscamos talento excepcional.",
+      "button": "Candidatura espontánea"
+    }
+  },
+  "changelog": {
+    "hero": {
+      "title": "Novedades",
+      "subtitle": "Descubra las últimas actualizaciones y mejoras."
+    },
+    "versions": {
+      "0": {
+        "version": "v2.0.0",
+        "date": "21 de febrero de 2024",
+        "title": "Rediseño completo",
+        "notes": {
+          "0": "Nuevo sistema de diseño 'Clean'.",
+          "1": "Interfaz más moderna.",
+          "2": "Optimización de rendimiento.",
+          "3": "Nuevo modo oscuro nativo."
+        }
+      },
+      "1": {
+        "version": "v1.5.0",
+        "date": "10 de enero de 2024",
+        "title": "Mejoras de video",
+        "notes": {
+          "0": "Soporte 4K para cuentas Pro.",
+          "1": "30% menos latencia.",
+          "2": "Nuevos filtros de cámara en tiempo real."
+        }
+      },
+      "2": {
+        "version": "v1.2.0",
+        "date": "5 de diciembre de 2023",
+        "title": "Herramientas de colaboración",
+        "notes": {
+          "0": "Pizarra interactiva.",
+          "1": "Compartir pantalla optimizado.",
+          "2": "Encuestas en vivo."
+        }
+      },
+      "3": {
+        "version": "v1.0.0",
+        "date": "1 de noviembre de 2023",
+        "title": "Lanzamiento oficial",
+        "notes": {
+          "0": "Lanzamiento público.",
+          "1": "Llamadas ilimitadas.",
+          "2": "Mensajería segura.",
+          "3": "Gestión de equipos."
+        }
+      }
+    },
+    "cta": {
+      "title": "¿Tiene una idea?",
+      "description": "Su feedback es valioso.",
+      "button": "Sugerir una función"
+    }
+  },
+  "checkout": {
+    "back": "Volver a precios",
+    "title": "Completar su pedido",
+    "subtitle": "Asegure su acceso a VisioConnect.",
+    "contact": {
+      "title": "Datos de contacto",
+      "email": "Correo electrónico *",
+      "emailPlaceholder": "su@email.com",
+      "name": "Nombre completo *",
+      "namePlaceholder": "Su nombre completo"
+    },
+    "payment": {
+      "title": "Información de pago",
+      "card": "Número de tarjeta *",
+      "cardPlaceholder": "1234 5678 9012 3456",
+      "expiry": "Fecha de vencimiento *",
+      "expiryPlaceholder": "MM/AA",
+      "cvv": "CVV *",
+      "cvvPlaceholder": "123",
+      "secure": "Sus datos están protegidos con cifrado SSL de 256 bits."
+    },
+    "billing": {
+      "title": "Dirección de facturación",
+      "address": "Dirección *",
+      "addressPlaceholder": "Calle Principal 123",
+      "city": "Ciudad *",
+      "cityPlaceholder": "Madrid",
+      "zipCode": "Código postal *",
+      "zipCodePlaceholder": "28001"
+    },
+    "plans": {
+      "starter": {
+        "name": "Plan Starter",
+        "feature1": "Hasta 10 participantes",
+        "feature2": "Reuniones ilimitadas",
+        "feature3": "Compartir pantalla",
+        "feature4": "Chat integrado",
+        "feature5": "Grabación (1h/mes)"
+      },
+      "professional": {
+        "name": "Plan Professional",
+        "feature1": "Hasta 100 participantes",
+        "feature2": "Reuniones ilimitadas",
+        "feature3": "Pantalla compartida avanzada",
+        "feature4": "Chat y archivos",
+        "feature5": "Grabación ilimitada",
+        "feature6": "Integraciones",
+        "feature7": "Soporte prioritario"
+      },
+      "enterprise": {
+        "name": "Plan Enterprise",
+        "feature1": "Participantes ilimitados",
+        "feature2": "Todas las funciones",
+        "feature3": "API personalizada",
+        "feature4": "SSO y seguridad avanzada",
+        "feature5": "Soporte dedicado",
+        "feature6": "Formación personalizada",
+        "feature7": "SLA garantizado"
+      }
+    },
+    "perMonth": "por mes",
+    "summary": {
+      "title": "Resumen del pedido",
+      "subtotal": "Subtotal",
+      "tax": "IVA (20%)",
+      "discount": "Descuento primer mes (-50%)",
+      "total": "Total"
+    },
+    "submit": "Completar pedido",
+    "error": "Error: ",
+    "errorPayment": "Error al crear la sesión de pago."
+  },
+  "settings": {
+    "back": "Volver",
+    "title": "Configuración",
+    "profile": {
+      "title": "Perfil de Usuario",
+      "desc": "Edite su información personal"
+    },
+    "security": {
+      "title": "Seguridad y Privacidad",
+      "desc": "Gestione su contraseña y 2FA"
+    },
+    "billing": {
+      "title": "Facturación y Suscripciones",
+      "desc": "Facturas y métodos de pago"
+    },
+    "notifications": {
+      "title": "Notificaciones",
+      "desc": "Preferencias de notificaciones"
+    },
+    "appearance": {
+      "title": "Apariencia",
+      "desc": "Tema e interfaz de usuario"
+    },
+    "language": {
+      "title": "Idioma y Región",
+      "desc": "Idioma y preferencias regionales"
+    }
+  },
+  "account": {
+    "dashboard": "Panel",
+    "subtitle": "Gestione su perfil y preferencias.",
+    "tabs": {
+      "profile": "Mi Perfil",
+      "security": "Seguridad e Inicio de sesión"
+    },
+    "menu": "Menú",
+    "logout": "Cerrar sesión",
+    "personalInfo": "Información Personal",
+    "avatar": {
+      "title": "Foto de perfil",
+      "desc": "Personalice su avatar. Formatos: JPG, PNG, GIF, WEBP (Max 10MB)."
+    },
+    "securityManaged": "Seguridad gestionada por Clerk",
+    "securityTitle": "Seguridad de la cuenta",
+    "securityDesc": "La seguridad de su cuenta es gestionada por nuestro proveedor de identidad.",
+    "fields": {
+      "displayName": "Nombre para mostrar",
+      "email": "Email (Solo lectura)",
+      "phone": "Teléfono",
+      "location": "Ubicación",
+      "company": "Empresa",
+      "position": "Puesto / Profesión",
+      "website": "Sitio web",
+      "bio": "Descripción (Bio)"
+    },
+    "placeholders": {
+      "displayName": "Ej: TheoG",
+      "phone": "+34 612 345 678",
+      "location": "Madrid, España",
+      "company": "Nombre de empresa",
+      "position": "Desarrollador, CEO...",
+      "website": "https://mi-sitio.es",
+      "bio": "Cuéntenos sobre usted..."
+    },
+    "bioHint": "Aparece en su perfil público si tiene uno.",
+    "cancel": "Cancelar",
+    "saving": "Guardando...",
+    "save": "Guardar",
+    "messages": {
+      "avatarSuccess": "¡Foto actualizada con éxito!",
+      "avatarError": "Error al cambiar la foto.",
+      "saveSuccess": "¡Perfil actualizado con éxito!",
+      "saveError": "Error al guardar."
+    }
+  },
+  "docs": {
+    "hero": {
+      "title": "Documentación",
+      "subtitle": "Todo lo que necesita para configurar y usar VisioConnect."
+    },
+    "search": "Buscar en la documentación...",
+    "sections": {
+      "manual": {
+        "title": "Manual de Usuario",
+        "desc": "Guías paso a paso.",
+        "links": {
+          "0": "Primeros pasos",
+          "1": "Gestionar una reunión",
+          "2": "Gestión de cuenta"
+        }
+      },
+      "api": {
+        "title": "API e Integraciones",
+        "desc": "Documentación técnica para desarrolladores.",
+        "links": {
+          "0": "Referencia API REST",
+          "1": "Webhooks",
+          "2": "Autenticación"
+        }
+      },
+      "admin": {
+        "title": "Administración y Seguridad",
+        "desc": "Recursos para administradores.",
+        "links": {
+          "0": "Guía de despliegue",
+          "1": "Protocolos de seguridad",
+          "2": "Configuración SSO"
+        }
+      }
+    },
+    "cta": {
+      "title": "¿Necesita más ayuda?",
+      "description": "Nuestro equipo está disponible 24/7.",
+      "button": "Contactar soporte"
+    }
+  },
+  "support": {
+    "hero": {
+      "title": "Centro de Ayuda",
+      "subtitle": "¿Cómo podemos ayudarle hoy?"
+    },
+    "search": "Buscar artículos y guías...",
+    "categories": {
+      "0": {
+        "title": "Primeros Pasos",
+        "desc": "Todo para comenzar con VisioConnect."
+      },
+      "1": {
+        "title": "Solución de Problemas",
+        "desc": "Soluciones a problemas comunes."
+      },
+      "2": {
+        "title": "Cuenta y Perfil",
+        "desc": "Gestione su configuración de cuenta."
+      },
+      "3": {
+        "title": "Facturación",
+        "desc": "Facturas y métodos de pago."
+      }
+    },
+    "cta": {
+      "title": "¿No encuentra su respuesta?",
+      "description": "Nuestro equipo está disponible 24/7.",
+      "button": "Contactar Soporte"
+    }
+  },
+  "status": {
+    "allOperational": "Todos los sistemas operativos",
+    "title": "Estado del Servicio",
+    "lastUpdate": "Última actualización: hace 2 minutos",
+    "operational": "Operativo",
+    "services": {
+      "api": "API VisioConnect",
+      "video": "Servidores de Video (WebRTC)",
+      "web": "Sitio Web y Panel",
+      "db": "Base de datos",
+      "ai": "Procesamiento IA en tiempo real"
+    },
+    "uptimeTitle": "Disponibilidad (últimos 30 días)",
+    "uptimeChart": "Gráfico de disponibilidad - 99.99% promedio",
+    "incidents": {
+      "0": {
+        "date": "15 de febrero de 2024",
+        "title": "Mantenimiento planificado",
+        "desc": "Actualización de infraestructura de video. Sin interrupciones."
+      },
+      "1": {
+        "date": "2 de enero de 2024",
+        "title": "Latencia en servidores EU-West",
+        "desc": "Latencia aumentada durante 15 minutos. Resuelto automáticamente."
+      },
+      "title": "Historial de incidentes"
+    }
+  },
+  "partners": {
+    "hero": {
+      "title": "Programa de Socios",
+      "subtitle": "Haga crecer su negocio con una solución de video para equipos exigentes",
+      "desc": "VisioConnect apoya integradores, agencias y consultoras.",
+      "ctaTeam": "Hablar con el equipo de asociaciones",
+      "ctaPlatform": "Descubrir la plataforma"
+    },
+    "overview": {
+      "title": "Visión del programa",
+      "model": "Modelo",
+      "modelValue": "Ingresos recurrentes",
+      "support": "Soporte",
+      "supportValue": "Dedicado",
+      "activation": "Activación",
+      "activationValue": "Rápida",
+      "positioning": "Posicionamiento",
+      "positioningValue": "B2B premium"
+    },
+    "props": {
+      "0": {
+        "label": "B2B",
+        "desc": "Programa orientado a ventas, integración y cuentas profesionales."
+      },
+      "1": {
+        "label": "4K",
+        "desc": "Plataforma para calidad de video exigente."
+      },
+      "2": {
+        "label": "E2EE",
+        "desc": "Fuerte posicionamiento en seguridad."
+      },
+      "3": {
+        "label": "API",
+        "desc": "Posibilidades de integración para su mercado."
+      }
+    },
+    "why": {
+      "title": "Por qué unirse al programa",
+      "subtitle": "Ventajas concretas para su negocio",
+      "reasons": {
+        "0": {
+          "title": "Modelo de ingresos más claro",
+          "desc": "Comisión recurrente por cada cliente."
+        },
+        "1": {
+          "title": "Propuesta creíble",
+          "desc": "Tecnología diferenciadora con 4K e IA."
+        },
+        "2": {
+          "title": "Soporte más operativo",
+          "desc": "Soporte dedicado y recursos de marketing."
+        }
+      }
+    },
+    "formats": {
+      "0": {
+        "type": "Referral",
+        "title": "Referidor de negocios",
+        "desc": "Recomiende VisioConnect y gane comisión.",
+        "bullets": {
+          "0": "Comisión por venta",
+          "1": "Sin compromiso técnico",
+          "2": "Panel de seguimiento"
+        }
+      },
+      "1": {
+        "type": "Reseller",
+        "title": "Revendedor / Agencia",
+        "desc": "Integre VisioConnect en su oferta.",
+        "bullets": {
+          "0": "Tarifas preferenciales",
+          "1": "Soporte prioritario",
+          "2": "Co-branding posible"
+        }
+      },
+      "2": {
+        "type": "Integration",
+        "title": "Integrador / Socio de solución",
+        "desc": "Conecte VisioConnect a sus soluciones.",
+        "bullets": {
+          "0": "Acceso API completo",
+          "1": "Acompañamiento técnico",
+          "2": "Programa de certificación"
+        }
+      },
+      "title": "Tres formatos de asociación",
+      "subtitle": "Elija el que corresponda a su actividad"
+    },
+    "collab": {
+      "title": "Cómo funciona la colaboración",
+      "subtitle": "Un proceso simple en 3 pasos",
+      "steps": {
+        "0": {
+          "title": "Calificación",
+          "desc": "Intercambio inicial sobre su actividad."
+        },
+        "1": {
+          "title": "Alineación comercial",
+          "desc": "Definición de condiciones y objetivos."
+        },
+        "2": {
+          "title": "Activación",
+          "desc": "Configuración de herramientas y lanzamiento."
+        }
+      }
+    },
+    "profiles": {
+      "title": "Para qué perfiles",
+      "subtitle": "Nuestro programa se dirige a",
+      "items": {
+        "0": {
+          "title": "Agencias y estudios",
+          "desc": "Integre video en proyectos de clientes."
+        },
+        "1": {
+          "title": "Consultoras",
+          "desc": "Ofrezca una herramienta de comunicación premium."
+        },
+        "2": {
+          "title": "Integradores y revendedores",
+          "desc": "Enriquezca su catálogo de soluciones."
+        }
+      }
+    },
+    "cta": {
+      "title": "Construir una asociación sólida",
+      "description": "Hablemos de su negocio y objetivos.",
+      "button": "Contactar equipo de asociaciones"
+    }
+  },
+  "developer": {
+    "hero": {
+      "role": "Desarrollador Full-Stack Autodidacta & UI/UX",
+      "title1": "Construir interfaces",
+      "title2": "con sentido.",
+      "desc": "Apasionado, perseverante y 100% autodidacta.",
+      "ctaProjects": "Ver proyectos",
+      "ctaContact": "Contactarme"
+    },
+    "journey": {
+      "title": "Cómo empezó todo",
+      "subtitle": "Mi camino está hecho de pasión y determinación.",
+      "stages": {
+        "0": {
+          "era": "La Chispa",
+          "title": "Descubrir la Web",
+          "desc": "Al principio, fue la necesidad de entender cómo funcionaban los sitios web."
+        },
+        "1": {
+          "era": "La Inmersión",
+          "title": "Dominar JavaScript y UI",
+          "desc": "Lo estático está bien, lo dinámico es mejor."
+        },
+        "2": {
+          "era": "La Revolución",
+          "title": "El ecosistema React y Web moderna",
+          "desc": "Descubrimiento de React y herramientas modernas."
+        },
+        "3": {
+          "era": "La Arquitectura",
+          "title": "Back-End y Datos",
+          "desc": "Para productos reales, hay que dominar el back-end."
+        },
+        "4": {
+          "era": "Hoy",
+          "title": "Full-Stack e Ingeniería",
+          "desc": "Hoy creo plataformas completas, del diseño a la producción."
+        }
+      }
+    },
+    "skills": {
+      "title": "Mi Arsenal Técnico",
+      "subtitle": "Habilidades adquiridas en el campo.",
+      "categories": {
+        "0": "Front-End & UI",
+        "1": "Back-End & DB",
+        "2": "Herramientas & Workflow"
+      }
+    },
+    "projects": {
+      "title": "Proyectos Principales",
+      "subtitle": "Sumérjase en mis creaciones.",
+      "items": {
+        "0": {
+          "category": "Aplicación SaaS Completa",
+          "title": "VisioConnect Platform",
+          "desc": "Infraestructura de videoconferencia completa con IA.",
+          "cta": "Descubrir el proyecto"
+        },
+        "1": {
+          "category": "Big Data & Arquitectura",
+          "title": "FinanceFlow Analytics",
+          "desc": "Interfaz de administración ultrarrápida.",
+          "cta": "Explorar la demo"
+        },
+        "2": {
+          "category": "Inteligencia Artificial",
+          "title": "Nexus AI Studio",
+          "desc": "Generador de componentes asistido por IA.",
+          "cta": "Lanzar el Studio"
+        }
+      }
+    },
+    "livePreview": "Vista previa en vivo",
+    "philosophy": {
+      "title": "Mi Filosofía del Código",
+      "desc": "Ser autodidacta me enseñó rigor y exigencia.",
+      "principles": {
+        "0": {
+          "title": "Calidad, Solidez y Legibilidad",
+          "desc": "Código limpio y mantenible."
+        },
+        "1": {
+          "title": "Rendimiento Puro",
+          "desc": "Optimización en cada nivel."
+        },
+        "2": {
+          "title": "Enfoque en el Usuario Final (UX)",
+          "desc": "El usuario está en el centro de cada decisión."
+        }
+      }
+    },
+    "stats": {
+      "0": {
+        "value": "100%",
+        "label": "Aprendizaje Continuo"
+      },
+      "1": {
+        "value": "0",
+        "label": "Bootcamps, 100% Autodidacta"
+      },
+      "2": {
+        "value": "100k+",
+        "label": "Líneas de código escritas"
+      },
+      "3": {
+        "value": "15+",
+        "label": "Proyectos y Prototipos"
+      }
+    }
+  },
+  "room": {
+    "cameraRefused": "Acceso a cámara denegado",
+    "cameraRefusedDesc": "VisioConnect necesita permiso para la cámara o micrófono.",
+    "refresh": "Actualizar página",
+    "unexpectedError": "Ocurrió un error inesperado.",
+    "preparing": "Preparando sala segura...",
+    "connectionError": "Conexión fallida",
+    "connectionErrorDesc": "No se pudo validar su acceso.",
+    "backHome": "Volver al inicio",
+    "accessDenied": "Acceso denegado",
+    "accessDeniedDesc": "Debe iniciar sesión o ser invitado.",
+    "beta": {
+      "title": "Acceso Beta Privado",
+      "subtitle": "Bienvenido a VisioConnect. Ingrese su código único.",
+      "keyLabel": "Clave de autorización",
+      "keyPlaceholder": "Ingrese el código...",
+      "invalidKey": "Código de acceso inválido.",
+      "pseudoLabel": "Su apodo",
+      "pseudoPlaceholder": "Ej: Juan Pérez",
+      "submit": "Desbloquear y unirse",
+      "e2ee": "Protegido por cifrado de extremo a extremo (E2EE)"
     }
   }
 }

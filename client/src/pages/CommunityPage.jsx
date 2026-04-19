@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
+import { useTranslation } from '../hooks/useTranslation';
 
 const COLORS = {
   primary: 'hsl(var(--primary))',
@@ -167,59 +168,61 @@ const TopicMeta = styled.div`
 `;
 
 const CommunityPage = () => {
+  const { t } = useTranslation();
+
   return (
     <PageContainer>
       <HeaderClean />
       <MainContent>
         <Hero>
-          <Title>Communauté VisioConnect</Title>
-          <Subtitle>Rejoignez des milliers de créateurs, développeurs et professionnels.</Subtitle>
+          <Title>{t('community.hero.title')}</Title>
+          <Subtitle>{t('community.hero.subtitle')}</Subtitle>
         </Hero>
 
         <CommunityGrid>
           <CommunityCard>
             <IconWrapper bgColor={COLORS.discord}>💬</IconWrapper>
-            <CardTitle>Discord</CardTitle>
-            <CardText>Rejoignez notre serveur pour discuter en direct avec l'équipe et la communauté.</CardText>
-            <ActionButton href="#" color={COLORS.discord}>Rejoindre le serveur</ActionButton>
+            <CardTitle>{t('community.social.discord.title')}</CardTitle>
+            <CardText>{t('community.social.discord.desc')}</CardText>
+            <ActionButton href="#" color={COLORS.discord}>{t('community.social.discord.button')}</ActionButton>
           </CommunityCard>
 
           <CommunityCard>
             <IconWrapper bgColor={COLORS.twitter}>🐦</IconWrapper>
-            <CardTitle>X / Twitter</CardTitle>
-            <CardText>Suivez-nous pour les dernières nouvelles et mises à jour.</CardText>
-            <ActionButton href="#" color={COLORS.twitter}>Suivre @visiconnect</ActionButton>
+            <CardTitle>{t('community.social.twitter.title')}</CardTitle>
+            <CardText>{t('community.social.twitter.desc')}</CardText>
+            <ActionButton href="#" color={COLORS.twitter}>{t('community.social.twitter.button')}</ActionButton>
           </CommunityCard>
 
           <CommunityCard>
             <IconWrapper bgColor={COLORS.linkedin}>💼</IconWrapper>
-            <CardTitle>LinkedIn</CardTitle>
-            <CardText>Restez connecté avec notre actualité professionnelle.</CardText>
-            <ActionButton href="#" color={COLORS.linkedin}>Nous suivre</ActionButton>
+            <CardTitle>{t('community.social.linkedin.title')}</CardTitle>
+            <CardText>{t('community.social.linkedin.desc')}</CardText>
+            <ActionButton href="#" color={COLORS.linkedin}>{t('community.social.linkedin.button')}</ActionButton>
           </CommunityCard>
         </CommunityGrid>
 
         <ForumSection>
           <ForumHeader>
-            <CardTitle style={{ marginBottom: 0 }}>Dernières discussions du Forum</CardTitle>
-            <ActionButton href="#" style={{ fontSize: '0.9rem', padding: '8px 16px' }}>Voir tout</ActionButton>
+            <CardTitle style={{ marginBottom: 0 }}>{t('community.forum.title')}</CardTitle>
+            <ActionButton href="#" style={{ fontSize: '0.9rem', padding: '8px 16px' }}>{t('community.forum.viewAll')}</ActionButton>
           </ForumHeader>
           <TopicList>
             <TopicItem>
-              <TopicTitle>Comment intégrer VisioConnect dans une app React ?</TopicTitle>
-              <TopicMeta>32 rép • il y a 2h</TopicMeta>
+              <TopicTitle>{t('community.forum.posts.0.title')}</TopicTitle>
+              <TopicMeta>{t('community.forum.posts.0.meta')}</TopicMeta>
             </TopicItem>
             <TopicItem>
-              <TopicTitle>Meilleures pratiques pour les webinaires de +500 personnes</TopicTitle>
-              <TopicMeta>15 rép • il y a 4h</TopicMeta>
+              <TopicTitle>{t('community.forum.posts.1.title')}</TopicTitle>
+              <TopicMeta>{t('community.forum.posts.1.meta')}</TopicMeta>
             </TopicItem>
             <TopicItem>
-              <TopicTitle>Idée de fonctionnalité : Tableau blanc infini</TopicTitle>
-              <TopicMeta>89 rép • il y a 1j</TopicMeta>
+              <TopicTitle>{t('community.forum.posts.2.title')}</TopicTitle>
+              <TopicMeta>{t('community.forum.posts.2.meta')}</TopicMeta>
             </TopicItem>
             <TopicItem>
-              <TopicTitle>Partagez vos configurations de télétravail !</TopicTitle>
-              <TopicMeta>124 rép • il y a 2j</TopicMeta>
+              <TopicTitle>{t('community.forum.posts.3.title')}</TopicTitle>
+              <TopicMeta>{t('community.forum.posts.3.meta')}</TopicMeta>
             </TopicItem>
           </TopicList>
         </ForumSection>

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import CallToAction from '../components/CallToAction';
+import { useTranslation } from '../hooks/useTranslation';
 
 const COLORS = {
   primary: 'hsl(var(--primary))',
@@ -184,59 +185,61 @@ const AvatarCircle = styled.div`
 `;
 
 const BlogPage = () => {
+    const { t } = useTranslation();
+
     const posts = [
         {
             id: 1,
-            title: "L'avenir du travail hybride",
-            excerpt: "Comment les entreprises s'adaptent à la nouvelle réalité du travail à distance et comment la technologie facilite cette transition.",
-            category: "Tendances",
-            date: "20 Fév 2024",
-            author: "Marie D.",
+            title: t('blog.posts.0.title'),
+            excerpt: t('blog.posts.0.excerpt'),
+            category: t('blog.posts.0.category'),
+            date: t('blog.posts.0.date'),
+            author: t('blog.posts.0.author'),
             imageColor: "#3b82f6"
         },
         {
             id: 2,
-            title: "5 astuces pour des réunions plus efficaces",
-            excerpt: "Découvrez nos meilleures pratiques pour réduire le temps passé en réunion tout en augmentant la productivité de votre équipe.",
-            category: "Productivité",
-            date: "15 Fév 2024",
-            author: "Thomas L.",
+            title: t('blog.posts.1.title'),
+            excerpt: t('blog.posts.1.excerpt'),
+            category: t('blog.posts.1.category'),
+            date: t('blog.posts.1.date'),
+            author: t('blog.posts.1.author'),
             imageColor: "#10b981"
         },
         {
             id: 3,
-            title: "Sécurité des données : notre priorité",
-            excerpt: "Un aperçu approfondi de la manière dont VisioConnect chiffre vos communications et protège vos données sensibles.",
-            category: "Sécurité",
-            date: "08 Fév 2024",
-            author: "Sophie B.",
+            title: t('blog.posts.2.title'),
+            excerpt: t('blog.posts.2.excerpt'),
+            category: t('blog.posts.2.category'),
+            date: t('blog.posts.2.date'),
+            author: t('blog.posts.2.author'),
             imageColor: "#ef4444"
         },
         {
             id: 4,
-            title: "Nouvelle fonctionnalité : Tableau Blanc",
-            excerpt: "Collaborez visuellement avec votre équipe grâce à notre nouvel outil de tableau blanc interactif intégré.",
-            category: "Produit",
-            date: "01 Fév 2024",
-            author: "Lucas M.",
+            title: t('blog.posts.3.title'),
+            excerpt: t('blog.posts.3.excerpt'),
+            category: t('blog.posts.3.category'),
+            date: t('blog.posts.3.date'),
+            author: t('blog.posts.3.author'),
             imageColor: "#f59e0b"
         },
         {
             id: 5,
-            title: "Comment configurer votre espace de travail",
-            excerpt: "Guide complet pour optimiser votre environnement physique et numérique pour le télétravail.",
-            category: "Guide",
-            date: "28 Jan 2024",
-            author: "Camille R.",
+            title: t('blog.posts.4.title'),
+            excerpt: t('blog.posts.4.excerpt'),
+            category: t('blog.posts.4.category'),
+            date: t('blog.posts.4.date'),
+            author: t('blog.posts.4.author'),
             imageColor: "#8b5cf6"
         },
         {
             id: 6,
-            title: "Interview : Le futur de la communication",
-            excerpt: "Entretien avec notre CEO sur sa vision des communications unifiées pour la prochaine décennie.",
-            category: "Interview",
-            date: "20 Jan 2024",
-            author: "Alex P.",
+            title: t('blog.posts.5.title'),
+            excerpt: t('blog.posts.5.excerpt'),
+            category: t('blog.posts.5.category'),
+            date: t('blog.posts.5.date'),
+            author: t('blog.posts.5.author'),
             imageColor: "#ec4899"
         }
     ];
@@ -247,9 +250,9 @@ const BlogPage = () => {
             <MainContent>
                 <Hero>
                     <SectionHeader>
-                        <h1>Le Blog VisioConnect</h1>
+                        <h1>{t('blog.hero.title')}</h1>
                         <p>
-                            Actualités, conseils et insights sur le monde du travail collaboratif et de la communication.
+                            {t('blog.hero.subtitle')}
                         </p>
                     </SectionHeader>
                 </Hero>
@@ -279,9 +282,9 @@ const BlogPage = () => {
                 </Grid>
                 </ContentWrapper>
                 <CallToAction 
-                    title="Vous souhaitez écrire pour nous ?"
-                    description="Partagez vos idées et votre expertise avec la communauté VisioConnect."
-                    buttonText="Proposer un article"
+                    title={t('blog.cta.title')}
+                    description={t('blog.cta.description')}
+                    buttonText={t('blog.cta.button')}
                     buttonLink="/contact"
                 />
             </MainContent>

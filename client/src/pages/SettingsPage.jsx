@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, User, Shield, CreditCard, Bell, Palette, Globe } from 'lucide-react';
+import { useTranslation } from '../hooks/useTranslation';
 
 const PageContainer = styled.div`
   min-height: 100vh;
@@ -99,41 +100,43 @@ const CardDescription = styled.p`
 `;
 
 const SettingsPage = () => {
+  const { t } = useTranslation();
+
   const settingsOptions = [
     {
       icon: User,
-      title: 'Profil Utilisateur',
-      description: 'Modifiez vos informations personnelles, photo de profil et nom d\'affichage',
+      title: t('settings.profile.title'),
+      description: t('settings.profile.desc'),
       onClick: () => {}
     },
     {
       icon: Shield,
-      title: 'Sécurité & Confidentialité',
-      description: 'Gérez votre mot de passe, authentification à deux facteurs et paramètres de confidentialité',
+      title: t('settings.security.title'),
+      description: t('settings.security.desc'),
       onClick: () => {}
     },
     {
       icon: CreditCard,
-      title: 'Facturation & Abonnements',
-      description: 'Consultez vos factures, gérez votre abonnement et méthodes de paiement',
+      title: t('settings.billing.title'),
+      description: t('settings.billing.desc'),
       onClick: () => {}
     },
     {
       icon: Bell,
-      title: 'Notifications',
-      description: 'Personnalisez vos préférences de notifications email et push',
+      title: t('settings.notifications.title'),
+      description: t('settings.notifications.desc'),
       onClick: () => {}
     },
     {
       icon: Palette,
-      title: 'Apparence',
-      description: 'Personnalisez le thème, les couleurs et l\'interface utilisateur',
+      title: t('settings.appearance.title'),
+      description: t('settings.appearance.desc'),
       onClick: () => {}
     },
     {
       icon: Globe,
-      title: 'Langue & Région',
-      description: 'Changez la langue de l\'interface et vos préférences régionales',
+      title: t('settings.language.title'),
+      description: t('settings.language.desc'),
       onClick: () => {}
     }
   ];
@@ -148,9 +151,9 @@ const SettingsPage = () => {
         <Header>
           <BackButton to="/">
             <ArrowLeft size={20} />
-            Retour
+            {t('settings.back')}
           </BackButton>
-          <Title>Paramètres</Title>
+          <Title>{t('settings.title')}</Title>
         </Header>
 
         <SettingsGrid>

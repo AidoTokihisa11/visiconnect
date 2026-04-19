@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import CallToAction from '../components/CallToAction';
+import { useTranslation } from '../hooks/useTranslation';
 
 const COLORS = {
   primary: 'hsl(var(--primary))',    
@@ -181,46 +182,48 @@ const CultureText = styled.p`
   line-height: 1.6;
 `;
 
-const JOBS = [
-  { id: 1, title: 'Développeur Full Stack Senior', department: 'Ingéniosité', location: 'Paris / Télétravail', type: 'CDI' },
-  { id: 2, title: 'Product Manager', department: 'Produit', location: 'Paris', type: 'CDI' },
-  { id: 3, title: 'Customer Success Manager', department: 'Sales', location: 'Lyon', type: 'CDI' },
-  { id: 4, title: 'DevOps Engineer', department: 'Infrastructure', location: 'Télétravail', type: 'Freelance' },
-];
-
 const CareersPageNew = () => {
+  const { t } = useTranslation();
+
+  const JOBS = [
+    { id: 1, title: t('careers.jobs.0.title'), department: t('careers.jobs.0.dept'), location: t('careers.jobs.0.location'), type: t('careers.jobs.0.type') },
+    { id: 2, title: t('careers.jobs.1.title'), department: t('careers.jobs.1.dept'), location: t('careers.jobs.1.location'), type: t('careers.jobs.1.type') },
+    { id: 3, title: t('careers.jobs.2.title'), department: t('careers.jobs.2.dept'), location: t('careers.jobs.2.location'), type: t('careers.jobs.2.type') },
+    { id: 4, title: t('careers.jobs.3.title'), department: t('careers.jobs.3.dept'), location: t('careers.jobs.3.location'), type: t('careers.jobs.3.type') },
+  ];
+
   return (
     <PageContainer>
       <HeaderClean />
       <MainContent>
         <Hero>
-          <Title>Rejoignez l'aventure VisioConnect</Title>
-          <Subtitle>Construisez avec nous le futur de la collaboration vidéo.</Subtitle>
+          <Title>{t('careers.hero.title')}</Title>
+          <Subtitle>{t('careers.hero.subtitle')}</Subtitle>
         </Hero>
 
         <Section>
-          <SectionTitle>Nos Valeurs</SectionTitle>
+          <SectionTitle>{t('careers.values.title')}</SectionTitle>
           <CultureGrid>
             <CultureCard>
               <CultureIcon>🚀</CultureIcon>
-              <CultureTitle>Innovation</CultureTitle>
-              <CultureText>Nous repoussons constamment les limites de la technologie pour offrir la meilleure expérience.</CultureText>
+              <CultureTitle>{t('careers.values.0.title')}</CultureTitle>
+              <CultureText>{t('careers.values.0.desc')}</CultureText>
             </CultureCard>
             <CultureCard>
               <CultureIcon>🤝</CultureIcon>
-              <CultureTitle>Transparence</CultureTitle>
-              <CultureText>Nous croyons en une communication ouverte et honnête, tant en interne qu'avec nos utilisateurs.</CultureText>
+              <CultureTitle>{t('careers.values.1.title')}</CultureTitle>
+              <CultureText>{t('careers.values.1.desc')}</CultureText>
             </CultureCard>
             <CultureCard>
               <CultureIcon>🌍</CultureIcon>
-              <CultureTitle>Impact</CultureTitle>
-              <CultureText>Nous cherchons à avoir un impact positif sur la façon dont le monde travaille et communique.</CultureText>
+              <CultureTitle>{t('careers.values.2.title')}</CultureTitle>
+              <CultureText>{t('careers.values.2.desc')}</CultureText>
             </CultureCard>
           </CultureGrid>
         </Section>
 
         <Section>
-          <SectionTitle>Postes Ouverts</SectionTitle>
+          <SectionTitle>{t('careers.jobs.title')}</SectionTitle>
           <JobList>
             {JOBS.map((job) => (
               <JobCard key={job.id}>
@@ -233,16 +236,16 @@ const CareersPageNew = () => {
                     <JobTag>{job.type}</JobTag>
                   </JobMeta>
                 </JobInfo>
-                <ApplyButton>Postuler</ApplyButton>
+                <ApplyButton>{t('careers.jobs.apply')}</ApplyButton>
               </JobCard>
             ))}
           </JobList>
         </Section>
 
       <CallToAction 
-        title="Vous ne trouvez pas le poste idéal ?"
-        description="Nous sommes toujours à la recherche de talents exceptionnels. Envoyez-nous une candidature spontanée !"
-        buttonText="Candidature spontanée"
+        title={t('careers.cta.title')}
+        description={t('careers.cta.description')}
+        buttonText={t('careers.cta.button')}
         buttonLink="/contact"
       />
       </MainContent>

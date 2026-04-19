@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
+import { useTranslation } from '../hooks/useTranslation';
 
 const COLORS = {
   primary: 'hsl(var(--primary))',    
@@ -192,15 +193,16 @@ const ContactButton = styled.button`
 `;
 
 const SupportPageNew = () => {
+  const { t } = useTranslation();
   return (
     <PageContainer>
       <HeaderClean />
       <MainContent>
         <HeroSection>
-          <Title>Centre d'<span>Aide</span></Title>
-          <Subtitle>Comment pouvons-nous vous aider aujourd'hui ?</Subtitle>
+          <Title>{t('support.hero.title')}</Title>
+          <Subtitle>{t('support.hero.subtitle')}</Subtitle>
           <SearchContainer>
-            <SearchInput placeholder="Rechercher des articles, des guides..." />
+            <SearchInput placeholder={t('support.search')} />
             <SearchIcon>🔍</SearchIcon>
           </SearchContainer>
         </HeroSection>
@@ -208,35 +210,35 @@ const SupportPageNew = () => {
         <CategoriesGrid>
           <CategoryCard href="#getting-started">
             <IconBox bgColor="#eff6ff" color="#2563eb">🚀</IconBox>
-            <CategoryTitle>Premiers Pas</CategoryTitle>
-            <CategoryDesc>Tout ce qu'il faut savoir pour bien démarrer avec VisiConnect.</CategoryDesc>
+            <CategoryTitle>{t('support.categories.0.title')}</CategoryTitle>
+            <CategoryDesc>{t('support.categories.0.desc')}</CategoryDesc>
           </CategoryCard>
           
           <CategoryCard href="#troubleshooting">
             <IconBox bgColor="#fef2f2" color="#dc2626">🛠️</IconBox>
-            <CategoryTitle>Dépannage</CategoryTitle>
-            <CategoryDesc>Solutions aux problèmes communs et erreurs techniques.</CategoryDesc>
+            <CategoryTitle>{t('support.categories.1.title')}</CategoryTitle>
+            <CategoryDesc>{t('support.categories.1.desc')}</CategoryDesc>
           </CategoryCard>
 
           <CategoryCard href="#account">
             <IconBox bgColor="#f0fdf4" color="#16a34a">👤</IconBox>
-            <CategoryTitle>Compte & Profil</CategoryTitle>
-            <CategoryDesc>Gérer vos paramètres de compte, mot de passe et préférences.</CategoryDesc>
+            <CategoryTitle>{t('support.categories.2.title')}</CategoryTitle>
+            <CategoryDesc>{t('support.categories.2.desc')}</CategoryDesc>
           </CategoryCard>
 
           <CategoryCard href="#billing">
             <IconBox bgColor="#fff7ed" color="#ea580c">💳</IconBox>
-            <CategoryTitle>Facturation</CategoryTitle>
-            <CategoryDesc>Comprendre vos factures, abonnements et méthodes de paiement.</CategoryDesc>
+            <CategoryTitle>{t('support.categories.3.title')}</CategoryTitle>
+            <CategoryDesc>{t('support.categories.3.desc')}</CategoryDesc>
           </CategoryCard>
         </CategoriesGrid>
 
         <ContactSection>
-          <ContactTitle>Vous ne trouvez pas votre réponse ?</ContactTitle>
+          <ContactTitle>{t('support.cta.title')}</ContactTitle>
           <ContactText>
-            Notre équipe de support est disponible 24/7 pour vous aider à résoudre vos problèmes les plus complexes.
+            {t('support.cta.description')}
           </ContactText>
-          <ContactButton>Contacter le Support</ContactButton>
+          <ContactButton>{t('support.cta.button')}</ContactButton>
         </ContactSection>
       </MainContent>
       <FooterClean />

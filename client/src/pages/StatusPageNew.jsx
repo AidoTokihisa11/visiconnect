@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
+import { useTranslation } from '../hooks/useTranslation';
 
 const COLORS = {
   primary: 'hsl(var(--primary))',
@@ -179,58 +180,60 @@ const IncidentDesc = styled.p`
 `;
 
 const StatusPageNew = () => {
+  const { t } = useTranslation();
+
   return (
     <PageContainer>
       <HeaderClean />
       <MainContent>
         <Hero>
-          <StatusBadge>Tous les systèmes sont opérationnels</StatusBadge>
-          <Title>État du Service</Title>
-          <LastUpdated>Dernière mise à jour : Il y a 2 minutes</LastUpdated>
+          <StatusBadge>{t('status.allOperational')}</StatusBadge>
+          <Title>{t('status.title')}</Title>
+          <LastUpdated>{t('status.lastUpdate')}</LastUpdated>
         </Hero>
 
         <Container>
           <SystemGrid>
             <SystemCard>
-              <SystemName>API VisioConnect</SystemName>
-              <StatusIndicator status="operational">Opérationnel</StatusIndicator>
+              <SystemName>{t('status.services.api')}</SystemName>
+              <StatusIndicator status="operational">{t('status.operational')}</StatusIndicator>
             </SystemCard>
             <SystemCard>
-              <SystemName>Serveurs Vidéo (WebRTC)</SystemName>
-              <StatusIndicator status="operational">Opérationnel</StatusIndicator>
+              <SystemName>{t('status.services.video')}</SystemName>
+              <StatusIndicator status="operational">{t('status.operational')}</StatusIndicator>
             </SystemCard>
             <SystemCard>
-              <SystemName>Site Web & Dashboard</SystemName>
-              <StatusIndicator status="operational">Opérationnel</StatusIndicator>
+              <SystemName>{t('status.services.web')}</SystemName>
+              <StatusIndicator status="operational">{t('status.operational')}</StatusIndicator>
             </SystemCard>
             <SystemCard>
-              <SystemName>Base de données</SystemName>
-              <StatusIndicator status="operational">Opérationnel</StatusIndicator>
+              <SystemName>{t('status.services.db')}</SystemName>
+              <StatusIndicator status="operational">{t('status.operational')}</StatusIndicator>
             </SystemCard>
             <SystemCard>
-              <SystemName>Traitement AI en temps réel</SystemName>
-              <StatusIndicator status="operational">Opérationnel</StatusIndicator>
+              <SystemName>{t('status.services.ai')}</SystemName>
+              <StatusIndicator status="operational">{t('status.operational')}</StatusIndicator>
             </SystemCard>
           </SystemGrid>
 
           <UptimeSection>
-            <SectionTitle>Disponibilité (30 derniers jours)</SectionTitle>
+            <SectionTitle>{t('status.uptimeTitle')}</SectionTitle>
             <UptimeGraph>
-              Graphique de disponibilité - 99.99% moyenne
+              {t('status.uptimeChart')}
             </UptimeGraph>
           </UptimeSection>
 
           <IncidentHistory>
-            <SectionTitle>Historique des incidents</SectionTitle>
+            <SectionTitle>{t('status.incidents.title')}</SectionTitle>
             <IncidentCard>
-              <IncidentDate>15 Février 2024</IncidentDate>
-              <IncidentTitle>Maintenance Planifiée</IncidentTitle>
-              <IncidentDesc>Mise à jour majeure de l'infrastructure vidéo. Aucune interruption de service n'a été constatée.</IncidentDesc>
+              <IncidentDate>{t('status.incidents.0.date')}</IncidentDate>
+              <IncidentTitle>{t('status.incidents.0.title')}</IncidentTitle>
+              <IncidentDesc>{t('status.incidents.0.desc')}</IncidentDesc>
             </IncidentCard>
             <IncidentCard>
-              <IncidentDate>02 Janvier 2024</IncidentDate>
-              <IncidentTitle>Latence sur les serveurs EU-West</IncidentTitle>
-              <IncidentDesc>Une latence accrue a été observée pendant 15 minutes. Le problème a été résolu par un reroutage automatique.</IncidentDesc>
+              <IncidentDate>{t('status.incidents.1.date')}</IncidentDate>
+              <IncidentTitle>{t('status.incidents.1.title')}</IncidentTitle>
+              <IncidentDesc>{t('status.incidents.1.desc')}</IncidentDesc>
             </IncidentCard>
           </IncidentHistory>
         </Container>

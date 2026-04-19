@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useTranslation } from '../hooks/useTranslation';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -341,6 +342,7 @@ const CheckoutButton = styled(motion.button)`
 const CheckoutPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     email: '',
     fullName: '',
@@ -357,46 +359,46 @@ const CheckoutPage = () => {
   
   const plans = {
     starter: {
-      name: 'Plan Starter',
+      name: t('checkout.plans.starter.name'),
       icon: <Users size={20} />,
       price: '29',
-      billing: 'par mois',
+      billing: t('checkout.perMonth'),
       features: [
-        'Jusqu\'à 10 participants',
-        'Réunions illimitées',
-        'Partage d\'écran',
-        'Chat intégré',
-        'Enregistrement (1h/mois)'
+        t('checkout.plans.starter.feature1'),
+        t('checkout.plans.starter.feature2'),
+        t('checkout.plans.starter.feature3'),
+        t('checkout.plans.starter.feature4'),
+        t('checkout.plans.starter.feature5')
       ]
     },
     professional: {
-      name: 'Plan Professional',
+      name: t('checkout.plans.professional.name'),
       icon: <Crown size={20} />,
       price: '79',
-      billing: 'par mois',
+      billing: t('checkout.perMonth'),
       features: [
-        'Jusqu\'à 100 participants',
-        'Réunions illimitées',
-        'Partage d\'écran avancé',
-        'Chat & fichiers',
-        'Enregistrement illimité',
-        'Intégrations',
-        'Support prioritaire'
+        t('checkout.plans.professional.feature1'),
+        t('checkout.plans.professional.feature2'),
+        t('checkout.plans.professional.feature3'),
+        t('checkout.plans.professional.feature4'),
+        t('checkout.plans.professional.feature5'),
+        t('checkout.plans.professional.feature6'),
+        t('checkout.plans.professional.feature7')
       ]
     },
     enterprise: {
-      name: 'Plan Enterprise',
+      name: t('checkout.plans.enterprise.name'),
       icon: <Zap size={20} />,
       price: '149',
-      billing: 'par mois',
+      billing: t('checkout.perMonth'),
       features: [
-        'Participants illimités',
-        'Toutes les fonctionnalités',
-        'API personnalisée',
-        'SSO et sécurité avancée',
-        'Support dédié',
-        'Formation personnalisée',
-        'SLA garanti'
+        t('checkout.plans.enterprise.feature1'),
+        t('checkout.plans.enterprise.feature2'),
+        t('checkout.plans.enterprise.feature3'),
+        t('checkout.plans.enterprise.feature4'),
+        t('checkout.plans.enterprise.feature5'),
+        t('checkout.plans.enterprise.feature6'),
+        t('checkout.plans.enterprise.feature7')
       ]
     }
   };
@@ -435,7 +437,7 @@ const CheckoutPage = () => {
 
       if (session.error) {
         console.error('Error from server:', session.error);
-        alert('Erreur: ' + session.error);
+        alert(t('checkout.error') + ': ' + session.error);
         return;
       }
 
@@ -443,7 +445,7 @@ const CheckoutPage = () => {
       window.location.href = session.url;
     } catch (error) {
       console.error('Error processing checkout:', error);
-      alert('Une erreur est survenue lors de la création de la session de paiement.');
+      alert(t('checkout.errorPayment'));
     }
   };
 
@@ -473,7 +475,7 @@ const CheckoutPage = () => {
             whileTap={{ scale: 0.95 }}
           >
             <ArrowLeft size={18} />
-            Retour aux tarifs
+            {t('checkout.back')}
           </BackButton>
         </Nav>
       </Header>
@@ -485,25 +487,25 @@ const CheckoutPage = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <FormTitle>Finaliser votre commande</FormTitle>
+            <FormTitle>{t('checkout.title')}</FormTitle>
             <FormSubtitle>
-              Sécurisez votre accès à VisiConnect et transformez vos réunions en ligne.
+              {t('checkout.subtitle')}
             </FormSubtitle>
 
             <form onSubmit={handleSubmit}>
               <Section>
                 <SectionTitle>
                   <Lock size={20} />
-                  Informations de contact
+                  {t('checkout.contact.title')}
                 </SectionTitle>
                 
                 <FormGroup>
-                  <Label htmlFor="email">Adresse email *</Label>
+                  <Label htmlFor="email">{t('checkout.contact.email')}</Label>
                   <Input
                     type="email"
                     id="email"
                     name="email"
-                    placeholder="votre@email.com"
+                    placeholder={t('checkout.contact.emailPlaceholder')}
                     value={formData.email}
                     onChange={handleInputChange}
                     required
@@ -511,12 +513,12 @@ const CheckoutPage = () => {
                 </FormGroup>
 
                 <FormGroup>
-                  <Label htmlFor="fullName">Nom complet *</Label>
+                  <Label htmlFor="fullName">{t('checkout.contact.name')}</Label>
                   <Input
                     type="text"
                     id="fullName"
                     name="fullName"
-                    placeholder="Votre nom et prénom"
+                    placeholder={t('checkout.contact.namePlaceholder')}
                     value={formData.fullName}
                     onChange={handleInputChange}
                     required
@@ -527,16 +529,16 @@ const CheckoutPage = () => {
               <Section>
                 <SectionTitle>
                   <CreditCard size={20} />
-                  Informations de paiement
+                  {t('checkout.payment.title')}
                 </SectionTitle>
                 
                 <FormGroup>
-                  <Label htmlFor="cardNumber">Numéro de carte *</Label>
+                  <Label htmlFor="cardNumber">{t('checkout.payment.card')}</Label>
                   <Input
                     type="text"
                     id="cardNumber"
                     name="cardNumber"
-                    placeholder="1234 5678 9012 3456"
+                    placeholder={t('checkout.payment.cardPlaceholder')}
                     value={formData.cardNumber}
                     onChange={handleInputChange}
                     required
@@ -545,24 +547,24 @@ const CheckoutPage = () => {
 
                 <InputGrid>
                   <FormGroup>
-                    <Label htmlFor="expiryDate">Date d'expiration *</Label>
+                    <Label htmlFor="expiryDate">{t('checkout.payment.expiry')}</Label>
                     <Input
                       type="text"
                       id="expiryDate"
                       name="expiryDate"
-                      placeholder="MM/YY"
+                      placeholder={t('checkout.payment.expiryPlaceholder')}
                       value={formData.expiryDate}
                       onChange={handleInputChange}
                       required
                     />
                   </FormGroup>
                   <FormGroup>
-                    <Label htmlFor="cvv">CVV *</Label>
+                    <Label htmlFor="cvv">{t('checkout.payment.cvv')}</Label>
                     <Input
                       type="text"
                       id="cvv"
                       name="cvv"
-                      placeholder="123"
+                      placeholder={t('checkout.payment.cvvPlaceholder')}
                       value={formData.cvv}
                       onChange={handleInputChange}
                       required
@@ -573,7 +575,7 @@ const CheckoutPage = () => {
                 <SecurityFeatures>
                   <Shield size={20} color="var(--accent-cyan, #06b6d4)" />
                   <SecurityText>
-                    Vos informations de paiement sont sécurisées avec un chiffrement SSL 256 bits.
+                    {t('checkout.payment.secure')}
                   </SecurityText>
                 </SecurityFeatures>
               </Section>
@@ -581,16 +583,16 @@ const CheckoutPage = () => {
               <Section>
                 <SectionTitle>
                   <AlertCircle size={20} />
-                  Adresse de facturation
+                  {t('checkout.billing.title')}
                 </SectionTitle>
                 
                 <FormGroup>
-                  <Label htmlFor="billingAddress">Adresse *</Label>
+                  <Label htmlFor="billingAddress">{t('checkout.billing.address')}</Label>
                   <Input
                     type="text"
                     id="billingAddress"
                     name="billingAddress"
-                    placeholder="123 Rue de la Paix"
+                    placeholder={t('checkout.billing.addressPlaceholder')}
                     value={formData.billingAddress}
                     onChange={handleInputChange}
                     required
@@ -599,24 +601,24 @@ const CheckoutPage = () => {
 
                 <InputGrid>
                   <FormGroup>
-                    <Label htmlFor="city">Ville *</Label>
+                    <Label htmlFor="city">{t('checkout.billing.city')}</Label>
                     <Input
                       type="text"
                       id="city"
                       name="city"
-                      placeholder="Paris"
+                      placeholder={t('checkout.billing.cityPlaceholder')}
                       value={formData.city}
                       onChange={handleInputChange}
                       required
                     />
                   </FormGroup>
                   <FormGroup>
-                    <Label htmlFor="zipCode">Code postal *</Label>
+                    <Label htmlFor="zipCode">{t('checkout.billing.zipCode')}</Label>
                     <Input
                       type="text"
                       id="zipCode"
                       name="zipCode"
-                      placeholder="75001"
+                      placeholder={t('checkout.billing.zipCodePlaceholder')}
                       value={formData.zipCode}
                       onChange={handleInputChange}
                       required
@@ -632,7 +634,7 @@ const CheckoutPage = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <SummaryTitle>Récapitulatif de commande</SummaryTitle>
+            <SummaryTitle>{t('checkout.summary.title')}</SummaryTitle>
             
             <PlanCard>
               <PlanName>
@@ -654,22 +656,22 @@ const CheckoutPage = () => {
 
             <PricingDetails>
               <PriceRow>
-                <span>Sous-total</span>
+                <span>{t('checkout.summary.subtotal')}</span>
                 <span>{currentPlan.price}€</span>
               </PriceRow>
               <PriceRow>
-                <span>TVA (20%)</span>
+                <span>{t('checkout.summary.tax')}</span>
                 <span>{(parseFloat(currentPlan.price) * 0.2).toFixed(2)}€</span>
               </PriceRow>
               <DiscountRow>
                 <span>
                   <Gift size={16} style={{ marginRight: '0.5rem' }} />
-                  Réduction premier mois (-50%)
+                  {t('checkout.summary.discount')}
                 </span>
                 <span>-{(parseFloat(currentPlan.price) / 2).toFixed(2)}€</span>
               </DiscountRow>
               <TotalRow>
-                <span>Total</span>
+                <span>{t('checkout.summary.total')}</span>
                 <span>{(parseFloat(currentPlan.price) * 1.2 - parseFloat(currentPlan.price) / 2).toFixed(2)}€</span>
               </TotalRow>
             </PricingDetails>
@@ -681,7 +683,7 @@ const CheckoutPage = () => {
               whileTap={{ scale: 0.98 }}
             >
               <Lock size={20} />
-              Finaliser la commande
+              {t('checkout.submit')}
             </CheckoutButton>
           </OrderSummary>
         </CheckoutGrid>

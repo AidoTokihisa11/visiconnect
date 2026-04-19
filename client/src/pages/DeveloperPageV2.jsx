@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
+import { useTranslation } from '../hooks/useTranslation';
 
 const fadeUp = keyframes`
   from { opacity: 0; transform: translateY(30px); }
@@ -869,6 +870,8 @@ const PhilosophyCard = styled.div`
 `;
 
 export default function DeveloperPageV2() {
+  const { t } = useTranslation();
+
   return (
     <PageWrapper>
       <HeaderClean />
@@ -880,22 +883,22 @@ export default function DeveloperPageV2() {
           <HeroContent>
             <Badge>
               <Rocket size={18} />
-              Développeur Full-Stack & UI/UX Autodidacte
+              {t('developer.hero.role')}
             </Badge>
             <Title>
-              Bâtir des interfaces 
-              <span>qui ont du sens.</span>
+              {t('developer.hero.title1')}
+              <span>{t('developer.hero.title2')}</span>
             </Title>
             <Subtitle>
-              Passionné, acharné et 100% autodidacte. Je transforme des idées complexes en applications web fluides, performantes et centrées sur l'utilisateur. Du design Figma jusqu'au déploiement en production.
+              {t('developer.hero.desc')}
             </Subtitle>
             <ButtonGroup>
               <PrimaryButton>
-                Voir mes projets
+                {t('developer.hero.ctaProjects')}
                 <ArrowRight size={18} />
               </PrimaryButton>
               <SecondaryButton>
-                Me contacter
+                {t('developer.hero.ctaContact')}
               </SecondaryButton>
             </ButtonGroup>
           </HeroContent>
@@ -913,53 +916,53 @@ export default function DeveloperPageV2() {
       {/* 2. HISTOIRE & TIMELINE */}
       <SectionAlt>
         <SectionHeader>
-          <h2>Comment Tout a Commencé</h2>
-          <p>Je n'ai pas suivi la voie traditionnelle. Mon parcours est fait de passion pure, de longues nuits d'apprentissage et d'une détermination sans faille. Voici mon évolution.</p>
+          <h2>{t('developer.journey.title')}</h2>
+          <p>{t('developer.journey.subtitle')}</p>
         </SectionHeader>
 
         <TimelineWrapper>
           <TimelineItem>
             <div className="dot" />
             <div className="content-box">
-              <span className="year">L'Étincelle</span>
-              <h4>La découverte du Web</h4>
-              <p>Au commencement, c'était le besoin de comprendre. Je voulais savoir ce qu'il se passait derrière les sites que je visitais tous les jours. J'ai écrit ma première balise HTML, puis mon premier fichier CSS. L'écran de mon navigateur a changé de couleur, et cette magie immédiate m'a rendu accro.</p>
+              <span className="year">{t('developer.journey.stages.0.era')}</span>
+              <h4>{t('developer.journey.stages.0.title')}</h4>
+              <p>{t('developer.journey.stages.0.desc')}</p>
             </div>
           </TimelineItem>
 
           <TimelineItem>
             <div className="dot" />
             <div className="content-box">
-              <span className="year">L'Immersion</span>
-              <h4>Maîtrise du JavaScript & de l'UI</h4>
-              <p>Le statique c'est bien, le dynamique c'est mieux. J'ai plongé tête la première dans le JavaScript. Au lieu de survoler la théorie, j'ai cloné des dizaines d'interfaces complexes. J'ai passé des heures à peaufiner des animations et ajuster le pixel-perfect.</p>
+              <span className="year">{t('developer.journey.stages.1.era')}</span>
+              <h4>{t('developer.journey.stages.1.title')}</h4>
+              <p>{t('developer.journey.stages.1.desc')}</p>
             </div>
           </TimelineItem>
 
           <TimelineItem>
             <div className="dot" />
             <div className="content-box">
-              <span className="year">La Révolution</span>
-              <h4>L'écosystème React & Modern web</h4>
-              <p>Découverte de l'écosystème React et changement complet de paradigme. J'ai appris à penser en "composants". J'ai absorbé les concepts de Hooks, les state managers et la création de vastes Single Page Applications.</p>
+              <span className="year">{t('developer.journey.stages.2.era')}</span>
+              <h4>{t('developer.journey.stages.2.title')}</h4>
+              <p>{t('developer.journey.stages.2.desc')}</p>
             </div>
           </TimelineItem>
 
           <TimelineItem>
             <div className="dot" />
             <div className="content-box">
-              <span className="year">L'Architecture</span>
-              <h4>Le Back-End & Les Données</h4>
-              <p>Pour construire de vrais produits, je devais maîtriser la mécanique sous le capot. J'ai alors attaqué Node.js, Express, les schémas de BDD complexes, PostgreSQL et le temps réel. Sécuriser les API est devenu passionnant.</p>
+              <span className="year">{t('developer.journey.stages.3.era')}</span>
+              <h4>{t('developer.journey.stages.3.title')}</h4>
+              <p>{t('developer.journey.stages.3.desc')}</p>
             </div>
           </TimelineItem>
 
           <TimelineItem>
             <div className="dot" />
             <div className="content-box">
-              <span className="year">Aujourd'hui</span>
-              <h4>Full-Stack & Ingénierie</h4>
-              <p>Aujourd'hui, je crée des plateformes entières et exigeantes. Je suis capable de concevoir, développer, et déployer des architectures complètes en m'assurant que le code final est performant, sécurisé, et testé.</p>
+              <span className="year">{t('developer.journey.stages.4.era')}</span>
+              <h4>{t('developer.journey.stages.4.title')}</h4>
+              <p>{t('developer.journey.stages.4.desc')}</p>
             </div>
           </TimelineItem>
         </TimelineWrapper>
@@ -968,8 +971,8 @@ export default function DeveloperPageV2() {
       {/* 3. COMPETENCES REELLES (BENTO GRID) */}
       <Section>
         <SectionHeader>
-          <h2>Mon Arsenal Technique</h2>
-          <p>Des compétences acquises sur le terrain et en résolvant de vrais problèmes. Voici mes outils de prédilection.</p>
+          <h2>{t('developer.skills.title')}</h2>
+          <p>{t('developer.skills.subtitle')}</p>
         </SectionHeader>
 
         <SkillsContainer>
@@ -977,7 +980,7 @@ export default function DeveloperPageV2() {
           <SkillCategory>
             <div className="header">
               <div className="icon-box"><MonitorSmartphone size={28} /></div>
-              <h3>Front-End & UI</h3>
+              <h3>{t('developer.skills.categories.0')}</h3>
             </div>
             <ul>
               <li>React / Next.js <div className="bar-bg"><div className="bar-fill" style={{width: '95%'}}/></div></li>
@@ -993,7 +996,7 @@ export default function DeveloperPageV2() {
           <SkillCategory>
             <div className="header">
               <div className="icon-box"><Database size={28} /></div>
-              <h3>Back-End & DB</h3>
+              <h3>{t('developer.skills.categories.1')}</h3>
             </div>
             <ul>
               <li>Node.js / Express <div className="bar-bg"><div className="bar-fill" style={{width: '85%'}}/></div></li>
@@ -1009,7 +1012,7 @@ export default function DeveloperPageV2() {
           <SkillCategory>
             <div className="header">
               <div className="icon-box"><Wrench size={28} /></div>
-              <h3>Outils & Workflow</h3>
+              <h3>{t('developer.skills.categories.2')}</h3>
             </div>
             <ul>
               <li>Git / GitHub <div className="bar-bg"><div className="bar-fill" style={{width: '90%'}}/></div></li>
@@ -1026,8 +1029,8 @@ export default function DeveloperPageV2() {
       {/* 4. PREMIUM PROJECTS (STRIPE/VERCEL STYLE) */}
       <SectionAlt>
         <SectionHeader>
-          <h2>Projets Majeurs & Réalisations</h2>
-          <p>Plongez dans les détails de mes créations les plus techniques. Des architectures complexes aux interfaces pixel-perfect.</p>
+          <h2>{t('developer.projects.title')}</h2>
+          <p>{t('developer.projects.subtitle')}</p>
         </SectionHeader>
 
         <ProjectsList>
@@ -1045,16 +1048,16 @@ export default function DeveloperPageV2() {
                 <div className="img-wrapper">
                   <img src="https://images.unsplash.com/photo-1587620962725-abab7fe55159?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="VisioConnect Dashboard" />
                   <div className="overlay">
-                    <span><Play size={20} /> Aperçu Live</span>
+                    <span><Play size={20} /> {t('developer.livePreview')}</span>
                   </div>
                 </div>
               </BrowserFrame>
             </ProjectVisual>
             
             <ProjectInfo>
-              <div className="badge">Application SaaS Complète</div>
-              <h3>VisioConnect Platform</h3>
-              <p>Une infrastructure de visioconférence et de collaboration en temps réel redoutablement performante. De la conception du player vidéo WebRTC au tableau blanc bidirectionnel, chaque pixel a été pensé pour réduire la latence et maximiser l'expérience utilisateur.</p>
+              <div className="badge">{t('developer.projects.items.0.category')}</div>
+              <h3>{t('developer.projects.items.0.title')}</h3>
+              <p>{t('developer.projects.items.0.desc')}</p>
               
               <div className="stack">
                 <span><Layout size={16}/> React.js</span>
@@ -1065,7 +1068,7 @@ export default function DeveloperPageV2() {
               </div>
 
               <div className="actions">
-                <a href="#" className="btn-primary">Découvrir le projet <ArrowRight size={18}/></a>
+                <a href="#" className="btn-primary">{t('developer.projects.items.0.cta')} <ArrowRight size={18}/></a>
                 <a href="#" className="btn-secondary"><Github size={18}/> Code source</a>
               </div>
             </ProjectInfo>
@@ -1084,16 +1087,16 @@ export default function DeveloperPageV2() {
                 <div className="img-wrapper">
                   <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="E-Commerce Interface" />
                   <div className="overlay">
-                    <span><Play size={20} /> Aperçu Live</span>
+                    <span><Play size={20} /> {t('developer.livePreview')}</span>
                   </div>
                 </div>
               </BrowserFrame>
             </ProjectVisual>
             
             <ProjectInfo>
-              <div className="badge">Big Data & Architecture</div>
-              <h3>FinanceFlow Analytics</h3>
-              <p>Une interface d'administration ultra-rapide capable de traiter et visualiser des milliers de lignes de base de données sans broncher. Des graphiques interactifs en temps réel, un système de filtres complexe et une API de traitement lourd construite pour la haute disponibilité.</p>
+              <div className="badge">{t('developer.projects.items.1.category')}</div>
+              <h3>{t('developer.projects.items.1.title')}</h3>
+              <p>{t('developer.projects.items.1.desc')}</p>
               
               <div className="stack">
                 <span><Layout size={16}/> Next.js</span>
@@ -1104,7 +1107,7 @@ export default function DeveloperPageV2() {
               </div>
 
               <div className="actions">
-                <a href="#" className="btn-primary">Explorer la démo <ArrowRight size={18}/></a>
+                <a href="#" className="btn-primary">{t('developer.projects.items.1.cta')} <ArrowRight size={18}/></a>
                 <a href="#" className="btn-secondary"><Github size={18}/> Architecture</a>
               </div>
             </ProjectInfo>
@@ -1123,16 +1126,16 @@ export default function DeveloperPageV2() {
                 <div className="img-wrapper">
                   <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="AI Agent Builder" />
                   <div className="overlay">
-                    <span><Play size={20} /> Aperçu Live</span>
+                    <span><Play size={20} /> {t('developer.livePreview')}</span>
                   </div>
                 </div>
               </BrowserFrame>
             </ProjectVisual>
             
             <ProjectInfo>
-              <div className="badge">Intelligence Artificielle</div>
-              <h3>Nexus AI Studio</h3>
-              <p>Un générateur de composants et un assistant de productivité dopé à l'intelligence artificielle. Connexion directe aux modèles d'OpenAI pour générer des interfaces à la volée, gérer des prompts complexes et intégrer de l'automatisation dans le workflow des développeurs.</p>
+              <div className="badge">{t('developer.projects.items.2.category')}</div>
+              <h3>{t('developer.projects.items.2.title')}</h3>
+              <p>{t('developer.projects.items.2.desc')}</p>
               
               <div className="stack">
                 <span><Layout size={16}/> React.js</span>
@@ -1143,7 +1146,7 @@ export default function DeveloperPageV2() {
               </div>
 
               <div className="actions">
-                <a href="#" className="btn-primary">Lancer le Studio <ArrowRight size={18}/></a>
+                <a href="#" className="btn-primary">{t('developer.projects.items.2.cta')} <ArrowRight size={18}/></a>
                 <a href="#" className="btn-secondary"><Github size={18}/> Repository</a>
               </div>
             </ProjectInfo>
@@ -1156,29 +1159,29 @@ export default function DeveloperPageV2() {
       <Section>
         <PhilosophyCard>
           <div className="content">
-            <h3>Ma Philosophie du Code</h3>
-            <p>Être autodidacte m'a appris la règle la plus capitale : ce n'est pas le framework qui compte, c'est l'approche pour résoudre le problème. Un beau code est un choix architectural assumé. Voici mes 3 règles d'or.</p>
+            <h3>{t('developer.philosophy.title')}</h3>
+            <p>{t('developer.philosophy.desc')}</p>
             
             <ul>
               <li>
                 <div className="check-box"><Star size={24} /></div>
                 <div className="text">
-                  <strong>Qualité, Solidité & Lisibilité</strong>
-                  <span>Le code est lu beaucoup plus souvent qu'il n'est écrit. J'écris pour mes pairs et pour mon « moi » du futur. Les nommages doivent être limpides, les composants strictement isolés et DRY.</span>
+                  <strong>{t('developer.philosophy.principles.0.title')}</strong>
+                  <span>{t('developer.philosophy.principles.0.desc')}</span>
                 </div>
               </li>
               <li>
                 <div className="check-box"><Zap size={24} /></div>
                 <div className="text">
-                  <strong>Performance Pure</strong>
-                  <span>Une fonction ne doit pas juste "marcher". Optimiser les algorithmes, réduire les re-renders inutiles, lazzy-loader les immenses assets et bien structurer son bundle est ce qui fait la différence.</span>
+                  <strong>{t('developer.philosophy.principles.1.title')}</strong>
+                  <span>{t('developer.philosophy.principles.1.desc')}</span>
                 </div>
               </li>
               <li>
                 <div className="check-box"><Heart size={24} /></div>
                 <div className="text">
-                  <strong>Focus sur l'Utilisateur Final (UX)</strong>
-                  <span>Une application parfaitement codée au backend ne sert à rien si l'interface frustre l'utilisateur. Feedback visuels, accessibilité, loaders, gestion chirurgicale des erreurs... Je soigne les détails.</span>
+                  <strong>{t('developer.philosophy.principles.2.title')}</strong>
+                  <span>{t('developer.philosophy.principles.2.desc')}</span>
                 </div>
               </li>
             </ul>
@@ -1198,23 +1201,23 @@ export default function DeveloperPageV2() {
         <StatsGrid>
           <div className="stat-item">
             <div className="icon-wrapper"><GraduationCap size={36} /></div>
-            <h5>0</h5>
-            <span>Bootcamps, 100% Autodidacte</span>
+            <h5>{t('developer.stats.0.value')}</h5>
+            <span>{t('developer.stats.0.label')}</span>
           </div>
           <div className="stat-item">
             <div className="icon-wrapper"><Code2 size={36} /></div>
-            <h5>100k+</h5>
-            <span>Lignes de code écrites</span>
+            <h5>{t('developer.stats.1.value')}</h5>
+            <span>{t('developer.stats.1.label')}</span>
           </div>
           <div className="stat-item">
             <div className="icon-wrapper"><Briefcase size={36} /></div>
-            <h5>15+</h5>
-            <span>Projets & Prototypes</span>
+            <h5>{t('developer.stats.2.value')}</h5>
+            <span>{t('developer.stats.2.label')}</span>
           </div>
           <div className="stat-item">
             <div className="icon-wrapper"><Coffee size={36} /></div>
-            <h5>∞</h5>
-            <span>Tasses de café & Bugs résolus</span>
+            <h5>{t('developer.stats.3.value')}</h5>
+            <span>{t('developer.stats.3.label')}</span>
           </div>
         </StatsGrid>
       </div>

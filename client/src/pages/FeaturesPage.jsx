@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import CallToAction from '../components/CallToAction';
+import { useTranslation } from '../hooks/useTranslation';
 
 const COLORS = {
   primary: 'hsl(var(--primary))',    
@@ -151,58 +152,24 @@ const CTAButton = styled(Link)`
   }
 `;
 
-const features = [
-  {
-    icon: <Video size={24} />,
-    title: "Vidéo HD Cristalline",
-    description: "Profitez d'une qualité vidéo haute définition fluide, même avec une bande passante limitée, grâce à notre technologie adaptative."
-  },
-  {
-    icon: <Shield size={24} />,
-    title: "Sécurité de Pointe",
-    description: "Vos conversations sont protégées par un chiffrement de bout en bout et des protocoles de sécurité avancés pour une confidentialité totale."
-  },
-  {
-    icon: <Zap size={24} />,
-    title: "Performance Ultra-Rapide",
-    description: "Une latence minimale et une connexion instantanée pour des échanges naturels, sans décalage ni interruption."
-  },
-  {
-    icon: <Users size={24} />,
-    title: "Réunions de Groupe",
-    description: "Accueillez de grandes équipes sans compromis sur la qualité. Idéal pour les webinaires, les classes virtuelles et les conférences."
-  },
-  {
-    icon: <Globe size={24} />,
-    title: "Accessibilité Globale",
-    description: "Connectez-vous depuis n'importe où dans le monde. Notre infrastructure distribuée garantit une stabilité optimale."
-  },
-  {
-    icon: <Smartphone size={24} />,
-    title: "Compatible Mobile",
-    description: "Une expérience fluide sur iOS, Android et tablettes. Restez connecté en déplacement avec notre application réactive."
-  },
-  {
-    icon: <Lock size={24} />,
-    title: "Contrôles d'Admin",
-    description: "Gérez vos réunions avec des outils puissants : salle d'attente, mise en sourdine, exclusion de participants et plus encore."
-  },
-  {
-    icon: <Mic size={24} />,
-    title: "Audio Haute Fidélité",
-    description: "Suppression du bruit de fond et amélioration vocale pour que chaque mot soit entendu clairement."
-  },
-  {
-    icon: <Layout size={24} />,
-    title: "Interface Intuitive",
-    description: "Un design épuré et facile à utiliser qui permet à chacun de se concentrer sur la conversation, pas sur la technologie."
-  }
-];
-
 const FeaturesPage = () => {
+  const { t } = useTranslation();
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const features = [
+    { icon: <Video size={24} />, title: t('featuresPage.items.hd_video.title'), description: t('featuresPage.items.hd_video.desc') },
+    { icon: <Shield size={24} />, title: t('featuresPage.items.security.title'), description: t('featuresPage.items.security.desc') },
+    { icon: <Zap size={24} />, title: t('featuresPage.items.performance.title'), description: t('featuresPage.items.performance.desc') },
+    { icon: <Users size={24} />, title: t('featuresPage.items.group.title'), description: t('featuresPage.items.group.desc') },
+    { icon: <Globe size={24} />, title: t('featuresPage.items.global.title'), description: t('featuresPage.items.global.desc') },
+    { icon: <Smartphone size={24} />, title: t('featuresPage.items.mobile.title'), description: t('featuresPage.items.mobile.desc') },
+    { icon: <Lock size={24} />, title: t('featuresPage.items.admin.title'), description: t('featuresPage.items.admin.desc') },
+    { icon: <Mic size={24} />, title: t('featuresPage.items.audio.title'), description: t('featuresPage.items.audio.desc') },
+    { icon: <Layout size={24} />, title: t('featuresPage.items.ui.title'), description: t('featuresPage.items.ui.desc') }
+  ];
 
   return (
     <PageContainer>
@@ -210,11 +177,8 @@ const FeaturesPage = () => {
       
       <MainContent>
         <HeroSection>
-          <HeroTitle>Fonctionnalités Puissantes</HeroTitle>
-          <HeroSubtitle>
-            Tout ce dont vous avez besoin pour des communications vidéo fluides, 
-            sécurisées et professionnelles.
-          </HeroSubtitle>
+          <HeroTitle>{t('featuresPage.hero.title')}</HeroTitle>
+          <HeroSubtitle>{t('featuresPage.hero.subtitle')}</HeroSubtitle>
         </HeroSection>
 
         <FeaturesGridSection>
@@ -230,9 +194,9 @@ const FeaturesPage = () => {
         </FeaturesGridSection>
 
         <CallToAction 
-             title="Prêt à transformer vos communications ?"
-             description="Rejoignez des milliers d'équipes qui font confiance à VisioConnect pour leurs réunions."
-             buttonText="Commencer Gratuitement"
+             title={t('featuresPage.cta.title')}
+             description={t('featuresPage.cta.description')}
+             buttonText={t('featuresPage.cta.button')}
              buttonLink="/register"
         />
       </MainContent>

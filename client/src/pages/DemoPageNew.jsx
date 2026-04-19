@@ -17,6 +17,7 @@ import {
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import CallToAction from '../components/CallToAction';
+import { useTranslation } from '../hooks/useTranslation';
 import {
   Bullet,
   BulletGrid,
@@ -57,81 +58,82 @@ import {
   WorkflowGrid,
 } from './DemoPageNew.styles';
 
-const highlights = [
-  {
-    icon: <Video size={22} />,
-    title: 'Visio fluide & ultra HD',
-    description: 'Une qualité allant jusqu\'à la 4K, adaptée dynamiquement à la connexion de chaque participant pour garantir un échange sans coupure.',
-  },
-  {
-    icon: <Bot size={22} />,
-    title: 'Assistant IA exclusif',
-    description: 'Bénéficiez de la retranscription en temps réel, de la génération de résumés et d\'un agent interactif au cœur de vos réunions.',
-  },
-  {
-    icon: <ShieldCheck size={22} />,
-    title: 'Contrôle & Sécurité',
-    description: 'Vos échanges sont protégés par un chiffrement robuste, avec une séparation stricte des flux audio, vidéo et données.',
-  },
-  {
-    icon: <MonitorSmartphone size={22} />,
-    title: 'Connexion instantanée',
-    description: 'Rejoignez la réunion depuis n\'importe quel navigateur (ordinateur, tablette, mobile) sans aucune installation de logiciel requise.',
-  },
-];
-
-const workflowSteps = [
-  {
-    step: '01',
-    title: 'Cliquez et rejoignez',
-    description: 'Pas de formulaire interminable : entrez en un clic dans notre salle de démo et découvrez notre interface épurée.',
-  },
-  {
-    step: '02',
-    title: 'Testez nos fonctionnalités',
-    description: 'Activez la caméra, discutez avec l\'IA, utilisez le tableau blanc et jugez par vous-même de notre faible latence.',
-  },
-  {
-    step: '03',
-    title: 'Passez à la vitesse supérieure',
-    description: 'Séduit par l’expérience ? Nos équipes sont prêtes à vous accompagner pour l\'intégrer dans votre environnement professionnel.',
-  },
-];
-
-const useCases = [
-  {
-    icon: <Users size={22} />,
-    title: 'Réunions de direction',
-    description: 'Un environnement confidentiel, stable et premium pour vos prises de décisions, avec compte-rendu généré par l\'IA.',
-  },
-  {
-    icon: <Globe size={22} />,
-    title: 'Travail collaboratif distant',
-    description: 'Réduisez la friction technique pour vos équipes mondiales grâce à une latence invisible et au tableau blanc intégré.',
-  },
-  {
-    icon: <MessageSquareText size={22} />,
-    title: 'Support et relation client',
-    description: 'Offrez un point de contact réactif et qualitatif, tout en gardant une trace précise grâce à la retranscription automatique.',
-  },
-  {
-    icon: <Layers3 size={22} />,
-    title: 'Présentations commerciales',
-    description: 'Suscitez la confiance de vos partenaires avec une solution moderne, fluide et qui ne nécessite aucune installation.',
-  },
-];
-
-const proofMetrics = [
-  { label: 'Latence cible', value: '29 ms' },
-  { label: 'Vidéo', value: 'Jusqu\'à 4K adaptatif' },
-  { label: 'IA intégrée', value: 'Résumés & Actions' },
-  { label: 'Accès', value: 'Zéro installation' },
-];
-
 import { useNavigate } from 'react-router-dom';
 
 export default function DemoPageNew() {
+  const { t } = useTranslation();
   const [demoRoomId] = React.useState(`demo-${Math.random().toString(36).substring(2, 9)}`);
+
+  const highlights = [
+    {
+      icon: <Video size={22} />,
+      title: t('demo.highlights.0.title'),
+      description: t('demo.highlights.0.desc'),
+    },
+    {
+      icon: <Bot size={22} />,
+      title: t('demo.highlights.1.title'),
+      description: t('demo.highlights.1.desc'),
+    },
+    {
+      icon: <ShieldCheck size={22} />,
+      title: t('demo.highlights.2.title'),
+      description: t('demo.highlights.2.desc'),
+    },
+    {
+      icon: <MonitorSmartphone size={22} />,
+      title: t('demo.highlights.3.title'),
+      description: t('demo.highlights.3.desc'),
+    },
+  ];
+
+  const workflowSteps = [
+    {
+      step: '01',
+      title: t('demo.workflow.0.title'),
+      description: t('demo.workflow.0.desc'),
+    },
+    {
+      step: '02',
+      title: t('demo.workflow.1.title'),
+      description: t('demo.workflow.1.desc'),
+    },
+    {
+      step: '03',
+      title: t('demo.workflow.2.title'),
+      description: t('demo.workflow.2.desc'),
+    },
+  ];
+
+  const useCases = [
+    {
+      icon: <Users size={22} />,
+      title: t('demo.usecases.0.title'),
+      description: t('demo.usecases.0.desc'),
+    },
+    {
+      icon: <Globe size={22} />,
+      title: t('demo.usecases.1.title'),
+      description: t('demo.usecases.1.desc'),
+    },
+    {
+      icon: <MessageSquareText size={22} />,
+      title: t('demo.usecases.2.title'),
+      description: t('demo.usecases.2.desc'),
+    },
+    {
+      icon: <Layers3 size={22} />,
+      title: t('demo.usecases.3.title'),
+      description: t('demo.usecases.3.desc'),
+    },
+  ];
+
+  const proofMetrics = [
+    { label: t('demo.proof.0.label'), value: t('demo.proof.0.value') },
+    { label: t('demo.proof.1.label'), value: t('demo.proof.1.value') },
+    { label: t('demo.proof.2.label'), value: t('demo.proof.2.value') },
+    { label: t('demo.proof.3.label'), value: t('demo.proof.3.value') },
+  ];
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -178,27 +180,27 @@ export default function DemoPageNew() {
           <HeroContainer>
             <HeroContent>
               <Eyebrow>
-                <Sparkles size={16} /> Démo immersive de la plateforme
+                <Sparkles size={16} /> {t('demo.hero.eyebrow')}
               </Eyebrow>
               <HeroTitle>
-                Découvrez la visioconférence de demain,
-                <span>propulsée par l'IA</span>
+                {t('demo.hero.title')}
+                <span>{t('demo.hero.titleHighlight')}</span>
               </HeroTitle>
               <HeroSubtitle>
-                Plongez dans un environnement de collaboration premium. Expérimentez des réunions fluides, sécurisées et assistées par notre IA intelligente. Entrez dans une salle de démonstration en direct pour tester nos fonctionnalités avancées sans aucun engagement.
+                {t('demo.hero.subtitle')}
               </HeroSubtitle>
               <HeroActions>
                 <PrimaryButton to={`/room/${demoRoomId}`}>
-                  <Play size={18} fill="currentColor" /> Lancer la démo live
+                  <Play size={18} fill="currentColor" /> {t('demo.hero.launchDemo')}
                 </PrimaryButton>
                 <SecondaryButton to="/contact">
-                  Planifier une présentation <ArrowRight size={18} />
+                  {t('demo.hero.schedulePresentation')} <ArrowRight size={18} />
                 </SecondaryButton>
               </HeroActions>
               <HeroMeta>
-                <MetaPill><Gauge size={16} /> Très faible latence</MetaPill>
-                <MetaPill><Bot size={16} /> Assistant IA intégré</MetaPill>
-                <MetaPill><ShieldCheck size={16} /> Conçu pour les entreprises</MetaPill>
+                <MetaPill><Gauge size={16} /> {t('demo.hero.meta.latency')}</MetaPill>
+                <MetaPill><Bot size={16} /> {t('demo.hero.meta.ai')}</MetaPill>
+                <MetaPill><ShieldCheck size={16} /> {t('demo.hero.meta.enterprise')}</MetaPill>
               </HeroMeta>
             </HeroContent>
 
@@ -215,10 +217,10 @@ export default function DemoPageNew() {
 
         <Section data-reveal>
           <SectionHeader>
-            <SectionLabel><Sparkles size={16} /> Ce qui fait la différence</SectionLabel>
-            <SectionTitle>Une plateforme conçue pour l'exigence</SectionTitle>
+            <SectionLabel><Sparkles size={16} /> {t('demo.sections.difference.label')}</SectionLabel>
+            <SectionTitle>{t('demo.sections.difference.title')}</SectionTitle>
             <SectionText>
-              Nous avons repensé la visioconférence pour qu'elle devienne un outil immersif et intelligent, plutôt qu'une simple fenêtre vidéo de plus.
+              {t('demo.sections.difference.text')}
             </SectionText>
           </SectionHeader>
 
@@ -235,10 +237,10 @@ export default function DemoPageNew() {
 
         <Section data-reveal>
           <SectionHeader>
-            <SectionLabel><Layers3 size={16} /> Parcours</SectionLabel>
-            <SectionTitle>Comment se déroule la démo</SectionTitle>
+            <SectionLabel><Layers3 size={16} /> {t('demo.sections.workflow.label')}</SectionLabel>
+            <SectionTitle>{t('demo.sections.workflow.title')}</SectionTitle>
             <SectionText>
-              Nous avons raccourci la distance entre la découverte produit et votre première expérience. En quelques secondes, vous êtes en visioconférence.
+              {t('demo.sections.workflow.text')}
             </SectionText>
           </SectionHeader>
 
@@ -258,42 +260,42 @@ export default function DemoPageNew() {
         <DarkBand>
           <DarkContainer data-reveal>
             <DarkText>
-              <SectionLabel style={{ color: '#93c5fd' }}><Gauge size={16} /> Sous le capot</SectionLabel>
-              <h2>Derrière la plateforme : une architecture taillée pour la performance</h2>
+              <SectionLabel style={{ color: '#93c5fd' }}><Gauge size={16} /> {t('demo.darkband.label')}</SectionLabel>
+              <h2>{t('demo.darkband.title')}</h2>
               <p>
-                Notre solution repose sur les standards les plus exigeants du marché pour offrir une expérience sans faille, même dans des conditions réseaux dégradées.
+                {t('demo.darkband.text')}
               </p>
               <BulletGrid>
-                <Bullet><BadgeCheck size={16} /> Routage vidéo optimisé (SFU)</Bullet>
-                <Bullet><BadgeCheck size={16} /> Codecs haute-fidélité de dernière génération</Bullet>
-                <Bullet><BadgeCheck size={16} /> Traitement de l’IA en temps réel</Bullet>
-                <Bullet><BadgeCheck size={16} /> Infrastructure redondante à haute disponibilité</Bullet>
+                <Bullet><BadgeCheck size={16} /> {t('demo.darkband.bullets.0')}</Bullet>
+                <Bullet><BadgeCheck size={16} /> {t('demo.darkband.bullets.1')}</Bullet>
+                <Bullet><BadgeCheck size={16} /> {t('demo.darkband.bullets.2')}</Bullet>
+                <Bullet><BadgeCheck size={16} /> {t('demo.darkband.bullets.3')}</Bullet>
               </BulletGrid>
             </DarkText>
 
             <MetricsPanel>
               <MetricsHero>
-                <div className="eyebrow">Signal principal</div>
-                <div className="value">Prêt pour la 4K</div>
-                <div className="caption">Une infrastructure conçue pour la performance brute et l'enrichissement collaboratif en temps réel.</div>
+                <div className="eyebrow">{t('demo.metrics.eyebrow')}</div>
+                <div className="value">{t('demo.metrics.value')}</div>
+                <div className="caption">{t('demo.metrics.caption')}</div>
               </MetricsHero>
 
               <MetricsGrid>
                 <MetricsTile>
-                  <div className="label">Bitrate vidéo</div>
-                  <div className="value">2.4 Mbps</div>
+                  <div className="label">{t('demo.metrics.tiles.0.label')}</div>
+                  <div className="value">{t('demo.metrics.tiles.0.value')}</div>
                 </MetricsTile>
                 <MetricsTile>
-                  <div className="label">RTT moyen</div>
-                  <div className="value">29 ms</div>
+                  <div className="label">{t('demo.metrics.tiles.1.label')}</div>
+                  <div className="value">{t('demo.metrics.tiles.1.value')}</div>
                 </MetricsTile>
                 <MetricsTile>
-                  <div className="label">Audio</div>
-                  <div className="value">Opus 48 kHz</div>
+                  <div className="label">{t('demo.metrics.tiles.2.label')}</div>
+                  <div className="value">{t('demo.metrics.tiles.2.value')}</div>
                 </MetricsTile>
                 <MetricsTile>
-                  <div className="label">Collaboration</div>
-                  <div className="value">Chat + AI + partage</div>
+                  <div className="label">{t('demo.metrics.tiles.3.label')}</div>
+                  <div className="value">{t('demo.metrics.tiles.3.value')}</div>
                 </MetricsTile>
               </MetricsGrid>
             </MetricsPanel>
@@ -302,10 +304,10 @@ export default function DemoPageNew() {
 
         <Section data-reveal>
           <SectionHeader>
-            <SectionLabel><Globe size={16} /> Cas d’usage</SectionLabel>
-            <SectionTitle>Pensé pour vos usages au quotidien</SectionTitle>
+            <SectionLabel><Globe size={16} /> {t('demo.sections.usecases.label')}</SectionLabel>
+            <SectionTitle>{t('demo.sections.usecases.title')}</SectionTitle>
             <SectionText>
-              Découvrez comment notre solution s'adapte à vos besoins spécifiques et transforme la manière dont vos équipes interagissent au quotidien.
+              {t('demo.sections.usecases.text')}
             </SectionText>
           </SectionHeader>
 
@@ -322,9 +324,9 @@ export default function DemoPageNew() {
 
         <RevealBlock data-reveal style={{ '--reveal-delay': '80ms' }}>
           <CallToAction
-            title="Prêt à tester la différence ?"
-            description="Rejoignez notre salle de démonstration publique ou planifiez un appel avec notre équipe pour une présentation personnalisée."
-            buttonText="Lancer la room de démo"
+            title={t('demo.cta.title')}
+            description={t('demo.cta.description')}
+            buttonText={t('demo.cta.button')}
             buttonLink={`/room/${demoRoomId}`}
           />
         </RevealBlock>

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import CallToAction from '../components/CallToAction';
+import { useTranslation } from '../hooks/useTranslation';
 
 const COLORS = {
   primary: 'hsl(var(--primary))',
@@ -205,17 +206,18 @@ const HelpSection = styled.div`
 `;
 
 const DocsPage = () => {
+    const { t } = useTranslation();
     return (
         <PageContainer>
             <HeaderClean />
             <MainContent>
                 <HeaderSection>
-                    <Title>Documentation</Title>
+                    <Title>{t('docs.hero.title')}</Title>
                     <Subtitle>
-                        Tout ce dont vous avez besoin pour configurer, utiliser et intégrer VisioConnect dans votre entreprise.
+                        {t('docs.hero.subtitle')}
                     </Subtitle>
                     <SearchBar>
-                        <SearchInput type="text" placeholder="Rechercher dans la documentation..." />
+                        <SearchInput type="text" placeholder={t('docs.search')} />
                         <SearchIcon>
                           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                         </SearchIcon>
@@ -225,48 +227,48 @@ const DocsPage = () => {
                 <CategoriesGrid>
                     <CategoryCard>
                         <IconBox bgColor="#ecfdf5" color="#059669">📚</IconBox>
-                        <CardTitle>Manuel Utilisateur</CardTitle>
+                        <CardTitle>{t('docs.sections.manual.title')}</CardTitle>
                         <CardDesc>
-                            Guides pas à pas pour maîtriser les fonctionnalités de base : appels, messagerie, partage d'écran.
+                            {t('docs.sections.manual.desc')}
                         </CardDesc>
                         <LinkList>
-                            <LinkItem><a href="#start">Premiers pas</a></LinkItem>
-                            <LinkItem><a href="#meetings">Gérer une réunion</a></LinkItem>
-                            <LinkItem><a href="#account">Gestion du compte</a></LinkItem>
+                            <LinkItem><a href="#start">{t('docs.sections.manual.links.0')}</a></LinkItem>
+                            <LinkItem><a href="#meetings">{t('docs.sections.manual.links.1')}</a></LinkItem>
+                            <LinkItem><a href="#account">{t('docs.sections.manual.links.2')}</a></LinkItem>
                         </LinkList>
                     </CategoryCard>
 
                     <CategoryCard>
                         <IconBox bgColor="#eff6ff" color="#2563eb">⚙️</IconBox>
-                        <CardTitle>API & Intégrations</CardTitle>
+                        <CardTitle>{t('docs.sections.api.title')}</CardTitle>
                         <CardDesc>
-                            Documentation technique pour les développeurs souhaitant intégrer VisioConnect à leurs outils.
+                            {t('docs.sections.api.desc')}
                         </CardDesc>
                         <LinkList>
-                            <LinkItem><a href="#api-ref">Référence API REST</a></LinkItem>
-                            <LinkItem><a href="#webhooks">Webhooks</a></LinkItem>
-                            <LinkItem><a href="#auth">Authentification</a></LinkItem>
+                            <LinkItem><a href="#api-ref">{t('docs.sections.api.links.0')}</a></LinkItem>
+                            <LinkItem><a href="#webhooks">{t('docs.sections.api.links.1')}</a></LinkItem>
+                            <LinkItem><a href="#auth">{t('docs.sections.api.links.2')}</a></LinkItem>
                         </LinkList>
                     </CategoryCard>
 
                     <CategoryCard>
                         <IconBox bgColor="#fff7ed" color="#ea580c">🛡️</IconBox>
-                        <CardTitle>Administration & Sécurité</CardTitle>
+                        <CardTitle>{t('docs.sections.admin.title')}</CardTitle>
                         <CardDesc>
-                            Ressources pour les administrateurs système : déploiement, SSO, et gestion des utilisateurs.
+                            {t('docs.sections.admin.desc')}
                         </CardDesc>
                         <LinkList>
-                            <LinkItem><a href="#deploy">Guide de déploiement</a></LinkItem>
-                            <LinkItem><a href="#security">Protocoles de sécurité</a></LinkItem>
-                            <LinkItem><a href="#sso">Configuration SSO</a></LinkItem>
+                            <LinkItem><a href="#deploy">{t('docs.sections.admin.links.0')}</a></LinkItem>
+                            <LinkItem><a href="#security">{t('docs.sections.admin.links.1')}</a></LinkItem>
+                            <LinkItem><a href="#sso">{t('docs.sections.admin.links.2')}</a></LinkItem>
                         </LinkList>
                     </CategoryCard>
                 </CategoriesGrid>
 
                 <CallToAction 
-                    title="Besoin d'aide supplémentaire ?"
-                    description="Si vous ne trouvez pas la réponse à votre question, notre équipe est là pour vous aider 24/7."
-                    buttonText="Contacter le support"
+                    title={t('docs.cta.title')}
+                    description={t('docs.cta.description')}
+                    buttonText={t('docs.cta.button')}
                     buttonLink="/support"
                 />
       </MainContent>

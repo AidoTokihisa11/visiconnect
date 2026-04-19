@@ -13,6 +13,7 @@ import {
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import CallToAction from '../components/CallToAction';
+import { useTranslation } from '../hooks/useTranslation';
 import {
   BenefitCard,
   BenefitsGrid,
@@ -53,6 +54,8 @@ import {
 } from './PartnersPage.styles';
 
 const PartnersPage = () => {
+  const { t } = useTranslation();
+
   useEffect(() => {
     window.scrollTo(0, 0);
 
@@ -97,45 +100,45 @@ const PartnersPage = () => {
           <HeroContainer>
             <HeroContent>
               <Eyebrow>
-                <Handshake size={16} /> Programme Partenaires
+                <Handshake size={16} /> {t('partners.hero.title')}
               </Eyebrow>
               <HeroTitle>
-                Développez votre activité avec une offre vidéo conçue pour les équipes exigeantes
+                {t('partners.hero.subtitle')}
               </HeroTitle>
               <HeroSubtitle>
-                VisioConnect accompagne les intégrateurs, agences, revendeurs et cabinets de conseil qui souhaitent enrichir leur offre avec une plateforme de collaboration moderne, sécurisée et rentable.
+                {t('partners.hero.desc')}
               </HeroSubtitle>
               <HeroActions>
                 <PrimaryButton href="/contact">
-                  Parler à l'équipe partenariats <ArrowRight size={18} />
+                  {t('partners.hero.ctaTeam')} <ArrowRight size={18} />
                 </PrimaryButton>
                 <SecondaryButton href="/features">
-                  Découvrir la plateforme <Layers3 size={18} />
+                  {t('partners.hero.ctaPlatform')} <Layers3 size={18} />
                 </SecondaryButton>
               </HeroActions>
             </HeroContent>
 
             <HeroPanel>
               <PanelHeader>
-                <PanelTitle>Vue du programme</PanelTitle>
+                <PanelTitle>{t('partners.overview.title')}</PanelTitle>
                 <BadgeCheck size={18} color={COLORS.primary} />
               </PanelHeader>
               <PanelGrid>
                 <PanelMetric>
-                  <div className="label">Modèle</div>
-                  <div className="value">Revenu récurrent</div>
+                  <div className="label">{t('partners.overview.model')}</div>
+                  <div className="value">{t('partners.overview.modelValue')}</div>
                 </PanelMetric>
                 <PanelMetric>
-                  <div className="label">Support</div>
-                  <div className="value">Dédié</div>
+                  <div className="label">{t('partners.overview.support')}</div>
+                  <div className="value">{t('partners.overview.supportValue')}</div>
                 </PanelMetric>
                 <PanelMetric>
-                  <div className="label">Activation</div>
-                  <div className="value">Rapide</div>
+                  <div className="label">{t('partners.overview.activation')}</div>
+                  <div className="value">{t('partners.overview.activationValue')}</div>
                 </PanelMetric>
                 <PanelMetric>
-                  <div className="label">Positionnement</div>
-                  <div className="value">B2B premium</div>
+                  <div className="label">{t('partners.overview.positioning')}</div>
+                  <div className="value">{t('partners.overview.positioningValue')}</div>
                 </PanelMetric>
               </PanelGrid>
             </HeroPanel>
@@ -145,29 +148,29 @@ const PartnersPage = () => {
         <ProofBand>
           <ProofGrid>
             <ProofCard data-reveal style={{ '--reveal-delay': '0ms' }}>
-              <div className="value">B2B</div>
-              <div className="label">Un programme orienté vente conseil, intégration et comptes professionnels.</div>
+              <div className="value">{t('partners.props.0.label')}</div>
+              <div className="label">{t('partners.props.0.desc')}</div>
             </ProofCard>
             <ProofCard data-reveal style={{ '--reveal-delay': '80ms' }}>
-              <div className="value">4K</div>
-              <div className="label">Une plateforme conçue pour des usages exigeants en matière de qualité vidéo.</div>
+              <div className="value">{t('partners.props.1.label')}</div>
+              <div className="label">{t('partners.props.1.desc')}</div>
             </ProofCard>
             <ProofCard data-reveal style={{ '--reveal-delay': '160ms' }}>
-              <div className="value">E2EE</div>
-              <div className="label">Un positionnement sécurité fort pour rassurer vos clients et prospects.</div>
+              <div className="value">{t('partners.props.2.label')}</div>
+              <div className="label">{t('partners.props.2.desc')}</div>
             </ProofCard>
             <ProofCard data-reveal style={{ '--reveal-delay': '240ms' }}>
-              <div className="value">API</div>
-              <div className="label">Des possibilités d’intégration pour créer une offre adaptée à votre marché.</div>
+              <div className="value">{t('partners.props.3.label')}</div>
+              <div className="label">{t('partners.props.3.desc')}</div>
             </ProofCard>
           </ProofGrid>
         </ProofBand>
 
         <Section data-reveal>
           <SectionHeader>
-            <SectionTitle>Pourquoi rejoindre le programme</SectionTitle>
+            <SectionTitle>{t('partners.why.title')}</SectionTitle>
             <SectionText>
-              Le programme partenaires est pensé pour accélérer la vente, réduire la friction technique et augmenter la valeur créée pour vos clients finaux.
+              {t('partners.why.subtitle')}
             </SectionText>
           </SectionHeader>
 
@@ -176,9 +179,9 @@ const PartnersPage = () => {
               <IconBox>
                 <LineChart size={24} />
               </IconBox>
-              <h3>Un modèle de revenus plus lisible</h3>
+              <h3>{t('partners.why.reasons.0.title')}</h3>
               <p>
-                Construisez un revenu récurrent autour d’une offre logicielle à forte valeur perçue, avec une structure simple à présenter et à vendre.
+                {t('partners.why.reasons.0.desc')}
               </p>
             </BenefitCard>
 
@@ -186,9 +189,9 @@ const PartnersPage = () => {
               <IconBox>
                 <ShieldCheck size={24} />
               </IconBox>
-              <h3>Une proposition crédible face aux alternatives</h3>
+              <h3>{t('partners.why.reasons.1.title')}</h3>
               <p>
-                Positionnez une solution moderne orientée performance, sécurité et expérience utilisateur, sans dépendre d’un discours produit flou.
+                {t('partners.why.reasons.1.desc')}
               </p>
             </BenefitCard>
 
@@ -196,9 +199,9 @@ const PartnersPage = () => {
               <IconBox>
                 <Users size={24} />
               </IconBox>
-              <h3>Un accompagnement plus opérationnel</h3>
+              <h3>{t('partners.why.reasons.2.title')}</h3>
               <p>
-                Bénéficiez d’un support commercial et technique plus direct pour qualifier, lancer et faire grandir vos opportunités.
+                {t('partners.why.reasons.2.desc')}
               </p>
             </BenefitCard>
           </BenefitsGrid>
@@ -206,49 +209,49 @@ const PartnersPage = () => {
 
         <Section data-reveal>
           <SectionHeader>
-            <SectionTitle>Trois formats de partenariat</SectionTitle>
+            <SectionTitle>{t('partners.formats.title')}</SectionTitle>
             <SectionText>
-              Choisissez le format qui correspond à votre cycle de vente, à votre profondeur d’intégration et à votre niveau d’implication client.
+              {t('partners.formats.subtitle')}
             </SectionText>
           </SectionHeader>
 
           <ProgramGrid>
             <ProgramCard data-reveal style={{ '--reveal-delay': '60ms' }}>
-              <div className="tag">Referral</div>
-              <h3>Apporteur d’affaires</h3>
+              <div className="tag">{t('partners.formats.0.type')}</div>
+              <h3>{t('partners.formats.0.title')}</h3>
               <p>
-                Pour les acteurs qui souhaitent recommander VisioConnect à leurs clients sans porter le déploiement technique.
+                {t('partners.formats.0.desc')}
               </p>
               <BulletList>
-                <BulletItem><BadgeCheck size={16} /> Transmission simple des opportunités</BulletItem>
-                <BulletItem><BadgeCheck size={16} /> Cycle de lancement rapide</BulletItem>
-                <BulletItem><BadgeCheck size={16} /> Modèle adapté aux cabinets et réseaux</BulletItem>
+                <BulletItem><BadgeCheck size={16} /> {t('partners.formats.0.bullets.0')}</BulletItem>
+                <BulletItem><BadgeCheck size={16} /> {t('partners.formats.0.bullets.1')}</BulletItem>
+                <BulletItem><BadgeCheck size={16} /> {t('partners.formats.0.bullets.2')}</BulletItem>
               </BulletList>
             </ProgramCard>
 
             <ProgramCard data-reveal style={{ '--reveal-delay': '140ms' }}>
-              <div className="tag">Reseller</div>
-              <h3>Revendeur / Agence</h3>
+              <div className="tag">{t('partners.formats.1.type')}</div>
+              <h3>{t('partners.formats.1.title')}</h3>
               <p>
-                Pour les structures qui veulent intégrer la plateforme dans leur portefeuille d’offres et piloter la relation client.
+                {t('partners.formats.1.desc')}
               </p>
               <BulletList>
-                <BulletItem><BadgeCheck size={16} /> Offre packagée plus facile à vendre</BulletItem>
-                <BulletItem><BadgeCheck size={16} /> Support d’avant-vente dédié</BulletItem>
-                <BulletItem><BadgeCheck size={16} /> Ressources produit et commerciales</BulletItem>
+                <BulletItem><BadgeCheck size={16} /> {t('partners.formats.1.bullets.0')}</BulletItem>
+                <BulletItem><BadgeCheck size={16} /> {t('partners.formats.1.bullets.1')}</BulletItem>
+                <BulletItem><BadgeCheck size={16} /> {t('partners.formats.1.bullets.2')}</BulletItem>
               </BulletList>
             </ProgramCard>
 
             <ProgramCard data-reveal style={{ '--reveal-delay': '220ms' }}>
-              <div className="tag">Integration</div>
-              <h3>Intégrateur / Partenaire solution</h3>
+              <div className="tag">{t('partners.formats.2.type')}</div>
+              <h3>{t('partners.formats.2.title')}</h3>
               <p>
-                Pour les partenaires techniques qui souhaitent connecter VisioConnect à des workflows, espaces clients ou outils métier.
+                {t('partners.formats.2.desc')}
               </p>
               <BulletList>
-                <BulletItem><BadgeCheck size={16} /> Intégrations sur mesure</BulletItem>
-                <BulletItem><BadgeCheck size={16} /> Support technique plus poussé</BulletItem>
-                <BulletItem><BadgeCheck size={16} /> Positionnement à plus forte valeur</BulletItem>
+                <BulletItem><BadgeCheck size={16} /> {t('partners.formats.2.bullets.0')}</BulletItem>
+                <BulletItem><BadgeCheck size={16} /> {t('partners.formats.2.bullets.1')}</BulletItem>
+                <BulletItem><BadgeCheck size={16} /> {t('partners.formats.2.bullets.2')}</BulletItem>
               </BulletList>
             </ProgramCard>
           </ProgramGrid>
@@ -256,9 +259,9 @@ const PartnersPage = () => {
 
         <Section data-reveal>
           <SectionHeader>
-            <SectionTitle>Comment se déroule la collaboration</SectionTitle>
+            <SectionTitle>{t('partners.collab.title')}</SectionTitle>
             <SectionText>
-              Le parcours partenaire a été simplifié pour permettre un cadrage rapide, un bon niveau d’alignement commercial et une mise en route sans friction inutile.
+              {t('partners.collab.subtitle')}
             </SectionText>
           </SectionHeader>
 
@@ -266,9 +269,9 @@ const PartnersPage = () => {
             <TimelineItem data-reveal style={{ '--reveal-delay': '40ms' }}>
               <TimelineStep>01</TimelineStep>
               <TimelineContent>
-                <h3>Qualification</h3>
+                <h3>{t('partners.collab.steps.0.title')}</h3>
                 <p>
-                  Nous analysons votre profil, votre cible de clients et la forme de partenariat la plus pertinente pour votre activité.
+                  {t('partners.collab.steps.0.desc')}
                 </p>
               </TimelineContent>
             </TimelineItem>
@@ -276,9 +279,9 @@ const PartnersPage = () => {
             <TimelineItem data-reveal style={{ '--reveal-delay': '120ms' }}>
               <TimelineStep>02</TimelineStep>
               <TimelineContent>
-                <h3>Alignement commercial</h3>
+                <h3>{t('partners.collab.steps.1.title')}</h3>
                 <p>
-                  Nous clarifions le positionnement, les cas d’usage, le discours de valeur et les conditions de collaboration pour éviter toute zone grise.
+                  {t('partners.collab.steps.1.desc')}
                 </p>
               </TimelineContent>
             </TimelineItem>
@@ -286,9 +289,9 @@ const PartnersPage = () => {
             <TimelineItem data-reveal style={{ '--reveal-delay': '200ms' }}>
               <TimelineStep>03</TimelineStep>
               <TimelineContent>
-                <h3>Activation</h3>
+                <h3>{t('partners.collab.steps.2.title')}</h3>
                 <p>
-                  Vous recevez les éléments utiles pour lancer vos premières opportunités: cadrage produit, support, ressources et point de contact opérationnel.
+                  {t('partners.collab.steps.2.desc')}
                 </p>
               </TimelineContent>
             </TimelineItem>
@@ -297,9 +300,9 @@ const PartnersPage = () => {
 
         <Section data-reveal>
           <SectionHeader>
-            <SectionTitle>Pour quels profils</SectionTitle>
+            <SectionTitle>{t('partners.profiles.title')}</SectionTitle>
             <SectionText>
-              La page est pensée pour parler à des partenaires sérieux, pas à une audience générique. Si vous opérez sur un marché professionnel, le programme est fait pour vous.
+              {t('partners.profiles.subtitle')}
             </SectionText>
           </SectionHeader>
 
@@ -308,9 +311,9 @@ const PartnersPage = () => {
               <IconBox>
                 <Building2 size={24} />
               </IconBox>
-              <h3>Agences et studios</h3>
+              <h3>{t('partners.profiles.items.0.title')}</h3>
               <p>
-                Pour enrichir une offre digitale avec un produit de collaboration crédible, simple à présenter et aligné sur une logique premium.
+                {t('partners.profiles.items.0.desc')}
               </p>
             </BenefitCard>
 
@@ -318,9 +321,9 @@ const PartnersPage = () => {
               <IconBox>
                 <Briefcase size={24} />
               </IconBox>
-              <h3>Cabinets et conseil</h3>
+              <h3>{t('partners.profiles.items.1.title')}</h3>
               <p>
-                Pour recommander ou embarquer une solution vidéo dans une mission d’accompagnement, de transformation ou d’équipement.
+                {t('partners.profiles.items.1.desc')}
               </p>
             </BenefitCard>
 
@@ -328,9 +331,9 @@ const PartnersPage = () => {
               <IconBox>
                 <Handshake size={24} />
               </IconBox>
-              <h3>Intégrateurs et revendeurs</h3>
+              <h3>{t('partners.profiles.items.2.title')}</h3>
               <p>
-                Pour construire une offre récurrente autour d’un produit exploitable commercialement et techniquement.
+                {t('partners.profiles.items.2.desc')}
               </p>
             </BenefitCard>
           </BenefitsGrid>
@@ -338,9 +341,9 @@ const PartnersPage = () => {
 
         <RevealBlock data-reveal style={{ '--reveal-delay': '80ms' }}>
           <CallToAction
-            title="Construire un partenariat solide"
-            description="Échangeons sur votre activité, votre marché et la manière la plus pertinente d’intégrer VisioConnect dans votre offre."
-            buttonText="Contacter l'équipe partenariats"
+            title={t('partners.cta.title')}
+            description={t('partners.cta.description')}
+            buttonText={t('partners.cta.button')}
             buttonLink="/contact"
           />
         </RevealBlock>

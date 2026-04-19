@@ -6,6 +6,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { FaGoogle, FaGithub } from 'react-icons/fa'
 import { Mail, Lock, Eye, EyeOff, AlertCircle, ArrowLeft, Check, X } from 'lucide-react'
 import AuthRightPanel from '../components/AuthRightPanel'
+import { useTranslation } from '../hooks/useTranslation'
 
 const PageWrapper = styled.div`
   display: flex;
@@ -337,6 +338,7 @@ const SuccessIconBox = styled.div`
 const SignupPage = () => {
   const navigate = useNavigate()
   const { isLoggedIn, signUp, signInWithGoogle, signInWithGithub, verifyEmailCode } = useAuth()
+  const { t } = useTranslation()
 
   const [registrationForm, setRegistrationForm] = useState({ email: '', password: '' })
   const [showPassword, setShowPassword] = useState(false)
@@ -367,12 +369,12 @@ const SignupPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!registrationForm.email || !registrationForm.password) {
-      setError('Veuillez remplir tous les champs')
+      setError(t('signup.errorFields'))
       return
     }
     const allPasswordRulesPassed = Object.values(passwordRules).every(Boolean)
     if (!allPasswordRulesPassed) {
-       setError('Le mot de passe ne respecte pas tous les critères de sécurité')
+       setError(t('signup.errorPassword'))
        return
     }
 
@@ -382,7 +384,7 @@ const SignupPage = () => {
     const result = await signUp(registrationForm.email, registrationForm.password)
 
     if (result.error) {
-      setError(result.error.message || 'Erreur lors de la création')
+      setError(result.error.message || t('signup.errorCreate'))
       setLoading(false)
     } else if (result.data?.requiresVerification) {
       setPendingVerification(true)
@@ -400,7 +402,7 @@ const SignupPage = () => {
     const result = await verifyEmailCode(code)
 
     if (result.error) {
-      setError(result.error.message || 'Code invalide')
+      setError(result.error.message || t('signup.errorCode'))
       setLoading(false)
     } else {
       navigate('/dashboard')
@@ -422,7 +424,7 @@ const SignupPage = () => {
     <PageWrapper>
       <LeftPanel>
         <BackLink to="/">
-          <ArrowLeft size={18} /> Retour à l'accueil
+          <ArrowLeft size={18} /> {t('signup.backHome')}
         </BackLink>
 
         <FormContainer
@@ -444,19 +446,19 @@ const SignupPage = () => {
             <>
               <Header>
                 <Logo>VisiConnect</Logo>
-                <Title>Créer un compte</Title>
-                <Subtitle>Rejoignez-nous et simplifiez vos réunions vidéo.</Subtitle>
+                <Title>{t('signup.title')}</Title>
+                <Subtitle>{t('signup.subtitle')}</Subtitle>
               </Header>
 
               <Form onSubmit={handleSubmit}>
                 <FormGroup>
-                  <Label>Email professionnel</Label>
+                  <Label>{t('signup.email')}</Label>
                   <InputWrapper>
                     <IconWrapper><Mail size={18} /></IconWrapper>
                     <Input
                       type="email"
                       name="email"
-                      placeholder="nom@entreprise.com"
+                      placeholder={t('signup.emailPlaceholder')}
                       value={registrationForm.email}
                       onChange={syncRegistrationInput}
                       required
@@ -465,13 +467,13 @@ const SignupPage = () => {
                 </FormGroup>
 
                 <FormGroup>
-                  <Label>Mot de passe</Label>
+                  <Label>{t('signup.password')}</Label>
                   <InputWrapper>
                     <IconWrapper><Lock size={18} /></IconWrapper>
                     <Input
                       type={showPassword ? "text" : "password"}
                       name="password"
-                      placeholder="Créez un mot de passe fort"
+                      placeholder={t('signup.passwordPlaceholder')}
                       value={registrationForm.password}
                       onChange={syncRegistrationInput}
                       required
@@ -484,16 +486,16 @@ const SignupPage = () => {
                   {registrationForm.password.length > 0 && (
                     <PasswordCriteria>
                       <Criterion $met={passwordRules.length}>
-                        {passwordRules.length ? <Check size={14}/> : <X size={14}/>} 8 caractères min
+                        {passwordRules.length ? <Check size={14}/> : <X size={14}/>} {t('signup.criteria.length')}
                       </Criterion>
                       <Criterion $met={passwordRules.uppercase}>
-                        {passwordRules.uppercase ? <Check size={14}/> : <X size={14}/>} 1 Majuscule
+                        {passwordRules.uppercase ? <Check size={14}/> : <X size={14}/>} {t('signup.criteria.uppercase')}
                       </Criterion>
                       <Criterion $met={passwordRules.number}>
-                        {passwordRules.number ? <Check size={14}/> : <X size={14}/>} 1 Chiffre
+                        {passwordRules.number ? <Check size={14}/> : <X size={14}/>} {t('signup.criteria.number')}
                       </Criterion>
                       <Criterion $met={passwordRules.special}>
-                        {passwordRules.special ? <Check size={14}/> : <X size={14}/>} 1 Caractère spécial
+                        {passwordRules.special ? <Check size={14}/> : <X size={14}/>} {t('signup.criteria.special')}
                       </Criterion>
                     </PasswordCriteria>
                   )}
@@ -504,11 +506,11 @@ const SignupPage = () => {
                   disabled={loading || (registrationForm.password.length > 0 && !Object.values(passwordRules).every(Boolean))}
                   whileTap={{ scale: 0.98 }}
                 >
-                  {loading ? 'Création en cours...' : 'Créer mon compte'}
+                  {loading ? t('signup.loading') : t('signup.submit')}
                 </SubmitButton>
               </Form>
 
-              <Divider><span>Ou s'inscrire via</span></Divider>
+              <Divider><span>{t('signup.orSignupWith')}</span></Divider>
 
               <OAuthButtons>
                 <OAuthButton
@@ -530,8 +532,8 @@ const SignupPage = () => {
               </OAuthButtons>
 
               <FooterLink>
-                Déjà un compte ?
-                <Link to="/login">Se connecter</Link>
+                {t('signup.hasAccount')}
+                <Link to="/login">{t('signup.login')}</Link>
               </FooterLink>
             </>
           ) : (
@@ -540,9 +542,9 @@ const SignupPage = () => {
                 <SuccessIconBox>
                   <Mail size={32} />
                 </SuccessIconBox>
-                <Title>Vérifiez votre email</Title>
+                <Title>{t('signup.verifyTitle')}</Title>
                 <Subtitle style={{ marginBottom: '1.5rem', lineHeight: '1.5' }}>
-                  Nous avons envoyé un code à 6 chiffres à<br/>
+                  {t('signup.verifySubtitle')}<br/>
                   <strong style={{ color: '#0f172a' }}>{registrationForm.email}</strong>
                 </Subtitle>
 
@@ -573,7 +575,7 @@ const SignupPage = () => {
                     disabled={code.length !== 6 || loading}
                     whileTap={{ scale: 0.98 }}
                   >
-                    {loading ? 'Vérification...' : 'Valider le code'}
+                    {loading ? t('signup.verifying') : t('signup.validateCode')}
                   </SubmitButton>
                 </Form>
               </motion.div>
@@ -584,8 +586,8 @@ const SignupPage = () => {
       </LeftPanel>
 
       <AuthRightPanel 
-        title="L'innovation au service de la connexion."
-        description="Créez des espaces de travail collaboratifs. Partagez, échangez et progressez ensemble, avec une fluidité exceptionnelle."
+        title={t('signup.rightPanel.title')}
+        description={t('signup.rightPanel.desc')}
       />
     </PageWrapper>
   )
