@@ -13,7 +13,7 @@ import TechBentoGrid from '../components/home/TechBentoGrid';
 import IndieBadge from '../components/home/IndieBadge';
 import ProofArea from '../components/home/ProofArea';
 import { EditableText } from '../components/Admin/EditableContent';
-import BannerSlider from '../components/home/BannerSlider';
+import FeaturesTabs from '../components/home/FeaturesTabs';
 import FeatureCard from '../components/home/FeatureCard';
 import TestimonialCard from '../components/home/TestimonialCard';
 import PricingCard from '../components/home/PricingCard';
@@ -567,7 +567,7 @@ const ContactLink = styled.a`
 
 export default function HomePageClean() {
   const { t } = useTranslation();
-  const { sliderData, featuresData, testimonialsData, pricingData, contactLinks } = useHomePageData();
+  const { featuresData, testimonialsData, pricingData, contactLinks } = useHomePageData();
 
   return (
     <PageContainer>
@@ -611,8 +611,8 @@ export default function HomePageClean() {
 
       <KeyStats />
 
-      {/* BANNER SLIDER SECTION */}
-      <BannerSlider slides={sliderData} />
+      {/* FEATURES TABS SECTION */}
+      <FeaturesTabs t={t} />
 
       {/* FEATURES SECTION */}
       <FeaturesSection id="features">
