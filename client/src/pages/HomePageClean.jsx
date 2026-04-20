@@ -264,6 +264,7 @@ const HeroSubhead = styled.p`
 const HeroImage = styled.div`
   position: relative;
   width: 100%;
+  min-height: 420px;
   display: flex;
   align-items: center;
   justify-content: center;
