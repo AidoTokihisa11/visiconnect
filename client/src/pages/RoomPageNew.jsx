@@ -192,6 +192,7 @@ export default function RoomPageNew() {
 
   const handleSendBetaCode = async (e) => {
     e.preventDefault();
+    e.stopPropagation();
     if (!regenEmail.trim()) return;
     setRegenStatus('loading');
     setRegenMessage('');
@@ -383,17 +384,18 @@ export default function RoomPageNew() {
                     </div>
                   </div>
                   {regenStatus !== 'sent' ? (
-                    <form onSubmit={handleSendBetaCode} className="flex gap-2">
+                    <div className="flex gap-2">
                       <input
                         type="email"
                         value={regenEmail}
                         onChange={(e) => { setRegenEmail(e.target.value); setRegenStatus('idle'); setRegenMessage(''); }}
                         placeholder="votre@email.com"
                         className="flex-1 bg-white border border-slate-200 focus:border-blue-500 text-slate-900 rounded-xl px-3 py-2.5 text-[13px] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
-                        required
+                        onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); handleSendBetaCode(e); } }}
                       />
                       <button
-                        type="submit"
+                        type="button"
+                        onClick={handleSendBetaCode}
                         disabled={regenStatus === 'loading' || !regenEmail.trim()}
                         className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-[13px] font-semibold rounded-xl px-4 py-2.5 transition-all whitespace-nowrap shadow-sm"
                       >
@@ -401,7 +403,7 @@ export default function RoomPageNew() {
                           <span className="flex items-center gap-1.5"><svg className="animate-spin w-3.5 h-3.5" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>Envoi...</span>
                         ) : 'Envoyer'}
                       </button>
-                    </form>
+                    </div>
                   ) : (
                     <div className="bg-green-50 border border-green-200 rounded-xl px-4 py-3">
                       <div className="flex items-center gap-2">
