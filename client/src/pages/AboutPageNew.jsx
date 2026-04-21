@@ -10,6 +10,7 @@ const COLORS = {
   primary:    '#2563eb',
   dark:       '#0f172a',
   text:       '#374151',
+  secondary:  '#6b7280',
   lightText:  '#6b7280',
   background: '#ffffff',
   bg:         '#f8fbff',
@@ -75,14 +76,14 @@ const HeroPanelLabel = styled.div`
   letter-spacing: .1em; color: ${COLORS.lightText}; margin-bottom: 1.25rem;
 `;
 const StatGrid = styled.div`display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;`;
-const StatItem = styled.div`
+const HeroStatItem = styled.div`
   background: #fff; border: 1px solid ${COLORS.border}; border-radius: 12px;
   padding: 1.1rem; text-align: center;
 `;
-const StatValue = styled.div`
+const HeroStatValue = styled.div`
   font-size: 1.6rem; font-weight: 800; color: ${COLORS.primary}; line-height: 1;
 `;
-const StatLabel = styled.div`
+const HeroStatLabel = styled.div`
   font-size: .76rem; color: ${COLORS.lightText}; margin-top: 4px;
 `;
 
@@ -248,7 +249,7 @@ const AboutPageNew = () => {
               <HeroPanelLabel>VisioConnect en chiffres</HeroPanelLabel>
               <StatGrid>
                 {[['50 000+','Utilisateurs actifs'],['120+','Pays'],['99.9%','Uptime SLA'],['2021','Fondée'],].map(([v,l])=>(
-                  <StatItem key={l}><StatValue>{v}</StatValue><StatLabel>{l}</StatLabel></StatItem>
+                  <HeroStatItem key={l}><HeroStatValue>{v}</HeroStatValue><HeroStatLabel>{l}</HeroStatLabel></HeroStatItem>
                 ))}
               </StatGrid>
             </HeroPanel>

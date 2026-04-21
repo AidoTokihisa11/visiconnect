@@ -67,8 +67,8 @@ const PanelLabel = styled.div`
   font-size:.75rem;font-weight:800;text-transform:uppercase;
   letter-spacing:.1em;color:${COLORS.lightText};margin-bottom:1.25rem;
 `;
-const CultureGrid = styled.div`display:grid;grid-template-columns:1fr 1fr;gap:.75rem;`;
-const CultureCard = styled.div`
+const HeroCultureGrid = styled.div`display:grid;grid-template-columns:1fr 1fr;gap:.75rem;`;
+const HeroCultureCard = styled.div`
   background:#fff;border:1px solid ${COLORS.border};border-radius:12px;
   padding:.85rem;text-align:center;font-size:.82rem;font-weight:600;color:${COLORS.dark};
 `;
@@ -231,11 +231,11 @@ const CareersPageNew = () => {
             </HeroContent>
             <HeroPanel>
               <PanelLabel>Notre culture</PanelLabel>
-              <CultureGrid>
+              <HeroCultureGrid>
                 {[['🌍','Remote First'],['🚀','Croissance rapide'],['🎯','Impact direct'],['❤️','Bien-être']].map(([e,l])=>(
-                  <CultureCard key={l}><div style={{fontSize:'1.5rem',marginBottom:4}}>{e}</div>{l}</CultureCard>
+                  <HeroCultureCard key={l}><div style={{fontSize:'1.5rem',marginBottom:4}}>{e}</div>{l}</HeroCultureCard>
                 ))}
-              </CultureGrid>
+              </HeroCultureGrid>
             </HeroPanel>
           </HeroInner>
         </Hero>
