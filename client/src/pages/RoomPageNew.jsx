@@ -189,7 +189,6 @@ export default function RoomPageNew() {
   const [regenEmail, setRegenEmail] = useState('');
   const [regenStatus, setRegenStatus] = useState('idle'); // 'idle' | 'loading' | 'sent' | 'error'
   const [regenMessage, setRegenMessage] = useState('');
-  const [showRegenForm, setShowRegenForm] = useState(false);
 
   const handleSendBetaCode = async (e) => {
     e.preventDefault();
@@ -372,45 +371,45 @@ export default function RoomPageNew() {
                 </div>
 
                 {/* Regen beta code by email */}
-                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-                  <button
-                    type="button"
-                    onClick={() => { setShowRegenForm((v) => !v); setRegenStatus('idle'); setRegenMessage(''); }}
-                    className="w-full text-left text-[12px] text-slate-500 font-medium flex items-center justify-between"
-                  >
-                    <span>Code perdu ou expiré ? Recevez-en un nouveau par email.</span>
-                    <span className="text-blue-500 text-[11px] font-semibold">{showRegenForm ? 'Masquer' : 'Voir'}</span>
-                  </button>
-                  <AnimatePresence>
-                    {showRegenForm && (
-                      <motion.form
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        onSubmit={handleSendBetaCode}
-                        className="mt-3 flex gap-2"
+                <div className="rounded-xl border border-blue-100 bg-blue-50/60 p-4">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <Key className="w-4 h-4 text-blue-500" />
+                    </div>
+                    <div>
+                      <p className="text-[13px] font-semibold text-slate-700 leading-tight">Code perdu ou expiré ?</p>
+                      <p className="text-[12px] text-slate-500 mt-0.5">Entrez votre email bêta-testeur pour recevoir un nouveau code.</p>
+                    </div>
+                  </div>
+                  {regenStatus !== 'sent' ? (
+                    <form onSubmit={handleSendBetaCode} className="flex gap-2">
+                      <input
+                        type="email"
+                        value={regenEmail}
+                        onChange={(e) => { setRegenEmail(e.target.value); setRegenStatus('idle'); setRegenMessage(''); }}
+                        placeholder="votre@email.com"
+                        className="flex-1 bg-white border border-slate-200 focus:border-blue-500 text-slate-900 rounded-xl px-3 py-2.5 text-[13px] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+                        required
+                      />
+                      <button
+                        type="submit"
+                        disabled={regenStatus === 'loading' || !regenEmail.trim()}
+                        className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-[13px] font-semibold rounded-xl px-4 py-2.5 transition-all whitespace-nowrap shadow-sm"
                       >
-                        <input
-                          type="email"
-                          value={regenEmail}
-                          onChange={(e) => { setRegenEmail(e.target.value); setRegenStatus('idle'); setRegenMessage(''); }}
-                          placeholder="votre@email.com"
-                          className="flex-1 bg-white border border-slate-200 focus:border-blue-500 text-slate-900 rounded-lg px-3 py-2 text-[13px] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
-                          required
-                        />
-                        <button
-                          type="submit"
-                          disabled={regenStatus === 'loading' || !regenEmail.trim()}
-                          className="bg-blue-600 hover:bg-blue-700 disabled:opacity-40 text-white text-[12px] font-semibold rounded-lg px-3 py-2 transition-all whitespace-nowrap"
-                        >
-                          {regenStatus === 'loading' ? '...' : 'Envoyer'}
-                        </button>
-                      </motion.form>
-                    )}
-                  </AnimatePresence>
-                  {regenMessage && (
-                    <p className={`text-[12px] font-medium mt-2 ${regenStatus === 'sent' ? 'text-green-600' : 'text-red-500'}`}>
-                      {regenMessage}
+                        {regenStatus === 'loading' ? (
+                          <span className="flex items-center gap-1.5"><svg className="animate-spin w-3.5 h-3.5" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>Envoi...</span>
+                        ) : 'Envoyer'}
+                      </button>
+                    </form>
+                  ) : (
+                    <div className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-xl px-4 py-3">
+                      <svg className="w-4 h-4 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                      <p className="text-[13px] text-green-700 font-medium">Code envoyé ! Vérifiez votre boîte mail.</p>
+                    </div>
+                  )}
+                  {regenStatus === 'error' && regenMessage && (
+                    <p className="text-[12px] text-red-500 font-medium mt-2 flex items-center gap-1.5">
+                      <AlertTriangle className="w-3 h-3" />{regenMessage}
                     </p>
                   )}
                 </div>
