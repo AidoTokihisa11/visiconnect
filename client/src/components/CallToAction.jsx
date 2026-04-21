@@ -1,163 +1,215 @@
 import React from "react";
-import styled from "styled-components";
-import { motion } from "framer-motion";
-import { ArrowRight, Sparkles } from "lucide-react";
+import styled, { keyframes } from "styled-components";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+// ─── Animations ──────────────────────────────────────────────────────────────
+const fadeUp = keyframes`
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+`;
+
+// ─── Styles ───────────────────────────────────────────────────────────────────
 const Wrapper = styled.section`
   padding: 5rem 1.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  background-color: transparent;
+  background: transparent;
 `;
 
-const Card = styled(motion.div)`
-  background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%);
-  border-radius: 20px;
-  max-width: 950px;
+const Inner = styled.div`
+  max-width: 880px;
   width: 100%;
-  padding: 5rem 2rem;
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 55%, #0f172a 100%);
+  border-radius: 24px;
+  padding: 72px 48px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.25);
+  box-shadow:
+    0 0 0 1px rgba(37, 99, 235, 0.2),
+    0 24px 48px -12px rgba(15, 23, 42, 0.4);
+  animation: ${fadeUp} 0.55s ease both;
 
-  @media (max-width: 768px) {
-    padding: 3.5rem 1.5rem;
+  /* subtle radial glow from centre */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(37,99,235,0.22) 0%, transparent 70%);
+    pointer-events: none;
   }
-`;
 
-/* The + pattern exact reference */
-const CrossPattern = styled.div`
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15 15V8h2v7h7v2h-7v7h-2v-7H8v-2h7z' fill='rgba(255,255,255,0.06)' fill-rule='evenodd'/%3E%3C/svg%3E");
-  z-index: 1;
+  /* thin top accent line */
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+    border-radius: 0 0 4px 4px;
+  }
+
+  @media (max-width: 640px) {
+    padding: 52px 28px;
+    border-radius: 20px;
+  }
 `;
 
 const Content = styled.div`
   position: relative;
-  z-index: 2;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
 
-const IconBox = styled.div`
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  display: flex;
+const Eyebrow = styled.div`
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  color: white;
-  margin-bottom: 2rem;
-  backdrop-filter: blur(10px);
+  gap: 6px;
+  background: rgba(37, 99, 235, 0.18);
+  border: 1px solid rgba(37, 99, 235, 0.35);
+  color: #93c5fd;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 9999px;
+  margin-bottom: 24px;
 `;
 
 const Title = styled.h2`
-  color: white;
-  font-size: 2.75rem;
+  color: #ffffff;
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
   font-weight: 800;
-  margin-bottom: 1.25rem;
   letter-spacing: -0.02em;
-
-  @media (max-width: 768px) {
-    font-size: 2rem;
-  }
+  line-height: 1.2;
+  margin: 0 0 16px;
+  max-width: 620px;
 `;
 
 const Description = styled.p`
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 1.15rem;
-  max-width: 650px;
-  margin: 0 auto 2.5rem;
-  line-height: 1.6;
+  color: rgba(148, 163, 184, 1);
+  font-size: 1.05rem;
+  max-width: 520px;
+  margin: 0 auto 40px;
+  line-height: 1.65;
   font-weight: 400;
 
-  @media (max-width: 768px) {
-    font-size: 1rem;
-    padding: 0 10px;
+  @media (max-width: 640px) {
+    font-size: 0.95rem;
   }
 `;
 
-const Button = styled(motion.button)`
-  background: white;
+const Actions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+`;
+
+const PrimaryBtn = styled.button`
+  background: #ffffff;
   color: #1e40af;
   border: none;
-  padding: 1rem 2.25rem;
-  font-size: 1.05rem;
-  font-weight: 600;
-  border-radius: 99px;
+  padding: 14px 28px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: 9999px;
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 8px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 
-  .arrow {
+  svg {
     transition: transform 0.2s ease;
   }
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    background: #f8fafc;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+    background: #f0f7ff;
 
-    .arrow {
-      transform: translateX(4px);
+    svg {
+      transform: translateX(3px);
     }
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 `;
 
+const GhostBtn = styled.button`
+  background: transparent;
+  color: rgba(255, 255, 255, 0.75);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  padding: 13px 24px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.45);
+    background: rgba(255, 255, 255, 0.06);
+  }
+`;
+
+// ─── Component ───────────────────────────────────────────────────────────────
 const CallToAction = ({
   title = "Vous avez d'autres questions ?",
   description = "Notre équipe commerciale est à votre disposition pour trouver l'offre qui correspond parfaitement à vos besoins.",
   buttonText = "Contacter les ventes",
   buttonLink = "/contact",
+  eyebrow = null,
+  secondaryText = null,
+  secondaryLink = null,
 }) => {
   const navigate = useNavigate();
 
   return (
     <Wrapper>
-      <Card
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-50px" }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-      >
-        <CrossPattern />
+      <Inner>
         <Content>
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-          >
-            <IconBox>
-              <Sparkles size={26} strokeWidth={2} />
-            </IconBox>
-          </motion.div>
-
+          {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
           <Title>{title}</Title>
           <Description>{description}</Description>
-
-          <Button onClick={() => navigate(buttonLink)}>
-            {buttonText}{" "}
-            <ArrowRight className="arrow" size={18} strokeWidth={2.5} />
-          </Button>
+          <Actions>
+            <PrimaryBtn onClick={() => navigate(buttonLink)}>
+              {buttonText}
+              <ArrowRight size={16} strokeWidth={2.5} />
+            </PrimaryBtn>
+            {secondaryText && secondaryLink && (
+              <GhostBtn onClick={() => navigate(secondaryLink)}>
+                {secondaryText}
+                <ArrowUpRight size={15} strokeWidth={2} />
+              </GhostBtn>
+            )}
+          </Actions>
         </Content>
-      </Card>
+      </Inner>
     </Wrapper>
   );
 };
 
 export default CallToAction;
+
