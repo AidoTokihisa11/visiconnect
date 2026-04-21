@@ -1080,6 +1080,69 @@
       "title": "Prêt à transformer vos communications ?",
       "description": "Rejoignez des milliers d'équipes qui font confiance à VisioConnect pour leurs réunions.",
       "button": "Commencer Gratuitement"
+    },
+    "eyebrow": "Fonctionnalités",
+    "heroCtaStart": "Commencer gratuitement",
+    "heroCtaDemo": "Voir la démo",
+    "overview": {
+      "title": "Aperçu de la plateforme",
+      "quality": "Qualité",
+      "qualityValue": "4K Ultra HD",
+      "security": "Sécurité",
+      "securityValue": "E2EE",
+      "latency": "Latence",
+      "latencyValue": "< 200ms",
+      "mobile": "Mobile",
+      "mobileValue": "iOS & Android"
+    },
+    "props": {
+      "0": { "label": "4K", "desc": "Vidéo ultra-haute définition pour des réunions comme en présentiel." },
+      "1": { "label": "E2EE", "desc": "Chiffrement de bout en bout pour une confidentialité absolue." },
+      "2": { "label": "<200ms", "desc": "Latence ultra-faible pour des échanges naturels en temps réel." },
+      "3": { "label": "100+", "desc": "Participants simultanés sans compromis sur la qualité." }
+    },
+    "core": {
+      "title": "Fonctionnalités principales",
+      "subtitle": "Les capacités fondamentales qui font de VisioConnect la référence de la vidéo professionnelle.",
+      "0": {
+        "tag": "Vidéo",
+        "title": "Vidéo HD Cristalline",
+        "desc": "Profitez d'une qualité vidéo haute définition fluide, même avec une bande passante limitée.",
+        "bullets": { "0": "Jusqu'à 4K Ultra HD", "1": "Technologie adaptative", "2": "Codec nouvelle génération" }
+      },
+      "1": {
+        "tag": "Sécurité",
+        "title": "Sécurité de Pointe",
+        "desc": "Chiffrement de bout en bout et protocoles avancés pour une confidentialité totale.",
+        "bullets": { "0": "Chiffrement E2EE", "1": "Conformité RGPD", "2": "Authentification MFA" }
+      },
+      "2": {
+        "tag": "Performance",
+        "title": "Performance Ultra-Rapide",
+        "desc": "Latence minimale et connexion instantanée pour des échanges naturels sans interruption.",
+        "bullets": { "0": "Latence < 200ms", "1": "Connexion instantanée", "2": "Infrastructure mondiale" }
+      }
+    },
+    "tools": {
+      "title": "Outils de collaboration",
+      "subtitle": "Tout ce dont votre équipe a besoin pour travailler ensemble, où qu'elle soit.",
+      "0": { "title": "Réunions de Groupe", "desc": "Accueillez de grandes équipes sans compromis sur la qualité. Idéal pour les webinaires et conférences." },
+      "1": { "title": "Compatible Mobile", "desc": "Une expérience fluide sur iOS, Android et tablettes. Restez connecté en déplacement." },
+      "2": { "title": "Contrôles d'Admin", "desc": "Salle d'attente, mise en sourdine, exclusion de participants et outils de modération avancés." }
+    },
+    "howto": {
+      "title": "Démarrer en 3 étapes",
+      "subtitle": "Simple, rapide et efficace. Rejoignez vos équipes en quelques minutes.",
+      "0": { "title": "Créez votre compte", "desc": "Inscrivez-vous gratuitement en moins de 2 minutes, sans carte bancaire requise." },
+      "1": { "title": "Configurez votre espace", "desc": "Personnalisez vos réunions et invitez vos collaborateurs en un clic." },
+      "2": { "title": "Lancez votre réunion", "desc": "Démarrez instantanément ou planifiez à l'avance depuis n'importe quel appareil." }
+    },
+    "usecases": {
+      "title": "Pour tous les usages",
+      "subtitle": "Des équipes de toutes tailles et tous secteurs font confiance à VisioConnect.",
+      "0": { "title": "Équipes en entreprise", "desc": "Réunions d'équipe, points projet, présentations clients — tout en un seul outil professionnel." },
+      "1": { "title": "Enseignement à distance", "desc": "Cours interactifs, salles de breakout et outils pédagogiques pour une expérience d'apprentissage enrichie." },
+      "2": { "title": "Événements et webinaires", "desc": "Organisez des conférences, formations et événements en ligne pour de larges audiences." }
     }
   },
   "login": {

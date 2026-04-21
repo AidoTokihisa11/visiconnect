@@ -1084,6 +1084,69 @@
       "title": "Bereit, Ihre Kommunikation zu transformieren?",
       "description": "Schließen Sie sich Tausenden von Teams an, die VisioConnect vertrauen.",
       "button": "Kostenlos starten"
+    },
+    "eyebrow": "Funktionen",
+    "heroCtaStart": "Kostenlos starten",
+    "heroCtaDemo": "Demo ansehen",
+    "overview": {
+      "title": "Plattformübersicht",
+      "quality": "Qualität",
+      "qualityValue": "4K Ultra HD",
+      "security": "Sicherheit",
+      "securityValue": "E2EE",
+      "latency": "Latenz",
+      "latencyValue": "< 200ms",
+      "mobile": "Mobil",
+      "mobileValue": "iOS & Android"
+    },
+    "props": {
+      "0": { "label": "4K", "desc": "Ultra-HD-Video für Meetings wie vor Ort." },
+      "1": { "label": "E2EE", "desc": "Ende-zu-Ende-Verschlüsselung für vollständige Vertraulichkeit." },
+      "2": { "label": "<200ms", "desc": "Ultra-niedrige Latenz für natürliche Gespräche in Echtzeit." },
+      "3": { "label": "100+", "desc": "Gleichzeitige Teilnehmer ohne Qualitätsverlust." }
+    },
+    "core": {
+      "title": "Hauptfunktionen",
+      "subtitle": "Die grundlegenden Fähigkeiten, die VisioConnect zum Benchmark für professionelles Video machen.",
+      "0": {
+        "tag": "Video",
+        "title": "Kristallklares HD-Video",
+        "desc": "Genießen Sie flüssige HD-Videoqualität, selbst bei begrenzter Bandbreite.",
+        "bullets": { "0": "Bis zu 4K Ultra HD", "1": "Adaptive Technologie", "2": "Nächste Generation Codec" }
+      },
+      "1": {
+        "tag": "Sicherheit",
+        "title": "Modernste Sicherheit",
+        "desc": "Ende-zu-Ende-Verschlüsselung und fortschrittliche Protokolle für totale Vertraulichkeit.",
+        "bullets": { "0": "E2EE-Verschlüsselung", "1": "DSGVO-konform", "2": "MFA-Authentifizierung" }
+      },
+      "2": {
+        "tag": "Leistung",
+        "title": "Ultraschnelle Leistung",
+        "desc": "Minimale Latenz und sofortige Verbindung für natürliche Gespräche ohne Unterbrechung.",
+        "bullets": { "0": "Latenz < 200ms", "1": "Sofortige Verbindung", "2": "Globale Infrastruktur" }
+      }
+    },
+    "tools": {
+      "title": "Kollaborationstools",
+      "subtitle": "Alles, was Ihr Team braucht, um zusammenzuarbeiten, egal wo.",
+      "0": { "title": "Gruppenbesprechungen", "desc": "Große Teams ohne Qualitätsverlust. Ideal für Webinare und Konferenzen." },
+      "1": { "title": "Mobilkompatibel", "desc": "Flüssiges Erlebnis auf iOS, Android und Tablets. Bleiben Sie unterwegs verbunden." },
+      "2": { "title": "Admin-Steuerung", "desc": "Warteraum, Stummschaltung, Teilnehmerausschluss und erweiterte Moderationstools." }
+    },
+    "howto": {
+      "title": "In 3 Schritten starten",
+      "subtitle": "Einfach, schnell und effektiv. Treten Sie Ihrem Team in Minuten bei.",
+      "0": { "title": "Konto erstellen", "desc": "Melden Sie sich kostenlos in weniger als 2 Minuten an, keine Kreditkarte erforderlich." },
+      "1": { "title": "Bereich einrichten", "desc": "Passen Sie Ihre Meetings an und laden Sie Mitarbeiter mit einem Klick ein." },
+      "2": { "title": "Meeting starten", "desc": "Starten Sie sofort oder planen Sie im Voraus von jedem Gerät aus." }
+    },
+    "usecases": {
+      "title": "Für jeden Anwendungsfall",
+      "subtitle": "Teams aller Größen und Branchen vertrauen VisioConnect.",
+      "0": { "title": "Unternehmensteams", "desc": "Teambesprechungen, Projektreviews, Kundenpräsentationen — alles in einem professionellen Tool." },
+      "1": { "title": "Fernunterricht", "desc": "Interaktive Klassen, Breakout-Räume und pädagogische Tools für eine bereicherte Lernerfahrung." },
+      "2": { "title": "Events & Webinare", "desc": "Veranstalten Sie Konferenzen, Schulungen und Online-Events für große Zielgruppen." }
     }
   },
   "login": {

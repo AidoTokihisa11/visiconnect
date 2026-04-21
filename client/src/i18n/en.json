@@ -1086,6 +1086,69 @@
       "title": "Ready to transform your communications?",
       "description": "Join thousands of teams who trust VisioConnect for their meetings.",
       "button": "Get Started Free"
+    },
+    "eyebrow": "Features",
+    "heroCtaStart": "Get started free",
+    "heroCtaDemo": "See a demo",
+    "overview": {
+      "title": "Platform overview",
+      "quality": "Quality",
+      "qualityValue": "4K Ultra HD",
+      "security": "Security",
+      "securityValue": "E2EE",
+      "latency": "Latency",
+      "latencyValue": "< 200ms",
+      "mobile": "Mobile",
+      "mobileValue": "iOS & Android"
+    },
+    "props": {
+      "0": { "label": "4K", "desc": "Ultra-high definition video for meetings that feel like being there." },
+      "1": { "label": "E2EE", "desc": "End-to-end encryption for complete confidentiality." },
+      "2": { "label": "<200ms", "desc": "Ultra-low latency for natural, real-time conversations." },
+      "3": { "label": "100+", "desc": "Simultaneous participants without compromising quality." }
+    },
+    "core": {
+      "title": "Core features",
+      "subtitle": "The fundamental capabilities that make VisioConnect the benchmark for professional video.",
+      "0": {
+        "tag": "Video",
+        "title": "Crystal Clear HD Video",
+        "desc": "Enjoy smooth high-definition video quality, even with limited bandwidth.",
+        "bullets": { "0": "Up to 4K Ultra HD", "1": "Adaptive technology", "2": "Next-gen video codec" }
+      },
+      "1": {
+        "tag": "Security",
+        "title": "Cutting-Edge Security",
+        "desc": "End-to-end encryption and advanced protocols for total confidentiality.",
+        "bullets": { "0": "E2EE encryption", "1": "GDPR compliant", "2": "MFA authentication" }
+      },
+      "2": {
+        "tag": "Performance",
+        "title": "Ultra-Fast Performance",
+        "desc": "Minimal latency and instant connection for natural conversations without interruption.",
+        "bullets": { "0": "Latency < 200ms", "1": "Instant connection", "2": "Global infrastructure" }
+      }
+    },
+    "tools": {
+      "title": "Collaboration tools",
+      "subtitle": "Everything your team needs to work together, wherever they are.",
+      "0": { "title": "Group Meetings", "desc": "Host large teams without compromising quality. Perfect for webinars and conferences." },
+      "1": { "title": "Mobile Compatible", "desc": "A smooth experience on iOS, Android and tablets. Stay connected on the go." },
+      "2": { "title": "Admin Controls", "desc": "Waiting room, mute, participant removal and advanced moderation tools." }
+    },
+    "howto": {
+      "title": "Get started in 3 steps",
+      "subtitle": "Simple, fast, and effective. Join your teams in minutes.",
+      "0": { "title": "Create your account", "desc": "Sign up for free in less than 2 minutes, no credit card required." },
+      "1": { "title": "Set up your space", "desc": "Customize your meetings and invite collaborators in one click." },
+      "2": { "title": "Launch your meeting", "desc": "Start instantly or schedule in advance from any device." }
+    },
+    "usecases": {
+      "title": "For every use case",
+      "subtitle": "Teams of all sizes and industries trust VisioConnect.",
+      "0": { "title": "Enterprise teams", "desc": "Team meetings, project updates, client presentations — all in one professional tool." },
+      "1": { "title": "Distance learning", "desc": "Interactive classes, breakout rooms and pedagogical tools for an enriched learning experience." },
+      "2": { "title": "Events & webinars", "desc": "Host conferences, trainings and online events for large audiences." }
     }
   },
   "login": {

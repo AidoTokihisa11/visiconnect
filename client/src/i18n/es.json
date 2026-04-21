@@ -1119,6 +1119,69 @@
       "title": "¿Listo para transformar sus comunicaciones?",
       "description": "Únase a miles de equipos que confían en VisioConnect.",
       "button": "Comenzar Gratis"
+    },
+    "eyebrow": "Funcionalidades",
+    "heroCtaStart": "Comenzar gratis",
+    "heroCtaDemo": "Ver la demo",
+    "overview": {
+      "title": "Vista general de la plataforma",
+      "quality": "Calidad",
+      "qualityValue": "4K Ultra HD",
+      "security": "Seguridad",
+      "securityValue": "E2EE",
+      "latency": "Latencia",
+      "latencyValue": "< 200ms",
+      "mobile": "Móvil",
+      "mobileValue": "iOS & Android"
+    },
+    "props": {
+      "0": { "label": "4K", "desc": "Video de ultra alta definición para reuniones como en persona." },
+      "1": { "label": "E2EE", "desc": "Cifrado de extremo a extremo para confidencialidad total." },
+      "2": { "label": "<200ms", "desc": "Latencia ultra-baja para conversaciones naturales en tiempo real." },
+      "3": { "label": "100+", "desc": "Participantes simultáneos sin comprometer la calidad." }
+    },
+    "core": {
+      "title": "Funcionalidades principales",
+      "subtitle": "Las capacidades fundamentales que hacen de VisioConnect la referencia del vídeo profesional.",
+      "0": {
+        "tag": "Vídeo",
+        "title": "Vídeo HD cristalino",
+        "desc": "Disfrute de vídeo HD fluido, incluso con ancho de banda limitado.",
+        "bullets": { "0": "Hasta 4K Ultra HD", "1": "Tecnología adaptativa", "2": "Códec de nueva generación" }
+      },
+      "1": {
+        "tag": "Seguridad",
+        "title": "Seguridad de vanguardia",
+        "desc": "Cifrado de extremo a extremo y protocolos avanzados para confidencialidad total.",
+        "bullets": { "0": "Cifrado E2EE", "1": "Cumplimiento RGPD", "2": "Autenticación MFA" }
+      },
+      "2": {
+        "tag": "Rendimiento",
+        "title": "Rendimiento ultrarrápido",
+        "desc": "Latencia mínima y conexión instantánea para conversaciones naturales.",
+        "bullets": { "0": "Latencia < 200ms", "1": "Conexión instantánea", "2": "Infraestructura mundial" }
+      }
+    },
+    "tools": {
+      "title": "Herramientas de colaboración",
+      "subtitle": "Todo lo que su equipo necesita para trabajar juntos, donde sea.",
+      "0": { "title": "Reuniones de grupo", "desc": "Equipos grandes sin perder calidad. Ideal para webinars y conferencias." },
+      "1": { "title": "Compatible con móviles", "desc": "Experiencia fluida en iOS, Android y tablets. Manténgase conectado en movimiento." },
+      "2": { "title": "Controles de administrador", "desc": "Sala de espera, silenciar, expulsar participantes y herramientas de moderación avanzadas." }
+    },
+    "howto": {
+      "title": "Empezar en 3 pasos",
+      "subtitle": "Simple, rápido y eficaz. Únase a sus equipos en minutos.",
+      "0": { "title": "Cree su cuenta", "desc": "Regístrese gratis en menos de 2 minutos, sin tarjeta de crédito." },
+      "1": { "title": "Configure su espacio", "desc": "Personalice sus reuniones e invite a colaboradores con un clic." },
+      "2": { "title": "Inicie su reunión", "desc": "Comience instantáneamente o prográmela desde cualquier dispositivo." }
+    },
+    "usecases": {
+      "title": "Para todos los usos",
+      "subtitle": "Equipos de todos los tamaños y sectores confían en VisioConnect.",
+      "0": { "title": "Equipos empresariales", "desc": "Reuniones de equipo, revisiones de proyectos, presentaciones a clientes — todo en una sola herramienta." },
+      "1": { "title": "Enseñanza a distancia", "desc": "Clases interactivas, salas de trabajo y herramientas pedagógicas para una experiencia enriquecida." },
+      "2": { "title": "Eventos y webinars", "desc": "Organice conferencias, formaciones y eventos en línea para grandes audiencias." }
     }
   },
   "login": {
