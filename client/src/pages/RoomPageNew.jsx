@@ -184,6 +184,37 @@ export default function RoomPageNew() {
   const [guestName, setGuestName] = useState('');
   const [betaCode, setBetaCode] = useState('');
   const [betaError, setBetaError] = useState(false);
+
+  // Regen beta code by email
+  const [regenEmail, setRegenEmail] = useState('');
+  const [regenStatus, setRegenStatus] = useState('idle'); // 'idle' | 'loading' | 'sent' | 'error'
+  const [regenMessage, setRegenMessage] = useState('');
+  const [showRegenForm, setShowRegenForm] = useState(false);
+
+  const handleSendBetaCode = async (e) => {
+    e.preventDefault();
+    if (!regenEmail.trim()) return;
+    setRegenStatus('loading');
+    setRegenMessage('');
+    try {
+      const res = await fetch('/api/send-beta-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: regenEmail.trim() }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setRegenStatus('sent');
+        setRegenMessage('Code envoyé ! Vérifiez votre boîte mail.');
+      } else {
+        setRegenStatus('error');
+        setRegenMessage(data.error || "Une erreur s'est produite.");
+      }
+    } catch {
+      setRegenStatus('error');
+      setRegenMessage("Impossible de contacter le serveur.");
+    }
+  };
   // Whitelist: ces identifiants bypass le code beta
   const WHITELIST = ['AidoTokihisa41'];
   const isWhitelisted = !!(
@@ -338,6 +369,50 @@ export default function RoomPageNew() {
                       </motion.p>
                     )}
                   </AnimatePresence>
+                </div>
+
+                {/* Regen beta code by email */}
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                  <button
+                    type="button"
+                    onClick={() => { setShowRegenForm((v) => !v); setRegenStatus('idle'); setRegenMessage(''); }}
+                    className="w-full text-left text-[12px] text-slate-500 font-medium flex items-center justify-between"
+                  >
+                    <span>Code perdu ou expiré ? Recevez-en un nouveau par email.</span>
+                    <span className="text-blue-500 text-[11px] font-semibold">{showRegenForm ? 'Masquer' : 'Voir'}</span>
+                  </button>
+                  <AnimatePresence>
+                    {showRegenForm && (
+                      <motion.form
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        onSubmit={handleSendBetaCode}
+                        className="mt-3 flex gap-2"
+                      >
+                        <input
+                          type="email"
+                          value={regenEmail}
+                          onChange={(e) => { setRegenEmail(e.target.value); setRegenStatus('idle'); setRegenMessage(''); }}
+                          placeholder="votre@email.com"
+                          className="flex-1 bg-white border border-slate-200 focus:border-blue-500 text-slate-900 rounded-lg px-3 py-2 text-[13px] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+                          required
+                        />
+                        <button
+                          type="submit"
+                          disabled={regenStatus === 'loading' || !regenEmail.trim()}
+                          className="bg-blue-600 hover:bg-blue-700 disabled:opacity-40 text-white text-[12px] font-semibold rounded-lg px-3 py-2 transition-all whitespace-nowrap"
+                        >
+                          {regenStatus === 'loading' ? '...' : 'Envoyer'}
+                        </button>
+                      </motion.form>
+                    )}
+                  </AnimatePresence>
+                  {regenMessage && (
+                    <p className={`text-[12px] font-medium mt-2 ${regenStatus === 'sent' ? 'text-green-600' : 'text-red-500'}`}>
+                      {regenMessage}
+                    </p>
+                  )}
                 </div>
 
                 {/* Guest name input */}
