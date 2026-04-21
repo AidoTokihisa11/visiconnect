@@ -461,6 +461,168 @@ const StatItem = styled.div`
   .lbl{ color:#bfdbfe; font-size:.88rem; font-weight:600; text-transform:uppercase; letter-spacing:.06em; }
 `;
 
+// ─── Services ─────────────────────────────────────────────────────────────────
+const ServicesGrid = styled.div`
+  display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem;
+  @media(max-width:1024px){ grid-template-columns:repeat(2,1fr); }
+  @media(max-width:640px){ grid-template-columns:1fr; }
+`;
+const ServiceCard = styled.div`
+  background:#fff; border:1px solid ${C.border}; border-radius:20px;
+  padding:2rem 1.75rem; box-shadow:0 4px 18px rgba(15,23,42,.04);
+  position:relative; overflow:hidden; display:flex; flex-direction:column;
+  transition:transform .3s,border-color .3s,box-shadow .3s;
+  ${revealStyles}
+  &::after{
+    content:''; position:absolute; left:0; right:0; top:0; height:3px;
+    background:linear-gradient(90deg,${C.primary},rgba(37,99,235,.3));
+    transform:scaleX(0); transform-origin:left; transition:transform .3s;
+  }
+  &:hover{ transform:translateY(-5px); border-color:${C.blueTint}; box-shadow:0 22px 44px rgba(37,99,235,.13); }
+  &:hover::after{ transform:scaleX(1); }
+`;
+const ServiceIconWrap = styled.div`
+  width:56px; height:56px; border-radius:16px;
+  display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg,${C.softBlue},${C.blueTint});
+  color:${C.primary}; margin-bottom:1.25rem; flex-shrink:0;
+  transition:transform .3s,box-shadow .3s;
+  ${ServiceCard}:hover & { transform:scale(1.12) rotate(-6deg); box-shadow:0 8px 20px rgba(37,99,235,.22); }
+`;
+const ServiceTitle = styled.h4`font-size:1.05rem;font-weight:800;color:${C.navy};margin:0 0 .55rem;`;
+const ServiceDesc = styled.p`font-size:.875rem;color:${C.muted};line-height:1.65;margin:0 0 1.25rem;flex:1;`;
+const ServiceFeats = styled.ul`
+  list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.45rem;
+  li{
+    display:flex;align-items:center;gap:.65rem;
+    font-size:.82rem;color:${C.text};font-weight:500;
+    &::before{
+      content:'';width:7px;height:7px;border-radius:50%;
+      background:${C.primary};flex-shrink:0;opacity:.65;
+    }
+  }
+`;
+
+// ─── Process ──────────────────────────────────────────────────────────────────
+const ProcessOuter = styled.div`position:relative;`;
+const ProcessLine = styled.div`
+  position:absolute; top:36px; left:calc(10% + 36px); right:calc(10% + 36px);
+  height:2px; background:linear-gradient(90deg,${C.primary},${C.blueTint});
+  @media(max-width:900px){ display:none; }
+`;
+const ProcessGrid = styled.div`
+  display:grid; grid-template-columns:repeat(5,1fr); gap:1rem;
+  @media(max-width:900px){ grid-template-columns:1fr; gap:1.5rem; max-width:420px; margin:0 auto; }
+`;
+const ProcessItem = styled.div`
+  display:flex; flex-direction:column; align-items:center; text-align:center;
+  padding:0 .5rem;
+  ${revealStyles}
+`;
+const StepNum = styled.div`
+  width:72px; height:72px; border-radius:50%; z-index:2; position:relative;
+  display:flex; align-items:center; justify-content:center;
+  background:${({$hi})=>$hi?`linear-gradient(135deg,${C.primary},#3b82f6)`:'#fff'};
+  border:2px solid ${({$hi})=>$hi?C.primary:C.border};
+  box-shadow:${({$hi})=>$hi?`0 8px 24px rgba(37,99,235,.35)`:'0 4px 14px rgba(15,23,42,.07)'};
+  color:${({$hi})=>$hi?'#fff':C.primary};
+  font-size:1.3rem; font-weight:800; margin-bottom:1.1rem;
+  transition:transform .3s,box-shadow .3s;
+  ${ProcessItem}:hover & { transform:scale(1.12); box-shadow:0 14px 30px rgba(37,99,235,.3); }
+`;
+const StepLabel = styled.div`font-size:.95rem;font-weight:800;color:${C.navy};margin-bottom:.4rem;`;
+const StepDesc = styled.div`font-size:.8rem;color:${C.muted};line-height:1.6;`;
+const ProcessCard = styled.div`
+  display:flex; gap:1.25rem; align-items:flex-start;
+  background:#fff; border:1px solid ${C.border}; border-radius:18px; padding:1.5rem;
+  box-shadow:0 4px 14px rgba(15,23,42,.04);
+  @media(min-width:901px){ display:none; }
+`;
+
+// ─── TechStack ─────────────────────────────────────────────────────────────────
+const TechBand = styled.div`
+  background:#fff; border-top:1px solid ${C.border}; border-bottom:1px solid ${C.border};
+  padding:5rem 1.5rem;
+`;
+const TechInner = styled.div`max-width:1200px; margin:0 auto;`;
+const TechGroups = styled.div`
+  display:grid; grid-template-columns:repeat(4,1fr); gap:2rem;
+  @media(max-width:900px){ grid-template-columns:repeat(2,1fr); }
+  @media(max-width:560px){ grid-template-columns:1fr; }
+`;
+const TechGroup = styled.div`${revealStyles}`;
+const TechGroupTitle = styled.div`
+  font-size:.78rem; font-weight:800; text-transform:uppercase; letter-spacing:.1em;
+  color:${C.primary}; margin-bottom:.9rem; display:flex; align-items:center; gap:.4rem;
+`;
+const TechTags = styled.div`display:flex;flex-wrap:wrap;gap:.5rem;`;
+const TechTag = styled.span`
+  padding:.38rem .8rem; border-radius:8px;
+  background:${C.softBlue}; border:1px solid ${C.blueTint};
+  color:${C.navy}; font-size:.8rem; font-weight:600;
+  transition:background .2s,border-color .2s,transform .2s;
+  &:hover{ background:${C.blueTint}; border-color:${C.primary}; transform:translateY(-1px); }
+`;
+
+// ─── CTA ──────────────────────────────────────────────────────────────────────
+const CtaSection = styled.section`
+  background:linear-gradient(135deg,#1e40af 0%,${C.primary} 55%,#3b82f6 100%);
+  padding:7rem 1.5rem; text-align:center; position:relative; overflow:hidden;
+  &::before{
+    content:''; position:absolute; inset:0; pointer-events:none;
+    background-image:
+      linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+    background-size:40px 40px;
+  }
+  &::after{
+    content:''; position:absolute; top:-25%; left:50%; transform:translateX(-50%);
+    width:700px; height:500px; border-radius:50%;
+    background:radial-gradient(circle,rgba(255,255,255,.07) 0%,transparent 60%);
+    pointer-events:none;
+  }
+`;
+const CtaInner = styled.div`max-width:760px; margin:0 auto; position:relative; z-index:1;`;
+const CtaAvail = styled.div`
+  display:inline-flex; align-items:center; gap:.6rem;
+  padding:.45rem 1.2rem; border-radius:999px;
+  background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.22);
+  color:#fff; font-size:.8rem; font-weight:700; margin-bottom:1.5rem;
+  backdrop-filter:blur(8px);
+  .dot{
+    width:9px; height:9px; border-radius:50%; background:#4ade80;
+    box-shadow:0 0 8px #4ade80; animation:${pulseGlow} 2s ease-in-out infinite;
+  }
+`;
+const CtaTitle = styled.h2`
+  font-size:clamp(2.2rem,4.5vw,3.4rem); font-weight:800; color:#fff;
+  letter-spacing:-.04em; line-height:1.1; margin:0 0 1.25rem;
+`;
+const CtaSub = styled.p`
+  font-size:1.1rem; color:rgba(255,255,255,.72); line-height:1.75; margin:0 0 2.5rem;
+`;
+const CtaActions = styled.div`display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;`;
+const CtaBtnPrimary = styled.a`
+  padding:1.1rem 2.25rem; border-radius:14px;
+  background:#fff; color:${C.primary}; font-weight:700; font-size:1rem;
+  display:inline-flex; align-items:center; gap:.65rem; text-decoration:none;
+  box-shadow:0 12px 32px rgba(0,0,0,.22);
+  transition:transform .2s,box-shadow .2s;
+  &:hover{ transform:translateY(-3px); box-shadow:0 18px 44px rgba(0,0,0,.28); }
+`;
+const CtaBtnSecondary = styled.a`
+  padding:1.1rem 2.25rem; border-radius:14px;
+  background:rgba(255,255,255,.1); color:#fff; font-weight:700; font-size:1rem;
+  display:inline-flex; align-items:center; gap:.65rem; text-decoration:none;
+  border:1.5px solid rgba(255,255,255,.25); backdrop-filter:blur(8px);
+  transition:transform .2s,background .2s,border-color .2s;
+  &:hover{ transform:translateY(-3px); background:rgba(255,255,255,.18); border-color:rgba(255,255,255,.45); }
+`;
+const CtaEmail = styled.div`
+  margin-top:2rem; font-size:.88rem; color:rgba(255,255,255,.55); display:flex; align-items:center; justify-content:center; gap:.4rem;
+  span{ color:rgba(255,255,255,.85); font-weight:600; }
+`;
+
 // ─── Page component ───────────────────────────────────────────────────────────
 export default function DeveloperPageV2() {
   const { t } = useTranslation();
@@ -533,12 +695,12 @@ export default function DeveloperPageV2() {
         <ProofBand>
           <ProofGrid>
             {[
-              {icon:<GraduationCap size={22}/>, val:t('developer.stats.0.value'), lbl:t('developer.stats.0.label')},
-              {icon:<Code2 size={22}/>,          val:t('developer.stats.1.value'), lbl:t('developer.stats.1.label')},
-              {icon:<Briefcase size={22}/>,       val:t('developer.stats.2.value'), lbl:t('developer.stats.2.label')},
-              {icon:<Coffee size={22}/>,          val:t('developer.stats.3.value'), lbl:t('developer.stats.3.label')},
+              {icon:<Code2 size={22}/>,      val:'Full-Stack',  lbl:'React · Node.js · TypeScript'},
+              {icon:<Zap size={22}/>,        val:'Temps Réel',  lbl:'WebRTC · LiveKit · Socket.io'},
+              {icon:<ShieldCheck size={22}/>,val:'Sécurisé',    lbl:'OWASP · JWT · Auth2'},
+              {icon:<Rocket size={22}/>,     val:'CI/CD Ready', lbl:'Vercel · Docker · GitHub Actions'},
             ].map(({icon,val,lbl},i) => (
-              <ProofCard key={lbl} data-reveal style={{'--reveal-delay':`${i*80}ms`}}>
+              <ProofCard key={val} data-reveal style={{'--reveal-delay':`${i*80}ms`}}>
                 <div className="icon">{icon}</div>
                 <div className="val">{val}</div>
                 <div className="lbl">{lbl}</div>
@@ -546,6 +708,64 @@ export default function DeveloperPageV2() {
             ))}
           </ProofGrid>
         </ProofBand>
+
+        {/* ── Services ── */}
+        <Section>
+          <SectionHeader>
+            <SectionEyebrow data-reveal><Zap size={13}/>&nbsp;Services</SectionEyebrow>
+            <SectionTitle data-reveal style={{'--reveal-delay':'80ms'}}>Ce que je peux faire pour vous</SectionTitle>
+            <SectionSub data-reveal style={{'--reveal-delay':'140ms'}}>
+              Du design à la mise en production, je vous accompagne avec rigueur et passion à chaque étape de votre projet.
+            </SectionSub>
+          </SectionHeader>
+          <ServicesGrid>
+            {[
+              {
+                icon:<MonitorSmartphone size={28}/>,
+                title:'Développement Frontend',
+                desc:"Interfaces modernes, réactives et accessibles construites avec React, Next.js et des animations soignées qui convertissent.",
+                feats:['React / Next.js / Vite','Animations & micro-interactions','Responsive & accessibilité WCAG'],
+              },
+              {
+                icon:<Server size={28}/>,
+                title:'Développement Backend',
+                desc:'APIs robustes, sécurisées et scalables avec Node.js, Express et des bases de données adaptées à vos besoins.',
+                feats:['Node.js / Express / REST & GraphQL','PostgreSQL · Convex · Redis','Auth JWT / OAuth2 / RBAC'],
+              },
+              {
+                icon:<Zap size={28}/>,
+                title:'Applications Temps Réel',
+                desc:'Vidéo-conférence, chat live, tableaux blancs collaboratifs et tout ce qui demande des mises à jour instantanées.',
+                feats:['WebRTC / LiveKit / Socket.io','Rooms & breakout sessions','Enregistrement & streaming HLS'],
+              },
+              {
+                icon:<Layout size={28}/>,
+                title:'Design UI/UX',
+                desc:'Maquettes Figma haute-fidélité, design systems cohérents et prototypes interactifs pour valider vos idées rapidement.',
+                feats:['Maquettes Figma haute-fidélité','Design system & tokens CSS','Tests utilisateurs & itération'],
+              },
+              {
+                icon:<ShieldCheck size={28}/>,
+                title:'Performance & Sécurité',
+                desc:'Audit complet, optimisation des Core Web Vitals, sécurisation OWASP et revue de code pour des applications solides.',
+                feats:['Lighthouse & Core Web Vitals','Protection OWASP Top 10','Code review & refactoring'],
+              },
+              {
+                icon:<Rocket size={28}/>,
+                title:'Déploiement & DevOps',
+                desc:'Mise en production automatisée, CI/CD, monitoring et scalabilité pour que votre application reste toujours en ligne.',
+                feats:['CI/CD GitHub Actions','Vercel / Netlify / Docker','Monitoring & alertes Sentry'],
+              },
+            ].map(({icon,title,desc,feats},i) => (
+              <ServiceCard key={title} data-reveal style={{'--reveal-delay':`${i*70}ms`}}>
+                <ServiceIconWrap>{icon}</ServiceIconWrap>
+                <ServiceTitle>{title}</ServiceTitle>
+                <ServiceDesc>{desc}</ServiceDesc>
+                <ServiceFeats>{feats.map(f=><li key={f}>{f}</li>)}</ServiceFeats>
+              </ServiceCard>
+            ))}
+          </ServicesGrid>
+        </Section>
 
         {/* ── Timeline ── */}
         <SectionAlt>
@@ -571,7 +791,7 @@ export default function DeveloperPageV2() {
         </SectionAlt>
 
         {/* ── Skills ── */}
-        <Section>
+        <Section style={{paddingBottom:'3rem'}}>
           <SectionHeader>
             <SectionEyebrow data-reveal><Code size={13}/>&nbsp;Compétences</SectionEyebrow>
             <SectionTitle data-reveal style={{'--reveal-delay':'80ms'}}>{t('developer.skills.title')}</SectionTitle>
@@ -615,6 +835,53 @@ export default function DeveloperPageV2() {
             </SkillCard>
           </SkillsGrid>
         </Section>
+
+        {/* ── TechStack ── */}
+        <TechBand>
+          <TechInner>
+            <SectionHeader style={{marginBottom:'3rem'}}>
+              <SectionEyebrow data-reveal><Code size={13}/>&nbsp;Stack technique</SectionEyebrow>
+              <SectionTitle data-reveal style={{'--reveal-delay':'80ms'}}>Technologies maîtrisées</SectionTitle>
+              <SectionSub data-reveal style={{'--reveal-delay':'140ms'}}>
+                Un panorama complet des outils et langages que j'utilise au quotidien pour construire des produits robustes.
+              </SectionSub>
+            </SectionHeader>
+            <TechGroups>
+              <TechGroup data-reveal>
+                <TechGroupTitle><MonitorSmartphone size={14}/>Frontend</TechGroupTitle>
+                <TechTags>
+                  {['React','Next.js','TypeScript','JavaScript ES2024','HTML5','CSS3','Tailwind CSS','Styled-Components','Framer Motion','GSAP','Zustand','React Query','Vite','Webpack','Storybook'].map(tag=>(
+                    <TechTag key={tag}>{tag}</TechTag>
+                  ))}
+                </TechTags>
+              </TechGroup>
+              <TechGroup data-reveal style={{'--reveal-delay':'80ms'}}>
+                <TechGroupTitle><Database size={14}/>Backend & BDD</TechGroupTitle>
+                <TechTags>
+                  {['Node.js','Express','NestJS','PostgreSQL','MySQL','Redis','Convex','Prisma ORM','Drizzle','REST API','GraphQL','WebSockets','JWT','OAuth2','Bcrypt'].map(tag=>(
+                    <TechTag key={tag}>{tag}</TechTag>
+                  ))}
+                </TechTags>
+              </TechGroup>
+              <TechGroup data-reveal style={{'--reveal-delay':'160ms'}}>
+                <TechGroupTitle><Zap size={14}/>Temps Réel & Media</TechGroupTitle>
+                <TechTags>
+                  {['LiveKit','WebRTC','Socket.io','HLS Streaming','Canvas API','Fabric.js','OpenAI API','Stripe','Webhooks','SSE','CRDT','Y.js','Liveblocks'].map(tag=>(
+                    <TechTag key={tag}>{tag}</TechTag>
+                  ))}
+                </TechTags>
+              </TechGroup>
+              <TechGroup data-reveal style={{'--reveal-delay':'240ms'}}>
+                <TechGroupTitle><Wrench size={14}/>DevOps & Outils</TechGroupTitle>
+                <TechTags>
+                  {['Git','GitHub','GitHub Actions','Docker','Vercel','Netlify','AWS S3','Sentry','Postman','Figma','VS Code','Bash','Linux','Lighthouse','OWASP ZAP'].map(tag=>(
+                    <TechTag key={tag}>{tag}</TechTag>
+                  ))}
+                </TechTags>
+              </TechGroup>
+            </TechGroups>
+          </TechInner>
+        </TechBand>
 
         {/* ── Projects ── */}
         <SectionAlt>
@@ -723,6 +990,35 @@ export default function DeveloperPageV2() {
           </SectionInner>
         </SectionAlt>
 
+        {/* ── Process ── */}
+        <Section>
+          <SectionHeader>
+            <SectionEyebrow data-reveal><Compass size={13}/>&nbsp;Méthode</SectionEyebrow>
+            <SectionTitle data-reveal style={{'--reveal-delay':'80ms'}}>Comment je travaille</SectionTitle>
+            <SectionSub data-reveal style={{'--reveal-delay':'140ms'}}>
+              Un processus éprouvé en 5 étapes pour transformer votre idée en produit fini, livré dans les délais et sans surprise.
+            </SectionSub>
+          </SectionHeader>
+          <ProcessOuter>
+            <ProcessLine/>
+            <ProcessGrid>
+              {[
+                {num:'01', label:'Découverte',    desc:'Analyse des besoins, objectifs, contraintes techniques et rédaction du cahier des charges.', hi:true},
+                {num:'02', label:'Design',         desc:'Maquettes Figma, wireframes, design system et validation visuelle avant tout code.', hi:false},
+                {num:'03', label:'Développement',  desc:'Code propre, composants réutilisables, commits Git réguliers et revues de code.', hi:true},
+                {num:'04', label:'Tests & QA',     desc:'Tests unitaires, cross-browser, optimisation Lighthouse, sécurité et corrections.', hi:false},
+                {num:'05', label:'Livraison',      desc:'Déploiement CI/CD, documentation technique, formation et support post-lancement.', hi:true},
+              ].map(({num,label,desc,hi},i) => (
+                <ProcessItem key={num} data-reveal style={{'--reveal-delay':`${i*80}ms`}}>
+                  <StepNum $hi={hi}>{num}</StepNum>
+                  <StepLabel>{label}</StepLabel>
+                  <StepDesc>{desc}</StepDesc>
+                </ProcessItem>
+              ))}
+            </ProcessGrid>
+          </ProcessOuter>
+        </Section>
+
         {/* ── Philosophy ── */}
         <Section>
           <PhiloCard data-reveal>
@@ -748,6 +1044,29 @@ export default function DeveloperPageV2() {
             </PhiloVisual>
           </PhiloCard>
         </Section>
+
+        {/* ── CTA ── */}
+        <CtaSection>
+          <CtaInner>
+            <CtaAvail data-reveal><div className="dot"/>Disponible pour de nouveaux projets</CtaAvail>
+            <CtaTitle data-reveal style={{'--reveal-delay':'60ms'}}>Prêt à donner vie<br/>à votre projet&nbsp;?</CtaTitle>
+            <CtaSub data-reveal style={{'--reveal-delay':'120ms'}}>
+              Que vous ayez besoin d'un site vitrine, d'une application web complexe, d'une API robuste
+              ou simplement d'un conseil technique, je suis là pour vous accompagner de A à Z.
+            </CtaSub>
+            <CtaActions data-reveal style={{'--reveal-delay':'180ms'}}>
+              <CtaBtnPrimary href="mailto:contact@visiconnect.app">
+                <Rocket size={18}/>Démarrer un projet
+              </CtaBtnPrimary>
+              <CtaBtnSecondary href="#">
+                <FileText size={18}/>Télécharger le CV
+              </CtaBtnSecondary>
+            </CtaActions>
+            <CtaEmail data-reveal style={{'--reveal-delay':'240ms'}}>
+              Réponse sous 24h&nbsp;·&nbsp;<span>contact@visiconnect.app</span>
+            </CtaEmail>
+          </CtaInner>
+        </CtaSection>
 
         {/* ── Stats ── */}
         <StatsWrap>
