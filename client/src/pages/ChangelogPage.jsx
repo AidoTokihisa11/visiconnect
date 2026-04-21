@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 import {
   Cpu,
   Video,
@@ -45,6 +45,12 @@ const COLOR_KEYS  = ['ai', 'video', 'security', 'analytics', 'design', 'collabor
 const fadeUp = keyframes`
   from { opacity: 0; transform: translateY(24px); }
   to   { opacity: 1; transform: translateY(0); }
+`;
+
+const pulseRing = keyframes`
+  0%   { transform: scale(1);   opacity: 0.7; }
+  70%  { transform: scale(1.7); opacity: 0;   }
+  100% { transform: scale(1);   opacity: 0;   }
 `;
 
 // ─── Layout ──────────────────────────────────────────────────────────────────
@@ -115,9 +121,9 @@ const HeroSubtitle = styled.p`
 
 // ─── Timeline section ────────────────────────────────────────────────────────
 const Section = styled.section`
-  max-width: 860px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 80px 24px 80px;
+  padding: 80px 24px;
 `;
 
 const Rail = styled.div`
@@ -126,30 +132,37 @@ const Rail = styled.div`
   &::before {
     content: '';
     position: absolute;
-    left: 27px;
-    top: 8px;
-    bottom: 0;
-    width: 2px;
-    background: linear-gradient(180deg, ${C.primary} 0%, ${C.border} 100%);
+    left: 22px;
+    top: 26px;
+    bottom: 26px;
+    width: 3px;
+    border-radius: 3px;
+    background: linear-gradient(
+      180deg,
+      #2563eb 0%,
+      #60a5fa 55%,
+      #dbeafe 100%
+    );
 
     @media (min-width: 640px) {
-      left: 35px;
+      left: 26px;
     }
   }
 `;
 
 const Entry = styled.article`
   display: flex;
-  gap: 20px;
-  padding-bottom: 48px;
+  gap: 24px;
+  padding-bottom: 56px;
   position: relative;
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.55s ease, transform 0.55s ease;
+  transform: translateX(-18px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition-delay: var(--delay, 0s);
 
   &.visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
   }
 
   &:last-child {
@@ -157,30 +170,45 @@ const Entry = styled.article`
   }
 
   @media (min-width: 640px) {
-    gap: 28px;
+    gap: 32px;
   }
 `;
 
 const IconCircle = styled.div`
   flex-shrink: 0;
-  width: 56px;
-  height: 56px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background: ${({ $bg }) => $bg};
-  border: 2px solid ${({ $color }) => $color}40;
+  background: ${C.white};
+  border: 2.5px solid ${({ $color }) => $color};
+  box-shadow: 0 0 0 5px ${({ $color }) => $color}22, 0 4px 12px rgba(0,0,0,0.07);
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  z-index: 1;
+  z-index: 2;
+  transition: box-shadow 0.3s ease;
 
-  svg {
-    color: ${({ $color }) => $color};
+  svg { color: ${({ $color }) => $color}; }
+
+  &:hover {
+    box-shadow: 0 0 0 8px ${({ $color }) => $color}28, 0 6px 20px rgba(0,0,0,0.12);
   }
 
+  ${({ $latest }) => $latest && css`
+    &::after {
+      content: '';
+      position: absolute;
+      inset: -5px;
+      border-radius: 50%;
+      border: 2px solid rgba(37,99,235,0.45);
+      animation: ${pulseRing} 2.2s ease-out infinite;
+    }
+  `}
+
   @media (min-width: 640px) {
-    width: 72px;
-    height: 72px;
+    width: 52px;
+    height: 52px;
   }
 `;
 
@@ -188,14 +216,15 @@ const Card = styled.div`
   flex: 1;
   background: ${C.white};
   border: 1px solid ${C.border};
+  border-top: 3px solid ${({ $color }) => $color};
   border-radius: 16px;
   padding: 24px 28px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
-  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
 
   &:hover {
-    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-    border-color: #d1d5db;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.10);
+    transform: translateY(-2px);
   }
 
   @media (min-width: 640px) {
@@ -339,15 +368,15 @@ const ChangelogPage = () => {
         {/* ── Timeline ── */}
         <Section>
           <Rail>
-            {items.map((item) => {
+            {items.map((item, idx) => {
               const Icon = item.meta.icon;
               return (
-                <Entry key={item.version} data-cl-reveal>
-                  <IconCircle $color={item.meta.color} $bg={item.meta.bg}>
-                    <Icon size={item.latest ? 26 : 22} strokeWidth={1.8} />
+                <Entry key={item.version} data-cl-reveal style={{ '--delay': `${idx * 0.08}s` }}>
+                  <IconCircle $color={item.meta.color} $bg={item.meta.bg} $latest={item.latest}>
+                    <Icon size={22} strokeWidth={1.8} />
                   </IconCircle>
 
-                  <Card>
+                  <Card $color={item.meta.color}>
                     <CardMeta>
                       <VersionBadge $color={item.meta.color}>
                         {item.version}
