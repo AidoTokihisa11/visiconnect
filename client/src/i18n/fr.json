@@ -1442,56 +1442,116 @@
   },
   "changelog": {
     "hero": {
-      "title": "Nouveautés",
-      "subtitle": "Découvrez les dernières mises à jour, améliorations et corrections de VisioConnect."
+      "eyebrow": "Nouveautés",
+      "title": "Toutes les mises à jour VisioConnect",
+      "subtitle": "Suivez l'évolution de la plateforme — nouvelles fonctionnalités, améliorations et correctifs, du lancement à aujourd'hui."
     },
     "versions": {
       "0": {
-        "version": "v2.0.0",
-        "date": "21 Février 2024",
-        "title": "Refonte Complète du Design",
+        "version": "v3.1.0",
+        "date": "Avril 2026",
+        "tag": "IA",
+        "title": "Intelligence Artificielle en Réunion",
         "notes": {
-          "0": "Nouveau design system « Clean » pour une meilleure lisibilité.",
-          "1": "Interface utilisateur plus moderne et épurée.",
-          "2": "Optimisation des performances de chargement.",
-          "3": "Nouveau mode sombre natif."
+          "0": "Assistant IA intégré : réponses contextuelles pendant la réunion.",
+          "1": "Prise de notes automatique et résumés post-réunion générés par IA.",
+          "2": "Transcription en temps réel multilingue (FR, EN, DE, ES, RU).",
+          "3": "Suggestions intelligentes d'ordre du jour basées sur l'historique.",
+          "4": "Détection automatique des points d'action et des décisions clés."
         }
       },
       "1": {
-        "version": "v1.5.0",
-        "date": "10 Janvier 2024",
-        "title": "Amélioration de la Vidéo",
+        "version": "v3.0.0",
+        "date": "Janvier 2026",
+        "tag": "Vidéo",
+        "title": "Mode Studio & Vidéo 4K",
         "notes": {
-          "0": "Support de la vidéo 4K pour les comptes Pro.",
-          "1": "Réduction de la latence de 30%.",
-          "2": "Nouveaux filtres de caméra en temps réel."
+          "0": "Vidéo Ultra HD 4K disponible sur tous les comptes Pro et Enterprise.",
+          "1": "Mode Studio avec arrière-plans virtuels haute qualité.",
+          "2": "Éclairage automatique par IA pour une image toujours professionnelle.",
+          "3": "Suppression avancée du bruit de fond (voix isolée).",
+          "4": "Codec vidéo nouvelle génération — qualité maximale, bande passante réduite."
         }
       },
       "2": {
-        "version": "v1.2.0",
-        "date": "5 Décembre 2023",
-        "title": "Outils de Collaboration",
+        "version": "v2.5.0",
+        "date": "Septembre 2025",
+        "tag": "Sécurité",
+        "title": "Sécurité Renforcée & Conformité",
         "notes": {
-          "0": "Ajout du tableau blanc interactif.",
-          "1": "Partage d'écran optimisé pour le texte.",
-          "2": "Sondages en direct pendant les réunions."
+          "0": "Chiffrement E2EE renforcé sur toutes les communications audio, vidéo et chat.",
+          "1": "Authentification multi-facteur (MFA) avec support TOTP et SMS.",
+          "2": "Salle d'attente intelligente avec validation manuelle par l'hôte.",
+          "3": "Journaux d'audit complets exportables (ISO 27001).",
+          "4": "Conformité RGPD améliorée : gestion fine des données et consentements."
         }
       },
       "3": {
-        "version": "v1.0.0",
-        "date": "1 Novembre 2023",
-        "title": "Lancement Officiel",
+        "version": "v2.3.0",
+        "date": "Juin 2025",
+        "tag": "Analytiques",
+        "title": "Tableau de Bord & Analytiques",
         "notes": {
-          "0": "Lancement public de VisioConnect.",
-          "1": "Appels audio et vidéo illimités.",
-          "2": "Messagerie instantanée sécurisée.",
-          "3": "Gestion des équipes."
+          "0": "Tableau de bord analytique des réunions avec métriques détaillées.",
+          "1": "Statistiques de participation : présence, durée, engagement.",
+          "2": "Export des rapports en CSV et PDF depuis l'interface admin.",
+          "3": "Métriques réseau en temps réel : latence, perte de paquets, qualité audio."
+        }
+      },
+      "4": {
+        "version": "v2.0.0",
+        "date": "Février 2025",
+        "tag": "Design",
+        "title": "Refonte Complète de l'Interface",
+        "notes": {
+          "0": "Nouveau design system « Clean » — typographie, couleurs et espacements repensés.",
+          "1": "Mode sombre natif avec basculement automatique selon les préférences système.",
+          "2": "Interface modernisée et épurée — réduction de la charge cognitive.",
+          "3": "Optimisation des performances de chargement (LCP < 1.5s)."
+        }
+      },
+      "5": {
+        "version": "v1.8.0",
+        "date": "Octobre 2024",
+        "tag": "Collaboration",
+        "title": "Outils de Collaboration Avancés",
+        "notes": {
+          "0": "Tableau blanc interactif en temps réel avec exportation PNG/PDF.",
+          "1": "Salles de sous-groupes (breakout rooms) jusqu'à 20 groupes simultanés.",
+          "2": "Sondages et Q&A en direct pendant les réunions.",
+          "3": "Annotation partagée sur écran partagé.",
+          "4": "Réactions emoji en temps réel et levée de main virtuelle."
+        }
+      },
+      "6": {
+        "version": "v1.5.0",
+        "date": "Juillet 2024",
+        "tag": "Performance",
+        "title": "Amélioration des Performances Vidéo",
+        "notes": {
+          "0": "Réduction de la latence de 40% grâce à un nouveau routage intelligent.",
+          "1": "Nouveaux filtres de caméra en temps réel (flou, couleurs, effets).",
+          "2": "Partage d'écran haute résolution avec priorité de fluidité.",
+          "3": "Stabilisation automatique de la connexion en cas de réseau instable."
+        }
+      },
+      "7": {
+        "version": "v1.0.0",
+        "date": "Novembre 2023",
+        "tag": "Lancement",
+        "title": "Lancement Officiel de VisioConnect",
+        "notes": {
+          "0": "Lancement public de la plateforme VisioConnect.",
+          "1": "Appels audio et vidéo HD illimités jusqu'à 100 participants.",
+          "2": "Messagerie instantanée sécurisée avec historique persistant.",
+          "3": "Gestion des équipes et des niveaux d'accès.",
+          "4": "Partage d'écran et enregistrement de réunion intégrés."
         }
       }
     },
     "cta": {
       "title": "Vous avez une idée ?",
-      "description": "Votre feedback est précieux. Suggérez-nous de nouvelles fonctionnalités.",
+      "description": "Votre feedback façonne la feuille de route. Suggérez-nous les fonctionnalités qui comptent pour vous.",
       "button": "Suggérer une fonctionnalité"
     }
   },

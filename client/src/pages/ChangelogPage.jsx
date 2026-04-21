@@ -1,289 +1,393 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, { useEffect } from 'react';
+import styled, { keyframes } from 'styled-components';
+import {
+  Cpu,
+  Video,
+  ShieldCheck,
+  BarChart2,
+  Paintbrush,
+  Users,
+  Zap,
+  Rocket,
+  CheckCircle2,
+} from 'lucide-react';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import CallToAction from '../components/CallToAction';
 import { useTranslation } from '../hooks/useTranslation';
 
-const COLORS = {
-  primary: 'hsl(var(--primary))',
-  secondary: 'hsl(var(--secondary))',
-  dark: 'hsl(var(--foreground))',
-  text: 'hsl(var(--foreground))',
-  lightText: 'hsl(var(--muted-foreground))',
-  background: 'hsl(var(--background))',
-  white: 'hsl(var(--card))',
-  border: 'hsl(var(--border))',
-  success: '#16a34a',
+// ─── Colour palette ──────────────────────────────────────────────────────────
+const C = {
+  primary:    '#2563eb',
+  dark:       '#0f172a',
+  text:       '#374151',
+  muted:      '#6b7280',
+  bg:         '#f8fafc',
+  white:      '#ffffff',
+  border:     '#e5e7eb',
 };
 
-const PageContainer = styled.div`
-  min-height: 100vh;
-  background-color: ${COLORS.background};
-  color: ${COLORS.text};
-  display: flex;
-  flex-direction: column;
-  transition: background-color 0.3s ease, color 0.3s ease;
+const TAG_META = {
+  ai:            { icon: Cpu,          color: '#7c3aed', bg: '#f5f3ff' },
+  video:         { icon: Video,        color: '#2563eb', bg: '#eff6ff' },
+  security:      { icon: ShieldCheck,  color: '#16a34a', bg: '#f0fdf4' },
+  analytics:     { icon: BarChart2,    color: '#d97706', bg: '#fffbeb' },
+  design:        { icon: Paintbrush,   color: '#db2777', bg: '#fdf2f8' },
+  collaboration: { icon: Users,        color: '#0891b2', bg: '#ecfeff' },
+  performance:   { icon: Zap,          color: '#4f46e5', bg: '#eef2ff' },
+  launch:        { icon: Rocket,       color: '#6b7280', bg: '#f9fafb' },
+};
+
+const NOTE_COUNTS = [5, 5, 5, 4, 4, 5, 4, 5];
+const COLOR_KEYS  = ['ai', 'video', 'security', 'analytics', 'design', 'collaboration', 'performance', 'launch'];
+
+// ─── Animations ──────────────────────────────────────────────────────────────
+const fadeUp = keyframes`
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
 `;
 
-const MainContent = styled.main`
-  flex: 1;
-  width: 100%;
-`; 
+// ─── Layout ──────────────────────────────────────────────────────────────────
+const Page = styled.div`
+  min-height: 100vh;
+  background: ${C.bg};
+  display: flex;
+  flex-direction: column;
+`;
 
-const Hero = styled.section`
-  background: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(var(--background)) 100%);
-  padding: 100px 24px 80px;
+const Main = styled.main`
+  flex: 1;
+`;
+
+// ─── Hero ────────────────────────────────────────────────────────────────────
+const HeroWrap = styled.section`
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #0f172a 100%);
+  padding: 120px 24px 96px;
   text-align: center;
-  border-bottom: 1px solid ${COLORS.border};
   position: relative;
   overflow: hidden;
 
   &::before {
     content: '';
     position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(37, 99, 235, 0.05) 0%, transparent 70%);
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(37,99,235,0.25) 0%, transparent 70%);
     pointer-events: none;
   }
 `;
 
-const SectionHeader = styled.div`
-  text-align: center;
-  max-width: 800px;
-  margin: 0 auto;
-
-  h1 {
-    font-size: 3rem;
-    font-weight: 800;
-    color: ${COLORS.dark};
-    margin-bottom: 16px;
-  }
-
-  p {
-    font-size: 1.25rem;
-    color: ${COLORS.lightText};
-    max-width: 600px;
-    margin: 0 auto;
-    
-    a {
-        color: ${COLORS.primary};
-        text-decoration: none;
-        &:hover {
-            text-decoration: underline;
-        }
-    }
-  }
-`;
-
-const ContentWrapper = styled.div`
-  max-width: 1200px;
-  margin: 60px auto;
-  padding: 0 24px;
-`;
-
-const TimelineContainer = styled.div`
-  position: relative;
-  max-width: 800px;
-  margin: 0 auto;
-  
-  &::after {
-    content: '';
-    position: absolute;
-    width: 2px;
-    background-color: ${COLORS.border};
-    top: 0;
-    bottom: 0;
-    left: 20px;
-    margin-left: -1px;
-    
-    @media (min-width: 768px) {
-        left: 50%;
-    }
-  }
-`;
-
-const TimelineItem = styled.div`
-  padding: 10px 40px;
-  position: relative;
-  background-color: inherit;
-  width: 100%;
-  box-sizing: border-box;
-
-  @media (min-width: 768px) {
-    width: 50%;
-    left: ${props => props.position === 'left' ? '0' : '50%'};
-    text-align: ${props => props.position === 'left' ? 'right' : 'left'};
-    padding: ${props => props.position === 'left' ? '10px 40px 10px 0' : '10px 0 10px 40px'};
-  }
-
-  /* The circle on the timeline */
-  &::after {
-    content: '';
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    right: auto;
-    left: 10px; /* Adjusted for mobile line position */
-    background-color: ${COLORS.white};
-    border: 4px solid ${COLORS.primary};
-    top: 15px;
-    border-radius: 50%;
-    z-index: 1;
-
-    @media (min-width: 768px) {
-        left: ${props => props.position === 'left' ? 'auto' : '-10px'};
-        right: ${props => props.position === 'left' ? '-10px' : 'auto'};
-    }
-  }
-`;
-
-const Content = styled.div`
-  padding: 20px 30px;
-  background-color: ${COLORS.white};
-  position: relative;
-  border-radius: 8px;
-  border: 1px solid ${COLORS.border};
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  text-align: left; /* Always left align content inside the card */
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-`;
-
-const VersionTag = styled.span`
-  display: inline-block;
-  padding: 4px 12px;
-  background-color: ${props => props.latest ? COLORS.primary : COLORS.background};
-  color: ${props => props.latest ? COLORS.white : COLORS.text};
-  border-radius: 9999px;
-  font-size: 0.875rem;
+const Eyebrow = styled.div`
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(37,99,235,0.18);
+  border: 1px solid rgba(37,99,235,0.35);
+  color: #93c5fd;
+  font-size: 0.8rem;
   font-weight: 600;
-  margin-bottom: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  border-radius: 9999px;
+  margin-bottom: 24px;
+  animation: ${fadeUp} 0.5s ease both;
 `;
 
-const DateText = styled.span`
-  display: block;
-  font-size: 0.875rem;
-  color: ${COLORS.lightText};
-  margin-bottom: 8px;
+const HeroTitle = styled.h1`
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  max-width: 760px;
+  margin: 0 auto 20px;
+  animation: ${fadeUp} 0.6s 0.1s ease both;
 `;
 
-const Title = styled.h3`
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: ${COLORS.dark};
-  margin-bottom: 12px;
+const HeroSubtitle = styled.p`
+  font-size: 1.15rem;
+  color: #94a3b8;
+  max-width: 580px;
+  margin: 0 auto;
+  line-height: 1.7;
+  animation: ${fadeUp} 0.6s 0.2s ease both;
 `;
 
-const List = styled.ul`
-  list-style-type: disc;
-  padding-left: 20px;
-  margin: 0;
-  
-  li {
-    color: ${COLORS.text};
-    margin-bottom: 6px;
-    font-size: 1rem;
-    line-height: 1.5;
+// ─── Timeline section ────────────────────────────────────────────────────────
+const Section = styled.section`
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 80px 24px 80px;
+`;
+
+const Rail = styled.div`
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 27px;
+    top: 8px;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, ${C.primary} 0%, ${C.border} 100%);
+
+    @media (min-width: 640px) {
+      left: 35px;
+    }
   }
 `;
 
+const Entry = styled.article`
+  display: flex;
+  gap: 20px;
+  padding-bottom: 48px;
+  position: relative;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  &:last-child {
+    padding-bottom: 0;
+  }
+
+  @media (min-width: 640px) {
+    gap: 28px;
+  }
+`;
+
+const IconCircle = styled.div`
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: ${({ $bg }) => $bg};
+  border: 2px solid ${({ $color }) => $color}40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+
+  svg {
+    color: ${({ $color }) => $color};
+  }
+
+  @media (min-width: 640px) {
+    width: 72px;
+    height: 72px;
+  }
+`;
+
+const Card = styled.div`
+  flex: 1;
+  background: ${C.white};
+  border: 1px solid ${C.border};
+  border-radius: 16px;
+  padding: 24px 28px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+
+  &:hover {
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    border-color: #d1d5db;
+  }
+
+  @media (min-width: 640px) {
+    padding: 28px 32px;
+  }
+`;
+
+const CardMeta = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+`;
+
+const VersionBadge = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  background: ${({ $color }) => $color}18;
+  color: ${({ $color }) => $color};
+  border: 1px solid ${({ $color }) => $color}30;
+`;
+
+const LatestDot = styled.span`
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: #22c55e;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px #22c55e30;
+`;
+
+const TagBadge = styled.span`
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  background: ${({ $bg }) => $bg};
+  color: ${({ $color }) => $color};
+`;
+
+const DateLabel = styled.span`
+  margin-left: auto;
+  font-size: 0.8rem;
+  color: ${C.muted};
+  font-weight: 500;
+  white-space: nowrap;
+`;
+
+const CardTitle = styled.h3`
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: ${C.dark};
+  margin: 0 0 16px;
+  line-height: 1.3;
+
+  @media (min-width: 640px) {
+    font-size: 1.25rem;
+  }
+`;
+
+const NoteList = styled.ul`
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+const NoteItem = styled.li`
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.95rem;
+  color: ${C.text};
+  line-height: 1.55;
+
+  svg {
+    flex-shrink: 0;
+    margin-top: 3px;
+    color: ${({ $color }) => $color};
+  }
+`;
+
+// ─── Component ───────────────────────────────────────────────────────────────
 const ChangelogPage = () => {
-    const { t } = useTranslation();
+  const { t } = useTranslation();
 
-    const changes = [
-        {
-            version: t('changelog.versions.0.version'),
-            date: t('changelog.versions.0.date'),
-            title: t('changelog.versions.0.title'),
-            notes: [
-                t('changelog.versions.0.notes.0'),
-                t('changelog.versions.0.notes.1'),
-                t('changelog.versions.0.notes.2'),
-                t('changelog.versions.0.notes.3'),
-            ],
-            latest: true
-        },
-        {
-            version: t('changelog.versions.1.version'),
-            date: t('changelog.versions.1.date'),
-            title: t('changelog.versions.1.title'),
-            notes: [
-                t('changelog.versions.1.notes.0'),
-                t('changelog.versions.1.notes.1'),
-                t('changelog.versions.1.notes.2'),
-            ],
-            latest: false
-        },
-        {
-            version: t('changelog.versions.2.version'),
-            date: t('changelog.versions.2.date'),
-            title: t('changelog.versions.2.title'),
-            notes: [
-                t('changelog.versions.2.notes.0'),
-                t('changelog.versions.2.notes.1'),
-                t('changelog.versions.2.notes.2'),
-            ],
-            latest: false
-        },
-        {
-            version: t('changelog.versions.3.version'),
-            date: t('changelog.versions.3.date'),
-            title: t('changelog.versions.3.title'),
-            notes: [
-                t('changelog.versions.3.notes.0'),
-                t('changelog.versions.3.notes.1'),
-                t('changelog.versions.3.notes.2'),
-                t('changelog.versions.3.notes.3'),
-            ],
-            latest: false
+  useEffect(() => {
+    const els = document.querySelectorAll('[data-cl-reveal]');
+    if (!els.length) return;
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
         }
-    ];
-
-    return (
-        <PageContainer>
-            <HeaderClean />
-            <MainContent>
-                <Hero>
-                    <SectionHeader>
-                        <h1>{t('changelog.hero.title')}</h1>
-                        <p>
-                            {t('changelog.hero.subtitle')}
-                        </p>
-                    </SectionHeader>
-                </Hero>
-
-                <TimelineContainer>
-                    {changes.map((change, index) => (
-                        <TimelineItem key={change.version} position={index % 2 === 0 ? 'left' : 'right'}>
-                            <Content>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                                    <VersionTag latest={change.latest}>{change.version}</VersionTag>
-                                    <DateText>{change.date}</DateText>
-                                </div>
-                                <Title>{change.title}</Title>
-                                <List>
-                                    {change.notes.map((note, i) => (
-                                        <li key={i}>{note}</li>
-                                    ))}
-                                </List>
-                            </Content>
-                        </TimelineItem>
-                    ))}
-                </TimelineContainer>
-
-                <CallToAction 
-                    title={t('changelog.cta.title')}
-                    description={t('changelog.cta.description')}
-                    buttonText={t('changelog.cta.button')}
-                    buttonLink="/contact"
-                />
-            </MainContent>
-            <FooterClean />
-        </PageContainer>
+      }),
+      { threshold: 0.1 }
     );
+    els.forEach(el => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
+  const items = COLOR_KEYS.map((colorKey, idx) => {
+    const meta = TAG_META[colorKey];
+    const notes = Array.from({ length: NOTE_COUNTS[idx] }, (_, ni) =>
+      t(`changelog.versions.${idx}.notes.${ni}`)
+    );
+    return {
+      version: t(`changelog.versions.${idx}.version`),
+      date:    t(`changelog.versions.${idx}.date`),
+      tag:     t(`changelog.versions.${idx}.tag`),
+      title:   t(`changelog.versions.${idx}.title`),
+      notes,
+      meta,
+      latest:  idx === 0,
+    };
+  });
+
+  return (
+    <Page>
+      <HeaderClean />
+      <Main>
+        {/* ── Hero ── */}
+        <HeroWrap>
+          <Eyebrow>{t('changelog.hero.eyebrow')}</Eyebrow>
+          <HeroTitle>{t('changelog.hero.title')}</HeroTitle>
+          <HeroSubtitle>{t('changelog.hero.subtitle')}</HeroSubtitle>
+        </HeroWrap>
+
+        {/* ── Timeline ── */}
+        <Section>
+          <Rail>
+            {items.map((item) => {
+              const Icon = item.meta.icon;
+              return (
+                <Entry key={item.version} data-cl-reveal>
+                  <IconCircle $color={item.meta.color} $bg={item.meta.bg}>
+                    <Icon size={item.latest ? 26 : 22} strokeWidth={1.8} />
+                  </IconCircle>
+
+                  <Card>
+                    <CardMeta>
+                      <VersionBadge $color={item.meta.color}>
+                        {item.version}
+                        {item.latest && <LatestDot />}
+                      </VersionBadge>
+                      <TagBadge $color={item.meta.color} $bg={item.meta.bg}>
+                        {item.tag}
+                      </TagBadge>
+                      <DateLabel>{item.date}</DateLabel>
+                    </CardMeta>
+
+                    <CardTitle>{item.title}</CardTitle>
+
+                    <NoteList>
+                      {item.notes.map((note, ni) => (
+                        <NoteItem key={ni} $color={item.meta.color}>
+                          <CheckCircle2 size={16} strokeWidth={2} />
+                          {note}
+                        </NoteItem>
+                      ))}
+                    </NoteList>
+                  </Card>
+                </Entry>
+              );
+            })}
+          </Rail>
+        </Section>
+
+        {/* ── CTA ── */}
+        <CallToAction
+          title={t('changelog.cta.title')}
+          description={t('changelog.cta.description')}
+          buttonText={t('changelog.cta.button')}
+          buttonLink="/contact"
+        />
+      </Main>
+      <FooterClean />
+    </Page>
+  );
 };
 
 export default ChangelogPage;
+

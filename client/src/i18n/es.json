@@ -1481,56 +1481,116 @@
   },
   "changelog": {
     "hero": {
-      "title": "Novedades",
-      "subtitle": "Descubra las últimas actualizaciones y mejoras."
+      "eyebrow": "Novedades",
+      "title": "Todas las actualizaciones de VisioConnect",
+      "subtitle": "Siga la evolución de la plataforma — nuevas funciones, mejoras y correcciones desde el lanzamiento hasta hoy."
     },
     "versions": {
       "0": {
-        "version": "v2.0.0",
-        "date": "21 de febrero de 2024",
-        "title": "Rediseño completo",
+        "version": "v3.1.0",
+        "date": "Abril 2026",
+        "tag": "IA",
+        "title": "Inteligencia Artificial en Reuniones",
         "notes": {
-          "0": "Nuevo sistema de diseño 'Clean'.",
-          "1": "Interfaz más moderna.",
-          "2": "Optimización de rendimiento.",
-          "3": "Nuevo modo oscuro nativo."
+          "0": "Asistente IA integrado: respuestas contextuales durante la reunión.",
+          "1": "Toma de notas automática y resúmenes post-reunión generados por IA.",
+          "2": "Transcripción en tiempo real multilingüe (FR, EN, DE, ES, RU).",
+          "3": "Sugerencias inteligentes de agenda basadas en el historial.",
+          "4": "Detección automática de puntos de acción y decisiones clave."
         }
       },
       "1": {
-        "version": "v1.5.0",
-        "date": "10 de enero de 2024",
-        "title": "Mejoras de video",
+        "version": "v3.0.0",
+        "date": "Enero 2026",
+        "tag": "Vídeo",
+        "title": "Modo Estudio & Vídeo 4K",
         "notes": {
-          "0": "Soporte 4K para cuentas Pro.",
-          "1": "30% menos latencia.",
-          "2": "Nuevos filtros de cámara en tiempo real."
+          "0": "Vídeo Ultra HD 4K disponible en todas las cuentas Pro y Enterprise.",
+          "1": "Modo Estudio con fondos virtuales de alta calidad.",
+          "2": "Iluminación automática con IA para una imagen siempre profesional.",
+          "3": "Supresión avanzada de ruido de fondo (voz aislada).",
+          "4": "Códec de vídeo de nueva generación — máxima calidad, menor ancho de banda."
         }
       },
       "2": {
-        "version": "v1.2.0",
-        "date": "5 de diciembre de 2023",
-        "title": "Herramientas de colaboración",
+        "version": "v2.5.0",
+        "date": "Septiembre 2025",
+        "tag": "Seguridad",
+        "title": "Seguridad Reforzada & Cumplimiento",
         "notes": {
-          "0": "Pizarra interactiva.",
-          "1": "Compartir pantalla optimizado.",
-          "2": "Encuestas en vivo."
+          "0": "Cifrado E2EE reforzado en todas las comunicaciones de audio, vídeo y chat.",
+          "1": "Autenticación multifactor (MFA) con soporte TOTP y SMS.",
+          "2": "Sala de espera inteligente con validación manual del anfitrión.",
+          "3": "Registros de auditoría completos exportables (ISO 27001).",
+          "4": "Cumplimiento RGPD mejorado: gestión detallada de datos y consentimientos."
         }
       },
       "3": {
-        "version": "v1.0.0",
-        "date": "1 de noviembre de 2023",
-        "title": "Lanzamiento oficial",
+        "version": "v2.3.0",
+        "date": "Junio 2025",
+        "tag": "Análisis",
+        "title": "Panel de Control & Análisis",
         "notes": {
-          "0": "Lanzamiento público.",
-          "1": "Llamadas ilimitadas.",
-          "2": "Mensajería segura.",
-          "3": "Gestión de equipos."
+          "0": "Panel de análisis de reuniones con métricas detalladas.",
+          "1": "Estadísticas de participación: asistencia, duración, compromiso.",
+          "2": "Exportación de informes en CSV y PDF desde la interfaz de administración.",
+          "3": "Métricas de red en tiempo real: latencia, pérdida de paquetes, calidad de audio."
+        }
+      },
+      "4": {
+        "version": "v2.0.0",
+        "date": "Febrero 2025",
+        "tag": "Diseño",
+        "title": "Renovación Completa de la Interfaz",
+        "notes": {
+          "0": "Nuevo sistema de diseño 'Clean' — tipografía, colores y espaciado rediseñados.",
+          "1": "Modo oscuro nativo con cambio automático según preferencias del sistema.",
+          "2": "Interfaz modernizada y simplificada — carga cognitiva reducida.",
+          "3": "Mejoras de rendimiento de carga (LCP < 1.5s)."
+        }
+      },
+      "5": {
+        "version": "v1.8.0",
+        "date": "Octubre 2024",
+        "tag": "Colaboración",
+        "title": "Herramientas de Colaboración Avanzadas",
+        "notes": {
+          "0": "Pizarra interactiva en tiempo real con exportación PNG/PDF.",
+          "1": "Salas de subgrupos (breakout rooms) — hasta 20 grupos simultáneos.",
+          "2": "Encuestas y preguntas y respuestas en vivo durante reuniones.",
+          "3": "Anotaciones compartidas en la pantalla compartida.",
+          "4": "Reacciones emoji en tiempo real y levantamiento de mano virtual."
+        }
+      },
+      "6": {
+        "version": "v1.5.0",
+        "date": "Julio 2024",
+        "tag": "Rendimiento",
+        "title": "Mejoras de Rendimiento de Vídeo",
+        "notes": {
+          "0": "40% menos latencia mediante enrutamiento inteligente.",
+          "1": "Nuevos filtros de cámara en tiempo real (desenfoque, colores, efectos).",
+          "2": "Compartir pantalla en alta resolución con fluidez prioritaria.",
+          "3": "Estabilización automática de conexión en redes inestables."
+        }
+      },
+      "7": {
+        "version": "v1.0.0",
+        "date": "Noviembre 2023",
+        "tag": "Lanzamiento",
+        "title": "Lanzamiento Oficial de VisioConnect",
+        "notes": {
+          "0": "Lanzamiento público de la plataforma VisioConnect.",
+          "1": "Llamadas de audio y vídeo HD ilimitadas para hasta 100 participantes.",
+          "2": "Mensajería instantánea segura con historial persistente.",
+          "3": "Gestión de equipos y niveles de acceso.",
+          "4": "Compartir pantalla y grabación de reuniones integrados."
         }
       }
     },
     "cta": {
       "title": "¿Tiene una idea?",
-      "description": "Su feedback es valioso.",
+      "description": "Su feedback da forma a la hoja de ruta. Sugúeranos las funciones que más le importan.",
       "button": "Sugerir una función"
     }
   },

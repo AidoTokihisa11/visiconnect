@@ -1448,56 +1448,116 @@
   },
   "changelog": {
     "hero": {
-      "title": "What's New",
-      "subtitle": "Discover the latest updates, improvements, and fixes for VisioConnect."
+      "eyebrow": "What's New",
+      "title": "All VisioConnect Updates",
+      "subtitle": "Follow the platform's evolution — new features, improvements and fixes, from launch to today."
     },
     "versions": {
       "0": {
-        "version": "v2.0.0",
-        "date": "February 21, 2024",
-        "title": "Complete Design Overhaul",
+        "version": "v3.1.0",
+        "date": "April 2026",
+        "tag": "AI",
+        "title": "Artificial Intelligence in Meetings",
         "notes": {
-          "0": "New 'Clean' design system for better readability.",
-          "1": "More modern and streamlined UI.",
-          "2": "Loading performance optimizations.",
-          "3": "New native dark mode."
+          "0": "Integrated AI assistant: contextual answers during the meeting.",
+          "1": "Automatic note-taking and AI-generated post-meeting summaries.",
+          "2": "Real-time multilingual transcription (FR, EN, DE, ES, RU).",
+          "3": "Smart agenda suggestions based on meeting history.",
+          "4": "Automatic detection of action items and key decisions."
         }
       },
       "1": {
-        "version": "v1.5.0",
-        "date": "January 10, 2024",
-        "title": "Video Improvements",
+        "version": "v3.0.0",
+        "date": "January 2026",
+        "tag": "Video",
+        "title": "Studio Mode & 4K Video",
         "notes": {
-          "0": "4K video support for Pro accounts.",
-          "1": "30% latency reduction.",
-          "2": "New real-time camera filters."
+          "0": "4K Ultra HD video available on all Pro and Enterprise accounts.",
+          "1": "Studio mode with high-quality virtual backgrounds.",
+          "2": "AI-powered automatic lighting for a consistently professional image.",
+          "3": "Advanced background noise suppression (isolated voice).",
+          "4": "Next-gen video codec — maximum quality, reduced bandwidth."
         }
       },
       "2": {
-        "version": "v1.2.0",
-        "date": "December 5, 2023",
-        "title": "Collaboration Tools",
+        "version": "v2.5.0",
+        "date": "September 2025",
+        "tag": "Security",
+        "title": "Enhanced Security & Compliance",
         "notes": {
-          "0": "Interactive whiteboard added.",
-          "1": "Optimized screen sharing for text.",
-          "2": "Live polls during meetings."
+          "0": "Reinforced E2EE encryption across all audio, video and chat communications.",
+          "1": "Multi-factor authentication (MFA) with TOTP and SMS support.",
+          "2": "Smart waiting room with manual host validation.",
+          "3": "Full exportable audit logs (ISO 27001).",
+          "4": "Improved GDPR compliance: granular data and consent management."
         }
       },
       "3": {
-        "version": "v1.0.0",
-        "date": "November 1, 2023",
-        "title": "Official Launch",
+        "version": "v2.3.0",
+        "date": "June 2025",
+        "tag": "Analytics",
+        "title": "Dashboard & Analytics",
         "notes": {
-          "0": "Public launch of VisioConnect.",
-          "1": "Unlimited audio and video calls.",
-          "2": "Secure instant messaging.",
-          "3": "Team management."
+          "0": "Meeting analytics dashboard with detailed metrics.",
+          "1": "Participation statistics: attendance, duration, engagement.",
+          "2": "Report export to CSV and PDF from the admin interface.",
+          "3": "Real-time network metrics: latency, packet loss, audio quality."
+        }
+      },
+      "4": {
+        "version": "v2.0.0",
+        "date": "February 2025",
+        "tag": "Design",
+        "title": "Complete Interface Overhaul",
+        "notes": {
+          "0": "New 'Clean' design system — redesigned typography, colors and spacing.",
+          "1": "Native dark mode with automatic switching based on system preferences.",
+          "2": "Modernized, streamlined interface — reduced cognitive load.",
+          "3": "Loading performance improvements (LCP < 1.5s)."
+        }
+      },
+      "5": {
+        "version": "v1.8.0",
+        "date": "October 2024",
+        "tag": "Collaboration",
+        "title": "Advanced Collaboration Tools",
+        "notes": {
+          "0": "Real-time interactive whiteboard with PNG/PDF export.",
+          "1": "Breakout rooms — up to 20 simultaneous groups.",
+          "2": "Live polls and Q&A during meetings.",
+          "3": "Shared annotation on shared screen.",
+          "4": "Real-time emoji reactions and virtual hand raise."
+        }
+      },
+      "6": {
+        "version": "v1.5.0",
+        "date": "July 2024",
+        "tag": "Performance",
+        "title": "Video Performance Improvements",
+        "notes": {
+          "0": "40% latency reduction through smart routing.",
+          "1": "New real-time camera filters (blur, color, effects).",
+          "2": "High-resolution screen sharing with smooth framerate priority.",
+          "3": "Automatic connection stabilization on unstable networks."
+        }
+      },
+      "7": {
+        "version": "v1.0.0",
+        "date": "November 2023",
+        "tag": "Launch",
+        "title": "Official Launch of VisioConnect",
+        "notes": {
+          "0": "Public launch of the VisioConnect platform.",
+          "1": "Unlimited HD audio and video calls for up to 100 participants.",
+          "2": "Secure instant messaging with persistent history.",
+          "3": "Team management and access level controls.",
+          "4": "Integrated screen sharing and meeting recording."
         }
       }
     },
     "cta": {
       "title": "Have an idea?",
-      "description": "Your feedback is valuable. Suggest new features.",
+      "description": "Your feedback shapes the roadmap. Suggest the features that matter most to you.",
       "button": "Suggest a feature"
     }
   },
