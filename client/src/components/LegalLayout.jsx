@@ -8,6 +8,7 @@ import { useTranslation } from '../hooks/useTranslation';
 const COLORS = {
   primary:   '#2563eb',
   dark:      '#0f172a',
+  secondary: '#6b7280',
   text:      '#374151',
   border:    '#e5e7eb',
   background:'#ffffff',

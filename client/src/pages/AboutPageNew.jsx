@@ -248,7 +248,7 @@ const AboutPageNew = () => {
             <HeroPanel>
               <HeroPanelLabel>VisioConnect en chiffres</HeroPanelLabel>
               <StatGrid>
-                {[['50 000+','Utilisateurs actifs'],['120+','Pays'],['99.9%','Uptime SLA'],['2021','Fondée'],].map(([v,l])=>(
+                {[['30','Utilisateurs actifs'],['20','Réunions actives'],['6','Pays disponibles'],['99.5%','Disponibilité'],].map(([v,l])=>(
                   <HeroStatItem key={l}><HeroStatValue>{v}</HeroStatValue><HeroStatLabel>{l}</HeroStatLabel></HeroStatItem>
                 ))}
               </StatGrid>
@@ -303,15 +303,15 @@ const AboutPageNew = () => {
         <StatsSection>
           <StatsGrid>
             <StatItem>
-              <StatNumber>1M+</StatNumber>
+              <StatNumber>30</StatNumber>
               <StatLabel>{t('about.stats.users')}</StatLabel>
             </StatItem>
             <StatItem>
-              <StatNumber>150+</StatNumber>
+              <StatNumber>6</StatNumber>
               <StatLabel>{t('about.stats.countries')}</StatLabel>
             </StatItem>
             <StatItem>
-              <StatNumber>99.9%</StatNumber>
+              <StatNumber>99.5%</StatNumber>
               <StatLabel>{t('about.stats.uptime')}</StatLabel>
             </StatItem>
             <StatItem>

@@ -1,59 +1,103 @@
-import React, { useState, useRef } from 'react';
-import styled, { keyframes } from 'styled-components';
+import React, { useState, useRef, useEffect } from 'react';
+import styled, { keyframes, css } from 'styled-components';
 import {
   BookOpen, Code2, ShieldCheck, Rocket, Search, Copy, Check,
   Zap, Users, Video, Settings, Key, Globe, FileText, Terminal, Lock,
+  ArrowRight, Layers3, BadgeCheck,
 } from 'lucide-react';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import CallToAction from '../components/CallToAction';
 import { useTranslation } from '../hooks/useTranslation';
 
+// ─── Palette ──────────────────────────────────────────────────────────────────
 const C = {
-  primary:'#2563eb', navy:'#0f172a', text:'#374151', muted:'#6b7280',
-  border:'#e5e7eb', bg:'#f8fbff', card:'#ffffff',
-  softBlue:'#eff6ff', blueTint:'#dbeafe',
+  primary:  '#2563eb',
+  navy:     '#0f172a',
+  text:     '#374151',
+  muted:    '#6b7280',
+  border:   '#e5e7eb',
+  bg:       '#f8fbff',
+  card:     '#ffffff',
+  softBlue: '#eff6ff',
+  blueTint: '#dbeafe',
 };
 
+// ─── Keyframes ────────────────────────────────────────────────────────────────
 const floatIn = keyframes`
-  from { opacity:0; transform:translateY(18px) scale(0.98); }
+  from { opacity:0; transform:translateY(20px) scale(0.97); }
   to   { opacity:1; transform:translateY(0)    scale(1);    }
 `;
 const fadeSlide = keyframes`
-  from { opacity:0; transform:translateX(-10px); }
+  from { opacity:0; transform:translateX(-12px); }
   to   { opacity:1; transform:translateX(0);     }
 `;
+const pulseGlow = keyframes`
+  0%,100% { transform:scale(1);    opacity:.45; }
+  50%      { transform:scale(1.09); opacity:.75; }
+`;
 
+const revealStyles = css`
+  opacity: 0;
+  transform: translateY(36px) scale(0.985);
+  transition: opacity .75s ease, transform .75s cubic-bezier(.22,1,.36,1);
+  transition-delay: var(--reveal-delay,0ms);
+  will-change: opacity, transform;
+  &.is-visible { opacity:1; transform:translateY(0) scale(1); }
+  @media (prefers-reduced-motion:reduce) { opacity:1; transform:none; transition:none; }
+`;
+
+// ─── Layout ───────────────────────────────────────────────────────────────────
 const Page = styled.div`
   min-height:100vh;
   background:
-    radial-gradient(circle at top left,rgba(37,99,235,.08),transparent 30%),
-    linear-gradient(180deg,${C.bg} 0%,#fff 25%,#fff 100%);
+    radial-gradient(circle at top left,  rgba(37,99,235,.08), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(37,99,235,.04), transparent 40%),
+    linear-gradient(180deg,${C.bg} 0%,#fff 28%,#fff 100%);
   display:flex; flex-direction:column; color:${C.navy};
 `;
 const Main = styled.main`flex:1;`;
+
+// ─── Hero ─────────────────────────────────────────────────────────────────────
 const HeroSection = styled.section`
-  padding:6rem 1.5rem 5rem; border-bottom:1px solid ${C.border};
+  padding:6.5rem 1.5rem 5rem;
+  border-bottom:1px solid ${C.border};
 `;
 const HeroContainer = styled.div`
   max-width:1200px; margin:0 auto;
-  display:grid; grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr);
+  display:grid; grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr);
   gap:3rem; align-items:center;
-  @media(max-width:960px){grid-template-columns:1fr;}
+  @media(max-width:980px){grid-template-columns:1fr;}
 `;
 const HeroContent = styled.div`animation:${floatIn} .75s cubic-bezier(.22,1,.36,1) both;`;
 const Eyebrow = styled.div`
   display:inline-flex; align-items:center; gap:.5rem;
-  padding:.5rem .85rem; border-radius:999px;
+  padding:.5rem .9rem; border-radius:999px;
   background:${C.softBlue}; border:1px solid ${C.blueTint};
   color:${C.primary}; font-weight:700; font-size:.82rem; margin-bottom:1.25rem;
 `;
 const HeroTitle = styled.h1`
-  font-size:clamp(2.4rem,4.5vw,3.8rem); font-weight:800;
-  letter-spacing:-.03em; line-height:1.1; margin:0 0 1.1rem; color:${C.navy};
+  font-size:clamp(2.5rem,5vw,4.2rem); font-weight:800;
+  letter-spacing:-.04em; line-height:1.05; margin:0 0 1.1rem; color:${C.navy};
 `;
 const HeroSubtitle = styled.p`
-  font-size:1.1rem; color:${C.muted}; line-height:1.75; margin:0 0 2rem;
+  font-size:1.1rem; color:${C.muted}; line-height:1.75; margin:0 0 2rem; max-width:600px;
+`;
+const HeroActions = styled.div`display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:2rem;`;
+const PrimaryButton = styled.button`
+  display:inline-flex; align-items:center; gap:.55rem;
+  padding:.9rem 1.35rem; border-radius:12px; border:none;
+  background:${C.primary}; color:#fff; font-weight:700; font-size:.95rem; cursor:pointer;
+  transition:transform .2s,box-shadow .2s;
+  &:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(37,99,235,.22);}
+`;
+const SecondaryButton = styled.button`
+  display:inline-flex; align-items:center; gap:.55rem;
+  padding:.9rem 1.35rem; border-radius:12px;
+  border:1.5px solid ${C.border}; background:#fff; color:${C.navy};
+  font-weight:700; font-size:.95rem; cursor:pointer;
+  transition:border-color .2s,color .2s;
+  &:hover{border-color:${C.primary};color:${C.primary};}
 `;
 const SearchBar = styled.div`
   position:relative; max-width:460px;
@@ -67,36 +111,121 @@ const SearchInput = styled.input`
   &::placeholder{color:${C.muted};}
   &:focus{outline:none;border-color:${C.primary};box-shadow:0 0 0 3px rgba(37,99,235,.1);}
 `;
+
+// ─── Hero panel ───────────────────────────────────────────────────────────────
 const HeroPanel = styled.div`
+  position:relative; overflow:hidden;
   background:linear-gradient(180deg,#fff 0%,${C.bg} 100%);
-  border:1px solid ${C.border}; border-radius:20px; padding:1.5rem;
-  box-shadow:0 20px 50px rgba(15,23,42,.08);
+  border:1px solid ${C.border}; border-radius:24px; padding:1.5rem;
+  box-shadow:0 24px 60px rgba(15,23,42,.08);
   animation:${floatIn} .9s .15s cubic-bezier(.22,1,.36,1) both;
+  &::before{
+    content:''; position:absolute; top:-80px; right:-40px;
+    width:180px; height:180px; border-radius:999px;
+    background:radial-gradient(circle,rgba(37,99,235,.22) 0%,transparent 72%);
+    animation:${pulseGlow} 8s ease-in-out infinite; pointer-events:none;
+  }
 `;
-const PanelTitle = styled.div`
-  font-size:.78rem; font-weight:700; text-transform:uppercase;
-  letter-spacing:.08em; color:${C.muted}; margin-bottom:1rem;
+const PanelHeader = styled.div`
+  display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;
 `;
+const PanelLabel = styled.div`font-size:.95rem; font-weight:700; color:${C.navy};`;
 const QuickLinkGrid = styled.div`display:grid;grid-template-columns:1fr 1fr;gap:.75rem;`;
 const QuickLinkCard = styled.button`
   display:flex; flex-direction:column; align-items:flex-start; gap:5px;
   padding:1rem; background:${C.card}; border:1px solid ${C.border};
-  border-radius:12px; cursor:pointer; text-align:left;
+  border-radius:14px; cursor:pointer; text-align:left; position:relative; overflow:hidden;
   transition:border-color .2s,box-shadow .2s,transform .2s;
+  &::after{
+    content:''; position:absolute; left:0; right:0; top:0; height:2px;
+    background:linear-gradient(90deg,${C.primary},rgba(37,99,235,.4));
+    transform:scaleX(0); transform-origin:left center; transition:transform .3s ease;
+  }
   .icon{color:${C.primary};}
-  .label{font-size:.82rem;font-weight:700;color:${C.navy};}
+  .label{font-size:.84rem;font-weight:700;color:${C.navy};}
   .desc{font-size:.74rem;color:${C.muted};line-height:1.4;}
-  &:hover{border-color:${C.primary};box-shadow:0 6px 20px rgba(37,99,235,.1);transform:translateY(-1px);}
+  &:hover{border-color:${C.primary};box-shadow:0 8px 24px rgba(37,99,235,.12);transform:translateY(-2px);}
+  &:hover::after{transform:scaleX(1);}
 `;
+
+// ─── Proof band ───────────────────────────────────────────────────────────────
+const ProofBand = styled.section`
+  border-top:1px solid ${C.border}; border-bottom:1px solid ${C.border};
+  background:linear-gradient(180deg,rgba(239,246,255,.85) 0%,rgba(255,255,255,.6) 100%);
+`;
+const ProofGrid = styled.div`
+  max-width:1200px; margin:0 auto; padding:2.5rem 1.5rem;
+  display:grid; grid-template-columns:repeat(4,1fr); gap:1rem;
+  @media(max-width:760px){grid-template-columns:repeat(2,1fr);}
+`;
+const ProofCard = styled.div`
+  text-align:center; padding:1.5rem 1rem;
+  background:#fff; border:1px solid ${C.border}; border-radius:16px;
+  box-shadow:0 4px 18px rgba(15,23,42,.04);
+  transition:transform .28s ease,border-color .28s ease,box-shadow .28s ease;
+  ${revealStyles}
+  &:hover{transform:translateY(-4px);border-color:rgba(37,99,235,.22);box-shadow:0 14px 32px rgba(37,99,235,.1);}
+  .value{font-size:1.8rem;font-weight:800;color:${C.primary};line-height:1;}
+  .label{font-size:.82rem;color:${C.muted};margin-top:.4rem;line-height:1.4;}
+`;
+
+// ─── Feature strip ────────────────────────────────────────────────────────────
+const FeatureStrip = styled.section`
+  max-width:1200px; margin:0 auto; padding:4.5rem 1.5rem;
+  ${revealStyles}
+`;
+const FeatureStripHeader = styled.div`max-width:640px; margin-bottom:2.5rem;`;
+const FeatureStripTitle = styled.h2`
+  font-size:clamp(1.8rem,2.8vw,2.6rem); font-weight:800;
+  letter-spacing:-.03em; color:${C.navy}; margin:0 0 .8rem;
+`;
+const FeatureStripText = styled.p`font-size:1rem;color:${C.muted};line-height:1.7;margin:0;`;
+const FeatureGrid = styled.div`
+  display:grid; grid-template-columns:repeat(3,1fr); gap:1.25rem;
+  @media(max-width:780px){grid-template-columns:1fr;}
+`;
+const FeatureCard = styled.article`
+  background:#fff; border:1px solid ${C.border}; border-radius:20px;
+  padding:1.5rem; position:relative; overflow:hidden;
+  box-shadow:0 4px 18px rgba(15,23,42,.04);
+  transition:transform .3s ease,border-color .3s ease,box-shadow .3s ease;
+  ${revealStyles}
+  &::after{
+    content:''; position:absolute; left:0; right:0; top:0; height:3px;
+    background:linear-gradient(90deg,rgba(37,99,235,.85),rgba(37,99,235,.25));
+    transform:scaleX(0); transform-origin:left; transition:transform .3s ease;
+  }
+  &::before{
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(135deg,rgba(37,99,235,.06),transparent);
+    opacity:0; transition:opacity .3s ease; pointer-events:none;
+  }
+  &:hover{transform:translateY(-8px);border-color:rgba(37,99,235,.22);box-shadow:0 24px 48px rgba(15,23,42,.1);}
+  &:hover::after{transform:scaleX(1);}
+  &:hover::before{opacity:1;}
+  h3{font-size:1.1rem;font-weight:700;color:${C.navy};margin:.9rem 0 .6rem;}
+  p{font-size:.9rem;color:${C.muted};line-height:1.65;margin:0;}
+`;
+const FeatureIconBox = styled.div`
+  width:48px; height:48px; border-radius:14px;
+  display:inline-flex; align-items:center; justify-content:center;
+  background:${C.softBlue}; color:${C.primary};
+  transition:transform .3s ease,background .3s ease;
+  ${FeatureCard}:hover & { transform:translateY(-2px) scale(1.06); background:rgba(37,99,235,.12); }
+`;
+
+// ─── Docs layout ──────────────────────────────────────────────────────────────
 const DocsWrapper = styled.div`
   max-width:1200px; margin:0 auto; padding:3rem 1.5rem 5rem;
   display:grid; grid-template-columns:260px 1fr; gap:3rem; align-items:start;
   @media(max-width:900px){grid-template-columns:1fr;}
 `;
+
+// ─── Sidebar ──────────────────────────────────────────────────────────────────
 const Sidebar = styled.nav`
   position:sticky; top:90px; height:fit-content;
-  background:#fff; border:1px solid ${C.border}; border-radius:16px;
-  padding:1.25rem; box-shadow:0 4px 20px rgba(15,23,42,.05);
+  background:#fff; border:1px solid ${C.border}; border-radius:18px;
+  padding:1.25rem; box-shadow:0 4px 24px rgba(15,23,42,.05);
   @media(max-width:900px){
     position:static;display:flex;gap:.5rem;flex-wrap:wrap;padding:1rem;border-radius:12px;
   }
@@ -106,17 +235,22 @@ const SidebarSection = styled.div`
   @media(max-width:900px){margin-bottom:0;}
 `;
 const SidebarHeading = styled.div`
-  font-size:.7rem; font-weight:800; text-transform:uppercase;
-  letter-spacing:.1em; color:${C.muted}; padding:0 .5rem; margin-bottom:.4rem;
+  font-size:.68rem; font-weight:800; text-transform:uppercase;
+  letter-spacing:.12em; color:${C.muted}; padding:0 .5rem; margin-bottom:.4rem;
   @media(max-width:900px){display:none;}
 `;
 const SidebarItem = styled.button`
   display:flex; align-items:center; gap:8px; width:100%;
-  padding:.55rem .75rem; border-radius:8px; border:none;
+  padding:.55rem .75rem; border-radius:8px; border:none; position:relative;
   background:${({$active})=>$active?C.softBlue:'transparent'};
   color:${({$active})=>$active?C.primary:C.text};
   font-size:.88rem; font-weight:${({$active})=>$active?'700':'500'};
   text-align:left; cursor:pointer; transition:background .15s,color .15s;
+  &::before{
+    content:''; position:absolute; left:0; top:20%; bottom:20%; width:3px;
+    border-radius:2px; background:${C.primary};
+    opacity:${({$active})=>$active?1:0}; transition:opacity .15s;
+  }
   svg{flex-shrink:0;}
   &:hover{background:${C.softBlue};color:${C.primary};}
   @media(max-width:900px){
@@ -124,105 +258,142 @@ const SidebarItem = styled.button`
     border:1px solid ${({$active})=>$active?C.primary:C.border};
   }
 `;
-const Content = styled.div`animation:${fadeSlide} .3s ease both;`;
+
+// ─── Content area ─────────────────────────────────────────────────────────────
+const Content = styled.div`animation:${fadeSlide} .35s ease both;`;
 const ContentHeader = styled.div`
-  border-bottom:2px solid ${C.border}; padding-bottom:1.5rem; margin-bottom:2rem;
+  position:relative; overflow:hidden;
+  background:linear-gradient(135deg,${C.softBlue} 0%,#fff 65%);
+  border:1px solid ${C.blueTint}; border-radius:18px;
+  padding:2rem 2.25rem; margin-bottom:2rem;
+  &::before{
+    content:''; position:absolute; right:-40px; top:-40px;
+    width:160px; height:160px; border-radius:999px;
+    background:radial-gradient(circle,rgba(37,99,235,.12) 0%,transparent 70%);
+    pointer-events:none;
+  }
 `;
 const ContentBadge = styled.span`
   display:inline-flex; align-items:center; gap:5px;
   background:${C.softBlue}; border:1px solid ${C.blueTint};
   color:${C.primary}; font-size:.74rem; font-weight:700;
-  padding:3px 10px; border-radius:9999px; margin-bottom:.75rem;
+  padding:4px 10px; border-radius:9999px; margin-bottom:.75rem;
 `;
 const ContentTitle = styled.h2`
-  font-size:2rem; font-weight:800; letter-spacing:-.02em;
-  color:${C.navy}; margin:0 0 .5rem;
+  font-size:clamp(1.6rem,2.8vw,2.2rem); font-weight:800;
+  letter-spacing:-.025em; color:${C.navy}; margin:0 0 .5rem; position:relative;
 `;
 const ContentSubtitle = styled.p`
-  font-size:1rem; color:${C.muted}; line-height:1.7; margin:0;
+  font-size:1rem; color:${C.muted}; line-height:1.7; margin:0; position:relative;
 `;
+
+// ─── Article card ─────────────────────────────────────────────────────────────
 const ArticleCard = styled.div`
-  background:#fff; border:1px solid ${C.border}; border-radius:14px;
-  padding:1.5rem; margin-bottom:1.25rem;
+  background:#fff; border:1px solid ${C.border}; border-radius:16px;
+  padding:1.5rem; margin-bottom:1.25rem; position:relative; overflow:hidden;
   box-shadow:0 2px 12px rgba(15,23,42,.04);
-  transition:box-shadow .2s,transform .2s,border-color .2s;
-  &:hover{box-shadow:0 8px 28px rgba(15,23,42,.09);transform:translateY(-1px);border-color:#d1d5db;}
+  transition:box-shadow .25s,transform .25s,border-color .25s;
+  &::after{
+    content:''; position:absolute; left:0; right:0; top:0; height:3px;
+    background:linear-gradient(90deg,${C.primary},rgba(37,99,235,.35));
+    transform:scaleX(0); transform-origin:left; transition:transform .3s ease;
+  }
+  &:hover{box-shadow:0 10px 32px rgba(15,23,42,.09);transform:translateY(-2px);border-color:#d1d5db;}
+  &:hover::after{transform:scaleX(1);}
 `;
 const ArticleTitle = styled.h3`
   font-size:1.05rem; font-weight:700; color:${C.navy};
-  margin:0 0 .5rem; display:flex; align-items:center; gap:8px;
+  margin:0 0 .6rem; display:flex; align-items:center; gap:8px;
 `;
 const ArticleText = styled.p`
   font-size:.92rem; color:${C.text}; line-height:1.65; margin:0 0 .75rem;
 `;
+
+// ─── Code block ───────────────────────────────────────────────────────────────
 const CodeBlock = styled.div`
-  background:#0f172a; border-radius:12px; overflow:hidden;
+  background:#0f172a; border-radius:14px; overflow:hidden;
   margin:1rem 0; border:1px solid #1e293b;
+  box-shadow:0 8px 28px rgba(15,23,42,.18);
 `;
 const CodeHeader = styled.div`
   display:flex; align-items:center; justify-content:space-between;
-  padding:.7rem 1rem; background:#1e293b; border-bottom:1px solid #334155;
+  padding:.75rem 1.1rem; background:#1e293b; border-bottom:1px solid #334155;
 `;
 const CodeLang = styled.span`
-  font-size:.74rem; font-weight:600; color:#94a3b8;
-  text-transform:uppercase; letter-spacing:.06em;
+  font-size:.72rem; font-weight:700; color:#60a5fa;
+  text-transform:uppercase; letter-spacing:.08em;
+`;
+const CodeDots = styled.div`
+  display:flex;gap:6px;
+  span{width:10px;height:10px;border-radius:50%;}
+  span:nth-child(1){background:#ef4444;}
+  span:nth-child(2){background:#f59e0b;}
+  span:nth-child(3){background:#22c55e;}
 `;
 const CopyBtn = styled.button`
   display:flex; align-items:center; gap:5px;
   background:none; border:1px solid #334155; border-radius:6px;
-  color:#94a3b8; font-size:.72rem; padding:3px 8px; cursor:pointer;
-  transition:border-color .15s,color .15s;
-  &:hover{border-color:#60a5fa;color:#60a5fa;}
+  color:#94a3b8; font-size:.72rem; padding:4px 9px; cursor:pointer;
+  transition:border-color .15s,color .15s,background .15s;
+  &:hover{border-color:#60a5fa;color:#60a5fa;background:rgba(96,165,250,.08);}
 `;
 const CodePre = styled.pre`
-  margin:0; padding:1.25rem; overflow-x:auto;
+  margin:0; padding:1.35rem; overflow-x:auto;
   font-family:'JetBrains Mono','Fira Code','Courier New',monospace;
-  font-size:.84rem; line-height:1.7; color:#e2e8f0;
+  font-size:.84rem; line-height:1.75; color:#e2e8f0;
 `;
-const StepsGrid = styled.div`display:grid;gap:1rem;margin:1.25rem 0;`;
+
+// ─── Steps ────────────────────────────────────────────────────────────────────
+const StepsGrid = styled.div`display:grid;gap:.85rem;margin:1.25rem 0;`;
 const StepCard = styled.div`
   display:flex; gap:1rem; align-items:flex-start;
-  padding:1.1rem; background:#fff; border:1px solid ${C.border}; border-radius:12px;
+  padding:1.15rem; background:#fff; border:1px solid ${C.border}; border-radius:14px;
+  transition:border-color .2s,box-shadow .2s;
+  &:hover{border-color:${C.blueTint};box-shadow:0 4px 16px rgba(37,99,235,.07);}
 `;
 const StepNum = styled.div`
-  flex-shrink:0;width:30px;height:30px;border-radius:50%;
-  background:${C.primary};color:#fff;font-weight:800;font-size:.84rem;
-  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0; width:32px; height:32px; border-radius:50%;
+  background:${C.primary}; color:#fff; font-weight:800; font-size:.84rem;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 4px 12px rgba(37,99,235,.3);
 `;
 const StepBody = styled.div`
   h4{font-size:.95rem;font-weight:700;color:${C.navy};margin:0 0 .25rem;}
   p{font-size:.875rem;color:${C.text};line-height:1.6;margin:0;}
 `;
+
+// ─── Info box ─────────────────────────────────────────────────────────────────
 const InfoBox = styled.div`
   display:flex; gap:12px; padding:1rem 1.25rem;
-  background:${({$type})=>$type==='warning'?'#fffbeb':C.softBlue};
-  border:1px solid ${({$type})=>$type==='warning'?'#fde68a':C.blueTint};
-  border-radius:10px; margin:1rem 0; font-size:.88rem;
-  color:${({$type})=>$type==='warning'?'#92400e':'#1e40af'}; line-height:1.6;
+  background:${C.softBlue}; border:1px solid ${C.blueTint};
+  border-radius:12px; margin:1rem 0; font-size:.88rem;
+  color:#1e40af; line-height:1.65;
 `;
-const TableWrap = styled.div`
-  overflow-x:auto;border-radius:12px;border:1px solid ${C.border};margin:1rem 0;
-`;
+
+// ─── Table ────────────────────────────────────────────────────────────────────
+const TableWrap = styled.div`overflow-x:auto;border-radius:12px;border:1px solid ${C.border};margin:1rem 0;`;
 const Table = styled.table`
   width:100%;border-collapse:collapse;font-size:.88rem;
   thead{background:${C.softBlue};
-    th{padding:.75rem 1rem;text-align:left;font-weight:700;color:${C.navy};border-bottom:1px solid ${C.blueTint};}
+    th{padding:.8rem 1rem;text-align:left;font-weight:700;color:${C.navy};border-bottom:1px solid ${C.blueTint};}
   }
   tbody tr{border-bottom:1px solid ${C.border};
     &:last-child{border-bottom:none;}
     &:hover{background:#f9fafb;}
-    td{padding:.75rem 1rem;color:${C.text};}
+    td{padding:.8rem 1rem;color:${C.text};}
   }
 `;
 const Badge = styled.span`
-  display:inline-block;padding:2px 8px;border-radius:9999px;
-  font-size:.72rem;font-weight:700;
-  background:${({$color})=>$color==='green'?'#f0fdf4':$color==='blue'?C.softBlue:$color==='orange'?'#fff7ed':'#f3f4f6'};
-  color:${({$color})=>$color==='green'?'#16a34a':$color==='blue'?C.primary:$color==='orange'?'#ea580c':C.muted};
+  display:inline-flex; align-items:center;
+  padding:3px 9px; border-radius:9999px;
+  font-size:.72rem; font-weight:700;
+  background:${C.softBlue};
+  color:${C.primary};
+  border:1px solid ${C.blueTint};
 `;
 const Divider = styled.div`height:1px;background:${C.border};margin:2rem 0;`;
 
-// ─── Code block with copy ─────────────────────────────────────────────────────
+// ─── CopyableCode component ───────────────────────────────────────────────────
 const CopyableCode = ({ lang, code }) => {
   const [copied, setCopied] = useState(false);
   const copy = () => {
@@ -234,6 +405,7 @@ const CopyableCode = ({ lang, code }) => {
   return (
     <CodeBlock>
       <CodeHeader>
+        <CodeDots><span/><span/><span/></CodeDots>
         <CodeLang>{lang}</CodeLang>
         <CopyBtn onClick={copy}>
           {copied?<Check size={12}/>:<Copy size={12}/>}
@@ -245,7 +417,7 @@ const CopyableCode = ({ lang, code }) => {
   );
 };
 
-// ─── Section content ──────────────────────────────────────────────────────────
+// ─── Section content renderer ─────────────────────────────────────────────────
 const SectionContent = ({ id }) => {
   switch(id){
     case 'getting-started':return(
@@ -257,14 +429,14 @@ const SectionContent = ({ id }) => {
         </ContentHeader>
         <StepsGrid>
           {[['Créer votre compte','Rendez-vous sur app.visiconnect.com et inscrivez-vous avec votre email professionnel.'],
-            ['Configurer votre profil','Ajoutez votre photo, nom et fuseau horaire.'],
+            ['Configurer votre profil','Ajoutez votre photo, nom et fuseau horaire pour une meilleure visibilité.'],
             ['Créer votre première réunion','Cliquez sur "Nouvelle réunion", choisissez un nom et invitez des participants.'],
-            ['Partager le lien','Chaque réunion génère un lien sécurisé unique à partager.'],
+            ['Partager le lien','Chaque réunion génère un lien sécurisé unique à partager en un clic.'],
           ].map(([h,p],i)=>(
             <StepCard key={i}><StepNum>{i+1}</StepNum><StepBody><h4>{h}</h4><p>{p}</p></StepBody></StepCard>
           ))}
         </StepsGrid>
-        <InfoBox><Zap size={16} style={{flexShrink:0,marginTop:2}}/><span>Conseil : Activez microphone et caméra dès le premier lancement pour éviter tout délai.</span></InfoBox>
+        <InfoBox><Zap size={16} style={{flexShrink:0,marginTop:2}}/><span>Conseil : Activez microphone et caméra dès le premier lancement pour éviter tout délai lors de vos réunions.</span></InfoBox>
         <Divider/>
         <ArticleCard>
           <ArticleTitle><Video size={16}/>Qualité vidéo recommandée</ArticleTitle>
@@ -300,10 +472,10 @@ const SectionContent = ({ id }) => {
         <ArticleCard>
           <ArticleTitle><Settings size={16}/>Options avancées</ArticleTitle>
           <StepsGrid>
-            {[['Salle d\'attente','Contrôlez l\'admission des participants.'],
-              ['Chiffrement E2E','Pour les réunions sensibles.'],
-              ['Enregistrement cloud','Stockage automatique sécurisé.'],
-              ['Transcription IA','Résumé automatique post-réunion.'],
+            {[["Salle d'attente","Contrôlez l'admission des participants avant qu'ils rejoignent."],
+              ['Chiffrement E2E','Activez le mode end-to-end pour les réunions sensibles.'],
+              ['Enregistrement cloud','Stockage automatique sécurisé avec accès partageable.'],
+              ['Transcription IA','Résumé automatique généré à la fin de chaque réunion.'],
             ].map(([h,p])=>(
               <StepCard key={h}><Check size={17} color={C.primary} style={{marginTop:2,flexShrink:0}}/><StepBody><h4>{h}</h4><p>{p}</p></StepBody></StepCard>
             ))}
@@ -316,11 +488,11 @@ const SectionContent = ({ id }) => {
         <ContentHeader>
           <ContentBadge><Users size={11}/>Compte</ContentBadge>
           <ContentTitle>Compte & Profil</ContentTitle>
-          <ContentSubtitle>Gérez vos informations, notifications et préférences.</ContentSubtitle>
+          <ContentSubtitle>Gérez vos informations, notifications et préférences de sécurité.</ContentSubtitle>
         </ContentHeader>
         <ArticleCard>
           <ArticleTitle>Modifier votre profil</ArticleTitle>
-          <ArticleText>Depuis <strong>Paramètres → Profil</strong> : nom, photo, titre, langue (12 langues disponibles).</ArticleText>
+          <ArticleText>Depuis <strong>Paramètres &rarr; Profil</strong> : nom, photo, titre, langue (12 langues disponibles).</ArticleText>
         </ArticleCard>
         <ArticleCard>
           <ArticleTitle>Sécurité — Authentification 2FA</ArticleTitle>
@@ -340,17 +512,17 @@ const SectionContent = ({ id }) => {
         <ContentHeader>
           <ContentBadge><Key size={11}/>API</ContentBadge>
           <ContentTitle>Authentification API</ContentTitle>
-          <ContentSubtitle>JWT et OAuth 2.0 pour sécuriser tous vos appels API.</ContentSubtitle>
+          <ContentSubtitle>JWT et OAuth 2.0 pour sécuriser tous vos appels API VisioConnect.</ContentSubtitle>
         </ContentHeader>
         <InfoBox><ShieldCheck size={16} style={{flexShrink:0,marginTop:2}}/><span>Toutes les requêtes doivent être sur HTTPS. Ne jamais exposer vos clés côté client.</span></InfoBox>
         <ArticleCard>
           <ArticleTitle>Obtenir votre clé API</ArticleTitle>
-          <ArticleText>Dashboard → Développeurs → Clés API. Copiez-la immédiatement, elle ne sera plus affichée.</ArticleText>
+          <ArticleText>Dashboard &rarr; Développeurs &rarr; Clés API. Copiez-la immédiatement, elle ne sera plus affichée.</ArticleText>
         </ArticleCard>
         <CopyableCode lang="bash" code={`<span style="color:#94a3b8"># Authentification Bearer</span>
 curl -X GET https://api.visiconnect.com/v1/meetings \\
-  -H <span style="color:#34d399">"Authorization: Bearer YOUR_API_KEY"</span> \\
-  -H <span style="color:#34d399">"Content-Type: application/json"</span>`}/>
+  -H <span style="color:#93c5fd">"Authorization: Bearer YOUR_API_KEY"</span> \\
+  -H <span style="color:#93c5fd">"Content-Type: application/json"</span>`}/>
         <ArticleCard>
           <ArticleTitle>Endpoints OAuth 2.0</ArticleTitle>
           <TableWrap><Table>
@@ -377,17 +549,17 @@ curl -X GET https://api.visiconnect.com/v1/meetings \\
         </ArticleCard>
         <ArticleCard>
           <ArticleTitle>Créer une réunion</ArticleTitle>
-          <CopyableCode lang="javascript" code={`<span style="color:#60a5fa">const</span> response = <span style="color:#60a5fa">await</span> fetch(<span style="color:#34d399">'https://api.visiconnect.com/v1/meetings'</span>, {
-  method: <span style="color:#34d399">'POST'</span>,
+          <CopyableCode lang="javascript" code={`<span style="color:#bfdbfe">const</span> response = <span style="color:#bfdbfe">await</span> fetch(<span style="color:#93c5fd">'https://api.visiconnect.com/v1/meetings'</span>, {
+  method: <span style="color:#93c5fd">'POST'</span>,
   headers: {
-    <span style="color:#34d399">'Authorization'</span>: <span style="color:#34d399">\`Bearer \${API_KEY}\`</span>,
-    <span style="color:#34d399">'Content-Type'</span>: <span style="color:#34d399">'application/json'</span>,
+    <span style="color:#93c5fd">'Authorization'</span>: <span style="color:#93c5fd">\`Bearer \${API_KEY}\`</span>,
+    <span style="color:#93c5fd">'Content-Type'</span>: <span style="color:#93c5fd">'application/json'</span>,
   },
   body: JSON.stringify({
-    title: <span style="color:#34d399">'Réunion équipe product'</span>,
-    scheduled_at: <span style="color:#34d399">'2026-04-25T10:00:00Z'</span>,
-    duration_minutes: <span style="color:#f59e0b">60</span>,
-    settings: { waiting_room: <span style="color:#60a5fa">true</span>, recording: <span style="color:#60a5fa">true</span> },
+    title: <span style="color:#93c5fd">'Réunion équipe product'</span>,
+    scheduled_at: <span style="color:#93c5fd">'2026-04-25T10:00:00Z'</span>,
+    duration_minutes: <span style="color:#a5b4fc">60</span>,
+    settings: { waiting_room: <span style="color:#bfdbfe">true</span>, recording: <span style="color:#bfdbfe">true</span> },
   }),
 });
 <span style="color:#94a3b8">// → { join_url: "https://meet.visiconnect.com/abc123" }</span>`}/>
@@ -403,7 +575,7 @@ curl -X GET https://api.visiconnect.com/v1/meetings \\
                 ['GET','/recordings','Enregistrements'],['GET','/analytics/usage','Statistiques'],
               ].map(([m,p,d])=>(
                 <tr key={p}>
-                  <td><Badge $color={m==='GET'?'blue':m==='POST'?'green':'orange'}>{m}</Badge></td>
+                  <td><Badge>{m}</Badge></td>
                   <td><code>{p}</code></td><td>{d}</td>
                 </tr>
               ))}
@@ -434,12 +606,12 @@ curl -X GET https://api.visiconnect.com/v1/meetings \\
         <ArticleCard>
           <ArticleTitle>Exemple payload</ArticleTitle>
           <CopyableCode lang="json" code={`{
-  <span style="color:#34d399">"event"</span>: <span style="color:#34d399">"meeting.ended"</span>,
-  <span style="color:#34d399">"timestamp"</span>: <span style="color:#34d399">"2026-04-25T11:02:47Z"</span>,
-  <span style="color:#34d399">"data"</span>: {
-    <span style="color:#34d399">"meeting_id"</span>: <span style="color:#34d399">"m_abc123"</span>,
-    <span style="color:#34d399">"duration_seconds"</span>: <span style="color:#f59e0b">3612</span>,
-    <span style="color:#34d399">"participants_count"</span>: <span style="color:#f59e0b">8</span>
+  <span style="color:#93c5fd">"event"</span>: <span style="color:#93c5fd">"meeting.ended"</span>,
+  <span style="color:#93c5fd">"timestamp"</span>: <span style="color:#93c5fd">"2026-04-25T11:02:47Z"</span>,
+  <span style="color:#93c5fd">"data"</span>: {
+    <span style="color:#93c5fd">"meeting_id"</span>: <span style="color:#93c5fd">"m_abc123"</span>,
+    <span style="color:#93c5fd">"duration_seconds"</span>: <span style="color:#a5b4fc">3612</span>,
+    <span style="color:#93c5fd">"participants_count"</span>: <span style="color:#a5b4fc">8</span>
   }
 }`}/>
         </ArticleCard>
@@ -450,16 +622,16 @@ curl -X GET https://api.visiconnect.com/v1/meetings \\
         <ContentHeader>
           <ContentBadge><Lock size={11}/>Admin</ContentBadge>
           <ContentTitle>Configuration SSO</ContentTitle>
-          <ContentSubtitle>Intégrez votre fournisseur d'identité SAML 2.0 ou OIDC.</ContentSubtitle>
+          <ContentSubtitle>Intégrez votre fournisseur d'identité SAML 2.0 ou OIDC en quelques étapes.</ContentSubtitle>
         </ContentHeader>
         <ArticleCard>
           <ArticleTitle>Protocoles supportés</ArticleTitle>
           <TableWrap><Table>
             <thead><tr><th>Protocole</th><th>Fournisseurs</th><th>Statut</th></tr></thead>
             <tbody>
-              <tr><td>SAML 2.0</td><td>Okta, Azure AD, OneLogin</td><td><Badge $color="green">Disponible</Badge></td></tr>
-              <tr><td>OIDC / OAuth2</td><td>Google Workspace, Auth0</td><td><Badge $color="green">Disponible</Badge></td></tr>
-              <tr><td>LDAP</td><td>Active Directory</td><td><Badge $color="blue">Enterprise</Badge></td></tr>
+              <tr><td>SAML 2.0</td><td>Okta, Azure AD, OneLogin</td><td><Badge>Disponible</Badge></td></tr>
+              <tr><td>OIDC / OAuth2</td><td>Google Workspace, Auth0</td><td><Badge>Disponible</Badge></td></tr>
+              <tr><td>LDAP</td><td>Active Directory</td><td><Badge>Enterprise</Badge></td></tr>
             </tbody>
           </Table></TableWrap>
         </ArticleCard>
@@ -481,7 +653,7 @@ curl -X GET https://api.visiconnect.com/v1/meetings \\
         <ContentHeader>
           <ContentBadge><ShieldCheck size={11}/>Sécurité</ContentBadge>
           <ContentTitle>Sécurité & Conformité</ContentTitle>
-          <ContentSubtitle>Chiffrement, certifications et conformité RGPD.</ContentSubtitle>
+          <ContentSubtitle>Chiffrement de bout en bout, certifications ISO et conformité RGPD.</ContentSubtitle>
         </ContentHeader>
         <ArticleCard>
           <ArticleTitle>Chiffrement</ArticleTitle>
@@ -498,12 +670,12 @@ curl -X GET https://api.visiconnect.com/v1/meetings \\
         <ArticleCard>
           <ArticleTitle>Certifications</ArticleTitle>
           <div style={{display:'flex',gap:'.75rem',flexWrap:'wrap',marginTop:'.75rem'}}>
-            {['ISO 27001','SOC 2 Type II','RGPD','HIPAA','HDS'].map(c=>(
-              <Badge key={c} $color="green" style={{padding:'5px 12px',fontSize:'.82rem'}}>{c}</Badge>
+            {['ISO 27001','SOC 2 Type II','RGPD','HIPAA','HDS'].map(cert=>(
+              <Badge key={cert} style={{padding:'6px 14px',fontSize:'.82rem'}}>{cert}</Badge>
             ))}
           </div>
         </ArticleCard>
-        <InfoBox $type="warning"><ShieldCheck size={16} style={{flexShrink:0,marginTop:2}}/><span>Le mode E2E désactive la transcription et l'enregistrement cloud.</span></InfoBox>
+        <InfoBox><ShieldCheck size={16} style={{flexShrink:0,marginTop:2}}/><span>Le mode E2E désactive la transcription et l'enregistrement cloud. Vos flux restent entièrement privés.</span></InfoBox>
       </div>
     );
     case 'deploy':return(
@@ -511,33 +683,33 @@ curl -X GET https://api.visiconnect.com/v1/meetings \\
         <ContentHeader>
           <ContentBadge><Globe size={11}/>Déploiement</ContentBadge>
           <ContentTitle>Guide de déploiement</ContentTitle>
-          <ContentSubtitle>SaaS, cloud privé ou on-premise selon vos besoins.</ContentSubtitle>
+          <ContentSubtitle>SaaS, cloud privé ou on-premise selon vos contraintes infrastructure.</ContentSubtitle>
         </ContentHeader>
         <ArticleCard>
-          <ArticleTitle>Options</ArticleTitle>
+          <ArticleTitle>Options de déploiement</ArticleTitle>
           <TableWrap><Table>
             <thead><tr><th>Mode</th><th>Hébergement</th><th>Plan</th></tr></thead>
             <tbody>
-              <tr><td>SaaS</td><td>Cloud VisioConnect</td><td><Badge $color="green">Tous</Badge></td></tr>
-              <tr><td>Cloud privé</td><td>AWS / Azure / GCP</td><td><Badge $color="blue">Pro</Badge></td></tr>
-              <tr><td>On-premise</td><td>Vos serveurs</td><td><Badge $color="orange">Enterprise</Badge></td></tr>
+              <tr><td>SaaS</td><td>Cloud VisioConnect</td><td><Badge>Tous</Badge></td></tr>
+              <tr><td>Cloud privé</td><td>AWS / Azure / GCP</td><td><Badge>Pro</Badge></td></tr>
+              <tr><td>On-premise</td><td>Vos serveurs</td><td><Badge>Enterprise</Badge></td></tr>
             </tbody>
           </Table></TableWrap>
         </ArticleCard>
         <ArticleCard>
           <ArticleTitle>Docker Compose (on-premise)</ArticleTitle>
           <CopyableCode lang="yaml" code={`<span style="color:#94a3b8"># docker-compose.yml</span>
-version: <span style="color:#34d399">'3.8'</span>
+version: <span style="color:#93c5fd">'3.8'</span>
 services:
   visiconnect:
-    image: <span style="color:#34d399">visiconnect/server:latest</span>
+    image: <span style="color:#93c5fd">visiconnect/server:latest</span>
     ports:
-      - <span style="color:#34d399">"443:443"</span>
+      - <span style="color:#93c5fd">"443:443"</span>
     environment:
-      - LICENSE_KEY=<span style="color:#34d399">YOUR_LICENSE</span>
-      - DATABASE_URL=<span style="color:#34d399">postgresql://...</span>
+      - LICENSE_KEY=<span style="color:#93c5fd">YOUR_LICENSE</span>
+      - DATABASE_URL=<span style="color:#93c5fd">postgresql://...</span>
   redis:
-    image: <span style="color:#34d399">redis:7-alpine</span>`}/>
+    image: <span style="color:#93c5fd">redis:7-alpine</span>`}/>
         </ArticleCard>
       </div>
     );
@@ -545,26 +717,40 @@ services:
   }
 };
 
-// ─── Nav data ─────────────────────────────────────────────────────────────────
+// ─── Data ─────────────────────────────────────────────────────────────────────
 const SECTIONS = [
-  {id:'getting-started',label:'Premiers pas',    icon:Rocket,       group:'Guide utilisateur'},
-  {id:'meetings',        label:'Réunions',        icon:Video,        group:'Guide utilisateur'},
-  {id:'account',         label:'Compte & Profil', icon:Users,        group:'Guide utilisateur'},
-  {id:'api-auth',        label:'Authentification',icon:Key,          group:'API & Dev'},
-  {id:'api-rest',        label:'REST API',         icon:Terminal,     group:'API & Dev'},
-  {id:'webhooks',        label:'Webhooks',         icon:Zap,          group:'API & Dev'},
-  {id:'sso',             label:'Configuration SSO',icon:Lock,         group:'Admin & Sécurité'},
-  {id:'security',        label:'Sécurité',         icon:ShieldCheck,  group:'Admin & Sécurité'},
-  {id:'deploy',          label:'Déploiement',      icon:Globe,        group:'Admin & Sécurité'},
+  {id:'getting-started', label:'Premiers pas',     icon:Rocket,      group:'Guide utilisateur'},
+  {id:'meetings',         label:'Réunions',         icon:Video,       group:'Guide utilisateur'},
+  {id:'account',          label:'Compte & Profil',  icon:Users,       group:'Guide utilisateur'},
+  {id:'api-auth',         label:'Authentification', icon:Key,         group:'API & Dev'},
+  {id:'api-rest',         label:'REST API',          icon:Terminal,    group:'API & Dev'},
+  {id:'webhooks',         label:'Webhooks',          icon:Zap,         group:'API & Dev'},
+  {id:'sso',              label:'Configuration SSO', icon:Lock,        group:'Admin & Sécurité'},
+  {id:'security',         label:'Sécurité',          icon:ShieldCheck, group:'Admin & Sécurité'},
+  {id:'deploy',           label:'Déploiement',       icon:Globe,       group:'Admin & Sécurité'},
 ];
 const QUICK_LINKS = [
-  {icon:Rocket,     label:'Démarrage', desc:'Votre 1ère réunion', id:'getting-started'},
-  {icon:Code2,      label:'API',       desc:'Référence REST',     id:'api-rest'},
-  {icon:ShieldCheck,label:'Sécurité',  desc:'Chiffrement',        id:'security'},
-  {icon:Settings,   label:'Admin',     desc:'SSO & déploiement',  id:'sso'},
+  {icon:Rocket,      label:'Démarrage', desc:'Votre 1ère réunion',  id:'getting-started'},
+  {icon:Code2,       label:'API',       desc:'Référence REST',      id:'api-rest'},
+  {icon:ShieldCheck, label:'Sécurité',  desc:'Chiffrement & certs', id:'security'},
+  {icon:Settings,    label:'Admin',     desc:'SSO & déploiement',   id:'sso'},
+];
+const PROOF_STATS = [
+  {value:'9',    label:'Sections de documentation'},
+  {value:'REST', label:'API complète & documentée'},
+  {value:'E2E',  label:'Chiffrement natif'},
+  {value:'RGPD', label:'Conformité & certifications'},
+];
+const FEATURES = [
+  {icon:Code2,       title:"SDK Prêt à l'emploi",   desc:'Intégrez VisioConnect en quelques lignes. Bibliothèques JavaScript, Python et mobile disponibles.'},
+  {icon:Zap,         title:'Webhooks Temps Réel',    desc:'Abonnez-vous aux événements de votre choix. Payloads JSON signés pour garantir l\'authenticité.'},
+  {icon:ShieldCheck, title:'Sécurité par Défaut',    desc:'Chiffrement TLS 1.3 et SRTP sur tous les flux. Clés API à rotation automatique.'},
+  {icon:Globe,       title:'Déploiement Flexible',   desc:'SaaS, cloud privé ou on-premise. Votre infrastructure, vos règles.'},
+  {icon:Terminal,    title:'API RESTful Complète',   desc:'Gérez réunions, utilisateurs, enregistrements et analytics via une API unifiée.'},
+  {icon:BookOpen,    title:'Docs Toujours à Jour',   desc:'Mise à jour synchronisée avec chaque release. Exemples testés et changelog détaillé.'},
 ];
 
-// ─── Page component ───────────────────────────────────────────────────────────
+// ─── Page ─────────────────────────────────────────────────────────────────────
 const DocsPage = () => {
   const {t} = useTranslation();
   const [activeSection, setActiveSection] = useState('getting-started');
@@ -580,16 +766,46 @@ const DocsPage = () => {
     if(contentRef.current) contentRef.current.scrollIntoView({behavior:'smooth',block:'start'});
   };
 
+  useEffect(()=>{
+    window.scrollTo(0,0);
+    const nodes = Array.from(document.querySelectorAll('[data-reveal]'));
+    if(!nodes.length) return undefined;
+    if(window.matchMedia('(prefers-reduced-motion:reduce)').matches){
+      nodes.forEach(n=>n.classList.add('is-visible'));
+      return undefined;
+    }
+    const obs = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          entry.target.classList.add('is-visible');
+          obs.unobserve(entry.target);
+        }
+      });
+    },{threshold:.15,rootMargin:'0px 0px -8% 0px'});
+    nodes.forEach(n=>obs.observe(n));
+    return ()=>obs.disconnect();
+  },[]);
+
   return (
     <Page>
       <HeaderClean/>
       <Main>
+
+        {/* Hero */}
         <HeroSection>
           <HeroContainer>
             <HeroContent>
-              <Eyebrow><FileText size={14}/>Documentation</Eyebrow>
+              <Eyebrow><FileText size={14}/>Documentation développeur</Eyebrow>
               <HeroTitle>{t('docs.hero.title')}</HeroTitle>
               <HeroSubtitle>{t('docs.hero.subtitle')}</HeroSubtitle>
+              <HeroActions>
+                <PrimaryButton onClick={()=>handleNav('getting-started')}>
+                  Commencer <ArrowRight size={16}/>
+                </PrimaryButton>
+                <SecondaryButton onClick={()=>handleNav('api-rest')}>
+                  Voir l'API <Layers3 size={16}/>
+                </SecondaryButton>
+              </HeroActions>
               <SearchBar>
                 <Search size={18}/>
                 <SearchInput
@@ -603,7 +819,10 @@ const DocsPage = () => {
               </SearchBar>
             </HeroContent>
             <HeroPanel>
-              <PanelTitle>Accès rapide</PanelTitle>
+              <PanelHeader>
+                <PanelLabel>Accès rapide</PanelLabel>
+                <BadgeCheck size={18} color={C.primary}/>
+              </PanelHeader>
               <QuickLinkGrid>
                 {QUICK_LINKS.map(({icon:Icon,label,desc,id})=>(
                   <QuickLinkCard key={id} onClick={()=>handleNav(id)}>
@@ -617,27 +836,60 @@ const DocsPage = () => {
           </HeroContainer>
         </HeroSection>
 
-        <DocsWrapper>
-          <Sidebar>
-            {groups.map(group=>{
-              const items = filtered.filter(s=>s.group===group);
-              if(!items.length) return null;
-              return(
-                <SidebarSection key={group}>
-                  <SidebarHeading>{group}</SidebarHeading>
-                  {items.map(({id,label,icon:Icon})=>(
-                    <SidebarItem key={id} $active={activeSection===id} onClick={()=>handleNav(id)}>
-                      <Icon size={15}/>{label}
-                    </SidebarItem>
-                  ))}
-                </SidebarSection>
-              );
-            })}
-          </Sidebar>
-          <Content ref={contentRef} key={activeSection}>
-            <SectionContent id={activeSection}/>
-          </Content>
-        </DocsWrapper>
+        {/* Proof band */}
+        <ProofBand>
+          <ProofGrid>
+            {PROOF_STATS.map(({value,label},i)=>(
+              <ProofCard key={label} data-reveal style={{'--reveal-delay':`${i*80}ms`}}>
+                <div className="value">{value}</div>
+                <div className="label">{label}</div>
+              </ProofCard>
+            ))}
+          </ProofGrid>
+        </ProofBand>
+
+        {/* Feature strip */}
+        <FeatureStrip data-reveal>
+          <FeatureStripHeader>
+            <Eyebrow style={{marginBottom:'.75rem'}}><Code2 size={14}/>Plateforme développeur</Eyebrow>
+            <FeatureStripTitle>Tout ce qu'il faut pour intégrer VisioConnect</FeatureStripTitle>
+            <FeatureStripText>API RESTful, webhooks, SDK et guides complets pour construire des expériences vidéo sur mesure.</FeatureStripText>
+          </FeatureStripHeader>
+          <FeatureGrid>
+            {FEATURES.map(({icon:Icon,title,desc},i)=>(
+              <FeatureCard key={title} data-reveal style={{'--reveal-delay':`${i*70}ms`}}>
+                <FeatureIconBox><Icon size={22}/></FeatureIconBox>
+                <h3>{title}</h3>
+                <p>{desc}</p>
+              </FeatureCard>
+            ))}
+          </FeatureGrid>
+        </FeatureStrip>
+
+        {/* Docs with sidebar */}
+        <div style={{borderTop:`1px solid ${C.border}`}}>
+          <DocsWrapper>
+            <Sidebar>
+              {groups.map(group=>{
+                const items = filtered.filter(s=>s.group===group);
+                if(!items.length) return null;
+                return(
+                  <SidebarSection key={group}>
+                    <SidebarHeading>{group}</SidebarHeading>
+                    {items.map(({id,label,icon:Icon})=>(
+                      <SidebarItem key={id} $active={activeSection===id} onClick={()=>handleNav(id)}>
+                        <Icon size={15}/>{label}
+                      </SidebarItem>
+                    ))}
+                  </SidebarSection>
+                );
+              })}
+            </Sidebar>
+            <Content ref={contentRef} key={activeSection}>
+              <SectionContent id={activeSection}/>
+            </Content>
+          </DocsWrapper>
+        </div>
 
         <CallToAction
           eyebrow="Support"
@@ -655,3 +907,4 @@ const DocsPage = () => {
 };
 
 export default DocsPage;
+
