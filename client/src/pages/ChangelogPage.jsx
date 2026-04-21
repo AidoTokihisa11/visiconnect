@@ -22,9 +22,11 @@ const C = {
   dark:       '#0f172a',
   text:       '#374151',
   muted:      '#6b7280',
-  bg:         '#f8fafc',
+  bg:         '#f8fbff',
   white:      '#ffffff',
   border:     '#e5e7eb',
+  softBlue:   '#eff6ff',
+  blueTint:   '#dbeafe',
 };
 
 const TAG_META = {
@@ -56,7 +58,9 @@ const pulseRing = keyframes`
 // ─── Layout ──────────────────────────────────────────────────────────────────
 const Page = styled.div`
   min-height: 100vh;
-  background: ${C.bg};
+  background:
+    radial-gradient(circle at top left, rgba(37,99,235,0.08), transparent 30%),
+    linear-gradient(180deg, ${C.bg} 0%, #ffffff 25%, #ffffff 100%);
   display: flex;
   flex-direction: column;
 `;
@@ -67,32 +71,23 @@ const Main = styled.main`
 
 // ─── Hero ────────────────────────────────────────────────────────────────────
 const HeroWrap = styled.section`
-  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #0f172a 100%);
-  padding: 120px 24px 96px;
+  background: transparent;
+  padding: 6rem 1.5rem 5rem;
   text-align: center;
+  border-bottom: 1px solid ${C.border};
   position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(37,99,235,0.25) 0%, transparent 70%);
-    pointer-events: none;
-  }
 `;
 
 const Eyebrow = styled.div`
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(37,99,235,0.18);
-  border: 1px solid rgba(37,99,235,0.35);
-  color: #93c5fd;
+  background: ${C.softBlue};
+  border: 1px solid ${C.blueTint};
+  color: ${C.primary};
   font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.06em;
   padding: 6px 16px;
   border-radius: 9999px;
   margin-bottom: 24px;
@@ -102,7 +97,7 @@ const Eyebrow = styled.div`
 const HeroTitle = styled.h1`
   font-size: clamp(2.2rem, 5vw, 3.5rem);
   font-weight: 800;
-  color: #ffffff;
+  color: ${C.dark};
   line-height: 1.15;
   letter-spacing: -0.02em;
   max-width: 760px;
@@ -112,7 +107,7 @@ const HeroTitle = styled.h1`
 
 const HeroSubtitle = styled.p`
   font-size: 1.15rem;
-  color: #94a3b8;
+  color: ${C.muted};
   max-width: 580px;
   margin: 0 auto;
   line-height: 1.7;

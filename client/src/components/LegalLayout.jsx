@@ -6,19 +6,21 @@ import FooterClean from './FooterClean';
 import { useTranslation } from '../hooks/useTranslation';
 
 const COLORS = {
-  primary: 'hsl(var(--primary))',
-  secondary: 'hsl(var(--muted-foreground))',
-  dark: 'hsl(var(--foreground))',
-  text: 'hsl(var(--foreground))',
-  border: 'hsl(var(--border))',
-  background: 'hsl(var(--background))',
-  active: 'hsl(var(--primary) / 0.1)',
+  primary:   '#2563eb',
+  dark:      '#0f172a',
+  text:      '#374151',
+  border:    '#e5e7eb',
+  background:'#ffffff',
+  bg:        '#f8fbff',
+  active:    '#eff6ff',
 };
 
 const PageContainer = styled.div`
   min-height: 100vh;
-  background-color: ${COLORS.background};
-  color: ${COLORS.text};
+  background:
+    radial-gradient(circle at top left, rgba(37,99,235,0.06), transparent 28%),
+    linear-gradient(180deg, ${COLORS.bg} 0%, #ffffff 20%, #ffffff 100%);
+  color: ${COLORS.dark};
   display: flex;
   flex-direction: column;
 `;

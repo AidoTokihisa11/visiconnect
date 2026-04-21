@@ -1,31 +1,38 @@
 import React, { useEffect } from 'react';
-import styled from 'styled-components';
-import { Target, Users, Heart, Globe, Award, Shield } from 'lucide-react';
+import styled, { keyframes } from 'styled-components';
+import { Target, Users, Heart, Globe, Award, Shield, Building2 } from 'lucide-react';
 import { useTranslation } from '../hooks/useTranslation';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import CallToAction from '../components/CallToAction';
 
 const COLORS = {
-  primary: 'hsl(var(--primary))',    
-  secondary: 'hsl(var(--muted-foreground))',  
-  dark: 'hsl(var(--foreground))',       
-  text: 'hsl(var(--foreground))',       
-  lightText: 'hsl(var(--muted-foreground))',  
-  background: 'hsl(var(--background))', 
-  white: 'hsl(var(--card))',
-  border: 'hsl(var(--border))',     
-  success: 'hsl(var(--primary))',    
+  primary:    '#2563eb',
+  dark:       '#0f172a',
+  text:       '#374151',
+  lightText:  '#6b7280',
+  background: '#ffffff',
+  bg:         '#f8fbff',
+  white:      '#ffffff',
+  border:     '#e5e7eb',
+  softBlue:   '#eff6ff',
+  blueTint:   '#dbeafe',
+  success:    '#2563eb',
 };
+
+const floatIn = keyframes`
+  from { opacity: 0; transform: translateY(18px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+`;
 
 const PageContainer = styled.div`
   min-height: 100vh;
-  background-color: ${COLORS.background};
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  color: ${COLORS.text};
+  background:
+    radial-gradient(circle at top left, rgba(37,99,235,0.08), transparent 30%),
+    linear-gradient(180deg, ${COLORS.bg} 0%, #ffffff 25%, #ffffff 100%);
+  color: ${COLORS.dark};
   display: flex;
   flex-direction: column;
-  transition: background-color 0.3s ease, color 0.3s ease;
 `;
 
 const MainContent = styled.main`
@@ -33,50 +40,66 @@ const MainContent = styled.main`
 `;
 
 const HeroSection = styled.div`
-  background: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(var(--background)) 100%);
-  padding: 8rem 1.5rem 6rem;
-  text-align: center;
+  background: transparent;
+  padding: 6rem 1.5rem 5rem;
   border-bottom: 1px solid ${COLORS.border};
-  position: relative;
-  overflow: hidden;
+`;
 
-  @media (max-width: 640px) {
-    padding: 6rem 1rem 4rem;
-  }
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(37, 99, 235, 0.05) 0%, transparent 70%);
-    pointer-events: none;
-  }
+const HeroInner = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0,1.2fr) minmax(280px,.8fr);
+  gap: 3rem;
+  align-items: center;
+  @media(max-width:900px){ grid-template-columns: 1fr; }
+`;
+const HeroContent = styled.div`
+  animation: ${floatIn} .75s cubic-bezier(.22,1,.36,1) both;
+`;
+const HeroEyebrow = styled.div`
+  display: inline-flex; align-items: center; gap: .5rem;
+  padding: .45rem .85rem; border-radius: 9999px;
+  background: ${COLORS.softBlue}; border: 1px solid ${COLORS.blueTint};
+  color: ${COLORS.primary}; font-weight: 700; font-size: .82rem;
+  margin-bottom: 1.25rem;
+`;
+const HeroPanel = styled.div`
+  background: linear-gradient(180deg,#fff 0%,${COLORS.bg} 100%);
+  border: 1px solid ${COLORS.border}; border-radius: 20px; padding: 1.75rem;
+  box-shadow: 0 20px 50px rgba(15,23,42,.08);
+  animation: ${floatIn} .9s .15s cubic-bezier(.22,1,.36,1) both;
+`;
+const HeroPanelLabel = styled.div`
+  font-size: .75rem; font-weight: 800; text-transform: uppercase;
+  letter-spacing: .1em; color: ${COLORS.lightText}; margin-bottom: 1.25rem;
+`;
+const StatGrid = styled.div`display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;`;
+const StatItem = styled.div`
+  background: #fff; border: 1px solid ${COLORS.border}; border-radius: 12px;
+  padding: 1.1rem; text-align: center;
+`;
+const StatValue = styled.div`
+  font-size: 1.6rem; font-weight: 800; color: ${COLORS.primary}; line-height: 1;
+`;
+const StatLabel = styled.div`
+  font-size: .76rem; color: ${COLORS.lightText}; margin-top: 4px;
 `;
 
 const HeroTitle = styled.h1`
-  font-size: 3rem;
+  font-size: clamp(2.5rem, 5vw, 4.2rem);
   font-weight: 800;
   color: ${COLORS.dark};
-  margin-bottom: 1.5rem;
-  letter-spacing: -0.025em;
-
-  span {
-    color: ${COLORS.primary};
-  }
-
-  @media (max-width: 768px) {
-    font-size: 2.25rem;
-  }
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  margin: 0 0 1.25rem;
 `;
 
 const HeroSubtitle = styled.p`
   font-size: 1.25rem;
   color: ${COLORS.lightText};
-  max-width: 700px;
-  margin: 0 auto;
+  max-width: 560px;
+  margin: 0 0 2rem;
   line-height: 1.6;
 `;
 
@@ -212,13 +235,24 @@ const AboutPageNew = () => {
       <HeaderClean />
       <MainContent>
         <HeroSection>
-          <HeroTitle>
-            {t('about.hero.title_part1')} <br />
-            <span>{t('about.hero.title_part2')}</span>
-          </HeroTitle>
-          <HeroSubtitle>
-            {t('about.hero.subtitle')}
-          </HeroSubtitle>
+          <HeroInner>
+            <HeroContent>
+              <HeroEyebrow><Building2 size={14} />{t('about.eyebrow') || 'Notre histoire'}</HeroEyebrow>
+              <HeroTitle>
+                {t('about.hero.title_part1')}{' '}
+                <span style={{color:COLORS.primary}}>{t('about.hero.title_part2')}</span>
+              </HeroTitle>
+              <HeroSubtitle>{t('about.hero.subtitle')}</HeroSubtitle>
+            </HeroContent>
+            <HeroPanel>
+              <HeroPanelLabel>VisioConnect en chiffres</HeroPanelLabel>
+              <StatGrid>
+                {[['50 000+','Utilisateurs actifs'],['120+','Pays'],['99.9%','Uptime SLA'],['2021','Fondée'],].map(([v,l])=>(
+                  <StatItem key={l}><StatValue>{v}</StatValue><StatLabel>{l}</StatLabel></StatItem>
+                ))}
+              </StatGrid>
+            </HeroPanel>
+          </HeroInner>
         </HeroSection>
 
         <Section>

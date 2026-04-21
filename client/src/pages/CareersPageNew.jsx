@@ -1,29 +1,37 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+import { Briefcase } from 'lucide-react';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import CallToAction from '../components/CallToAction';
 import { useTranslation } from '../hooks/useTranslation';
 
 const COLORS = {
-  primary: 'hsl(var(--primary))',    
-  secondary: 'hsl(var(--muted-foreground))',  
-  dark: 'hsl(var(--foreground))',       
-  text: 'hsl(var(--foreground))',       
-  lightText: 'hsl(var(--muted-foreground))',  
-  background: 'hsl(var(--background))', 
-  white: 'hsl(var(--card))',
-  border: 'hsl(var(--border))',     
-  success: 'hsl(var(--primary))',    
+  primary:   '#2563eb',
+  dark:      '#0f172a',
+  text:      '#374151',
+  lightText: '#6b7280',
+  background:'#ffffff',
+  bg:        '#f8fbff',
+  white:     '#ffffff',
+  border:    '#e5e7eb',
+  softBlue:  '#eff6ff',
+  blueTint:  '#dbeafe',
+  success:   '#2563eb',
 };
+
+const floatIn = keyframes`
+  from { opacity:0; transform:translateY(18px) scale(0.98); }
+  to   { opacity:1; transform:translateY(0) scale(1); }
+`;
 
 const PageContainer = styled.div`
   min-height: 100vh;
-  background-color: ${COLORS.background};
+  background:
+    radial-gradient(circle at top left,rgba(37,99,235,.08),transparent 30%),
+    linear-gradient(180deg,${COLORS.bg} 0%,#fff 25%,#fff 100%);
   display: flex;
   flex-direction: column;
-  font-family: 'Inter', sans-serif;
-  transition: background-color 0.3s ease, color 0.3s ease;
 `;
 
 const MainContent = styled.main`
@@ -31,37 +39,55 @@ const MainContent = styled.main`
 `;
 
 const Hero = styled.section`
-  background: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(var(--background)) 100%);
-  padding: 100px 24px 80px;
-  text-align: center;
+  background: transparent;
+  padding: 6rem 1.5rem 5rem;
   border-bottom: 1px solid ${COLORS.border};
-  position: relative;
-  overflow: hidden;
+`;
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(37, 99, 235, 0.05) 0%, transparent 70%);
-    pointer-events: none;
-  }
+const HeroInner = styled.div`
+  max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: minmax(0,1.2fr) minmax(280px,.8fr);
+  gap: 3rem; align-items: center;
+  @media(max-width:900px){ grid-template-columns:1fr; }
+`;
+const HeroContent = styled.div`animation:${floatIn} .75s cubic-bezier(.22,1,.36,1) both;`;
+const HeroEyebrow = styled.div`
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.45rem .85rem;border-radius:9999px;
+  background:${COLORS.softBlue};border:1px solid ${COLORS.blueTint};
+  color:${COLORS.primary};font-weight:700;font-size:.82rem;margin-bottom:1.25rem;
+`;
+const HeroPanel = styled.div`
+  background:linear-gradient(180deg,#fff 0%,${COLORS.bg} 100%);
+  border:1px solid ${COLORS.border};border-radius:20px;padding:1.75rem;
+  box-shadow:0 20px 50px rgba(15,23,42,.08);
+  animation:${floatIn} .9s .15s cubic-bezier(.22,1,.36,1) both;
+`;
+const PanelLabel = styled.div`
+  font-size:.75rem;font-weight:800;text-transform:uppercase;
+  letter-spacing:.1em;color:${COLORS.lightText};margin-bottom:1.25rem;
+`;
+const CultureGrid = styled.div`display:grid;grid-template-columns:1fr 1fr;gap:.75rem;`;
+const CultureCard = styled.div`
+  background:#fff;border:1px solid ${COLORS.border};border-radius:12px;
+  padding:.85rem;text-align:center;font-size:.82rem;font-weight:600;color:${COLORS.dark};
 `;
 
 const Title = styled.h1`
-  font-size: 3rem;
+  font-size: clamp(2.5rem,5vw,4.2rem);
   font-weight: 700;
   color: ${COLORS.dark};
-  margin-bottom: 16px;
+  margin: 0 0 1.25rem;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
 `;
 
 const Subtitle = styled.p`
   font-size: 1.25rem;
   color: ${COLORS.lightText};
-  max-width: 600px;
-  margin: 0 auto;
+  max-width: 520px;
+  margin: 0 0 2rem;
+  line-height: 1.6;
 `;
 
 const Section = styled.section`
@@ -197,8 +223,21 @@ const CareersPageNew = () => {
       <HeaderClean />
       <MainContent>
         <Hero>
-          <Title>{t('careers.hero.title')}</Title>
-          <Subtitle>{t('careers.hero.subtitle')}</Subtitle>
+          <HeroInner>
+            <HeroContent>
+              <HeroEyebrow><Briefcase size={14}/>{t('careers.eyebrow') || 'Rejoignez-nous'}</HeroEyebrow>
+              <Title style={{color:COLORS.dark}}>{t('careers.hero.title')}</Title>
+              <Subtitle>{t('careers.hero.subtitle')}</Subtitle>
+            </HeroContent>
+            <HeroPanel>
+              <PanelLabel>Notre culture</PanelLabel>
+              <CultureGrid>
+                {[['🌍','Remote First'],['🚀','Croissance rapide'],['🎯','Impact direct'],['❤️','Bien-être']].map(([e,l])=>(
+                  <CultureCard key={l}><div style={{fontSize:'1.5rem',marginBottom:4}}>{e}</div>{l}</CultureCard>
+                ))}
+              </CultureGrid>
+            </HeroPanel>
+          </HeroInner>
         </Hero>
 
         <Section>
