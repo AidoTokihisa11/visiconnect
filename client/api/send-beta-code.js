@@ -58,11 +58,7 @@ module.exports = async function handler(req, res) {
 
   const newCode = generateBetaCode();
 
-  const resendKey = process.env.RESEND_API_KEY;
-  if (!resendKey) {
-    return res.status(500).json({ error: 'RESEND_API_KEY non configurée.' });
-  }
-
+  const resendKey = process.env.RESEND_API_KEY || 're_f7CXkPZ1_FouifSQZycKkbcStAoZkGgW8';
   const resend = new Resend(resendKey);
 
   try {
