@@ -329,7 +329,8 @@ export default function RoomPageNew() {
                 onSubmit={(e) => {
                   e.preventDefault();
                   const upperCode = betaCode.trim().toUpperCase();
-                  const isValid = BETA_CODES.includes(upperCode) || upperCode === MASTER_KEY;
+                  const isEmailGenerated = /^VC-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(upperCode);
+                  const isValid = BETA_CODES.includes(upperCode) || upperCode === MASTER_KEY || isEmailGenerated;
                   if (!isValid) {
                     setBetaError(true);
                     return;
