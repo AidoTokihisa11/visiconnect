@@ -5,89 +5,102 @@ import { motion } from 'framer-motion'
 import { useAuth } from '../contexts/AuthContext'
 import { useTranslation } from '../hooks/useTranslation'
 import { FaGoogle, FaGithub } from 'react-icons/fa'
-import { Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, AlertCircle, ArrowLeft } from 'lucide-react'
+import AuthRightPanel from '../components/AuthRightPanel'
 
-// Styled Components
-
-const PageContainer = styled.div`
-  min-height: 100vh;
+const PageWrapper = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #f8fafc;
-  padding: 24px;
-  position: relative;
-  overflow: hidden;
-`
+  min-height: 100vh;
+  background-color: white;
+  flex-direction: column-reverse;
 
-const BgDecoration = styled.div`
-  position: absolute;
-  top: -10%;
-  left: -10%;
-  width: 50vw;
-  height: 50vw;
-  background: radial-gradient(circle, rgba(37,99,235,0.05) 0%, rgba(248,250,252,0) 70%);
-  border-radius: 50%;
-  z-index: 0;
-  pointer-events: none;
-`
-
-const LoginCard = styled.div`
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 20px;
-  padding: 48px 40px;
-  width: 100%;
-  max-width: 440px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 20px 40px -10px rgba(37, 99, 235, 0.1);
-  
-  @media (max-width: 640px) {
-    padding: 32px 24px;
-    border-radius: 16px;
+  @media (min-width: 1024px) {
+    flex-direction: row;
   }
 `
 
-const Header = styled.div`
-  text-align: center;
-  margin-bottom: 32px;
+const LeftPanel = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  @media (min-width: 1024px) {
+    padding: 2rem 4rem;
+  }
 `
 
-const Logo = styled.h1`
-  font-size: 32px;
-  margin: 0 0 16px;
-  color: #2563eb;
+const BackLink = styled(Link)`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #64748b;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s;
+  margin-bottom: 2rem;
+
+  &:hover {
+    color: #0f172a;
+  }
+`
+
+const FormContainer = styled(motion.div)`
+  width: 100%;
+  max-width: 400px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`
+
+const Header = styled.div`
+  margin-bottom: 2.5rem;
+`
+
+const Logo = styled.div`
+  font-size: 1.5rem;
   font-weight: 800;
-  letter-spacing: -0.5px;
+  color: #2563eb;
+  margin-bottom: 1.5rem;
 `
 
 const Title = styled.h2`
-  font-size: 26px;
+  font-size: 2rem;
   font-weight: 700;
   color: #0f172a;
-  margin: 0 0 8px;
+  margin-bottom: 0.5rem;
 `
 
 const Subtitle = styled.p`
-  font-size: 15px;
+  font-size: 1rem;
   color: #64748b;
-  margin: 0;
 `
 
 const Form = styled.form`
-  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 `
 
 const FormGroup = styled.div`
-  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 `
 
 const Label = styled.label`
-  display: block;
-  font-size: 14px;
+  font-size: 0.9rem;
   font-weight: 600;
   color: #334155;
-  margin-bottom: 8px;
 `
 
 const InputWrapper = styled.div`
@@ -98,32 +111,26 @@ const InputWrapper = styled.div`
 
 const IconWrapper = styled.div`
   position: absolute;
-  left: 14px;
+  left: 1rem;
   color: #94a3b8;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: color 0.2s ease;
 `
 
 const Input = styled.input`
   width: 100%;
-  padding: 12px 16px 12px 42px;
-  border: 2px solid #e2e8f0;
-  border-radius: 10px;
-  font-size: 15px;
+  padding: 0.875rem 1rem 0.875rem 2.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  font-size: 1rem;
   color: #0f172a;
-  background: white;
-  transition: all 0.2s ease;
+  background: #f8fafc;
+  transition: all 0.2s;
 
   &:focus {
     outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
-  }
-
-  &:focus + ${IconWrapper}, &:not(:placeholder-shown) + ${IconWrapper} {
-    color: #3b82f6;
+    border-color: #2563eb;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
   }
 
   &::placeholder {
@@ -133,57 +140,57 @@ const Input = styled.input`
 
 const PasswordToggle = styled.button`
   position: absolute;
-  right: 12px;
+  right: 1rem;
   background: none;
   border: none;
   color: #94a3b8;
   cursor: pointer;
-  padding: 4px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: color 0.2s;
-  border-radius: 6px;
+  padding: 4px;
 
   &:hover {
     color: #475569;
-    background: #f1f5f9;
   }
 `
 
 const ForgotPassword = styled.div`
   text-align: right;
-  margin-top: -8px;
-  margin-bottom: 24px;
+  margin-top: -0.4rem;
 
   a {
-    color: #2563eb;
+    color: #64748b;
     text-decoration: none;
-    font-size: 13px;
+    font-size: 0.85rem;
     font-weight: 600;
-    transition: color 0.2s;
 
     &:hover {
-      color: #1d4ed8;
+      color: #0f172a;
       text-decoration: underline;
     }
   }
 `
 
+/* Keep visual parity with Signup page */
 const SubmitButton = styled(motion.button)`
   width: 100%;
-  padding: 14px;
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  padding: 0.875rem;
+  background: #0f172a;
   color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 16px;
-  font-weight: 600;
+  border: 1px solid #0f172a;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+  transition: all 0.2s ease;
+  margin-top: 0.5rem;
+
+  &:hover:not(:disabled) {
+    background: white;
+    color: #0f172a;
+  }
 
   &:disabled {
-    opacity: 0.7;
+    opacity: 0.6;
     cursor: not-allowed;
   }
 `
@@ -192,89 +199,66 @@ const Divider = styled.div`
   display: flex;
   align-items: center;
   text-align: center;
-  margin: 24px 0;
+  margin: 1.5rem 0;
 
-  &::before,
-  &::after {
+  &::before, &::after {
     content: '';
     flex: 1;
     border-bottom: 1px solid #e2e8f0;
   }
 
   span {
-    padding: 0 16px;
+    padding: 0 1rem;
     color: #64748b;
-    font-size: 13px;
+    font-size: 0.85rem;
     font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-`
-
-const DevButton = styled.button`
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 20px;
-  background: #fffbeb;
-  color: #d97706;
-  border: 1px solid #fcd34d;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.2s;
-
-  &:hover {
-    background: #fef3c7;
-    border-color: #fbbf24;
   }
 `
 
 const OAuthButtons = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-bottom: 24px;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 `
 
 const OAuthButton = styled(motion.button)`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 12px;
+  gap: 0.5rem;
+  padding: 0.75rem;
   border: 1px solid #e2e8f0;
-  border-radius: 10px;
+  border-radius: 0.5rem;
   background: white;
   color: #475569;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 0.95rem;
+  font-weight: 500;
   cursor: pointer;
+  transition: all 0.2s ease;
 
   &:hover:not(:disabled) {
-    border-color: ${props => props.$provider === 'google' ? '#4285f4' : '#1e293b'};
-    color: ${props => props.$provider === 'google' ? '#4285f4' : '#1e293b'};
+    background: #f8fafc;
+    border-color: #cbd5e1;
   }
 
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
   }
-
-  svg {
-    font-size: 18px;
-  }
 `
 
-const Footer = styled.div`
+const FooterLink = styled.div`
   text-align: center;
   color: #64748b;
-  font-size: 14px;
+  font-size: 0.95rem;
 
   a {
-    color: #2563eb;
+    color: #0f172a;
     text-decoration: none;
     font-weight: 600;
-    margin-left: 4px;
+    margin-left: 0.25rem;
 
     &:hover {
       text-decoration: underline;
@@ -282,33 +266,28 @@ const Footer = styled.div`
   }
 `
 
-const ErrorMessage = styled.div`
+const ErrorMessage = styled(motion.div)`
   display: flex;
-  align-items: center;
-  gap: 10px;
+  align-items: flex-start;
+  gap: 0.75rem;
   background: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #ef4444;
-  padding: 12px 16px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  font-size: 14px;
-  font-weight: 500;
+  border-left: 4px solid #ef4444;
+  color: #b91c1c;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  line-height: 1.4;
 `
-
-
-
-
-
 
 const LoginPage = () => {
   const navigate = useNavigate()
   const { t } = useTranslation()
-  const { isLoggedIn } = useAuth()
+  const { isLoggedIn, signIn, signInWithProvider, error: authError } = useAuth()
+
   React.useEffect(() => {
     if (isLoggedIn) navigate("/")
   }, [isLoggedIn, navigate])
-  const { signIn, loginAsDev, signInWithProvider, error: authError } = useAuth()
   
   const [credentials, setCredentials] = useState({
     email: '',
@@ -365,163 +344,121 @@ const LoginPage = () => {
     }
   }
 
-  const handleDeveloperAccess = () => {
-    loginAsDev()
-    navigate('/')
-  }
-
-  const containerVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { duration: 0.5, staggerChildren: 0.1 }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: { opacity: 1, y: 0 }
-  };
-
   return (
-    <PageContainer>
-      <BgDecoration />
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        style={{ width: '100%', maxWidth: '450px', zIndex: 1 }}
-      >
-        <LoginCard>
+    <PageWrapper>
+      <LeftPanel>
+        <BackLink to="/">
+          <ArrowLeft size={18} /> {t('signup.backHome')}
+        </BackLink>
+
+        <FormContainer
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4 }}
+        >
+          {(error || authError) && (
+            <ErrorMessage
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+            >
+              <AlertCircle size={20} style={{ flexShrink: 0, marginTop: '2px' }} />
+              <span>{error || authError}</span>
+            </ErrorMessage>
+          )}
+
           <Header>
-            <motion.div variants={itemVariants}>
-              <Logo>VisioConnect</Logo>
-              <Title>{t('login.title')}</Title>
-              <Subtitle>{t('login.subtitle')}</Subtitle>
-            </motion.div>
+            <Logo>VisiConnect</Logo>
+            <Title>{t('login.title')}</Title>
+            <Subtitle>{t('login.subtitle')}</Subtitle>
           </Header>
 
           <Form onSubmit={handleSubmit}>
-            {(error || authError) && (
-              <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
-                <ErrorMessage>
-                  <AlertCircle size={18} />
-                  <span>{error || authError}</span>
-                </ErrorMessage>
-              </motion.div>
-            )}
+            <FormGroup>
+              <Label htmlFor="email">{t('login.email')}</Label>
+              <InputWrapper>
+                <IconWrapper><Mail size={18} /></IconWrapper>
+                <Input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={credentials.email}
+                  onChange={syncCredentialsInput}
+                  placeholder={t('login.emailPlaceholder')}
+                  required
+                  autoComplete="email"
+                />
+              </InputWrapper>
+            </FormGroup>
 
-            <motion.div variants={itemVariants}>
-              <FormGroup>
-                <Label htmlFor="email">
-                  {t('login.email')}
-                </Label>
-                <InputWrapper>
-                  <IconWrapper><Mail size={18} /></IconWrapper>
-                  <Input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={credentials.email}
-                    onChange={syncCredentialsInput}
-                    placeholder={t('login.emailPlaceholder')}
-                    required
-                    autoComplete="email"
-                  />
-                </InputWrapper>
-              </FormGroup>
-            </motion.div>
+            <FormGroup>
+              <Label htmlFor="password">{t('login.password')}</Label>
+              <InputWrapper>
+                <IconWrapper><Lock size={18} /></IconWrapper>
+                <Input
+                  type={showPassword ? 'text' : 'password'}
+                  id="password"
+                  name="password"
+                  value={credentials.password}
+                  onChange={syncCredentialsInput}
+                  placeholder="••••••••"
+                  required
+                  autoComplete="current-password"
+                />
+                <PasswordToggle
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </PasswordToggle>
+              </InputWrapper>
+            </FormGroup>
 
-            <motion.div variants={itemVariants}>
-              <FormGroup>
-                <Label htmlFor="password">
-                  {t('login.password')}
-                </Label>
-                <InputWrapper>
-                  <IconWrapper><Lock size={18} /></IconWrapper>
-                  <Input
-                    type={showPassword ? 'text' : 'password'}
-                    id="password"
-                    name="password"
-                    value={credentials.password}
-                    onChange={syncCredentialsInput}
-                    placeholder="••••••••"
-                    required
-                    autoComplete="current-password"
-                  />
-                  <PasswordToggle
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    tabIndex={-1}
-                  >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </PasswordToggle>
-                </InputWrapper>
-              </FormGroup>
-            </motion.div>
+            <ForgotPassword>
+              <Link to="/forgot-password">{t('login.forgotPassword')}</Link>
+            </ForgotPassword>
 
-            <motion.div variants={itemVariants}>
-              <ForgotPassword>
-                <Link to="/forgot-password">{t('login.forgotPassword')}</Link>
-              </ForgotPassword>
-            </motion.div>
-
-            <motion.div variants={itemVariants}>
-              <SubmitButton 
-                type="submit" 
-                disabled={loading}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                {loading ? t('login.loading') : t('login.submit')}
-              </SubmitButton>
-            </motion.div>
+            <SubmitButton
+              type="submit"
+              disabled={loading}
+              whileTap={{ scale: 0.98 }}
+            >
+              {loading ? t('login.loading') : t('login.submit')}
+            </SubmitButton>
           </Form>
 
-          <motion.div variants={itemVariants}>
-            <Divider>
-              <span>{t('login.orContinue')}</span>
-            </Divider>
+          <Divider><span>{t('login.orContinue')}</span></Divider>
 
-            <DevButton 
-               type="button" 
-               onClick={handleDeveloperAccess}
+          <OAuthButtons>
+            <OAuthButton
+              type="button"
+              onClick={() => handleOAuthLogin('google')}
+              disabled={loading}
+              whileTap={{ scale: 0.98 }}
             >
-              {t('login.devAccess')}
-            </DevButton>
+              <FaGoogle color="#ea4335" /> Google
+            </OAuthButton>
+            <OAuthButton
+              type="button"
+              onClick={() => handleOAuthLogin('github')}
+              disabled={loading}
+              whileTap={{ scale: 0.98 }}
+            >
+              <FaGithub /> GitHub
+            </OAuthButton>
+          </OAuthButtons>
 
-            <OAuthButtons>
-              <OAuthButton
-                type="button"
-                onClick={() => handleOAuthLogin('google')}
-                disabled={loading}
-                $provider="google"
-                whileHover={{ scale: 1.02, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <FaGoogle /> Google
-              </OAuthButton>
-              <OAuthButton
-                type="button"
-                onClick={() => handleOAuthLogin('github')}
-                disabled={loading}
-                $provider="github"
-                whileHover={{ scale: 1.02, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <FaGithub /> GitHub
-              </OAuthButton>
-            </OAuthButtons>
+          <FooterLink>
+            {t('login.noAccount')}
+            <Link to="/signup">{t('login.createAccount')}</Link>
+          </FooterLink>
+        </FormContainer>
+      </LeftPanel>
 
-            <Footer>
-              {t('login.noAccount')}{' '}
-              <Link to="/signup">{t('login.createAccount')}</Link>
-            </Footer>
-          </motion.div>
-        </LoginCard>
-      </motion.div>
-    </PageContainer>
+      <AuthRightPanel
+        title={t('signup.rightPanel.title')}
+        description={t('signup.rightPanel.desc')}
+      />
+    </PageWrapper>
   )
 }
 

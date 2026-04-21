@@ -13,53 +13,113 @@ import {
 
 const t = {
   // ANGLAIS
-  previewText: "Update regarding the VisioConnect Beta Delay",
+  previewText: "VisioConnect Beta goes live tonight at 8:30 PM (Paris/Madrid)",
   helloEn: "Dear",
-  introTextEn: "Thank you for being part of the VisioConnect Beta Program. The beta launch, which was initially postponed to April 19, has unfortunately been delayed once more.",
-  launchDateTitleEn: "New Official Launch Date",
+  introTextEn: "Thank you for being part of the VisioConnect Beta Program. We are pleased to confirm that beta access will be officially available tonight.",
+  launchHeroLabelEn: "OFFICIAL OPENING TIME",
+  launchHeroTimeEn: "8:30 PM (CEST)",
+  launchHeroSubEn: "Access starts tonight - please connect from this time onward.",
+  launchDateTitleEn: "Official Beta Opening - Tonight",
   launchDateTextEn: `
-    <div style="margin-bottom: 8px;">🗓️ <strong>April 21 at 10:30 AM (Paris/Madrid time)</strong></div>
-    <div style="margin-bottom: 4px;">🌍 <strong>4:30 AM</strong> on the US East Coast (EDT)</div>
-    <div>🌍 <strong>3:30 AM</strong> in Ecuador (ECT)</div>
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse: collapse; font-size: 14px;">
+      <tr>
+        <td style="padding: 10px 12px; border: 1px solid #bfdbfe; background: #dbeafe; color: #1e3a8a; font-weight: 700;">Paris / Madrid (CEST)</td>
+        <td style="padding: 10px 12px; border: 1px solid #bfdbfe; background: #dbeafe; color: #1e3a8a; font-weight: 700; text-align: right;">8:30 PM</td>
+      </tr>
+      <tr>
+        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #334155;">London (BST)</td>
+        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #0f172a; font-weight: 600; text-align: right;">7:30 PM</td>
+      </tr>
+      <tr>
+        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #334155;">New York (EDT)</td>
+        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #0f172a; font-weight: 600; text-align: right;">2:30 PM</td>
+      </tr>
+      <tr>
+        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #334155;">Los Angeles (PDT)</td>
+        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #0f172a; font-weight: 600; text-align: right;">11:30 AM</td>
+      </tr>
+      <tr>
+        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #334155;">Quito (ECT)</td>
+        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #0f172a; font-weight: 600; text-align: right;">1:30 PM</td>
+      </tr>
+      <tr>
+        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #334155;">UTC</td>
+        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #0f172a; font-weight: 600; text-align: right;">6:30 PM</td>
+      </tr>
+      <tr>
+        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #334155;">Tokyo (JST)</td>
+        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #0f172a; font-weight: 600; text-align: right;">3:30 AM (Apr 22)</td>
+      </tr>
+    </table>
   `,
   
-  situationTitleEn: "What Happened?",
-  situationTextEn: "Despite our explicit instructions to wait for the official launch email, a small number of users connected to the platform prematurely. These unexpected early connections triggered unforeseen code errors that destabilized our infrastructure.",
+  situationTitleEn: "Before You Connect",
+  situationTextEn: "Please make sure to read the documentation shared in the very first beta email before your first login. It contains the complete onboarding steps, expected behavior, and best practices to help you start quickly.",
   
-  actionTitleEn: "Our Response",
-  actionTextEn: "Our developers are actively fixing these code errors and implementing stricter access controls.",
+  actionTitleEn: "If You Have an Issue with a Beta Code",
+  actionTextEn: "If your beta code does not work, please send an email to <strong style=\"color: #1e40af;\">theo.garces.aido@gmail.com</strong> with your <strong>first name</strong>, <strong>last name</strong>, and <strong>email address</strong> used for registration (you can also include your beta code for faster support).",
   
-  compensationTitleEn: "Beta Period Extended",
-  compensationTextEn: 'To apologize for this delay, we are extending your beta access. Your account will now remain active until <strong style="color: #1e40af;">April 30, 2026</strong>.',
+  compensationTitleEn: "Access Reminder & Compensation",
+  compensationTextEn: 'Access is considered officially open from <strong style="color: #1e40af;">8:30 PM (CEST)</strong> only. To ensure platform stability for everyone, please connect only from that time onward.<br /><br />To compensate for the delay, we have extended your beta period: <strong style="color: #1e40af;">beta access now ends on April 30, 2026</strong>.',
   
-  closingTextEn: "We deeply apologize for the inconvenience and appreciate your patience. We will notify you by email as soon as the servers are fully stabilized.",
-  apologyTextEn: "Thank you for your understanding.",
+  closingTextEn: "Thank you again for your trust and for helping us test VisioConnect in real conditions. Your feedback is essential.",
+  apologyTextEn: "We look forward to welcoming you tonight.",
   
   // FRANÇAIS
   helloFr: "Bonjour",
-  introTextFr: "Merci de faire partie du programme Bêta de VisioConnect. Le lancement de la bêta, initialement repoussé au 19 avril, est malheureusement retardé une nouvelle fois.",
-  launchDateTitleFr: "Nouvelle Date de Lancement Officiel",
+  introTextFr: "Merci de faire partie du programme Bêta de VisioConnect. Nous avons le plaisir de vous confirmer que l'accès bêta sera officiellement disponible ce soir.",
+  launchHeroLabelFr: "HEURE OFFICIELLE D'OUVERTURE",
+  launchHeroTimeFr: "20h30 (CEST)",
+  launchHeroSubFr: "Accès ouvert ce soir - merci de vous connecter à partir de cet horaire.",
+  launchDateTitleFr: "Ouverture Officielle de la Bêta - Ce Soir",
   launchDateTextFr: `
-    <div style="margin-bottom: 8px;">🗓️ <strong>21 avril à 10h30 (Heure de Paris et de Madrid)</strong></div>
-    <div style="margin-bottom: 4px;">🌍 <strong>4h30</strong> sur la côte Est des États-Unis (EDT)</div>
-    <div>🌍 <strong>3h30</strong> en Équateur (ECT)</div>
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse: collapse; font-size: 14px;">
+      <tr>
+        <td style="padding: 10px 12px; border: 1px solid #bfdbfe; background: #dbeafe; color: #1e3a8a; font-weight: 700;">Paris / Madrid (CEST)</td>
+        <td style="padding: 10px 12px; border: 1px solid #bfdbfe; background: #dbeafe; color: #1e3a8a; font-weight: 700; text-align: right;">20h30</td>
+      </tr>
+      <tr>
+        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #334155;">Londres (BST)</td>
+        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #0f172a; font-weight: 600; text-align: right;">19h30</td>
+      </tr>
+      <tr>
+        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #334155;">New York (EDT)</td>
+        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #0f172a; font-weight: 600; text-align: right;">14h30</td>
+      </tr>
+      <tr>
+        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #334155;">Los Angeles (PDT)</td>
+        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #0f172a; font-weight: 600; text-align: right;">11h30</td>
+      </tr>
+      <tr>
+        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #334155;">Quito (ECT)</td>
+        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #0f172a; font-weight: 600; text-align: right;">13h30</td>
+      </tr>
+      <tr>
+        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #334155;">UTC</td>
+        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #0f172a; font-weight: 600; text-align: right;">18h30</td>
+      </tr>
+      <tr>
+        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #334155;">Tokyo (JST)</td>
+        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #0f172a; font-weight: 600; text-align: right;">03h30 (22 avril)</td>
+      </tr>
+    </table>
   `,
   
-  situationTitleFr: "Que s'est-il passé ?",
-  situationTextFr: "Malgré nos instructions claires de patienter jusqu'à la réception de l'email officiel de lancement, un petit nombre d'utilisateurs s'est connecté prématurément à la plateforme. Ces connexions anticipées ont déclenché des erreurs de code inattendues qui ont déstabilisé notre infrastructure.",
+  situationTitleFr: "Avant de Vous Connecter",
+  situationTextFr: "Pensez bien à lire la documentation fournie dans le tout premier email bêta avant votre première connexion. Elle contient toutes les étapes d'onboarding, les usages recommandés et les informations utiles pour démarrer rapidement.",
   
-  actionTitleFr: "Notre Réponse",
-  actionTextFr: "Nos développeurs corrigent activement ces erreurs de code et mettent en place des contrôles d'accès plus stricts.",
+  actionTitleFr: "En Cas de Problème avec un Code Bêta",
+  actionTextFr: "Si votre code bêta ne fonctionne pas, envoyez un email à <strong style=\"color: #1e40af;\">theo.garces.aido@gmail.com</strong> en indiquant votre <strong>nom</strong>, <strong>prénom</strong> et <strong>adresse mail</strong> utilisée à l'inscription (vous pouvez aussi ajouter le code bêta pour un traitement plus rapide).",
   
-  compensationTitleFr: "Période de Bêta Prolongée",
-  compensationTextFr: 'Pour nous excuser de ce retard, nous prolongeons votre accès à la bêta. Votre compte restera désormais actif jusqu\'au <strong style="color: #1e40af;">30 Avril 2026</strong>.',
+  compensationTitleFr: "Rappel d'Accès & Compensation",
+  compensationTextFr: 'L\'accès est officiellement ouvert à partir de <strong style="color: #1e40af;">20h30 (CEST)</strong>. Pour garantir la stabilité de la plateforme pour tous, merci de vous connecter uniquement à partir de cet horaire.<br /><br />En compensation des jours ajoutés, votre période bêta est prolongée : <strong style="color: #1e40af;">la fin de la bêta est fixée au 30 avril 2026</strong>.',
   
-  closingTextFr: "Nous vous présentons nos plus plates excuses pour la gêne occasionnée et vous remercions de votre patience. Nous vous informerons par email dès que les serveurs seront totalement stabilisés.",
-  apologyTextFr: "Merci de votre compréhension.",
+  closingTextFr: "Merci encore pour votre confiance et votre aide dans les tests de VisioConnect en conditions réelles. Vos retours sont essentiels.",
+  apologyTextFr: "Nous avons hâte de vous accueillir ce soir.",
 
   // ALERT
-  alertBoxEn: "⚠️ IMPORTANT: Please do not try logging into VisioConnect until you receive the official launch confirmation email.",
-  alertBoxFr: "⚠️ IMPORTANT : Merci de ne pas tenter de vous connecter à VisioConnect tant que vous n'avez pas reçu l'email officiel de lancement.",
+  alertBoxEn: "⚠️ IMPORTANT: VisioConnect Beta will be officially accessible tonight from 8:30 PM (CEST) only.",
+  alertBoxFr: "⚠️ IMPORTANT : La bêta VisioConnect sera officiellement accessible ce soir à partir de 20h30 (CEST) uniquement.",
   
   footerText: "You are receiving this email because you registered for the VisioConnect Private Beta Program.",
   footerCopyright: "VisioConnect — The Future of Video Conferencing",
@@ -72,7 +132,7 @@ export const MeetingInviteEmail = ({
   return (
     <Html>
       <Head>
-        <title>Beta Update - VisioConnect</title>
+        <title>Official Beta Opening Tonight - VisioConnect</title>
         <Font
           fontFamily="Inter"
           fallbackFontFamily="Helvetica, Arial, sans-serif"
@@ -109,6 +169,12 @@ export const MeetingInviteEmail = ({
             
             <div style={paragraph} dangerouslySetInnerHTML={{ __html: t.introTextEn }} />
 
+            <Section style={launchHeroBox}>
+              <Text style={launchHeroLabel}>{t.launchHeroLabelEn}</Text>
+              <Text style={launchHeroTime}>{t.launchHeroTimeEn}</Text>
+              <Text style={launchHeroSub}>{t.launchHeroSubEn}</Text>
+            </Section>
+
             {/* ENCART HORARES EN */}
             <Section style={dateBoxStyles}>
               <Text style={dateTitle}>{t.launchDateTitleEn}</Text>
@@ -127,7 +193,7 @@ export const MeetingInviteEmail = ({
             
             <Section style={infoCard}>
               <Text style={cardTitle}>{t.actionTitleEn}</Text>
-              <Text style={cardText}>{t.actionTextEn}</Text>
+              <div style={cardText} dangerouslySetInnerHTML={{ __html: t.actionTextEn }} />
             </Section>
             
             <Section style={infoCardHighlight}>
@@ -136,6 +202,7 @@ export const MeetingInviteEmail = ({
             </Section>
 
             <Text style={paragraph}>{t.closingTextEn}</Text>
+            <Text style={paragraph}>{t.apologyTextEn}</Text>
             
             <Text style={signoffEn}>
               Warmest regards,<br />
@@ -148,6 +215,12 @@ export const MeetingInviteEmail = ({
             <Text style={greeting}>{t.helloFr} {inviteeName},</Text>
             
             <div style={paragraph} dangerouslySetInnerHTML={{ __html: t.introTextFr }} />
+
+            <Section style={launchHeroBox}>
+              <Text style={launchHeroLabel}>{t.launchHeroLabelFr}</Text>
+              <Text style={launchHeroTime}>{t.launchHeroTimeFr}</Text>
+              <Text style={launchHeroSub}>{t.launchHeroSubFr}</Text>
+            </Section>
 
             {/* ENCART HORARES FR */}
             <Section style={dateBoxStyles}>
@@ -167,7 +240,7 @@ export const MeetingInviteEmail = ({
             
             <Section style={infoCard}>
               <Text style={cardTitle}>{t.actionTitleFr}</Text>
-              <Text style={cardText}>{t.actionTextFr}</Text>
+              <div style={cardText} dangerouslySetInnerHTML={{ __html: t.actionTextFr }} />
             </Section>
             
             <Section style={infoCardHighlight}>
@@ -176,6 +249,7 @@ export const MeetingInviteEmail = ({
             </Section>
 
             <Text style={paragraph}>{t.closingTextFr}</Text>
+            <Text style={paragraph}>{t.apologyTextFr}</Text>
 
             <Text style={signoff}>
               Cordialement,<br />
@@ -304,6 +378,39 @@ const dateText = {
   color: '#27272a',
   fontSize: '15px',
   lineHeight: '24px',
+  margin: '0',
+};
+
+const launchHeroBox = {
+  backgroundColor: '#0f172a',
+  borderRadius: '10px',
+  padding: '20px 24px',
+  marginBottom: '24px',
+  border: '1px solid #1e293b',
+};
+
+const launchHeroLabel = {
+  color: '#93c5fd',
+  fontSize: '11px',
+  fontWeight: '700',
+  letterSpacing: '1.2px',
+  textTransform: 'uppercase',
+  margin: '0 0 8px 0',
+};
+
+const launchHeroTime = {
+  color: '#ffffff',
+  fontSize: '32px',
+  fontWeight: '700',
+  letterSpacing: '-0.8px',
+  lineHeight: '1.2',
+  margin: '0 0 8px 0',
+};
+
+const launchHeroSub = {
+  color: '#cbd5e1',
+  fontSize: '14px',
+  lineHeight: '22px',
   margin: '0',
 };
 
