@@ -478,7 +478,7 @@ const SyntaxCode = memo(() => (
       <T>{'    <'}</T><F>div</F><T>{' className='}</T><S>"meeting-grid"</S><T>{'>\n'}</T>
       <T>{'      {'}</T><V>participants</V><T>.</T><F>map</F><T>{'('}</T><V>p</V><T>{' => (\n'}</T>
       <T>{'        <'}</T><F>VideoTile</F><T>{'\n'}</T>
-      <T>{'          key={'}</T><V>p</V><T>.sid}\n</T>
+      <T>{'          key={'}</T><V>p</V><T>{'.sid}\n'}</T>
       <T>{'          participant={'}</T><V>p</V><T>{'}\n'}</T>
       <T>{'          quality={'}</T><V>quality</V><T>{'}\n'}</T>
       <T>{'          latency={'}</T><V>latency</V><T>{'} />\n'}</T>
