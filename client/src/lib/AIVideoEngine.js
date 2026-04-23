@@ -26,19 +26,7 @@ export class AIVideoProcessor {
     this.fpsDrops = 0;
     this.thermalGuardActive = false;
     this.frameCount = 0;
-    
-    // --- Adaptive Enhancement v3.0 ---
-    this.exposureGain = 1.0;
-    this.detectedResolution = 0;      // Résolution réelle détectée
-    this.sharpnessIntensity = 1.08;   // Intensité du sharpening (1.0-1.25)
-    this.pixelationScore = 0;         // Score de pixelisation (0-100)
-    this.estimatedBitrate = 2000000;  // Bitrate estimé (défaut 2Mbps)
-    this.lastBitrateCheck = 0;        // Timestamp dernière estimation
-    
-    // --- Zero-Copy Optimization ---
-    this.offscreenCanvas = null;
-    this.offscreenCtx = null;
-    this.imageBitmapSupported = typeof createImageBitmap === 'function';
+    this._aiFilter = 'brightness(1.05) contrast(1.08) saturate(1.10)';
   }
 
   /**
@@ -74,124 +62,11 @@ export class AIVideoProcessor {
     const stream = this.canvas.captureStream(fps);
     this.processedTrack = stream.getVideoTracks()[0];
 
+    // Filtre fixe appliqué une fois : légère amélioration sans clignotement
+    this._aiFilter = 'brightness(1.05) contrast(1.08) saturate(1.10)';
+
     this.processFrame();
     return { track: this.processedTrack };
-  }
-
-  /**
-   * Courbe sigmoïde pour un ajustement naturel de la luminosité.
-   * Évite les sauts brutaux et produit des transitions douces.
-   */
-  sigmoidGain(currentLuma, targetLuma = 100) {
-    if (currentLuma >= targetLuma) return 1.0;
-    
-    // x normalisé entre 0 et 1 (0 = très sombre, 1 = luminosité cible)
-    const x = currentLuma / targetLuma;
-    
-    // Courbe sigmoïde: f(x) = 1 / (1 + e^(-k*(x-0.5)))
-    // On inverse pour avoir un gain élevé quand c'est sombre
-    const k = 6; // Pente de la courbe
-    const sigmoid = 1 / (1 + Math.exp(-k * (x - 0.5)));
-    
-    // Mapper sigmoid [0.0025, 0.9975] -> gain [1.0, 1.6]
-    const minGain = 1.0;
-    const maxGain = 1.6;
-    const gain = minGain + (maxGain - minGain) * (1 - sigmoid);
-    
-    return Math.min(maxGain, Math.max(minGain, gain));
-  }
-
-  /**
-   * Analyse la pixelisation de l'image pour ajuster le sharpening.
-   * Si l'image est très compressée ou le bitrate bas, on réduit le sharpening
-   * pour éviter d'accentuer les artefacts JPEG/WebRTC.
-   */
-  analyzePixelation() {
-    try {
-      // Échantillon 16x16 au centre pour détecter les blocs de compression
-      const cx = Math.floor(this.canvas.width / 2) - 8;
-      const cy = Math.floor(this.canvas.height / 2) - 8;
-      const imageData = this.ctx.getImageData(cx, cy, 16, 16);
-      const data = imageData.data;
-      
-      // Calcul du gradient local (détection d'artefacts de bloc)
-      let blockScore = 0;
-      let edgeCount = 0;
-      
-      for (let y = 1; y < 15; y++) {
-        for (let x = 1; x < 15; x++) {
-          const idx = (y * 16 + x) * 4;
-          const idxLeft = (y * 16 + x - 1) * 4;
-          const idxUp = ((y - 1) * 16 + x) * 4;
-          
-          // Gradient horizontal et vertical
-          const gradH = Math.abs(data[idx] - data[idxLeft]);
-          const gradV = Math.abs(data[idx] - data[idxUp]);
-          
-          // Les artefacts de bloc créent des transitions brutales tous les 8 pixels
-          if (x % 8 === 0 || y % 8 === 0) {
-            if (gradH > 20 || gradV > 20) blockScore++;
-          }
-          if (gradH > 10 || gradV > 10) edgeCount++;
-        }
-      }
-      
-      // Score de pixelisation (0-100)
-      this.pixelationScore = Math.min(100, (blockScore / 4) * 100);
-      
-      // === SHARPENING BITRATE-AWARE v3.0 ===
-      // Facteur résolution: réduire sur basse résolution
-      const resolutionFactor = this.detectedResolution < 480 ? 0.7 : 
-                               this.detectedResolution < 720 ? 0.85 : 1.0;
-      
-      // Facteur pixelisation: réduire si artefacts détectés
-      const pixelationFactor = this.pixelationScore > 50 ? 0.75 : 
-                               this.pixelationScore > 25 ? 0.88 : 1.0;
-      
-      // Facteur bitrate: réduire si bitrate bas (évite d'accentuer compression)
-      // < 1Mbps = très compressé, 1-2Mbps = compressé, > 2Mbps = OK
-      const bitrateFactor = this.estimatedBitrate < 1_000_000 ? 0.6 :
-                            this.estimatedBitrate < 2_000_000 ? 0.8 : 1.0;
-      
-      // Sharpening adaptatif: 1.0 (très pixelisé/compressé) à 1.12 (haute qualité)
-      // Plafonné à 1.12 pour éviter l'aspect artificiel
-      const combinedFactor = resolutionFactor * pixelationFactor * bitrateFactor;
-      this.sharpnessIntensity = 1.0 + (0.12 * combinedFactor);
-      
-    } catch (e) {
-      this.sharpnessIntensity = 1.05; // Fallback conservateur
-    }
-  }
-
-  /**
-   * Estimation du bitrate basée sur l'activité de la piste vidéo.
-   * Utilise getStats() si disponible, sinon heuristique.
-   */
-  async estimateBitrate() {
-    try {
-      // Vérifier si on a accès aux stats WebRTC
-      if (this.sourceTrack && typeof this.sourceTrack.getStats === 'function') {
-        const stats = await this.sourceTrack.getStats();
-        if (stats) {
-          // Chercher le rapport de type 'outbound-rtp' ou 'inbound-rtp'
-          for (const report of stats.values()) {
-            if (report.type === 'outbound-rtp' && report.kind === 'video') {
-              const bitrate = report.targetBitrate || report.bitrate || 2_000_000;
-              this.estimatedBitrate = bitrate;
-              return;
-            }
-          }
-        }
-      }
-      
-      // Heuristique: estimer basé sur résolution et framerate
-      const pixels = this.canvas.width * this.canvas.height;
-      const estimatedBps = pixels * 0.07; // ~0.07 bits per pixel (H.264 typ.)
-      this.estimatedBitrate = Math.max(500_000, Math.min(8_000_000, estimatedBps));
-      
-    } catch (e) {
-      this.estimatedBitrate = 2_000_000; // Fallback 2Mbps
-    }
   }
 
   processFrame = () => {
@@ -227,7 +102,6 @@ export class AIVideoProcessor {
     if (this.canvas.width !== videoWidth) {
       this.canvas.width = videoWidth;
       this.canvas.height = videoHeight;
-      this.detectedResolution = Math.min(videoWidth, videoHeight);
     }
 
     this.frameCount++;
@@ -237,57 +111,17 @@ export class AIVideoProcessor {
 
     // --- 2. PIPELINE DE RENDU ---
     if (this.thermalGuardActive || skipFrame) {
-      // MODE DÉGRADÉ / SKIP : Pass-through matériel simple
-      this.ctx.filter = 'none';
+      // MODE DÉGRADÉ / SKIP : Pass-through simple
+      if (this.ctx.filter !== 'none') this.ctx.filter = 'none';
       this.ctx.drawImage(this.videoElement, 0, 0, videoWidth, videoHeight);
     } else {
-      // MODE AI-AUTONOMOUS
-
-      // A. Auto-Relighting Sigmoïde (tous les 10 frames desktop, 20 mobile)
-      const relightInterval = this.isMobile ? 20 : 10;
-      if (this.frameCount % relightInterval === 0) {
-        this.computeRelightingSigmoid();
-      }
-      
-      // B. Analyse Pixelisation + Estimation Bitrate (tous les 30 frames desktop, 60 mobile)
-      const analyzeInterval = this.isMobile ? 60 : 30;
-      if (this.frameCount % analyzeInterval === 0) {
-        this.analyzePixelation();
-        // Estimation bitrate asynchrone (non-bloquant)
-        this.estimateBitrate();
-      }
-
-      // C. Sharpening + Relight sur toute l'image (pas de ROI partiel)
-      this.ctx.filter = `brightness(${this.exposureGain.toFixed(2)}) contrast(${this.sharpnessIntensity.toFixed(2)}) saturate(1.1)`;
+      // MODE AI : filtre fixe — pas de recalcul dynamique pour éviter tout clignotement
+      if (this.ctx.filter !== this._aiFilter) this.ctx.filter = this._aiFilter;
       this.ctx.drawImage(this.videoElement, 0, 0, videoWidth, videoHeight);
     }
 
     this.rafId = requestAnimationFrame(this.processFrame);
   };
-
-  /**
-   * Calcul du gain de luminosité avec courbe sigmoïde.
-   * Plus naturel que le gain linéaire.
-   */
-  computeRelightingSigmoid() {
-    const cx = this.canvas.width / 2;
-    const cy = this.canvas.height / 2;
-    try {
-      // Échantillon 3x3 au centre pour stabilité
-      const pixel = this.ctx.getImageData(cx - 1, cy - 1, 3, 3).data;
-      let sumLuma = 0;
-      for (let i = 0; i < pixel.length; i += 4) {
-        sumLuma += (pixel[i] + pixel[i + 1] + pixel[i + 2]) / 3;
-      }
-      const avgLuma = sumLuma / 9;
-      
-      // Gain sigmoïde au lieu de linéaire
-      const targetExposure = this.sigmoidGain(avgLuma, 100);
-      
-      // Lissage temporel pour éviter les flickering
-      this.exposureGain += (targetExposure - this.exposureGain) * 0.08;
-    } catch(e) {}
-  }
 
   async restart({ track }) {
     await this.destroy();
