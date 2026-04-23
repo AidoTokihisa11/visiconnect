@@ -8,7 +8,7 @@ import { useRoomProtection } from '../hooks/useRoomProtection';
 import { useLiveKit4K } from '../hooks/useLiveKit4K';  // v4.0 Anti-Pixelisation
 import { useSafeLayout } from '../hooks/useSafeLayout';
 import { MeetingRoom } from '../components/room/MeetingRoom';
-import { Video, ArrowRight, Shield, AlertTriangle, Lock, Key, Sparkles } from 'lucide-react';
+import { Video, ArrowRight, Shield, AlertTriangle, Lock, Key, Sparkles, Download, FileText } from 'lucide-react';
 import { BETA_CODES } from '../config/betaCodes';
 import { useTranslation } from '../hooks/useTranslation';
 import '@livekit/components-styles';
@@ -370,6 +370,27 @@ export default function RoomPageNew() {
                       </motion.p>
                     )}
                   </AnimatePresence>
+                </div>
+
+                {/* Documentation download */}
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <FileText className="w-4 h-4 text-slate-500" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-[13px] font-semibold text-slate-700 leading-tight">Documentation VisioConnect</p>
+                      <p className="text-[12px] text-slate-500 mt-0.5 mb-3">La documentation est téléchargeable sur le bouton ci-dessous.</p>
+                      <a
+                        href="/Official_Guide_Beta.pdf"
+                        download="VisioConnect_Documentation.pdf"
+                        className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-semibold rounded-xl px-4 py-2.5 transition-all shadow-sm"
+                      >
+                        <Download className="w-3.5 h-3.5" />
+                        Télécharger la documentation
+                      </a>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Regen beta code by email */}

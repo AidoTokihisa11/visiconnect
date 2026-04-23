@@ -391,28 +391,37 @@ const toggleBlur = useCallback(async (newRadius) => {
     }
 }, [localParticipant, isBlurEnabled, blurRadius, blurProcessor, isAIEnhanced]);
 
-const toggleAIVideoEngine = useCallback(async () => {
-    if (!localParticipant) return;
+const [isProcessingAI, setIsProcessingAI] = useState(false);
 
+const toggleAIVideoEngine = useCallback(async () => {
+    if (!localParticipant || isProcessingAI) return;
+
+    setIsProcessingAI(true);
     try {
       const videoTrack = localParticipant.getTrackPublication(Track.Source.Camera)?.videoTrack;
-      if (!videoTrack || videoTrack.isMuted || !videoTrack.mediaStreamTrack) {
-          console.warn("Flux inactif ou aucune source media. IA bloquée.");
+      if (!videoTrack) {
+          console.warn("Aucune piste caméra disponible.");
           return;
       }
 
       if (isAIEnhanced) {
-          // Disable AI 
+          // Désactivation: setProcessor(null) fonctionne même si mediaStreamTrack est null
           await videoTrack.setProcessor(null);
           setIsAIEnhanced(false);
       } else {
+          // Activation: vérifier que le flux est valide
+          if (videoTrack.isMuted || !videoTrack.mediaStreamTrack) {
+              console.warn("Flux inactif ou aucune source media. IA bloquée.");
+              return;
+          }
+
           // Prevent conflict: If Blur is active, turn it off
           if (isBlurEnabled) {
               setIsBlurEnabled(false);
           }
 
           // Délai plus long sur mobile pour éviter les freezes
-          const delay = isMobile ? 150 : 50;
+          const delay = isMobile ? 150 : 80;
           await new Promise(resolve => setTimeout(resolve, delay));
           
           let processor = activeAiProcessor;
@@ -426,8 +435,10 @@ const toggleAIVideoEngine = useCallback(async () => {
       }
     } catch (err) {
       console.error('Failed to toggle AI Engine', err);
+    } finally {
+      setIsProcessingAI(false);
     }
-}, [localParticipant, isAIEnhanced, activeAiProcessor, isBlurEnabled, isMobile]);
+}, [localParticipant, isAIEnhanced, activeAiProcessor, isBlurEnabled, isMobile, isProcessingAI]);
 
 
     const refreshDevices = useCallback(async () => {
@@ -508,6 +519,7 @@ const toggleAIVideoEngine = useCallback(async () => {
   return {
     isAiReady,
     isAIEnhanced,
+    isProcessingAI,
     toggleAIVideoEngine,
     room,
     localParticipant,

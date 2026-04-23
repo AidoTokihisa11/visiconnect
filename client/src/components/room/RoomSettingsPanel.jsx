@@ -39,6 +39,7 @@ const Row = styled.label`
   color: ${THEME.textDim};
   font-size: 0.88rem;
   margin-bottom: 0.6rem;
+  flex-wrap: wrap;
 
   &:last-child {
     margin-bottom: 0;
@@ -76,6 +77,12 @@ const Select = styled.select`
   border-radius: 8px;
   padding: 0.35rem 0.55rem;
   outline: none;
+  max-width: 180px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex-shrink: 0;
 
   &:focus {
     box-shadow: 0 0 0 3px ${THEME.ring};

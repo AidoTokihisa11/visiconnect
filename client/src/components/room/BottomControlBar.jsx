@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import {
   Mic, MicOff, Video, VideoOff, Phone, Monitor, MonitorOff,
-  MessageSquare, Sparkles, Layout, Activity, Settings2, MoreHorizontal, Circle, PieChart, Users,
+  MessageSquare, Sparkles, Layout, Activity, Settings2, MoreHorizontal, Circle, PieChart,
   Hand, Bot,
 } from 'lucide-react';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
@@ -313,6 +313,7 @@ export const ControlBar = ({
   toggleBlur,
   isAiReady,
   isAIEnhanced,
+  isProcessingAI = false,
   toggleAIVideoEngine,
   onLeave,
   // Notifications
@@ -384,30 +385,33 @@ export const ControlBar = ({
         {/* IA Smart Enhancer Button - Touch target optimisé + Animation */}
         <ButtonGroup>
           <ControlButton
-            disabled={!isAiReady}
+            disabled={!isAiReady || isProcessingAI}
             $active={isAIEnhanced}
             onClick={toggleAIVideoEngine}
-            title={!isAiReady ? "Modèles d'IA en cours de chargement..." : (isAIEnhanced ? "Désactiver l'IA" : "Activer l'IA vidéo")}
+            title={isProcessingAI ? "Transition en cours..." : !isAiReady ? "Modèles d'IA en cours de chargement..." : (isAIEnhanced ? "Désactiver l'IA" : "Activer l'IA vidéo")}
             aria-label={isAIEnhanced ? "Désactiver l'amélioration IA" : "Activer l'amélioration IA"}
             className={isAIEnhanced ? 'ai-button-active' : ''}
             style={{
-              background: isAIEnhanced 
-                ? 'linear-gradient(135deg, #10B981 0%, #059669 50%, #047857 100%)' 
-                : !isAiReady 
-                  ? 'rgba(100, 100, 100, 0.3)' 
-                  : undefined,
-              borderColor: isAIEnhanced ? 'transparent' : undefined,
-              color: isAIEnhanced ? 'white' : !isAiReady ? '#888' : undefined,
+              background: isProcessingAI
+                ? 'rgba(100, 100, 100, 0.4)'
+                : isAIEnhanced 
+                  ? 'linear-gradient(135deg, #10B981 0%, #059669 50%, #047857 100%)' 
+                  : !isAiReady 
+                    ? 'rgba(100, 100, 100, 0.3)' 
+                    : undefined,
+              borderColor: isAIEnhanced && !isProcessingAI ? 'transparent' : undefined,
+              color: isAIEnhanced && !isProcessingAI ? 'white' : (!isAiReady || isProcessingAI) ? '#888' : undefined,
               minWidth: '52px',
               minHeight: '48px',
-              animation: isAIEnhanced ? 'aiPulse 2s ease-in-out infinite' : 'none',
-              boxShadow: isAIEnhanced 
+              animation: isProcessingAI ? 'aiPulse 0.8s ease-in-out infinite' : isAIEnhanced ? 'aiPulse 2s ease-in-out infinite' : 'none',
+              boxShadow: isAIEnhanced && !isProcessingAI
                 ? '0 0 20px rgba(16, 185, 129, 0.5), 0 4px 15px rgba(16, 185, 129, 0.3)' 
                 : undefined,
               transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              cursor: isProcessingAI ? 'wait' : undefined,
             }}
           >
-            <Sparkles size={22} strokeWidth={isAIEnhanced ? 2.5 : 2} />
+            <Sparkles size={22} strokeWidth={(isAIEnhanced && !isProcessingAI) ? 2.5 : 2} />
           </ControlButton>
         </ButtonGroup>
 
@@ -456,10 +460,6 @@ export const ControlBar = ({
             <Hand />
           </ControlButton>
 
-          <ControlButton onClick={() => togglePanel('breakout')} $active={activePanel === 'breakout' && sidePanelOpen} $activeColor={THEME.accent} title="Salles de sous-commission">
-            <Users />
-          </ControlButton>
-
           <ControlButton onClick={() => togglePanel('chat')} $active={activePanel === 'chat' && sidePanelOpen} $activeColor={THEME.accent} title="Chat">
             <MessageSquare />
             {unreadChat > 0 && <NotificationBadge>{unreadChat > 99 ? '99+' : unreadChat}</NotificationBadge>}
@@ -506,10 +506,6 @@ export const ControlBar = ({
             <ControlButton onClick={() => { onRaiseHand?.(); setIsMoreMenuOpen(false); }} $active={isHandRaised} $activeColor="#f59e0b">
               <Hand />
               <span>Main levée</span>
-            </ControlButton>
-            <ControlButton onClick={() => { togglePanel('breakout'); setIsMoreMenuOpen(false); }} $active={activePanel === 'breakout' && sidePanelOpen} $activeColor={THEME.accent}>
-              <Users />
-              <span>Groupes</span>
             </ControlButton>
             <ControlButton onClick={() => { toggleWhiteboard(); setIsMoreMenuOpen(false); }} $active={whiteboardOpen} $activeColor={THEME.accent}>
               <Layout />

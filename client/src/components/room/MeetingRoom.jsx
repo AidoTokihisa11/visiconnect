@@ -155,7 +155,8 @@ const PollPopupButton = styled.button`
 
 // Side Panel Styles — Premium GPU-accelerated transitions
 const SidePanel = styled(motion.div)`
-  width: ${props => props.wide ? '600px' : '400px'};
+  width: ${props => props.wide ? 'min(600px, 45vw)' : 'min(400px, 38vw)'};
+  min-width: 280px;
   background-color: ${THEME.panelBg};
   border-left: 1px solid #cbd5e1;
   display: flex;
@@ -175,6 +176,7 @@ const SidePanel = styled(motion.div)`
 
   @media (max-width: 768px) {
     width: 100%;
+    min-width: unset;
     top: 0;
     bottom: calc(70px + env(safe-area-inset-bottom, 12px));
     height: auto;
@@ -300,6 +302,7 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
     toggleBlur,
     isAiReady,
     isAIEnhanced,
+    isProcessingAI,
     toggleAIVideoEngine,
     tracks,
     devices,
@@ -672,6 +675,7 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
          toggleBlur={toggleBlur}
          isAiReady={isAiReady}
          isAIEnhanced={isAIEnhanced}
+         isProcessingAI={isProcessingAI}
          toggleAIVideoEngine={toggleAIVideoEngine}
          onLeave={onLeave}
          unreadChat={unreadChat}
