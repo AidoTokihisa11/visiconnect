@@ -62,8 +62,9 @@ export class AIVideoProcessor {
     const stream = this.canvas.captureStream(fps);
     this.processedTrack = stream.getVideoTracks()[0];
 
-    // Filtre fixe appliqué une fois : légère amélioration sans clignotement
-    this._aiFilter = 'brightness(1.05) contrast(1.08) saturate(1.10)';
+    // Filtre fixe défini UNE SEULE FOIS ici — jamais réassigné dans la boucle
+    // (réassigner ctx.filter chaque frame force le GPU à recompiler le shader → clignotement)
+    this.ctx.filter = this._aiFilter;
 
     this.processFrame();
     return { track: this.processedTrack };
@@ -105,18 +106,14 @@ export class AIVideoProcessor {
     }
 
     this.frameCount++;
-    
-    // MOBILE: Skip frames pour économiser CPU (traiter 1 frame sur 2)
-    const skipFrame = this.isMobile && (this.frameCount % 2 === 0);
+
+    // MOBILE en surchauffe: sauter 1 frame sur 2 pour réduire CPU
+    // On ne redessine PAS (canvas garde le frame précédent) — filtre jamais modifié
+    const skipDraw = this.thermalGuardActive && this.isMobile && (this.frameCount % 2 === 0);
 
     // --- 2. PIPELINE DE RENDU ---
-    if (this.thermalGuardActive || skipFrame) {
-      // MODE DÉGRADÉ / SKIP : Pass-through simple
-      if (this.ctx.filter !== 'none') this.ctx.filter = 'none';
-      this.ctx.drawImage(this.videoElement, 0, 0, videoWidth, videoHeight);
-    } else {
-      // MODE AI : filtre fixe — pas de recalcul dynamique pour éviter tout clignotement
-      if (this.ctx.filter !== this._aiFilter) this.ctx.filter = this._aiFilter;
+    // ctx.filter est fixé une fois dans init() — on ne le touche plus ici
+    if (!skipDraw) {
       this.ctx.drawImage(this.videoElement, 0, 0, videoWidth, videoHeight);
     }
 
