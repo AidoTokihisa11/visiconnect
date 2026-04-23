@@ -26,13 +26,6 @@ export class AIVideoProcessor {
     this.fpsDrops = 0;
     this.thermalGuardActive = false;
     this.frameCount = 0;
-
-    // --- AI Models ---
-    this.vision = null;
-    this.faceDetector = null;
-    this.faceRect = null;
-    this.modelLoading = false;
-    this.modelLoaded = false;
     
     // --- Adaptive Enhancement v3.0 ---
     this.exposureGain = 1.0;
@@ -81,48 +74,8 @@ export class AIVideoProcessor {
     const stream = this.canvas.captureStream(fps);
     this.processedTrack = stream.getVideoTracks()[0];
 
-    // MOBILE: Délais le chargement IA de 2 secondes pour laisser WebRTC s'établir
-    if (isMobile) {
-      console.log('[AIVideoEngine] Mobile: Mode léger activé, IA différée');
-      setTimeout(() => this.loadAIModels(), 2000);
-    } else {
-      // Desktop: Chargement immédiat
-      this.loadAIModels();
-    }
-
     this.processFrame();
     return { track: this.processedTrack };
-  }
-
-  /**
-   * MediaPipe Task-Vision avec GPU Delegate.
-   */
-  async loadAIModels() {
-    if (this.modelLoading || this.modelLoaded) return;
-    this.modelLoading = true;
-
-    try {
-      const vision = await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/vision_bundle.mjs');
-      const { FaceDetector, FilesetResolver } = vision;
-
-      const filesetResolver = await FilesetResolver.forVisionTasks(
-        "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm"
-      );
-
-      this.faceDetector = await FaceDetector.createFromOptions(filesetResolver, {
-        baseOptions: {
-          modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/latest/blaze_face_short_range.tflite",
-          delegate: "GPU"
-        },
-        runningMode: "VIDEO",
-        minDetectionConfidence: 0.5
-      });
-
-      this.modelLoaded = true;
-      console.log("[AIVideoEngine] Models Loaded (GPU Delegate active)");
-    } catch (e) {
-      console.error("[AIVideoEngine] AI Fallback", e);
-    }
   }
 
   /**
@@ -289,25 +242,14 @@ export class AIVideoProcessor {
       this.ctx.drawImage(this.videoElement, 0, 0, videoWidth, videoHeight);
     } else {
       // MODE AI-AUTONOMOUS
-      
-      // A. Détection Visage (tous les 5 frames)
-      if (this.modelLoaded && this.frameCount % 5 === 0) {
-        const detections = this.faceDetector.detectForVideo(this.videoElement, performance.now()).detections;
-        if (detections && detections.length > 0) {
-          const bb = detections[0].boundingBox;
-          this.faceRect = { x: bb.originX, y: bb.originY, w: bb.width, h: bb.height };
-        } else {
-          this.faceRect = null;
-        }
-      }
 
-      // B. Auto-Relighting Sigmoïde (tous les 10 frames desktop, 20 mobile)
+      // A. Auto-Relighting Sigmoïde (tous les 10 frames desktop, 20 mobile)
       const relightInterval = this.isMobile ? 20 : 10;
       if (this.frameCount % relightInterval === 0) {
         this.computeRelightingSigmoid();
       }
       
-      // C. Analyse Pixelisation + Estimation Bitrate (tous les 30 frames desktop, 60 mobile)
+      // B. Analyse Pixelisation + Estimation Bitrate (tous les 30 frames desktop, 60 mobile)
       const analyzeInterval = this.isMobile ? 60 : 30;
       if (this.frameCount % analyzeInterval === 0) {
         this.analyzePixelation();
@@ -315,22 +257,9 @@ export class AIVideoProcessor {
         this.estimateBitrate();
       }
 
-      // D. Sharpening Adaptatif + Relight
-      // Utilisation de l'intensité calculée dynamiquement
+      // C. Sharpening + Relight sur toute l'image (pas de ROI partiel)
       this.ctx.filter = `brightness(${this.exposureGain.toFixed(2)}) contrast(${this.sharpnessIntensity.toFixed(2)}) saturate(1.1)`;
       this.ctx.drawImage(this.videoElement, 0, 0, videoWidth, videoHeight);
-
-      // E. ROI Face Enhancement (sharpening accru sur le visage uniquement)
-      if (this.faceRect) {
-        // Sharpening visage légèrement plus élevé mais adaptatif
-        const faceSharpness = Math.min(1.20, this.sharpnessIntensity + 0.08);
-        this.ctx.filter = `brightness(${this.exposureGain.toFixed(2)}) contrast(${faceSharpness.toFixed(2)}) saturate(1.15)`;
-        this.ctx.drawImage(
-          this.videoElement, 
-          this.faceRect.x, this.faceRect.y, this.faceRect.w, this.faceRect.h,
-          this.faceRect.x, this.faceRect.y, this.faceRect.w, this.faceRect.h
-        );
-      }
     }
 
     this.rafId = requestAnimationFrame(this.processFrame);
