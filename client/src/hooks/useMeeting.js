@@ -405,9 +405,11 @@ const toggleAIVideoEngine = useCallback(async () => {
       }
 
       if (isAIEnhanced) {
-          // Désactivation: setProcessor(null) fonctionne même si mediaStreamTrack est null
+          // Désactivation: setProcessor(null) — LiveKit appellera destroy() sur le processeur
           await videoTrack.setProcessor(null);
           setIsAIEnhanced(false);
+          // Vider la référence: forcer la création d'une nouvelle instance à la prochaine activation
+          setActiveAiProcessor(null);
       } else {
           // Activation: vérifier que le flux est valide
           if (videoTrack.isMuted || !videoTrack.mediaStreamTrack) {

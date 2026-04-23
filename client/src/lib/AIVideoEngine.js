@@ -52,6 +52,9 @@ export class AIVideoProcessor {
    * Initialise le pipeline vidéo optimisé avec OffscreenCanvas.
    */
   async init({ track }) {
+    // Réinitialiser l'état en cas de réutilisation après destroy
+    this.isDestroyed = false;
+    this.rafId = null;
     this.sourceTrack = track;
     this.videoElement = document.createElement('video');
     this.videoElement.autoplay = true;
