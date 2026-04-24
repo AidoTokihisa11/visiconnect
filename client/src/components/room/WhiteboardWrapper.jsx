@@ -13,17 +13,56 @@ const Wrapper = styled.div`
   }
 `;
 
+const FallbackWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  background: #1a1f2e;
+  color: #94a3b8;
+  font-size: 0.9rem;
+`;
+
+// Catches render errors from tldraw (e.g. license enforcement in production)
+class TldrawErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  componentDidCatch(error) {
+    console.warn('[WhiteboardWrapper] tldraw render error:', error?.message);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <FallbackWrapper>
+          <span>🖊</span>
+          <span>Le tableau blanc n'est pas disponible.</span>
+        </FallbackWrapper>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 // React.memo prevents re-mounts when parent MeetingRoom re-renders
 // (state changes like chat messages, stats, etc. must not unmount Tldraw)
-export const WhiteboardWrapper = memo(({ roomId, userName }) => {
+export const WhiteboardWrapper = memo(({ roomId }) => {
   return (
     <Wrapper>
-      <Tldraw 
-        persistenceKey={`room-${roomId}`} 
-        autoFocus 
-        hideUi={false}
-        licenseKey={import.meta.env.VITE_TLDRAW_LICENSE_KEY}
-      />
+      <TldrawErrorBoundary>
+        <Tldraw
+          persistenceKey={`room-${roomId}`}
+          autoFocus
+          hideUi={false}
+        />
+      </TldrawErrorBoundary>
     </Wrapper>
   );
 }, (prev, next) => prev.roomId === next.roomId);

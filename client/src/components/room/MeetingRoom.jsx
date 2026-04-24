@@ -27,7 +27,6 @@ import { MeetingChat } from './MeetingChat';
 import PollsPanel from './PollsPanel';
 import BreakoutRoomsPanel from './BreakoutRoomsPanel';
 import { useRecording } from '../../hooks/useRecording';
-import { PermissionDeniedModal } from './PermissionDeniedModal';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 
 // Layout Styled Components
@@ -309,8 +308,6 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
     devices,
     selectedDevices,
     controls,
-    permissionError,
-    clearPermissionError,
   } = useMeeting(roomSettings.maxQualityLock);
 
   const { messages, sendMessage } = useChat(roomId, user, null);
@@ -788,11 +785,6 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
         className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white font-medium py-3 px-6 rounded-full shadow-2xl z-[999] animate-bounce hover:bg-blue-700 transition" 
       />
 
-      {/* Modale de permission refusée (micro / caméra) */}
-      <PermissionDeniedModal
-        type={permissionError}
-        onClose={clearPermissionError}
-      />
     </MainContent>
   );
 };
