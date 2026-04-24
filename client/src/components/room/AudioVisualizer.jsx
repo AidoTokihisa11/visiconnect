@@ -1,48 +1,12 @@
 /**
- * AudioVisualizer — Web Audio API VU Meter
- * Shows a real-time audio level bar for the local microphone.
- * Uses the LiveKit localParticipant's audio MediaStreamTrack to avoid
- * requesting a second getUserMedia permission.
+ * useAudioLevel — Web Audio API hook
+ * Returns a 0-1 RMS level from the local microphone track.
+ * Used to drive the mic button glow ring in BottomControlBar.
  */
-import React, { useEffect, useRef, useState } from 'react';
-import styled, { keyframes } from 'styled-components';
-import { ROOM_THEME as THEME } from '../../styles/roomTheme';
+import { useEffect, useRef, useState } from 'react';
 
-const pulse = keyframes`
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
-`;
-
-const Wrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  height: 20px;
-  width: 32px;
-`;
-
-const Bar = styled.div`
-  flex: 1;
-  border-radius: 2px;
-  background: ${({ $active, $level }) =>
-    $active
-      ? $level > 0.7
-        ? '#ef4444'   /* loud — red */
-        : $level > 0.35
-        ? '#f59e0b'   /* mid  — amber */
-        : '#22c55e'   /* low  — green */
-      : 'rgba(255,255,255,0.15)'};
-  transition: height 0.08s ease-out, background 0.15s ease;
-  min-height: 3px;
-`;
-
-/**
- * @param {object} props
- * @param {boolean}  props.isMicEnabled  — whether the mic is on
- * @param {object}   props.localParticipant — LiveKit LocalParticipant (optional)
- */
-export const AudioVisualizer = ({ isMicEnabled, localParticipant }) => {
-  const [levels, setLevels] = useState([0, 0, 0, 0]);
+export const useAudioLevel = ({ isMicEnabled, localParticipant }) => {
+  const [level, setLevel] = useState(0);
   const animRef = useRef(null);
   const analyserRef = useRef(null);
   const sourceRef = useRef(null);
@@ -50,7 +14,7 @@ export const AudioVisualizer = ({ isMicEnabled, localParticipant }) => {
 
   useEffect(() => {
     if (!isMicEnabled) {
-      setLevels([0, 0, 0, 0]);
+      setLevel(0);
       return;
     }
 
@@ -58,27 +22,23 @@ export const AudioVisualizer = ({ isMicEnabled, localParticipant }) => {
 
     const start = async () => {
       try {
-        // Prefer the LiveKit audio track's MediaStreamTrack to avoid double getUserMedia
         let stream;
         if (localParticipant) {
-          const audioPubs = Array.from(localParticipant.audioTrackPublications?.values?.() || []);
-          const localAudioPub = audioPubs.find(p => p.track?.mediaStreamTrack);
-          if (localAudioPub) {
-            stream = new MediaStream([localAudioPub.track.mediaStreamTrack]);
-          }
+          const audioPubs = Array.from(
+            localParticipant.audioTrackPublications?.values?.() || []
+          );
+          const pub = audioPubs.find(p => p.track?.mediaStreamTrack);
+          if (pub) stream = new MediaStream([pub.track.mediaStreamTrack]);
         }
-
-        // Fallback: request mic directly (no additional permission if already granted)
         if (!stream) {
           stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
         }
-
         if (cancelled) return;
 
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
         const analyser = ctx.createAnalyser();
-        analyser.fftSize = 64;
-        analyser.smoothingTimeConstant = 0.75;
+        analyser.fftSize = 256;
+        analyser.smoothingTimeConstant = 0.8;
 
         const source = ctx.createMediaStreamSource(stream);
         source.connect(analyser);
@@ -92,22 +52,17 @@ export const AudioVisualizer = ({ isMicEnabled, localParticipant }) => {
         const tick = () => {
           if (cancelled) return;
           analyser.getByteFrequencyData(data);
-
-          // Map 32 frequency bins onto 4 visual bars
-          const chunkSize = Math.floor(data.length / 4);
-          const newLevels = Array.from({ length: 4 }, (_, i) => {
-            const slice = data.slice(i * chunkSize, (i + 1) * chunkSize);
-            const avg = slice.reduce((s, v) => s + v, 0) / slice.length;
-            return avg / 255; // normalise 0-1
-          });
-
-          setLevels(newLevels);
+          // RMS over all bins → single 0-1 value
+          const rms = Math.sqrt(
+            data.reduce((sum, v) => sum + v * v, 0) / data.length
+          ) / 128;
+          setLevel(Math.min(1, rms));
           animRef.current = requestAnimationFrame(tick);
         };
 
         animRef.current = requestAnimationFrame(tick);
-      } catch (err) {
-        console.warn('[AudioVisualizer] Could not start analyser:', err);
+      } catch {
+        // Analyser unavailable — level stays 0, no crash
       }
     };
 
@@ -124,16 +79,5 @@ export const AudioVisualizer = ({ isMicEnabled, localParticipant }) => {
     };
   }, [isMicEnabled, localParticipant]);
 
-  return (
-    <Wrapper title="Niveau micro">
-      {levels.map((lvl, i) => (
-        <Bar
-          key={i}
-          $active={isMicEnabled}
-          $level={lvl}
-          style={{ height: isMicEnabled ? `${Math.max(20, lvl * 100)}%` : '20%' }}
-        />
-      ))}
-    </Wrapper>
-  );
+  return level;
 };

@@ -308,6 +308,8 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
     devices,
     selectedDevices,
     controls,
+    deviceError,
+    clearDeviceError,
   } = useMeeting(roomSettings.maxQualityLock);
 
   const { messages, sendMessage } = useChat(roomId, user, null);
@@ -362,6 +364,16 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
   const { isRecording, toggleRecording, recordingError, clearRecordingError } = useRecording();
 
   // Show a toast when recording permission is denied
+  useEffect(() => {
+    if (!deviceError) return;
+    const msg = deviceError === 'mic_denied'
+      ? 'Micro bloqué — cliquez sur 🔒 dans la barre d’adresse pour autoriser l’accès.'
+      : 'Caméra bloquée — cliquez sur 🔒 dans la barre d’adresse pour autoriser l’accès.';
+    setToast({ message: msg, type: 'poll' });
+    const t = setTimeout(() => { setToast(null); clearDeviceError(); }, 5000);
+    return () => clearTimeout(t);
+  }, [deviceError, clearDeviceError]);
+
   useEffect(() => {
     if (!recordingError) return;
     const messages = {

@@ -313,18 +313,33 @@ export const useMeeting = (maxQualityLock = true) => {
     { onlySubscribed: true } // Default to true to prevent sending null tracks to VideoTrack
   );
 
+  const [deviceError, setDeviceError] = useState(null);
+  const clearDeviceError = useCallback(() => setDeviceError(null), []);
+
   const toggleMic = useCallback(async () => {
     if (!localParticipant) return;
     const newState = !isMicrophoneEnabled;
-    await localParticipant.setMicrophoneEnabled(newState);
-    setIsMicManualMute(!newState);
+    try {
+      await localParticipant.setMicrophoneEnabled(newState);
+      setIsMicManualMute(!newState);
+    } catch (err) {
+      if (err?.name === 'NotAllowedError' || err?.name === 'PermissionDeniedError') {
+        setDeviceError('mic_denied');
+      }
+    }
   }, [localParticipant, isMicrophoneEnabled]);
 
   const toggleCamera = useCallback(async () => {
     if (!localParticipant) return;
     const newState = !isCameraEnabled;
-    await localParticipant.setCameraEnabled(newState);
-    setIsCameraManualMute(!newState);
+    try {
+      await localParticipant.setCameraEnabled(newState);
+      setIsCameraManualMute(!newState);
+    } catch (err) {
+      if (err?.name === 'NotAllowedError' || err?.name === 'PermissionDeniedError') {
+        setDeviceError('cam_denied');
+      }
+    }
   }, [localParticipant, isCameraEnabled]);
   const toggleScreenShare = useCallback(async () => {
     if (localParticipant) {
@@ -525,6 +540,8 @@ const toggleAIVideoEngine = useCallback(async () => {
     connectionState: room?.state,
     devices,
     selectedDevices,
+    deviceError,
+    clearDeviceError,
     controls: {
       toggleMic,
       toggleCamera,

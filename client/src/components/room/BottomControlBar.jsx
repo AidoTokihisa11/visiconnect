@@ -5,7 +5,7 @@ import {
   MessageSquare, Sparkles, Layout, Activity, Settings2, MoreHorizontal, Circle, PieChart,
   Hand, Bot,
 } from 'lucide-react';
-import { AudioVisualizer } from './AudioVisualizer';
+import { useAudioLevel } from './AudioVisualizer';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 
 const BottomBar = styled.div`
@@ -136,6 +136,17 @@ const NotificationBadge = styled.span`
     font-size: 9px;
     border: 2px solid rgba(25, 25, 30, 0.98);
   }
+`;
+
+// Mic button glow ring — scales with audio level
+const MicRing = styled.div`
+  position: relative;
+  border-radius: 12px;
+  transition: box-shadow 0.08s ease-out;
+  box-shadow: ${({ $level, $active }) =>
+    $active && $level > 0.04
+      ? `0 0 0 ${Math.round(2 + $level * 12)}px rgba(59,130,246,${(0.25 + $level * 0.55).toFixed(2)})`
+      : 'none'};
 `;
 
 const EndCallButton = styled(ControlButton)`
@@ -328,6 +339,9 @@ export const ControlBar = ({
   const [showBlurSlider, setShowBlurSlider] = useState(false);
   const [showBlurToast, setShowBlurToast] = useState(false);
 
+  // Audio level for mic glow ring
+  const micLevel = useAudioLevel({ isMicEnabled: isMicrophoneEnabled, localParticipant });
+
   // Auto-close mobile menu when panel opens
   useEffect(() => {
     if (sidePanelOpen) {
@@ -419,14 +433,11 @@ export const ControlBar = ({
 
 
 
-        <ControlButton className="focus-visible-ring" onClick={controls.toggleMic} $active={isMicrophoneEnabled} $activeColor={THEME.accent} title={isMicrophoneEnabled ? "Désactiver le micro" : "Activer le micro"} aria-label={isMicrophoneEnabled ? "Désactiver le micro" : "Activer le micro"}>
-          {isMicrophoneEnabled ? <Mic /> : <MicOff color={THEME.danger} />}
-        </ControlButton>
-
-        {/* VU Meter — hidden on mobile to save space */}
-        <div style={{ display: 'flex', alignItems: 'center' }} className="desktop-only-block">
-          <AudioVisualizer isMicEnabled={isMicrophoneEnabled} localParticipant={localParticipant} />
-        </div>
+        <MicRing $level={micLevel} $active={isMicrophoneEnabled}>
+          <ControlButton className="focus-visible-ring" onClick={controls.toggleMic} $active={isMicrophoneEnabled} $activeColor={THEME.accent} title={isMicrophoneEnabled ? "Désactiver le micro" : "Activer le micro"} aria-label={isMicrophoneEnabled ? "Désactiver le micro" : "Activer le micro"}>
+            {isMicrophoneEnabled ? <Mic /> : <MicOff color={THEME.danger} />}
+          </ControlButton>
+        </MicRing>
 
         {/* Desktop-only Quick Access */}
         <DesktopOnlyWrapper>
