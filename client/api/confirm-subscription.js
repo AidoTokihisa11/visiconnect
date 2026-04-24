@@ -11,9 +11,6 @@ module.exports = async function handler(req, res) {
   if (!process.env.STRIPE_SECRET_KEY) {
     return res.status(500).json({ error: 'STRIPE_SECRET_KEY non configurée.' });
   }
-  if (!process.env.CLERK_SECRET_KEY) {
-    return res.status(500).json({ error: 'CLERK_SECRET_KEY non configurée.' });
-  }
 
   const { sessionId } = req.body || {};
   if (!sessionId) return res.status(400).json({ error: 'sessionId requis.' });
@@ -28,38 +25,23 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: 'Paiement non confirmé.' });
     }
 
-    const { userId, plan, billingCycle } = session.metadata || {};
-    if (!userId || !plan) {
-      return res.status(400).json({ error: 'Metadata Stripe incomplètes (userId ou plan manquant).' });
+    const { plan, billingCycle } = session.metadata || {};
+    if (!plan) {
+      return res.status(400).json({ error: 'Metadata Stripe incomplètes (plan manquant).' });
     }
 
-    // Update Clerk user public_metadata via Clerk Management REST API
-    const clerkRes = await fetch(`https://api.clerk.com/v1/users/${userId}`, {
-      method: 'PATCH',
-      headers: {
-        'Authorization': `Bearer ${process.env.CLERK_SECRET_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        public_metadata: {
-          plan,
-          billingCycle: billingCycle || 'monthly',
-          subscribedAt: new Date().toISOString(),
-          stripeSessionId: sessionId,
-        },
-      }),
+    // Return verified plan to the client — the client updates its own Clerk metadata
+    // using user.update() from the Clerk frontend SDK (no CLERK_SECRET_KEY needed)
+    return res.status(200).json({
+      success: true,
+      plan,
+      billingCycle: billingCycle || 'monthly',
+      subscribedAt: new Date().toISOString(),
     });
-
-    if (!clerkRes.ok) {
-      const clerkErr = await clerkRes.json();
-      console.error('Clerk update error:', clerkErr);
-      return res.status(500).json({ error: 'Erreur mise à jour profil.', details: clerkErr });
-    }
-
-    return res.status(200).json({ success: true, plan });
 
   } catch (err) {
     console.error('confirm-subscription error:', err.message);
     return res.status(500).json({ error: err.message });
   }
 };
+

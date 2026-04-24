@@ -69,9 +69,19 @@ const SuccessPage = () => {
         });
         const data = await res.json();
         if (data.success) {
+          // Update Clerk metadata client-side — no CLERK_SECRET_KEY needed
+          if (user) {
+            await user.update({
+              unsafeMetadata: {
+                ...(user.unsafeMetadata || {}),
+                plan: data.plan,
+                billingCycle: data.billingCycle || 'monthly',
+                subscribedAt: data.subscribedAt || new Date().toISOString(),
+              },
+            });
+            await user.reload();
+          }
           setConfirmedPlan(data.plan);
-          // Reload Clerk user so publicMetadata is refreshed
-          if (user) await user.reload();
         } else {
           setError(data.error || 'Erreur lors de la confirmation.');
         }

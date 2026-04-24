@@ -354,20 +354,19 @@ const AccountPageSimple = () => {
       if (!window.confirm('Rétrograder vers le plan Starter ? Vous perdrez l\'accès aux fonctionnalités Pro/Business à la fin de votre période de facturation.')) return;
       setPlanSwitching(true);
       try {
-        const res = await fetch('/api/downgrade-subscription', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId: user?.id }),
+        await user.update({
+          unsafeMetadata: {
+            ...(user.unsafeMetadata || {}),
+            plan: 'starter',
+            billingCycle: null,
+            subscribedAt: null,
+            downgradedAt: new Date().toISOString(),
+          },
         });
-        const data = await res.json();
-        if (data.success) {
-          await user.reload();
-          showNotification('Votre abonnement a été rétrogradé vers le plan Starter.');
-        } else {
-          showNotification(data.error || 'Erreur lors de la rétrogradation.', 'error');
-        }
+        await user.reload();
+        showNotification('Votre abonnement a été rétrogradé vers le plan Starter.');
       } catch (err) {
-        showNotification('Erreur réseau lors de la rétrogradation.', 'error');
+        showNotification('Erreur lors de la rétrogradation.', 'error');
       } finally {
         setPlanSwitching(false);
       }
