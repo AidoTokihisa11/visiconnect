@@ -6,6 +6,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import { useTranslation } from '../hooks/useTranslation';
+import { useUser } from '@clerk/react';
 import CallToAction from '../components/CallToAction';
 
 const stripePromise = loadStripe('pk_test_51T5EwZ8YZRxeQjiW412gOFLsaZ4fn6ArvMjf74OphD9WhovPuRDde4qOGwrpdwlnFQIt1apdfwnWNfjbt6n0CkkB00p9k8z1MO');
@@ -354,6 +355,7 @@ const FAQList = [
 
 const PricingPage = () => {
   const { t } = useTranslation();
+  const { user } = useUser();
   
   const [openFAQ, setOpenFAQ] = useState(null);
 
@@ -377,7 +379,7 @@ const PricingPage = () => {
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan, billingCycle }),
+        body: JSON.stringify({ plan, billingCycle, userId: user?.id || '' }),
       });
       
       const session = await response.json();

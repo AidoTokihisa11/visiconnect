@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
-import { CheckCircle } from 'lucide-react';
+import { useUser } from '@clerk/react';
+import { CheckCircle, Loader2 } from 'lucide-react';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -50,24 +51,76 @@ const SuccessPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { t } = useTranslation();
+  const { user } = useUser();
   const sessionId = searchParams.get('session_id');
+  const [confirming, setConfirming] = useState(!!sessionId);
+  const [confirmedPlan, setConfirmedPlan] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (sessionId) {
-      // Here you could make a backend call to verify the payment
-    }
+    if (!sessionId) return;
+
+    const confirmSubscription = async () => {
+      try {
+        const res = await fetch('/api/confirm-subscription', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionId }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          setConfirmedPlan(data.plan);
+          // Reload Clerk user so publicMetadata is refreshed
+          if (user) await user.reload();
+        } else {
+          setError(data.error || 'Erreur lors de la confirmation.');
+        }
+      } catch (err) {
+        setError('Erreur réseau lors de la confirmation.');
+      } finally {
+        setConfirming(false);
+      }
+    };
+
+    confirmSubscription();
   }, [sessionId]);
+
+  // Auto-redirect to account page after 3s once confirmed
+  useEffect(() => {
+    if (!confirmedPlan) return;
+    const timer = setTimeout(() => navigate('/account'), 3000);
+    return () => clearTimeout(timer);
+  }, [confirmedPlan, navigate]);
+
+  const planLabels = { starter: 'Starter', pro: 'Pro', business: 'Business' };
 
   return (
     <Container>
-      <CheckCircle size={80} color="#10b981" />
-      <Title>{t('success.title')}</Title>
-      <Subtitle>
-        {t('success.description')}
-      </Subtitle>
-      <Button onClick={() => navigate('/dashboard')}>
-        {t('success.button')}
-      </Button>
+      {confirming ? (
+        <>
+          <Loader2 size={80} color="#3b82f6" style={{ animation: 'spin 1s linear infinite' }} />
+          <Title style={{ color: '#3b82f6' }}>Activation en cours…</Title>
+          <Subtitle>Nous confirmons votre abonnement, veuillez patienter.</Subtitle>
+        </>
+      ) : error ? (
+        <>
+          <CheckCircle size={80} color="#10b981" />
+          <Title>{t('success.title')}</Title>
+          <Subtitle>{t('success.description')}</Subtitle>
+          <Button onClick={() => navigate('/account')}>{t('success.button')}</Button>
+        </>
+      ) : (
+        <>
+          <CheckCircle size={80} color="#10b981" />
+          <Title>{t('success.title')}</Title>
+          <Subtitle>
+            {confirmedPlan
+              ? `Votre abonnement ${planLabels[confirmedPlan] || confirmedPlan} est maintenant actif. Redirection vers votre profil…`
+              : t('success.description')}
+          </Subtitle>
+          <Button onClick={() => navigate('/account')}>Voir mon profil</Button>
+        </>
+      )}
     </Container>
   );
 };

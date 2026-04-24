@@ -330,8 +330,53 @@ const AccountPageSimple = () => {
       business:['Jusqu\'à 200 participants', 'Durée illimitée', 'Stockage illimité', 'SSO & Admin avancé', 'Transcriptions illimitées', 'Support téléphonique dédié'],
     };
 
+    const [planSwitching, setPlanSwitching] = React.useState(false);
+
+    const handleUpgrade = async (targetPlan) => {
+      setPlanSwitching(true);
+      try {
+        const billingCycle = 'monthly';
+        const res = await fetch('/api/create-checkout-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ plan: targetPlan, billingCycle, userId: user?.id }),
+        });
+        const session = await res.json();
+        if (session.error) { showNotification(session.error, 'error'); return; }
+        if (session.url) window.location.href = session.url;
+      } catch (err) {
+        showNotification('Erreur lors de la redirection vers le paiement.', 'error');
+      } finally {
+        setPlanSwitching(false);
+      }
+    };
+
+    const handleDowngrade = async () => {
+      if (!window.confirm('Rétrograder vers le plan Starter ? Vous perdrez l\'accès aux fonctionnalités Pro/Business à la fin de votre période de facturation.')) return;
+      setPlanSwitching(true);
+      try {
+        const res = await fetch('/api/downgrade-subscription', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: user?.id }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          await user.reload();
+          showNotification('Votre abonnement a été rétrogradé vers le plan Starter.');
+        } else {
+          showNotification(data.error || 'Erreur lors de la rétrogradation.', 'error');
+        }
+      } catch (err) {
+        showNotification('Erreur réseau lors de la rétrogradation.', 'error');
+      } finally {
+        setPlanSwitching(false);
+      }
+    };
+
     return (
       <div style={{ padding: '1.5rem 0' }}>
+        {/* Current plan card */}
         <div style={{
           background: colors.bg,
           border: `2px solid ${colors.border}`,
@@ -351,36 +396,86 @@ const AccountPageSimple = () => {
               {currentPlan.priceMonthly === 0 ? 'Gratuit' : `€${currentPlan.priceMonthly}/mois`}
             </div>
           </div>
-          <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 0', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             {(featuresByPlan[currentPlanId] || []).map((feat, i) => (
               <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: '#334155' }}>
                 <CheckCircle size={16} color={colors.badge} /> {feat}
               </li>
             ))}
           </ul>
-          {currentPlanId !== 'business' && (
-            <a href="/pricing" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: colors.badge, color: 'white', textDecoration: 'none', padding: '0.65rem 1.25rem', borderRadius: '10px', fontWeight: '600', fontSize: '0.9rem' }}>
-              <Star size={16} /> Passer au plan supérieur
-            </a>
-          )}
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem' }}>
-          {Object.values(PLANS).map(plan => (
-            <div key={plan.id} style={{ background: plan.id === currentPlanId ? colors.bg : '#f8fafc', border: `1px solid ${plan.id === currentPlanId ? colors.border : '#e2e8f0'}`, borderRadius: '12px', padding: '1rem', textAlign: 'center', position: 'relative' }}>
-              {plan.id === currentPlanId && (
-                <div style={{ position: 'absolute', top: '-10px', left: '50%', transform: 'translateX(-50%)', background: colors.badge, color: 'white', fontSize: '0.7rem', fontWeight: '700', padding: '0.2rem 0.6rem', borderRadius: '999px', whiteSpace: 'nowrap' }}>Actuel</div>
-              )}
-              <div style={{ fontWeight: '800', fontSize: '1rem', marginBottom: '0.25rem', color: '#0f172a' }}>{plan.name}</div>
-              <div style={{ fontSize: '1.25rem', fontWeight: '700', color: '#2563eb' }}>
-                {plan.priceMonthly === 0 ? '€0' : `€${plan.priceMonthly}`}
-                <span style={{ fontSize: '0.75rem', fontWeight: '500', color: '#64748b' }}>/mois</span>
+
+        {/* Plan selection grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem', marginBottom: '1.25rem' }}>
+          {Object.values(PLANS).map(plan => {
+            const isCurrentPlan = plan.id === currentPlanId;
+            const planColor = tierColors[plan.id] || tierColors.starter;
+            const isUpgrade = plan.priceMonthly > currentPlan.priceMonthly;
+            const isDowngrade = plan.priceMonthly < currentPlan.priceMonthly && plan.id !== 'starter';
+            return (
+              <div key={plan.id} style={{
+                background: isCurrentPlan ? planColor.bg : '#f8fafc',
+                border: `1px solid ${isCurrentPlan ? planColor.border : '#e2e8f0'}`,
+                borderRadius: '12px',
+                padding: '1rem',
+                textAlign: 'center',
+                position: 'relative',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.5rem',
+              }}>
+                {isCurrentPlan && (
+                  <div style={{ position: 'absolute', top: '-10px', left: '50%', transform: 'translateX(-50%)', background: planColor.badge, color: 'white', fontSize: '0.7rem', fontWeight: '700', padding: '0.2rem 0.6rem', borderRadius: '999px', whiteSpace: 'nowrap' }}>Actuel</div>
+                )}
+                <div style={{ fontWeight: '800', fontSize: '1rem', color: '#0f172a' }}>{plan.name}</div>
+                <div style={{ fontSize: '1.25rem', fontWeight: '700', color: '#2563eb' }}>
+                  {plan.priceMonthly === 0 ? '€0' : `€${plan.priceMonthly}`}
+                  <span style={{ fontSize: '0.75rem', fontWeight: '500', color: '#64748b' }}>/mois</span>
+                </div>
+                {!isCurrentPlan && (
+                  <button
+                    disabled={planSwitching}
+                    onClick={() => isUpgrade || isDowngrade ? handleUpgrade(plan.id) : null}
+                    style={{
+                      marginTop: '0.25rem',
+                      padding: '0.4rem 0.75rem',
+                      background: isUpgrade ? planColor.badge : '#e2e8f0',
+                      color: isUpgrade ? 'white' : '#475569',
+                      border: 'none',
+                      borderRadius: '8px',
+                      fontWeight: '600',
+                      fontSize: '0.8rem',
+                      cursor: planSwitching ? 'not-allowed' : 'pointer',
+                      opacity: planSwitching ? 0.7 : 1,
+                    }}
+                  >
+                    {planSwitching ? '…' : isUpgrade ? 'Passer à ce plan' : 'Choisir'}
+                  </button>
+                )}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
-        <p style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '1rem', textAlign: 'center' }}>
-          Gérez votre facturation depuis votre tableau de bord Stripe.
-        </p>
+
+        {/* Downgrade to starter */}
+        {currentPlanId !== 'starter' && (
+          <div style={{ textAlign: 'center' }}>
+            <button
+              disabled={planSwitching}
+              onClick={handleDowngrade}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#94a3b8',
+                fontSize: '0.82rem',
+                cursor: planSwitching ? 'not-allowed' : 'pointer',
+                textDecoration: 'underline',
+              }}
+            >
+              Rétrograder vers le plan Starter (gratuit)
+            </button>
+          </div>
+        )}
       </div>
     );
   };

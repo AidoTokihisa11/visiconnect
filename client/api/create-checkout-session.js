@@ -23,7 +23,7 @@ module.exports = async function handler(req, res) {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY.trim());
 
   try {
-    const { plan, billingCycle } = req.body || {};
+    const { plan, billingCycle, userId } = req.body || {};
 
     // Starter is free — skip Stripe, activate directly
     if (plan === 'starter') {
@@ -69,7 +69,12 @@ module.exports = async function handler(req, res) {
         },
       ],
       mode: 'subscription',
-      success_url: `${origin}/success.html?session_id={CHECKOUT_SESSION_ID}`,
+      metadata: {
+        userId: userId || '',
+        plan: plan,
+        billingCycle: billingCycle || 'monthly',
+      },
+      success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/pricing`,
     });
 

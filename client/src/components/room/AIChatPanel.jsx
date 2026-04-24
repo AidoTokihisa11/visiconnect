@@ -71,9 +71,14 @@ const Input = styled.input`
   border: 1px solid ${THEME.border};
   border-radius: 9999px;
   padding: 0.75rem 1rem;
+  background-color: ${THEME.bg};
   color: ${THEME.text};
   outline: none;
   font-size: 0.9rem;
+
+  &::placeholder {
+    color: ${THEME.textDim};
+  }
 
   &:focus {
     border-color: ${THEME.accent};
