@@ -27,6 +27,7 @@ import { MeetingChat } from './MeetingChat';
 import PollsPanel from './PollsPanel';
 import BreakoutRoomsPanel from './BreakoutRoomsPanel';
 import { useRecording } from '../../hooks/useRecording';
+import { PermissionDeniedModal } from './PermissionDeniedModal';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 
 // Layout Styled Components
@@ -308,6 +309,8 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
     devices,
     selectedDevices,
     controls,
+    permissionError,
+    clearPermissionError,
   } = useMeeting(roomSettings.maxQualityLock);
 
   const { messages, sendMessage } = useChat(roomId, user, null);
@@ -359,7 +362,19 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
   // Query des sondages pour les notifications
   const polls = useQuery(api.polls.getPolls, originalRoomId ? { meetingId: originalRoomId } : "skip") || [];
 
-  const { isRecording, toggleRecording } = useRecording();
+  const { isRecording, toggleRecording, recordingError, clearRecordingError } = useRecording();
+
+  // Show a toast when recording permission is denied
+  useEffect(() => {
+    if (!recordingError) return;
+    const messages = {
+      permission_denied: 'Partage d’écran refusé. Vérifiez les permissions du navigateur.',
+      no_device: 'Aucun périphérique trouvé pour l’enregistrement.',
+      unknown: 'Erreur lors du démarrage de l’enregistrement.',
+    };
+    setToast({ message: messages[recordingError] || messages.unknown, type: 'poll' });
+    setTimeout(() => { setToast(null); clearRecordingError(); }, 4000);
+  }, [recordingError, clearRecordingError]);
 
   useEffect(() => {
     localStorage.setItem('visiconnect_room_settings', JSON.stringify(roomSettings));
@@ -771,6 +786,12 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
       <StartAudio 
         label="Démarrer l'audio" 
         className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white font-medium py-3 px-6 rounded-full shadow-2xl z-[999] animate-bounce hover:bg-blue-700 transition" 
+      />
+
+      {/* Modale de permission refusée (micro / caméra) */}
+      <PermissionDeniedModal
+        type={permissionError}
+        onClose={clearPermissionError}
       />
     </MainContent>
   );

@@ -3,10 +3,14 @@ import RecordRTC from 'recordrtc';
 
 export const useRecording = () => {
   const [isRecording, setIsRecording] = useState(false);
+  const [recordingError, setRecordingError] = useState(null);
   const recorderRef = useRef(null);
   const streamRef = useRef(null);
 
+  const clearRecordingError = useCallback(() => setRecordingError(null), []);
+
   const startRecording = useCallback(async () => {
+    setRecordingError(null);
     try {
       // Capture both screen and audio
       const screenStream = await navigator.mediaDevices.getDisplayMedia({
@@ -41,10 +45,17 @@ export const useRecording = () => {
         stopRecording();
       };
     } catch (error) {
-      console.error('Erreur lors du démarrage de l\'enregistrement:', error);
       setIsRecording(false);
+      if (error?.name === 'NotAllowedError' || error?.name === 'PermissionDeniedError') {
+        setRecordingError('permission_denied');
+      } else if (error?.name === 'NotFoundError') {
+        setRecordingError('no_device');
+      } else {
+        setRecordingError('unknown');
+        console.error('Erreur lors du démarrage de l\'enregistrement:', error);
+      }
     }
-  }, []);
+  }, []);;
 
   const stopRecording = useCallback(() => {
     if (recorderRef.current) {
@@ -87,6 +98,8 @@ export const useRecording = () => {
 
   return {
     isRecording,
+    recordingError,
+    clearRecordingError,
     startRecording,
     stopRecording,
     toggleRecording

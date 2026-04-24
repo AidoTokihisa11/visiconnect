@@ -313,33 +313,70 @@ export const useMeeting = (maxQualityLock = true) => {
     { onlySubscribed: true } // Default to true to prevent sending null tracks to VideoTrack
   );
 
+  // Permission denied state: null | 'microphone' | 'camera'
+  const [permissionError, setPermissionError] = useState(null);
+
+  // Helper: pre-check a permission before calling LiveKit APIs.
+  // Returns true when it is safe to proceed.
+  const checkPermission = useCallback(async (name) => {
+    if (!navigator.permissions?.query) return true; // API not available — let LiveKit handle it
+    try {
+      const result = await navigator.permissions.query({ name });
+      if (result.state === 'denied') {
+        setPermissionError(name === 'microphone' ? 'microphone' : 'camera');
+        return false;
+      }
+    } catch {
+      // Some browsers (e.g. Firefox on 'camera') throw on unknown permission names — fall through
+    }
+    return true;
+  }, []);
+
+  const clearPermissionError = useCallback(() => setPermissionError(null), []);
+
   const toggleMic = useCallback(async () => {
     if (!localParticipant) return;
 
-    try {
-      const newState = !isMicrophoneEnabled;
-      await localParticipant.setMicrophoneEnabled(newState);
-      // Privacy Lock: Met à jour le verrou d'intention
-      setIsMicManualMute(!newState);
-    } catch (err) {
-      console.error('Erreur lors de l’activation du micro:', err);
-      alert('Impossible d’accéder au microphone. Veuillez vérifier vos permissions.');
+    const enabling = !isMicrophoneEnabled;
+    if (enabling) {
+      const allowed = await checkPermission('microphone');
+      if (!allowed) return;
     }
-  }, [localParticipant, isMicrophoneEnabled]);
+
+    try {
+      await localParticipant.setMicrophoneEnabled(enabling);
+      // Privacy Lock: Met à jour le verrou d'intention
+      setIsMicManualMute(!enabling);
+    } catch (err) {
+      if (err?.name === 'NotAllowedError' || err?.name === 'PermissionDeniedError') {
+        setPermissionError('microphone');
+      } else {
+        console.error('Erreur lors de l’activation du micro:', err);
+      }
+    }
+  }, [localParticipant, isMicrophoneEnabled, checkPermission]);
 
   const toggleCamera = useCallback(async () => {
     if (!localParticipant) return;
 
-    try {
-      const newState = !isCameraEnabled;
-      await localParticipant.setCameraEnabled(newState);
-      // Privacy Lock: Met à jour le verrou d'intention
-      setIsCameraManualMute(!newState);
-    } catch (err) {
-      console.error('Erreur lors de l’activation de la caméra:', err);
-      alert('Impossible d’accéder à la caméra. Veuillez vérifier vos permissions.');
+    const enabling = !isCameraEnabled;
+    if (enabling) {
+      const allowed = await checkPermission('camera');
+      if (!allowed) return;
     }
-  }, [localParticipant, isCameraEnabled]);
+
+    try {
+      await localParticipant.setCameraEnabled(enabling);
+      // Privacy Lock: Met à jour le verrou d'intention
+      setIsCameraManualMute(!enabling);
+    } catch (err) {
+      if (err?.name === 'NotAllowedError' || err?.name === 'PermissionDeniedError') {
+        setPermissionError('camera');
+      } else {
+        console.error('Erreur lors de l’activation de la caméra:', err);
+      }
+    }
+  }, [localParticipant, isCameraEnabled, checkPermission]);
   const toggleScreenShare = useCallback(async () => {
     if (localParticipant) {
       await localParticipant.setScreenShareEnabled(!isScreenShareEnabled, {
@@ -531,7 +568,7 @@ const toggleAIVideoEngine = useCallback(async () => {
     isMicrophoneEnabled,
     isScreenShareEnabled,
     isBlurEnabled,
-      blurRadius,
+    blurRadius,
     toggleBlur,
     remoteParticipants,
     tracks,
@@ -539,6 +576,8 @@ const toggleAIVideoEngine = useCallback(async () => {
     connectionState: room?.state,
     devices,
     selectedDevices,
+    permissionError,
+    clearPermissionError,
     controls: {
       toggleMic,
       toggleCamera,
