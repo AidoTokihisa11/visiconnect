@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { SlidersHorizontal, Sparkles, Camera, Palette, Mic, Volume2, RefreshCw } from 'lucide-react';
+import { SlidersHorizontal, Sparkles, Camera, Palette, Mic, Volume2, RefreshCw, PlayCircle } from 'lucide-react';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 
 const Wrapper = styled.div`
@@ -113,6 +113,40 @@ const ActionButton = styled.button`
 `;
 
 export const RoomSettingsPanel = ({ settings, updateSetting, devices, selectedDevices, controls }) => {
+  const [isTesting, setIsTesting] = useState(false);
+
+  const playSpeakerTest = () => {
+    if (isTesting) return;
+    setIsTesting(true);
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const gainNode = ctx.createGain();
+      gainNode.gain.setValueAtTime(0.35, ctx.currentTime);
+      gainNode.connect(ctx.destination);
+
+      // Simple rising tone: 440 Hz → 880 Hz over 0.6s
+      const osc = ctx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(440, ctx.currentTime);
+      osc.frequency.linearRampToValueAtTime(880, ctx.currentTime + 0.4);
+      osc.connect(gainNode);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.6);
+
+      // Fade out at the end
+      gainNode.gain.setValueAtTime(0.35, ctx.currentTime + 0.4);
+      gainNode.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.6);
+
+      setTimeout(() => {
+        ctx.close();
+        setIsTesting(false);
+      }, 700);
+    } catch (e) {
+      console.error('[SpeakerTest] Web Audio API error:', e);
+      setIsTesting(false);
+    }
+  };
+
   return (
     <Wrapper>
       <Section>
@@ -161,6 +195,15 @@ export const RoomSettingsPanel = ({ settings, updateSetting, devices, selectedDe
 
         <ActionButton type="button" onClick={() => controls?.refreshDevices?.()}>
           <RefreshCw size={14} /> Rafraichir les peripheriques
+        </ActionButton>
+
+        <ActionButton
+          type="button"
+          onClick={playSpeakerTest}
+          disabled={isTesting}
+          style={{ marginTop: '0.5rem', opacity: isTesting ? 0.6 : 1, cursor: isTesting ? 'wait' : 'pointer' }}
+        >
+          <PlayCircle size={14} /> {isTesting ? 'Lecture...' : 'Tester les haut-parleurs'}
         </ActionButton>
       </Section>
 

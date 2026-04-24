@@ -1,6 +1,6 @@
 import { AIEngineManager } from '../lib/AIEngineManager';
 import { AIVideoProcessor } from '../lib/AIVideoEngine';
-import { setupAntiFreezeListeners } from './LiveKitEngine';
+import { setupAntiFreezeListeners, setupVisibilityProtection } from './LiveKitEngine';
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { 
   useRoomContext, 
@@ -291,6 +291,8 @@ export const useMeeting = (maxQualityLock = true) => {
 
   useEffect(() => {
     setupAntiFreezeListeners(room);
+    const cleanupVisibility = setupVisibilityProtection(room);
+    return () => cleanupVisibility();
   }, [room]);
     
     const [activeAiProcessor, setActiveAiProcessor] = useState(null);

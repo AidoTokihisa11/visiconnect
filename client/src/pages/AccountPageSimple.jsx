@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { 
   User, Camera, Mail, Building, Briefcase, 
   MapPin, Link as LinkIcon, Save, X, Phone,
-  Loader2, LogOut, Shield, Menu
+  Loader2, LogOut, Shield, Menu, CreditCard, Star, CheckCircle
 } from 'lucide-react';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
@@ -11,6 +11,7 @@ import { useUserProfile } from '../hooks/useUserProfile';
 import { useClerk, useUser } from '@clerk/react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
+import { PLANS } from '../config/pricing';
 import {
   PageWrapper,
   ContentContainer,
@@ -311,6 +312,79 @@ const AccountPageSimple = () => {
     </motion.form>
   );
 
+  const renderSubscriptionTab = () => {
+    // Detect current plan from Clerk metadata
+    const currentPlanId = user?.publicMetadata?.plan || user?.unsafeMetadata?.plan || 'starter';
+    const currentPlan = PLANS[currentPlanId] || PLANS.starter;
+
+    const tierColors = {
+      starter: { bg: '#f1f5f9', border: '#cbd5e1', badge: '#64748b' },
+      pro:     { bg: '#eff6ff', border: '#3b82f6', badge: '#2563eb' },
+      business:{ bg: '#f0fdf4', border: '#22c55e', badge: '#16a34a' },
+    };
+    const colors = tierColors[currentPlanId] || tierColors.starter;
+
+    const featuresByPlan = {
+      starter: ['Jusqu\'à 3 participants', '45 min par réunion', 'Partage d\'écran'],
+      pro:     ['Jusqu\'à 50 participants', 'Durée illimitée', '5 Go stockage Cloud', 'Support Email (24h)', 'Transcriptions IA 10h/mois'],
+      business:['Jusqu\'à 200 participants', 'Durée illimitée', 'Stockage illimité', 'SSO & Admin avancé', 'Transcriptions illimitées', 'Support téléphonique dédié'],
+    };
+
+    return (
+      <div style={{ padding: '1.5rem 0' }}>
+        <div style={{
+          background: colors.bg,
+          border: `2px solid ${colors.border}`,
+          borderRadius: '16px',
+          padding: '1.5rem',
+          marginBottom: '1.5rem',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <Star size={24} color={colors.badge} fill={colors.badge} />
+              <div>
+                <div style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Plan actuel</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: '800', color: '#0f172a' }}>{currentPlan.name}</div>
+              </div>
+            </div>
+            <div style={{ background: colors.badge, color: 'white', fontSize: '0.85rem', fontWeight: '700', padding: '0.35rem 1rem', borderRadius: '999px' }}>
+              {currentPlan.priceMonthly === 0 ? 'Gratuit' : `€${currentPlan.priceMonthly}/mois`}
+            </div>
+          </div>
+          <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            {(featuresByPlan[currentPlanId] || []).map((feat, i) => (
+              <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: '#334155' }}>
+                <CheckCircle size={16} color={colors.badge} /> {feat}
+              </li>
+            ))}
+          </ul>
+          {currentPlanId !== 'business' && (
+            <a href="/pricing" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: colors.badge, color: 'white', textDecoration: 'none', padding: '0.65rem 1.25rem', borderRadius: '10px', fontWeight: '600', fontSize: '0.9rem' }}>
+              <Star size={16} /> Passer au plan supérieur
+            </a>
+          )}
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem' }}>
+          {Object.values(PLANS).map(plan => (
+            <div key={plan.id} style={{ background: plan.id === currentPlanId ? colors.bg : '#f8fafc', border: `1px solid ${plan.id === currentPlanId ? colors.border : '#e2e8f0'}`, borderRadius: '12px', padding: '1rem', textAlign: 'center', position: 'relative' }}>
+              {plan.id === currentPlanId && (
+                <div style={{ position: 'absolute', top: '-10px', left: '50%', transform: 'translateX(-50%)', background: colors.badge, color: 'white', fontSize: '0.7rem', fontWeight: '700', padding: '0.2rem 0.6rem', borderRadius: '999px', whiteSpace: 'nowrap' }}>Actuel</div>
+              )}
+              <div style={{ fontWeight: '800', fontSize: '1rem', marginBottom: '0.25rem', color: '#0f172a' }}>{plan.name}</div>
+              <div style={{ fontSize: '1.25rem', fontWeight: '700', color: '#2563eb' }}>
+                {plan.priceMonthly === 0 ? '€0' : `€${plan.priceMonthly}`}
+                <span style={{ fontSize: '0.75rem', fontWeight: '500', color: '#64748b' }}>/mois</span>
+              </div>
+            </div>
+          ))}
+        </div>
+        <p style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '1rem', textAlign: 'center' }}>
+          Gérez votre facturation depuis votre tableau de bord Stripe.
+        </p>
+      </div>
+    );
+  };
+
   return (
     <PageWrapper>
       <HeaderClean />
@@ -350,6 +424,12 @@ const AccountPageSimple = () => {
                   <User size={20} /> {t('account.tabs.profile')}
                 </NavItem>
                 <NavItem
+                  $active={activeTab === 'subscription'}
+                  onClick={() => { setActiveTab('subscription'); setIsMobileMenuOpen(false); }}
+                >
+                  <CreditCard size={20} /> Mon Abonnement
+                </NavItem>
+                <NavItem
                   $active={activeTab === 'security'}
                   onClick={() => { setActiveTab('security'); setIsMobileMenuOpen(false); }}
                 >
@@ -371,7 +451,7 @@ const AccountPageSimple = () => {
           >
             <CardHeader>
               <CardTitle>
-                {activeTab === 'profile' ? t('account.personalInfo') : t('account.securityTitle')}
+                {activeTab === 'profile' ? t('account.personalInfo') : activeTab === 'subscription' ? 'Mon Abonnement' : t('account.securityTitle')}
               </CardTitle>
             </CardHeader>
             <CardBody>
@@ -385,6 +465,16 @@ const AccountPageSimple = () => {
                     transition={{ duration: 0.3 }}
                   >
                     {renderProfileTab()}
+                  </motion.div>
+                ) : activeTab === 'subscription' ? (
+                  <motion.div
+                    key="subscription"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {renderSubscriptionTab()}
                   </motion.div>
                 ) : (
                   <motion.div

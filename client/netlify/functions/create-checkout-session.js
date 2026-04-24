@@ -26,20 +26,26 @@ exports.handler = async (event, context) => {
   try {
     const { plan, billingCycle } = JSON.parse(event.body);
 
+    // Starter is free — skip Stripe
+    if (plan === 'starter') {
+      return { statusCode: 200, headers, body: JSON.stringify({ free: true, plan: 'starter', message: 'Plan Starter activé' }) };
+    }
+
     let amount = 0;
     let name = '';
 
-    if (plan === 'starter') {
-      amount = 0;
-      name = 'VisiConnect Starter';
-    } else if (plan === 'pro') {
+    if (plan === 'pro') {
       amount = billingCycle === 'annual' ? 14400 : 1500;
       name = 'VisiConnect Pro';
     } else if (plan === 'business') {
       amount = billingCycle === 'annual' ? 34800 : 3500;
       name = 'VisiConnect Business';
     } else {
-      return { statusCode: 400, headers, body: JSON.stringify({ error: 'Plan invalide' }) };
+      return { statusCode: 400, headers, body: JSON.stringify({ error: 'Plan invalide. Valeurs acceptées : starter, pro, business.' }) };
+    }
+
+    if (amount <= 0) {
+      return { statusCode: 400, headers, body: JSON.stringify({ error: 'Montant invalide pour le plan sélectionné.' }) };
     }
 
     // Default to the referring origin, fallback to Netlify or localhost

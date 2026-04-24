@@ -387,6 +387,12 @@ const PricingPage = () => {
         return;
       }
 
+      // Free plan: no Stripe redirect
+      if (session.free) {
+        window.location.href = '/';
+        return;
+      }
+
       // Redirection native vers l'URL fournie par Stripe
       if (session.url) {
         window.location.href = session.url;

@@ -140,3 +140,65 @@ export const setupAntiFreezeListeners = (room) => {
     }
   });
 };
+
+/**
+ * 4. Page Visibility API Protection
+ * Prevents WebRTC streams from being suspended when the tab is hidden or minimised.
+ * Returns a cleanup function to call on unmount.
+ */
+export const setupVisibilityProtection = (room) => {
+  if (!room || typeof document === 'undefined') return () => {};
+
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === 'visible') {
+      console.log('[WebRTC] Tab visible — requesting keyframes for all video tracks');
+
+      // Re-request HIGH quality keyframes for every remote video track
+      room.remoteParticipants.forEach(participant => {
+        participant.trackPublications.forEach(pub => {
+          if (pub.track?.kind === Track.Kind.Video) {
+            if (typeof pub.setVideoQuality === 'function') {
+              pub.setVideoQuality(VideoQuality.HIGH);
+            }
+            // Force a PLI (Picture Loss Indication) to refresh the decoded frame
+            if (typeof pub.track.setDowncasted === 'function') {
+              pub.track.setDowncasted(false);
+            }
+          }
+        });
+      });
+
+      // Re-enable local camera/mic tracks that browsers may have suspended
+      room.localParticipant?.trackPublications?.forEach(pub => {
+        if (pub.track && pub.track.mediaStreamTrack?.readyState === 'ended') {
+          console.warn('[WebRTC] Local track ended while hidden — attempting republish');
+          pub.track.restartTrack?.().catch(e => console.error('[WebRTC] restartTrack failed', e));
+        }
+      });
+    }
+  };
+
+  // Some browsers throttle JS timers on hidden tabs; keep a no-op wake lock
+  let wakeLockInterval = null;
+  if (typeof setInterval !== 'undefined') {
+    wakeLockInterval = setInterval(() => {
+      // Tiny heartbeat — prevents aggressive timer throttling in Chrome/Firefox
+      if (room.state === 'connected') {
+        room.localParticipant?.trackPublications?.forEach(pub => {
+          const mst = pub.track?.mediaStreamTrack;
+          if (mst && mst.readyState === 'live' && mst.kind === 'audio') {
+            // Accessing enabled property is enough to prevent GC / suspension
+            void mst.enabled;
+          }
+        });
+      }
+    }, 15000);
+  }
+
+  document.addEventListener('visibilitychange', handleVisibilityChange);
+
+  return () => {
+    document.removeEventListener('visibilitychange', handleVisibilityChange);
+    if (wakeLockInterval !== null) clearInterval(wakeLockInterval);
+  };
+};

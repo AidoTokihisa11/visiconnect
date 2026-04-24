@@ -25,23 +25,29 @@ module.exports = async function handler(req, res) {
   try {
     const { plan, billingCycle } = req.body || {};
 
+    // Starter is free — skip Stripe, activate directly
+    if (plan === 'starter') {
+      return res.status(200).json({ free: true, plan: 'starter', message: 'Plan Starter activé' });
+    }
+
     let amount = 0;
     let name = '';
 
-    if (plan === 'starter') {
-      amount = 0;
-      name = 'VisiConnect Starter';
-    } else if (plan === 'pro') {
-      amount = billingCycle === 'annual' ? 14400 : 1500;
+    if (plan === 'pro') {
+      amount = billingCycle === 'annual' ? 14400 : 1500; // matches src/config/pricing.js PLANS.pro
       name = 'VisiConnect Pro';
     } else if (plan === 'business') {
-      amount = billingCycle === 'annual' ? 34800 : 3500;
+      amount = billingCycle === 'annual' ? 34800 : 3500; // matches src/config/pricing.js PLANS.business
       name = 'VisiConnect Business';
     } else {
-      return res.status(400).json({ error: 'Plan invalide' });
+      return res.status(400).json({ error: 'Plan invalide. Valeurs acceptées : starter, pro, business.' });
     }
 
-    // Default to the referring origin or host
+    if (amount <= 0) {
+      return res.status(400).json({ error: 'Montant invalide pour le plan sélectionné.' });
+    }
+
+    // Determine origin for redirect URLs
     const PROTOCOL = process.env.NODE_ENV === 'development' ? 'http' : 'https';
     const origin = req.headers.origin || (req.headers.referer ? req.headers.referer.replace(/\/$/, '') : `${PROTOCOL}://${req.headers.host}`);
 

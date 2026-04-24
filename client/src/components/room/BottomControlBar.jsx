@@ -5,6 +5,7 @@ import {
   MessageSquare, Sparkles, Layout, Activity, Settings2, MoreHorizontal, Circle, PieChart,
   Hand, Bot,
 } from 'lucide-react';
+import { AudioVisualizer } from './AudioVisualizer';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 
 const BottomBar = styled.div`
@@ -421,6 +422,11 @@ export const ControlBar = ({
         <ControlButton className="focus-visible-ring" onClick={controls.toggleMic} $active={isMicrophoneEnabled} $activeColor={THEME.accent} title={isMicrophoneEnabled ? "Désactiver le micro" : "Activer le micro"} aria-label={isMicrophoneEnabled ? "Désactiver le micro" : "Activer le micro"}>
           {isMicrophoneEnabled ? <Mic /> : <MicOff color={THEME.danger} />}
         </ControlButton>
+
+        {/* VU Meter — hidden on mobile to save space */}
+        <div style={{ display: 'flex', alignItems: 'center' }} className="desktop-only-block">
+          <AudioVisualizer isMicEnabled={isMicrophoneEnabled} localParticipant={localParticipant} />
+        </div>
 
         {/* Desktop-only Quick Access */}
         <DesktopOnlyWrapper>

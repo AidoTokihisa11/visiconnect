@@ -163,7 +163,7 @@ const SidePanel = styled(motion.div)`
   flex-direction: column;
   height: 100%;
   box-shadow: -8px 0 24px rgba(29, 78, 216, 0.16);
-  z-index: 50;
+  z-index: 70; /* Above BottomBar (60) and StatsMonitor (50) */
   position: absolute;
   right: 0;
   top: 0;
@@ -183,7 +183,7 @@ const SidePanel = styled(motion.div)`
     max-height: none;
     border-radius: 0 0 20px 20px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-    z-index: 55;
+    z-index: 70; /* Above BottomBar (60) on mobile too */
     border-left: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
@@ -365,10 +365,9 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
     localStorage.setItem('visiconnect_room_settings', JSON.stringify(roomSettings));
   }, [roomSettings]);
 
+  // Sync showStats ↔ roomSettings.showStatsDefault (bidirectional)
   useEffect(() => {
-    if (roomSettings.showStatsDefault) {
-      setShowStats(true);
-    }
+    setShowStats(roomSettings.showStatsDefault);
   }, [roomSettings.showStatsDefault]);
 
   // -- Track new messages for notifications --
@@ -504,7 +503,10 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
     if (messageText.trim()) {
       sendMessage(messageText);
       setMessageText('');
-      startPanelFadeOut();
+      // Only fade out for non-chat panels (chat stays open after send)
+      if (activePanel !== 'chat') {
+        startPanelFadeOut();
+      }
     }
   };
 
@@ -664,7 +666,7 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
          whiteboardOpen={whiteboardOpen}
          toggleWhiteboard={toggleWhiteboard}
          showStats={showStats}
-         setShowStats={setShowStats}
+         setShowStats={(val) => { setShowStats(val); updateSetting('showStatsDefault', val); }}
          sidePanelOpen={sidePanelOpen}
          activePanel={activePanel}
          togglePanel={togglePanel}
@@ -739,8 +741,11 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
                {activePanel === 'aiFeatures' && <AIFeaturesPanel />}
                {activePanel === 'settings' && (
                  <RoomSettingsPanel
-                   settings={roomSettings}
-                   updateSetting={updateSetting}
+                   settings={{ ...roomSettings, showStatsDefault: showStats }}
+                   updateSetting={(key, val) => {
+                     updateSetting(key, val);
+                     if (key === 'showStatsDefault') setShowStats(val);
+                   }}
                    devices={devices}
                    selectedDevices={selectedDevices}
                    controls={controls}
