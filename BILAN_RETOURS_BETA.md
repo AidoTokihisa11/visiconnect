@@ -1,5 +1,5 @@
 # Bilan des retours bêta — VisiConnect
-*Réponse aux remarques du bêta-testeur — Mise à jour : avril 2026*
+*Réponse aux remarques du bêta-testeur — Mise à jour : avril 2026 (v2)*
 
 ---
 
@@ -84,22 +84,35 @@ Le Stats Monitor est maintenant correctement synchronisé avec le panneau des pa
 ---
 
 ### 11. Erreur lors de la création d'une session de paiement
-**ℹ️ Mode test actif — coordonnées de carte fictives requises**
+**✅ Système de paiement complet — opérationnel**
 
-Le système de paiement est fonctionnel et correctement configuré. Le mode test Stripe est intentionnellement actif en production pendant la phase bêta. Cela signifie que **les vraies coordonnées bancaires sont refusées** — il faut utiliser les coordonnées de test Stripe pour que le paiement aboutisse :
+Le système de paiement Stripe est entièrement intégré et fonctionnel :
+
+- Au clic sur « S'abonner », une session Stripe Checkout est créée côté serveur et le client est redirigé vers la page de paiement Stripe.
+- Après un paiement réussi, Stripe redirige vers `/success?session_id=...` où le paiement est vérifié côté serveur.
+- Le plan souscrit est automatiquement enregistré dans les métadonnées du compte Clerk de l'utilisateur.
+- La page profil se met à jour immédiatement pour afficher le bon forfait.
+- Les boutons « Passer à ce plan » et « Rétrograder » sont dynamiques selon le plan actuel.
+
+Le mode test Stripe est intentionnellement actif pendant la phase bêta. Pour tester un paiement, utiliser les coordonnées fictives Stripe :
 
 - **Numéro de carte** : `4242 4242 4242 4242`
 - **Date d'expiration** : n'importe quelle date future (ex : `12/30`)
 - **CVV** : n'importe quels 3 chiffres (ex : `123`)
 
-Si le testeur a utilisé sa vraie carte, c'est normal que cela ait échoué. Ce comportement est voulu pendant la phase de test.
+**Reçus et factures par e-mail** : Stripe est configuré pour envoyer automatiquement un reçu par e-mail au client après chaque paiement réussi. L'adresse e-mail de l'utilisateur (récupérée depuis son compte) est transmise à Stripe lors de la création de la session de paiement. Les paramètres Billing Stripe envoient également les factures d'abonnement.
 
 ---
 
 ### 12. L'abonnement souscrit n'est pas visible clairement dans le profil
-**✅ Déjà disponible**
+**✅ Complet — plan affiché et gérable depuis le profil**
 
-L'onglet « Abonnement » existe déjà dans votre espace personnel, placé exactement entre les onglets « Profil » et « Sécurité » comme suggéré. Vous pouvez y consulter votre forfait actuel et gérer votre facturation. Si cet onglet n'était pas visible lors de vos tests, il s'agissait peut-être d'un problème de chargement lié à votre session.
+L'onglet « Abonnement » dans l'espace personnel a été entièrement mis à jour :
+
+- Votre **forfait actuel** est affiché clairement (Starter, Pro ou Business) avec le cycle de facturation (mensuel ou annuel).
+- Un bouton **« Passer à ce plan »** apparaît sur les forfaits supérieurs et redirige vers le paiement Stripe.
+- Un bouton **« Rétrograder vers le plan Starter »** permet de repasser au plan gratuit en un clic, sans aucune manipulation complexe.
+- Le profil se **rafraîchit automatiquement** après tout changement de plan.
 
 ---
 
@@ -153,8 +166,8 @@ Les traductions ont été faite entièrement a la main par mes soins.
 | Transcription IA ne fonctionne pas | ⚠️ Chrome/Edge uniquement |
 | Mode complet IA plante | ✅ Amélioré |
 | Stats Monitor ne se désactive pas | ✅ Corrigé |
-| Erreur paiement abonnement | ℹ️ Mode test — carte fictive requise |
-| Type d'abonnement invisible dans le profil | ✅ Déjà disponible |
+| Erreur paiement abonnement | ✅ Système complet (Stripe → Clerk → profil) |
+| Type d'abonnement invisible dans le profil | ✅ Plan affiché + boutons upgrade/downgrade |
 | Présentation / navigation / chargement | ✅ Positif |
 | Illustration "Salle de réunion immersive" | ⏳ À changer |
 | Dashboard / Studio / Analytique non accessibles | ⏳ En développement |
