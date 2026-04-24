@@ -52,6 +52,7 @@ const AccountPageSimple = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [notification, setNotification] = useState(null);
+  const [planSwitching, setPlanSwitching] = useState(false);
   
   const [formData, setFormData] = useState({
     displayName: '',
@@ -329,8 +330,6 @@ const AccountPageSimple = () => {
       pro:     ['Jusqu\'à 50 participants', 'Durée illimitée', '5 Go stockage Cloud', 'Support Email (24h)', 'Transcriptions IA 10h/mois'],
       business:['Jusqu\'à 200 participants', 'Durée illimitée', 'Stockage illimité', 'SSO & Admin avancé', 'Transcriptions illimitées', 'Support téléphonique dédié'],
     };
-
-    const [planSwitching, setPlanSwitching] = React.useState(false);
 
     const handleUpgrade = async (targetPlan) => {
       setPlanSwitching(true);
