@@ -102,42 +102,42 @@
     "perMonth": "/mes",
     "perUser": "por usuario",
     "free": {
-      "title": "Gratis",
+      "title": "Starter",
       "price": "0€",
-      "description": "Perfecto para empezar",
+      "description": "Para descubrir la plataforma sin compromiso.",
       "features": [
         "Hasta 3 participantes",
-        "Reuniones de 40 minutos",
-        "Audio y video HD",
-        "Compartir pantalla"
+        "45 min por reunión",
+        "Compartir pantalla",
+        "Chat en tiempo real"
       ],
-      "action": "Comenzar Gratis"
+      "action": "Comenzar gratis"
     },
     "pro": {
       "title": "Pro",
-      "price": "12€",
-      "description": "Para equipos en crecimiento",
+      "price": "15€",
+      "description": "Para equipos ágiles y freelancers.",
       "features": [
         "Hasta 50 participantes",
-        "Reuniones ilimitadas",
-        "Grabación en la nube",
-        "Chat y pizarra",
-        "Soporte prioritario"
+        "Duración ilimitada",
+        "5 GB de almacenamiento Cloud",
+        "Soporte prioritario",
+        "Transcripciones IA (10h/mes)"
       ],
-      "action": "Probar Pro"
+      "action": "Suscribirse"
     },
     "enterprise": {
-      "title": "Enterprise",
-      "price": "Personalizado",
-      "description": "Para organizaciones grandes",
+      "title": "Business",
+      "price": "35€",
+      "description": "Para organizaciones a gran escala.",
       "features": [
-        "Participantes ilimitados",
-        "SSO e integraciones",
-        "Administración avanzada",
-        "Soporte dedicado",
-        "SLA garantizado"
+        "Hasta 200 participantes",
+        "Almacenamiento ilimitado",
+        "Salas de subgrupos",
+        "SSO y Administración avanzada",
+        "Transcripciones ilimitadas"
       ],
-      "action": "Contactar Ventas"
+      "action": "Suscribirse"
     },
     "getStarted": "Comenzar",
     "contactSales": "Contactar ventas",

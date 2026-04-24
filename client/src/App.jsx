@@ -1,6 +1,6 @@
 import { AuthenticateWithRedirectCallback } from '@clerk/react';
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { ThemeProvider } from "./components/theme-provider";
 import { AuthProvider } from './contexts/AuthContext';
@@ -15,7 +15,7 @@ import SignupPage from './pages/SignupPage';
 import RoomPage from './pages/RoomPageNew';
 import SupportPageNew from './pages/SupportPageNew';
 import AccountPageSimple from './pages/AccountPageSimple';
-import CheckoutPage from './pages/CheckoutPage';
+// CheckoutPage removed — /checkout redirects to /pricing
 import SuccessPage from './pages/SuccessPage';
 import UserGuidePage from './pages/UserGuidePageNew';
 import CommunityPage from './pages/CommunityPage';
@@ -93,7 +93,7 @@ function App() {
                         <Route path="/settings" element={<SettingsPage />} />
                         <Route path="/support" element={<SupportPageNew />} />
                         <Route path="/account" element={<AccountPageSimple />} />
-                        <Route path="/checkout" element={<CheckoutPage />} />
+                        <Route path="/checkout" element={<Navigate to="/pricing" replace />} />
                         <Route path="/success" element={<SuccessPage />} />
                         <Route path="/user-guide" element={<UserGuidePage />} />
                         <Route path="/community" element={<CommunityPage />} />

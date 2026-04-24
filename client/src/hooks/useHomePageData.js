@@ -94,52 +94,50 @@ export const useHomePageData = () => {
     },
   ];
 
-  // Pricing data
+  // Pricing data — aligned with /pricing page and client/src/config/pricing.js
   const pricingData = [
     {
-      planName: t('pricing.free.title', 'Plan Gratuit'),
+      planName: 'Starter',
       price: '0',
-      description: t('pricing.free.description', 'Pour tester'),
+      description: t('pricing.free.description', 'Pour découvrir la plateforme sans engagement.'),
       features: t('pricing.free.features', { returnObjects: true, defaultValue: [
-        'Jusqu\' 2 participants',
-        'Réunions courtes (15 min)',
-        'Quality vidéo standard',
-        'Chat basique'
+        "Jusqu'à 3 participants",
+        '45 min par réunion',
+        "Partage d'écran",
+        'Chat en temps réel',
       ]}) || [],
-      ctaText: t('pricing.free.action', 'Commencer'),
-      ctaLink: '/dashboard',
+      ctaText: t('pricing.free.action', 'Commencer gratuitement'),
+      ctaLink: '/pricing',
       isPopular: false
     },
     {
-      planName: t('pricing.pro.title', 'Plan Pro'),
-      price: '29',
-      description: t('pricing.pro.description', 'Pour les équipes'),
+      planName: 'Pro',
+      price: '15',
+      description: t('pricing.pro.description', "Pour les équipes agiles et les freelances."),
       features: t('pricing.pro.features', { returnObjects: true, defaultValue: [
-        'Jusqu\' 10 participants',
-        'Réunions illimitées',
-        'HD 1080p',
-        'Partage d\'cran',
-        'Enregistrement (1h/mois)',
-        'Support par email'
+        "Jusqu'à 50 participants",
+        'Durée illimitée',
+        '5 Go de stockage Cloud',
+        'Support Prioritaire',
+        'Transcriptions IA (10h/mois)',
       ]}) || [],
-      ctaText: t('pricing.pro.action', 'Choisir'),
-      ctaLink: '/checkout?plan=pro',
+      ctaText: t('pricing.pro.action', "S'abonner"),
+      ctaLink: '/pricing',
       isPopular: true
     },
     {
-      planName: t('pricing.enterprise.title', 'Plan Enterprise'),
-      price: '99',
-      description: t('pricing.enterprise.description', 'Pour les large organisations'),
+      planName: 'Business',
+      price: '35',
+      description: t('pricing.enterprise.description', "Pour les organisations à grande échelle."),
       features: t('pricing.enterprise.features', { returnObjects: true, defaultValue: [
-        'Participants illimités',
-        'Toutes les fonctionnalités',
-        'API personnalisée',
-        'SSO & sécurité avancée',
-        'Support dédié 24/7',
-        'SLA garanti 99.9%'
+        "Jusqu'à 200 participants",
+        'Stockage illimité',
+        'Salles de sous-groupes',
+        'SSO & Admin Avancé',
+        'Transcriptions Illimitées',
       ]}) || [],
-      ctaText: t('pricing.enterprise.action', 'Contacter'),
-      ctaLink: '/contact',
+      ctaText: t('pricing.enterprise.action', "S'abonner"),
+      ctaLink: '/pricing',
       isPopular: false
     },
   ];

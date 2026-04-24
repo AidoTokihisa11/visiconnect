@@ -158,7 +158,7 @@ const PricingCard = ({
   features = [],
   isPopular = false,
   ctaText = 'Choisir',
-  ctaLink = '/checkout',
+  ctaLink = '/pricing',
   delay = 0,
   ...props
 }) => {

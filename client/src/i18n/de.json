@@ -102,42 +102,42 @@
     "perMonth": "/Monat",
     "perUser": "pro Benutzer",
     "free": {
-      "title": "Kostenlos",
+      "title": "Starter",
       "price": "0€",
-      "description": "Perfekt zum Einstieg",
+      "description": "Entdecke die Plattform ohne Verpflichtung.",
       "features": [
         "Bis zu 3 Teilnehmer",
-        "40-Minuten-Meetings",
-        "HD-Audio und -Video",
-        "Bildschirmfreigabe"
+        "45 Min pro Meeting",
+        "Bildschirmfreigabe",
+        "Echtzeit-Chat"
       ],
       "action": "Kostenlos starten"
     },
     "pro": {
       "title": "Pro",
-      "price": "12€",
-      "description": "Für wachsende Teams",
+      "price": "15€",
+      "description": "Für agile Teams und Freelancer.",
       "features": [
         "Bis zu 50 Teilnehmer",
-        "Unbegrenzte Meetings",
-        "Cloud-Aufzeichnung",
-        "Chat und Whiteboard",
-        "Prioritäts-Support"
+        "Unbegrenzte Dauer",
+        "5 GB Cloud-Speicher",
+        "Prioritäts-Support",
+        "KI-Transkriptionen (10 Std/Monat)"
       ],
-      "action": "Pro ausprobieren"
+      "action": "Abonnieren"
     },
     "enterprise": {
-      "title": "Enterprise",
-      "price": "Individuell",
-      "description": "Für große Organisationen",
+      "title": "Business",
+      "price": "35€",
+      "description": "Für große Organisationen.",
       "features": [
-        "Unbegrenzte Teilnehmer",
-        "SSO und Integrationen",
-        "Erweiterte Administration",
-        "Dedizierter Support",
-        "Garantierte SLA"
+        "Bis zu 200 Teilnehmer",
+        "Unbegrenzter Speicher",
+        "Breakout-Räume",
+        "SSO & Erweiterte Verwaltung",
+        "Unbegrenzte Transkriptionen"
       ],
-      "action": "Vertrieb kontaktieren"
+      "action": "Abonnieren"
     },
     "getStarted": "Loslegen",
     "contactSales": "Vertrieb kontaktieren",

@@ -153,36 +153,39 @@
     "free": {
       "title": "Starter",
       "price": "0€",
-      "action": "Commencer maintenant",
+      "description": "Pour découvrir la plateforme sans engagement.",
+      "action": "Commencer gratuitement",
       "features": [
-        "Réunions jusqu'à 40 minutes",
-        "Jusqu'à 100 participants",
-        "Chat privé et groupe",
-        "Tableau blanc interactif"
+        "Jusqu'à 3 participants",
+        "45 min par réunion",
+        "Partage d'écran",
+        "Chat en temps réel"
       ]
     },
     "pro": {
-      "title": "Professionnel",
-      "price": "12€",
-      "action": "Passer au Pro",
+      "title": "Pro",
+      "price": "15€",
+      "description": "Pour les équipes agiles et les freelances.",
+      "action": "S'abonner",
       "features": [
-        "Réunions illimitées",
-        "Jusqu'à 150 participants",
-        "Enregistrement cloud (1 Go)",
-        "Administration avancée",
-        "Personnalisation de marque"
+        "Jusqu'à 50 participants",
+        "Durée illimitée",
+        "5 Go de stockage Cloud",
+        "Support Prioritaire",
+        "Transcriptions IA (10h/mois)"
       ]
     },
     "enterprise": {
-      "title": "Entreprise",
-      "price": "Sur devis",
-      "action": "Contacter l'équipe",
+      "title": "Business",
+      "price": "35€",
+      "description": "Pour les organisations à grande échelle.",
+      "action": "S'abonner",
       "features": [
-        "Toutes les fonctionnalités Pro",
-        "Jusqu'à 300 participants",
+        "Jusqu'à 200 participants",
         "Stockage illimité",
-        "Authentification SSO",
-        "Support dédié 24/7"
+        "Salles de sous-groupes",
+        "SSO & Admin Avancé",
+        "Transcriptions Illimitées"
       ]
     },
     "getStarted": "Commencer",

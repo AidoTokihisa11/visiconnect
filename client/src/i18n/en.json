@@ -152,41 +152,41 @@
     "perUser": "per user",
     "free": {
       "title": "Starter",
-      "price": "$0",
-      "description": "Perfect to get started",
+      "price": "€0",
+      "description": "To discover the platform with no commitment.",
       "features": [
-        "Meetings up to 40 minutes",
-        "Up to 100 participants",
-        "HD audio and video",
-        "Screen sharing"
+        "Up to 3 participants",
+        "45 min per meeting",
+        "Screen sharing",
+        "Real-time chat"
       ],
-      "action": "Get started now"
+      "action": "Get started free"
     },
     "pro": {
-      "title": "Professional",
-      "price": "$12",
-      "description": "For growing teams",
+      "title": "Pro",
+      "price": "€15",
+      "description": "For agile teams and freelancers.",
       "features": [
-        "Unlimited meetings",
-        "Up to 150 participants",
-        "Cloud recording (1GB)",
-        "Advanced administration",
-        "Custom branding"
+        "Up to 50 participants",
+        "Unlimited duration",
+        "5 GB Cloud storage",
+        "Priority support",
+        "AI Transcriptions (10h/month)"
       ],
-      "action": "Upgrade to Pro"
+      "action": "Subscribe"
     },
     "enterprise": {
-      "title": "Enterprise",
-      "price": "Custom",
-      "description": "For large organizations",
+      "title": "Business",
+      "price": "€35",
+      "description": "For large-scale organizations.",
       "features": [
-        "All Professional features",
-        "Up to 300 participants",
+        "Up to 200 participants",
         "Unlimited storage",
-        "SSO authentication",
-        "24/7 dedicated support"
+        "Breakout rooms",
+        "SSO & Advanced admin",
+        "Unlimited transcriptions"
       ],
-      "action": "Contact our team"
+      "action": "Subscribe"
     },
     "getStarted": "Get Started",
     "contactSales": "Contact Sales",
