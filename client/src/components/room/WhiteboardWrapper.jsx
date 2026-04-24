@@ -61,6 +61,7 @@ export const WhiteboardWrapper = memo(({ roomId }) => {
           persistenceKey={`room-${roomId}`}
           autoFocus
           hideUi={false}
+          licenseKey={import.meta.env.VITE_TLDRAW_LICENSE_KEY}
         />
       </TldrawErrorBoundary>
     </Wrapper>
