@@ -338,7 +338,7 @@ const AccountPageSimple = () => {
         const res = await fetch('/api/create-checkout-session', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ plan: targetPlan, billingCycle, userId: user?.id }),
+          body: JSON.stringify({ plan: targetPlan, billingCycle, userId: user?.id, userEmail: user?.primaryEmailAddress?.emailAddress || '' }),
         });
         const session = await res.json();
         if (session.error) { showNotification(session.error, 'error'); return; }

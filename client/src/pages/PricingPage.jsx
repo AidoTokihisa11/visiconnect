@@ -379,7 +379,7 @@ const PricingPage = () => {
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan, billingCycle, userId: user?.id || '' }),
+        body: JSON.stringify({ plan, billingCycle, userId: user?.id || '', userEmail: user?.primaryEmailAddress?.emailAddress || '' }),
       });
       
       const session = await response.json();

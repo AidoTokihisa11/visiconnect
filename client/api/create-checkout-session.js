@@ -23,7 +23,7 @@ module.exports = async function handler(req, res) {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY.trim());
 
   try {
-    const { plan, billingCycle, userId } = req.body || {};
+    const { plan, billingCycle, userId, userEmail } = req.body || {};
 
     // Starter is free — skip Stripe, activate directly
     if (plan === 'starter') {
@@ -53,6 +53,7 @@ module.exports = async function handler(req, res) {
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
+      ...(userEmail ? { customer_email: userEmail } : {}),
       line_items: [
         {
           price_data: {
