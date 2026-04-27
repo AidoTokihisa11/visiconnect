@@ -226,7 +226,7 @@ export const TranscriptionWidget = ({ onClose }) => {
     toggle,
     setLanguage: setTranscriptionLanguage,
     exportTranscript,
-    clearTranscript,
+    clear: clearTranscript,
   } = useTranscription({ language });
 
   // Auto-scroll vers le bas quand nouveau texte

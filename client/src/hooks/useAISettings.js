@@ -88,7 +88,7 @@ export const useAISettings = () => {
       full: {
         transcription: { enabled: true, autoStart: true },
         backgroundBlur: { enabled: true, mode: 'blur', blurAmount: 10 },
-        videoEnhancement: { enabled: true, preset: 'professional' },
+        videoEnhancement: { enabled: false }, // Désactivé: conflit avec backgroundBlur (même videoTrack.setProcessor)
         translation: { enabled: true, autoTranslate: true },
         noiseSuppression: { enabled: true, level: 'high' },
       },
@@ -124,16 +124,20 @@ export const useAISettings = () => {
     return isMobile || lowRam || lowCores;
   }, []);
 
-  // Auto-désactive les features gourmandes sur devices lents
+  // Auto-désactive les features gourmandes sur devices lents OU non supportées
   const safeSettings = useMemo(() => {
-    if (!isLowEndDevice) return settings;
-    
+    const blurUnavailable = !capabilities.backgroundBlur?.available;
+    const blurForceOff = isLowEndDevice || blurUnavailable;
+    const videoForceOff = isLowEndDevice;
+
+    if (!blurForceOff && !videoForceOff) return settings;
+
     return {
       ...settings,
-      backgroundBlur: { ...settings.backgroundBlur, enabled: false },
-      videoEnhancement: { ...settings.videoEnhancement, enabled: false },
+      backgroundBlur: { ...settings.backgroundBlur, enabled: blurForceOff ? false : settings.backgroundBlur?.enabled },
+      videoEnhancement: { ...settings.videoEnhancement, enabled: videoForceOff ? false : settings.videoEnhancement?.enabled },
     };
-  }, [settings, isLowEndDevice]);
+  }, [settings, isLowEndDevice, capabilities]);
 
   return {
     // État
