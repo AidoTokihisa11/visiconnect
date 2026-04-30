@@ -3,7 +3,6 @@ import { useNavigate, Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
 import { useAuth } from '../contexts/AuthContext'
-import { useSignUp } from '@clerk/react'
 import { FaGoogle, FaGithub } from 'react-icons/fa'
 import { Mail, Lock, Eye, EyeOff, AlertCircle, ArrowLeft, Check, X } from 'lucide-react'
 import AuthRightPanel from '../components/AuthRightPanel'
@@ -338,8 +337,7 @@ const SuccessIconBox = styled.div`
 
 const SignupPage = () => {
   const navigate = useNavigate()
-  const { isLoggedIn, signInWithGoogle, signInWithGithub } = useAuth()
-  const { signUp: clerkSignUp, setActive, isLoaded } = useSignUp()
+  const { isLoggedIn, signUp, signInWithGoogle, signInWithGithub, verifyEmailCode, prepareVerification } = useAuth()
   const { t } = useTranslation()
 
   const [registrationForm, setRegistrationForm] = useState({ email: '', password: '' })
@@ -379,31 +377,24 @@ const SignupPage = () => {
        setError(t('signup.errorPassword'))
        return
     }
-    if (!isLoaded || !clerkSignUp) return
 
     setLoading(true)
     setError('')
 
-    try {
-      // 1. Créer le compte
-      const res = await clerkSignUp.create({
-        emailAddress: registrationForm.email,
-        password: registrationForm.password,
-      })
+    const result = await signUp(registrationForm.email, registrationForm.password)
 
-      if (res.status === 'complete') {
-        await setActive({ session: res.createdSessionId })
-        navigate('/dashboard')
+    if (result.error) {
+      setError(result.error.message || t('signup.errorCreate'))
+      setLoading(false)
+    } else if (result.data?.requiresVerification) {
+      // Envoyer le mail de vérification maintenant que React a re-rendu et que l'instance SignUp est à jour
+      const prepResult = await prepareVerification()
+      if (prepResult?.error) {
+        setError(prepResult.error.message)
+        setLoading(false)
         return
       }
-
-      // 2. Envoyer le code de vérification — sur la même instance `res` (fraîche, avec méthodes)
-      await res.prepareEmailAddressVerification({ strategy: 'email_code' })
       setPendingVerification(true)
-    } catch (err) {
-      const msg = err.errors?.[0]?.longMessage || err.errors?.[0]?.message || err.message || t('signup.errorCreate')
-      setError(msg)
-    } finally {
       setLoading(false)
     }
   }
@@ -415,24 +406,13 @@ const SignupPage = () => {
     setLoading(true)
     setError('')
 
-    try {
-      const res = await clerkSignUp.attemptEmailAddressVerification({ code })
-      if (res.status === 'complete') {
-        await setActive({ session: res.createdSessionId })
-        navigate('/dashboard')
-      } else if (res.status === 'missing_requirements') {
-        const missing = res.missingFields?.join(', ') || 'inconnu'
-        setError(`Le code est valide, mais certains champs obligatoires manquent dans Clerk Dashboard : [ ${missing} ].`)
-      } else if (res.status === 'abandoned') {
-        setError('La session d\'inscription a expiré. Veuillez recommencer.')
-      } else {
-        setError(t('signup.errorCode'))
-      }
-    } catch (err) {
-      const msg = err.errors?.[0]?.longMessage || err.errors?.[0]?.message || err.message || t('signup.errorCode')
-      setError(msg)
-    } finally {
+    const result = await verifyEmailCode(code)
+
+    if (result.error) {
+      setError(result.error.message || t('signup.errorCode'))
       setLoading(false)
+    } else {
+      navigate('/dashboard')
     }
   }
 
@@ -530,7 +510,7 @@ const SignupPage = () => {
 
                 <SubmitButton
                   type="submit"
-                  disabled={!isLoaded || loading || (registrationForm.password.length > 0 && !Object.values(passwordRules).every(Boolean))}
+                  disabled={loading || (registrationForm.password.length > 0 && !Object.values(passwordRules).every(Boolean))}
                   whileTap={{ scale: 0.98 }}
                 >
                   {loading ? t('signup.loading') : t('signup.submit')}

@@ -1,5 +1,5 @@
-import React, { createContext, useContext } from 'react';
-import { useUser, useAuth as useClerkAuth, useClerk } from '@clerk/react';
+import React, { createContext, useContext, useRef } from 'react';
+import { useUser, useAuth as useClerkAuth, useClerk, useSignIn, useSignUp } from '@clerk/react';
 import { useConvexAuth } from 'convex/react';
 
 const AuthContext = createContext({});
@@ -14,9 +14,13 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
-  const { isSignedIn, signOut, setActive, isLoaded: isAuthLoaded } = useClerkAuth();
+  const { isSignedIn, signOut, isLoaded: isAuthLoaded } = useClerkAuth();
   const clerk = useClerk();
+  const { signIn: clerkSignIn, setActive: setSignInActive } = useSignIn();
+  const { signUp: clerkSignUp, setActive: setSignUpActive } = useSignUp();
   const { isAuthenticated: isConvexAuthed, isLoading: isConvexLoading } = useConvexAuth();
+  // Ref pour conserver l'instance SignUp fraîche après create() — nécessaire pour prepareEmailAddressVerification
+  const signUpResourceRef = useRef(null);
 
   const isLoggedIn = !!isSignedIn;
 
@@ -38,10 +42,10 @@ export const AuthProvider = ({ children }) => {
 
   // Implémentation via l'objet client global (Clerk instance) pour éviter les hooks asynchrones bloquants
   const signInWithProvider = async (provider) => {
-    if (!clerk.client) return { error: { message: "Clerk n'est pas prêt." } };
+    if (!clerkSignIn) return { error: { message: "Clerk n'est pas prêt." } };
     try {
-      await clerk.client.signIn.authenticateWithRedirect({
-        strategy: `oauth_${provider}`, // ex: "oauth_google"
+      await clerkSignIn.authenticateWithRedirect({
+        strategy: `oauth_${provider}`,
         redirectUrl: '/sso-callback',
         redirectUrlComplete: '/'
       });
@@ -57,18 +61,18 @@ export const AuthProvider = ({ children }) => {
   const signInWithDiscord = () => signInWithProvider('discord');
 
   const signInWithEmail = async (email, password) => {
-    if (!clerk.client) return { error: { message: "Clerk n'est pas prêt." } };
+    if (!clerkSignIn) return { error: { message: "Clerk n'est pas prêt." } };
     try {
-      const res = await clerk.client.signIn.create({ identifier: email, password });
+      const res = await clerkSignIn.create({ identifier: email, password });
       if (res.status === "complete") {
-        await clerk.setActive({ session: res.createdSessionId });
+        await setSignInActive({ session: res.createdSessionId });
         return { data: { user: res }, success: true };
       }
       if (res.status === "needs_second_factor") {
-        return { error: { message: "Votre compte a la double authentification (2FA) activée. Veuillez désactiver le 2FA depuis les paramètres de votre compte Clerk, ou contactez le support." } };
+        return { error: { message: "Votre compte a la double authentification (2FA) activée. Veuillez désactiver le 2FA depuis les paramètres de votre compte, ou contactez le support." } };
       }
       if (res.status === "needs_first_factor") {
-        return { error: { message: "Ce compte a été créé via Google, GitHub ou Discord. Veuillez utiliser le bouton de connexion sociale correspondant." } };
+        return { error: { message: "Ce compte utilise une connexion sociale (Google, GitHub...). Veuillez utiliser le bouton de connexion sociale correspondant." } };
       }
       return { error: { message: `Connexion incomplète (statut: ${res.status}). Veuillez réessayer ou contacter le support.` } };
     } catch (err) {
@@ -77,7 +81,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signUpWithEmail = async (email, password, options = {}) => {
-    if (!clerk.client) return { error: { message: "Clerk n'est pas prêt." } };
+    if (!clerkSignUp) return { error: { message: "Clerk n'est pas prêt." } };
     
     const attemptSignUp = async (withOptions) => {
       const payload = { emailAddress: email, password };
@@ -86,7 +90,7 @@ export const AuthProvider = ({ children }) => {
         if (options.lastName) payload.lastName = options.lastName;
         if (options.username) payload.username = options.username;
       }
-      return await clerk.client.signUp.create(payload);
+      return await clerkSignUp.create(payload);
     };
 
     try {
@@ -104,11 +108,11 @@ export const AuthProvider = ({ children }) => {
       }
       
       if (res.status === "complete") {
-        await clerk.setActive({ session: res.createdSessionId });
+        await setSignUpActive({ session: res.createdSessionId });
         return { data: { user: res }, success: true };
       } else {
-        // Envoi du mail de vérification
-        await clerk.client.signUp.prepareEmailAddressVerification({ strategy: "email_code" });
+        // Stocker la référence fraîche — prepareEmailAddressVerification sera appelée séparément via prepareVerification()
+        signUpResourceRef.current = res;
         return { data: { requiresVerification: true, email }, success: true };
       }
     } catch (err) {
@@ -116,24 +120,39 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const verifyEmailCode = async (code) => {
-    if (!clerk.client) return { error: { message: "Clerk n'est pas prêt." } };
+  const prepareVerification = async () => {
+    // Utilise la ref fraîche stockée après create() — évite le problème de closure stale sur clerkSignUp
+    const resource = signUpResourceRef.current || clerkSignUp;
+    if (!resource || typeof resource.prepareEmailAddressVerification !== 'function') {
+      return { error: { message: "Session d'inscription introuvable. Veuillez recommencer." } };
+    }
     try {
-      const res = await clerk.client.signUp.attemptEmailAddressVerification({ code });
+      await resource.prepareEmailAddressVerification({ strategy: "email_code" });
+      return { success: true };
+    } catch (err) {
+      return { error: { message: handleNetworkError(err) } };
+    }
+  };
+
+  const verifyEmailCode = async (code) => {
+    if (!clerkSignUp) return { error: { message: "Clerk n'est pas prêt." } };
+    try {
+      const res = await clerkSignUp.attemptEmailAddressVerification({ code });
       
       if (res.status === "complete") {
-        await clerk.setActive({ session: res.createdSessionId });
+        await setSignUpActive({ session: res.createdSessionId });
         return { data: { user: res }, success: true };
       } else if (res.status === "missing_requirements") {
-        // Rendre les champs manquants lisibles
         const missing = res.missingFields ? res.missingFields.join(", ") : "inconnu";
         return { 
           error: { 
-            message: `Le code est valide ! Cependant, la création est bloquée car des champs obligatoires sont activés dans votre panel Clerk : [ ${missing} ]. Veuillez aller dans Clerk > Email/Phone/Username et passer ces champs en "Off" ou "Optionnel".`
+            message: `Le code est valide, mais certains champs obligatoires sont configurés dans votre panel Clerk : [ ${missing} ]. Allez dans Clerk Dashboard → User & Authentication → Email, Phone, Username et passez ces champs en "Optionnel".`
           } 
         };
+      } else if (res.status === "abandoned") {
+        return { error: { message: "La session d'inscription a expiré. Veuillez recommencer l'inscription depuis le début." } };
       } else {
-        return { error: { message: "Information manquante lors de la vérification. Statut retourné: " + res.status } };
+        return { error: { message: "Vérification incomplète. Veuillez réessayer ou recommencer l'inscription." } };
       }
     } catch (err) {
       return { error: { message: handleNetworkError(err) } };
@@ -149,9 +168,11 @@ export const AuthProvider = ({ children }) => {
     user,
     isLoggedIn,
     loading: !(clerkLoaded && isAuthLoaded && !isConvexLoading),
-    signIn: signInWithEmail,   
-    signUp: signUpWithEmail,   
-    verifyEmailCode,    signInWithProvider,
+    signIn: signInWithEmail,
+    signUp: signUpWithEmail,
+    prepareVerification,
+    verifyEmailCode,
+    signInWithProvider,
     signInWithGoogle,
     signInWithGithub,
     signInWithDiscord,    logout
