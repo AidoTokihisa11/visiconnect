@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useRef } from 'react';
+import React, { createContext, useContext } from 'react';
 import { useUser, useAuth as useClerkAuth, useClerk, useSignIn, useSignUp } from '@clerk/react';
 import { useConvexAuth } from 'convex/react';
 
@@ -19,8 +19,6 @@ export const AuthProvider = ({ children }) => {
   const { signIn: clerkSignIn, setActive: setSignInActive } = useSignIn();
   const { signUp: clerkSignUp, setActive: setSignUpActive } = useSignUp();
   const { isAuthenticated: isConvexAuthed, isLoading: isConvexLoading } = useConvexAuth();
-  // Ref pour conserver l'instance SignUp fraîche après create() — nécessaire pour prepareEmailAddressVerification
-  const signUpResourceRef = useRef(null);
 
   const isLoggedIn = !!isSignedIn;
 
@@ -111,8 +109,6 @@ export const AuthProvider = ({ children }) => {
         await setSignUpActive({ session: res.createdSessionId });
         return { data: { user: res }, success: true };
       } else {
-        // Stocker la référence fraîche — prepareEmailAddressVerification sera appelée séparément via prepareVerification()
-        signUpResourceRef.current = res;
         return { data: { requiresVerification: true, email }, success: true };
       }
     } catch (err) {
@@ -121,13 +117,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   const prepareVerification = async () => {
-    // Utilise la ref fraîche stockée après create() — évite le problème de closure stale sur clerkSignUp
-    const resource = signUpResourceRef.current || clerkSignUp;
-    if (!resource || typeof resource.prepareEmailAddressVerification !== 'function') {
-      return { error: { message: "Session d'inscription introuvable. Veuillez recommencer." } };
-    }
+    if (!clerkSignUp) return { error: { message: "Clerk n'est pas prêt." } };
     try {
-      await resource.prepareEmailAddressVerification({ strategy: "email_code" });
+      await clerkSignUp.prepareEmailAddressVerification({ strategy: "email_code" });
       return { success: true };
     } catch (err) {
       return { error: { message: handleNetworkError(err) } };
