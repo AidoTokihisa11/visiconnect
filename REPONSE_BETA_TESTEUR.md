@@ -48,9 +48,13 @@ Ce que nous ne pouvons pas faire : réécrire nous-mêmes le texte de ces messag
 
 ### Scénario 4 — La confirmation bancaire (3D Secure) était en anglais
 
-**⚠️ Hors de notre portée — message émis par votre banque, pas par VisiConnect.**
+**⚠️ Limitation liée à l'environnement de test — sera corrigé en production.**
 
-La page de confirmation 3D Secure (le pop-up ou la redirection qui vous demande de valider le paiement depuis votre application bancaire) n'est pas gérée par VisiConnect, ni même par Stripe. C'est votre banque qui envoie ce message et qui en choisit la langue. Nous n'avons aucune capacité technique à intervenir dessus. Si vous souhaitez que ces confirmations soient en français, la démarche est à faire directement auprès de votre banque.
+La page de paiement que vous avez utilisée lors des tests est un environnement de développement Stripe (vous avez pu le voir dans l'URL `checkout.stripe.com` avec la mention « Environnement de test »). Dans cet environnement, certains éléments — dont le module de confirmation 3D Secure — ne respectent pas le paramètre de langue que nous configurons, car ils sont simulés par Stripe à des fins de test uniquement.
+
+Nous ne pouvons pas tester ce comportement en conditions réelles sans basculer en mode production, ce qui nécessite une vraie carte bancaire et active les paiements réels. Ce n'est pas quelque chose que l'on fait pendant la phase bêta.
+
+En production, le module 3D Secure sera affiché dans la langue configurée par Stripe (français, grâce au paramètre `locale: fr` déjà en place). La langue exacte du message de confirmation dépend ensuite de votre banque — certains établissements l'envoient dans la langue du navigateur, d'autres dans la langue du pays d'émission de la carte.
 
 ---
 
@@ -201,7 +205,7 @@ Le bouton affichait un cercle vide, qui ne ressemblait à aucune de ces deux con
 | Code d'accès bêta | Site | ✅ Fonctionnel |
 | Formulaire Stripe — code postal vs. pays | Site | ✅ Normal (adapté par Stripe) |
 | Messages d'erreur paiement en anglais | Site | ⚠️ Locale fr activée — messages Stripe, non personnalisables (page hébergée Stripe) |
-| Confirmation 3D Secure en anglais | Site | ⚠️ Émis par la banque — hors de notre contrôle |
+| Confirmation 3D Secure en anglais | Site | ⚠️ Lié à l'environnement de test — sera correct en production |
 | Sections page d'accueil trop uniformes | Site | ✅ Partiellement corrigé |
 | Identité visuelle — différenciation, typographie | Site | ⏳ Refonte graphique prévue |
 | Pages footer inaccessibles depuis la navigation | Site | ✅ Corrigé (menu Ressources) |

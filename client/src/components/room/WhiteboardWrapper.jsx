@@ -32,6 +32,50 @@ const Wrapper = styled.div`
     pointer-events: all !important;
     cursor: pointer;
   }
+
+  /* ============================================================
+     JAUGE D'OPACITÉ — séparation et étiquette claires
+     Problème : le slider était collé sous la palette de couleurs
+     sans aucun séparateur, laissant croire qu'il contrôlait la
+     taille du crayon. On le distingue visuellement ici.
+  ============================================================ */
+
+  /* Séparateur au-dessus du slider d'opacité */
+  .tlui-style-panel .tlui-slider__container {
+    margin-top: 4px !important;
+    padding-top: 2px !important;
+    border-top: 1px solid var(--tl-color-divider) !important;
+  }
+
+  /* Label "Opacité" affiché au-dessus de la jauge via pseudo-élément */
+  .tlui-style-panel .tlui-slider__container::before {
+    content: '◑  Opacité';
+    display: block;
+    font-size: 10.5px;
+    font-weight: 700;
+    color: var(--tl-color-text-1);
+    opacity: 0.5;
+    padding: 4px 0 0 var(--tl-space-4);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+
+  /* Ne pas affecter le slider de la barre d'image (contexte différent) */
+  .tlui-image__toolbar .tlui-slider__container {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    border-top: none !important;
+  }
+  .tlui-image__toolbar .tlui-slider__container::before {
+    display: none;
+  }
+
+  /* Sections du panneau de style — espacement entre chaque groupe */
+  .tlui-style-panel__section {
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
 `;
 
 const FallbackWrapper = styled.div`

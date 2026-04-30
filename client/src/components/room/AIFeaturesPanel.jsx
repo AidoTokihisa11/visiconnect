@@ -5,7 +5,7 @@
  * à la demande pour ne pas impacter les performances
  */
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import { 
   Sparkles, 
@@ -281,6 +281,25 @@ const Feature = ({
   );
 };
 
+// Slider avec état local — ne déclenche setProcessor qu'au relâchement
+const BlurSliderRow = ({ currentValue, onCommit }) => {
+  const [localValue, setLocalValue] = useState(currentValue);
+  return (
+    <OptionRow>
+      Intensité du flou
+      <Slider
+        type="range"
+        min="5"
+        max="30"
+        value={localValue}
+        onChange={(e) => setLocalValue(Number(e.target.value))}
+        onMouseUp={(e) => onCommit(Number(e.target.value))}
+        onTouchEnd={(e) => onCommit(Number(e.target.value))}
+      />
+    </OptionRow>
+  );
+};
+
 // Composant principal
 export const AIFeaturesPanel = () => {
   const {
@@ -443,16 +462,10 @@ export const AIFeaturesPanel = () => {
           </Select>
         </OptionRow>
         {settings.backgroundBlur?.mode === 'blur' && (
-          <OptionRow>
-            Intensité du flou
-            <Slider 
-              type="range" 
-              min="5" 
-              max="30" 
-              value={settings.backgroundBlur?.blurAmount || 10}
-              onChange={(e) => updateSettings('backgroundBlur', { blurAmount: Number(e.target.value) })}
-            />
-          </OptionRow>
+          <BlurSliderRow
+            currentValue={settings.backgroundBlur?.blurAmount || 10}
+            onCommit={(v) => updateSettings('backgroundBlur', { blurAmount: v })}
+          />
         )}
       </Feature>
 

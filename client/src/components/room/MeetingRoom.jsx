@@ -458,12 +458,16 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
 
   // 🤖 Bridge: blur amount slider change → re-apply processor with new radius
   const prevBlurAmount = React.useRef(aiSettings?.backgroundBlur?.blurAmount);
+  const blurDebounceRef = React.useRef(null);
   useEffect(() => {
     const newAmount = aiSettings?.backgroundBlur?.blurAmount;
     if (newAmount === prevBlurAmount.current) return;
     prevBlurAmount.current = newAmount;
     if (isBlurEnabled && typeof newAmount === 'number' && newAmount > 0) {
-      toggleBlur(newAmount);
+      if (blurDebounceRef.current) clearTimeout(blurDebounceRef.current);
+      blurDebounceRef.current = setTimeout(() => {
+        toggleBlur(newAmount);
+      }, 150);
     }
   }, [aiSettings?.backgroundBlur?.blurAmount, isBlurEnabled]);
 

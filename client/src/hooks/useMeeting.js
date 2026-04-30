@@ -9,7 +9,7 @@ import {
   useParticipants
 } from '@livekit/components-react';
 import { Track } from 'livekit-client';
-import { BackgroundBlur } from '@livekit/track-processors';
+import { BackgroundProcessor } from '@livekit/track-processors';
 
 /**
  * Hook to fetch LiveKit token
@@ -297,6 +297,7 @@ export const useMeeting = (maxQualityLock = true) => {
     
     const [activeAiProcessor, setActiveAiProcessor] = useState(null);
     const [blurProcessor, setBlurProcessor] = useState(null);
+    const isApplyingBlur = useRef(false);
     
     const [selectedDevices, setSelectedDevices] = useState({
     cameraId: '',
@@ -352,11 +353,14 @@ export const useMeeting = (maxQualityLock = true) => {
 
 const toggleBlur = useCallback(async (newRadius) => {
     if (!localParticipant) return;
+    // Guard: ignore concurrent calls (évite le crash GPU)
+    if (isApplyingBlur.current) return;
+    isApplyingBlur.current = true;
 
     try {
       const videoTrack = localParticipant.getTrackPublication(Track.Source.Camera)?.videoTrack;
       if (!videoTrack || videoTrack.isMuted || !videoTrack.mediaStreamTrack) {
-          console.warn("Flux inactif ou aucune source media. Flou bloqué.");
+          console.warn('Flux inactif ou aucune source media. Flou bloqué.');
           return;
       }
 
@@ -364,34 +368,35 @@ const toggleBlur = useCallback(async (newRadius) => {
       const shouldDisable = typeof newRadius !== 'number' ? isBlurEnabled : newRadius === 0;
 
       if (shouldDisable) {
-         await videoTrack.setProcessor(null);
+         // stopProcessor() — NE PAS utiliser setProcessor(null) : LiveKit appelle null.init() et lève une erreur
+         await videoTrack.stopProcessor();
          setIsBlurEnabled(false);
-         // If we are turning off blur, maybe clear the AI conflict flag too
+         setBlurProcessor(null);
       } else {
-         // Prevent conflict: If AI is active, turn it off
-         if (isAIEnhanced) {
-             setIsAIEnhanced(false);
+         if (isAIEnhanced) setIsAIEnhanced(false);
+
+         if (blurProcessor && isBlurEnabled) {
+           // Flou déjà actif : met à jour le rayon sans recréer le processeur (pas de flash, pas de freeze)
+           await blurProcessor.updateTransformerOptions({ blurRadius: targetRadius });
+         } else {
+           // Première activation ou après désactivation : créer un nouveau processeur
+           // delegate: 'GPU' = segmentation hardware-accélérée (précision et perf supérieures)
+           const processor = BackgroundProcessor({
+             mode: 'background-blur',
+             blurRadius: targetRadius,
+             segmenterOptions: { delegate: 'GPU' },
+           });
+           await videoTrack.setProcessor(processor);
+           setBlurProcessor(processor);
          }
-         
-         // Always create a new processor when radius changes to ensure the new intensity is applied
-         const radiusChanged = typeof newRadius === 'number' && newRadius !== blurRadius;
-         let processor = blurProcessor;
-         if (!processor || radiusChanged) {
-             // Let UI render first before blocking thread
-             await new Promise(resolve => setTimeout(resolve, 50));
-             processor = BackgroundBlur(targetRadius);
-             setBlurProcessor(processor);
-         }
-         
-         await videoTrack.setProcessor(processor);
+
          setIsBlurEnabled(true);
-         
-         if (typeof newRadius === 'number') {
-             setBlurRadius(newRadius);
-         }
+         if (typeof newRadius === 'number') setBlurRadius(newRadius);
       }
     } catch (err) {
       console.error('Failed to toggle blur', err);
+    } finally {
+      isApplyingBlur.current = false;
     }
 }, [localParticipant, isBlurEnabled, blurRadius, blurProcessor, isAIEnhanced]);
 
