@@ -6,138 +6,29 @@ import {
   Body,
   Container,
   Section,
+  Row,
+  Column,
   Text,
   Hr,
-  Font
+  Font,
+  Button,
+  Link,
+  Img,
 } from '@react-email/components';
 
-const t = {
-  // ANGLAIS
-  previewText: "VisioConnect Beta goes live tonight at 8:30 PM (Paris/Madrid)",
-  helloEn: "Dear",
-  introTextEn: "Thank you for being part of the VisioConnect Beta Program. We are pleased to confirm that beta access will be officially available tonight.",
-  launchHeroLabelEn: "OFFICIAL OPENING TIME",
-  launchHeroTimeEn: "8:30 PM (CEST)",
-  launchHeroSubEn: "Access starts tonight - please connect from this time onward.",
-  launchDateTitleEn: "Official Beta Opening - Tonight",
-  launchDateTextEn: `
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse: collapse; font-size: 14px;">
-      <tr>
-        <td style="padding: 10px 12px; border: 1px solid #bfdbfe; background: #dbeafe; color: #1e3a8a; font-weight: 700;">Paris / Madrid (CEST)</td>
-        <td style="padding: 10px 12px; border: 1px solid #bfdbfe; background: #dbeafe; color: #1e3a8a; font-weight: 700; text-align: right;">8:30 PM</td>
-      </tr>
-      <tr>
-        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #334155;">London (BST)</td>
-        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #0f172a; font-weight: 600; text-align: right;">7:30 PM</td>
-      </tr>
-      <tr>
-        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #334155;">New York (EDT)</td>
-        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #0f172a; font-weight: 600; text-align: right;">2:30 PM</td>
-      </tr>
-      <tr>
-        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #334155;">Los Angeles (PDT)</td>
-        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #0f172a; font-weight: 600; text-align: right;">11:30 AM</td>
-      </tr>
-      <tr>
-        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #334155;">Quito (ECT)</td>
-        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #0f172a; font-weight: 600; text-align: right;">1:30 PM</td>
-      </tr>
-      <tr>
-        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #334155;">UTC</td>
-        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #0f172a; font-weight: 600; text-align: right;">6:30 PM</td>
-      </tr>
-      <tr>
-        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #334155;">Tokyo (JST)</td>
-        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #0f172a; font-weight: 600; text-align: right;">3:30 AM (Apr 22)</td>
-      </tr>
-    </table>
-  `,
-  
-  situationTitleEn: "Before You Connect",
-  situationTextEn: "Please make sure to read the documentation shared in the very first beta email before your first login. It contains the complete onboarding steps, expected behavior, and best practices to help you start quickly.",
-  
-  actionTitleEn: "If You Have an Issue with a Beta Code",
-  actionTextEn: "If your beta code does not work, please send an email to <strong style=\"color: #1e40af;\">theo.garces.aido@gmail.com</strong> with your <strong>first name</strong>, <strong>last name</strong>, and <strong>email address</strong> used for registration (you can also include your beta code for faster support).",
-  
-  compensationTitleEn: "Access Reminder & Compensation",
-  compensationTextEn: 'Access is considered officially open from <strong style="color: #1e40af;">8:30 PM (CEST)</strong> only. To ensure platform stability for everyone, please connect only from that time onward.<br /><br />To compensate for the delay, we have extended your beta period: <strong style="color: #1e40af;">beta access now ends on April 30, 2026</strong>.',
-  
-  closingTextEn: "Thank you again for your trust and for helping us test VisioConnect in real conditions. Your feedback is essential.",
-  apologyTextEn: "We look forward to welcoming you tonight.",
-  
-  // FRANÇAIS
-  helloFr: "Bonjour",
-  introTextFr: "Merci de faire partie du programme Bêta de VisioConnect. Nous avons le plaisir de vous confirmer que l'accès bêta sera officiellement disponible ce soir.",
-  launchHeroLabelFr: "HEURE OFFICIELLE D'OUVERTURE",
-  launchHeroTimeFr: "20h30 (CEST)",
-  launchHeroSubFr: "Accès ouvert ce soir - merci de vous connecter à partir de cet horaire.",
-  launchDateTitleFr: "Ouverture Officielle de la Bêta - Ce Soir",
-  launchDateTextFr: `
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse: collapse; font-size: 14px;">
-      <tr>
-        <td style="padding: 10px 12px; border: 1px solid #bfdbfe; background: #dbeafe; color: #1e3a8a; font-weight: 700;">Paris / Madrid (CEST)</td>
-        <td style="padding: 10px 12px; border: 1px solid #bfdbfe; background: #dbeafe; color: #1e3a8a; font-weight: 700; text-align: right;">20h30</td>
-      </tr>
-      <tr>
-        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #334155;">Londres (BST)</td>
-        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #0f172a; font-weight: 600; text-align: right;">19h30</td>
-      </tr>
-      <tr>
-        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #334155;">New York (EDT)</td>
-        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #0f172a; font-weight: 600; text-align: right;">14h30</td>
-      </tr>
-      <tr>
-        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #334155;">Los Angeles (PDT)</td>
-        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #0f172a; font-weight: 600; text-align: right;">11h30</td>
-      </tr>
-      <tr>
-        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #334155;">Quito (ECT)</td>
-        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #0f172a; font-weight: 600; text-align: right;">13h30</td>
-      </tr>
-      <tr>
-        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #334155;">UTC</td>
-        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #0f172a; font-weight: 600; text-align: right;">18h30</td>
-      </tr>
-      <tr>
-        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #334155;">Tokyo (JST)</td>
-        <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #0f172a; font-weight: 600; text-align: right;">03h30 (22 avril)</td>
-      </tr>
-    </table>
-  `,
-  
-  situationTitleFr: "Avant de Vous Connecter",
-  situationTextFr: "Pensez bien à lire la documentation fournie dans le tout premier email bêta avant votre première connexion. Elle contient toutes les étapes d'onboarding, les usages recommandés et les informations utiles pour démarrer rapidement.",
-  
-  actionTitleFr: "En Cas de Problème avec un Code Bêta",
-  actionTextFr: "Si votre code bêta ne fonctionne pas, envoyez un email à <strong style=\"color: #1e40af;\">theo.garces.aido@gmail.com</strong> en indiquant votre <strong>nom</strong>, <strong>prénom</strong> et <strong>adresse mail</strong> utilisée à l'inscription (vous pouvez aussi ajouter le code bêta pour un traitement plus rapide).",
-  
-  compensationTitleFr: "Rappel d'Accès & Compensation",
-  compensationTextFr: 'L\'accès est officiellement ouvert à partir de <strong style="color: #1e40af;">20h30 (CEST)</strong>. Pour garantir la stabilité de la plateforme pour tous, merci de vous connecter uniquement à partir de cet horaire.<br /><br />En compensation des jours ajoutés, votre période bêta est prolongée : <strong style="color: #1e40af;">la fin de la bêta est fixée au 30 avril 2026</strong>.',
-  
-  closingTextFr: "Merci encore pour votre confiance et votre aide dans les tests de VisioConnect en conditions réelles. Vos retours sont essentiels.",
-  apologyTextFr: "Nous avons hâte de vous accueillir ce soir.",
-
-  // ALERT
-  alertBoxEn: "⚠️ IMPORTANT: VisioConnect Beta will be officially accessible tonight from 8:30 PM (CEST) only.",
-  alertBoxFr: "⚠️ IMPORTANT : La bêta VisioConnect sera officiellement accessible ce soir à partir de 20h30 (CEST) uniquement.",
-  
-  footerText: "You are receiving this email because you registered for the VisioConnect Private Beta Program.",
-  footerCopyright: "VisioConnect — The Future of Video Conferencing",
-  footerUnsubscribe: "If you no longer wish to participate in the beta program, please reply to this email."
-};
-
 export const MeetingInviteEmail = ({
-  inviteeName = "Theo",
+  inviteeName = "Testeur",
+  betaCode = "",
 }) => {
   return (
-    <Html>
+    <Html lang="fr">
       <Head>
-        <title>Official Beta Opening Tonight - VisioConnect</title>
+        <title>Votre accès bêta VisioConnect est actif</title>
         <Font
           fontFamily="Inter"
           fallbackFontFamily="Helvetica, Arial, sans-serif"
           webFont={{
-            url: "https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfMZhrib2Bg-4.ttf",      
+            url: "https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfMZhrib2Bg-4.ttf",
             format: "truetype",
           }}
           fontWeight={400}
@@ -147,339 +38,770 @@ export const MeetingInviteEmail = ({
           fontFamily="Inter"
           fallbackFontFamily="Helvetica, Arial, sans-serif"
           webFont={{
-            url: "https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfMZhrib2Bg-4.ttf",      
+            url: "https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfMZhrib2Bg-4.ttf",
             format: "truetype",
           }}
-          fontWeight={600} // Inter SemiBold
+          fontWeight={700}
           fontStyle="normal"
         />
       </Head>
-      <Preview>{t.previewText}</Preview>
-      <Body style={main}>      
-        <Container style={container}>
-          {/* EN-TÊTE ÉLÉGANT */}
-          <Section style={header}>
-            <Text style={headerText}>VisioConnect</Text>
-            <Text style={headerSubText}>OFFICIAL COMMUNICATION</Text>
+      <Preview>🔑 Votre accès bêta VisioConnect est actif — Code : {betaCode}</Preview>
+
+      <Body style={bodyStyle}>
+        <Container style={containerStyle}>
+
+          {/* ════════════════════════════════
+              EN-TÊTE GRADIENT
+          ════════════════════════════════ */}
+          <Section style={headerStyle}>
+            {/* Logo + nom */}
+            <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" style={{ borderCollapse: 'collapse' }}>
+              <tr>
+                <td style={{ textAlign: 'center', paddingBottom: '20px' }}>
+                  <div style={logoBadgeStyle}>
+                    <span style={logoLetterStyle}>V</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style={{ textAlign: 'center' }}>
+                  <Text style={brandNameStyle}>VisioConnect</Text>
+                  <div style={betaBadgeStyle}>
+                    <span style={betaBadgeTextStyle}>● BÊTA PRIVÉE</span>
+                  </div>
+                </td>
+              </tr>
+            </table>
           </Section>
 
-          {/* CORPS DU MESSAGE - ANGLAIS */}
-          <Section style={content}>
-            <Text style={greeting}>{t.helloEn} {inviteeName},</Text>
-            
-            <div style={paragraph} dangerouslySetInnerHTML={{ __html: t.introTextEn }} />
+          {/* ════════════════════════════════
+              SALUTATION PERSONNALISÉE
+          ════════════════════════════════ */}
+          <Section style={greetingSection}>
+            <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" style={{ borderCollapse: 'collapse' }}>
+              <tr>
+                <td style={avatarCell}>
+                  <div style={avatarCircle}>
+                    <span style={avatarLetter}>{(inviteeName || 'T').charAt(0).toUpperCase()}</span>
+                  </div>
+                </td>
+                <td style={greetingTextCell}>
+                  <Text style={greetingLineStyle}>Bonjour {inviteeName},</Text>
+                  <Text style={greetingSubStyle}>Bienvenue dans la bêta officielle de VisioConnect.</Text>
+                </td>
+              </tr>
+            </table>
+          </Section>
 
-            <Section style={launchHeroBox}>
-              <Text style={launchHeroLabel}>{t.launchHeroLabelEn}</Text>
-              <Text style={launchHeroTime}>{t.launchHeroTimeEn}</Text>
-              <Text style={launchHeroSub}>{t.launchHeroSubEn}</Text>
-            </Section>
+          <Section style={contentStyle}>
 
-            {/* ENCART HORARES EN */}
-            <Section style={dateBoxStyles}>
-              <Text style={dateTitle}>{t.launchDateTitleEn}</Text>
-              <div style={dateText} dangerouslySetInnerHTML={{ __html: t.launchDateTextEn }} />
-            </Section>
-
-            {/* ALERTE URGENCE EN */}
-            <Section style={alertBoxStyles}>
-              <Text style={alertText}>{t.alertBoxEn}</Text>
-            </Section>
-            
-            <Section style={infoCard}>
-              <Text style={cardTitle}>{t.situationTitleEn}</Text>
-              <Text style={cardText}>{t.situationTextEn}</Text>
-            </Section>
-            
-            <Section style={infoCard}>
-              <Text style={cardTitle}>{t.actionTitleEn}</Text>
-              <div style={cardText} dangerouslySetInnerHTML={{ __html: t.actionTextEn }} />
-            </Section>
-            
-            <Section style={infoCardHighlight}>
-              <Text style={cardTitle}>{t.compensationTitleEn}</Text>
-              <div style={cardText} dangerouslySetInnerHTML={{ __html: t.compensationTextEn }} />
-            </Section>
-
-            <Text style={paragraph}>{t.closingTextEn}</Text>
-            <Text style={paragraph}>{t.apologyTextEn}</Text>
-            
-            <Text style={signoffEn}>
-              Warmest regards,<br />
-              <span style={{ fontWeight: 600, color: '#2563eb', display: 'inline-block', marginTop: '6px' }}>The VisioConnect Team</span>
+            {/* ── INTRO ── */}
+            <Text style={introText}>
+              Vous faites partie des <strong style={{ color: '#1d4ed8' }}>premiers testeurs officiels</strong> sélectionnés par l'équipe VisioConnect. Votre code d'accès nominatif ci-dessous vous donne accès à la réunion <strong style={{ color: '#1d4ed8' }}>Point de Synchronisation</strong>.
             </Text>
-            
-            <Hr style={dividerMargin} />
 
-            {/* CORPS DU MESSAGE - FRANÇAIS */}
-            <Text style={greeting}>{t.helloFr} {inviteeName},</Text>
-            
-            <div style={paragraph} dangerouslySetInnerHTML={{ __html: t.introTextFr }} />
-
-            <Section style={launchHeroBox}>
-              <Text style={launchHeroLabel}>{t.launchHeroLabelFr}</Text>
-              <Text style={launchHeroTime}>{t.launchHeroTimeFr}</Text>
-              <Text style={launchHeroSub}>{t.launchHeroSubFr}</Text>
+            {/* ════════════════════════════════
+                BLOC CODE BÊTA — CENTRAL
+            ════════════════════════════════ */}
+            <Section style={codeWrapperStyle}>
+              {/* Étiquette */}
+              <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" style={{ borderCollapse: 'collapse' }}>
+                <tr>
+                  <td style={{ textAlign: 'center', paddingBottom: '14px' }}>
+                    <div style={codeLabelStyle}>
+                      <span style={codeLabelTextStyle}>🔑 VOTRE CODE D'ACCÈS BÊTA</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td style={{ textAlign: 'center', paddingBottom: '10px' }}>
+                    <div style={codeBoxStyle}>
+                      <Text style={codeTextStyle}>{betaCode}</Text>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td style={{ textAlign: 'center' }}>
+                    <Text style={codeSubtextStyle}>↑ Copiez ce code et collez-le lors de votre première connexion</Text>
+                  </td>
+                </tr>
+              </table>
             </Section>
 
-            {/* ENCART HORARES FR */}
-            <Section style={dateBoxStyles}>
-              <Text style={dateTitle}>{t.launchDateTitleFr}</Text>
-              <div style={dateText} dangerouslySetInnerHTML={{ __html: t.launchDateTextFr }} />
+            {/* ════════════════════════════════
+                STATUT BÊTA
+            ════════════════════════════════ */}
+            <Section style={statusSectionStyle}>
+              <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" style={{ borderCollapse: 'collapse' }}>
+                <tr>
+                  <td style={statusIconCell}>
+                    <div style={statusDotStyle} />
+                  </td>
+                  <td style={{ padding: '0' }}>
+                    <Text style={statusTitleStyle}>Bêta en cours — Accès jusqu'au 1er mai 2026</Text>
+                    <Text style={statusBodyStyle}>
+                      La bêta officielle se termine le <strong style={{ color: '#15803d' }}>30 avril 2026</strong>, mais nous prolongeons votre accès jusqu'au <strong style={{ color: '#15803d' }}>1er mai inclus</strong> pour que vous puissiez finaliser vos tests sereinement.
+                    </Text>
+                  </td>
+                </tr>
+              </table>
             </Section>
 
-            {/* ALERTE URGENCE FR */}
-            <Section style={alertBoxStyles}>
-              <Text style={alertText}>{t.alertBoxFr}</Text>
-            </Section>
-            
-            <Section style={infoCard}>
-              <Text style={cardTitle}>{t.situationTitleFr}</Text>
-              <Text style={cardText}>{t.situationTextFr}</Text>
-            </Section>
-            
-            <Section style={infoCard}>
-              <Text style={cardTitle}>{t.actionTitleFr}</Text>
-              <div style={cardText} dangerouslySetInnerHTML={{ __html: t.actionTextFr }} />
-            </Section>
-            
-            <Section style={infoCardHighlight}>
-              <Text style={cardTitle}>{t.compensationTitleFr}</Text>
-              <div style={cardText} dangerouslySetInnerHTML={{ __html: t.compensationTextFr }} />
+            {/* ════════════════════════════════
+                CALENDRIER DES FUSEAUX
+            ════════════════════════════════ */}
+            <Section style={calendarWrapperStyle}>
+              <Text style={sectionTitleStyle}>🗓️ Calendrier de la Bêta — Début & Fin</Text>
+              <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" style={{ borderCollapse: 'collapse', borderRadius: '8px', overflow: 'hidden' }}>
+                <thead>
+                  <tr>
+                    <th style={thStyleLeft}>Fuseau horaire</th>
+                    <th style={thStyleCenter}>Début</th>
+                    <th style={thStyleCenter}>Fin</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style={{ backgroundColor: '#ffffff' }}>
+                    <td style={tdMainZone}>🇫🇷 France / Espagne / Italie (CEST)</td>
+                    <td style={tdCenter}>17 Avr · 10h30</td>
+                    <td style={tdEndHighlight}>1er Mai · 02h00</td>
+                  </tr>
+                  <tr style={{ backgroundColor: '#f8fafc' }}>
+                    <td style={tdZoneStyle}>🇵🇹 Portugal (WEST)</td>
+                    <td style={tdCenter}>17 Avr · 09h30</td>
+                    <td style={tdEndHighlight}>1er Mai · 01h00</td>
+                  </tr>
+                  <tr style={{ backgroundColor: '#ffffff' }}>
+                    <td style={tdZoneStyle}>🇺🇸 États-Unis · Est (EDT)</td>
+                    <td style={tdCenter}>17 Avr · 04h30</td>
+                    <td style={tdEndHighlight}>30 Avr · 20h00</td>
+                  </tr>
+                  <tr style={{ backgroundColor: '#f8fafc' }}>
+                    <td style={tdZoneStyle}>🇪🇨 Équateur (ECT)</td>
+                    <td style={tdCenter}>17 Avr · 03h30</td>
+                    <td style={tdEndHighlight}>30 Avr · 19h00</td>
+                  </tr>
+                </tbody>
+              </table>
             </Section>
 
-            <Text style={paragraph}>{t.closingTextFr}</Text>
-            <Text style={paragraph}>{t.apologyTextFr}</Text>
+            {/* ════════════════════════════════
+                ÉTAPES DE CONNEXION
+            ════════════════════════════════ */}
+            <Section style={stepsWrapperStyle}>
+              <Text style={sectionTitleStyle}>Comment accéder à la plateforme</Text>
 
-            <Text style={signoff}>
-              Cordialement,<br />
-              <span style={{ fontWeight: 600, color: '#2563eb', display: 'inline-block', marginTop: '6px' }}>L'équipe VisioConnect</span>
+              {/* Étape 1 */}
+              <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" style={{ borderCollapse: 'collapse', marginBottom: '16px' }}>
+                <tr>
+                  <td style={stepNumberCell}>
+                    <div style={stepBubble}>1</div>
+                  </td>
+                  <td style={stepContentCell}>
+                    <Text style={stepTitleStyle}>Créez votre compte</Text>
+                    <Text style={stepBodyStyle}>
+                      Inscrivez-vous instantanément avec <strong>Google</strong> ou <strong>GitHub</strong>.<br />
+                      Ou par e-mail : vous recevrez un code à 6 chiffres pour vérifier votre identité.
+                    </Text>
+                  </td>
+                </tr>
+              </table>
+
+              {/* Étape 2 */}
+              <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" style={{ borderCollapse: 'collapse' }}>
+                <tr>
+                  <td style={stepNumberCell}>
+                    <div style={stepBubble}>2</div>
+                  </td>
+                  <td style={stepContentCell}>
+                    <Text style={stepTitleStyle}>Entrez votre code bêta</Text>
+                    <Text style={stepBodyStyle}>
+                      Collez le code <strong style={{ color: '#1d4ed8', fontFamily: 'monospace', letterSpacing: '1px' }}>{betaCode}</strong> dans le champ prévu lors de votre première connexion pour débloquer l'application.
+                    </Text>
+                  </td>
+                </tr>
+              </table>
+            </Section>
+
+            {/* ════════════════════════════════
+                GUIDE PDF
+            ════════════════════════════════ */}
+            <Section style={guideBoxStyle}>
+              <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" style={{ borderCollapse: 'collapse' }}>
+                <tr>
+                  <td style={{ width: '36px', verticalAlign: 'top', paddingTop: '2px' }}>
+                    <Text style={guideIconStyle}>📎</Text>
+                  </td>
+                  <td>
+                    <Text style={guideTitleStyle}>Guide Bêta inclus en pièce jointe</Text>
+                    <Text style={guideBodyStyle}>
+                      Votre guide officiel au format PDF est joint à cet e-mail. Il contient toutes vos missions de test, les fonctionnalités à explorer et les informations utiles pour démarrer rapidement.
+                    </Text>
+                  </td>
+                </tr>
+              </table>
+            </Section>
+
+            {/* ════════════════════════════════
+                BOUTONS CTA
+            ════════════════════════════════ */}
+            <Section style={ctaWrapperStyle}>
+              <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" style={{ borderCollapse: 'collapse' }}>
+                <tr>
+                  <td style={{ textAlign: 'center', paddingBottom: '12px' }}>
+                    <Button href="https://visioconnect-1.vercel.app/room/demo-123" style={btnPrimaryStyle}>
+                      → Rejoindre la réunion
+                    </Button>
+                  </td>
+                </tr>
+                <tr>
+                  <td style={{ textAlign: 'center' }}>
+                    <Button href="https://visioconnect-1.vercel.app/" style={btnSecondaryStyle}>
+                      Découvrir le site
+                    </Button>
+                  </td>
+                </tr>
+              </table>
+            </Section>
+
+            {/* Liens de secours */}
+            <Section style={fallbackSectionStyle}>
+              <Text style={fallbackTitleStyle}>Liens de secours :</Text>
+              <Text style={fallbackItemStyle}>
+                Réunion :{' '}
+                <Link href="https://visioconnect-1.vercel.app/room/demo-123" style={linkInlineStyle}>
+                  visioconnect-1.vercel.app/room/demo-123
+                </Link>
+              </Text>
+              <Text style={fallbackItemStyle}>
+                Site :{' '}
+                <Link href="https://visioconnect-1.vercel.app/" style={linkInlineStyle}>
+                  visioconnect-1.vercel.app
+                </Link>
+              </Text>
+            </Section>
+
+            <Hr style={hrStyle} />
+
+            {/* ── SIGNATURE ── */}
+            <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" style={{ borderCollapse: 'collapse', marginTop: '8px' }}>
+              <tr>
+                <td>
+                  <Text style={signoffStyle}>
+                    Merci pour votre confiance et votre aide précieuse dans les tests de VisioConnect.{' '}
+                    Vos retours sont essentiels pour améliorer la plateforme.
+                  </Text>
+                  <Text style={signoffStyle}>Cordialement,</Text>
+                  <Text style={signoffTeamStyle}>L'équipe VisioConnect</Text>
+                </td>
+              </tr>
+            </table>
+
+          </Section>
+
+          {/* ════════════════════════════════
+              PIED DE PAGE
+          ════════════════════════════════ */}
+          <Section style={footerStyle}>
+            <Text style={footerTaglineStyle}>
+              Conçu pour une collaboration rapide, simple et sécurisée.
+            </Text>
+            <Hr style={footerHrStyle} />
+            <Text style={footerLegalStyle}>
+              Vous recevez cet e-mail suite à une invitation directe à la bêta VisioConnect.
+            </Text>
+            <Text style={footerCopyrightStyle}>
+              © {new Date().getFullYear()} VisioConnect — Tous droits réservés.
             </Text>
           </Section>
-          <Section style={footer}>
-            <Text style={footerText}>{t.footerText}</Text>
-            <Text style={footerText}>{t.footerUnsubscribe}</Text>
-            <Text style={footerCopyright}>© {new Date().getFullYear()} {t.footerCopyright}</Text>
-          </Section>
+
         </Container>
       </Body>
     </Html>
   );
 };
 
-// -------------------------------------------------------------
-// STYLES IN-JS POUR DESIGNS UNIQUES ET RESPONSIVE
-// -------------------------------------------------------------
-const main = {
-  backgroundColor: '#f4f4f5', // Soft minimal gray
+// ══════════════════════════════════════════════
+// STYLES
+// ══════════════════════════════════════════════
+
+const bodyStyle = {
+  backgroundColor: '#eef2f7',
   fontFamily: '"Inter", "Helvetica Neue", Helvetica, Arial, sans-serif',
-  padding: '40px 0',
+  padding: '32px 0 48px',
 };
 
-const container = {
+const containerStyle = {
   backgroundColor: '#ffffff',
   margin: '0 auto',
-  maxWidth: '600px',
-  borderRadius: '12px',
+  maxWidth: '580px',
+  borderRadius: '16px',
   overflow: 'hidden',
-  boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-  border: '1px solid #e4e4e7',
+  boxShadow: '0 20px 60px rgba(30, 64, 175, 0.12), 0 4px 16px rgba(0,0,0,0.06)',
+  border: '1px solid #dbeafe',
 };
 
-const header = {
-  backgroundColor: '#2563eb', // Deep premium dark -> changed to Primary Blue
-  padding: '36px 40px',
+// ── HEADER ──
+const headerStyle = {
+  background: 'linear-gradient(150deg, #1e40af 0%, #1d4ed8 40%, #2563eb 70%, #3b82f6 100%)',
+  padding: '44px 40px 36px',
   textAlign: 'center',
 };
 
-const headerText = {
+const logoBadgeStyle = {
+  display: 'inline-block',
+  width: '52px',
+  height: '52px',
+  borderRadius: '14px',
+  backgroundColor: 'rgba(255,255,255,0.18)',
+  border: '2px solid rgba(255,255,255,0.35)',
+  margin: '0 auto',
+  textAlign: 'center',
+  lineHeight: '52px',
+  verticalAlign: 'middle',
+};
+
+const logoLetterStyle = {
+  color: '#ffffff',
+  fontSize: '28px',
+  fontWeight: '800',
+  lineHeight: '52px',
+  verticalAlign: 'middle',
+  display: 'inline-block',
+};
+
+const brandNameStyle = {
   color: '#ffffff',
   fontSize: '26px',
-  fontWeight: '600',
-  letterSpacing: '-0.5px',
-  margin: '0',
+  fontWeight: '800',
+  letterSpacing: '-0.6px',
+  margin: '12px 0 10px',
 };
 
-const headerSubText = {
-  color: '#bfdbfe', // Soft light blue
-  fontSize: '11px',
-  fontWeight: '600',
+const betaBadgeStyle = {
+  display: 'inline-block',
+  backgroundColor: 'rgba(255,255,255,0.15)',
+  border: '1px solid rgba(255,255,255,0.3)',
+  borderRadius: '20px',
+  padding: '4px 14px',
+  margin: '0 auto',
+};
+
+const betaBadgeTextStyle = {
+  color: '#bfdbfe',
+  fontSize: '10px',
+  fontWeight: '700',
   letterSpacing: '2px',
   textTransform: 'uppercase',
-  margin: '8px 0 0 0',
 };
 
-const content = {
-  padding: '40px',
+// ── GREETING BAND ──
+const greetingSection = {
+  backgroundColor: '#f0f7ff',
+  borderBottom: '1px solid #dbeafe',
+  padding: '20px 32px',
 };
 
-const greeting = {
-  color: '#1e3a8a', // Dark blue
+const avatarCell = {
+  width: '60px',
+  verticalAlign: 'middle',
+  paddingRight: '14px',
+};
+
+const avatarCircle = {
+  width: '42px',
+  height: '42px',
+  borderRadius: '50%',
+  backgroundColor: '#1d4ed8',
+  display: 'block',
+  border: '3px solid #bfdbfe',
+  textAlign: 'center',
+  lineHeight: '42px',
+};
+
+const avatarLetter = {
+  color: '#ffffff',
   fontSize: '20px',
-  fontWeight: '600',
-  marginBottom: '24px',
+  fontWeight: '700',
+  lineHeight: '42px',
+  verticalAlign: 'middle',
+  display: 'inline-block',
 };
 
-const paragraph = {
-  color: '#3f3f46',
-  fontSize: '15px',
-  lineHeight: '26px',
-  marginBottom: '24px',
+const greetingTextCell = {
+  verticalAlign: 'middle',
 };
 
-const infoCard = {
-  backgroundColor: '#fafafa', // Ultra light gray to pop inside white box
-  border: '1px solid #e4e4e7',
-  borderRadius: '8px',
-  marginBottom: '24px',
-};
-
-const infoCardHighlight = {
-  backgroundColor: '#eff6ff', // Light blue highlight
-  border: '2px solid #2563eb',
-  borderRadius: '8px',
-  marginBottom: '24px',
-};
-
-const cardTitle = {
-  color: '#1e3a8a', // Dark blue
-  fontSize: '15px',
-  fontWeight: '600',
-  margin: '0',
-  padding: '24px 24px 8px 24px',
-};
-
-const cardText = {
-  color: '#52525b',
-  fontSize: '15px',
-  lineHeight: '25px',
-  margin: '0',
-  padding: '0 24px 24px 24px',
-};
-
-const dateBoxStyles = {
-  backgroundColor: '#f8fafc', // slate-50
-  borderLeft: '4px solid #2563eb', // blue-600
-  padding: '24px',
-  marginBottom: '24px',
-  borderRadius: '0 8px 8px 0',
-};
-
-const dateTitle = {
+const greetingLineStyle = {
   color: '#1e3a8a',
-  fontSize: '14px',
+  fontSize: '17px',
   fontWeight: '700',
-  margin: '0 0 12px 0',
-  textTransform: 'uppercase',
-  letterSpacing: '0.5px'
+  margin: '0 0 2px',
 };
 
-const dateText = {
-  color: '#27272a',
-  fontSize: '15px',
-  lineHeight: '24px',
+const greetingSubStyle = {
+  color: '#3b82f6',
+  fontSize: '13px',
   margin: '0',
 };
 
-const launchHeroBox = {
-  backgroundColor: '#0f172a',
-  borderRadius: '10px',
-  padding: '20px 24px',
+// ── CONTENT ──
+const contentStyle = {
+  padding: '32px 36px 36px',
+};
+
+const introText = {
+  color: '#374151',
+  fontSize: '15px',
+  lineHeight: '27px',
+  margin: '0 0 28px',
+};
+
+// ── CODE BÊTA ──
+const codeWrapperStyle = {
+  background: 'linear-gradient(145deg, #0f172a 0%, #1e293b 100%)',
+  borderRadius: '14px',
+  padding: '28px 24px',
   marginBottom: '24px',
-  border: '1px solid #1e293b',
+  border: '1px solid #334155',
 };
 
-const launchHeroLabel = {
-  color: '#93c5fd',
-  fontSize: '11px',
+const codeLabelStyle = {
+  display: 'inline-block',
+  backgroundColor: 'rgba(99,179,255,0.12)',
+  border: '1px solid rgba(147,197,253,0.3)',
+  borderRadius: '20px',
+  padding: '5px 16px',
+};
+
+const codeLabelTextStyle = {
+  color: '#7dd3fc',
+  fontSize: '10px',
   fontWeight: '700',
-  letterSpacing: '1.2px',
+  letterSpacing: '1.8px',
   textTransform: 'uppercase',
-  margin: '0 0 8px 0',
 };
 
-const launchHeroTime = {
+const codeBoxStyle = {
+  backgroundColor: 'rgba(255,255,255,0.05)',
+  border: '2px dashed rgba(147,197,253,0.4)',
+  borderRadius: '10px',
+  padding: '14px 20px',
+  display: 'inline-block',
+  margin: '0 auto',
+};
+
+const codeTextStyle = {
   color: '#ffffff',
   fontSize: '32px',
-  fontWeight: '700',
-  letterSpacing: '-0.8px',
-  lineHeight: '1.2',
-  margin: '0 0 8px 0',
+  fontWeight: '800',
+  letterSpacing: '8px',
+  fontFamily: '"Courier New", Courier, "Lucida Console", monospace',
+  margin: '0',
+  textAlign: 'center',
 };
 
-const launchHeroSub = {
-  color: '#cbd5e1',
+const codeSubtextStyle = {
+  color: '#64748b',
+  fontSize: '12px',
+  margin: '4px 0 0',
+  textAlign: 'center',
+};
+
+// ── STATUS ──
+const statusSectionStyle = {
+  backgroundColor: '#f0fdf4',
+  border: '1.5px solid #86efac',
+  borderRadius: '12px',
+  padding: '18px 20px',
+  marginBottom: '24px',
+};
+
+const statusIconCell = {
+  width: '20px',
+  verticalAlign: 'top',
+  paddingTop: '4px',
+  paddingRight: '12px',
+};
+
+const statusDotStyle = {
+  width: '10px',
+  height: '10px',
+  borderRadius: '50%',
+  backgroundColor: '#22c55e',
+  boxShadow: '0 0 0 3px rgba(34,197,94,0.2)',
+};
+
+const statusTitleStyle = {
+  color: '#15803d',
   fontSize: '14px',
+  fontWeight: '700',
+  margin: '0 0 6px',
+};
+
+const statusBodyStyle = {
+  color: '#166534',
+  fontSize: '13px',
   lineHeight: '22px',
   margin: '0',
 };
 
-const alertBoxStyles = {
-  backgroundColor: '#fef2f2', // red-50
-  border: '2px solid #ef4444', // red-500
-  borderRadius: '8px',
-  padding: '24px',
-  marginBottom: '32px',
+// ── CALENDRIER ──
+const calendarWrapperStyle = {
+  marginBottom: '24px',
+  border: '1px solid #e2e8f0',
+  borderRadius: '12px',
+  overflow: 'hidden',
 };
 
-const alertText = {
-  color: '#991b1b', // red-800
-  fontSize: '16px',
-  fontWeight: '600',
-  lineHeight: '24px',
-  margin: '0',
+const sectionTitleStyle = {
+  color: '#1e3a8a',
+  fontSize: '14px',
+  fontWeight: '700',
+  margin: '0 0 14px',
+  textTransform: 'uppercase',
+  letterSpacing: '0.5px',
+};
+
+const thStyleLeft = {
+  padding: '10px 14px',
+  backgroundColor: '#1e40af',
+  color: '#ffffff',
+  fontSize: '11px',
+  fontWeight: '700',
+  textAlign: 'left',
+  letterSpacing: '0.5px',
+  textTransform: 'uppercase',
+};
+
+const thStyleCenter = {
+  padding: '10px 14px',
+  backgroundColor: '#1e40af',
+  color: '#ffffff',
+  fontSize: '11px',
+  fontWeight: '700',
   textAlign: 'center',
+  letterSpacing: '0.5px',
+  textTransform: 'uppercase',
 };
 
-const dividerMargin = {
-  borderColor: '#e4e4e7',
-  margin: '40px 0',
+const tdMainZone = {
+  padding: '10px 14px',
+  color: '#1e3a8a',
+  fontSize: '13px',
+  fontWeight: '600',
+  borderBottom: '1px solid #e2e8f0',
 };
 
-const signoffEn = {
-  color: '#52525b',
-  fontSize: '15px',
-  lineHeight: '24px',
-  margin: '0',
-  marginTop: '24px',
+const tdZoneStyle = {
+  padding: '10px 14px',
+  color: '#334155',
+  fontSize: '13px',
+  borderBottom: '1px solid #e2e8f0',
 };
 
-const signoff = {
-  color: '#52525b',
-  fontSize: '15px',
-  lineHeight: '24px',
-  margin: '0',
-  marginTop: '24px',
+const tdCenter = {
+  padding: '10px 14px',
+  color: '#475569',
+  fontSize: '13px',
+  fontWeight: '500',
+  textAlign: 'center',
+  borderBottom: '1px solid #e2e8f0',
+  borderLeft: '1px solid #e2e8f0',
 };
 
-const divider = {
-  borderColor: '#e4e4e7',
-  margin: '0',
+const tdEndHighlight = {
+  padding: '10px 14px',
+  color: '#1d4ed8',
+  fontSize: '13px',
+  fontWeight: '700',
+  textAlign: 'center',
+  borderBottom: '1px solid #e2e8f0',
+  borderLeft: '1px solid #e2e8f0',
 };
 
-const dividerSubtle = {
-  borderColor: '#e4e4e7',
-  margin: '0',
-};
-
-const footer = {
+// ── ÉTAPES ──
+const stepsWrapperStyle = {
   backgroundColor: '#fafafa',
-  padding: '32px 40px',
+  border: '1px solid #e4e4e7',
+  borderRadius: '12px',
+  padding: '22px 22px 8px',
+  marginBottom: '24px',
+};
+
+const stepNumberCell = {
+  width: '36px',
+  verticalAlign: 'top',
+  paddingTop: '0px',
+  paddingRight: '14px',
+};
+
+const stepBubble = {
+  width: '32px',
+  height: '32px',
+  borderRadius: '50%',
+  backgroundColor: '#1d4ed8',
+  color: '#ffffff',
+  fontSize: '14px',
+  fontWeight: '700',
+  display: 'inline-block',
+  textAlign: 'center',
+  lineHeight: '32px',
+};
+
+const stepContentCell = {
+  verticalAlign: 'top',
+  paddingBottom: '16px',
+};
+
+const stepTitleStyle = {
+  color: '#1e3a8a',
+  fontSize: '14px',
+  fontWeight: '700',
+  margin: '2px 0 6px',
+};
+
+const stepBodyStyle = {
+  color: '#52525b',
+  fontSize: '13px',
+  lineHeight: '22px',
+  margin: '0',
+};
+
+// ── GUIDE PDF ──
+const guideBoxStyle = {
+  backgroundColor: '#fffbeb',
+  border: '1.5px solid #fcd34d',
+  borderRadius: '12px',
+  padding: '16px 20px',
+  marginBottom: '28px',
+};
+
+const guideIconStyle = {
+  fontSize: '20px',
+  margin: '0',
+};
+
+const guideTitleStyle = {
+  color: '#92400e',
+  fontSize: '14px',
+  fontWeight: '700',
+  margin: '0 0 4px',
+};
+
+const guideBodyStyle = {
+  color: '#78350f',
+  fontSize: '13px',
+  lineHeight: '22px',
+  margin: '0',
+};
+
+// ── CTA ──
+const ctaWrapperStyle = {
+  marginBottom: '20px',
+};
+
+const btnPrimaryStyle = {
+  backgroundColor: '#1d4ed8',
+  backgroundImage: 'linear-gradient(135deg, #1d4ed8, #2563eb)',
+  borderRadius: '10px',
+  color: '#ffffff',
+  display: 'inline-block',
+  fontSize: '15px',
+  fontWeight: '700',
+  padding: '15px 36px',
+  textDecoration: 'none',
+  letterSpacing: '0.2px',
+};
+
+const btnSecondaryStyle = {
+  backgroundColor: '#f8fafc',
+  border: '2px solid #cbd5e1',
+  borderRadius: '10px',
+  color: '#1e3a8a',
+  display: 'inline-block',
+  fontSize: '14px',
+  fontWeight: '600',
+  padding: '13px 32px',
+  textDecoration: 'none',
+};
+
+const fallbackSectionStyle = {
+  marginBottom: '28px',
+};
+
+const fallbackTitleStyle = {
+  color: '#94a3b8',
+  fontSize: '11px',
+  fontWeight: '600',
+  margin: '0 0 4px',
+  textTransform: 'uppercase',
+  letterSpacing: '0.5px',
+};
+
+const fallbackItemStyle = {
+  color: '#94a3b8',
+  fontSize: '11px',
+  margin: '0 0 2px',
+};
+
+const linkInlineStyle = {
+  color: '#3b82f6',
+  textDecoration: 'underline',
+};
+
+const hrStyle = {
+  borderColor: '#e2e8f0',
+  margin: '28px 0',
+};
+
+const signoffStyle = {
+  color: '#52525b',
+  fontSize: '14px',
+  lineHeight: '24px',
+  margin: '0 0 8px',
+};
+
+const signoffTeamStyle = {
+  color: '#1d4ed8',
+  fontSize: '15px',
+  fontWeight: '700',
+  margin: '0',
+};
+
+// ── FOOTER ──
+const footerStyle = {
+  backgroundColor: '#f1f5f9',
+  borderTop: '1px solid #e2e8f0',
+  padding: '24px 36px',
   textAlign: 'center',
 };
 
-const footerText = {
-  color: '#71717a',
-  fontSize: '12px',
-  lineHeight: '18px',
-  margin: '0 0 8px 0',
+const footerTaglineStyle = {
+  color: '#475569',
+  fontSize: '13px',
+  fontWeight: '600',
+  margin: '0 0 14px',
 };
 
-const footerCopyright = {
-  color: '#a1a1aa',
-  fontSize: '12px',
-  fontWeight: '600',
+const footerHrStyle = {
+  borderColor: '#e2e8f0',
+  margin: '0 0 14px',
+};
+
+const footerLegalStyle = {
+  color: '#94a3b8',
+  fontSize: '11px',
+  lineHeight: '17px',
+  margin: '0 0 6px',
+};
+
+const footerCopyrightStyle = {
+  color: '#64748b',
+  fontSize: '11px',
+  fontWeight: '700',
   margin: '0',
+  letterSpacing: '0.5px',
 };
 
 export default MeetingInviteEmail;

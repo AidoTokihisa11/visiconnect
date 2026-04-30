@@ -1,4 +1,6 @@
 import * as React from 'react';
+import * as fs from 'fs';
+import * as path from 'path';
 import { Resend } from 'resend';
 import { render } from '@react-email/components';
 import { MeetingInviteEmail } from '../emails/MeetingInviteEmail';
@@ -7,29 +9,10 @@ import { MeetingInviteEmail } from '../emails/MeetingInviteEmail';
 const resend = new Resend('re_f7CXkPZ1_FouifSQZycKkbcStAoZkGgW8');
 
 // LISTE DES BÊTA TESTEURS À PERSONNALISER
+// Chaque entrée : nom complet, email, et code bêta unique
 const betaTesters = [
-  { name: "Alex Suárez", email: "alex.suarez.garce@hotmail.com" },
-  { name: "Eduardo Guzman", email: "drguzmangarces@gmail.com" },
-  { name: "Paulina Garces", email: "paulygarces27@gmail.com" },
-  { name: "Cris Guzman", email: "ggmariacris@gmail.com" },
-  { name: "Ma.Augusta Suarez", email: "magusuarez@gmail.com" },
-  { name: "Jose Garces", email: "josegarces70@hotmail.com" },
-  { name: "Paquito Garces", email: "jgarces29@gmail.com" },
-  { name: "Leopold Brillet", email: "leopold.brillet@gmail.com" },
-  { name: "rozenn Guillemet", email: "roz.guill07@gmail.com" },
-  { name: "Maxine M", email: "kuroyasha.m@gmail.com" },
-  { name: "Jacqueline Guillemet", email: "biotilande@sfr.fr" },
-  { name: "Marco Luciano", email: "Lucianomarco74@gmail.com" },
-  { name: "Amelie Durant", email: "Amelied68@gmail.com" },
-  { name: "Andreas Dohin", email: "andreas.dohin@laposte.net" },
-  { name: "Yesmine Ben Dhaou", email: "Yesminebendhaou@gmail.com" },
-  { name: "Marine SEGURET", email: "msleeenss@gmail.com" },
-  { name: "Wisllor PIERRE SAINT", email: "wisllor.pierresaint@gmail.com" },
-  { name: "Mickaël Guillemet", email: "mikka@netcourrier.com" },
-  { name: "Maëlle Guillemet", email: "guillemet.maelle@gmail.com" },
-  { name: "Alexandra Doucet", email: "Alexandra.durman8@gmail.com" },
-  { name: "Théo Garces", email: "theogarces33@gmail.com" },
-  { name: "Isabelle Garces", email: "isadgarces@gmail.com" }
+  { name: "Gaël Sorin", email: "gagadu8585@gmail.com", betaCode: "VC-GS-A4KP" },
+  { name: "Loris Doucet", email: "loris.doucet37@gmail.com", betaCode: "VC-LD-M7RQ" },
 ];
 
 async function sendInvites() {
@@ -46,16 +29,26 @@ async function sendInvites() {
       // 1. Rendre l'email avec les données personnalisées du testeur
       const emailHtml = await render(
         <MeetingInviteEmail 
-          inviteeName={tester.name} 
+          inviteeName={tester.name}
+          betaCode={tester.betaCode}
         />
       );
 
       // 2. Envoyer l'email
+      const pdfPath = path.resolve(process.cwd(), 'server/public/Guide_officiel__Bta_Prive_VisioConnect.pdf');
+      const pdfContent = fs.readFileSync(pdfPath);
+
       const response = await resend.emails.send({
         from: 'VisioConnect <contact@visioconnect.pro>',
         to: tester.email,
-        subject: 'Mise à jour concernant la Bêta de VisioConnect',
-        html: emailHtml
+        subject: `🔑 Votre accès bêta VisioConnect est actif — Code : ${tester.betaCode}`,
+        html: emailHtml,
+        attachments: [
+          {
+            filename: 'Guide_Beta_VisioConnect.pdf',
+            content: pdfContent,
+          }
+        ]
       });
 
       if (response.error) {

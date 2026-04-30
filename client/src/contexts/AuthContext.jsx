@@ -64,7 +64,13 @@ export const AuthProvider = ({ children }) => {
         await clerk.setActive({ session: res.createdSessionId });
         return { data: { user: res }, success: true };
       }
-      return { error: { message: "Information manquante" } };
+      if (res.status === "needs_second_factor") {
+        return { error: { message: "Votre compte a la double authentification (2FA) activée. Veuillez désactiver le 2FA depuis les paramètres de votre compte Clerk, ou contactez le support." } };
+      }
+      if (res.status === "needs_first_factor") {
+        return { error: { message: "Ce compte a été créé via Google, GitHub ou Discord. Veuillez utiliser le bouton de connexion sociale correspondant." } };
+      }
+      return { error: { message: `Connexion incomplète (statut: ${res.status}). Veuillez réessayer ou contacter le support.` } };
     } catch (err) {
       return { error: { message: handleNetworkError(err) } };
     }
