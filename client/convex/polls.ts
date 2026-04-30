@@ -17,6 +17,8 @@ export const createPoll = mutation({
     question: v.string(),
     options: v.array(v.string()),
     createdBy: v.string(),
+    isAnonymous: v.optional(v.boolean()),
+    showResults: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     const optionsWithVotes = args.options.map(text => ({
@@ -33,6 +35,8 @@ export const createPoll = mutation({
       isActive: true,
       createdBy: args.createdBy,
       createdAt: Date.now(),
+      isAnonymous: args.isAnonymous ?? false,
+      showResults: args.showResults ?? true,
     });
   },
 });
@@ -66,5 +70,14 @@ export const endPoll = mutation({
   args: { pollId: v.id("polls") },
   handler: async (ctx, args) => {
     await ctx.db.patch(args.pollId, { isActive: false });
+  },
+});
+
+export const toggleShowResults = mutation({
+  args: { pollId: v.id("polls"), show: v.boolean() },
+  handler: async (ctx, args) => {
+    const poll = await ctx.db.get(args.pollId);
+    if (!poll) throw new Error("Sondage introuvable");
+    await ctx.db.patch(args.pollId, { showResults: args.show });
   },
 });

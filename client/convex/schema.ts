@@ -75,6 +75,8 @@ export default defineSchema({
     isActive: v.boolean(),
     createdBy: v.string(),
     createdAt: v.number(),
+    isAnonymous: v.optional(v.boolean()),
+    showResults: v.optional(v.boolean()),
   }).index("by_meeting", ["meetingId"]),
 
   breakoutRooms: defineTable({
