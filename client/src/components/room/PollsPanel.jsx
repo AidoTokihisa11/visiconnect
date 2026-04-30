@@ -541,129 +541,13 @@ const IconButton = styled.button`
   color: ${THEME.textSecondary};
   cursor: pointer;
   display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
   
   &:hover {
     color: white;
+    background: rgba(255,255,255,0.08);
   }
 `;
-
-export default function PollsPanel({ meetingId, currentUser, onClose, onPollCreated }) {
-  const polls = useQuery(api.polls.getPolls, { meetingId }) || [];
-  const createPoll = useMutation(api.polls.createPoll);
-  const votePoll = useMutation(api.polls.votePoll);
-  const endPoll = useMutation(api.polls.endPoll);
-
-  const [isCreating, setIsCreating] = useState(false);
-  const [question, setQuestion] = useState("");
-  const [options, setOptions] = useState(["", ""]);
-
-  const handleCreate = async () => {
-    const validOptions = options.filter(o => o.trim() !== "");
-    if (question.trim() === "" || validOptions.length < 2) return;
-    
-    await createPoll({
-      meetingId,
-      question,
-      options: validOptions,
-      createdBy: currentUser.identity || "Anonyme",
-    });
-    
-    setIsCreating(false);
-    setQuestion("");
-    setOptions(["", ""]);
-    // Auto-close panel after successful creation
-    if (onPollCreated) onPollCreated();
-  };
-
-  const totalVotes = (poll) => poll.options.reduce((acc, curr) => acc + curr.votes, 0);
-
-  return (
-    <PanelContainer>
-      <Header>
-        <span>Sondages</span>
-        <IconButton onClick={onClose}><X size={20} /></IconButton>
-      </Header>
-      
-      <Content>
-        {!isCreating ? (
-          <>
-            <Button onClick={() => setIsCreating(true)}>
-              <Plus size={18} /> Créer un sondage
-            </Button>
-            
-            {polls.map(poll => {
-              const hasVoted = poll.votedUsers?.includes(currentUser.identity);
-              const total = totalVotes(poll);
-              
-              return (
-                <PollCard key={poll._id}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                    <h4 style={{ margin: 0 }}>{poll.question}</h4>
-                    {poll.createdBy === currentUser.identity && poll.isActive && (
-                      <IconButton onClick={() => endPoll({ pollId: poll._id })} title="Clôturer">
-                        <CheckCircle size={16} />
-                      </IconButton>
-                    )}
-                  </div>
-                  
-                  {!poll.isActive && <div style={{ fontSize: '12px', color: THEME.danger, marginBottom: '8px' }}>Sondage terminé</div>}
-                  
-                  {poll.options.map(opt => {
-                    const pct = total > 0 ? Math.round((opt.votes / total) * 100) : 0;
-                    return (
-                      <OptionBtn 
-                        key={opt.id}
-                        disabled={hasVoted || !poll.isActive}
-                        onClick={() => votePoll({ pollId: poll._id, optionId: opt.id, userId: currentUser.identity })}
-                      >
-                        <span>{opt.text}</span>
-                        {(hasVoted || !poll.isActive) && <span>{pct}% ({opt.votes})</span>}
-                      </OptionBtn>
-                    );
-                  })}
-                </PollCard>
-              );
-            })}
-          </>
-        ) : (
-          <PollCard>
-            <h4 style={{ margin: '0 0 16px 0' }}>Nouveau sondage</h4>
-            <Input 
-              placeholder="Votre question..." 
-              value={question} 
-              onChange={e => setQuestion(e.target.value)} 
-            />
-            
-            {options.map((opt, i) => (
-              <div key={i} style={{ display: 'flex', gap: '8px' }}>
-                <Input 
-                  placeholder={`Option ${i + 1}`} 
-                  value={opt} 
-                  onChange={e => {
-                    const newOpts = [...options];
-                    newOpts[i] = e.target.value;
-                    setOptions(newOpts);
-                  }} 
-                />
-                {options.length > 2 && (
-                  <IconButton onClick={() => setOptions(options.filter((_, idx) => idx !== i))} style={{ marginTop: '-8px' }}>
-                    <Trash2 size={16} />
-                  </IconButton>
-                )}
-              </div>
-            ))}
-            
-            <Button style={{ background: 'transparent', border: `1px dashed ${THEME.primary}` }} onClick={() => setOptions([...options, ""])}>
-              <Plus size={16} /> Ajouter une option
-            </Button>
-            
-            <div style={{ display: 'flex', gap: '8px', marginTop: '16px' }}>
-              <Button style={{ background: THEME.surface }} onClick={() => setIsCreating(false)}>Annuler</Button>
-              <Button onClick={handleCreate}>Créer</Button>
-            </div>
-          </PollCard>
-        )}
-      </Content>
-    </PanelContainer>
-  );
-}
