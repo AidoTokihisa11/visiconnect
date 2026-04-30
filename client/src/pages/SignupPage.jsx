@@ -379,10 +379,7 @@ const SignupPage = () => {
        setError(t('signup.errorPassword'))
        return
     }
-    if (!isLoaded || !clerkSignUp) {
-      setError('Clerk n\'est pas prêt, veuillez patienter.')
-      return
-    }
+    if (!isLoaded || !clerkSignUp) return
 
     setLoading(true)
     setError('')
@@ -533,7 +530,7 @@ const SignupPage = () => {
 
                 <SubmitButton
                   type="submit"
-                  disabled={loading || (registrationForm.password.length > 0 && !Object.values(passwordRules).every(Boolean))}
+                  disabled={!isLoaded || loading || (registrationForm.password.length > 0 && !Object.values(passwordRules).every(Boolean))}
                   whileTap={{ scale: 0.98 }}
                 >
                   {loading ? t('signup.loading') : t('signup.submit')}
