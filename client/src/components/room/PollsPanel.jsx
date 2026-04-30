@@ -442,39 +442,3 @@ export default function PollsPanel({ meetingId, currentUser, onClose, onPollCrea
 }
 
 
-const PanelContainer = styled.div`
-  width: 320px;
-  background-color: ${THEME.panelBg};
-  border-left: 1px solid ${THEME.border};
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-`;
-
-const Header = styled.div`
-  padding: 16px;
-  border-bottom: 1px solid ${THEME.border};
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: white;
-  font-weight: 600;
-`;
-
-const Content = styled.div`
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
-
-const PollCard = styled.div`
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  padding: 16px;
-  color: white;
-`;
-
-
