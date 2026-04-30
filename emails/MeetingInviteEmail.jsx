@@ -18,7 +18,7 @@ import {
 
 export const MeetingInviteEmail = ({
   inviteeName = "Testeur",
-  betaCode = "",
+  betaCode = "VC-XXXX-XXXX",
 }) => {
   return (
     <Html lang="fr">
@@ -138,9 +138,9 @@ export const MeetingInviteEmail = ({
                     <div style={statusDotStyle} />
                   </td>
                   <td style={{ padding: '0' }}>
-                    <Text style={statusTitleStyle}>Bêta en cours — Accès jusqu'au 1er mai 2026</Text>
+                    <Text style={statusTitleStyle}>Bêta en cours — Fin le 30 avril 2026 à 00h30</Text>
                     <Text style={statusBodyStyle}>
-                      La bêta officielle se termine le <strong style={{ color: '#15803d' }}>30 avril 2026</strong>, mais nous prolongeons votre accès jusqu'au <strong style={{ color: '#15803d' }}>1er mai inclus</strong> pour que vous puissiez finaliser vos tests sereinement.
+                      La bêta officielle se termine le <strong style={{ color: '#15803d' }}>30 avril 2026 à 00h30</strong> (heure de Paris). Merci pour votre participation et vos retours précieux.
                     </Text>
                   </td>
                 </tr>
@@ -164,22 +164,22 @@ export const MeetingInviteEmail = ({
                   <tr style={{ backgroundColor: '#ffffff' }}>
                     <td style={tdMainZone}>🇫🇷 France / Espagne / Italie (CEST)</td>
                     <td style={tdCenter}>17 Avr · 10h30</td>
-                    <td style={tdEndHighlight}>1er Mai · 02h00</td>
+                    <td style={tdEndHighlight}>30 Avr · 00h30</td>
                   </tr>
                   <tr style={{ backgroundColor: '#f8fafc' }}>
                     <td style={tdZoneStyle}>🇵🇹 Portugal (WEST)</td>
                     <td style={tdCenter}>17 Avr · 09h30</td>
-                    <td style={tdEndHighlight}>1er Mai · 01h00</td>
+                    <td style={tdEndHighlight}>29 Avr · 23h30</td>
                   </tr>
                   <tr style={{ backgroundColor: '#ffffff' }}>
                     <td style={tdZoneStyle}>🇺🇸 États-Unis · Est (EDT)</td>
                     <td style={tdCenter}>17 Avr · 04h30</td>
-                    <td style={tdEndHighlight}>30 Avr · 20h00</td>
+                    <td style={tdEndHighlight}>29 Avr · 18h30</td>
                   </tr>
                   <tr style={{ backgroundColor: '#f8fafc' }}>
                     <td style={tdZoneStyle}>🇪🇨 Équateur (ECT)</td>
                     <td style={tdCenter}>17 Avr · 03h30</td>
-                    <td style={tdEndHighlight}>30 Avr · 19h00</td>
+                    <td style={tdEndHighlight}>29 Avr · 17h30</td>
                   </tr>
                 </tbody>
               </table>

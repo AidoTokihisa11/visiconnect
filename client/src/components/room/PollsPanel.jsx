@@ -254,26 +254,47 @@ export default function PollsPanel({ meetingId, currentUser, onClose, onPollCrea
   const [options, setOptions] = useState(["", ""]);
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [showResultsOnCreate, setShowResultsOnCreate] = useState(true);
+  const [createError, setCreateError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleCreate = async () => {
-    const validOptions = options.filter(o => o.trim() !== "");
-    if (question.trim() === "" || validOptions.length < 2) return;
-    
-    await createPoll({
-      meetingId,
-      question,
-      options: validOptions,
-      createdBy: currentUser.identity || "Anonyme",
-      isAnonymous,
-      showResults: showResultsOnCreate,
-    });
-    
+  const resetForm = () => {
     setIsCreating(false);
     setQuestion("");
     setOptions(["", ""]);
     setIsAnonymous(false);
     setShowResultsOnCreate(true);
-    if (onPollCreated) onPollCreated();
+    setCreateError("");
+  };
+
+  const handleCreate = async () => {
+    setCreateError("");
+    const validOptions = options.filter(o => o.trim() !== "");
+    if (question.trim() === "") {
+      setCreateError("Veuillez saisir une question.");
+      return;
+    }
+    if (validOptions.length < 2) {
+      setCreateError("Ajoutez au moins 2 options.");
+      return;
+    }
+    setIsLoading(true);
+    try {
+      await createPoll({
+        meetingId,
+        question: question.trim(),
+        options: validOptions,
+        createdBy: currentUser?.identity || "Anonyme",
+        isAnonymous,
+        showResults: showResultsOnCreate,
+      });
+      resetForm();
+      if (onPollCreated) onPollCreated();
+    } catch (err) {
+      console.error('createPoll error:', err);
+      setCreateError("Erreur lors de la création. Réessayez.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const totalVotes = (poll) => poll.options.reduce((acc, curr) => acc + curr.votes, 0);
@@ -430,9 +451,16 @@ export default function PollsPanel({ meetingId, currentUser, onClose, onPollCrea
               </ToggleRow>
             </OptionsSection>
 
+            {createError && (
+              <div style={{ color: '#f87171', fontSize: '12px', marginTop: '8px', padding: '6px 10px', background: 'rgba(239,68,68,0.08)', borderRadius: '6px', border: '1px solid rgba(239,68,68,0.25)' }}>
+                {createError}
+              </div>
+            )}
             <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
-              <Button style={{ background: THEME.surface }} onClick={() => { setIsCreating(false); setIsAnonymous(false); setShowResultsOnCreate(true); }}>Annuler</Button>
-              <Button onClick={handleCreate}>Créer</Button>
+              <Button style={{ background: THEME.surface }} onClick={resetForm} disabled={isLoading}>Annuler</Button>
+              <Button onClick={handleCreate} disabled={isLoading} style={{ opacity: isLoading ? 0.6 : 1 }}>
+                {isLoading ? 'Création...' : 'Créer'}
+              </Button>
             </div>
           </PollCard>
         )}

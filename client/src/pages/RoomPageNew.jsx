@@ -184,6 +184,7 @@ export default function RoomPageNew() {
   const [guestName, setGuestName] = useState('');
   const [betaCode, setBetaCode] = useState('');
   const [betaError, setBetaError] = useState(false);
+  const [nameError, setNameError] = useState(false);
 
   // Regen beta code by email
   const [regenEmail, setRegenEmail] = useState('');
@@ -337,7 +338,11 @@ export default function RoomPageNew() {
                     return;
                   }
                   setBetaError(false);
-                  if (!user?.email && !guestName.trim()) return;
+                  if (!user?.email && !guestName.trim()) {
+                    setNameError(true);
+                    return;
+                  }
+                  setNameError(false);
                   setIsBetaValidated(true);
                 }}
                 className="space-y-4 sm:space-y-5"
@@ -449,10 +454,15 @@ export default function RoomPageNew() {
                       type="text"
                       placeholder={t('room.beta.pseudoPlaceholder')}
                       value={guestName}
-                      onChange={(e) => setGuestName(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 focus:border-blue-500 focus:bg-white text-slate-900 rounded-xl px-4 py-3 sm:py-3.5 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all text-[15px]"
-                      required
+                      onChange={(e) => { setGuestName(e.target.value); setNameError(false); }}
+                      className={`w-full bg-slate-50 border focus:bg-white text-slate-900 rounded-xl px-4 py-3 sm:py-3.5 placeholder-slate-400 focus:outline-none focus:ring-2 transition-all text-[15px] ${nameError ? 'border-red-300 ring-2 ring-red-500/20' : 'border-slate-200 focus:border-blue-500 focus:ring-blue-500/20'}`}
                     />
+                    {nameError && (
+                      <p className="text-[12px] text-red-500 font-medium flex items-center gap-1.5">
+                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+                        Veuillez entrer votre prénom ou pseudo pour rejoindre la salle.
+                      </p>
+                    )}
                   </div>
                 )}
 

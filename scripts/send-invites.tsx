@@ -11,8 +11,9 @@ const resend = new Resend('re_f7CXkPZ1_FouifSQZycKkbcStAoZkGgW8');
 // LISTE DES BÊTA TESTEURS À PERSONNALISER
 // Chaque entrée : nom complet, email, et code bêta unique
 const betaTesters = [
-  { name: "Gaël Sorin", email: "gagadu8585@gmail.com", betaCode: "VC-GS-A4KP" },
-  { name: "Loris Doucet", email: "loris.doucet37@gmail.com", betaCode: "VC-LD-M7RQ" },
+  { name: "Marlène Avonture", email: "avonture.marlene@gmail.com", betaCode: "VC-VXWX-O47D" },
+  { name: "Gab Maxxx", email: "gabmaxx@gmail.com", betaCode: "VC-YCXT-4XEH" },
+  { name: "Anthony De Amim", email: "deamim.contact@gmail.com", betaCode: "VC-NIUV-LT9V" },
 ];
 
 async function sendInvites() {
