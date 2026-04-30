@@ -34,18 +34,23 @@ Il n'y a rien d'anormal ici. Stripe adapte automatiquement le formulaire de paie
 
 ### Scénarios 2 et 3 — Messages peu clairs pour fonds insuffisants et carte expirée
 
-**✅ Corrigé**
+**⚠️ Partiellement traité — voici ce qu'on peut faire, et ce qu'on ne peut pas.**
 
-Ces messages venaient de Stripe, qui affichait ses notifications d'erreur en anglais par défaut. Le paramètre de langue française a été activé côté serveur. Désormais, Stripe affiche ses messages dans la langue de votre navigation :
+Le formulaire de paiement de VisiConnect est une page hébergée directement par Stripe (vous êtes redirigé vers `checkout.stripe.com`). Cela signifie que nous n'avons pas la main sur le contenu exact des messages d'erreur affichés — ils sont générés et affichés par Stripe.
+
+Ce que nous avons fait : activer le paramètre de langue française (`locale: fr`) côté serveur. Stripe utilise désormais ses traductions françaises pour tous les messages. Les messages que vous verrez à présent sont du type :
 
 - Fonds insuffisants → *« Votre carte ne dispose pas de fonds suffisants. »*
 - Carte expirée → *« Votre carte a expiré. »*
+- Numéro invalide → *« Votre numéro de carte n'est pas valide. »*
+
+Ce que nous ne pouvons pas faire : réécrire nous-mêmes le texte de ces messages, car ils s'affichent sur une page appartenant à Stripe et non à VisiConnect. Pour personnaliser intégralement les messages d'erreur, il faudrait basculer vers une intégration Stripe Elements (formulaire embarqué dans notre propre page), ce qui représente un chantier de développement plus conséquent. C'est une évolution que nous gardons en tête pour une prochaine version.
 
 ### Scénario 4 — La confirmation bancaire (3D Secure) était en anglais
 
-**⚠️ Ce point est hors de notre portée — voici pourquoi, simplement.**
+**⚠️ Hors de notre portée — message émis par votre banque, pas par VisiConnect.**
 
-Quand votre banque vous envoie un SMS ou vous redirige vers son application pour valider un paiement, ce message vient directement de votre banque — pas de VisiConnect, pas de Stripe. C'est votre établissement bancaire qui choisit la langue, le texte et la mise en forme de ce message. Nous n'avons aucune capacité à modifier ce que votre banque vous envoie. Si vous souhaitez que ces confirmations soient en français, la démarche est à faire directement auprès de votre conseiller bancaire ou dans les paramètres de votre application bancaire.
+La page de confirmation 3D Secure (le pop-up ou la redirection qui vous demande de valider le paiement depuis votre application bancaire) n'est pas gérée par VisiConnect, ni même par Stripe. C'est votre banque qui envoie ce message et qui en choisit la langue. Nous n'avons aucune capacité technique à intervenir dessus. Si vous souhaitez que ces confirmations soient en français, la démarche est à faire directement auprès de votre banque.
 
 ---
 
@@ -195,7 +200,7 @@ Le bouton affichait un cercle vide, qui ne ressemblait à aucune de ces deux con
 | Boutons Créer/Rejoindre absents du tableau de bord | Site | ✅ Corrigé |
 | Code d'accès bêta | Site | ✅ Fonctionnel |
 | Formulaire Stripe — code postal vs. pays | Site | ✅ Normal (adapté par Stripe) |
-| Messages d'erreur paiement en anglais | Site | ✅ Corrigé (`locale: fr`) |
+| Messages d'erreur paiement en anglais | Site | ⚠️ Locale fr activée — messages Stripe, non personnalisables (page hébergée Stripe) |
 | Confirmation 3D Secure en anglais | Site | ⚠️ Émis par la banque — hors de notre contrôle |
 | Sections page d'accueil trop uniformes | Site | ✅ Partiellement corrigé |
 | Identité visuelle — différenciation, typographie | Site | ⏳ Refonte graphique prévue |

@@ -14,6 +14,7 @@ import { useClerk, useUser } from '@clerk/react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
 import { PLANS } from '../config/pricing';
+import { BETA_CODES } from '../config/betaCodes';
 import {
   PageWrapper,
   ContentContainer,
@@ -57,11 +58,27 @@ const AccountPageSimple = () => {
   const [planSwitching, setPlanSwitching] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [joinRoomId, setJoinRoomId] = useState('');
+  const [joinError, setJoinError] = useState('');
+
+  const BETA_CODE_REGEX = /^VC-[A-Z0-9]{4}-[A-Z0-9]{4}$/i;
 
   const handleJoinRoom = (e) => {
     e.preventDefault();
     const id = joinRoomId.trim();
-    if (id) navigate(`/room/${id}`);
+    if (!id) return;
+
+    if (BETA_CODE_REGEX.test(id)) {
+      const normalized = id.toUpperCase();
+      if (BETA_CODES.includes(normalized)) {
+        // Derive a unique, deterministic private room from the beta code
+        const roomId = 'beta-' + normalized.replace(/[^A-Z0-9]/g, '').toLowerCase();
+        navigate(`/room/${roomId}`);
+      } else {
+        setJoinError('Code bêta invalide ou déjà utilisé.');
+      }
+    } else {
+      navigate(`/room/${id}`);
+    }
   };
 
   const handleQuickCreate = () => {
@@ -519,31 +536,41 @@ const AccountPageSimple = () => {
               >
                 <Video size={17} /> Créer une réunion
               </button>
-              <form onSubmit={handleJoinRoom} style={{ display: 'flex', gap: '0.5rem' }}>
-                <input
-                  value={joinRoomId}
-                  onChange={e => setJoinRoomId(e.target.value)}
-                  placeholder="Code de la salle…"
-                  style={{
-                    padding: '0.6rem 1rem', border: '1px solid #cbd5e1', borderRadius: '8px',
-                    fontSize: '0.95rem', outline: 'none', width: '180px',
-                    background: 'white', color: '#0f172a',
-                  }}
-                />
-                <button
-                  type="submit"
-                  style={{
-                    display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
-                    padding: '0.6rem 1rem', background: 'white', color: '#2563eb',
-                    border: '1px solid #2563eb', borderRadius: '8px', fontWeight: '600',
-                    fontSize: '0.95rem', cursor: 'pointer', transition: 'background 0.2s',
-                  }}
-                  onMouseOver={e => e.currentTarget.style.background = '#eff6ff'}
-                  onMouseOut={e => e.currentTarget.style.background = 'white'}
-                >
-                  <ArrowRight size={16} /> Rejoindre
-                </button>
-              </form>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                <form onSubmit={handleJoinRoom} style={{ display: 'flex', gap: '0.5rem' }}>
+                  <input
+                    value={joinRoomId}
+                    onChange={e => { setJoinRoomId(e.target.value); setJoinError(''); }}
+                    placeholder="ID de salle ou code bêta (VC-XXXX-XXXX)"
+                    style={{
+                      padding: '0.6rem 1rem',
+                      border: `1px solid ${joinError ? '#ef4444' : '#cbd5e1'}`,
+                      borderRadius: '8px',
+                      fontSize: '0.95rem', outline: 'none', width: '260px',
+                      background: 'white', color: '#0f172a',
+                    }}
+                  />
+                  <button
+                    type="submit"
+                    style={{
+                      display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+                      padding: '0.6rem 1rem', background: 'white', color: '#2563eb',
+                      border: '1px solid #2563eb', borderRadius: '8px', fontWeight: '600',
+                      fontSize: '0.95rem', cursor: 'pointer', transition: 'background 0.2s',
+                      whiteSpace: 'nowrap',
+                    }}
+                    onMouseOver={e => e.currentTarget.style.background = '#eff6ff'}
+                    onMouseOut={e => e.currentTarget.style.background = 'white'}
+                  >
+                    <ArrowRight size={16} /> Rejoindre
+                  </button>
+                </form>
+                {joinError && (
+                  <span style={{ fontSize: '0.8rem', color: '#ef4444', paddingLeft: '0.25rem' }}>
+                    {joinError}
+                  </span>
+                )}
+              </div>
             </div>
           </HeaderSection>
           <CreateMeetingModal isOpen={showCreateModal} onClose={() => setShowCreateModal(false)} />
