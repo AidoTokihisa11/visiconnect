@@ -456,6 +456,17 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
     }
   }, [aiSettings?.backgroundBlur?.enabled]);
 
+  // 🤖 Bridge: blur amount slider change → re-apply processor with new radius
+  const prevBlurAmount = React.useRef(aiSettings?.backgroundBlur?.blurAmount);
+  useEffect(() => {
+    const newAmount = aiSettings?.backgroundBlur?.blurAmount;
+    if (newAmount === prevBlurAmount.current) return;
+    prevBlurAmount.current = newAmount;
+    if (isBlurEnabled && typeof newAmount === 'number' && newAmount > 0) {
+      toggleBlur(newAmount);
+    }
+  }, [aiSettings?.backgroundBlur?.blurAmount, isBlurEnabled]);
+
   // 🤖 Bridge: AI Features Panel → Video Enhancement (via useMeeting)
   const aiBridgeInit = React.useRef(true);
   useEffect(() => {
@@ -639,21 +650,32 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
              exit={{ opacity: 0, scale: 0.95 }}
            >
              <WhiteboardWrapper roomId={roomId} userName={user?.name || 'Guest'} />
-             <div style={{ position: 'absolute', top: 20, right: 20, zIndex: 1000 }}>
+             <div style={{
+               position: 'absolute',
+               bottom: 16,
+               left: '50%',
+               transform: 'translateX(-50%)',
+               zIndex: 1000,
+             }}>
                 <button 
                   onClick={toggleWhiteboard}
                   style={{
-                    background: '#ef4444',
+                    background: 'rgba(15, 23, 42, 0.85)',
+                    backdropFilter: 'blur(8px)',
                     color: 'white',
-                    border: 'none',
-                    padding: '8px 16px',
-                    borderRadius: '8px',
+                    border: '1px solid rgba(255,255,255,0.15)',
+                    padding: '6px 20px',
+                    borderRadius: '20px',
                     cursor: 'pointer',
-                    fontWeight: 'bold',
-                    boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                    fontWeight: '600',
+                    fontSize: '0.85rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
                   }}
                 >
-                  Fermer
+                  ✕ Fermer le tableau
                 </button>
              </div>
            </WhiteboardOverlay>
@@ -695,7 +717,7 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
          activePanel={activePanel}
          togglePanel={togglePanel}
          isRecording={isRecording}
-         toggleRecording={toggleRecording}
+         toggleRecording={() => toggleRecording({ includeMic: isMicrophoneEnabled })}
          isBlurEnabled={isBlurEnabled}
          blurRadius={blurRadius}
          toggleBlur={toggleBlur}

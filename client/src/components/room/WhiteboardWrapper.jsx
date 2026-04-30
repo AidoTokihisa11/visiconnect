@@ -11,6 +11,27 @@ const Wrapper = styled.div`
   .tl-container {
     border-radius: 0;
   }
+
+  /* Push tldraw bottom toolbar up so our close button doesn't overlap it */
+  .tlui-layout__bottom {
+    padding-bottom: 48px !important;
+  }
+
+  /* Ensure style panel (opacity, colors) is always on top and interactive */
+  .tlui-style-panel,
+  .tlui-toolbar,
+  .tlui-menu-zone {
+    pointer-events: all !important;
+    position: relative;
+    z-index: 10;
+  }
+
+  /* Ensure sliders (opacity range input) are always interactable */
+  .tlui-slider__container input[type="range"],
+  .tl-style-panel input[type="range"] {
+    pointer-events: all !important;
+    cursor: pointer;
+  }
 `;
 
 const FallbackWrapper = styled.div`

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {
   Mic, MicOff, Video, VideoOff, Phone, Monitor, MonitorOff,
   MessageSquare, Sparkles, Layout, Activity, Settings2, MoreHorizontal, Circle, PieChart,
-  Hand, Bot,
+  Hand, Bot, Wand2, Square,
 } from 'lucide-react';
 import { useAudioLevel } from './AudioVisualizer';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
@@ -451,7 +451,9 @@ export const ControlBar = ({
 
 
           <ControlButton onClick={toggleRecording} $active={isRecording} $activeColor={THEME.danger} title={isRecording ? "Arrêter l'enregistrement" : "Démarrer l'enregistrement"}>
-            <Circle fill={isRecording ? '#ef4444' : 'none'} />
+            {isRecording
+              ? <Square fill="white" stroke="none" size={16} />
+              : <Circle fill="#ef4444" stroke="#ef4444" size={18} />}
           </ControlButton>
 
           <ControlButton onClick={() => setShowStats(!showStats)} $active={showStats} $activeColor="#10b981" title="Stats / Debug (4K)">
@@ -465,7 +467,7 @@ export const ControlBar = ({
           </ControlButton>
 
           <ControlButton onClick={() => togglePanel('aiFeatures')} $active={activePanel === 'aiFeatures' && sidePanelOpen} $activeColor="#8b5cf6" title="Fonctionnalités IA">
-            <Sparkles />
+            <Wand2 />
           </ControlButton>
 
           <ControlButton onClick={() => togglePanel('polls')} $active={activePanel === 'polls' && sidePanelOpen} $activeColor={THEME.accent} title="Sondages">
@@ -512,7 +514,7 @@ export const ControlBar = ({
               <span>Assistant IA</span>
             </ControlButton>
             <ControlButton onClick={() => { togglePanel('aiFeatures'); setIsMoreMenuOpen(false); }} $active={activePanel === 'aiFeatures' && sidePanelOpen} $activeColor="#8b5cf6">
-              <Sparkles />
+              <Wand2 />
               <span>IA Features</span>
             </ControlButton>
             <ControlButton onClick={() => { togglePanel('polls'); setIsMoreMenuOpen(false); }} $active={activePanel === 'polls' && sidePanelOpen} $activeColor={THEME.accent}>
@@ -529,7 +531,9 @@ export const ControlBar = ({
               <span>Tableau</span>
             </ControlButton>
             <ControlButton onClick={() => { toggleRecording(); setIsMoreMenuOpen(false); }} $active={isRecording} $activeColor={THEME.danger}>
-              <Circle fill={isRecording ? '#ef4444' : 'none'} />
+              {isRecording
+                ? <Square fill="white" stroke="none" size={16} />
+                : <Circle fill="#ef4444" stroke="#ef4444" size={18} />}
               <span>Enregistrer</span>
             </ControlButton>
             <ControlButton onClick={() => { togglePanel('settings'); setIsMoreMenuOpen(false); }} $active={activePanel === 'settings' && sidePanelOpen} $activeColor={THEME.accent}>

@@ -373,9 +373,10 @@ const toggleBlur = useCallback(async (newRadius) => {
              setIsAIEnhanced(false);
          }
          
-         // Reuse existing processor if possible to prevent massive WASM reload freezes
+         // Always create a new processor when radius changes to ensure the new intensity is applied
+         const radiusChanged = typeof newRadius === 'number' && newRadius !== blurRadius;
          let processor = blurProcessor;
-         if (!processor) {
+         if (!processor || radiusChanged) {
              // Let UI render first before blocking thread
              await new Promise(resolve => setTimeout(resolve, 50));
              processor = BackgroundBlur(targetRadius);

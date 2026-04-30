@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { Video, Menu, X, User } from 'lucide-react';
+import { Video, Menu, X, User, ChevronDown, BookOpen, Shield, Puzzle, FileText } from 'lucide-react';
 import LanguageSelector from './LanguageSelector';
 
 import { useAuth } from '../contexts/AuthContext';
@@ -93,6 +93,68 @@ const NavLink = styled(Link)`
 
   &:hover {
     color: ${COLORS.primary};
+  }
+`;
+
+const DropdownWrapper = styled.div`
+  position: relative;
+`;
+
+const DropdownTrigger = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: ${COLORS.secondary};
+  font-weight: 500;
+  font-size: 0.95rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+
+  &:hover {
+    color: ${COLORS.primary};
+  }
+`;
+
+const DropdownMenu = styled.div`
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: hsl(var(--card));
+  border: 1px solid ${COLORS.border};
+  border-radius: 10px;
+  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.12);
+  min-width: 200px;
+  padding: 0.5rem;
+  z-index: 1100;
+  display: ${props => props.$open ? 'flex' : 'none'};
+  flex-direction: column;
+  gap: 0.15rem;
+`;
+
+const DropdownItem = styled(Link)`
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 6px;
+  color: ${COLORS.dark};
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.15s;
+
+  &:hover {
+    background-color: hsl(var(--muted));
+    color: ${COLORS.primary};
+  }
+
+  svg {
+    flex-shrink: 0;
+    opacity: 0.7;
   }
 `;
 
@@ -218,6 +280,19 @@ export default function HeaderClean() {
   const { user, signOut } = useAuth();
   const { t } = useTranslation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [resourcesOpen, setResourcesOpen] = useState(false);
+  const resourcesRef = useRef(null);
+
+  // Close resources dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (resourcesRef.current && !resourcesRef.current.contains(e.target)) {
+        setResourcesOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleLogout = async () => {
     await signOut();
@@ -240,6 +315,29 @@ export default function HeaderClean() {
             <NavLink to="/pricing">{t('navigation.pricing')}</NavLink>
             <NavLink to="/demo">{t('navigation.demo')}</NavLink>
             <NavLink to="/developer">{t('navigation.developers')}</NavLink>
+            <DropdownWrapper ref={resourcesRef}>
+              <DropdownTrigger
+                onClick={() => setResourcesOpen(!resourcesOpen)}
+                aria-expanded={resourcesOpen}
+                aria-haspopup="true"
+              >
+                Ressources <ChevronDown size={14} style={{ transition: 'transform 0.2s', transform: resourcesOpen ? 'rotate(180deg)' : 'rotate(0deg)' }} />
+              </DropdownTrigger>
+              <DropdownMenu $open={resourcesOpen}>
+                <DropdownItem to="/user-guide" onClick={() => setResourcesOpen(false)}>
+                  <BookOpen size={15} /> Guide d'utilisation
+                </DropdownItem>
+                <DropdownItem to="/docs" onClick={() => setResourcesOpen(false)}>
+                  <FileText size={15} /> Documentation
+                </DropdownItem>
+                <DropdownItem to="/integrations" onClick={() => setResourcesOpen(false)}>
+                  <Puzzle size={15} /> Intégrations
+                </DropdownItem>
+                <DropdownItem to="/security" onClick={() => setResourcesOpen(false)}>
+                  <Shield size={15} /> Sécurité
+                </DropdownItem>
+              </DropdownMenu>
+            </DropdownWrapper>
             <NavLink to="/contact">{t('navigation.contact')}</NavLink>
           </NavLinks>
 
@@ -276,6 +374,10 @@ export default function HeaderClean() {
             <MobileNavLink to="/pricing" onClick={() => setIsMobileMenuOpen(false)}>{t('navigation.pricing')}</MobileNavLink>
             <MobileNavLink to="/demo" onClick={() => setIsMobileMenuOpen(false)}>{t('navigation.demo')}</MobileNavLink>
             <MobileNavLink to="/developer" onClick={() => setIsMobileMenuOpen(false)}>{t('navigation.developers')}</MobileNavLink>
+            <MobileNavLink to="/user-guide" onClick={() => setIsMobileMenuOpen(false)}>Guide d'utilisation</MobileNavLink>
+            <MobileNavLink to="/docs" onClick={() => setIsMobileMenuOpen(false)}>Documentation</MobileNavLink>
+            <MobileNavLink to="/integrations" onClick={() => setIsMobileMenuOpen(false)}>Intégrations</MobileNavLink>
+            <MobileNavLink to="/security" onClick={() => setIsMobileMenuOpen(false)}>Sécurité</MobileNavLink>
             <MobileNavLink to="/contact" onClick={() => setIsMobileMenuOpen(false)}>{t('navigation.contact')}</MobileNavLink>
             <div style={{ margin: '1rem 0', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 {user ? (

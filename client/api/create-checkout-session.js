@@ -75,6 +75,7 @@ module.exports = async function handler(req, res) {
         plan: plan,
         billingCycle: billingCycle || 'monthly',
       },
+      locale: 'fr',
       success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/pricing`,
     });

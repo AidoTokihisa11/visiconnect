@@ -3,8 +3,10 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { 
   User, Camera, Mail, Building, Briefcase, 
   MapPin, Link as LinkIcon, Save, X, Phone,
-  Loader2, LogOut, Shield, Menu, CreditCard, Star, CheckCircle
+  Loader2, LogOut, Shield, Menu, CreditCard, Star, CheckCircle,
+  Plus, ArrowRight, Video
 } from 'lucide-react';
+import CreateMeetingModal from '../components/CreateMeetingModal';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import { useUserProfile } from '../hooks/useUserProfile';
@@ -53,6 +55,19 @@ const AccountPageSimple = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [notification, setNotification] = useState(null);
   const [planSwitching, setPlanSwitching] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [joinRoomId, setJoinRoomId] = useState('');
+
+  const handleJoinRoom = (e) => {
+    e.preventDefault();
+    const id = joinRoomId.trim();
+    if (id) navigate(`/room/${id}`);
+  };
+
+  const handleQuickCreate = () => {
+    const id = Math.random().toString(36).substring(2, 9);
+    navigate(`/room/${id}`);
+  };
   
   const [formData, setFormData] = useState({
     displayName: '',
@@ -490,7 +505,48 @@ const AccountPageSimple = () => {
           <HeaderSection>
             <Title>{t('account.dashboard')}</Title>
             <Subtitle>{t('account.subtitle')}</Subtitle>
+            <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+              <button
+                onClick={() => setShowCreateModal(true)}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
+                  padding: '0.6rem 1.25rem', background: '#2563eb', color: 'white',
+                  border: 'none', borderRadius: '8px', fontWeight: '600', fontSize: '0.95rem',
+                  cursor: 'pointer', transition: 'opacity 0.2s',
+                }}
+                onMouseOver={e => e.currentTarget.style.opacity = '0.88'}
+                onMouseOut={e => e.currentTarget.style.opacity = '1'}
+              >
+                <Video size={17} /> Créer une réunion
+              </button>
+              <form onSubmit={handleJoinRoom} style={{ display: 'flex', gap: '0.5rem' }}>
+                <input
+                  value={joinRoomId}
+                  onChange={e => setJoinRoomId(e.target.value)}
+                  placeholder="Code de la salle…"
+                  style={{
+                    padding: '0.6rem 1rem', border: '1px solid #cbd5e1', borderRadius: '8px',
+                    fontSize: '0.95rem', outline: 'none', width: '180px',
+                    background: 'white', color: '#0f172a',
+                  }}
+                />
+                <button
+                  type="submit"
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+                    padding: '0.6rem 1rem', background: 'white', color: '#2563eb',
+                    border: '1px solid #2563eb', borderRadius: '8px', fontWeight: '600',
+                    fontSize: '0.95rem', cursor: 'pointer', transition: 'background 0.2s',
+                  }}
+                  onMouseOver={e => e.currentTarget.style.background = '#eff6ff'}
+                  onMouseOut={e => e.currentTarget.style.background = 'white'}
+                >
+                  <ArrowRight size={16} /> Rejoindre
+                </button>
+              </form>
+            </div>
           </HeaderSection>
+          <CreateMeetingModal isOpen={showCreateModal} onClose={() => setShowCreateModal(false)} />
         </motion.div>
 
         <DashboardGrid>

@@ -35,6 +35,7 @@ const COLORS = {
   lightText: 'hsl(var(--muted-foreground))',
   background: 'hsl(var(--background))', 
   white: 'hsl(var(--card))',
+  altBackground: 'hsl(var(--muted))',  // visually distinct from background
   border: 'hsl(var(--border))',     
   success: 'hsl(var(--primary))',    
 };
@@ -274,7 +275,7 @@ const HeroImage = styled.div`
 // --- TRUSTED SECTION ---
 const TrustedSection = styled.section`
   padding: 4rem 1.5rem;
-  background-color: ${COLORS.white};
+  background-color: ${COLORS.altBackground};
   border-bottom: 1px solid ${COLORS.border};
 `;
 
@@ -372,7 +373,7 @@ const StatItemPill = ({ icon: Icon, value, label }) => (
 // --- FEATURES SECTION ---
 const FeaturesSection = styled.section`
   padding: 5rem 1.5rem;
-  background-color: ${COLORS.background};
+  background-color: ${COLORS.altBackground};
 `;
 
 const SectionHeader = styled.div`
@@ -435,7 +436,7 @@ const TestimonialsGrid = styled.div`
 // --- PRICING SECTION ---
 const PricingSectionWrapper = styled.section`
   padding: 5rem 1.5rem;
-  background-color: ${COLORS.white};
+  background-color: ${COLORS.altBackground};
   border-top: 1px solid ${COLORS.border};
 `;
 
@@ -524,7 +525,7 @@ const AboutStat = styled.div`
 // --- CONTACT SECTION ---
 const ContactSection = styled.section`
   padding: 5rem 1.5rem;
-  background-color: ${COLORS.white};
+  background-color: ${COLORS.altBackground};
   border-top: 1px solid ${COLORS.border};
 `;
 

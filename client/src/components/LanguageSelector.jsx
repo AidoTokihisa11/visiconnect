@@ -24,7 +24,7 @@ const LanguageSelector = () => {
           title={currentLang?.name || 'Language'}
         >
           <Globe className="h-[1.2rem] w-[1.2rem] text-slate-700 dark:text-slate-400" />
-          <span className="absolute -bottom-0.5 -right-0.5 text-xs bg-primary text-primary-foreground rounded-full w-4 h-4 flex items-center justify-center font-semibold uppercase">
+          <span className="absolute -top-1 -right-1 text-xs bg-primary text-primary-foreground rounded-full w-4 h-4 flex items-center justify-center font-semibold uppercase" style={{ zIndex: 10 }}>
             {language.slice(0, 2)}
           </span>
           <span className="sr-only">Toggle language</span>

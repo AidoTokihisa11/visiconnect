@@ -9,7 +9,7 @@ export const useRecording = () => {
 
   const clearRecordingError = useCallback(() => setRecordingError(null), []);
 
-  const startRecording = useCallback(async () => {
+  const startRecording = useCallback(async ({ includeMic = true } = {}) => {
     setRecordingError(null);
     try {
       // Capture both screen and audio
@@ -17,15 +17,23 @@ export const useRecording = () => {
         video: true,
         audio: true
       });
-      
-      const micStream = await navigator.mediaDevices.getUserMedia({
-        audio: true
-      });
+
+      // Only capture mic if it's currently enabled in the meeting
+      let micAudioTracks = [];
+      if (includeMic) {
+        try {
+          const micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          micAudioTracks = micStream.getAudioTracks();
+        } catch (micError) {
+          // Mic capture failure is non-fatal — record without mic
+          console.warn('[Recording] Impossible de capturer le micro:', micError);
+        }
+      }
 
       // Combine streams
       const tracks = [
         ...screenStream.getVideoTracks(),
-        ...micStream.getAudioTracks(),
+        ...micAudioTracks,
         ...screenStream.getAudioTracks()
       ];
       
@@ -88,11 +96,11 @@ export const useRecording = () => {
     }
   }, []);
 
-  const toggleRecording = useCallback(() => {
+  const toggleRecording = useCallback((options = {}) => {
     if (isRecording) {
       stopRecording();
     } else {
-      startRecording();
+      startRecording(options);
     }
   }, [isRecording, startRecording, stopRecording]);
 
