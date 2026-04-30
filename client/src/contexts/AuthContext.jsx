@@ -109,8 +109,8 @@ export const AuthProvider = ({ children }) => {
         await setSignUpActive({ session: res.createdSessionId });
         return { data: { user: res }, success: true };
       } else {
-        // Envoi du mail de vérification
-        await clerkSignUp.prepareEmailAddressVerification({ strategy: "email_code" });
+        // Envoi du mail de vérification — utiliser `res` (objet retourné par create) et non `clerkSignUp` (closure stale)
+        await res.prepareEmailAddressVerification({ strategy: "email_code" });
         return { data: { requiresVerification: true, email }, success: true };
       }
     } catch (err) {
