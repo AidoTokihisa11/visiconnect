@@ -58,6 +58,8 @@ const LogoContainer = styled(Link)`
   align-items: center;
   gap: 0.75rem;
   text-decoration: none;
+  flex-shrink: 0;
+  margin-right: 2rem;
 `;
 
 const LogoIcon = styled.div`
@@ -86,11 +88,13 @@ const LogoText = styled.span`
 
 const NavLinks = styled.nav`
   display: flex;
+  flex: 1;
+  justify-content: center;
   gap: 2.25rem;
   align-items: center;
 
   @media (max-width: 1024px) {
-    gap: 1.5rem;
+    gap: 1.25rem;
   }
 
   @media (max-width: 768px) {
@@ -191,9 +195,12 @@ const AuthButtons = styled.div`
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  flex-shrink: 0;
+  margin-left: 2rem;
 
   @media (max-width: 1024px) {
     gap: 0.5rem;
+    margin-left: 1rem;
   }
 
   @media (max-width: 768px) {
