@@ -27,15 +27,20 @@ const HeaderContainer = styled.header`
   background-color: hsl(var(--card));
   border-bottom: 1px solid hsl(var(--border));
   box-shadow: ${SHADOWS.sm};
-  padding: 0 1rem;
-  height: 72px;
+  padding: 0 2rem;
+  height: 80px;
   display: flex;
   align-items: center;
   transition: background-color 0.3s ease, border-color 0.3s ease;
+
+  @media (max-width: 1024px) {
+    padding: 0 1.5rem;
+    height: 76px;
+  }
   
   @media (max-width: 640px) {
-    height: 64px;
-    padding: 0 1rem;
+    height: 68px;
+    padding: 0 1.25rem;
   }
 `;
 
@@ -56,28 +61,37 @@ const LogoContainer = styled(Link)`
 `;
 
 const LogoIcon = styled.div`
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   background-color: ${COLORS.primary};
-  border-radius: 8px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: ${COLORS.white};
+  flex-shrink: 0;
 `;
 
 const LogoText = styled.span`
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: ${COLORS.dark};
   letter-spacing: -0.025em;
   transition: color 0.3s;
+
+  @media (max-width: 480px) {
+    display: none;
+  }
 `;
 
 const NavLinks = styled.nav`
   display: flex;
-  gap: 2rem;
+  gap: 2.25rem;
   align-items: center;
+
+  @media (max-width: 1024px) {
+    gap: 1.5rem;
+  }
 
   @media (max-width: 768px) {
     display: none;
@@ -88,11 +102,26 @@ const NavLink = styled(Link)`
   color: ${COLORS.secondary};
   font-weight: 500;
   text-decoration: none;
-  font-size: 0.95rem;
+  font-size: 0.975rem;
+  padding: 0.375rem 0;
+  position: relative;
   transition: color 0.2s;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: ${COLORS.primary};
+    border-radius: 1px;
+    transition: width 0.2s;
+  }
 
   &:hover {
     color: ${COLORS.primary};
+    &::after { width: 100%; }
   }
 `;
 
@@ -106,11 +135,11 @@ const DropdownTrigger = styled.button`
   gap: 0.25rem;
   color: ${COLORS.secondary};
   font-weight: 500;
-  font-size: 0.95rem;
+  font-size: 0.975rem;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0;
+  padding: 0.375rem 0;
   transition: color 0.2s;
 
   &:hover {
@@ -161,7 +190,11 @@ const DropdownItem = styled(Link)`
 const AuthButtons = styled.div`
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
+
+  @media (max-width: 1024px) {
+    gap: 0.5rem;
+  }
 
   @media (max-width: 768px) {
     display: none;
@@ -169,8 +202,8 @@ const AuthButtons = styled.div`
 `;
 
 const Button = styled(Link)`
-  padding: 0.625rem 1.25rem;
-  border-radius: 6px;
+  padding: 0.6rem 1.35rem;
+  border-radius: 8px;
   font-weight: 600;
   font-size: 0.95rem;
   text-decoration: none;
@@ -179,6 +212,12 @@ const Button = styled(Link)`
   align-items: center;
   gap: 0.5rem;
   cursor: pointer;
+  white-space: nowrap;
+
+  @media (max-width: 1024px) {
+    padding: 0.55rem 1rem;
+    font-size: 0.9rem;
+  }
 
   ${props => props.$variant === 'primary' ? `
     background-color: ${COLORS.primary};
@@ -186,6 +225,8 @@ const Button = styled(Link)`
     border: 1px solid ${COLORS.primary};
     &:hover {
       opacity: 0.9;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
     }
   ` : `
     background-color: transparent;
@@ -204,6 +245,14 @@ const MobileMenuButton = styled.button`
   border: none;
   cursor: pointer;
   color: ${COLORS.secondary};
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: hsl(var(--muted));
+    color: ${COLORS.dark};
+  }
   
   @media (max-width: 768px) {
     display: flex;
@@ -211,8 +260,8 @@ const MobileMenuButton = styled.button`
 `;
 
 const LogoutButton = styled.button`
-  padding: 0.625rem 1.25rem;
-  border-radius: 6px;
+  padding: 0.6rem 1.35rem;
+  border-radius: 8px;
   font-weight: 600;
   font-size: 0.95rem;
   text-decoration: none;
@@ -224,6 +273,12 @@ const LogoutButton = styled.button`
   background-color: transparent;
   color: ${COLORS.secondary};
   border: 1px solid ${COLORS.border};
+  white-space: nowrap;
+
+  @media (max-width: 1024px) {
+    padding: 0.55rem 1rem;
+    font-size: 0.9rem;
+  }
 
   &:hover {
     background-color: ${COLORS.background};
@@ -234,7 +289,7 @@ const LogoutButton = styled.button`
 // Mobile Menu Overlay
 const MobileMenuOverlay = styled.div`
   position: fixed;
-  top: 72px; /* Match header height */
+  top: 80px;
   left: 0;
   right: 0;
   bottom: 0;
@@ -242,38 +297,49 @@ const MobileMenuOverlay = styled.div`
   z-index: 999;
   display: ${props => props.$isOpen ? 'block' : 'none'};
   backdrop-filter: blur(4px);
+
+  @media (max-width: 1024px) {
+    top: 76px;
+  }
   
   @media (max-width: 640px) {
-    top: 64px; /* Match mobile header height */
+    top: 68px;
   }
 `;
 
 const MobileMenuContent = styled.div`
   background-color: hsl(var(--background));
-  padding: 1.5rem;
+  padding: 1.75rem 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.25rem;
   border-bottom: 1px solid ${COLORS.border};
-  max-height: calc(100vh - 72px);
+  max-height: calc(100vh - 80px);
   overflow-y: auto;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   width: 100%;
   
   @media (max-width: 640px) {
-    max-height: calc(100vh - 64px);
-    padding: 1rem;
-  }
+    max-height: calc(100vh - 68px);
+    padding: 1.25rem 1.25rem;
   }
 `;
 
 const MobileNavLink = styled(Link)`
   color: ${COLORS.dark};
-  font-weight: 600;
+  font-weight: 500;
   text-decoration: none;
-  font-size: 1.125rem;
-  padding: 0.75rem 0;
-  border-bottom: 1px solid ${COLORS.border};
+  font-size: 1rem;
+  padding: 0.85rem 0.75rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.15s, color 0.15s;
+
+  &:hover {
+    background-color: hsl(var(--muted));
+    color: ${COLORS.primary};
+  }
 `;
 
 export default function HeaderClean() {

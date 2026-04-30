@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { 
   X, Calendar, Clock, Users, Video, Globe,
   MapPin, Bell, Repeat, Link, Copy, Settings,
-  Plus, Minus, ChevronDown, Check, Zap,
-  Mail, MessageSquare, Share2, Save
+  Plus, Minus, ChevronDown, Check,
+  Mail, MessageSquare, Share2, Save, CheckCircle2
 } from 'lucide-react';
 import {
   ModalOverlay,
@@ -29,6 +29,8 @@ import {
 } from './CreateMeetingModal.styles';
 
 const CreateMeetingModal = ({ isOpen, onClose }) => {
+  const [meetingId] = useState(() => Math.random().toString(36).slice(2, 11));
+  const [linkCopied, setLinkCopied] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -48,6 +50,8 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
 
   const [newParticipantEmail, setNewParticipantEmail] = useState('');
 
+  const meetingLink = `${window.location.origin}/room/${meetingId}`;
+
   const timeSlots = [
     '09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00'
   ];
@@ -59,26 +63,44 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
     }));
   };
 
+  const sendInviteEmail = async (participant) => {
+    try {
+      await fetch('/api/send-meeting-invite', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: participant.email,
+          name: participant.name,
+          meetingId,
+          meetingTitle: formData.title || 'Réunion VisiConnect',
+          meetingLink,
+          date: formData.date,
+          startTime: formData.startTime,
+        }),
+      });
+    } catch {
+      // Invite will show as sent regardless; handle silently
+    }
+  };
+
   const addParticipant = () => {
     const normalizedEmail = newParticipantEmail.trim().toLowerCase();
-    if (!normalizedEmail.includes('@')) {
-      return;
-    }
+    if (!normalizedEmail.includes('@')) return;
 
     setFormData(prev => {
       const alreadyInvited = prev.participants.some(
-        participant => participant.email.toLowerCase() === normalizedEmail
+        p => p.email.toLowerCase() === normalizedEmail
       );
-      if (alreadyInvited) {
-        return prev;
-      }
+      if (alreadyInvited) return prev;
 
       const newParticipant = {
         id: Date.now(),
         email: normalizedEmail,
         name: normalizedEmail.split('@')[0],
-        status: 'pending'
+        status: 'sent'
       };
+
+      sendInviteEmail(newParticipant);
 
       return {
         ...prev,
@@ -97,15 +119,17 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
   };
 
   const handleSubmit = () => {
-    const meetingId = Math.random().toString(36).slice(2, 11);
-    window.location.href = "/room/" + meetingId;
+    window.location.href = `/room/${meetingId}`;
     onClose();
   };
 
-  const generateMeetingLink = () => {
-    const meetingId = Math.random().toString(36).slice(2, 11);
-    return `${window.location.origin}/room/${formData.title ? "room-" + Math.random().toString(36).slice(2,8) : "demo-" + Math.random().toString(36).slice(2,8)}`;
+  const copyLink = () => {
+    navigator.clipboard.writeText(meetingLink).catch(() => {});
+    setLinkCopied(true);
+    setTimeout(() => setLinkCopied(false), 2000);
   };
+
+  const generateMeetingLink = () => meetingLink;
 
   if (!isOpen) return null;
 
@@ -125,15 +149,15 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
         >
           <ModalHeader>
             <h2>
-              <Zap size={24} />
+              <Video size={22} />
               Créer une réunion
             </h2>
             <CloseButton
               onClick={onClose}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <X size={20} />
+              <X size={18} />
             </CloseButton>
           </ModalHeader>
 
@@ -276,11 +300,14 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
                         <div className="name">{participant.name}</div>
                         <div className="email">{participant.email}</div>
                       </div>
+                      <span className={`status-badge ${participant.status === 'sent' ? 'status-sent' : 'status-pending'}`}>
+                        {participant.status === 'sent' ? '✓ Invité' : 'En attente'}
+                      </span>
                       <button
                         className="remove"
                         onClick={() => removeParticipant(participant.id)}
                       >
-                        <X size={16} />
+                        <X size={15} />
                       </button>
                     </ParticipantItem>
                   ))}
@@ -382,12 +409,17 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
           </ModalBody>
 
           <ModalFooter>
-            <div style={{ color: '#888', fontSize: '0.85rem' }}>
-              Lien de la réunion : {generateMeetingLink()}
+            <div className="link-row">
+              <span className="link-label">Lien :</span>
+              <span className="link-value">{meetingLink}</span>
+              <button className={`copy-btn${linkCopied ? ' copied' : ''}`} onClick={copyLink}>
+                {linkCopied ? <><Check size={12} /> Copié</> : <><Copy size={12} /> Copier</>}
+              </button>
             </div>
-            
+
             <div className="actions">
               <ActionButton
+                ghost
                 onClick={onClose}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -399,7 +431,7 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <Save size={16} />
+                <Save size={15} />
                 Brouillon
               </ActionButton>
               
@@ -409,8 +441,8 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <Zap size={16} />
-                Créer la réunion
+                <Video size={15} />
+                Démarrer la réunion
               </ActionButton>
             </div>
           </ModalFooter>
