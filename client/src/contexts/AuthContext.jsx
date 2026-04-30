@@ -78,49 +78,20 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const signUpWithEmail = async (email, password, options = {}) => {
-    if (!clerkSignUp) return { error: { message: "Clerk n'est pas prêt." } };
-    
-    const attemptSignUp = async (withOptions) => {
-      const payload = { emailAddress: email, password };
-      if (withOptions) {
-        if (options.firstName) payload.firstName = options.firstName;
-        if (options.lastName) payload.lastName = options.lastName;
-        if (options.username) payload.username = options.username;
-      }
-      return await clerkSignUp.create(payload);
-    };
-
-    try {
-      let res;
-      try {
-        res = await attemptSignUp(true);
-      } catch (initialErr) {
-        // Si Clerk rejette à cause d'un paramètre non configuré (ex: Prénom/Nom désactivés)
-        const errMsg = initialErr.errors?.[0]?.message || "";
-        if (errMsg.toLowerCase().includes("unknown") || errMsg.toLowerCase().includes("inconnu")) {
-          res = await attemptSignUp(false);
-        } else {
-          throw initialErr;
-        }
-      }
-      
-      if (res.status === "complete") {
-        await setSignUpActive({ session: res.createdSessionId });
-        return { data: { user: res }, success: true };
-      } else {
-        return { data: { requiresVerification: true, email }, success: true };
-      }
-    } catch (err) {
-      return { error: { message: handleNetworkError(err) } };
-    }
-  };
-
-  const prepareVerification = async () => {
+  const signUpWithEmail = async (email, password) => {
     if (!clerkSignUp) return { error: { message: "Clerk n'est pas prêt." } };
     try {
-      await clerkSignUp.prepareEmailAddressVerification({ strategy: "email_code" });
-      return { success: true };
+      // create() retourne la ressource SignUp fraîche avec toutes ses méthodes
+      const resource = await clerkSignUp.create({ emailAddress: email, password });
+
+      if (resource.status === "complete") {
+        await setSignUpActive({ session: resource.createdSessionId });
+        return { data: { user: resource }, success: true };
+      }
+
+      // Appel immédiat sur la ressource retournée — pas de re-render React entre les deux
+      await resource.prepareEmailAddressVerification({ strategy: "email_code" });
+      return { data: { requiresVerification: true, email }, success: true };
     } catch (err) {
       return { error: { message: handleNetworkError(err) } };
     }
@@ -162,7 +133,6 @@ export const AuthProvider = ({ children }) => {
     loading: !(clerkLoaded && isAuthLoaded && !isConvexLoading),
     signIn: signInWithEmail,
     signUp: signUpWithEmail,
-    prepareVerification,
     verifyEmailCode,
     signInWithProvider,
     signInWithGoogle,

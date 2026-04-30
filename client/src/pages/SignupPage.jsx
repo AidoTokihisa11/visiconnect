@@ -337,7 +337,7 @@ const SuccessIconBox = styled.div`
 
 const SignupPage = () => {
   const navigate = useNavigate()
-  const { isLoggedIn, signUp, signInWithGoogle, signInWithGithub, verifyEmailCode, prepareVerification } = useAuth()
+  const { isLoggedIn, signUp, signInWithGoogle, signInWithGithub, verifyEmailCode } = useAuth()
   const { t } = useTranslation()
 
   const [registrationForm, setRegistrationForm] = useState({ email: '', password: '' })
@@ -387,13 +387,6 @@ const SignupPage = () => {
       setError(result.error.message || t('signup.errorCreate'))
       setLoading(false)
     } else if (result.data?.requiresVerification) {
-      // Envoyer le mail de vérification maintenant que React a re-rendu et que l'instance SignUp est à jour
-      const prepResult = await prepareVerification()
-      if (prepResult?.error) {
-        setError(prepResult.error.message)
-        setLoading(false)
-        return
-      }
       setPendingVerification(true)
       setLoading(false)
     }
