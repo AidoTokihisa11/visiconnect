@@ -1,214 +1,438 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useSafeLayout } from '../hooks/useSafeLayout';
-import { ArrowRight, Shield, AlertTriangle, Sparkles, Clock3, Video, Users } from 'lucide-react';
-import { useTranslation } from '../hooks/useTranslation';
+import {
+  Sparkles, Users, CheckCircle2, ArrowLeft, Send,
+  Loader2, AlertCircle, Zap, Bug, Rocket,
+} from 'lucide-react';
+
+const PROFILES = [
+  { value: '', label: 'Sélectionnez votre profil…', disabled: true },
+  { value: 'student', label: 'Étudiant(e)' },
+  { value: 'developer', label: 'Développeur / Tech' },
+  { value: 'designer', label: 'Designer / Créatif' },
+  { value: 'manager', label: 'Manager / Chef de projet' },
+  { value: 'freelance', label: 'Freelance / Auto-entrepreneur' },
+  { value: 'other', label: 'Autre' },
+];
+
+const USAGES = [
+  { value: '', label: 'Comment comptez-vous l\'utiliser ?', disabled: true },
+  { value: 'personal', label: 'Appels personnels (famille, amis)' },
+  { value: 'professional', label: 'Réunions professionnelles' },
+  { value: 'team', label: 'Travail en équipe / PME' },
+  { value: 'education', label: 'Cours / Formation en ligne' },
+];
+
+const TOOLS = ['Zoom', 'Google Meet', 'Microsoft Teams', 'Discord', 'Whereby', 'Jitsi', 'Skype'];
+
+const INFO_CARDS = [
+  {
+    icon: Bug,
+    title: 'Ce qui s\'est passé',
+    text: 'Des dizaines de sessions de test, des bugs documentés, des comportements inattendus remontés. Chaque retour a atterri directement dans mon backlog.',
+  },
+  {
+    icon: Zap,
+    title: 'Ce qui a été corrigé',
+    text: 'Stabilité de connexion, gestion des erreurs d\'auth, comportements instables sur mobile. La plateforme est dans un bien meilleur état.',
+  },
+  {
+    icon: Rocket,
+    title: 'La Vague 2',
+    text: 'Plus ciblée — 15 personnes choisies manuellement. Pas de code à saisir. Si tu es retenu(e), je te contacte directement par email.',
+  },
+];
 
 export default function RoomPageNew() {
   const navigate = useNavigate();
-  const { language } = useTranslation();
-  
-  // Apply SafeLayout for mobile viewport fixes (--vh CSS variable)
   useSafeLayout();
-  const copyByLanguage = {
-    fr: {
-      badge: 'Programme beta termine',
-      title: 'La premiere phase de beta test est maintenant terminee.',
-      subtitle: 'Merci a toutes les personnes qui ont pris le temps de tester VisioConnect, de signaler les erreurs et de faire remonter des bugs concrets. Vos retours m ont permis de corriger, stabiliser et ameliorer la plateforme beaucoup plus vite.',
-      relaunchLabel: 'Nouvelle vague d ici 1 semaine',
-      relaunchText: 'Une nouvelle session beta ouvrira d ici environ une semaine. Cette fois, je selectionnerai moi-meme les participants afin de garder un groupe plus cible et un meilleur suivi.',
-      thanksTitle: 'Merci pour votre aide',
-      thanksText: 'Chaque retour, chaque bug remonte et chaque remarque utile ont directement contribue a ameliorer le code, l experience et la fiabilite globale du produit.',
-      progressTitle: 'Ce qui a ete ameliore',
-      progressText: 'Les retours recus m ont deja permis de corriger plusieurs problemes techniques, de nettoyer certains comportements instables et de preparer une version plus propre pour la suite.',
-      selectionTitle: 'Selection manuelle',
-      selectionText: 'La prochaine vague ne passera plus par un code a saisir sur cette page. Les personnes retenues seront contactees directement.',
-      inactiveBanner: 'Le formulaire de code beta est desactive pour le moment.',
-      cta: 'Retourner a l accueil',
-      footer: 'VisioConnect continue d evoluer grace a votre participation.'
-    },
-    en: {
-      badge: 'Beta program closed',
-      title: 'The first beta testing phase is now over.',
-      subtitle: 'Thank you to everyone who tested VisioConnect, reported issues, and shared concrete bugs. Your feedback helped me fix, stabilize, and improve the platform much faster.',
-      relaunchLabel: 'New wave in about 1 week',
-      relaunchText: 'A new beta session will open in about a week. This time, I will personally select participants to keep the group more focused and provide better follow-up.',
-      thanksTitle: 'Thank you for helping',
-      thanksText: 'Every report, every bug, and every useful note directly helped improve the code, the experience, and the overall reliability of the product.',
-      progressTitle: 'What improved',
-      progressText: 'The feedback already helped me fix several technical issues, clean up unstable behaviors, and prepare a sharper version for the next opening.',
-      selectionTitle: 'Manual selection',
-      selectionText: 'The next wave will no longer rely on a beta code on this page. Selected participants will be contacted directly.',
-      inactiveBanner: 'The beta code form is currently disabled.',
-      cta: 'Back to home',
-      footer: 'VisioConnect keeps improving thanks to your participation.'
+
+  const [form, setForm] = useState({
+    firstName: '', lastName: '', email: '',
+    profile: '', usage: '', tools: [], motivation: '',
+  });
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
+
+  const update = (field, value) => {
+    setForm(prev => ({ ...prev, [field]: value }));
+    if (fieldErrors[field]) setFieldErrors(prev => ({ ...prev, [field]: null }));
+  };
+
+  const toggleTool = (tool) => {
+    setForm(prev => ({
+      ...prev,
+      tools: prev.tools.includes(tool)
+        ? prev.tools.filter(t => t !== tool)
+        : [...prev.tools, tool],
+    }));
+  };
+
+  const validate = () => {
+    const e = {};
+    if (!form.firstName.trim()) e.firstName = 'Champ requis';
+    if (!form.lastName.trim()) e.lastName = 'Champ requis';
+    if (!form.email.trim()) {
+      e.email = 'Email requis';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+      e.email = 'Adresse email invalide';
+    }
+    if (!form.profile) e.profile = 'Sélectionnez un profil';
+    if (!form.usage) e.usage = 'Sélectionnez un usage';
+    if (form.motivation.trim().length < 40) e.motivation = 'Minimum 40 caractères';
+    return e;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const errs = validate();
+    if (Object.keys(errs).length > 0) {
+      setFieldErrors(errs);
+      return;
+    }
+    setFieldErrors({});
+    setIsSubmitting(true);
+    setSubmitError(null);
+    try {
+      const res = await fetch('/api/beta-apply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...form,
+          firstName: form.firstName.trim(),
+          lastName: form.lastName.trim(),
+          email: form.email.trim().toLowerCase(),
+          motivation: form.motivation.trim(),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Erreur inattendue, veuillez réessayer.');
+      setSubmitted(true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (err) {
+      setSubmitError(err.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const content = copyByLanguage[language] || copyByLanguage.fr;
+  const inputBase = 'w-full rounded-xl border px-4 py-3 text-sm text-slate-900 bg-white placeholder-slate-400 outline-none transition-all duration-150 focus:ring-2';
+  const inputClass = (field) =>
+    `${inputBase} ${fieldErrors[field]
+      ? 'border-red-300 focus:border-red-400 focus:ring-red-100'
+      : 'border-slate-200 focus:border-blue-400 focus:ring-blue-100'
+    }`;
+
+  const motLen = form.motivation.length;
 
   return (
-    <div className="relative flex min-h-[100dvh] w-full items-center justify-center overflow-hidden bg-[linear-gradient(180deg,_#eff6ff_0%,_#f8fbff_35%,_#ffffff_100%)] px-4 py-10 sm:px-6 lg:px-8 font-sans">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
-          className="absolute -left-20 top-10 h-64 w-64 rounded-full bg-blue-300/25 blur-3xl"
-        />
-        <motion.div
-          initial={{ opacity: 0, scale: 0.85 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.9, delay: 0.1 }}
-          className="absolute right-[-4rem] top-1/4 h-72 w-72 rounded-full bg-cyan-300/20 blur-3xl"
-        />
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="absolute bottom-[-5rem] left-1/3 h-72 w-72 rounded-full bg-blue-200/30 blur-3xl"
-        />
-        <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: 'radial-gradient(circle, #2563eb 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+    <div className="relative min-h-screen w-full overflow-x-hidden bg-[linear-gradient(180deg,#eff6ff_0%,#f8fbff_45%,#ffffff_100%)] px-4 py-12 sm:px-6 font-sans">
+
+      {/* Background decorations */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+        <div className="absolute -left-24 top-8 h-72 w-72 rounded-full bg-blue-300/20 blur-3xl" />
+        <div className="absolute right-[-5rem] top-1/3 h-80 w-80 rounded-full bg-cyan-300/15 blur-3xl" />
+        <div className="absolute bottom-[-6rem] left-1/3 h-80 w-80 rounded-full bg-blue-200/25 blur-3xl" />
+        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'radial-gradient(circle, #2563eb 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45 }}
-        className="relative z-10 w-full max-w-6xl"
-      >
-        <div className="overflow-hidden rounded-[32px] border border-blue-100 bg-white/85 shadow-[0_32px_90px_rgba(59,130,246,0.16)] backdrop-blur-xl">
-          <div className="grid lg:grid-cols-[1.15fr_0.85fr]">
-            <div className="relative px-6 py-8 sm:px-10 sm:py-12 lg:px-14 lg:py-16">
-              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-400/40 to-transparent" />
+      <div className="relative z-10 mx-auto max-w-3xl">
 
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: 0.05 }}
-                className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-blue-700"
-              >
-                <Sparkles className="h-3.5 w-3.5" />
-                {content.badge}
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.12 }}
-                className="max-w-2xl"
-              >
-                <h1 className="text-4xl font-bold leading-tight tracking-[-0.04em] text-slate-950 sm:text-5xl lg:text-[3.6rem]">
-                  {content.title}
-                </h1>
-                <p className="mt-5 max-w-xl text-[15px] leading-7 text-slate-600 sm:text-[17px]">
-                  {content.subtitle}
-                </p>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.42, delay: 0.2 }}
-                className="mt-8 flex flex-col gap-3 rounded-3xl border border-blue-100 bg-[linear-gradient(135deg,_rgba(239,246,255,0.95),_rgba(255,255,255,0.98))] p-5 sm:p-6"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-lg shadow-blue-600/20">
-                    <Clock3 className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-blue-600">{content.relaunchLabel}</p>
-                    <p className="mt-1 text-sm leading-6 text-slate-600 sm:text-[15px]">{content.relaunchText}</p>
-                  </div>
-                </div>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.45, delay: 0.28 }}
-                className="mt-8 flex flex-col gap-4 sm:flex-row"
-              >
-                <button
-                  type="button"
-                  onClick={() => navigate('/')}
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 transition-transform duration-200 hover:-translate-y-0.5 hover:bg-blue-700"
-                >
-                  {content.cta}
-                  <ArrowRight className="h-4 w-4" />
-                </button>
-                <div className="inline-flex items-center gap-2 rounded-2xl border border-blue-100 bg-blue-50/70 px-4 py-3 text-sm font-medium text-slate-600">
-                  <AlertTriangle className="h-4 w-4 text-blue-500" />
-                  {content.inactiveBanner}
-                </div>
-              </motion.div>
+        {/* ── HERO ── */}
+        {submitted ? (
+          <motion.div
+            key="success"
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.45 }}
+            className="mb-12 text-center"
+          >
+            <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 ring-4 ring-green-50">
+              <CheckCircle2 className="h-9 w-9 text-green-500" />
             </div>
+            <h1 className="text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl">
+              Candidature envoyée !
+            </h1>
+            <p className="mx-auto mt-4 max-w-lg text-[16px] leading-7 text-slate-600">
+              Merci <strong>{form.firstName}</strong>. J'ai bien reçu ta candidature — je te répondrai directement par email si tu es sélectionné(e) parmi les 15. Un email de confirmation a été envoyé à <strong>{form.email}</strong>.
+            </p>
+            <p className="mx-auto mt-3 max-w-md text-sm text-slate-400">
+              La sélection se fait dans les prochains jours. À très vite peut-être !
+            </p>
+            <button
+              onClick={() => navigate('/')}
+              className="mt-8 inline-flex items-center gap-2 rounded-2xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:bg-slate-800"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Retour à l'accueil
+            </button>
+          </motion.div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-10 text-center"
+          >
+            <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-blue-700">
+              <Sparkles className="h-3.5 w-3.5" />
+              Phase bêta I — terminée
+            </span>
+            <h1 className="text-4xl font-bold tracking-[-0.04em] text-slate-950 sm:text-[3rem] lg:text-[3.5rem]">
+              Merci à vous.<br />Vraiment.
+            </h1>
+            <p className="mx-auto mt-5 max-w-2xl text-[16px] leading-8 text-slate-600 sm:text-[17px]">
+              La première vague est terminée. Honnêtement, je ne savais pas trop à quoi m'attendre quand j'ai envoyé les premiers codes. Vous avez testé, cassé des trucs, signalé des bugs que je n'aurais jamais trouvés seul — c'est exactement ce qu'il me fallait pour avancer sérieusement.
+            </p>
+          </motion.div>
+        )}
 
-            <div className="border-t border-blue-100/80 bg-[linear-gradient(180deg,_rgba(239,246,255,0.92),_rgba(255,255,255,0.96))] px-6 py-8 sm:px-10 sm:py-10 lg:border-l lg:border-t-0 lg:px-10 lg:py-16">
-              <div className="grid gap-4">
-                {[
-                  {
-                    icon: Users,
-                    title: content.thanksTitle,
-                    text: content.thanksText
-                  },
-                  {
-                    icon: Shield,
-                    title: content.progressTitle,
-                    text: content.progressText
-                  },
-                  {
-                    icon: Video,
-                    title: content.selectionTitle,
-                    text: content.selectionText
-                  }
-                ].map((item, index) => {
-                  const Icon = item.icon;
+        {!submitted && (
+          <>
+            {/* ── INFO CARDS ── */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, delay: 0.1 }}
+              className="mb-10 grid gap-4 sm:grid-cols-3"
+            >
+              {INFO_CARDS.map((item, i) => {
+                const Icon = item.icon;
+                return (
+                  <motion.div
+                    key={item.title}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: 0.15 + i * 0.07 }}
+                    className="rounded-2xl border border-blue-100 bg-white/80 p-5 shadow-[0_8px_30px_rgba(37,99,235,0.07)] backdrop-blur-sm"
+                  >
+                    <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <h3 className="mb-1.5 text-sm font-semibold text-slate-900">{item.title}</h3>
+                    <p className="text-[13px] leading-[1.65] text-slate-500">{item.text}</p>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
 
-                  return (
-                    <motion.div
-                      key={item.title}
-                      initial={{ opacity: 0, x: 14 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.35, delay: 0.16 + index * 0.08 }}
-                      className="group relative overflow-hidden rounded-3xl border border-blue-100 bg-white/90 p-5 shadow-[0_18px_45px_rgba(37,99,235,0.08)]"
-                    >
-                      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-300/60 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                      <div className="flex items-start gap-4">
-                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 ring-1 ring-blue-100">
-                          <Icon className="h-5 w-5" />
-                        </div>
-                        <div>
-                          <h2 className="text-lg font-semibold tracking-[-0.02em] text-slate-900">{item.title}</h2>
-                          <p className="mt-2 text-sm leading-6 text-slate-600">{item.text}</p>
-                        </div>
-                      </div>
-                    </motion.div>
-                  );
-                })}
+            {/* ── APPLICATION FORM ── */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="overflow-hidden rounded-3xl border border-blue-100 bg-white/90 shadow-[0_32px_80px_rgba(37,99,235,0.12)] backdrop-blur-xl"
+            >
+              {/* Form header */}
+              <div className="relative border-b border-blue-50 bg-[linear-gradient(135deg,#eff6ff,#f8faff)] px-6 py-7 sm:px-10">
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-300/50 to-transparent" />
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <h2 className="text-xl font-bold tracking-tight text-slate-950 sm:text-2xl">
+                      Participer à la Vague 2
+                    </h2>
+                    <p className="mt-1.5 max-w-md text-sm leading-6 text-slate-500">
+                      Je cherche 15 personnes motivées pour tester la prochaine version. Je lis chaque candidature moi-même et je réponds personnellement.
+                    </p>
+                  </div>
+                  <div className="inline-flex shrink-0 items-center gap-2 self-start rounded-full border border-blue-200 bg-white px-4 py-2 text-sm font-semibold text-blue-700 shadow-sm">
+                    <Users className="h-4 w-4" />
+                    <span>15 places</span>
+                  </div>
+                </div>
               </div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.45 }}
-                className="mt-6 rounded-3xl border border-blue-100 bg-blue-950 px-6 py-5 text-blue-50 shadow-[0_20px_50px_rgba(15,23,42,0.22)]"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10">
-                    <Sparkles className="h-5 w-5" />
+              {/* Form body */}
+              <form onSubmit={handleSubmit} noValidate className="px-6 py-8 sm:px-10">
+
+                {/* Prénom + Nom */}
+                <div className="mb-5 grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label className="mb-1.5 block text-sm font-medium text-slate-700">
+                      Prénom <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Alice"
+                      value={form.firstName}
+                      onChange={e => update('firstName', e.target.value)}
+                      className={inputClass('firstName')}
+                      autoComplete="given-name"
+                    />
+                    {fieldErrors.firstName && <p className="mt-1 text-xs text-red-500">{fieldErrors.firstName}</p>}
                   </div>
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-200">VisioConnect</p>
-                    <p className="mt-1 text-sm leading-6 text-blue-50/85">{content.footer}</p>
+                    <label className="mb-1.5 block text-sm font-medium text-slate-700">
+                      Nom <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Dupont"
+                      value={form.lastName}
+                      onChange={e => update('lastName', e.target.value)}
+                      className={inputClass('lastName')}
+                      autoComplete="family-name"
+                    />
+                    {fieldErrors.lastName && <p className="mt-1 text-xs text-red-500">{fieldErrors.lastName}</p>}
                   </div>
                 </div>
-              </motion.div>
-            </div>
-          </div>
-        </div>
-      </motion.div>
+
+                {/* Email */}
+                <div className="mb-5">
+                  <label className="mb-1.5 block text-sm font-medium text-slate-700">
+                    Email <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    placeholder="alice@example.com"
+                    value={form.email}
+                    onChange={e => update('email', e.target.value)}
+                    className={inputClass('email')}
+                    autoComplete="email"
+                  />
+                  {fieldErrors.email && <p className="mt-1 text-xs text-red-500">{fieldErrors.email}</p>}
+                </div>
+
+                {/* Profil + Usage */}
+                <div className="mb-5 grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label className="mb-1.5 block text-sm font-medium text-slate-700">
+                      Votre profil <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      value={form.profile}
+                      onChange={e => update('profile', e.target.value)}
+                      className={`${inputClass('profile')} cursor-pointer`}
+                    >
+                      {PROFILES.map(p => (
+                        <option key={p.value} value={p.value} disabled={p.disabled}>{p.label}</option>
+                      ))}
+                    </select>
+                    {fieldErrors.profile && <p className="mt-1 text-xs text-red-500">{fieldErrors.profile}</p>}
+                  </div>
+                  <div>
+                    <label className="mb-1.5 block text-sm font-medium text-slate-700">
+                      Usage prévu <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      value={form.usage}
+                      onChange={e => update('usage', e.target.value)}
+                      className={`${inputClass('usage')} cursor-pointer`}
+                    >
+                      {USAGES.map(u => (
+                        <option key={u.value} value={u.value} disabled={u.disabled}>{u.label}</option>
+                      ))}
+                    </select>
+                    {fieldErrors.usage && <p className="mt-1 text-xs text-red-500">{fieldErrors.usage}</p>}
+                  </div>
+                </div>
+
+                {/* Outils */}
+                <div className="mb-5">
+                  <label className="mb-2 block text-sm font-medium text-slate-700">
+                    Quels outils utilisez-vous déjà ?{' '}
+                    <span className="font-normal text-slate-400">(facultatif)</span>
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {TOOLS.map(tool => {
+                      const selected = form.tools.includes(tool);
+                      return (
+                        <button
+                          key={tool}
+                          type="button"
+                          onClick={() => toggleTool(tool)}
+                          className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-all duration-150 ${
+                            selected
+                              ? 'border-blue-500 bg-blue-600 text-white shadow-sm'
+                              : 'border-slate-200 bg-white text-slate-600 hover:border-blue-300 hover:text-blue-700'
+                          }`}
+                        >
+                          {tool}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Motivation */}
+                <div className="mb-7">
+                  <div className="mb-1.5 flex items-center justify-between">
+                    <label className="text-sm font-medium text-slate-700">
+                      Pourquoi veux-tu tester VisioConnect ? <span className="text-red-500">*</span>
+                    </label>
+                    <span className={`text-xs tabular-nums ${motLen >= 40 ? 'text-green-600' : 'text-slate-400'}`}>
+                      {motLen} / 40 min.
+                    </span>
+                  </div>
+                  <textarea
+                    rows={4}
+                    placeholder="Dis-moi en quelques mots ce qui t'intéresse dans VisioConnect, ce que tu cherches dans une appli de visio, ou simplement pourquoi tu veux participer…"
+                    value={form.motivation}
+                    onChange={e => update('motivation', e.target.value)}
+                    className={`${inputClass('motivation')} resize-none`}
+                  />
+                  {fieldErrors.motivation && <p className="mt-1 text-xs text-red-500">{fieldErrors.motivation}</p>}
+                </div>
+
+                {/* Submit error */}
+                {submitError && (
+                  <div className="mb-5 flex items-start gap-3 rounded-xl border border-red-100 bg-red-50 px-4 py-3">
+                    <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-500" />
+                    <p className="text-sm text-red-600">{submitError}</p>
+                  </div>
+                )}
+
+                {/* Submit */}
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="inline-flex w-full items-center justify-center gap-2.5 rounded-2xl bg-blue-600 px-6 py-4 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60 disabled:translate-y-0"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Envoi en cours…
+                    </>
+                  ) : (
+                    <>
+                      <Send className="h-4 w-4" />
+                      Envoyer ma candidature
+                    </>
+                  )}
+                </button>
+
+                <p className="mt-4 text-center text-[12px] text-slate-400">
+                  Tes données ne sont utilisées que pour la sélection bêta et ne seront jamais partagées.
+                </p>
+              </form>
+            </motion.div>
+
+            {/* ── FOOTER ── */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4, delay: 0.35 }}
+              className="mt-8 flex flex-col items-center gap-4"
+            >
+              <button
+                onClick={() => navigate('/')}
+                className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition-all hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Retour à l'accueil
+              </button>
+              <p className="text-[12px] text-slate-400">
+                © 2026 VisioConnect — Fait avec soin par Théo Garcès
+              </p>
+            </motion.div>
+          </>
+        )}
+
+      </div>
     </div>
   );
 }
