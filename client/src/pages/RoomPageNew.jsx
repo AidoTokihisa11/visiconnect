@@ -1,244 +1,647 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useSafeLayout } from '../hooks/useSafeLayout';
+import styled, { keyframes, css } from 'styled-components';
 import {
-  Sparkles, Users, CheckCircle2, ArrowLeft, Send,
-  Loader2, AlertCircle, Mic, MicOff, Video, VideoOff,
-  Monitor, MessageSquare, Shield, Wifi, ChevronRight,
+  Sparkles, Users, CheckCircle2, ArrowLeft, Send, Loader2, AlertCircle,
+  Bug, Zap, Rocket, Shield, Clock, Star, MessageCircle, ChevronRight,
+  Check, Heart, Target, FileText, Mail,
 } from 'lucide-react';
+import { useSafeLayout } from '../hooks/useSafeLayout';
 
-/* ─── Data ─────────────────────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────────
+   PALETTE (identique au reste du site)
+───────────────────────────────────────────────────────────────── */
+const C = {
+  primary:  '#2563eb',
+  navy:     '#0f172a',
+  text:     '#374151',
+  muted:    '#6b7280',
+  border:   '#e5e7eb',
+  card:     '#ffffff',
+  softBlue: '#eff6ff',
+  blueTint: '#dbeafe',
+  bg:       '#f8fbff',
+};
+
+/* ─────────────────────────────────────────────────────────────────
+   KEYFRAMES
+───────────────────────────────────────────────────────────────── */
+const floatIn = keyframes`
+  from { opacity: 0; transform: translateY(22px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+`;
+
+const revealCss = css`
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity .65s ease, transform .65s cubic-bezier(.22, 1, .36, 1);
+  transition-delay: var(--d, 0ms);
+  will-change: opacity, transform;
+  &.visible { opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce) { opacity: 1; transform: none; transition: none; }
+`;
+
+/* ─────────────────────────────────────────────────────────────────
+   PAGE SHELL
+───────────────────────────────────────────────────────────────── */
+const Page = styled.div`
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(37,99,235,.07), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(37,99,235,.04), transparent 40%),
+    linear-gradient(180deg, ${C.bg} 0%, #fff 30%, #fff 100%);
+  color: ${C.navy};
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+`;
+const DotGrid = styled.div`
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    linear-gradient(rgba(37,99,235,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37,99,235,.025) 1px, transparent 1px);
+  background-size: 44px 44px;
+`;
+
+/* ─────────────────────────────────────────────────────────────────
+   NAV
+───────────────────────────────────────────────────────────────── */
+const Nav = styled.nav`
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,255,255,.92); backdrop-filter: blur(16px);
+  border-bottom: 1px solid ${C.border};
+`;
+const NavInner = styled.div`
+  max-width: 1200px; margin: 0 auto; padding: .9rem 1.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+`;
+const NavLogo = styled.button`
+  background: none; border: none; cursor: pointer; padding: 0;
+  display: flex; align-items: center; gap: .55rem;
+  font-weight: 800; font-size: 1.05rem; color: ${C.navy};
+  transition: color .2s;
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: ${C.primary}; }
+  &:hover { color: ${C.primary}; }
+`;
+const NavCta = styled.button`
+  display: inline-flex; align-items: center; gap: .5rem;
+  padding: .55rem 1.15rem; border-radius: 10px;
+  background: ${C.softBlue}; border: 1px solid ${C.blueTint};
+  color: ${C.primary}; font-weight: 700; font-size: .85rem; cursor: pointer;
+  transition: background .2s, transform .2s;
+  &:hover { background: #dbeafe; transform: translateY(-1px); }
+`;
+
+/* ─────────────────────────────────────────────────────────────────
+   HERO
+───────────────────────────────────────────────────────────────── */
+const HeroSection = styled.section`
+  padding: 7rem 1.5rem 5.5rem;
+  border-bottom: 1px solid ${C.border};
+  position: relative; z-index: 1; text-align: center;
+`;
+const HeroEyebrow = styled.div`
+  display: inline-flex; align-items: center; gap: .55rem;
+  padding: .5rem 1.1rem; border-radius: 999px;
+  background: ${C.softBlue}; border: 1px solid ${C.blueTint};
+  color: ${C.primary}; font-weight: 700; font-size: .82rem;
+  margin-bottom: 2rem;
+  animation: ${floatIn} .6s cubic-bezier(.22,1,.36,1) both;
+  .pulse {
+    width: 7px; height: 7px; border-radius: 50%; background: ${C.primary};
+    animation: ripple 1.8s ease infinite;
+  }
+  @keyframes ripple {
+    0%  { box-shadow: 0 0 0 0   rgba(37,99,235,.5); }
+    70% { box-shadow: 0 0 0 8px rgba(37,99,235,0);  }
+    100%{ box-shadow: 0 0 0 0   rgba(37,99,235,0);  }
+  }
+`;
+const HeroTitle = styled.h1`
+  font-size: clamp(2.6rem, 6vw, 4.4rem);
+  font-weight: 800; letter-spacing: -.04em; line-height: 1.07;
+  color: ${C.navy}; margin: 0 auto 1.5rem; max-width: 820px;
+  animation: ${floatIn} .7s .06s cubic-bezier(.22,1,.36,1) both;
+  span {
+    background: linear-gradient(135deg, ${C.primary}, #60a5fa);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; display: block;
+  }
+`;
+const HeroSubtitle = styled.p`
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  color: ${C.muted}; line-height: 1.8; max-width: 640px; margin: 0 auto 2.5rem;
+  animation: ${floatIn} .7s .12s cubic-bezier(.22,1,.36,1) both;
+`;
+const HeroActions = styled.div`
+  display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;
+  animation: ${floatIn} .7s .18s cubic-bezier(.22,1,.36,1) both;
+`;
+const BtnPrimary = styled.button`
+  display: inline-flex; align-items: center; gap: .6rem;
+  padding: 1rem 1.8rem; border-radius: 12px; border: none;
+  background: ${C.primary}; color: #fff; font-weight: 700; font-size: .95rem; cursor: pointer;
+  box-shadow: 0 10px 28px rgba(37,99,235,.3);
+  transition: transform .2s, box-shadow .2s, background .2s;
+  &:hover { transform: translateY(-2px); box-shadow: 0 16px 36px rgba(37,99,235,.38); background: #1d4ed8; }
+`;
+const BtnSecondary = styled.button`
+  display: inline-flex; align-items: center; gap: .6rem;
+  padding: 1rem 1.6rem; border-radius: 12px;
+  border: 1.5px solid ${C.border}; background: #fff; color: ${C.navy};
+  font-weight: 700; font-size: .95rem; cursor: pointer;
+  transition: border-color .2s, color .2s, transform .2s;
+  &:hover { border-color: ${C.primary}; color: ${C.primary}; transform: translateY(-2px); }
+`;
+
+/* ─────────────────────────────────────────────────────────────────
+   STATS BAND
+───────────────────────────────────────────────────────────────── */
+const StatsBand = styled.section`
+  background: linear-gradient(180deg, rgba(239,246,255,.8) 0%, rgba(255,255,255,.4) 100%);
+  border-bottom: 1px solid ${C.border};
+`;
+const StatsGrid = styled.div`
+  max-width: 1200px; margin: 0 auto; padding: 2.75rem 1.5rem;
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem;
+  @media(max-width: 768px) { grid-template-columns: repeat(2,1fr); }
+`;
+const StatCard = styled.div`
+  background: #fff; border: 1px solid ${C.border}; border-radius: 18px;
+  padding: 1.75rem 1.25rem; text-align: center;
+  box-shadow: 0 4px 20px rgba(15,23,42,.04);
+  transition: transform .28s, border-color .28s, box-shadow .28s;
+  ${revealCss}
+  &:hover { transform: translateY(-4px); border-color: ${C.blueTint}; box-shadow: 0 14px 32px rgba(37,99,235,.1); }
+  .icon { color: ${C.primary}; margin-bottom: .65rem; }
+  .val  { font-size: 2rem; font-weight: 800; color: ${C.navy}; line-height: 1; }
+  .lbl  { font-size: .78rem; color: ${C.muted}; margin-top: .4rem; line-height: 1.4; }
+`;
+
+/* ─────────────────────────────────────────────────────────────────
+   SECTION HELPERS
+───────────────────────────────────────────────────────────────── */
+const Wrap = styled.div`max-width: 1200px; margin: 0 auto; padding: 0 1.5rem;`;
+const SectionW = styled.section`padding: 5.5rem 0; border-bottom: 1px solid ${C.border}; position: relative; z-index: 1;`;
+const SectionAlt = styled.section`
+  background: ${C.softBlue};
+  border-top: 1px solid ${C.blueTint}; border-bottom: 1px solid ${C.blueTint};
+  padding: 5.5rem 0; position: relative; z-index: 1;
+`;
+const SectionHead = styled.div`text-align: center; max-width: 660px; margin: 0 auto 3.5rem;`;
+const SectionEyebrow = styled.div`
+  display: inline-flex; align-items: center; gap: .5rem;
+  padding: .4rem .85rem; border-radius: 999px;
+  background: ${C.softBlue}; border: 1px solid ${C.blueTint};
+  color: ${C.primary}; font-weight: 700; font-size: .78rem;
+  margin-bottom: .85rem; text-transform: uppercase; letter-spacing: .08em;
+  ${revealCss}
+`;
+const SectionTitle = styled.h2`
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem); font-weight: 800;
+  letter-spacing: -.03em; color: ${C.navy}; margin: 0 0 .75rem;
+  ${revealCss}
+  span {
+    background: linear-gradient(135deg, ${C.primary}, #60a5fa);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+`;
+const SectionSub = styled.p`
+  font-size: 1rem; color: ${C.muted}; line-height: 1.75; margin: 0;
+  ${revealCss}
+`;
+
+/* ─────────────────────────────────────────────────────────────────
+   BILAN CARDS
+───────────────────────────────────────────────────────────────── */
+const CardsGrid = styled.div`
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem;
+  @media(max-width: 900px) { grid-template-columns: 1fr; }
+  ${revealCss}
+`;
+const FeatureCard = styled.div`
+  background: #fff; border: 1px solid ${C.border}; border-radius: 22px;
+  padding: 2rem; box-shadow: 0 6px 22px rgba(15,23,42,.05);
+  position: relative; overflow: hidden;
+  transition: transform .3s, border-color .3s, box-shadow .3s;
+  &::after {
+    content: ''; position: absolute; left: 0; right: 0; top: 0; height: 3px;
+    background: linear-gradient(90deg, ${C.primary}, rgba(37,99,235,.3));
+    transform: scaleX(0); transform-origin: left; transition: transform .3s;
+  }
+  &:hover { transform: translateY(-5px); border-color: ${C.blueTint}; box-shadow: 0 18px 40px rgba(37,99,235,.1); }
+  &:hover::after { transform: scaleX(1); }
+`;
+const IconBox = styled.div`
+  width: 50px; height: 50px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  background: ${C.softBlue}; color: ${C.primary}; margin-bottom: 1.25rem;
+  transition: transform .3s, background .3s;
+  ${FeatureCard}:hover & { transform: scale(1.08); background: rgba(37,99,235,.12); }
+`;
+const CardTitle = styled.h3`font-size: 1.1rem; font-weight: 800; color: ${C.navy}; margin: 0 0 .6rem;`;
+const CardText  = styled.p`font-size: .9rem; color: ${C.muted}; line-height: 1.7; margin: 0;`;
+
+/* ─────────────────────────────────────────────────────────────────
+   CHANGES LIST
+───────────────────────────────────────────────────────────────── */
+const ChangeList = styled.div`
+  display: flex; flex-direction: column; gap: 1.25rem; max-width: 860px; margin: 0 auto;
+  ${revealCss}
+`;
+const ChangeItem = styled.div`
+  background: #fff; border: 1px solid ${C.border}; border-radius: 18px;
+  padding: 1.6rem 1.75rem; display: flex; gap: 1.25rem; align-items: flex-start;
+  box-shadow: 0 4px 18px rgba(15,23,42,.04);
+  transition: transform .28s, border-color .28s, box-shadow .28s;
+  &:hover { transform: translateY(-3px); border-color: ${C.blueTint}; box-shadow: 0 14px 30px rgba(37,99,235,.1); }
+`;
+const ChangeIconWrap = styled.div`
+  flex-shrink: 0; width: 40px; height: 40px; border-radius: 12px;
+  background: ${C.softBlue}; color: ${C.primary};
+  display: flex; align-items: center; justify-content: center; margin-top: 1px;
+`;
+const ChangeBody = styled.div`
+  flex: 1;
+  h4 { font-size: 1rem; font-weight: 800; color: ${C.navy}; margin: 0 0 .35rem; }
+  p  { font-size: .9rem; color: ${C.muted}; line-height: 1.65; margin: 0; }
+`;
+const ChangeBadge = styled.span`
+  flex-shrink: 0; align-self: flex-start; margin-top: 2px;
+  padding: .3rem .75rem; border-radius: 8px; font-size: .75rem; font-weight: 700;
+  background: ${({ $ok }) => $ok ? '#f0fdf4' : C.softBlue};
+  color:      ${({ $ok }) => $ok ? '#16a34a' : C.primary};
+  border:     1px solid ${({ $ok }) => $ok ? '#bbf7d0' : C.blueTint};
+`;
+
+/* ─────────────────────────────────────────────────────────────────
+   VAGUE 2 GRID
+───────────────────────────────────────────────────────────────── */
+const NewGrid = styled.div`
+  display: grid; grid-template-columns: repeat(2,1fr); gap: 1.5rem;
+  @media(max-width: 760px) { grid-template-columns: 1fr; }
+  ${revealCss}
+`;
+const NewCard = styled.div`
+  background: #fff; border: 1px solid ${C.border}; border-radius: 20px;
+  padding: 1.75rem 1.9rem; display: flex; gap: 1.1rem; align-items: flex-start;
+  box-shadow: 0 4px 18px rgba(15,23,42,.04);
+  transition: transform .28s, border-color .28s, box-shadow .28s;
+  &:hover { transform: translateY(-4px); border-color: ${C.blueTint}; box-shadow: 0 14px 32px rgba(37,99,235,.1); }
+`;
+const NewIcon = styled.div`
+  flex-shrink: 0; width: 44px; height: 44px; border-radius: 13px;
+  background: ${C.softBlue}; color: ${C.primary};
+  display: flex; align-items: center; justify-content: center; margin-top: 1px;
+  transition: transform .3s, background .3s;
+  ${NewCard}:hover & { transform: scale(1.08); background: rgba(37,99,235,.12); }
+`;
+const NewBody = styled.div`
+  flex: 1;
+  h4 { font-size: 1rem; font-weight: 800; color: ${C.navy}; margin: 0 0 .4rem; }
+  p  { font-size: .87rem; color: ${C.muted}; line-height: 1.65; margin: 0; }
+`;
+
+/* ─────────────────────────────────────────────────────────────────
+   CRITERIA
+───────────────────────────────────────────────────────────────── */
+const CriteriaGrid = styled.div`
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem;
+  @media(max-width: 900px) { grid-template-columns: 1fr; }
+  ${revealCss}
+`;
+const CriteriaCard = styled.div`
+  background: #fff; border: 1px solid ${C.border}; border-radius: 20px;
+  padding: 1.75rem; box-shadow: 0 4px 18px rgba(15,23,42,.04);
+  transition: transform .28s, border-color .28s, box-shadow .28s;
+  &:hover { transform: translateY(-4px); border-color: ${C.blueTint}; box-shadow: 0 14px 32px rgba(37,99,235,.1); }
+  .num {
+    width: 34px; height: 34px; border-radius: 10px; background: ${C.primary};
+    color: #fff; font-weight: 800; font-size: .85rem;
+    display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;
+  }
+  h4 { font-size: 1rem; font-weight: 800; color: ${C.navy}; margin: 0 0 .5rem; }
+  p  { font-size: .87rem; color: ${C.muted}; line-height: 1.65; margin: 0; }
+`;
+
+/* ─────────────────────────────────────────────────────────────────
+   QUOTES
+───────────────────────────────────────────────────────────────── */
+const QuoteGrid = styled.div`
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem;
+  @media(max-width: 900px) { grid-template-columns: 1fr; }
+  ${revealCss}
+`;
+const QuoteCard = styled.div`
+  background: #fff; border: 1px solid ${C.border}; border-radius: 20px;
+  padding: 1.75rem; box-shadow: 0 4px 18px rgba(15,23,42,.04);
+  display: flex; flex-direction: column; gap: 1rem;
+  transition: transform .28s, border-color .28s, box-shadow .28s;
+  &:hover { transform: translateY(-4px); border-color: ${C.blueTint}; box-shadow: 0 14px 32px rgba(37,99,235,.1); }
+  .qi { color: ${C.primary}; }
+  p { font-size: .92rem; color: ${C.text}; line-height: 1.7; margin: 0; flex: 1; font-style: italic; }
+`;
+const QuoteAuthor = styled.div`
+  display: flex; align-items: center; gap: .7rem;
+  .av {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: ${C.softBlue}; border: 2px solid ${C.blueTint};
+    display: flex; align-items: center; justify-content: center;
+    font-size: .8rem; font-weight: 800; color: ${C.primary};
+  }
+  .nm { font-size: .85rem; font-weight: 700; color: ${C.navy}; }
+  .rl { font-size: .75rem; color: ${C.muted}; }
+`;
+
+/* ─────────────────────────────────────────────────────────────────
+   FORM
+───────────────────────────────────────────────────────────────── */
+const FormSection = styled.section`
+  padding: 5.5rem 1.5rem 6rem;
+  background: linear-gradient(180deg, ${C.softBlue} 0%, #fff 100%);
+  border-top: 1px solid ${C.blueTint};
+  position: relative; z-index: 1;
+`;
+const FormCard = styled.div`
+  max-width: 860px; margin: 0 auto;
+  background: #fff; border: 1px solid ${C.border}; border-radius: 28px;
+  box-shadow: 0 40px 100px rgba(37,99,235,.12); overflow: hidden;
+  ${revealCss}
+`;
+const FormHeader = styled.div`
+  padding: 2.5rem 2.5rem 2rem;
+  background: linear-gradient(135deg, ${C.softBlue} 0%, rgba(255,255,255,.6) 100%);
+  border-bottom: 1px solid ${C.blueTint};
+  display: flex; gap: 1.5rem; align-items: flex-start; flex-wrap: wrap;
+  @media(max-width: 640px) { padding: 1.75rem 1.5rem 1.5rem; }
+`;
+const FormHeaderLeft = styled.div`flex: 1; min-width: 200px;`;
+const FormBadge = styled.div`
+  display: inline-flex; align-items: center; gap: .5rem;
+  padding: .4rem .85rem; border-radius: 999px;
+  background: ${C.softBlue}; border: 1px solid ${C.blueTint};
+  color: ${C.primary}; font-weight: 700; font-size: .78rem;
+  margin-bottom: .75rem; text-transform: uppercase; letter-spacing: .08em;
+`;
+const FormTitle = styled.h2`
+  font-size: clamp(1.5rem, 2.5vw, 2rem); font-weight: 800;
+  letter-spacing: -.03em; color: ${C.navy}; margin: 0 0 .5rem;
+`;
+const FormSubtitle = styled.p`font-size: .92rem; color: ${C.muted}; line-height: 1.65; margin: 0;`;
+const SlotsBox = styled.div`
+  flex-shrink: 0; background: #fff; border: 1px solid ${C.blueTint};
+  border-radius: 18px; padding: 1.25rem 1.5rem; text-align: center;
+  box-shadow: 0 4px 16px rgba(37,99,235,.08); align-self: flex-start;
+  .iw { width: 40px; height: 40px; border-radius: 12px; background: ${C.primary}; color: #fff; display: flex; align-items: center; justify-content: center; margin: 0 auto .5rem; }
+  .num { font-size: 2rem; font-weight: 800; color: ${C.navy}; line-height: 1; }
+  .cap { font-size: .72rem; font-weight: 700; color: ${C.muted}; text-transform: uppercase; letter-spacing: .08em; }
+`;
+const FormBody = styled.form`
+  padding: 2.5rem;
+  display: flex; flex-direction: column; gap: 1.5rem;
+  @media(max-width: 640px) { padding: 1.5rem; }
+`;
+const FieldRow = styled.div`
+  display: grid;
+  grid-template-columns: ${({ $cols }) => $cols === 2 ? '1fr 1fr' : '1fr'};
+  gap: 1rem;
+  @media(max-width: 640px) { grid-template-columns: 1fr; }
+`;
+const FieldGroup = styled.div`display: flex; flex-direction: column; gap: .45rem;`;
+const Label = styled.label`
+  font-size: .85rem; font-weight: 600; color: ${C.navy};
+  display: flex; align-items: center; justify-content: space-between;
+  .req { color: #ef4444; }
+  .opt { font-weight: 400; color: ${C.muted}; }
+  .counter { font-weight: 500; color: ${({ $ok }) => $ok ? '#16a34a' : C.muted}; }
+`;
+const inputBase = css`
+  width: 100%; padding: .75rem 1rem; border-radius: 12px; font-size: .9rem;
+  color: ${C.navy}; background: #fff; outline: none; box-sizing: border-box;
+  font-family: inherit;
+  border: 1.5px solid ${({ $err }) => $err ? '#fca5a5' : C.border};
+  transition: border-color .18s, box-shadow .18s;
+  &::placeholder { color: #9ca3af; }
+  &:focus {
+    border-color: ${({ $err }) => $err ? '#ef4444' : C.primary};
+    box-shadow: 0 0 0 3px ${({ $err }) => $err ? 'rgba(239,68,68,.12)' : 'rgba(37,99,235,.12)'};
+  }
+`;
+const Input    = styled.input`${inputBase}`;
+const Select   = styled.select`${inputBase} cursor: pointer;`;
+const Textarea = styled.textarea`${inputBase} resize: vertical; line-height: 1.65; min-height: 120px;`;
+const FieldError = styled.p`font-size: .8rem; color: #ef4444; margin: 0;`;
+const ToolsWrap = styled.div`display: flex; flex-wrap: wrap; gap: .65rem;`;
+const ToolChip = styled.button`
+  padding: .5rem 1rem; border-radius: 10px; font-size: .85rem; font-weight: 600; cursor: pointer;
+  border: 1.5px solid ${({ $on }) => $on ? C.primary : C.border};
+  background: ${({ $on }) => $on ? C.primary : '#fff'};
+  color: ${({ $on }) => $on ? '#fff' : C.text};
+  box-shadow: ${({ $on }) => $on ? '0 4px 14px rgba(37,99,235,.22)' : 'none'};
+  transition: all .15s ease;
+  display: inline-flex; align-items: center; gap: .3rem;
+  &:hover {
+    border-color: ${C.primary};
+    background: ${({ $on }) => $on ? '#1d4ed8' : C.softBlue};
+    color: ${({ $on }) => $on ? '#fff' : C.primary};
+    transform: translateY(-1px);
+  }
+`;
+const AlertBox = styled.div`
+  display: flex; align-items: flex-start; gap: .75rem;
+  padding: .9rem 1.1rem; border-radius: 12px;
+  background: #fef2f2; border: 1px solid #fecaca; color: #dc2626;
+  font-size: .88rem; line-height: 1.5;
+`;
+const SubmitBtn = styled.button`
+  display: inline-flex; align-items: center; justify-content: center; gap: .6rem;
+  padding: 1.05rem 1.75rem; border-radius: 14px; border: none;
+  background: linear-gradient(135deg, ${C.primary}, #3b82f6);
+  color: #fff; font-weight: 700; font-size: 1rem; cursor: pointer;
+  box-shadow: 0 10px 28px rgba(37,99,235,.3);
+  transition: transform .2s, box-shadow .2s, opacity .2s;
+  &:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 16px 36px rgba(37,99,235,.38); }
+  &:disabled { opacity: .6; cursor: not-allowed; }
+`;
+const PrivacyNote = styled.p`
+  font-size: .78rem; color: ${C.muted}; text-align: center; margin: 0;
+  display: flex; align-items: center; justify-content: center; gap: .4rem;
+`;
+
+/* ─────────────────────────────────────────────────────────────────
+   SUCCESS
+───────────────────────────────────────────────────────────────── */
+const SuccessWrap = styled.div`
+  padding: 5rem 1.5rem;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  position: relative; z-index: 1;
+`;
+const SuccessCircle = styled.div`
+  width: 80px; height: 80px; border-radius: 50%;
+  background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+  border: 3px solid #6ee7b7;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 1.75rem;
+  animation: ${floatIn} .6s cubic-bezier(.22,1,.36,1) both;
+`;
+const SuccessTitle = styled.h1`
+  font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; letter-spacing: -.03em;
+  color: ${C.navy}; margin: 0 0 1rem;
+  animation: ${floatIn} .6s .1s cubic-bezier(.22,1,.36,1) both;
+`;
+const SuccessText = styled.p`
+  font-size: 1.05rem; color: ${C.muted}; line-height: 1.75;
+  max-width: 520px; margin: 0 auto .75rem;
+  animation: ${floatIn} .6s .18s cubic-bezier(.22,1,.36,1) both;
+`;
+
+/* ─────────────────────────────────────────────────────────────────
+   FOOTER
+───────────────────────────────────────────────────────────────── */
+const FooterBar = styled.footer`
+  background: ${C.navy}; padding: 2.5rem 1.5rem; position: relative; z-index: 1;
+`;
+const FooterInner = styled.div`
+  max-width: 1200px; margin: 0 auto;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;
+`;
+const FooterLogo = styled.span`font-weight: 800; color: #fff; font-size: 1rem;`;
+const FooterMeta = styled.p`font-size: .8rem; color: #64748b; margin: 0;`;
+const FooterBack = styled.button`
+  display: inline-flex; align-items: center; gap: .5rem;
+  padding: .65rem 1.25rem; border-radius: 10px;
+  border: 1.5px solid rgba(255,255,255,.12); background: transparent;
+  color: #cbd5e1; font-weight: 600; font-size: .85rem; cursor: pointer;
+  transition: border-color .2s, color .2s, transform .2s;
+  &:hover { border-color: rgba(255,255,255,.3); color: #fff; transform: translateY(-1px); }
+`;
+
+/* ─────────────────────────────────────────────────────────────────
+   REVEAL HOOK
+───────────────────────────────────────────────────────────────── */
+function useReveal(delay = 0) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (delay) el.style.setProperty('--d', `${delay}ms`);
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { el.classList.add('visible'); obs.disconnect(); } },
+      { threshold: 0.08 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [delay]);
+  return ref;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   DATA
+───────────────────────────────────────────────────────────────── */
+const STATS_DATA = [
+  { icon: Users,    val: '22',   lbl: 'bêta-testeurs · Vague 1' },
+  { icon: Bug,      val: '47+',  lbl: 'bugs documentés & corrigés' },
+  { icon: Sparkles, val: '15',   lbl: 'places · Vague 2' },
+  { icon: Star,     val: '100%', lbl: 'sélection manuelle' },
+];
+
+const BILAN_CARDS = [
+  {
+    icon: Bug,
+    title: 'Des bugs remontés sérieusement',
+    text: 'Vous avez testé dans des conditions réelles — connexions instables, multiples onglets, mobile. Chaque rapport a atterri directement dans mon backlog et guidé les corrections de ces deux derniers mois.',
+  },
+  {
+    icon: MessageCircle,
+    title: 'Des retours honnêtes et contextualisés',
+    text: 'Pas juste "ça marche" ou "ça marche pas". Des retours avec du contexte, des captures, des comparatifs avec d\'autres outils. C\'est ce genre de feedback qui fait vraiment avancer un produit.',
+  },
+  {
+    icon: Heart,
+    title: 'Une communauté qui s\'implique',
+    text: 'Certains d\'entre vous ont testé plusieurs fois, signalé des régressions, proposé des améliorations. Ce niveau d\'implication dans un projet solo, c\'est rare et je l\'apprécie vraiment.',
+  },
+];
+
+const CHANGES_DATA = [
+  { icon: Shield,   title: 'Stabilité de connexion',       text: 'La gestion des coupures réseau et des reconnexions a été entièrement revue. Les sessions se rétablissent maintenant sans rechargement manuel.',                                                                       badge: 'Corrigé',  ok: true  },
+  { icon: Zap,      title: 'Authentification & sessions',   text: 'Le bug critique empêchant certains comptes de se connecter après migration a été résolu. La gestion des tokens est plus robuste et les sessions persistent correctement.',                                           badge: 'Corrigé',  ok: true  },
+  { icon: Target,   title: 'Comportement sur mobile',       text: 'Les problèmes d\'interface sur iOS et Android ont été traités. La mise en page s\'adapte correctement aux petits écrans et les gestes tactiles sont mieux gérés.',                                                   badge: 'Corrigé',  ok: true  },
+  { icon: FileText, title: 'Monitoring & détection d\'erreurs', text: 'Un système de monitoring interne a été mis en place. Je peux maintenant identifier les problèmes avant qu\'ils n\'impactent les utilisateurs — et corriger proactivement.',                                   badge: 'En prod',  ok: true  },
+  { icon: Clock,    title: 'Performance générale',          text: 'Le temps de chargement initial a été réduit. Les participants rejoignent les salles plus rapidement, notamment sur les connexions lentes ou depuis mobile.',                                                          badge: 'Amélioré', ok: true  },
+  { icon: Rocket,   title: 'Nouvelles fonctionnalités',     text: 'La Vague 2 sera la première à tester les fonctionnalités en développement : sondages en séance, tableau blanc collaboratif et système de notifications amélioré.',                                                  badge: 'Vague 2',  ok: false },
+];
+
+const VAGUE2_NEW = [
+  { icon: Target,       title: 'Sélection 100% manuelle',     text: 'Je lis chaque candidature personnellement. Pas d\'algorithme, pas de tirage au sort. Je cherche des profils variés — différents métiers, différents usages, différentes façons de tester.' },
+  { icon: Mail,         title: 'Réponse directe par email',   text: 'Si tu es sélectionné(e), je t\'écris directement sans intermédiaire. La sélection se fait dans les jours qui suivent la fermeture des candidatures.' },
+  { icon: MessageCircle,title: 'Canal Discord privé',         text: 'Les bêta-testeurs Vague 2 ont accès à un canal Discord privé pour remonter les bugs, discuter des fonctionnalités et échanger directement avec moi.' },
+  { icon: Rocket,       title: 'Accès anticipé aux features', text: 'Vous testez les fonctionnalités avant tout le monde. Vos retours influencent directement ce qui est gardé, modifié ou retiré avant la sortie publique.' },
+];
+
+const CRITERIA = [
+  { num: '01', title: 'Disponibilité réelle',    text: 'Pas besoin d\'y passer des heures chaque jour. Mais je cherche des gens qui ont vraiment du temps à consacrer au test — pas une inscription oubliée au fond d\'une boîte mail.' },
+  { num: '02', title: 'Feedback de qualité',     text: 'La qualité prime sur la quantité. Un rapport précis avec contexte, étapes de reproduction et capture vaut infiniment plus que "j\'ai trouvé un bug".' },
+  { num: '03', title: 'Usage réel de la visio',  text: 'Que ce soit pour le travail, les cours ou les appels personnels — si tu utilises déjà des outils de visioconférence régulièrement, tu as exactement le profil que je cherche.' },
+];
+
+const QUOTES = [
+  { text: 'Le niveau d\'attention portée aux retours m\'a surpris. Chaque bug que j\'ai signalé a été pris en compte rapidement. Rare pour un projet solo.', initials: 'ML', name: 'Marc L.',  role: 'Développeur' },
+  { text: 'J\'avais des doutes au départ mais l\'expérience était fluide malgré les bugs de beta. Le potentiel est clairement là.', initials: 'SO',                 name: 'Sarah O.', role: 'Designer UX' },
+  { text: 'Ce qui m\'a marqué c\'est la transparence sur l\'état du produit. Pas de fausse promesse, juste du boulot concret.', initials: 'PF',                      name: 'Pierre F.', role: 'Manager' },
+];
+
 const PROFILES = [
-  { value: '', label: 'Votre profil…', disabled: true },
-  { value: 'student', label: 'Étudiant(e)' },
+  { value: '',          label: 'Votre profil…',               disabled: true },
+  { value: 'student',   label: 'Étudiant(e)' },
   { value: 'developer', label: 'Développeur / Tech' },
-  { value: 'designer', label: 'Designer / Créatif' },
-  { value: 'manager', label: 'Manager / Chef de projet' },
+  { value: 'designer',  label: 'Designer / Créatif' },
+  { value: 'manager',   label: 'Manager / Chef de projet' },
   { value: 'freelance', label: 'Freelance / Auto-entrepreneur' },
-  { value: 'other', label: 'Autre' },
+  { value: 'other',     label: 'Autre' },
 ];
 
 const USAGES = [
-  { value: '', label: 'Usage principal…', disabled: true },
-  { value: 'personal', label: 'Appels personnels' },
+  { value: '',             label: 'Usage principal…',              disabled: true },
+  { value: 'personal',     label: 'Appels personnels (famille, amis)' },
   { value: 'professional', label: 'Réunions professionnelles' },
-  { value: 'team', label: 'Travail en équipe' },
-  { value: 'education', label: 'Cours / Formation en ligne' },
+  { value: 'team',         label: 'Travail en équipe / PME' },
+  { value: 'education',    label: 'Cours / Formation en ligne' },
 ];
 
-const TOOLS = ['Zoom', 'Google Meet', 'Teams', 'Discord', 'Whereby', 'Skype'];
+const TOOLS = ['Zoom', 'Google Meet', 'Microsoft Teams', 'Discord', 'Whereby', 'Jitsi', 'Skype'];
 
-const STATS = [
-  { value: '22', label: 'bêta-testeurs Vague 1' },
-  { value: '47+', label: 'bugs corrigés' },
-  { value: '15', label: 'places disponibles' },
-  { value: '100%', label: 'sélection manuelle' },
-];
-
-const PARTICIPANTS = [
-  { initials: 'MR', name: 'Marie R.', color: 'from-blue-500 to-blue-700', active: true },
-  { initials: 'TG', name: 'Théo G.', color: 'from-indigo-500 to-blue-600', active: true, speaking: true },
-  { initials: 'AL', name: 'Alice L.', color: 'from-blue-400 to-cyan-500', active: false },
-  { initials: 'JD', name: 'Julie D.', color: 'from-violet-500 to-indigo-600', active: true },
-];
-
-/* ─── Animated conference mockup ───────────────────────────────── */
-function ConferenceMockup() {
-  const [speakingIdx, setSpeakingIdx] = useState(1);
-  const [time, setTime] = useState('00:00');
-  const [seconds, setSeconds] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSpeakingIdx(i => (i === 3 ? 0 : i + 1));
-    }, 2400);
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSeconds(s => {
-        const next = s + 1;
-        const m = String(Math.floor(next / 60)).padStart(2, '0');
-        const sec = String(next % 60).padStart(2, '0');
-        setTime(`${m}:${sec}`);
-        return next;
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div
-      style={{
-        background: 'linear-gradient(160deg,#0f172a 0%,#1e3a5f 100%)',
-        borderRadius: '20px',
-        overflow: 'hidden',
-        boxShadow: '0 40px 80px rgba(15,23,42,0.35), 0 0 0 1px rgba(255,255,255,0.08)',
-        fontFamily: 'inherit',
-      }}
-    >
-      {/* Browser chrome */}
-      <div style={{ background: '#1e293b', padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 8, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-        <div style={{ display: 'flex', gap: 5 }}>
-          {['#ef4444','#f59e0b','#22c55e'].map(c => (
-            <div key={c} style={{ width: 10, height: 10, borderRadius: '50%', background: c, opacity: 0.8 }} />
-          ))}
-        </div>
-        <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
-          <div style={{ background: 'rgba(255,255,255,0.07)', borderRadius: 6, padding: '3px 14px', display: 'flex', alignItems: 'center', gap: 5 }}>
-            <Shield size={9} color='#60a5fa' />
-            <span style={{ fontSize: 10, color: '#94a3b8', letterSpacing: '0.02em' }}>visioconnect.pro/room/beta-session</span>
-          </div>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-          <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 6px #22c55e' }} />
-          <span style={{ fontSize: 10, color: '#64748b', fontVariantNumeric: 'tabular-nums' }}>{time}</span>
-        </div>
-      </div>
-
-      {/* Video grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3, padding: 3, background: '#0f172a' }}>
-        {PARTICIPANTS.map((p, i) => {
-          const isSpeaking = i === speakingIdx;
-          return (
-            <motion.div
-              key={p.initials}
-              animate={{ boxShadow: isSpeaking ? '0 0 0 2.5px #3b82f6, inset 0 0 0 1px rgba(59,130,246,0.2)' : '0 0 0 0px transparent' }}
-              transition={{ duration: 0.3 }}
-              style={{
-                position: 'relative',
-                aspectRatio: '16/10',
-                borderRadius: 12,
-                background: `linear-gradient(145deg, #1e2d4a, #0f1a2e)`,
-                overflow: 'hidden',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              {/* Avatar gradient bg */}
-              <div style={{
-                position: 'absolute', inset: 0,
-                background: `radial-gradient(circle at 60% 40%, rgba(37,99,235,0.18), transparent 60%)`,
-              }} />
-              {/* Avatar */}
-              <div style={{
-                width: 44, height: 44, borderRadius: '50%',
-                background: `linear-gradient(135deg, ${p.color.replace('from-','').replace(' to-','#').split('from-')[1] || '#2563eb'}, #1d4ed8)`,
-                backgroundImage: `linear-gradient(135deg, var(--tw-gradient-stops))`,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 14, fontWeight: 700, color: 'white',
-                boxShadow: '0 4px 14px rgba(0,0,0,0.3)',
-                zIndex: 1,
-              }}
-              className={`bg-gradient-to-br ${p.color}`}
-              >
-                {p.initials}
-              </div>
-              {/* Name tag */}
-              <div style={{
-                position: 'absolute', bottom: 7, left: 7,
-                background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(6px)',
-                borderRadius: 6, padding: '2px 7px',
-                display: 'flex', alignItems: 'center', gap: 4,
-              }}>
-                <span style={{ fontSize: 9, color: '#e2e8f0', fontWeight: 500 }}>{p.name}</span>
-                {isSpeaking && (
-                  <motion.div
-                    animate={{ opacity: [0.5, 1, 0.5] }}
-                    transition={{ duration: 0.6, repeat: Infinity }}
-                    style={{ display: 'flex', gap: 1.5, alignItems: 'center' }}
-                  >
-                    {[1,2,3].map(b => (
-                      <motion.div
-                        key={b}
-                        animate={{ scaleY: [0.3, 1, 0.3] }}
-                        transition={{ duration: 0.5, delay: b * 0.1, repeat: Infinity }}
-                        style={{ width: 2, height: 8, borderRadius: 1, background: '#60a5fa', transformOrigin: 'bottom' }}
-                      />
-                    ))}
-                  </motion.div>
-                )}
-              </div>
-              {/* Mic icon */}
-              <div style={{
-                position: 'absolute', bottom: 7, right: 7,
-                background: p.active ? 'rgba(37,99,235,0.35)' : 'rgba(239,68,68,0.3)',
-                borderRadius: 5, padding: 3,
-              }}>
-                {p.active
-                  ? <Mic size={8} color='#93c5fd' />
-                  : <MicOff size={8} color='#fca5a5' />
-                }
-              </div>
-            </motion.div>
-          );
-        })}
-      </div>
-
-      {/* Bottom toolbar */}
-      <div style={{ background: '#0f172a', padding: '10px 16px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-        {[
-          { icon: Mic, label: 'Micro', on: true },
-          { icon: Video, label: 'Caméra', on: true },
-          { icon: Monitor, label: 'Partager', on: false },
-          { icon: MessageSquare, label: 'Chat', on: false },
-        ].map(({ icon: Icon, label, on }) => (
-          <button key={label} style={{
-            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3,
-            background: on ? 'rgba(37,99,235,0.2)' : 'rgba(255,255,255,0.05)',
-            border: `1px solid ${on ? 'rgba(59,130,246,0.35)' : 'rgba(255,255,255,0.07)'}`,
-            borderRadius: 8, padding: '6px 10px', cursor: 'default',
-          }}>
-            <Icon size={12} color={on ? '#93c5fd' : '#64748b'} />
-            <span style={{ fontSize: 8, color: on ? '#93c5fd' : '#64748b', fontWeight: 500 }}>{label}</span>
-          </button>
-        ))}
-        <button style={{
-          marginLeft: 6,
-          background: 'rgba(239,68,68,0.15)',
-          border: '1px solid rgba(239,68,68,0.3)',
-          borderRadius: 8, padding: '6px 14px', cursor: 'default',
-          display: 'flex', alignItems: 'center', gap: 4,
-        }}>
-          <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#ef4444' }} />
-          <span style={{ fontSize: 9, color: '#fca5a5', fontWeight: 600 }}>Quitter</span>
-        </button>
-        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 4 }}>
-          <Wifi size={10} color='#22c55e' />
-          <span style={{ fontSize: 9, color: '#4ade80' }}>HD · 42ms</span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ─── Input helpers ─────────────────────────────────────────────── */
-const inputBase = 'w-full rounded-xl border bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none transition-all duration-150 focus:ring-2';
-const inputNormal = 'border-slate-200 focus:border-blue-400 focus:ring-blue-100';
-const inputError  = 'border-red-300 focus:border-red-400 focus:ring-red-100';
-
-/* ─── Page ──────────────────────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────────
+   MAIN COMPONENT
+───────────────────────────────────────────────────────────────── */
 export default function RoomPageNew() {
   const navigate = useNavigate();
   useSafeLayout();
 
+  const formRef = useRef(null);
+
+  /* Reveal refs */
+  const r_stats     = [useReveal(0), useReveal(80), useReveal(160), useReveal(240)];
+  const r_bilanEyebrow = useReveal(0); const r_bilanTitle = useReveal(80); const r_bilanSub = useReveal(140); const r_bilanCards = useReveal(180);
+  const r_chgEyebrow   = useReveal(0); const r_chgTitle   = useReveal(80); const r_chgSub   = useReveal(140); const r_chgList   = useReveal(180);
+  const r_newEyebrow   = useReveal(0); const r_newTitle   = useReveal(80); const r_newSub   = useReveal(140); const r_newGrid   = useReveal(180);
+  const r_crtEyebrow   = useReveal(0); const r_crtTitle   = useReveal(80); const r_crtSub   = useReveal(140); const r_crtGrid   = useReveal(180);
+  const r_qtEyebrow    = useReveal(0); const r_qtTitle    = useReveal(80); const r_qtGrid   = useReveal(120);
+  const r_formCard     = useReveal(100);
+
+  /* Form state */
   const [form, setForm] = useState({ firstName: '', lastName: '', email: '', profile: '', usage: '', tools: [], motivation: '' });
   const [fieldErrors, setFieldErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState(null);
 
-  const update = (field, value) => {
-    setForm(prev => ({ ...prev, [field]: value }));
-    if (fieldErrors[field]) setFieldErrors(prev => ({ ...prev, [field]: null }));
+  const update = (f, v) => {
+    setForm(p => ({ ...p, [f]: v }));
+    if (fieldErrors[f]) setFieldErrors(p => ({ ...p, [f]: null }));
   };
-
-  const toggleTool = (tool) => setForm(prev => ({
-    ...prev,
-    tools: prev.tools.includes(tool) ? prev.tools.filter(t => t !== tool) : [...prev.tools, tool],
+  const toggleTool = (t) => setForm(p => ({
+    ...p, tools: p.tools.includes(t) ? p.tools.filter(x => x !== t) : [...p.tools, t],
   }));
 
   const validate = () => {
@@ -252,7 +655,8 @@ export default function RoomPageNew() {
     }
     if (!form.profile) e.profile = 'Sélectionnez un profil';
     if (!form.usage)   e.usage   = 'Sélectionnez un usage';
-    if (form.motivation.trim().length < 40) e.motivation = 'Minimum 40 caractères';
+    const motLen = form.motivation.trim().length;
+    if (motLen < 40) e.motivation = `Minimum 40 caractères (${motLen} actuellement)`;
     return e;
   };
 
@@ -267,7 +671,13 @@ export default function RoomPageNew() {
       const res = await fetch('/api/beta-apply', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, firstName: form.firstName.trim(), lastName: form.lastName.trim(), email: form.email.trim().toLowerCase(), motivation: form.motivation.trim() }),
+        body: JSON.stringify({
+          ...form,
+          firstName:  form.firstName.trim(),
+          lastName:   form.lastName.trim(),
+          email:      form.email.trim().toLowerCase(),
+          motivation: form.motivation.trim(),
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Erreur inattendue, veuillez réessayer.');
@@ -280,354 +690,306 @@ export default function RoomPageNew() {
     }
   };
 
-  const ic = (field) => `${inputBase} ${fieldErrors[field] ? inputError : inputNormal}`;
-  const motLen = form.motivation.length;
+  const motLen = form.motivation.trim().length;
+  const scrollToForm = () => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
+  /* ─── SUCCESS ─── */
+  if (submitted) {
+    return (
+      <Page>
+        <DotGrid />
+        <Nav>
+          <NavInner>
+            <NavLogo onClick={() => navigate('/')}><div className="dot" />VisioConnect</NavLogo>
+          </NavInner>
+        </Nav>
+        <SuccessWrap>
+          <SuccessCircle><CheckCircle2 size={38} color="#16a34a" /></SuccessCircle>
+          <SuccessTitle>Candidature envoyée !</SuccessTitle>
+          <SuccessText>
+            Merci <strong>{form.firstName}</strong>. J'ai bien reçu ta candidature et un email de confirmation est parti à <strong>{form.email}</strong>.
+          </SuccessText>
+          <SuccessText style={{ animationDelay: '.22s' }}>
+            Je lis chaque message personnellement. Si tu es sélectionné(e) parmi les 15, je te recontacte directement par email — sans intermédiaire.
+          </SuccessText>
+          <div style={{ marginTop: '2rem', animation: `${floatIn} .6s .3s both` }}>
+            <BtnPrimary onClick={() => navigate('/')}>
+              <ArrowLeft size={16} /> Retour à l'accueil
+            </BtnPrimary>
+          </div>
+        </SuccessWrap>
+        <FooterBar>
+          <FooterInner>
+            <FooterLogo>VisioConnect</FooterLogo>
+            <FooterMeta>© 2026 — Fait avec soin par Théo Garcès</FooterMeta>
+          </FooterInner>
+        </FooterBar>
+      </Page>
+    );
+  }
+
+  /* ─── MAIN PAGE ─── */
   return (
-    <div className="relative min-h-screen w-full overflow-x-hidden font-sans" style={{ background: 'linear-gradient(180deg,#eff6ff 0%,#f1f8ff 30%,#f8fbff 60%,#ffffff 100%)' }}>
+    <Page>
+      <DotGrid />
 
-      {/* ── Ambient blobs ── */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden="true">
-        <div className="absolute -left-32 -top-16 h-[500px] w-[500px] rounded-full" style={{ background: 'radial-gradient(circle,rgba(147,197,253,0.22),transparent 70%)' }} />
-        <div className="absolute -right-24 top-1/4 h-[420px] w-[420px] rounded-full" style={{ background: 'radial-gradient(circle,rgba(186,230,253,0.18),transparent 70%)' }} />
-        <div className="absolute bottom-0 left-1/3 h-[380px] w-[380px] rounded-full" style={{ background: 'radial-gradient(circle,rgba(199,210,254,0.20),transparent 70%)' }} />
-        <div className="absolute inset-0 opacity-[0.028]" style={{ backgroundImage: 'radial-gradient(#2563eb 1px,transparent 1px)', backgroundSize: '32px 32px' }} />
-      </div>
+      {/* NAV */}
+      <Nav>
+        <NavInner>
+          <NavLogo onClick={() => navigate('/')}><div className="dot" />VisioConnect</NavLogo>
+          <NavCta onClick={scrollToForm}><Sparkles size={14} />Candidater <ChevronRight size={14} /></NavCta>
+        </NavInner>
+      </Nav>
 
-      <div className="relative z-10 mx-auto max-w-4xl px-4 pb-20 pt-12 sm:px-6">
+      {/* HERO */}
+      <HeroSection>
+        <HeroEyebrow><span className="pulse" />Bêta terminée · Vague 2 ouverte</HeroEyebrow>
+        <HeroTitle>
+          La Vague 1 est terminée.
+          <span>Et maintenant, la suite.</span>
+        </HeroTitle>
+        <HeroSubtitle>
+          Honnêtement, je ne savais pas trop à quoi m'attendre quand j'ai envoyé les premiers codes.
+          Vous avez testé dans de vraies conditions, remonté des bugs précis, et donné des retours
+          qui ont changé concrètement la direction du produit. Je cherche maintenant 15 personnes pour aller plus loin.
+        </HeroSubtitle>
+        <HeroActions>
+          <BtnPrimary onClick={scrollToForm}><Sparkles size={16} />Candidater à la Vague 2</BtnPrimary>
+          <BtnSecondary onClick={() => navigate('/')}><ArrowLeft size={16} />Revenir à l'accueil</BtnSecondary>
+        </HeroActions>
+      </HeroSection>
 
-        {/* ══════════════════════════════════
-            SUCCESS STATE
-        ══════════════════════════════════ */}
-        <AnimatePresence mode="wait">
-          {submitted ? (
-            <motion.div
-              key="success"
-              initial={{ opacity: 0, scale: 0.94, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="flex flex-col items-center py-16 text-center"
-            >
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.15, type: 'spring', stiffness: 200 }}
-                className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-green-100 ring-8 ring-green-50"
-              >
-                <CheckCircle2 className="h-10 w-10 text-green-500" />
-              </motion.div>
-              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.4 }}>
-                <h1 className="text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl">Candidature envoyée !</h1>
-                <p className="mx-auto mt-5 max-w-md text-[16px] leading-7 text-slate-600">
-                  Merci <strong>{form.firstName}</strong>. J'ai bien reçu ta candidature et un email de confirmation est parti sur <strong>{form.email}</strong>.
-                </p>
-                <p className="mx-auto mt-3 max-w-sm text-sm text-slate-400">
-                  Je lis chaque candidature personnellement. Si tu es sélectionné(e), je te recontacte dans les prochains jours.
-                </p>
-                <button onClick={() => navigate('/')} className="mt-8 inline-flex items-center gap-2 rounded-2xl bg-blue-600 px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all hover:-translate-y-0.5 hover:bg-blue-700">
-                  <ArrowLeft className="h-4 w-4" /> Retour à l'accueil
-                </button>
-              </motion.div>
-            </motion.div>
-          ) : (
-            <motion.div key="main" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
+      {/* STATS */}
+      <StatsBand>
+        <StatsGrid>
+          {STATS_DATA.map(({ icon: Icon, val, lbl }, i) => (
+            <StatCard key={lbl} ref={r_stats[i]}>
+              <div className="icon"><Icon size={22} /></div>
+              <div className="val">{val}</div>
+              <div className="lbl">{lbl}</div>
+            </StatCard>
+          ))}
+        </StatsGrid>
+      </StatsBand>
 
-              {/* ══════════════════════════════════
-                  HERO — badge + title + subtitle
-              ══════════════════════════════════ */}
-              <div className="mb-14 text-center">
-                <motion.div
-                  initial={{ opacity: 0, y: -8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.45 }}
-                  className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/80 px-5 py-2 text-[11px] font-bold uppercase tracking-[0.25em] text-blue-600 shadow-sm backdrop-blur"
-                >
-                  <span className="relative flex h-2 w-2">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75" />
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-blue-500" />
-                  </span>
-                  Vague 2 · Candidatures ouvertes
-                </motion.div>
+      {/* BILAN */}
+      <SectionW>
+        <Wrap>
+          <SectionHead>
+            <SectionEyebrow ref={r_bilanEyebrow}>Bilan · Vague 1</SectionEyebrow>
+            <SectionTitle ref={r_bilanTitle}>Ce que vous avez <span>vraiment accompli</span></SectionTitle>
+            <SectionSub ref={r_bilanSub}>Deux mois de beta-test intensif. Voici ce que ça a changé concrètement dans le développement de VisioConnect.</SectionSub>
+          </SectionHead>
+          <CardsGrid ref={r_bilanCards}>
+            {BILAN_CARDS.map(({ icon: Icon, title, text }) => (
+              <FeatureCard key={title}>
+                <IconBox><Icon size={22} /></IconBox>
+                <CardTitle>{title}</CardTitle>
+                <CardText>{text}</CardText>
+              </FeatureCard>
+            ))}
+          </CardsGrid>
+        </Wrap>
+      </SectionW>
 
-                <motion.h1
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.07 }}
-                  className="text-[2.8rem] font-extrabold leading-[1.08] tracking-[-0.04em] text-slate-950 sm:text-[3.6rem]"
-                >
-                  La Vague 1 est terminée.
-                  <br />
-                  <span className="bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
-                    Rejoins la Vague 2.
-                  </span>
-                </motion.h1>
+      {/* CE QUI A CHANGE */}
+      <SectionAlt>
+        <Wrap>
+          <SectionHead>
+            <SectionEyebrow ref={r_chgEyebrow}>Corrections & évolutions</SectionEyebrow>
+            <SectionTitle ref={r_chgTitle}>Ce qui a <span>changé depuis</span></SectionTitle>
+            <SectionSub ref={r_chgSub}>Chaque retour de la Vague 1 a alimenté une correction ou une amélioration. Voici un aperçu de ce qui a été fait.</SectionSub>
+          </SectionHead>
+          <ChangeList ref={r_chgList}>
+            {CHANGES_DATA.map(({ icon: Icon, title, text, badge, ok }) => (
+              <ChangeItem key={title}>
+                <ChangeIconWrap><Icon size={18} /></ChangeIconWrap>
+                <ChangeBody><h4>{title}</h4><p>{text}</p></ChangeBody>
+                <ChangeBadge $ok={ok}>{badge}</ChangeBadge>
+              </ChangeItem>
+            ))}
+          </ChangeList>
+        </Wrap>
+      </SectionAlt>
 
-                <motion.p
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.14 }}
-                  className="mx-auto mt-5 max-w-xl text-[16px] leading-[1.8] text-slate-500 sm:text-[17px]"
-                >
-                  Honnêtement, je ne m'attendais pas à des retours aussi concrets dès la première vague. 
-                  Bugs remontés, comportements instables identifiés, sessions de test menées sérieusement — 
-                  ça a changé beaucoup de choses dans l'app. Je cherche 15 nouvelles personnes pour aller plus loin.
-                </motion.p>
+      {/* VAGUE 2 */}
+      <SectionW>
+        <Wrap>
+          <SectionHead>
+            <SectionEyebrow ref={r_newEyebrow}>Vague 2</SectionEyebrow>
+            <SectionTitle ref={r_newTitle}>Ce qui <span>change pour la Vague 2</span></SectionTitle>
+            <SectionSub ref={r_newSub}>Plus ciblée, plus structurée. La deuxième vague est pensée pour aller chercher des retours vraiment utiles.</SectionSub>
+          </SectionHead>
+          <NewGrid ref={r_newGrid}>
+            {VAGUE2_NEW.map(({ icon: Icon, title, text }) => (
+              <NewCard key={title}>
+                <NewIcon><Icon size={20} /></NewIcon>
+                <NewBody><h4>{title}</h4><p>{text}</p></NewBody>
+              </NewCard>
+            ))}
+          </NewGrid>
+        </Wrap>
+      </SectionW>
 
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.2 }}
-                  className="mt-6 flex flex-wrap items-center justify-center gap-2 text-sm text-slate-400"
-                >
-                  <span className="flex items-center gap-1.5"><Shield size={13} className="text-blue-400" /> Sélection manuelle</span>
-                  <span className="text-slate-300">·</span>
-                  <span className="flex items-center gap-1.5"><Users size={13} className="text-blue-400" /> 15 places</span>
-                  <span className="text-slate-300">·</span>
-                  <span className="flex items-center gap-1.5"><Sparkles size={13} className="text-blue-400" /> Réponse personnelle</span>
-                </motion.div>
-              </div>
+      {/* QUOTES */}
+      <SectionAlt>
+        <Wrap>
+          <SectionHead>
+            <SectionEyebrow ref={r_qtEyebrow}>Retours · Vague 1</SectionEyebrow>
+            <SectionTitle ref={r_qtTitle}>Ce qu'en disent <span>les participants</span></SectionTitle>
+          </SectionHead>
+          <QuoteGrid ref={r_qtGrid}>
+            {QUOTES.map(({ text, initials, name, role }) => (
+              <QuoteCard key={name}>
+                <MessageCircle size={22} className="qi" />
+                <p>"{text}"</p>
+                <QuoteAuthor>
+                  <div className="av">{initials}</div>
+                  <div><div className="nm">{name}</div><div className="rl">{role}</div></div>
+                </QuoteAuthor>
+              </QuoteCard>
+            ))}
+          </QuoteGrid>
+        </Wrap>
+      </SectionAlt>
 
-              {/* ══════════════════════════════════
-                  VIDEO CONFERENCE MOCKUP
-              ══════════════════════════════════ */}
-              <motion.div
-                initial={{ opacity: 0, y: 28, scale: 0.97 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.65, delay: 0.22, ease: [0.22, 1, 0.36, 1] }}
-                className="mb-12"
-              >
-                <ConferenceMockup />
-              </motion.div>
+      {/* CRITERIA */}
+      <SectionW>
+        <Wrap>
+          <SectionHead>
+            <SectionEyebrow ref={r_crtEyebrow}>Sélection</SectionEyebrow>
+            <SectionTitle ref={r_crtTitle}>Ce que je <span>cherche</span></SectionTitle>
+            <SectionSub ref={r_crtSub}>Pas de profil type, pas de prérequis techniques. Juste trois critères simples qui font la différence.</SectionSub>
+          </SectionHead>
+          <CriteriaGrid ref={r_crtGrid}>
+            {CRITERIA.map(({ num, title, text }) => (
+              <CriteriaCard key={num}>
+                <div className="num">{num}</div>
+                <h4>{title}</h4>
+                <p>{text}</p>
+              </CriteriaCard>
+            ))}
+          </CriteriaGrid>
+        </Wrap>
+      </SectionW>
 
-              {/* ══════════════════════════════════
-                  STATS STRIP
-              ══════════════════════════════════ */}
-              <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.45, delay: 0.3 }}
-                className="mb-12 grid grid-cols-2 gap-3 sm:grid-cols-4"
-              >
-                {STATS.map((stat, i) => (
-                  <motion.div
-                    key={stat.label}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.35, delay: 0.32 + i * 0.06 }}
-                    className="flex flex-col items-center justify-center rounded-2xl border border-blue-100 bg-white/70 py-5 px-3 text-center shadow-[0_4px_20px_rgba(37,99,235,0.07)] backdrop-blur"
-                  >
-                    <span className="text-2xl font-extrabold tracking-tight text-blue-600 sm:text-3xl">{stat.value}</span>
-                    <span className="mt-1 text-[11px] font-medium leading-tight text-slate-500">{stat.label}</span>
-                  </motion.div>
+      {/* FORM */}
+      <FormSection ref={formRef}>
+        <SectionHead style={{ marginBottom: '2.5rem' }}>
+          <SectionEyebrow>Candidature</SectionEyebrow>
+          <SectionTitle>Rejoindre la <span>Vague 2</span></SectionTitle>
+          <SectionSub>15 places. Sélection manuelle. Je réponds personnellement à chaque candidat retenu.</SectionSub>
+        </SectionHead>
+
+        <FormCard ref={r_formCard}>
+          <FormHeader>
+            <FormHeaderLeft>
+              <FormBadge><Sparkles size={12} />Candidature · Vague 2</FormBadge>
+              <FormTitle>Postuler maintenant</FormTitle>
+              <FormSubtitle>Je lis chaque candidature moi-même. Pas d'algorithme, pas de filtre automatique — juste ta motivation et ton profil. Prends le temps de bien remplir.</FormSubtitle>
+            </FormHeaderLeft>
+            <SlotsBox>
+              <div className="iw"><Users size={18} /></div>
+              <div className="num">15</div>
+              <div className="cap">places disponibles</div>
+            </SlotsBox>
+          </FormHeader>
+
+          <FormBody onSubmit={handleSubmit} noValidate>
+
+            <FieldRow $cols={2}>
+              <FieldGroup>
+                <Label htmlFor="fn">Prénom <span className="req">*</span></Label>
+                <Input id="fn" type="text" placeholder="Alice" value={form.firstName} onChange={e => update('firstName', e.target.value)} $err={!!fieldErrors.firstName} autoComplete="given-name" />
+                {fieldErrors.firstName && <FieldError>{fieldErrors.firstName}</FieldError>}
+              </FieldGroup>
+              <FieldGroup>
+                <Label htmlFor="ln">Nom <span className="req">*</span></Label>
+                <Input id="ln" type="text" placeholder="Dupont" value={form.lastName} onChange={e => update('lastName', e.target.value)} $err={!!fieldErrors.lastName} autoComplete="family-name" />
+                {fieldErrors.lastName && <FieldError>{fieldErrors.lastName}</FieldError>}
+              </FieldGroup>
+            </FieldRow>
+
+            <FieldGroup>
+              <Label htmlFor="em">Adresse email <span className="req">*</span></Label>
+              <Input id="em" type="email" placeholder="alice@example.com" value={form.email} onChange={e => update('email', e.target.value)} $err={!!fieldErrors.email} autoComplete="email" />
+              {fieldErrors.email && <FieldError>{fieldErrors.email}</FieldError>}
+            </FieldGroup>
+
+            <FieldRow $cols={2}>
+              <FieldGroup>
+                <Label htmlFor="pf">Votre profil <span className="req">*</span></Label>
+                <Select id="pf" value={form.profile} onChange={e => update('profile', e.target.value)} $err={!!fieldErrors.profile}>
+                  {PROFILES.map(p => <option key={p.value} value={p.value} disabled={p.disabled}>{p.label}</option>)}
+                </Select>
+                {fieldErrors.profile && <FieldError>{fieldErrors.profile}</FieldError>}
+              </FieldGroup>
+              <FieldGroup>
+                <Label htmlFor="us">Usage principal <span className="req">*</span></Label>
+                <Select id="us" value={form.usage} onChange={e => update('usage', e.target.value)} $err={!!fieldErrors.usage}>
+                  {USAGES.map(u => <option key={u.value} value={u.value} disabled={u.disabled}>{u.label}</option>)}
+                </Select>
+                {fieldErrors.usage && <FieldError>{fieldErrors.usage}</FieldError>}
+              </FieldGroup>
+            </FieldRow>
+
+            <FieldGroup>
+              <Label>Outils déjà utilisés <span className="opt">(optionnel)</span></Label>
+              <ToolsWrap>
+                {TOOLS.map(t => (
+                  <ToolChip key={t} type="button" $on={form.tools.includes(t)} onClick={() => toggleTool(t)}>
+                    {form.tools.includes(t) && <Check size={12} />}{t}
+                  </ToolChip>
                 ))}
-              </motion.div>
+              </ToolsWrap>
+            </FieldGroup>
 
-              {/* ══════════════════════════════════
-                  APPLICATION FORM
-              ══════════════════════════════════ */}
-              <motion.div
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.55, delay: 0.38, ease: [0.22, 1, 0.36, 1] }}
-                className="overflow-hidden rounded-3xl border border-blue-100 bg-white shadow-[0_40px_100px_rgba(37,99,235,0.14)]"
-              >
+            <FieldGroup>
+              <Label htmlFor="mo" $ok={motLen >= 40}>
+                Pourquoi veux-tu rejoindre la bêta ? <span className="req">*</span>
+                <span className="counter">{motLen} / 40 min.</span>
+              </Label>
+              <Textarea
+                id="mo" rows={5}
+                placeholder="Ce qui t'intéresse dans VisioConnect, comment tu utilises la visio au quotidien, ce que tu aimerais voir évoluer — tout ça m'intéresse vraiment."
+                value={form.motivation}
+                onChange={e => update('motivation', e.target.value)}
+                $err={!!fieldErrors.motivation}
+              />
+              {fieldErrors.motivation && <FieldError>{fieldErrors.motivation}</FieldError>}
+            </FieldGroup>
 
-                {/* Form header */}
-                <div className="relative overflow-hidden border-b border-slate-100 px-8 py-8 sm:px-10" style={{ background: 'linear-gradient(135deg,#eff6ff 0%,#f0f9ff 50%,#f8faff 100%)' }}>
-                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-300/60 to-transparent" />
-                  {/* Decorative circles */}
-                  <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full" style={{ background: 'radial-gradient(circle,rgba(59,130,246,0.12),transparent 70%)' }} />
-                  <div className="pointer-events-none absolute -bottom-10 left-10 h-28 w-28 rounded-full" style={{ background: 'radial-gradient(circle,rgba(99,102,241,0.08),transparent 70%)' }} />
+            {submitError && (
+              <AlertBox>
+                <AlertCircle size={16} style={{ flexShrink: 0, marginTop: 1 }} />
+                {submitError}
+              </AlertBox>
+            )}
 
-                  <div className="relative flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                    <div>
-                      <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.22em] text-blue-500">Candidature · Vague 2</p>
-                      <h2 className="text-2xl font-extrabold tracking-tight text-slate-950 sm:text-3xl">
-                        Rejoins l'aventure
-                      </h2>
-                      <p className="mt-2 max-w-sm text-sm leading-6 text-slate-500">
-                        Je lis chaque message moi-même. Aucun algorithme, aucun filtre — juste ta motivation.
-                      </p>
-                    </div>
-                    <div className="shrink-0 self-start">
-                      <div className="flex items-center gap-2 rounded-2xl border border-blue-200 bg-white px-4 py-2.5 shadow-sm">
-                        <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-600">
-                          <Users className="h-4 w-4 text-white" />
-                        </div>
-                        <div>
-                          <p className="text-[11px] font-semibold uppercase tracking-wide text-blue-600">Places restantes</p>
-                          <p className="text-lg font-extrabold leading-none tracking-tight text-slate-900">15</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+            <div>
+              <SubmitBtn type="submit" disabled={isSubmitting}>
+                {isSubmitting
+                  ? <><Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} />Envoi en cours…</>
+                  : <><Send size={16} />Envoyer ma candidature<ChevronRight size={15} style={{ opacity: .65 }} /></>
+                }
+              </SubmitBtn>
+              <PrivacyNote style={{ marginTop: '1rem' }}>
+                <Shield size={13} />
+                Tes données ne sont utilisées que pour la sélection bêta — jamais revendues, jamais partagées.
+              </PrivacyNote>
+            </div>
+          </FormBody>
+        </FormCard>
+      </FormSection>
 
-                {/* Form fields */}
-                <form onSubmit={handleSubmit} noValidate className="space-y-6 px-8 py-8 sm:px-10">
-
-                  {/* Prénom + Nom */}
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    {[
-                      { field: 'firstName', label: 'Prénom', ph: 'Alice', ac: 'given-name' },
-                      { field: 'lastName',  label: 'Nom',    ph: 'Dupont', ac: 'family-name' },
-                    ].map(({ field, label, ph, ac }) => (
-                      <div key={field}>
-                        <label className="mb-1.5 block text-sm font-semibold text-slate-700">
-                          {label} <span className="text-red-400">*</span>
-                        </label>
-                        <input
-                          type="text" placeholder={ph} value={form[field]}
-                          onChange={e => update(field, e.target.value)}
-                          className={ic(field)} autoComplete={ac}
-                        />
-                        {fieldErrors[field] && <p className="mt-1.5 text-xs text-red-500">{fieldErrors[field]}</p>}
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Email */}
-                  <div>
-                    <label className="mb-1.5 block text-sm font-semibold text-slate-700">
-                      Adresse email <span className="text-red-400">*</span>
-                    </label>
-                    <input
-                      type="email" placeholder="alice@example.com" value={form.email}
-                      onChange={e => update('email', e.target.value)}
-                      className={ic('email')} autoComplete="email"
-                    />
-                    {fieldErrors.email && <p className="mt-1.5 text-xs text-red-500">{fieldErrors.email}</p>}
-                  </div>
-
-                  {/* Profil + Usage */}
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    {[
-                      { field: 'profile', label: 'Votre profil',  options: PROFILES },
-                      { field: 'usage',   label: 'Usage prévu',   options: USAGES },
-                    ].map(({ field, label, options }) => (
-                      <div key={field}>
-                        <label className="mb-1.5 block text-sm font-semibold text-slate-700">
-                          {label} <span className="text-red-400">*</span>
-                        </label>
-                        <select
-                          value={form[field]} onChange={e => update(field, e.target.value)}
-                          className={`${ic(field)} cursor-pointer`}
-                        >
-                          {options.map(o => (
-                            <option key={o.value} value={o.value} disabled={o.disabled}>{o.label}</option>
-                          ))}
-                        </select>
-                        {fieldErrors[field] && <p className="mt-1.5 text-xs text-red-500">{fieldErrors[field]}</p>}
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Outils */}
-                  <div>
-                    <label className="mb-2.5 block text-sm font-semibold text-slate-700">
-                      Outils que tu utilises déjà{' '}
-                      <span className="font-normal text-slate-400">(optionnel)</span>
-                    </label>
-                    <div className="flex flex-wrap gap-2">
-                      {TOOLS.map(tool => {
-                        const on = form.tools.includes(tool);
-                        return (
-                          <motion.button
-                            key={tool} type="button" onClick={() => toggleTool(tool)}
-                            whileTap={{ scale: 0.95 }}
-                            className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-all duration-150 ${
-                              on
-                                ? 'border-blue-500 bg-blue-600 text-white shadow-sm shadow-blue-600/20'
-                                : 'border-slate-200 bg-slate-50 text-slate-600 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700'
-                            }`}
-                          >
-                            {tool}
-                          </motion.button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Motivation */}
-                  <div>
-                    <div className="mb-1.5 flex items-center justify-between">
-                      <label className="text-sm font-semibold text-slate-700">
-                        Pourquoi veux-tu rejoindre la bêta ? <span className="text-red-400">*</span>
-                      </label>
-                      <span className={`text-xs font-medium tabular-nums transition-colors ${motLen >= 40 ? 'text-green-600' : 'text-slate-400'}`}>
-                        {motLen}/40 min.
-                      </span>
-                    </div>
-                    <textarea
-                      rows={4}
-                      placeholder="Ce qui t'attire dans VisioConnect, ton expérience avec les outils de visio, ce que tu aimerais tester ou voir évoluer — tout ça m'intéresse vraiment."
-                      value={form.motivation}
-                      onChange={e => update('motivation', e.target.value)}
-                      className={`${ic('motivation')} resize-none leading-relaxed`}
-                    />
-                    {fieldErrors.motivation && <p className="mt-1.5 text-xs text-red-500">{fieldErrors.motivation}</p>}
-                  </div>
-
-                  {/* Submit error */}
-                  <AnimatePresence>
-                    {submitError && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                        className="flex items-start gap-3 rounded-xl border border-red-100 bg-red-50 px-4 py-3.5"
-                      >
-                        <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-500" />
-                        <p className="text-sm text-red-600">{submitError}</p>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-
-                  {/* Submit button */}
-                  <motion.button
-                    type="submit"
-                    disabled={isSubmitting}
-                    whileHover={isSubmitting ? {} : { y: -2, boxShadow: '0 12px 30px rgba(37,99,235,0.35)' }}
-                    whileTap={isSubmitting ? {} : { scale: 0.98 }}
-                    className="relative w-full overflow-hidden rounded-2xl bg-blue-600 px-6 py-4 text-sm font-bold text-white shadow-lg shadow-blue-600/25 transition-colors disabled:cursor-not-allowed disabled:opacity-60"
-                    style={{ background: isSubmitting ? '#3b82f6' : 'linear-gradient(135deg,#2563eb,#3b82f6)' }}
-                  >
-                    <span className="relative flex items-center justify-center gap-2.5">
-                      {isSubmitting ? (
-                        <><Loader2 className="h-4 w-4 animate-spin" /> Envoi en cours…</>
-                      ) : (
-                        <><Send className="h-4 w-4" /> Envoyer ma candidature <ChevronRight className="h-4 w-4 opacity-60" /></>
-                      )}
-                    </span>
-                  </motion.button>
-
-                  <p className="text-center text-[12px] text-slate-400">
-                    Tes données ne sont utilisées que pour la sélection bêta — jamais revendues, jamais partagées.
-                  </p>
-                </form>
-              </motion.div>
-
-              {/* ══════════════════════════════════
-                  FOOTER
-              ══════════════════════════════════ */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.4, delay: 0.5 }}
-                className="mt-10 flex flex-col items-center gap-3"
-              >
-                <button
-                  onClick={() => navigate('/')}
-                  className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white/70 px-5 py-2.5 text-sm font-medium text-slate-600 backdrop-blur transition-all hover:-translate-y-0.5 hover:border-blue-200 hover:text-blue-700 hover:shadow-md"
-                >
-                  <ArrowLeft className="h-3.5 w-3.5" /> Retour à l'accueil
-                </button>
-                <p className="text-[11px] text-slate-400">© 2026 VisioConnect — Fait avec soin par Théo Garcès</p>
-              </motion.div>
-
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </div>
+      {/* FOOTER */}
+      <FooterBar>
+        <FooterInner>
+          <FooterLogo>VisioConnect</FooterLogo>
+          <FooterMeta>© 2026 VisioConnect — Fait avec soin par Théo Garcès</FooterMeta>
+          <FooterBack onClick={() => navigate('/')}><ArrowLeft size={14} />Retour à l'accueil</FooterBack>
+        </FooterInner>
+      </FooterBar>
+    </Page>
   );
 }
-
