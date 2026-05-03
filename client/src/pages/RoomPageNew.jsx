@@ -640,7 +640,7 @@ const FootCopy  = styled.div`font-size:.72rem;color:${C.muted};`;
 /* ═══════════════════════════════════════════════════════════
    DONNÉES (language-independent)
 ═══════════════════════════════════════════════════════════ */
-const TOOLS = ['Figma','Notion','Slack','GitHub','Linear','VS Code','Jira','Discord','Miro','Loom'];
+const TOOLS = ['Zoom','Teams','Slack','Notion','Trello','Google Drive','Calendly','Asana','Monday','WhatsApp'];
 
 /* ═══════════════════════════════════════════════════════════
    COMPOSANT
@@ -1206,8 +1206,8 @@ export default function RoomPageNew() {
                       <FG>
                         <Lbl>{t('room.betaPage.form.toolsLbl')}</Lbl>
                         <CWrap>
-                          {TOOLS.map(t => (
-                            <Chip key={t} type="button" $on={form.tools.includes(t)} onClick={()=>toggle(t)}>{t}</Chip>
+                          {TOOLS.map(tool => (
+                            <Chip key={tool} type="button" translate="no" $on={form.tools.includes(tool)} onClick={()=>toggle(tool)}>{tool}</Chip>
                           ))}
                         </CWrap>
                       </FG>
