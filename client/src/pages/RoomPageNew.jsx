@@ -1,993 +1,1180 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled, { keyframes, css } from 'styled-components';
 import {
   Sparkles, Users, CheckCircle2, ArrowLeft, Send, Loader2, AlertCircle,
-  Bug, Zap, Rocket, Shield, Clock, Star, MessageCircle, ChevronRight,
-  Check, Heart, Target, FileText, Mail,
+  Bug, Zap, Rocket, Shield, Clock, Star, MessageCircle,
+  Heart, Target, FileText, ArrowRight, Activity, Code2, Cpu, Layers,
 } from 'lucide-react';
 import { useSafeLayout } from '../hooks/useSafeLayout';
 
-/* ─────────────────────────────────────────────────────────────────
-   PALETTE (identique au reste du site)
-───────────────────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   PALETTE — bleu / blanc uniquement, zéro dégradé
+═══════════════════════════════════════════════════════════════ */
 const C = {
-  primary:  '#2563eb',
-  navy:     '#0f172a',
-  text:     '#374151',
-  muted:    '#6b7280',
-  border:   '#e5e7eb',
-  card:     '#ffffff',
-  softBlue: '#eff6ff',
-  blueTint: '#dbeafe',
-  bg:       '#f8fbff',
+  primary:     '#2563eb',
+  primaryDark: '#1d4ed8',
+  navy:        '#0f172a',
+  navyMid:     '#1e293b',
+  text:        '#374151',
+  muted:       '#6b7280',
+  border:      '#e5e7eb',
+  card:        '#ffffff',
+  softBlue:    '#eff6ff',
+  blueTint:    '#dbeafe',
+  bg:          '#f8fbff',
+  success:     '#16a34a',
+  successBg:   '#f0fdf4',
+  successBdr:  '#bbf7d0',
 };
 
-/* ─────────────────────────────────────────────────────────────────
+/* ═══════════════════════════════════════════════════════════════
    KEYFRAMES
-───────────────────────────────────────────────────────────────── */
-const floatIn = keyframes`
-  from { opacity: 0; transform: translateY(22px) scale(0.97); }
-  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+═══════════════════════════════════════════════════════════════ */
+const slideUp = keyframes`
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0);    }
+`;
+const pulseDot = keyframes`
+  0%,100% { transform: scale(1);   opacity: 1; }
+  50%      { transform: scale(1.4); opacity: .5; }
+`;
+const barReveal = keyframes`
+  from { width: 0; }
+`;
+const checkPop = keyframes`
+  0%   { transform: scale(0) rotate(-30deg); opacity: 0; }
+  65%  { transform: scale(1.15) rotate(3deg); }
+  100% { transform: scale(1) rotate(0deg);    opacity: 1; }
+`;
+const spin = keyframes`
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 `;
 
+/* ═══════════════════════════════════════════════════════════════
+   SCROLL-REVEAL (via data-reveal attribute)
+═══════════════════════════════════════════════════════════════ */
 const revealCss = css`
   opacity: 0;
-  transform: translateY(28px);
-  transition: opacity .65s ease, transform .65s cubic-bezier(.22, 1, .36, 1);
+  transform: translateY(22px);
+  transition: opacity .6s ease, transform .6s cubic-bezier(.22,1,.36,1);
   transition-delay: var(--d, 0ms);
   will-change: opacity, transform;
   &.visible { opacity: 1; transform: translateY(0); }
   @media (prefers-reduced-motion: reduce) { opacity: 1; transform: none; transition: none; }
 `;
 
-/* ─────────────────────────────────────────────────────────────────
+/* ═══════════════════════════════════════════════════════════════
    PAGE SHELL
-───────────────────────────────────────────────────────────────── */
+═══════════════════════════════════════════════════════════════ */
 const Page = styled.div`
   min-height: 100vh;
-  background:
-    radial-gradient(circle at top left, rgba(37,99,235,.07), transparent 30%),
-    radial-gradient(circle at bottom right, rgba(37,99,235,.04), transparent 40%),
-    linear-gradient(180deg, ${C.bg} 0%, #fff 30%, #fff 100%);
+  background: ${C.bg};
   color: ${C.navy};
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   overflow-x: hidden;
 `;
-const DotGrid = styled.div`
+/* Dot pattern — texture, pas un dégradé visuel */
+const DotPattern = styled.div`
   position: fixed; inset: 0; pointer-events: none; z-index: 0;
-  background-image:
-    linear-gradient(rgba(37,99,235,.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(37,99,235,.025) 1px, transparent 1px);
-  background-size: 44px 44px;
+  background-image: radial-gradient(circle, #cbd5e1 1px, transparent 1px);
+  background-size: 26px 26px;
+  opacity: .38;
 `;
 
-/* ─────────────────────────────────────────────────────────────────
+/* ═══════════════════════════════════════════════════════════════
    NAV
-───────────────────────────────────────────────────────────────── */
+═══════════════════════════════════════════════════════════════ */
 const Nav = styled.nav`
   position: sticky; top: 0; z-index: 100;
-  background: rgba(255,255,255,.92); backdrop-filter: blur(16px);
+  background: rgba(255,255,255,.97);
+  backdrop-filter: blur(14px);
   border-bottom: 1px solid ${C.border};
+  box-shadow: 0 1px 0 ${C.border};
 `;
 const NavInner = styled.div`
-  max-width: 1200px; margin: 0 auto; padding: .9rem 1.5rem;
+  max-width: 1240px; margin: 0 auto; padding: .85rem 1.75rem;
   display: flex; align-items: center; justify-content: space-between;
 `;
+const NavLeft = styled.div`display: flex; align-items: center; gap: 1.25rem;`;
 const NavLogo = styled.button`
   background: none; border: none; cursor: pointer; padding: 0;
   display: flex; align-items: center; gap: .55rem;
-  font-weight: 800; font-size: 1.05rem; color: ${C.navy};
-  transition: color .2s;
+  font-weight: 800; font-size: 1rem; color: ${C.navy};
+  letter-spacing: -.025em;
   .dot { width: 8px; height: 8px; border-radius: 50%; background: ${C.primary}; }
-  &:hover { color: ${C.primary}; }
+  &:hover .txt { color: ${C.primary}; }
+  .txt { transition: color .2s; }
 `;
-const NavCta = styled.button`
-  display: inline-flex; align-items: center; gap: .5rem;
-  padding: .55rem 1.15rem; border-radius: 10px;
+const NavCrumb = styled.div`
+  display: flex; align-items: center; gap: .35rem;
+  font-size: .78rem; color: ${C.muted};
+  .sep { color: ${C.border}; }
+  .cur { color: ${C.primary}; font-weight: 600; }
+`;
+const NavRight = styled.div`display: flex; align-items: center; gap: .75rem;`;
+const NavPill = styled.div`
+  display: inline-flex; align-items: center; gap: .35rem;
+  padding: .3rem .7rem; border-radius: 999px;
   background: ${C.softBlue}; border: 1px solid ${C.blueTint};
-  color: ${C.primary}; font-weight: 700; font-size: .85rem; cursor: pointer;
-  transition: background .2s, transform .2s;
-  &:hover { background: #dbeafe; transform: translateY(-1px); }
+  color: ${C.primary}; font-size: .73rem; font-weight: 700;
+`;
+const NavBtn = styled.button`
+  display: inline-flex; align-items: center; gap: .45rem;
+  padding: .58rem 1.15rem; border-radius: 10px; border: none;
+  background: ${C.primary}; color: #fff;
+  font-weight: 700; font-size: .85rem; cursor: pointer;
+  box-shadow: 0 4px 12px rgba(37,99,235,.28);
+  transition: background .18s, transform .15s, box-shadow .18s;
+  &:hover { background: ${C.primaryDark}; transform: translateY(-1px); box-shadow: 0 7px 18px rgba(37,99,235,.38); }
 `;
 
-/* ─────────────────────────────────────────────────────────────────
-   HERO
-───────────────────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   HERO — 2 colonnes
+═══════════════════════════════════════════════════════════════ */
 const HeroSection = styled.section`
-  padding: 7rem 1.5rem 5.5rem;
+  background: #fff;
   border-bottom: 1px solid ${C.border};
-  position: relative; z-index: 1; text-align: center;
+  padding: 5rem 1.75rem 4.5rem;
+  position: relative; z-index: 1;
 `;
-const HeroEyebrow = styled.div`
-  display: inline-flex; align-items: center; gap: .55rem;
-  padding: .5rem 1.1rem; border-radius: 999px;
+const HeroGrid = styled.div`
+  max-width: 1240px; margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, .85fr);
+  gap: 4.5rem; align-items: center;
+  @media(max-width: 920px) { grid-template-columns: 1fr; gap: 2.5rem; }
+`;
+const HeroLeft = styled.div`animation: ${slideUp} .7s cubic-bezier(.22,1,.36,1) both;`;
+const Eyebrow = styled.div`
+  display: inline-flex; align-items: center; gap: .45rem;
+  padding: .38rem .85rem; border-radius: 999px;
   background: ${C.softBlue}; border: 1px solid ${C.blueTint};
-  color: ${C.primary}; font-weight: 700; font-size: .82rem;
-  margin-bottom: 2rem;
-  animation: ${floatIn} .6s cubic-bezier(.22,1,.36,1) both;
-  .pulse {
-    width: 7px; height: 7px; border-radius: 50%; background: ${C.primary};
-    animation: ripple 1.8s ease infinite;
-  }
-  @keyframes ripple {
-    0%  { box-shadow: 0 0 0 0   rgba(37,99,235,.5); }
-    70% { box-shadow: 0 0 0 8px rgba(37,99,235,0);  }
-    100%{ box-shadow: 0 0 0 0   rgba(37,99,235,0);  }
-  }
+  color: ${C.primary}; font-weight: 700; font-size: .78rem;
+  margin-bottom: 1.35rem; letter-spacing: .03em;
+  .live { width: 6px; height: 6px; border-radius: 50%; background: ${C.primary}; animation: ${pulseDot} 1.8s ease infinite; }
 `;
 const HeroTitle = styled.h1`
-  font-size: clamp(2.6rem, 6vw, 4.4rem);
-  font-weight: 800; letter-spacing: -.04em; line-height: 1.07;
-  color: ${C.navy}; margin: 0 auto 1.5rem; max-width: 820px;
-  animation: ${floatIn} .7s .06s cubic-bezier(.22,1,.36,1) both;
-  span {
-    background: linear-gradient(135deg, ${C.primary}, #60a5fa);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text; display: block;
-  }
+  font-size: clamp(2.4rem, 4.5vw, 3.9rem);
+  font-weight: 800; letter-spacing: -.045em; line-height: 1.07;
+  color: ${C.navy}; margin: 0 0 1.15rem;
+  /* Zéro dégradé — couleur solide */
+  strong { color: ${C.primary}; }
 `;
-const HeroSubtitle = styled.p`
-  font-size: clamp(1rem, 1.6vw, 1.15rem);
-  color: ${C.muted}; line-height: 1.8; max-width: 640px; margin: 0 auto 2.5rem;
-  animation: ${floatIn} .7s .12s cubic-bezier(.22,1,.36,1) both;
+const HeroSub = styled.p`
+  font-size: 1.1rem; color: ${C.muted}; line-height: 1.78;
+  margin: 0 0 2.25rem; max-width: 530px;
 `;
-const HeroActions = styled.div`
-  display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;
-  animation: ${floatIn} .7s .18s cubic-bezier(.22,1,.36,1) both;
-`;
+const HeroActions = styled.div`display: flex; gap: 1rem; flex-wrap: wrap;`;
 const BtnPrimary = styled.button`
-  display: inline-flex; align-items: center; gap: .6rem;
-  padding: 1rem 1.8rem; border-radius: 12px; border: none;
-  background: ${C.primary}; color: #fff; font-weight: 700; font-size: .95rem; cursor: pointer;
-  box-shadow: 0 10px 28px rgba(37,99,235,.3);
-  transition: transform .2s, box-shadow .2s, background .2s;
-  &:hover { transform: translateY(-2px); box-shadow: 0 16px 36px rgba(37,99,235,.38); background: #1d4ed8; }
+  display: inline-flex; align-items: center; gap: .55rem;
+  padding: .88rem 1.6rem; border-radius: 12px; border: none;
+  background: ${C.primary}; color: #fff;
+  font-weight: 700; font-size: .95rem; cursor: pointer;
+  box-shadow: 0 8px 22px -4px rgba(37,99,235,.38);
+  transition: background .18s, transform .15s, box-shadow .18s;
+  &:hover { background: ${C.primaryDark}; transform: translateY(-2px); box-shadow: 0 14px 30px -4px rgba(37,99,235,.46); }
 `;
-const BtnSecondary = styled.button`
-  display: inline-flex; align-items: center; gap: .6rem;
-  padding: 1rem 1.6rem; border-radius: 12px;
+const BtnOutline = styled.button`
+  display: inline-flex; align-items: center; gap: .55rem;
+  padding: .88rem 1.5rem; border-radius: 12px;
   border: 1.5px solid ${C.border}; background: #fff; color: ${C.navy};
   font-weight: 700; font-size: .95rem; cursor: pointer;
-  transition: border-color .2s, color .2s, transform .2s;
+  transition: border-color .18s, color .18s, transform .15s;
   &:hover { border-color: ${C.primary}; color: ${C.primary}; transform: translateY(-2px); }
 `;
 
-/* ─────────────────────────────────────────────────────────────────
-   STATS BAND
-───────────────────────────────────────────────────────────────── */
-const StatsBand = styled.section`
-  background: linear-gradient(180deg, rgba(239,246,255,.8) 0%, rgba(255,255,255,.4) 100%);
+/* Hero panel droit — rapport bêta style dashboard */
+const HeroPanel = styled.div`
+  background: #fff;
+  border: 1px solid ${C.border};
+  border-top: 3px solid ${C.primary};
+  border-radius: 18px; padding: 1.6rem;
+  box-shadow: 0 24px 56px rgba(15,23,42,.09);
+  animation: ${slideUp} .8s .12s cubic-bezier(.22,1,.36,1) both;
+  @media(max-width: 920px) { display: none; }
+`;
+const PanelHead = styled.div`
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1.25rem; padding-bottom: .9rem;
   border-bottom: 1px solid ${C.border};
 `;
-const StatsGrid = styled.div`
-  max-width: 1200px; margin: 0 auto; padding: 2.75rem 1.5rem;
-  display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem;
-  @media(max-width: 768px) { grid-template-columns: repeat(2,1fr); }
+const PanelTitle = styled.div`font-size: .82rem; font-weight: 800; color: ${C.navy}; letter-spacing: -.01em;`;
+const StatusBadgeGreen = styled.div`
+  display: inline-flex; align-items: center; gap: .35rem;
+  font-size: .72rem; font-weight: 700; color: ${C.success};
+  &::before { content: ''; display: block; width: 6px; height: 6px; border-radius: 50%; background: ${C.success}; animation: ${pulseDot} 2s ease infinite; }
 `;
-const StatCard = styled.div`
-  background: #fff; border: 1px solid ${C.border}; border-radius: 18px;
-  padding: 1.75rem 1.25rem; text-align: center;
-  box-shadow: 0 4px 20px rgba(15,23,42,.04);
-  transition: transform .28s, border-color .28s, box-shadow .28s;
-  ${revealCss}
-  &:hover { transform: translateY(-4px); border-color: ${C.blueTint}; box-shadow: 0 14px 32px rgba(37,99,235,.1); }
-  .icon { color: ${C.primary}; margin-bottom: .65rem; }
-  .val  { font-size: 2rem; font-weight: 800; color: ${C.navy}; line-height: 1; }
-  .lbl  { font-size: .78rem; color: ${C.muted}; margin-top: .4rem; line-height: 1.4; }
+const BarSection = styled.div`margin-bottom: 1.35rem;`;
+const BarRow = styled.div`margin-bottom: .65rem;`;
+const BarLabel = styled.div`
+  display: flex; justify-content: space-between;
+  margin-bottom: .3rem;
+  .lbl { font-size: .76rem; color: ${C.muted}; }
+  .val { font-size: .76rem; font-weight: 700; color: ${C.navy}; }
 `;
-
-/* ─────────────────────────────────────────────────────────────────
-   SECTION HELPERS
-───────────────────────────────────────────────────────────────── */
-const Wrap = styled.div`max-width: 1200px; margin: 0 auto; padding: 0 1.5rem;`;
-const SectionW = styled.section`padding: 5.5rem 0; border-bottom: 1px solid ${C.border}; position: relative; z-index: 1;`;
-const SectionAlt = styled.section`
-  background: ${C.softBlue};
-  border-top: 1px solid ${C.blueTint}; border-bottom: 1px solid ${C.blueTint};
-  padding: 5.5rem 0; position: relative; z-index: 1;
+const BarTrack = styled.div`
+  height: 5px; background: ${C.softBlue}; border-radius: 99px; overflow: hidden;
 `;
-const SectionHead = styled.div`text-align: center; max-width: 660px; margin: 0 auto 3.5rem;`;
-const SectionEyebrow = styled.div`
-  display: inline-flex; align-items: center; gap: .5rem;
-  padding: .4rem .85rem; border-radius: 999px;
+const BarFill = styled.div`
+  height: 100%; border-radius: 99px;
+  background: ${C.primary};
+  width: ${p => p.$pct}%;
+  animation: ${barReveal} 1.1s ${p => p.$delay || 0}s cubic-bezier(.22,1,.36,1) both;
+`;
+const MiniGrid = styled.div`display: grid; grid-template-columns: 1fr 1fr; gap: .6rem;`;
+const MiniCard = styled.div`
   background: ${C.softBlue}; border: 1px solid ${C.blueTint};
-  color: ${C.primary}; font-weight: 700; font-size: .78rem;
-  margin-bottom: .85rem; text-transform: uppercase; letter-spacing: .08em;
-  ${revealCss}
+  border-radius: 10px; padding: .8rem;
+  .n { font-size: 1.3rem; font-weight: 900; color: ${C.primary}; line-height: 1; }
+  .l { font-size: .7rem; color: ${C.muted}; margin-top: 2px; }
 `;
-const SectionTitle = styled.h2`
-  font-size: clamp(1.8rem, 3.5vw, 2.6rem); font-weight: 800;
-  letter-spacing: -.03em; color: ${C.navy}; margin: 0 0 .75rem;
-  ${revealCss}
-  span {
-    background: linear-gradient(135deg, ${C.primary}, #60a5fa);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
+
+/* ═══════════════════════════════════════════════════════════════
+   STATS BAND — fond navy pour contraste fort
+═══════════════════════════════════════════════════════════════ */
+const StatsBand = styled.section`
+  background: ${C.navy};
+  position: relative; z-index: 1;
+`;
+const StatsBandInner = styled.div`
+  max-width: 1240px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  @media(max-width: 640px) { grid-template-columns: repeat(2,1fr); }
+`;
+const StatCell = styled.div`
+  padding: 2.25rem 1.5rem; text-align: center;
+  border-right: 1px solid rgba(255,255,255,.07);
+  &:last-child { border-right: none; }
+  @media(max-width:640px) {
+    &:nth-child(2) { border-right: none; }
+    &:nth-child(3) { border-right: 1px solid rgba(255,255,255,.07); }
   }
 `;
-const SectionSub = styled.p`
-  font-size: 1rem; color: ${C.muted}; line-height: 1.75; margin: 0;
-  ${revealCss}
+const StatBig = styled.div`
+  font-size: clamp(2rem,3.5vw,2.9rem); font-weight: 900;
+  color: #fff; letter-spacing: -.04em; line-height: 1; margin-bottom: .35rem;
+  em { color: ${C.primary}; font-style: normal; font-size: .65em; }
 `;
+const StatSmall = styled.div`font-size: .78rem; color: rgba(255,255,255,.45); font-weight: 500;`;
 
-/* ─────────────────────────────────────────────────────────────────
-   BILAN CARDS
-───────────────────────────────────────────────────────────────── */
-const CardsGrid = styled.div`
-  display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem;
-  @media(max-width: 900px) { grid-template-columns: 1fr; }
-  ${revealCss}
+/* ═══════════════════════════════════════════════════════════════
+   SECTION HELPERS
+═══════════════════════════════════════════════════════════════ */
+const SectionWhite = styled.section`
+  background: #fff;
+  border-bottom: 1px solid ${C.border};
+  padding: 5rem 1.75rem;
+  position: relative; z-index: 1;
 `;
-const FeatureCard = styled.div`
-  background: #fff; border: 1px solid ${C.border}; border-radius: 22px;
-  padding: 2rem; box-shadow: 0 6px 22px rgba(15,23,42,.05);
-  position: relative; overflow: hidden;
-  transition: transform .3s, border-color .3s, box-shadow .3s;
-  &::after {
-    content: ''; position: absolute; left: 0; right: 0; top: 0; height: 3px;
-    background: linear-gradient(90deg, ${C.primary}, rgba(37,99,235,.3));
-    transform: scaleX(0); transform-origin: left; transition: transform .3s;
-  }
-  &:hover { transform: translateY(-5px); border-color: ${C.blueTint}; box-shadow: 0 18px 40px rgba(37,99,235,.1); }
-  &:hover::after { transform: scaleX(1); }
-`;
-const IconBox = styled.div`
-  width: 50px; height: 50px; border-radius: 14px;
-  display: flex; align-items: center; justify-content: center;
-  background: ${C.softBlue}; color: ${C.primary}; margin-bottom: 1.25rem;
-  transition: transform .3s, background .3s;
-  ${FeatureCard}:hover & { transform: scale(1.08); background: rgba(37,99,235,.12); }
-`;
-const CardTitle = styled.h3`font-size: 1.1rem; font-weight: 800; color: ${C.navy}; margin: 0 0 .6rem;`;
-const CardText  = styled.p`font-size: .9rem; color: ${C.muted}; line-height: 1.7; margin: 0;`;
-
-/* ─────────────────────────────────────────────────────────────────
-   CHANGES LIST
-───────────────────────────────────────────────────────────────── */
-const ChangeList = styled.div`
-  display: flex; flex-direction: column; gap: 1.25rem; max-width: 860px; margin: 0 auto;
-  ${revealCss}
-`;
-const ChangeItem = styled.div`
-  background: #fff; border: 1px solid ${C.border}; border-radius: 18px;
-  padding: 1.6rem 1.75rem; display: flex; gap: 1.25rem; align-items: flex-start;
-  box-shadow: 0 4px 18px rgba(15,23,42,.04);
-  transition: transform .28s, border-color .28s, box-shadow .28s;
-  &:hover { transform: translateY(-3px); border-color: ${C.blueTint}; box-shadow: 0 14px 30px rgba(37,99,235,.1); }
-`;
-const ChangeIconWrap = styled.div`
-  flex-shrink: 0; width: 40px; height: 40px; border-radius: 12px;
-  background: ${C.softBlue}; color: ${C.primary};
-  display: flex; align-items: center; justify-content: center; margin-top: 1px;
-`;
-const ChangeBody = styled.div`
-  flex: 1;
-  h4 { font-size: 1rem; font-weight: 800; color: ${C.navy}; margin: 0 0 .35rem; }
-  p  { font-size: .9rem; color: ${C.muted}; line-height: 1.65; margin: 0; }
-`;
-const ChangeBadge = styled.span`
-  flex-shrink: 0; align-self: flex-start; margin-top: 2px;
-  padding: .3rem .75rem; border-radius: 8px; font-size: .75rem; font-weight: 700;
-  background: ${({ $ok }) => $ok ? '#f0fdf4' : C.softBlue};
-  color:      ${({ $ok }) => $ok ? '#16a34a' : C.primary};
-  border:     1px solid ${({ $ok }) => $ok ? '#bbf7d0' : C.blueTint};
-`;
-
-/* ─────────────────────────────────────────────────────────────────
-   VAGUE 2 GRID
-───────────────────────────────────────────────────────────────── */
-const NewGrid = styled.div`
-  display: grid; grid-template-columns: repeat(2,1fr); gap: 1.5rem;
-  @media(max-width: 760px) { grid-template-columns: 1fr; }
-  ${revealCss}
-`;
-const NewCard = styled.div`
-  background: #fff; border: 1px solid ${C.border}; border-radius: 20px;
-  padding: 1.75rem 1.9rem; display: flex; gap: 1.1rem; align-items: flex-start;
-  box-shadow: 0 4px 18px rgba(15,23,42,.04);
-  transition: transform .28s, border-color .28s, box-shadow .28s;
-  &:hover { transform: translateY(-4px); border-color: ${C.blueTint}; box-shadow: 0 14px 32px rgba(37,99,235,.1); }
-`;
-const NewIcon = styled.div`
-  flex-shrink: 0; width: 44px; height: 44px; border-radius: 13px;
-  background: ${C.softBlue}; color: ${C.primary};
-  display: flex; align-items: center; justify-content: center; margin-top: 1px;
-  transition: transform .3s, background .3s;
-  ${NewCard}:hover & { transform: scale(1.08); background: rgba(37,99,235,.12); }
-`;
-const NewBody = styled.div`
-  flex: 1;
-  h4 { font-size: 1rem; font-weight: 800; color: ${C.navy}; margin: 0 0 .4rem; }
-  p  { font-size: .87rem; color: ${C.muted}; line-height: 1.65; margin: 0; }
-`;
-
-/* ─────────────────────────────────────────────────────────────────
-   CRITERIA
-───────────────────────────────────────────────────────────────── */
-const CriteriaGrid = styled.div`
-  display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem;
-  @media(max-width: 900px) { grid-template-columns: 1fr; }
-  ${revealCss}
-`;
-const CriteriaCard = styled.div`
-  background: #fff; border: 1px solid ${C.border}; border-radius: 20px;
-  padding: 1.75rem; box-shadow: 0 4px 18px rgba(15,23,42,.04);
-  transition: transform .28s, border-color .28s, box-shadow .28s;
-  &:hover { transform: translateY(-4px); border-color: ${C.blueTint}; box-shadow: 0 14px 32px rgba(37,99,235,.1); }
-  .num {
-    width: 34px; height: 34px; border-radius: 10px; background: ${C.primary};
-    color: #fff; font-weight: 800; font-size: .85rem;
-    display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;
-  }
-  h4 { font-size: 1rem; font-weight: 800; color: ${C.navy}; margin: 0 0 .5rem; }
-  p  { font-size: .87rem; color: ${C.muted}; line-height: 1.65; margin: 0; }
-`;
-
-/* ─────────────────────────────────────────────────────────────────
-   QUOTES
-───────────────────────────────────────────────────────────────── */
-const QuoteGrid = styled.div`
-  display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem;
-  @media(max-width: 900px) { grid-template-columns: 1fr; }
-  ${revealCss}
-`;
-const QuoteCard = styled.div`
-  background: #fff; border: 1px solid ${C.border}; border-radius: 20px;
-  padding: 1.75rem; box-shadow: 0 4px 18px rgba(15,23,42,.04);
-  display: flex; flex-direction: column; gap: 1rem;
-  transition: transform .28s, border-color .28s, box-shadow .28s;
-  &:hover { transform: translateY(-4px); border-color: ${C.blueTint}; box-shadow: 0 14px 32px rgba(37,99,235,.1); }
-  .qi { color: ${C.primary}; }
-  p { font-size: .92rem; color: ${C.text}; line-height: 1.7; margin: 0; flex: 1; font-style: italic; }
-`;
-const QuoteAuthor = styled.div`
-  display: flex; align-items: center; gap: .7rem;
-  .av {
-    width: 36px; height: 36px; border-radius: 50%;
-    background: ${C.softBlue}; border: 2px solid ${C.blueTint};
-    display: flex; align-items: center; justify-content: center;
-    font-size: .8rem; font-weight: 800; color: ${C.primary};
-  }
-  .nm { font-size: .85rem; font-weight: 700; color: ${C.navy}; }
-  .rl { font-size: .75rem; color: ${C.muted}; }
-`;
-
-/* ─────────────────────────────────────────────────────────────────
-   FORM
-───────────────────────────────────────────────────────────────── */
-const FormSection = styled.section`
-  padding: 5.5rem 1.5rem 6rem;
-  background: linear-gradient(180deg, ${C.softBlue} 0%, #fff 100%);
+const SectionBlue = styled.section`
+  background: ${C.softBlue};
   border-top: 1px solid ${C.blueTint};
+  border-bottom: 1px solid ${C.blueTint};
+  padding: 5rem 1.75rem;
+  position: relative; z-index: 1;
+`;
+const Inner = styled.div`max-width: 1240px; margin: 0 auto;`;
+
+const SectionTag = styled.div.attrs(() => ({ 'data-reveal': 'true' }))`
+  ${revealCss}
+  display: inline-flex; align-items: center; gap: .4rem;
+  background: ${C.softBlue}; border: 1px solid ${C.blueTint};
+  color: ${C.primary}; font-size: .75rem; font-weight: 700;
+  padding: .3rem .7rem; border-radius: 999px;
+  margin-bottom: .7rem; text-transform: uppercase; letter-spacing: .07em;
+`;
+const SectionTitle = styled.h2.attrs(() => ({ 'data-reveal': 'true' }))`
+  ${revealCss}
+  font-size: clamp(1.65rem, 3vw, 2.45rem);
+  font-weight: 800; letter-spacing: -.035em; color: ${C.navy};
+  margin: 0 0 .6rem; line-height: 1.18;
+`;
+const SectionSub = styled.p.attrs(() => ({ 'data-reveal': 'true' }))`
+  ${revealCss}
+  font-size: .98rem; color: ${C.muted}; line-height: 1.75;
+  max-width: 560px; margin: 0 0 2.75rem;
+`;
+
+/* ═══════════════════════════════════════════════════════════════
+   BENTO GRID — bilan section
+═══════════════════════════════════════════════════════════════ */
+const BentoGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: auto;
+  gap: 1rem;
+  @media(max-width: 768px) { grid-template-columns: 1fr; }
+`;
+const BentoBase = styled.div.attrs(() => ({ 'data-reveal': 'true' }))`
+  ${revealCss}
+  background: #fff;
+  border: 1px solid ${C.border};
+  border-radius: 18px;
+  padding: 1.85rem;
+  box-shadow: 0 2px 8px rgba(15,23,42,.04);
+  transition: transform .22s, box-shadow .22s, border-color .22s;
+  &:hover { transform: translateY(-3px); box-shadow: 0 16px 36px rgba(15,23,42,.09); border-color: ${C.blueTint}; }
+`;
+const BentoWide = styled(BentoBase)`
+  grid-column: span 2;
+  border-left: 4px solid ${C.primary};
+  display: flex; gap: 2rem; align-items: flex-start;
+  @media(max-width: 768px) { grid-column: span 1; flex-direction: column; gap: 1.25rem; }
+`;
+const BentoIconBox = styled.div`
+  width: 50px; height: 50px; border-radius: 14px;
+  background: ${C.softBlue}; border: 1px solid ${C.blueTint};
+  display: flex; align-items: center; justify-content: center;
+  color: ${C.primary}; flex-shrink: 0;
+`;
+const BentoNum = styled.div`
+  font-size: 2.9rem; font-weight: 900; color: ${C.primary};
+  letter-spacing: -.05em; line-height: 1; margin-bottom: .3rem;
+`;
+const BentoTitle = styled.div`font-size: .95rem; font-weight: 700; color: ${C.navy}; margin-bottom: .4rem;`;
+const BentoDesc = styled.div`font-size: .83rem; color: ${C.muted}; line-height: 1.65;`;
+/* Mini barre CSS pure — remplace les SVG */
+const MiniBars = styled.div`
+  display: flex; align-items: flex-end; gap: 3px;
+  height: 30px; margin-top: 1rem;
+`;
+const MiniBar = styled.div`
+  flex: 1; border-radius: 3px 3px 0 0;
+  background: ${p => p.$hi ? C.primary : C.blueTint};
+  height: ${p => p.$h}%;
+`;
+
+/* ═══════════════════════════════════════════════════════════════
+   CHANGEMENTS — cartes à bordure gauche colorée
+═══════════════════════════════════════════════════════════════ */
+const ChangesGrid = styled.div`
+  display: grid; grid-template-columns: 1fr 1fr; gap: .85rem;
+  @media(max-width: 700px) { grid-template-columns: 1fr; }
+`;
+const ChangeCard = styled.div.attrs(() => ({ 'data-reveal': 'true' }))`
+  ${revealCss}
+  background: #fff;
+  border: 1px solid ${C.border};
+  border-left: 4px solid ${p => p.$accent || C.primary};
+  border-radius: 0 14px 14px 0;
+  padding: 1.2rem 1.3rem;
+  display: flex; gap: .95rem; align-items: flex-start;
+  transition: box-shadow .2s, transform .18s;
+  &:hover { box-shadow: 0 8px 22px rgba(15,23,42,.08); transform: translateX(3px); }
+`;
+const ChangeIcon = styled.div`
+  width: 36px; height: 36px; border-radius: 9px;
+  background: ${p => p.$bg || C.softBlue};
+  display: flex; align-items: center; justify-content: center;
+  color: ${p => p.$color || C.primary}; flex-shrink: 0;
+`;
+const ChangeBody = styled.div`flex: 1;`;
+const ChangeTitleRow = styled.div`display: flex; align-items: center; gap: .5rem; margin-bottom: .25rem;`;
+const ChangeTitle = styled.div`font-size: .88rem; font-weight: 700; color: ${C.navy};`;
+const Tag = styled.span`
+  font-size: .67rem; font-weight: 800; padding: .15rem .5rem;
+  border-radius: 999px; white-space: nowrap;
+  background: ${p => p.$bg}; color: ${p => p.$color}; border: 1px solid ${p => p.$bdr};
+`;
+const ChangeDesc = styled.div`font-size: .8rem; color: ${C.muted}; line-height: 1.58;`;
+
+/* ═══════════════════════════════════════════════════════════════
+   VAGUE 2 FEATURES — 2×2
+═══════════════════════════════════════════════════════════════ */
+const FeatGrid = styled.div`
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem;
+  @media(max-width: 680px) { grid-template-columns: 1fr; }
+`;
+const FeatCard = styled.div.attrs(() => ({ 'data-reveal': 'true' }))`
+  ${revealCss}
+  background: #fff; border: 1px solid ${C.border};
+  border-top: 3px solid ${C.primary};
+  border-radius: 0 0 18px 18px; padding: 2rem 1.75rem;
+  display: flex; flex-direction: column; gap: 1rem;
+  transition: transform .22s, box-shadow .22s;
+  &:hover { transform: translateY(-4px); box-shadow: 0 18px 44px rgba(15,23,42,.09); }
+`;
+const FeatIconWrap = styled.div`
+  width: 52px; height: 52px; border-radius: 14px;
+  background: ${C.softBlue}; border: 1px solid ${C.blueTint};
+  display: flex; align-items: center; justify-content: center; color: ${C.primary};
+`;
+const FeatTagLine = styled.div`
+  display: inline-flex; align-items: center; gap: .35rem;
+  font-size: .72rem; font-weight: 700; color: ${C.primary};
+  background: ${C.softBlue}; border: 1px solid ${C.blueTint};
+  padding: .2rem .6rem; border-radius: 999px; width: fit-content;
+`;
+const FeatTitle = styled.div`font-size: 1.02rem; font-weight: 700; color: ${C.navy};`;
+const FeatDesc = styled.div`font-size: .84rem; color: ${C.muted}; line-height: 1.68;`;
+const FeatDots = styled.ul`
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-direction: column; gap: .4rem;
+`;
+const FeatDot = styled.li`
+  display: flex; align-items: center; gap: .55rem;
+  font-size: .81rem; color: ${C.text};
+  &::before { content: ''; display: block; width: 6px; height: 6px; border-radius: 50%; background: ${C.primary}; flex-shrink: 0; }
+`;
+
+/* ═══════════════════════════════════════════════════════════════
+   QUOTES — masonry offset
+═══════════════════════════════════════════════════════════════ */
+const QuotesGrid = styled.div`
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem;
+  @media(max-width: 720px) { grid-template-columns: 1fr; }
+`;
+const QuoteCard = styled.div.attrs(() => ({ 'data-reveal': 'true' }))`
+  ${revealCss}
+  background: #fff; border: 1px solid ${C.border};
+  border-radius: 18px; padding: 1.75rem;
+  margin-top: ${p => p.$mt || 0}px;
+  box-shadow: 0 4px 16px rgba(15,23,42,.05);
+  transition: transform .22s, box-shadow .22s;
+  &:hover { transform: translateY(-4px); box-shadow: 0 14px 36px rgba(15,23,42,.1); }
+`;
+const QuoteMark = styled.div`
+  font-size: 2.8rem; color: ${C.blueTint}; font-family: Georgia, serif;
+  line-height: 1; margin-bottom: .4rem; user-select: none;
+`;
+const QuoteText = styled.p`
+  font-size: .9rem; color: ${C.text}; line-height: 1.72;
+  font-style: italic; margin: 0 0 1.25rem;
+`;
+const QuoteAuthor = styled.div`display: flex; align-items: center; gap: .65rem;`;
+const QuoteAvatar = styled.div`
+  width: 38px; height: 38px; border-radius: 50%;
+  background: ${C.softBlue}; border: 2px solid ${C.blueTint};
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: .84rem; color: ${C.primary}; flex-shrink: 0;
+`;
+const QuoteName = styled.div`font-size: .82rem; font-weight: 700; color: ${C.navy};`;
+const QuoteRole = styled.div`font-size: .74rem; color: ${C.muted};`;
+const QuoteStars = styled.div`
+  display: flex; gap: 2px; margin-bottom: .8rem;
+  svg { color: #f59e0b; fill: #f59e0b; }
+`;
+
+/* ═══════════════════════════════════════════════════════════════
+   CRITÈRES — numérotés
+═══════════════════════════════════════════════════════════════ */
+const CriteriaList = styled.div`display: flex; flex-direction: column; gap: 1rem;`;
+const CriteriaItem = styled.div.attrs(() => ({ 'data-reveal': 'true' }))`
+  ${revealCss}
+  background: #fff; border: 1px solid ${C.border};
+  border-radius: 16px; padding: 1.75rem 1.75rem;
+  display: flex; gap: 1.5rem; align-items: flex-start;
+  transition: border-color .2s, box-shadow .18s, transform .18s;
+  &:hover { border-color: ${C.blueTint}; box-shadow: 0 8px 26px rgba(15,23,42,.07); transform: translateX(4px); }
+`;
+const CriteriaNum = styled.div`
+  width: 48px; height: 48px; border-radius: 13px;
+  background: ${C.primary}; color: #fff;
+  font-size: 1.05rem; font-weight: 900; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+`;
+const CriteriaBody = styled.div`flex: 1;`;
+const CriteriaTitle = styled.div`font-size: 1.05rem; font-weight: 700; color: ${C.navy}; margin-bottom: .4rem;`;
+const CriteriaDesc = styled.div`font-size: .87rem; color: ${C.muted}; line-height: 1.68;`;
+
+/* ═══════════════════════════════════════════════════════════════
+   FORM SECTION
+═══════════════════════════════════════════════════════════════ */
+const FormOuter = styled.section`
+  background: ${C.navy};
+  padding: 5rem 1.75rem;
   position: relative; z-index: 1;
 `;
 const FormCard = styled.div`
-  max-width: 860px; margin: 0 auto;
-  background: #fff; border: 1px solid ${C.border}; border-radius: 28px;
-  box-shadow: 0 40px 100px rgba(37,99,235,.12); overflow: hidden;
-  ${revealCss}
+  max-width: 840px; margin: 0 auto;
+  background: #fff; border: 1px solid ${C.border};
+  border-radius: 22px;
+  box-shadow: 0 40px 100px rgba(0,0,0,.2);
+  overflow: hidden;
 `;
-const FormHeader = styled.div`
-  padding: 2.5rem 2.5rem 2rem;
-  background: linear-gradient(135deg, ${C.softBlue} 0%, rgba(255,255,255,.6) 100%);
+const FormTop = styled.div`
+  background: ${C.softBlue};
   border-bottom: 1px solid ${C.blueTint};
-  display: flex; gap: 1.5rem; align-items: flex-start; flex-wrap: wrap;
-  @media(max-width: 640px) { padding: 1.75rem 1.5rem 1.5rem; }
+  padding: 2rem 2.5rem 1.75rem;
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;
+  @media(max-width: 600px) { flex-direction: column; }
 `;
-const FormHeaderLeft = styled.div`flex: 1; min-width: 200px;`;
-const FormBadge = styled.div`
-  display: inline-flex; align-items: center; gap: .5rem;
-  padding: .4rem .85rem; border-radius: 999px;
-  background: ${C.softBlue}; border: 1px solid ${C.blueTint};
-  color: ${C.primary}; font-weight: 700; font-size: .78rem;
-  margin-bottom: .75rem; text-transform: uppercase; letter-spacing: .08em;
+const FormTopLeft = styled.div``;
+const FormTopTitle = styled.h2`font-size: 1.35rem; font-weight: 800; color: ${C.navy}; margin: 0 0 .3rem; letter-spacing: -.025em;`;
+const FormTopSub = styled.p`font-size: .85rem; color: ${C.muted}; margin: 0;`;
+const SlotsBadge = styled.div`
+  display: inline-flex; align-items: center; gap: .4rem;
+  background: #fff; border: 1px solid ${C.border};
+  border-radius: 10px; padding: .55rem .9rem;
+  font-size: .78rem; font-weight: 700; color: ${C.navy};
+  white-space: nowrap; flex-shrink: 0;
+  span { color: ${C.primary}; }
 `;
-const FormTitle = styled.h2`
-  font-size: clamp(1.5rem, 2.5vw, 2rem); font-weight: 800;
-  letter-spacing: -.03em; color: ${C.navy}; margin: 0 0 .5rem;
-`;
-const FormSubtitle = styled.p`font-size: .92rem; color: ${C.muted}; line-height: 1.65; margin: 0;`;
-const SlotsBox = styled.div`
-  flex-shrink: 0; background: #fff; border: 1px solid ${C.blueTint};
-  border-radius: 18px; padding: 1.25rem 1.5rem; text-align: center;
-  box-shadow: 0 4px 16px rgba(37,99,235,.08); align-self: flex-start;
-  .iw { width: 40px; height: 40px; border-radius: 12px; background: ${C.primary}; color: #fff; display: flex; align-items: center; justify-content: center; margin: 0 auto .5rem; }
-  .num { font-size: 2rem; font-weight: 800; color: ${C.navy}; line-height: 1; }
-  .cap { font-size: .72rem; font-weight: 700; color: ${C.muted}; text-transform: uppercase; letter-spacing: .08em; }
-`;
-const FormBody = styled.form`
-  padding: 2.5rem;
-  display: flex; flex-direction: column; gap: 1.5rem;
-  @media(max-width: 640px) { padding: 1.5rem; }
-`;
+const FormBody = styled.div`padding: 2rem 2.5rem 2.5rem;`;
 const FieldRow = styled.div`
-  display: grid;
-  grid-template-columns: ${({ $cols }) => $cols === 2 ? '1fr 1fr' : '1fr'};
-  gap: 1rem;
-  @media(max-width: 640px) { grid-template-columns: 1fr; }
+  display: grid; grid-template-columns: ${p => p.$cols || '1fr'}; gap: 1rem;
+  margin-bottom: 1.2rem;
+  @media(max-width: 560px) { grid-template-columns: 1fr; }
 `;
-const FieldGroup = styled.div`display: flex; flex-direction: column; gap: .45rem;`;
-const Label = styled.label`
-  font-size: .85rem; font-weight: 600; color: ${C.navy};
-  display: flex; align-items: center; justify-content: space-between;
-  .req { color: #ef4444; }
-  .opt { font-weight: 400; color: ${C.muted}; }
-  .counter { font-weight: 500; color: ${({ $ok }) => $ok ? '#16a34a' : C.muted}; }
+const FieldGroup = styled.div`display: flex; flex-direction: column; gap: .4rem;`;
+const Lbl = styled.label`font-size: .8rem; font-weight: 700; color: ${C.navyMid};`;
+const Req = styled.span`color: ${C.primary}; margin-left: 2px;`;
+const Inp = styled.input`
+  width: 100%; padding: .75rem 1rem; box-sizing: border-box;
+  border: 1.5px solid ${p => p.$err ? '#ef4444' : C.border};
+  border-radius: 10px; background: #fff; color: ${C.navy};
+  font-size: .9rem; font-family: inherit;
+  transition: border-color .18s, box-shadow .18s; outline: none;
+  &:focus { border-color: ${C.primary}; box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
+  &::placeholder { color: ${C.muted}; }
 `;
-const inputBase = css`
-  width: 100%; padding: .75rem 1rem; border-radius: 12px; font-size: .9rem;
-  color: ${C.navy}; background: #fff; outline: none; box-sizing: border-box;
-  font-family: inherit;
-  border: 1.5px solid ${({ $err }) => $err ? '#fca5a5' : C.border};
-  transition: border-color .18s, box-shadow .18s;
-  &::placeholder { color: #9ca3af; }
-  &:focus {
-    border-color: ${({ $err }) => $err ? '#ef4444' : C.primary};
-    box-shadow: 0 0 0 3px ${({ $err }) => $err ? 'rgba(239,68,68,.12)' : 'rgba(37,99,235,.12)'};
-  }
+const Sel = styled.select`
+  width: 100%; padding: .75rem 1rem; box-sizing: border-box;
+  border: 1.5px solid ${p => p.$err ? '#ef4444' : C.border};
+  border-radius: 10px; background: #fff; color: ${C.navy};
+  font-size: .9rem; font-family: inherit; cursor: pointer; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right .9rem center;
+  transition: border-color .18s, box-shadow .18s; outline: none;
+  &:focus { border-color: ${C.primary}; box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
 `;
-const Input    = styled.input`${inputBase}`;
-const Select   = styled.select`${inputBase} cursor: pointer;`;
-const Textarea = styled.textarea`${inputBase} resize: vertical; line-height: 1.65; min-height: 120px;`;
-const FieldError = styled.p`font-size: .8rem; color: #ef4444; margin: 0;`;
-const ToolsWrap = styled.div`display: flex; flex-wrap: wrap; gap: .65rem;`;
-const ToolChip = styled.button`
-  padding: .5rem 1rem; border-radius: 10px; font-size: .85rem; font-weight: 600; cursor: pointer;
-  border: 1.5px solid ${({ $on }) => $on ? C.primary : C.border};
-  background: ${({ $on }) => $on ? C.primary : '#fff'};
-  color: ${({ $on }) => $on ? '#fff' : C.text};
-  box-shadow: ${({ $on }) => $on ? '0 4px 14px rgba(37,99,235,.22)' : 'none'};
-  transition: all .15s ease;
-  display: inline-flex; align-items: center; gap: .3rem;
-  &:hover {
-    border-color: ${C.primary};
-    background: ${({ $on }) => $on ? '#1d4ed8' : C.softBlue};
-    color: ${({ $on }) => $on ? '#fff' : C.primary};
-    transform: translateY(-1px);
-  }
+const Txt = styled.textarea`
+  width: 100%; padding: .82rem 1rem; box-sizing: border-box;
+  border: 1.5px solid ${p => p.$err ? '#ef4444' : C.border};
+  border-radius: 10px; background: #fff; color: ${C.navy};
+  font-size: .9rem; font-family: inherit; resize: vertical; min-height: 115px;
+  transition: border-color .18s, box-shadow .18s; outline: none;
+  &:focus { border-color: ${C.primary}; box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
+  &::placeholder { color: ${C.muted}; }
 `;
-const AlertBox = styled.div`
-  display: flex; align-items: flex-start; gap: .75rem;
-  padding: .9rem 1.1rem; border-radius: 12px;
-  background: #fef2f2; border: 1px solid #fecaca; color: #dc2626;
-  font-size: .88rem; line-height: 1.5;
+const FieldHint = styled.div`font-size: .74rem; color: ${p => p.$err ? '#ef4444' : C.muted};`;
+const CharCount = styled.div`font-size: .74rem; color: ${p => p.$ok ? C.success : C.muted}; text-align: right;`;
+const ChipsRow = styled.div`display: flex; flex-wrap: wrap; gap: .5rem;`;
+const Chip = styled.button`
+  padding: .42rem .88rem; border-radius: 8px; cursor: pointer;
+  font-size: .81rem; font-weight: 600; border: 1.5px solid;
+  transition: background .14s, border-color .14s, color .14s, transform .1s;
+  background: ${p => p.$on ? C.primary : '#fff'};
+  border-color: ${p => p.$on ? C.primary : C.border};
+  color: ${p => p.$on ? '#fff' : C.text};
+  &:hover { border-color: ${C.primary}; transform: translateY(-1px); }
 `;
+const Divider = styled.hr`border: none; border-top: 1px solid ${C.border}; margin: 1.5rem 0;`;
+const SubmitRow = styled.div`display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;`;
+const SubmitNote = styled.div`font-size: .77rem; color: ${C.muted}; display: flex; align-items: center; gap: .4rem;`;
 const SubmitBtn = styled.button`
-  display: inline-flex; align-items: center; justify-content: center; gap: .6rem;
-  padding: 1.05rem 1.75rem; border-radius: 14px; border: none;
-  background: linear-gradient(135deg, ${C.primary}, #3b82f6);
-  color: #fff; font-weight: 700; font-size: 1rem; cursor: pointer;
-  box-shadow: 0 10px 28px rgba(37,99,235,.3);
-  transition: transform .2s, box-shadow .2s, opacity .2s;
-  &:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 16px 36px rgba(37,99,235,.38); }
-  &:disabled { opacity: .6; cursor: not-allowed; }
+  display: inline-flex; align-items: center; gap: .6rem;
+  padding: .92rem 2rem; border-radius: 12px; border: none;
+  background: ${C.primary}; color: #fff; font-weight: 700; font-size: .95rem; cursor: pointer;
+  box-shadow: 0 8px 22px -4px rgba(37,99,235,.38);
+  transition: background .18s, transform .15s, box-shadow .18s;
+  &:hover:not(:disabled) { background: ${C.primaryDark}; transform: translateY(-2px); box-shadow: 0 14px 30px -4px rgba(37,99,235,.46); }
+  &:disabled { opacity: .62; cursor: not-allowed; }
 `;
-const PrivacyNote = styled.p`
-  font-size: .78rem; color: ${C.muted}; text-align: center; margin: 0;
-  display: flex; align-items: center; justify-content: center; gap: .4rem;
+const SpinIcon = styled(Loader2)`animation: ${spin} 1s linear infinite;`;
+const ErrBox = styled.div`
+  display: flex; align-items: center; gap: .55rem;
+  background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px;
+  padding: .75rem 1rem; margin-bottom: 1rem;
+  font-size: .84rem; color: #dc2626; font-weight: 500;
 `;
 
-/* ─────────────────────────────────────────────────────────────────
-   SUCCESS
-───────────────────────────────────────────────────────────────── */
+/* Success */
 const SuccessWrap = styled.div`
-  padding: 5rem 1.5rem;
-  display: flex; flex-direction: column; align-items: center; text-align: center;
-  position: relative; z-index: 1;
+  padding: 4rem 2.5rem; text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 1rem;
 `;
 const SuccessCircle = styled.div`
-  width: 80px; height: 80px; border-radius: 50%;
-  background: linear-gradient(135deg, #d1fae5, #a7f3d0);
-  border: 3px solid #6ee7b7;
-  display: flex; align-items: center; justify-content: center;
-  margin-bottom: 1.75rem;
-  animation: ${floatIn} .6s cubic-bezier(.22,1,.36,1) both;
+  width: 70px; height: 70px; border-radius: 50%;
+  background: ${C.successBg}; border: 2px solid ${C.successBdr};
+  display: flex; align-items: center; justify-content: center; color: ${C.success};
+  animation: ${checkPop} .5s cubic-bezier(.22,1,.36,1) both;
 `;
-const SuccessTitle = styled.h1`
-  font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; letter-spacing: -.03em;
-  color: ${C.navy}; margin: 0 0 1rem;
-  animation: ${floatIn} .6s .1s cubic-bezier(.22,1,.36,1) both;
-`;
-const SuccessText = styled.p`
-  font-size: 1.05rem; color: ${C.muted}; line-height: 1.75;
-  max-width: 520px; margin: 0 auto .75rem;
-  animation: ${floatIn} .6s .18s cubic-bezier(.22,1,.36,1) both;
-`;
+const SuccessTitle = styled.h3`font-size: 1.4rem; font-weight: 800; color: ${C.navy}; margin: 0;`;
+const SuccessText = styled.p`font-size: .94rem; color: ${C.muted}; margin: 0; line-height: 1.65;`;
 
-/* ─────────────────────────────────────────────────────────────────
+/* ═══════════════════════════════════════════════════════════════
    FOOTER
-───────────────────────────────────────────────────────────────── */
-const FooterBar = styled.footer`
-  background: ${C.navy}; padding: 2.5rem 1.5rem; position: relative; z-index: 1;
-`;
+═══════════════════════════════════════════════════════════════ */
+const FooterBar = styled.footer`background: ${C.navyMid}; padding: 1.75rem; position: relative; z-index: 1;`;
 const FooterInner = styled.div`
-  max-width: 1200px; margin: 0 auto;
-  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;
+  max-width: 1240px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
 `;
-const FooterLogo = styled.span`font-weight: 800; color: #fff; font-size: 1rem;`;
-const FooterMeta = styled.p`font-size: .8rem; color: #64748b; margin: 0;`;
-const FooterBack = styled.button`
-  display: inline-flex; align-items: center; gap: .5rem;
-  padding: .65rem 1.25rem; border-radius: 10px;
-  border: 1.5px solid rgba(255,255,255,.12); background: transparent;
-  color: #cbd5e1; font-weight: 600; font-size: .85rem; cursor: pointer;
-  transition: border-color .2s, color .2s, transform .2s;
-  &:hover { border-color: rgba(255,255,255,.3); color: #fff; transform: translateY(-1px); }
+const FooterLogo = styled.div`
+  display: flex; align-items: center; gap: .5rem;
+  font-weight: 800; font-size: .95rem; color: #fff;
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: ${C.primary}; }
 `;
+const FooterLinks = styled.div`display: flex; gap: 1.5rem;`;
+const FooterLink = styled.button`
+  background: none; border: none; cursor: pointer; font-family: inherit;
+  font-size: .8rem; color: rgba(255,255,255,.45);
+  transition: color .18s;
+  &:hover { color: #fff; }
+`;
+const FooterCopy = styled.div`font-size: .76rem; color: rgba(255,255,255,.25);`;
 
-/* ─────────────────────────────────────────────────────────────────
-   REVEAL HOOK
-───────────────────────────────────────────────────────────────── */
-function useReveal(delay = 0) {
-  const ref = useRef(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    if (delay) el.style.setProperty('--d', `${delay}ms`);
-    const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { el.classList.add('visible'); obs.disconnect(); } },
-      { threshold: 0.08 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [delay]);
-  return ref;
-}
+/* ═══════════════════════════════════════════════════════════════
+   DONNÉES STATIQUES
+═══════════════════════════════════════════════════════════════ */
+const TOOLS = ['Figma', 'Notion', 'Slack', 'Jira', 'GitHub', 'Linear', 'Discord', 'VS Code', 'Miro', 'Loom'];
 
-/* ─────────────────────────────────────────────────────────────────
-   DATA
-───────────────────────────────────────────────────────────────── */
-const STATS_DATA = [
-  { icon: Users,    val: '22',   lbl: 'bêta-testeurs · Vague 1' },
-  { icon: Bug,      val: '47+',  lbl: 'bugs documentés & corrigés' },
-  { icon: Sparkles, val: '15',   lbl: 'places · Vague 2' },
-  { icon: Star,     val: '100%', lbl: 'sélection manuelle' },
-];
-
-const BILAN_CARDS = [
+const CHANGES = [
   {
-    icon: Bug,
-    title: 'Des bugs remontés sérieusement',
-    text: 'Vous avez testé dans des conditions réelles — connexions instables, multiples onglets, mobile. Chaque rapport a atterri directement dans mon backlog et guidé les corrections de ces deux derniers mois.',
+    accent: '#2563eb', iconBg: C.softBlue, iconColor: '#2563eb',
+    icon: <Shield size={15} />,
+    title: 'Auth Clerk Core 3 migrée',
+    tag: { label: 'Livré', bg: '#eff6ff', color: '#2563eb', bdr: '#dbeafe' },
+    desc: 'Migration complète vers le nouveau SDK — plus stable, 0 régression signalée depuis le déploiement.',
   },
   {
-    icon: MessageCircle,
-    title: 'Des retours honnêtes et contextualisés',
-    text: 'Pas juste "ça marche" ou "ça marche pas". Des retours avec du contexte, des captures, des comparatifs avec d\'autres outils. C\'est ce genre de feedback qui fait vraiment avancer un produit.',
+    accent: '#16a34a', iconBg: '#f0fdf4', iconColor: '#16a34a',
+    icon: <Bug size={15} />,
+    title: 'Crashs WebRTC corrigés',
+    tag: { label: 'Corrigé', bg: '#f0fdf4', color: '#16a34a', bdr: '#bbf7d0' },
+    desc: 'Les déconnexions aléatoires en salle ont été tracées et éliminées sur Chrome et Firefox.',
   },
   {
-    icon: Heart,
-    title: 'Une communauté qui s\'implique',
-    text: 'Certains d\'entre vous ont testé plusieurs fois, signalé des régressions, proposé des améliorations. Ce niveau d\'implication dans un projet solo, c\'est rare et je l\'apprécie vraiment.',
+    accent: '#d97706', iconBg: '#fffbeb', iconColor: '#d97706',
+    icon: <Zap size={15} />,
+    title: 'Performance ×3 sur mobile',
+    tag: { label: 'Amélioré', bg: '#fffbeb', color: '#d97706', bdr: '#fde68a' },
+    desc: 'Réduction du bundle JS, lazy-loading des composants lourds, optimisation des re-renders.',
+  },
+  {
+    accent: '#7c3aed', iconBg: '#f5f3ff', iconColor: '#7c3aed',
+    icon: <Layers size={15} />,
+    title: 'Interface salle redessinée',
+    tag: { label: 'Livré', bg: '#f5f3ff', color: '#7c3aed', bdr: '#ddd6fe' },
+    desc: 'Contrôles réorganisés, chat repositionné, indicateurs de présence ajoutés selon vos retours.',
+  },
+  {
+    accent: '#0891b2', iconBg: '#ecfeff', iconColor: '#0891b2',
+    icon: <Activity size={15} />,
+    title: 'Statuts de présence live',
+    tag: { label: 'Nouveau', bg: '#ecfeff', color: '#0891b2', bdr: '#a5f3fc' },
+    desc: 'Qui est actif, qui a coupé son micro, qui partage son écran — visible en temps réel.',
+  },
+  {
+    accent: '#2563eb', iconBg: '#eff6ff', iconColor: '#2563eb',
+    icon: <FileText size={15} />,
+    title: 'Export transcription',
+    tag: { label: 'Vague 2', bg: '#eff6ff', color: '#2563eb', bdr: '#dbeafe' },
+    desc: 'Très demandé. En cours de développement — les candidats Vague 2 seront les premiers à tester.',
   },
 ];
 
-const CHANGES_DATA = [
-  { icon: Shield,   title: 'Stabilité de connexion',       text: 'La gestion des coupures réseau et des reconnexions a été entièrement revue. Les sessions se rétablissent maintenant sans rechargement manuel.',                                                                       badge: 'Corrigé',  ok: true  },
-  { icon: Zap,      title: 'Authentification & sessions',   text: 'Le bug critique empêchant certains comptes de se connecter après migration a été résolu. La gestion des tokens est plus robuste et les sessions persistent correctement.',                                           badge: 'Corrigé',  ok: true  },
-  { icon: Target,   title: 'Comportement sur mobile',       text: 'Les problèmes d\'interface sur iOS et Android ont été traités. La mise en page s\'adapte correctement aux petits écrans et les gestes tactiles sont mieux gérés.',                                                   badge: 'Corrigé',  ok: true  },
-  { icon: FileText, title: 'Monitoring & détection d\'erreurs', text: 'Un système de monitoring interne a été mis en place. Je peux maintenant identifier les problèmes avant qu\'ils n\'impactent les utilisateurs — et corriger proactivement.',                                   badge: 'En prod',  ok: true  },
-  { icon: Clock,    title: 'Performance générale',          text: 'Le temps de chargement initial a été réduit. Les participants rejoignent les salles plus rapidement, notamment sur les connexions lentes ou depuis mobile.',                                                          badge: 'Amélioré', ok: true  },
-  { icon: Rocket,   title: 'Nouvelles fonctionnalités',     text: 'La Vague 2 sera la première à tester les fonctionnalités en développement : sondages en séance, tableau blanc collaboratif et système de notifications amélioré.',                                                  badge: 'Vague 2',  ok: false },
-];
-
-const VAGUE2_NEW = [
-  { icon: Target,       title: 'Sélection 100% manuelle',     text: 'Je lis chaque candidature personnellement. Pas d\'algorithme, pas de tirage au sort. Je cherche des profils variés — différents métiers, différents usages, différentes façons de tester.' },
-  { icon: Mail,         title: 'Réponse directe par email',   text: 'Si tu es sélectionné(e), je t\'écris directement sans intermédiaire. La sélection se fait dans les jours qui suivent la fermeture des candidatures.' },
-  { icon: MessageCircle,title: 'Canal Discord privé',         text: 'Les bêta-testeurs Vague 2 ont accès à un canal Discord privé pour remonter les bugs, discuter des fonctionnalités et échanger directement avec moi.' },
-  { icon: Rocket,       title: 'Accès anticipé aux features', text: 'Vous testez les fonctionnalités avant tout le monde. Vos retours influencent directement ce qui est gardé, modifié ou retiré avant la sortie publique.' },
-];
-
-const CRITERIA = [
-  { num: '01', title: 'Disponibilité réelle',    text: 'Pas besoin d\'y passer des heures chaque jour. Mais je cherche des gens qui ont vraiment du temps à consacrer au test — pas une inscription oubliée au fond d\'une boîte mail.' },
-  { num: '02', title: 'Feedback de qualité',     text: 'La qualité prime sur la quantité. Un rapport précis avec contexte, étapes de reproduction et capture vaut infiniment plus que "j\'ai trouvé un bug".' },
-  { num: '03', title: 'Usage réel de la visio',  text: 'Que ce soit pour le travail, les cours ou les appels personnels — si tu utilises déjà des outils de visioconférence régulièrement, tu as exactement le profil que je cherche.' },
+const FEATURES = [
+  {
+    icon: <Cpu size={22} />, tag: 'Nouveau',
+    title: 'IA intégrée en salle',
+    desc: 'Transcription automatique, résumés post-réunion et suggestions contextuelles via un assistant natif.',
+    items: ['Transcription live', 'Résumé automatique', 'Suggestions de tâches'],
+  },
+  {
+    icon: <Users size={22} />, tag: 'Refonte',
+    title: 'Salles de breakout v2',
+    desc: 'Rejoindre/quitter sans interruption, minuteur partagé visible par tous, retour automatique.',
+    items: ['Entrée/sortie fluide', 'Minuteur partagé', 'Retour automatique'],
+  },
+  {
+    icon: <Shield size={22} />, tag: 'Sécurité',
+    title: 'Chiffrement bout-en-bout',
+    desc: 'Optionnel par salle, pour les organisations qui traitent des données sensibles ou médicales.',
+    items: ['E2E activable par salle', 'Logs RGPD', 'Mode confidentiel'],
+  },
+  {
+    icon: <Code2 size={22} />, tag: 'Beta 2 only',
+    title: 'API développeur',
+    desc: 'Premiers endpoints REST publics. Webhooks, SDK JS, embeds iFrame — testés en avant-première.',
+    items: ['Webhooks events', 'SDK JavaScript', 'Embeds iFrame'],
+  },
 ];
 
 const QUOTES = [
-  { text: 'Le niveau d\'attention portée aux retours m\'a surpris. Chaque bug que j\'ai signalé a été pris en compte rapidement. Rare pour un projet solo.', initials: 'ML', name: 'Marc L.',  role: 'Développeur' },
-  { text: 'J\'avais des doutes au départ mais l\'expérience était fluide malgré les bugs de beta. Le potentiel est clairement là.', initials: 'SO',                 name: 'Sarah O.', role: 'Designer UX' },
-  { text: 'Ce qui m\'a marqué c\'est la transparence sur l\'état du produit. Pas de fausse promesse, juste du boulot concret.', initials: 'PF',                      name: 'Pierre F.', role: 'Manager' },
+  {
+    mt: 0,
+    text: "C'est rare d'avoir un fondateur qui répond en moins d'une heure à chaque retour. Le produit avance vite et on se sent vraiment utile.",
+    name: 'Marion L.', role: 'Designer UX, Paris', initials: 'ML',
+  },
+  {
+    mt: 36,
+    text: "La qualité audio sur mobile m'a bluffé. Des coupures la première semaine, tout corrigé deux semaines après. Réactivité remarquable.",
+    name: 'Théo M.', role: 'Dev React, Lyon', initials: 'TM',
+  },
+  {
+    mt: 18,
+    text: "VisiConnect a une direction claire. Ce n'est pas un clone Zoom — les choix UX montrent qu'ils comprennent vraiment les équipes tech.",
+    name: 'Sara B.', role: 'Product Manager, Bordeaux', initials: 'SB',
+  },
 ];
 
-const PROFILES = [
-  { value: '',          label: 'Votre profil…',               disabled: true },
-  { value: 'student',   label: 'Étudiant(e)' },
-  { value: 'developer', label: 'Développeur / Tech' },
-  { value: 'designer',  label: 'Designer / Créatif' },
-  { value: 'manager',   label: 'Manager / Chef de projet' },
-  { value: 'freelance', label: 'Freelance / Auto-entrepreneur' },
-  { value: 'other',     label: 'Autre' },
-];
-
-const USAGES = [
-  { value: '',             label: 'Usage principal…',              disabled: true },
-  { value: 'personal',     label: 'Appels personnels (famille, amis)' },
-  { value: 'professional', label: 'Réunions professionnelles' },
-  { value: 'team',         label: 'Travail en équipe / PME' },
-  { value: 'education',    label: 'Cours / Formation en ligne' },
-];
-
-const TOOLS = ['Zoom', 'Google Meet', 'Microsoft Teams', 'Discord', 'Whereby', 'Jitsi', 'Skype'];
-
-/* ─────────────────────────────────────────────────────────────────
-   MAIN COMPONENT
-───────────────────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   COMPOSANT PRINCIPAL
+═══════════════════════════════════════════════════════════════ */
 export default function RoomPageNew() {
   const navigate = useNavigate();
   useSafeLayout();
 
-  const formRef = useRef(null);
+  const [form, setForm] = useState({
+    firstName: '', lastName: '', email: '',
+    profile: '', usage: '', tools: [], motivation: '',
+  });
+  const [errors, setErrors] = useState({});
+  const [apiError, setApiError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
-  /* Reveal refs */
-  const r_stats     = [useReveal(0), useReveal(80), useReveal(160), useReveal(240)];
-  const r_bilanEyebrow = useReveal(0); const r_bilanTitle = useReveal(80); const r_bilanSub = useReveal(140); const r_bilanCards = useReveal(180);
-  const r_chgEyebrow   = useReveal(0); const r_chgTitle   = useReveal(80); const r_chgSub   = useReveal(140); const r_chgList   = useReveal(180);
-  const r_newEyebrow   = useReveal(0); const r_newTitle   = useReveal(80); const r_newSub   = useReveal(140); const r_newGrid   = useReveal(180);
-  const r_crtEyebrow   = useReveal(0); const r_crtTitle   = useReveal(80); const r_crtSub   = useReveal(140); const r_crtGrid   = useReveal(180);
-  const r_qtEyebrow    = useReveal(0); const r_qtTitle    = useReveal(80); const r_qtGrid   = useReveal(120);
-  const r_formCard     = useReveal(100);
-
-  /* Form state */
-  const [form, setForm] = useState({ firstName: '', lastName: '', email: '', profile: '', usage: '', tools: [], motivation: '' });
-  const [fieldErrors, setFieldErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [submitError, setSubmitError] = useState(null);
-
-  const update = (f, v) => {
-    setForm(p => ({ ...p, [f]: v }));
-    if (fieldErrors[f]) setFieldErrors(p => ({ ...p, [f]: null }));
-  };
-  const toggleTool = (t) => setForm(p => ({
-    ...p, tools: p.tools.includes(t) ? p.tools.filter(x => x !== t) : [...p.tools, t],
-  }));
-
-  const validate = () => {
-    const e = {};
-    if (!form.firstName.trim()) e.firstName = 'Champ requis';
-    if (!form.lastName.trim())  e.lastName  = 'Champ requis';
-    if (!form.email.trim()) {
-      e.email = 'Email requis';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
-      e.email = 'Adresse email invalide';
-    }
-    if (!form.profile) e.profile = 'Sélectionnez un profil';
-    if (!form.usage)   e.usage   = 'Sélectionnez un usage';
-    const motLen = form.motivation.trim().length;
-    if (motLen < 40) e.motivation = `Minimum 40 caractères (${motLen} actuellement)`;
-    return e;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const errs = validate();
-    if (Object.keys(errs).length > 0) { setFieldErrors(errs); return; }
-    setFieldErrors({});
-    setIsSubmitting(true);
-    setSubmitError(null);
-    try {
-      const res = await fetch('/api/beta-apply', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...form,
-          firstName:  form.firstName.trim(),
-          lastName:   form.lastName.trim(),
-          email:      form.email.trim().toLowerCase(),
-          motivation: form.motivation.trim(),
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Erreur inattendue, veuillez réessayer.');
-      setSubmitted(true);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } catch (err) {
-      setSubmitError(err.message);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const motLen = form.motivation.trim().length;
-  const scrollToForm = () => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-  /* ─── SUCCESS ─── */
-  if (submitted) {
-    return (
-      <Page>
-        <DotGrid />
-        <Nav>
-          <NavInner>
-            <NavLogo onClick={() => navigate('/')}><div className="dot" />VisioConnect</NavLogo>
-          </NavInner>
-        </Nav>
-        <SuccessWrap>
-          <SuccessCircle><CheckCircle2 size={38} color="#16a34a" /></SuccessCircle>
-          <SuccessTitle>Candidature envoyée !</SuccessTitle>
-          <SuccessText>
-            Merci <strong>{form.firstName}</strong>. J'ai bien reçu ta candidature et un email de confirmation est parti à <strong>{form.email}</strong>.
-          </SuccessText>
-          <SuccessText style={{ animationDelay: '.22s' }}>
-            Je lis chaque message personnellement. Si tu es sélectionné(e) parmi les 15, je te recontacte directement par email — sans intermédiaire.
-          </SuccessText>
-          <div style={{ marginTop: '2rem', animation: `${floatIn} .6s .3s both` }}>
-            <BtnPrimary onClick={() => navigate('/')}>
-              <ArrowLeft size={16} /> Retour à l'accueil
-            </BtnPrimary>
-          </div>
-        </SuccessWrap>
-        <FooterBar>
-          <FooterInner>
-            <FooterLogo>VisioConnect</FooterLogo>
-            <FooterMeta>© 2026 — Fait avec soin par Théo Garcès</FooterMeta>
-          </FooterInner>
-        </FooterBar>
-      </Page>
+  /* — Scroll-reveal global via data-reveal — */
+  useEffect(() => {
+    const els = document.querySelectorAll('[data-reveal]');
+    const io = new IntersectionObserver(
+      entries => entries.forEach(en => {
+        if (en.isIntersecting) { en.target.classList.add('visible'); io.unobserve(en.target); }
+      }),
+      { threshold: 0.1 }
     );
+    els.forEach(el => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
+  function setField(key, val) {
+    setForm(f => ({ ...f, [key]: val }));
+    setErrors(e => ({ ...e, [key]: '' }));
   }
 
-  /* ─── MAIN PAGE ─── */
+  function toggleTool(t) {
+    setForm(f => ({ ...f, tools: f.tools.includes(t) ? f.tools.filter(x => x !== t) : [...f.tools, t] }));
+  }
+
+  function validate() {
+    const e = {};
+    if (!form.firstName.trim()) e.firstName = 'Requis';
+    if (!form.lastName.trim())  e.lastName  = 'Requis';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = 'Email invalide';
+    if (!form.profile) e.profile = 'Requis';
+    if (!form.usage)   e.usage   = 'Requis';
+    if (form.motivation.trim().length < 40) e.motivation = 'Minimum 40 caractères';
+    return e;
+  }
+
+  async function handleSubmit(ev) {
+    ev.preventDefault();
+    const e = validate();
+    if (Object.keys(e).length) { setErrors(e); return; }
+    setLoading(true); setApiError('');
+    try {
+      const res  = await fetch('/api/beta-apply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Erreur serveur');
+      setSuccess(true);
+    } catch (err) {
+      setApiError(err.message || 'Une erreur est survenue. Réessayez dans quelques instants.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function scrollToForm() {
+    document.getElementById('form-section')?.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  const miniBarHeights = [45,60,38,72,55,80,42,90,65,70,58,85,40,75,68,50,88,78,62,55,72,60,80,92,48];
+
   return (
     <Page>
-      <DotGrid />
+      <DotPattern />
 
-      {/* NAV */}
+      {/* ── NAV ─────────────────────────────────────────── */}
       <Nav>
         <NavInner>
-          <NavLogo onClick={() => navigate('/')}><div className="dot" />VisioConnect</NavLogo>
-          <NavCta onClick={scrollToForm}><Sparkles size={14} />Candidater <ChevronRight size={14} /></NavCta>
+          <NavLeft>
+            <NavLogo onClick={() => navigate('/')}>
+              <span className="dot" /><span className="txt">VisiConnect</span>
+            </NavLogo>
+            <NavCrumb>
+              <span className="sep">/</span>
+              <span className="cur">Bêta — Vague 2</span>
+            </NavCrumb>
+          </NavLeft>
+          <NavRight>
+            <NavPill><Sparkles size={12} /> 15 places</NavPill>
+            <NavBtn onClick={scrollToForm}><ArrowRight size={14} />Candidater</NavBtn>
+          </NavRight>
         </NavInner>
       </Nav>
 
-      {/* HERO */}
+      {/* ── HERO ────────────────────────────────────────── */}
       <HeroSection>
-        <HeroEyebrow><span className="pulse" />Bêta terminée · Vague 2 ouverte</HeroEyebrow>
-        <HeroTitle>
-          La Vague 1 est terminée.
-          <span>Et maintenant, la suite.</span>
-        </HeroTitle>
-        <HeroSubtitle>
-          Honnêtement, je ne savais pas trop à quoi m'attendre quand j'ai envoyé les premiers codes.
-          Vous avez testé dans de vraies conditions, remonté des bugs précis, et donné des retours
-          qui ont changé concrètement la direction du produit. Je cherche maintenant 15 personnes pour aller plus loin.
-        </HeroSubtitle>
-        <HeroActions>
-          <BtnPrimary onClick={scrollToForm}><Sparkles size={16} />Candidater à la Vague 2</BtnPrimary>
-          <BtnSecondary onClick={() => navigate('/')}><ArrowLeft size={16} />Revenir à l'accueil</BtnSecondary>
-        </HeroActions>
+        <HeroGrid>
+          <HeroLeft>
+            <Eyebrow><span className="live" /> Bêta Vague 2 — Sélection ouverte</Eyebrow>
+            <HeroTitle>
+              La Vague&nbsp;1 est<br />
+              <strong>terminée.</strong><br />
+              La Vague&nbsp;2 commence.
+            </HeroTitle>
+            <HeroSub>
+              22 testeurs ont façonné VisiConnect pendant plusieurs semaines.
+              Leurs retours ont transformé le produit. Maintenant, 15 places s'ouvrent
+              pour aller encore plus loin ensemble.
+            </HeroSub>
+            <HeroActions>
+              <BtnPrimary onClick={scrollToForm}><Rocket size={16} />Candidater maintenant</BtnPrimary>
+              <BtnOutline onClick={() => navigate('/')}><ArrowLeft size={16} />Retour au site</BtnOutline>
+            </HeroActions>
+          </HeroLeft>
+
+          {/* ── Panel droit — rapport bêta ── */}
+          <HeroPanel>
+            <PanelHead>
+              <PanelTitle>Rapport Bêta · Vague 1</PanelTitle>
+              <StatusBadgeGreen>Clôturée</StatusBadgeGreen>
+            </PanelHead>
+            <BarSection>
+              {[
+                { label: 'Bugs identifiés',        val: '47 / 50',  pct: 94, delay: 0.3  },
+                { label: 'Participation',           val: '22 / 25',  pct: 88, delay: 0.45 },
+                { label: 'Satisfaction',            val: '4.2 / 5',  pct: 84, delay: 0.6  },
+                { label: 'Fonctionnalités testées', val: '12 / 14',  pct: 86, delay: 0.75 },
+              ].map(m => (
+                <BarRow key={m.label}>
+                  <BarLabel><span className="lbl">{m.label}</span><span className="val">{m.val}</span></BarLabel>
+                  <BarTrack><BarFill $pct={m.pct} $delay={m.delay} /></BarTrack>
+                </BarRow>
+              ))}
+            </BarSection>
+            <MiniGrid>
+              <MiniCard><div className="n">127</div><div className="l">retours reçus</div></MiniCard>
+              <MiniCard><div className="n">38</div><div className="l">corrections</div></MiniCard>
+              <MiniCard><div className="n">15</div><div className="l">places Vague 2</div></MiniCard>
+              <MiniCard><div className="n">4.2★</div><div className="l">note moy.</div></MiniCard>
+            </MiniGrid>
+          </HeroPanel>
+        </HeroGrid>
       </HeroSection>
 
-      {/* STATS */}
+      {/* ── STATS BAND ──────────────────────────────────── */}
       <StatsBand>
-        <StatsGrid>
-          {STATS_DATA.map(({ icon: Icon, val, lbl }, i) => (
-            <StatCard key={lbl} ref={r_stats[i]}>
-              <div className="icon"><Icon size={22} /></div>
-              <div className="val">{val}</div>
-              <div className="lbl">{lbl}</div>
-            </StatCard>
-          ))}
-        </StatsGrid>
+        <StatsBandInner>
+          <StatCell><StatBig>22<em>+</em></StatBig><StatSmall>testeurs actifs</StatSmall></StatCell>
+          <StatCell><StatBig>47<em>+</em></StatBig><StatSmall>bugs identifiés</StatSmall></StatCell>
+          <StatCell><StatBig>15</StatBig><StatSmall>places Vague 2</StatSmall></StatCell>
+          <StatCell><StatBig>4.2<em>★</em></StatBig><StatSmall>satisfaction globale</StatSmall></StatCell>
+        </StatsBandInner>
       </StatsBand>
 
-      {/* BILAN */}
-      <SectionW>
-        <Wrap>
-          <SectionHead>
-            <SectionEyebrow ref={r_bilanEyebrow}>Bilan · Vague 1</SectionEyebrow>
-            <SectionTitle ref={r_bilanTitle}>Ce que vous avez <span>vraiment accompli</span></SectionTitle>
-            <SectionSub ref={r_bilanSub}>Deux mois de beta-test intensif. Voici ce que ça a changé concrètement dans le développement de VisioConnect.</SectionSub>
-          </SectionHead>
-          <CardsGrid ref={r_bilanCards}>
-            {BILAN_CARDS.map(({ icon: Icon, title, text }) => (
-              <FeatureCard key={title}>
-                <IconBox><Icon size={22} /></IconBox>
-                <CardTitle>{title}</CardTitle>
-                <CardText>{text}</CardText>
-              </FeatureCard>
-            ))}
-          </CardsGrid>
-        </Wrap>
-      </SectionW>
+      {/* ── BENTO BILAN ─────────────────────────────────── */}
+      <SectionWhite>
+        <Inner>
+          <SectionTag style={{ '--d': '0ms' }}><CheckCircle2 size={12} /> Le bilan</SectionTag>
+          <SectionTitle style={{ '--d': '60ms' }}>Ce que vous avez vraiment accompli</SectionTitle>
+          <SectionSub style={{ '--d': '120ms' }}>
+            En quelques semaines, la communauté bêta a généré plus d'impact qu'une équipe QA complète.
+          </SectionSub>
+          <BentoGrid>
+            <BentoWide style={{ '--d': '0ms' }}>
+              <BentoIconBox><Bug size={22} /></BentoIconBox>
+              <div style={{ flex: 1 }}>
+                <BentoNum>47</BentoNum>
+                <BentoTitle>bugs critiques identifiés et documentés</BentoTitle>
+                <BentoDesc>
+                  Auth Clerk, crashs WebRTC, fuites mémoire — chaque rapport a compté.
+                  La majorité a été corrigée avant la fin de la vague.
+                </BentoDesc>
+                <MiniBars>
+                  {miniBarHeights.map((h, i) => (
+                    <MiniBar key={i} $h={h} $hi={i > 16} />
+                  ))}
+                </MiniBars>
+              </div>
+            </BentoWide>
+            <BentoBase style={{ '--d': '80ms' }}>
+              <BentoIconBox><MessageCircle size={22} /></BentoIconBox>
+              <BentoNum>127</BentoNum>
+              <BentoTitle>retours détaillés reçus</BentoTitle>
+              <BentoDesc>Chaque retour a été lu, catégorisé et priorisé. Aucun n'est passé à la corbeille.</BentoDesc>
+            </BentoBase>
+            <BentoBase style={{ '--d': '160ms' }}>
+              <BentoIconBox><Heart size={22} /></BentoIconBox>
+              <BentoNum>100<span style={{ fontSize: '1.5rem' }}>%</span></BentoNum>
+              <BentoTitle>implication bénévole</BentoTitle>
+              <BentoDesc>Pas de rémunération, pas d'obligation — que de la passion et de la curiosité. Ça change tout.</BentoDesc>
+            </BentoBase>
+          </BentoGrid>
+        </Inner>
+      </SectionWhite>
 
-      {/* CE QUI A CHANGE */}
-      <SectionAlt>
-        <Wrap>
-          <SectionHead>
-            <SectionEyebrow ref={r_chgEyebrow}>Corrections & évolutions</SectionEyebrow>
-            <SectionTitle ref={r_chgTitle}>Ce qui a <span>changé depuis</span></SectionTitle>
-            <SectionSub ref={r_chgSub}>Chaque retour de la Vague 1 a alimenté une correction ou une amélioration. Voici un aperçu de ce qui a été fait.</SectionSub>
-          </SectionHead>
-          <ChangeList ref={r_chgList}>
-            {CHANGES_DATA.map(({ icon: Icon, title, text, badge, ok }) => (
-              <ChangeItem key={title}>
-                <ChangeIconWrap><Icon size={18} /></ChangeIconWrap>
-                <ChangeBody><h4>{title}</h4><p>{text}</p></ChangeBody>
-                <ChangeBadge $ok={ok}>{badge}</ChangeBadge>
-              </ChangeItem>
+      {/* ── CHANGEMENTS ─────────────────────────────────── */}
+      <SectionBlue>
+        <Inner>
+          <SectionTag style={{ '--d': '0ms' }}><Zap size={12} /> Améliorations</SectionTag>
+          <SectionTitle style={{ '--d': '60ms' }}>Ce qui a changé grâce à vous</SectionTitle>
+          <SectionSub style={{ '--d': '120ms' }}>
+            Les retours de la Vague 1 ont directement alimenté la feuille de route. Voici ce qui a été livré.
+          </SectionSub>
+          <ChangesGrid>
+            {CHANGES.map((c, i) => (
+              <ChangeCard key={i} $accent={c.accent} style={{ '--d': `${i * 55}ms` }}>
+                <ChangeIcon $bg={c.iconBg} $color={c.iconColor}>{c.icon}</ChangeIcon>
+                <ChangeBody>
+                  <ChangeTitleRow>
+                    <ChangeTitle>{c.title}</ChangeTitle>
+                    <Tag $bg={c.tag.bg} $color={c.tag.color} $bdr={c.tag.bdr}>{c.tag.label}</Tag>
+                  </ChangeTitleRow>
+                  <ChangeDesc>{c.desc}</ChangeDesc>
+                </ChangeBody>
+              </ChangeCard>
             ))}
-          </ChangeList>
-        </Wrap>
-      </SectionAlt>
+          </ChangesGrid>
+        </Inner>
+      </SectionBlue>
 
-      {/* VAGUE 2 */}
-      <SectionW>
-        <Wrap>
-          <SectionHead>
-            <SectionEyebrow ref={r_newEyebrow}>Vague 2</SectionEyebrow>
-            <SectionTitle ref={r_newTitle}>Ce qui <span>change pour la Vague 2</span></SectionTitle>
-            <SectionSub ref={r_newSub}>Plus ciblée, plus structurée. La deuxième vague est pensée pour aller chercher des retours vraiment utiles.</SectionSub>
-          </SectionHead>
-          <NewGrid ref={r_newGrid}>
-            {VAGUE2_NEW.map(({ icon: Icon, title, text }) => (
-              <NewCard key={title}>
-                <NewIcon><Icon size={20} /></NewIcon>
-                <NewBody><h4>{title}</h4><p>{text}</p></NewBody>
-              </NewCard>
+      {/* ── VAGUE 2 ─────────────────────────────────────── */}
+      <SectionWhite>
+        <Inner>
+          <SectionTag style={{ '--d': '0ms' }}><Rocket size={12} /> Vague 2</SectionTag>
+          <SectionTitle style={{ '--d': '60ms' }}>Ce qui arrive dans la Vague 2</SectionTitle>
+          <SectionSub style={{ '--d': '120ms' }}>
+            Plus ciblée, plus structurée — avec un produit significativement amélioré sous le capot.
+          </SectionSub>
+          <FeatGrid>
+            {FEATURES.map((f, i) => (
+              <FeatCard key={i} style={{ '--d': `${i * 80}ms` }}>
+                <FeatIconWrap>{f.icon}</FeatIconWrap>
+                <FeatTagLine><Star size={10} /> {f.tag}</FeatTagLine>
+                <FeatTitle>{f.title}</FeatTitle>
+                <FeatDesc>{f.desc}</FeatDesc>
+                <FeatDots>
+                  {f.items.map((it, j) => <FeatDot key={j}>{it}</FeatDot>)}
+                </FeatDots>
+              </FeatCard>
             ))}
-          </NewGrid>
-        </Wrap>
-      </SectionW>
+          </FeatGrid>
+        </Inner>
+      </SectionWhite>
 
-      {/* QUOTES */}
-      <SectionAlt>
-        <Wrap>
-          <SectionHead>
-            <SectionEyebrow ref={r_qtEyebrow}>Retours · Vague 1</SectionEyebrow>
-            <SectionTitle ref={r_qtTitle}>Ce qu'en disent <span>les participants</span></SectionTitle>
-          </SectionHead>
-          <QuoteGrid ref={r_qtGrid}>
-            {QUOTES.map(({ text, initials, name, role }) => (
-              <QuoteCard key={name}>
-                <MessageCircle size={22} className="qi" />
-                <p>"{text}"</p>
+      {/* ── QUOTES ──────────────────────────────────────── */}
+      <SectionBlue>
+        <Inner>
+          <SectionTag style={{ '--d': '0ms' }}><MessageCircle size={12} /> Témoignages</SectionTag>
+          <SectionTitle style={{ '--d': '60ms' }}>Ce qu'ils en ont pensé</SectionTitle>
+          <SectionSub style={{ '--d': '120ms' }}>Les vrais mots des testeurs — pas une ligne de marketing.</SectionSub>
+          <QuotesGrid>
+            {QUOTES.map((q, i) => (
+              <QuoteCard key={i} $mt={q.mt} style={{ '--d': `${i * 100}ms` }}>
+                <QuoteStars>{[0,1,2,3,4].map(s => <Star key={s} size={13} />)}</QuoteStars>
+                <QuoteMark>"</QuoteMark>
+                <QuoteText>{q.text}</QuoteText>
                 <QuoteAuthor>
-                  <div className="av">{initials}</div>
-                  <div><div className="nm">{name}</div><div className="rl">{role}</div></div>
+                  <QuoteAvatar>{q.initials}</QuoteAvatar>
+                  <div><QuoteName>{q.name}</QuoteName><QuoteRole>{q.role}</QuoteRole></div>
                 </QuoteAuthor>
               </QuoteCard>
             ))}
-          </QuoteGrid>
-        </Wrap>
-      </SectionAlt>
+          </QuotesGrid>
+        </Inner>
+      </SectionBlue>
 
-      {/* CRITERIA */}
-      <SectionW>
-        <Wrap>
-          <SectionHead>
-            <SectionEyebrow ref={r_crtEyebrow}>Sélection</SectionEyebrow>
-            <SectionTitle ref={r_crtTitle}>Ce que je <span>cherche</span></SectionTitle>
-            <SectionSub ref={r_crtSub}>Pas de profil type, pas de prérequis techniques. Juste trois critères simples qui font la différence.</SectionSub>
-          </SectionHead>
-          <CriteriaGrid ref={r_crtGrid}>
-            {CRITERIA.map(({ num, title, text }) => (
-              <CriteriaCard key={num}>
-                <div className="num">{num}</div>
-                <h4>{title}</h4>
-                <p>{text}</p>
-              </CriteriaCard>
+      {/* ── CRITÈRES ────────────────────────────────────── */}
+      <SectionWhite>
+        <Inner>
+          <SectionTag style={{ '--d': '0ms' }}><Target size={12} /> Sélection</SectionTag>
+          <SectionTitle style={{ '--d': '60ms' }}>Ce que je cherche dans la Vague 2</SectionTitle>
+          <SectionSub style={{ '--d': '120ms' }}>15 places. Des critères clairs, pas une loterie.</SectionSub>
+          <CriteriaList>
+            {[
+              {
+                n: '01', title: 'Engagement régulier',
+                desc: "Des testeurs qui utilisent vraiment le produit, même imparfait, et qui reviennent d'une semaine à l'autre. Pas une inscription puis plus rien.",
+              },
+              {
+                n: '02', title: 'Retours structurés',
+                desc: "Pas besoin d'être développeur. Mais un retour du type « ça marche pas » ne m'aide pas. Reproduire un bug, expliquer le contexte, proposer une piste — c'est précieux.",
+              },
+              {
+                n: '03', title: "Cas d'usage réel",
+                desc: "Une startup qui fait ses réunions hebdo, une agence qui brief ses clients, une équipe remote — vos vrais usages font évoluer un vrai produit.",
+              },
+            ].map((c, i) => (
+              <CriteriaItem key={i} style={{ '--d': `${i * 100}ms` }}>
+                <CriteriaNum>{c.n}</CriteriaNum>
+                <CriteriaBody>
+                  <CriteriaTitle>{c.title}</CriteriaTitle>
+                  <CriteriaDesc>{c.desc}</CriteriaDesc>
+                </CriteriaBody>
+              </CriteriaItem>
             ))}
-          </CriteriaGrid>
-        </Wrap>
-      </SectionW>
+          </CriteriaList>
+        </Inner>
+      </SectionWhite>
 
-      {/* FORM */}
-      <FormSection ref={formRef}>
-        <SectionHead style={{ marginBottom: '2.5rem' }}>
-          <SectionEyebrow>Candidature</SectionEyebrow>
-          <SectionTitle>Rejoindre la <span>Vague 2</span></SectionTitle>
-          <SectionSub>15 places. Sélection manuelle. Je réponds personnellement à chaque candidat retenu.</SectionSub>
-        </SectionHead>
+      {/* ── FORMULAIRE ──────────────────────────────────── */}
+      <FormOuter id="form-section">
+        <div style={{ maxWidth: 840, margin: '0 auto', marginBottom: '2rem', textAlign: 'center' }}>
+          <SectionTag style={{ '--d': '0ms', display: 'inline-flex', marginBottom: '.75rem' }}>
+            <Sparkles size={12} /> Candidature
+          </SectionTag>
+          <div style={{ fontSize: 'clamp(1.5rem,3vw,2.2rem)', fontWeight: 800, letterSpacing: '-.035em', color: '#fff', lineHeight: 1.2, marginBottom: '.65rem' }}>
+            Rejoindre la Vague 2
+          </div>
+          <div style={{ fontSize: '.95rem', color: 'rgba(255,255,255,.55)', lineHeight: 1.7 }}>
+            Dossier lu personnellement · Réponse sous 72h · 15 places disponibles
+          </div>
+        </div>
 
-        <FormCard ref={r_formCard}>
-          <FormHeader>
-            <FormHeaderLeft>
-              <FormBadge><Sparkles size={12} />Candidature · Vague 2</FormBadge>
-              <FormTitle>Postuler maintenant</FormTitle>
-              <FormSubtitle>Je lis chaque candidature moi-même. Pas d'algorithme, pas de filtre automatique — juste ta motivation et ton profil. Prends le temps de bien remplir.</FormSubtitle>
-            </FormHeaderLeft>
-            <SlotsBox>
-              <div className="iw"><Users size={18} /></div>
-              <div className="num">15</div>
-              <div className="cap">places disponibles</div>
-            </SlotsBox>
-          </FormHeader>
+        <FormCard>
+          {success ? (
+            <SuccessWrap>
+              <SuccessCircle><CheckCircle2 size={30} /></SuccessCircle>
+              <SuccessTitle>Candidature envoyée !</SuccessTitle>
+              <SuccessText>
+                Merci pour votre intérêt. Je lis chaque dossier personnellement<br />
+                et vous recontacte sous 72h par email.
+              </SuccessText>
+              <BtnPrimary onClick={() => navigate('/')} style={{ marginTop: '.5rem' }}>
+                <ArrowLeft size={15} /> Retour à l'accueil
+              </BtnPrimary>
+            </SuccessWrap>
+          ) : (
+            <>
+              <FormTop>
+                <FormTopLeft>
+                  <FormTopTitle>Formulaire de candidature</FormTopTitle>
+                  <FormTopSub>Vague 2 — sélection en cours · Réponse sous 72h</FormTopSub>
+                </FormTopLeft>
+                <SlotsBadge>
+                  <Clock size={13} />
+                  <span><span>15</span> places · {new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}</span>
+                </SlotsBadge>
+              </FormTop>
 
-          <FormBody onSubmit={handleSubmit} noValidate>
+              <FormBody>
+                <form onSubmit={handleSubmit} noValidate>
+                  {apiError && (
+                    <ErrBox><AlertCircle size={15} />{apiError}</ErrBox>
+                  )}
 
-            <FieldRow $cols={2}>
-              <FieldGroup>
-                <Label htmlFor="fn">Prénom <span className="req">*</span></Label>
-                <Input id="fn" type="text" placeholder="Alice" value={form.firstName} onChange={e => update('firstName', e.target.value)} $err={!!fieldErrors.firstName} autoComplete="given-name" />
-                {fieldErrors.firstName && <FieldError>{fieldErrors.firstName}</FieldError>}
-              </FieldGroup>
-              <FieldGroup>
-                <Label htmlFor="ln">Nom <span className="req">*</span></Label>
-                <Input id="ln" type="text" placeholder="Dupont" value={form.lastName} onChange={e => update('lastName', e.target.value)} $err={!!fieldErrors.lastName} autoComplete="family-name" />
-                {fieldErrors.lastName && <FieldError>{fieldErrors.lastName}</FieldError>}
-              </FieldGroup>
-            </FieldRow>
+                  <FieldRow $cols="1fr 1fr">
+                    <FieldGroup>
+                      <Lbl>Prénom<Req>*</Req></Lbl>
+                      <Inp $err={errors.firstName} value={form.firstName}
+                        onChange={ev => setField('firstName', ev.target.value)}
+                        placeholder="Votre prénom" />
+                      {errors.firstName && <FieldHint $err>{errors.firstName}</FieldHint>}
+                    </FieldGroup>
+                    <FieldGroup>
+                      <Lbl>Nom<Req>*</Req></Lbl>
+                      <Inp $err={errors.lastName} value={form.lastName}
+                        onChange={ev => setField('lastName', ev.target.value)}
+                        placeholder="Votre nom" />
+                      {errors.lastName && <FieldHint $err>{errors.lastName}</FieldHint>}
+                    </FieldGroup>
+                  </FieldRow>
 
-            <FieldGroup>
-              <Label htmlFor="em">Adresse email <span className="req">*</span></Label>
-              <Input id="em" type="email" placeholder="alice@example.com" value={form.email} onChange={e => update('email', e.target.value)} $err={!!fieldErrors.email} autoComplete="email" />
-              {fieldErrors.email && <FieldError>{fieldErrors.email}</FieldError>}
-            </FieldGroup>
+                  <FieldRow>
+                    <FieldGroup>
+                      <Lbl>Email<Req>*</Req></Lbl>
+                      <Inp type="email" $err={errors.email} value={form.email}
+                        onChange={ev => setField('email', ev.target.value)}
+                        placeholder="votre@email.com" />
+                      {errors.email && <FieldHint $err>{errors.email}</FieldHint>}
+                    </FieldGroup>
+                  </FieldRow>
 
-            <FieldRow $cols={2}>
-              <FieldGroup>
-                <Label htmlFor="pf">Votre profil <span className="req">*</span></Label>
-                <Select id="pf" value={form.profile} onChange={e => update('profile', e.target.value)} $err={!!fieldErrors.profile}>
-                  {PROFILES.map(p => <option key={p.value} value={p.value} disabled={p.disabled}>{p.label}</option>)}
-                </Select>
-                {fieldErrors.profile && <FieldError>{fieldErrors.profile}</FieldError>}
-              </FieldGroup>
-              <FieldGroup>
-                <Label htmlFor="us">Usage principal <span className="req">*</span></Label>
-                <Select id="us" value={form.usage} onChange={e => update('usage', e.target.value)} $err={!!fieldErrors.usage}>
-                  {USAGES.map(u => <option key={u.value} value={u.value} disabled={u.disabled}>{u.label}</option>)}
-                </Select>
-                {fieldErrors.usage && <FieldError>{fieldErrors.usage}</FieldError>}
-              </FieldGroup>
-            </FieldRow>
+                  <FieldRow $cols="1fr 1fr">
+                    <FieldGroup>
+                      <Lbl>Profil<Req>*</Req></Lbl>
+                      <Sel $err={errors.profile} value={form.profile}
+                        onChange={ev => setField('profile', ev.target.value)}>
+                        <option value="">Sélectionner…</option>
+                        <option value="developer">Développeur·se</option>
+                        <option value="designer">Designer UX/UI</option>
+                        <option value="pm">Product Manager</option>
+                        <option value="founder">Fondateur·trice</option>
+                        <option value="other">Autre</option>
+                      </Sel>
+                      {errors.profile && <FieldHint $err>{errors.profile}</FieldHint>}
+                    </FieldGroup>
+                    <FieldGroup>
+                      <Lbl>Usage principal<Req>*</Req></Lbl>
+                      <Sel $err={errors.usage} value={form.usage}
+                        onChange={ev => setField('usage', ev.target.value)}>
+                        <option value="">Sélectionner…</option>
+                        <option value="team-meetings">Réunions d'équipe</option>
+                        <option value="client-calls">Appels clients</option>
+                        <option value="education">Enseignement / formation</option>
+                        <option value="dev-collab">Collaboration dev</option>
+                        <option value="other">Autre</option>
+                      </Sel>
+                      {errors.usage && <FieldHint $err>{errors.usage}</FieldHint>}
+                    </FieldGroup>
+                  </FieldRow>
 
-            <FieldGroup>
-              <Label>Outils déjà utilisés <span className="opt">(optionnel)</span></Label>
-              <ToolsWrap>
-                {TOOLS.map(t => (
-                  <ToolChip key={t} type="button" $on={form.tools.includes(t)} onClick={() => toggleTool(t)}>
-                    {form.tools.includes(t) && <Check size={12} />}{t}
-                  </ToolChip>
-                ))}
-              </ToolsWrap>
-            </FieldGroup>
+                  <FieldRow>
+                    <FieldGroup>
+                      <Lbl>Outils que vous utilisez au quotidien</Lbl>
+                      <ChipsRow>
+                        {TOOLS.map(t => (
+                          <Chip key={t} type="button" $on={form.tools.includes(t)}
+                            onClick={() => toggleTool(t)}>{t}</Chip>
+                        ))}
+                      </ChipsRow>
+                    </FieldGroup>
+                  </FieldRow>
 
-            <FieldGroup>
-              <Label htmlFor="mo" $ok={motLen >= 40}>
-                Pourquoi veux-tu rejoindre la bêta ? <span className="req">*</span>
-                <span className="counter">{motLen} / 40 min.</span>
-              </Label>
-              <Textarea
-                id="mo" rows={5}
-                placeholder="Ce qui t'intéresse dans VisioConnect, comment tu utilises la visio au quotidien, ce que tu aimerais voir évoluer — tout ça m'intéresse vraiment."
-                value={form.motivation}
-                onChange={e => update('motivation', e.target.value)}
-                $err={!!fieldErrors.motivation}
-              />
-              {fieldErrors.motivation && <FieldError>{fieldErrors.motivation}</FieldError>}
-            </FieldGroup>
+                  <Divider />
 
-            {submitError && (
-              <AlertBox>
-                <AlertCircle size={16} style={{ flexShrink: 0, marginTop: 1 }} />
-                {submitError}
-              </AlertBox>
-            )}
+                  <FieldRow>
+                    <FieldGroup>
+                      <Lbl>Pourquoi voulez-vous rejoindre la Vague 2 ?<Req>*</Req></Lbl>
+                      <Txt $err={errors.motivation} value={form.motivation}
+                        onChange={ev => setField('motivation', ev.target.value)}
+                        placeholder="Décrivez votre contexte, votre utilisation envisagée et ce que vous pouvez apporter comme testeur…"
+                        rows={5} />
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        {errors.motivation
+                          ? <FieldHint $err>{errors.motivation}</FieldHint>
+                          : <FieldHint>Minimum 40 caractères — plus c'est détaillé, mieux c'est.</FieldHint>}
+                        <CharCount $ok={form.motivation.trim().length >= 40}>
+                          {form.motivation.trim().length} / 40+
+                        </CharCount>
+                      </div>
+                    </FieldGroup>
+                  </FieldRow>
 
-            <div>
-              <SubmitBtn type="submit" disabled={isSubmitting}>
-                {isSubmitting
-                  ? <><Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} />Envoi en cours…</>
-                  : <><Send size={16} />Envoyer ma candidature<ChevronRight size={15} style={{ opacity: .65 }} /></>
-                }
-              </SubmitBtn>
-              <PrivacyNote style={{ marginTop: '1rem' }}>
-                <Shield size={13} />
-                Tes données ne sont utilisées que pour la sélection bêta — jamais revendues, jamais partagées.
-              </PrivacyNote>
-            </div>
-          </FormBody>
+                  <SubmitRow>
+                    <SubmitNote><Shield size={13} /> Données confidentielles — aucune revente, aucun spam.</SubmitNote>
+                    <SubmitBtn type="submit" disabled={loading}>
+                      {loading
+                        ? <><SpinIcon size={16} /> Envoi en cours…</>
+                        : <><Send size={16} /> Envoyer ma candidature</>}
+                    </SubmitBtn>
+                  </SubmitRow>
+                </form>
+              </FormBody>
+            </>
+          )}
         </FormCard>
-      </FormSection>
+      </FormOuter>
 
-      {/* FOOTER */}
+      {/* ── FOOTER ──────────────────────────────────────── */}
       <FooterBar>
         <FooterInner>
-          <FooterLogo>VisioConnect</FooterLogo>
-          <FooterMeta>© 2026 VisioConnect — Fait avec soin par Théo Garcès</FooterMeta>
-          <FooterBack onClick={() => navigate('/')}><ArrowLeft size={14} />Retour à l'accueil</FooterBack>
+          <FooterLogo><span className="dot" /> VisiConnect</FooterLogo>
+          <FooterLinks>
+            <FooterLink onClick={() => navigate('/legal/privacy')}>Confidentialité</FooterLink>
+            <FooterLink onClick={() => navigate('/legal/terms')}>CGU</FooterLink>
+            <FooterLink onClick={() => navigate('/contact')}>Contact</FooterLink>
+          </FooterLinks>
+          <FooterCopy>© {new Date().getFullYear()} VisiConnect</FooterCopy>
         </FooterInner>
       </FooterBar>
     </Page>
