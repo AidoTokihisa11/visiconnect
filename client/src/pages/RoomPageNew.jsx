@@ -4,6 +4,7 @@ import styled, { keyframes, css } from 'styled-components';
 import {
   Sparkles, Users, CheckCircle2, ArrowLeft, Send, Loader2, AlertCircle,
   Rocket, Shield, Clock, Code2, Cpu, Globe, Check, X, ArrowRight, MessageSquare,
+  Mic, Monitor,
 } from 'lucide-react';
 import { useSafeLayout } from '../hooks/useSafeLayout';
 
@@ -574,39 +575,64 @@ const FootCopy = styled.div`font-size:.72rem; color:${C.muted};`;
 ═══════════════════════════════════════════════════════════ */
 const CHANGELOG = [
   {
-    date:'Avril 2026 · Retour #1', accent:C.green,
+    date:'Mai 2026 · Testeur 1 (Mac, Chrome) — CORRIGÉ', accent:C.green,
     badge:{ label:'Corrigé', bg:C.greenBg, c:C.green, bdr:C.greenBdr },
-    title:'Déconnexions en pleine réunion — auth entièrement refaite',
-    desc:"Signalé par un testeur lors de sessions longues : déconnexion aléatoire toutes les 20–30 min. Cause identifiée en 12h, migration Clerk Core 3 déployée en 48h. Problème éliminé.",
+    title:'Auth instable — déconnexions aléatoires en pleine réunion',
+    desc:"Déconnexions toutes les 20–30 min signalées dès les premières sessions. Cause identifiée en 12h (token Clerk v2 expirant silencieusement), migration Clerk Core 3 déployée sous 48h. Aucune déconnexion non sollicitée depuis.",
     quote:"Je me déconnectais sans raison en pleine réunion — pas utilisable dans cet état.",
   },
   {
-    date:'Avril 2026 · Retour #2', accent:C.amber,
-    badge:{ label:'Repensé', bg:C.amberBg, c:C.amber, bdr:C.amberBdr },
-    title:'Interface salle confuse — contrôles repris de zéro',
-    desc:"Retour récurrent : les boutons micro, caméra et partage étaient visuellement identiques et mal placés. Toute la barre de contrôle a été redessinée avec une hiérarchie visuelle claire.",
-    quote:"Je cherchais comment couper mon micro — les boutons se ressemblaient tous.",
+    date:'Mai 2026 · Testeurs 2 & 3 (Windows 10, Chrome) — CORRIGÉ', accent:C.amber,
+    badge:{ label:'Corrigé', bg:C.amberBg, c:C.amber, bdr:C.amberBdr },
+    title:'Boutons identiques & icônes ambiguës — interface contrôles refaite',
+    desc:'"Activer l\'IA vidéo" et "Fonctionnalités IA" portaient le même pictogramme pour deux actions différentes. La barre de contrôle a été entièrement redessinée : icônes différenciées, hiérarchie visuelle claire, label visible au survol.',
+    quote:'Les boutons « Activer l\'IA vidéo » et « Fonctionnalités IA » portent le même pictogramme alors que ce n\'est pas la même action. Cela porte à confusion.',
   },
   {
-    date:'Avril 2026 · Retour #3', accent:C.primary,
-    badge:{ label:'En cours', bg:C.softBlue, c:C.primary, bdr:C.blueTint },
-    title:'Pas de suivi post-réunion — transcription planifiée',
-    desc:"Retour partagé par plusieurs testeurs : sans résumé ni notes, l'outil est difficile à justifier en contexte pro. La transcription IA devient la priorité n°1 de la Vague 2.",
-    quote:"Pas de résumé, pas de notes — difficile de convaincre mon équipe de l'adopter.",
+    date:'Mai 2026 · Testeur 1 (Mac, Chrome) — CORRIGÉ', accent:C.green,
+    badge:{ label:'Corrigé', bg:C.greenBg, c:C.green, bdr:C.greenBdr },
+    title:'Onboarding peu clair — parcours d\'entrée repensé',
+    desc:'Le bouton « Rejoindre la réunion » ne reflétait pas l\'action réelle (création de compte requise). Renommé, une phrase d\'explication ajoutée, bouton dupliqué en milieu et bas d\'email pour améliorer le taux de clic.',
+    quote:'Difficultés de connexion — je ne comprenais pas le parcours d\'entrée. Le bouton ne correspondait pas à ce que j\'attendais.',
+  },
+  {
+    date:'En cours · Correctif Vague 2', accent:C.purple,
+    badge:{ label:'En cours', bg:C.purpleBg, c:C.purple, bdr:C.purpleBdr },
+    title:'Chat & assistant IA masqués par la barre d\'onglets',
+    desc:'Signalé par 2 testeurs : la zone de saisie du chat et de l\'IA était partiellement cachée par la barre d\'onglets du navigateur. De plus, le chat se fermait après chaque envoi. Correctif de hauteur dynamique en cours.',
+    quote:'La fenêtre pour écrire est partiellement cachée par la barre d\'onglet. Une fois le message envoyé, le Chat se ferme et se désactive tout seul.',
+  },
+  {
+    date:'Planifié · Priorité Vague 2', accent:C.primary,
+    badge:{ label:'Planifié', bg:C.softBlue, c:C.primary, bdr:C.blueTint },
+    title:'Transcription IA absente — copilote de réunion complet',
+    desc:'Pointé par les 3 testeurs avancés. La transcription en temps réel et le résumé structuré deviennent la priorité n°1. L\'assistant IA passe d\'un chatbot générique à un vrai copilote : compte-rendu auto, traduction, réponses contextuelles.',
+    quote:'La transcription ne semble pas fonctionner. Pas de résumé, pas de notes — difficile de convaincre mon équipe de l\'adopter.',
+  },
+  {
+    date:'Planifié · Vague 2', accent:C.cyan,
+    badge:{ label:'Planifié', bg:C.cyanBg, c:C.cyan, bdr:C.cyanBdr },
+    title:'Tableau blanc : caméra flottante + export PDF + bugs zoom',
+    desc:'3 remontées : zoom 100% grisé, SVG exporté transparent, animateur invisible quand le whiteboard est ouvert. Vague 2 : bulle vidéo flottante déplaçable, export PDF, zoom réinitialisé correctement, jauge opacité repositionnée.',
+    quote:'Lorsque le tableau blanc est utilisé, on ne voit plus l\'animateur. Et le zoom 100% est grisé — le SVG exporté est inutilisable, transparent.',
   },
 ];
 
 const COMPARE_ROWS = [
-  { feat:"Auth stable",               v1:false, v2:true  },
-  { feat:"Interface repensée",        v1:false, v2:true  },
-  { feat:"Contrôles micro/caméra",    v1:true,  v2:true  },
-  { feat:"Chat intégré",              v1:true,  v2:true  },
-  { feat:"Partage d'écran",           v1:true,  v2:true  },
-  { feat:"Salles de breakout",        v1:true,  v2:true  },
-  { feat:"Transcription IA",          v1:false, v2:true  },
-  { feat:"Résumé post-réunion",       v1:false, v2:true  },
-  { feat:"Statuts temps réel",        v1:false, v2:true  },
-  { feat:"API développeur",           v1:false, v2:true  },
+  { feat:"Auth stable (sans déconnexion)",   v1:false, v2:true  },
+  { feat:"Contrôles clairs & icônes uniques",v1:false, v2:true  },
+  { feat:"Micro / caméra / partage d'écran", v1:true,  v2:true  },
+  { feat:"Aperçu visuel partage d'écran",    v1:false, v2:true  },
+  { feat:"Chat stable (ne se ferme plus)",   v1:false, v2:true  },
+  { feat:"Salles de breakout",               v1:true,  v2:true  },
+  { feat:"Tableau blanc",                    v1:true,  v2:true  },
+  { feat:"Caméra flottante whiteboard",      v1:false, v2:true  },
+  { feat:"Export PDF tableau blanc",         v1:false, v2:true  },
+  { feat:"Transcription IA temps réel",      v1:false, v2:true  },
+  { feat:"Résumé & compte-rendu auto",       v1:false, v2:true  },
+  { feat:"Test audio + VU-mètre micro",      v1:false, v2:true  },
+  { feat:"Statut abonnement dans le profil", v1:false, v2:true  },
+  { feat:"API développeur",                  v1:false, v2:true  },
 ];
 
 const FEATURES = [
@@ -614,41 +640,41 @@ const FEATURES = [
     icon:<Cpu size={20}/>, tag:"IA native", wide:true,
     accent:C.primary, ibg:C.softBlue, ibdr:C.blueTint, ic:C.primary,
     tbg:C.softBlue, tc:C.primary, tbdr:C.blueTint,
-    title:"Transcription & résumé post-réunion",
-    desc:"L'assistant IA transcrit en temps réel et génère un résumé structuré après chaque call. Exportable en Markdown ou Notion.",
-    items:["Transcription temps réel","Résumé actionnable","Export Markdown / Notion"],
+    title:"Copilote de réunion — transcription & résumé auto",
+    desc:"Pointé par les 3 testeurs comme fonctionnalité manquante critique. L'IA transcrit en temps réel, génère un compte-rendu structuré et peut répondre à des questions sur le contenu de la réunion.",
+    items:["Transcription temps réel","Compte-rendu structuré post-call","Traduction en direct","Export Notion / Markdown"],
   },
   {
-    icon:<Users size={20}/>, tag:"Refonte", wide:false,
+    icon:<Users size={20}/>, tag:"Whiteboard", wide:false,
     accent:C.purple, ibg:C.purpleBg, ibdr:C.purpleBdr, ic:C.purple,
     tbg:C.purpleBg, tc:C.purple, tbdr:C.purpleBdr,
-    title:"Breakout v2",
-    desc:"Entrée et sortie fluides, minuteur partagé visible, retour automatique à la salle principale.",
-    items:["Entrée/sortie sans coupure","Minuteur partagé","Retour auto"],
+    title:"Caméra flottante pendant le tableau blanc",
+    desc:"Retour direct : l'animateur disparaît dès que le whiteboard est ouvert. Une bulle vidéo déplaçable maintient le lien humain sans gêner le contenu.",
+    items:["Bulle vidéo drag & drop","Activable/désactivable","4 positions prédéfinies"],
   },
   {
-    icon:<Shield size={20}/>, tag:"Sécurité", wide:false,
+    icon:<Monitor size={20}/>, tag:"Partage d'écran", wide:false,
     accent:C.green, ibg:C.greenBg, ibdr:C.greenBdr, ic:C.green,
     tbg:C.greenBg, tc:C.green, tbdr:C.greenBdr,
-    title:"Chiffrement E2E",
-    desc:"Activable par salle pour les équipes traitant des données sensibles.",
-    items:["Chiffrement bout-en-bout","Logs RGPD","Mode confidentiel"],
+    title:"Aperçu visuel du partage d'écran",
+    desc:"Retour Mac/Chrome : aucun retour visuel ne confirmait que l'écran était bien partagé. Une preview miniature et un badge « Vous partagez » arrivent en Vague 2.",
+    items:["Preview miniature temps réel","Badge confirmation visible","Indicateur côté participants"],
   },
   {
-    icon:<Code2 size={20}/>, tag:"Bêta only", wide:false,
-    accent:C.cyan, ibg:C.cyanBg, ibdr:C.cyanBdr, ic:C.cyan,
-    tbg:C.cyanBg, tc:C.cyan, tbdr:C.cyanBdr,
-    title:"API développeur",
-    desc:"Premiers endpoints REST et SDK JS — en avant-première pour les testeurs Vague 2.",
-    items:["Webhooks événements","SDK JavaScript","Embeds iFrame"],
-  },
-  {
-    icon:<Globe size={20}/>, tag:"Infrastructure", wide:false,
+    icon:<Mic size={20}/>, tag:"Audio", wide:false,
     accent:C.amber, ibg:C.amberBg, ibdr:C.amberBdr, ic:C.amber,
     tbg:C.amberBg, tc:C.amber, tbdr:C.amberBdr,
-    title:"Présence multi-régions",
-    desc:"3 régions actives. Latence réduite de 55 % pour les équipes en Europe.",
-    items:["3 régions actives","Latence < 45 ms EU","Failover automatique"],
+    title:"Test audio + VU-mètre micro en temps réel",
+    desc:"Retour texte exact : aucun moyen de vérifier que le micro envoie bien le signal. VU-mètre animé + test de sortie audio (phrase jouée) pour valider micro et enceintes avant chaque réunion.",
+    items:["VU-mètre niveau micro","Test enceintes / casque","Indicateur signal envoyé"],
+  },
+  {
+    icon:<Code2 size={20}/>, tag:"Profil", wide:false,
+    accent:C.cyan, ibg:C.cyanBg, ibdr:C.cyanBdr, ic:C.cyan,
+    tbg:C.cyanBg, tc:C.cyan, tbdr:C.cyanBdr,
+    title:"Tableau de bord abonnement",
+    desc:"Retour direct : impossible de savoir si l'abonnement était actif après un paiement. Un onglet dédié dans le profil affiche clairement le plan actif, la date de renouvellement et l'historique.",
+    items:["Statut plan visible (Gratuit/Pro)","Date de renouvellement","Historique de paiement"],
   },
 ];
 
@@ -754,14 +780,14 @@ export default function RoomPageNew() {
       <Hero>
         <HeroWrap>
           <HeroLeft>
-            <Eyebrow><span className="dot" />Bêta Vague 1 fermée · Vague 2 ouverte</Eyebrow>
+            <Eyebrow><span className="dot" />Rapport honnête · Bêta Vague 1 → Vague 2 ouverte</Eyebrow>
             <H1>
-              9 testeurs.<br />3 retours qui ont<br /><em>tout changé.</em>
+              9 testeurs ont mis<br />le produit à l'épreuve.<br /><em>Voici la vérité.</em>
             </H1>
             <HeroP>
-              La Vague 1 était une version imparfaite, testée honnêtement.
-              Chaque retour a eu un impact direct sur le produit.
-              La Vague 2 ouvre 15 places pour aller encore plus loin.
+              Déconnexions en pleine réunion, interface confuse, transcription absente,
+              chat masqué — rien n'a été caché. Chaque retour est ici, mot pour mot,
+              avec ce qu'on a corrigé et ce qu'on construit pour la Vague 2.
             </HeroP>
             <HeroActions>
               <BtnPrimary onClick={() => go('candidature')}><Rocket size={15} />Rejoindre la Vague 2</BtnPrimary>
@@ -801,10 +827,10 @@ export default function RoomPageNew() {
       <StatsBand>
         <StatsInner>
           {[
-            { n:'9',   sup:'',  l:'testeurs Vague 1',     d:0   },
-            { n:'3',   sup:'',  l:'retours actionnés',    d:80  },
-            { n:'15',  sup:'',  l:'places Vague 2',       d:160 },
-            { n:'4',   sup:'★', l:'satisfaction moyenne', d:240 },
+            { n:'9',   sup:'',  l:'testeurs Vague 1',         d:0   },
+            { n:'3',   sup:'',  l:'retours détaillés reçus',  d:80  },
+            { n:'15',  sup:'',  l:'places ouvertes Vague 2',  d:160 },
+            { n:'4',   sup:'★', l:'satisfaction moyenne',     d:240 },
           ].map(s => (
             <StatCell key={s.l} {...rv(s.d)}>
               <StatNum>{s.n}<sup>{s.sup}</sup></StatNum>
@@ -820,11 +846,14 @@ export default function RoomPageNew() {
           <TLWrap>
             <TLSide>
               <TLBox>
-                <TLBoxTitle>Les 3 retours</TLBoxTitle>
+                <TLBoxTitle>Journal complet</TLBoxTitle>
                 {[
-                  { c:C.green,   label:'Auth corrigée'    },
-                  { c:C.amber,   label:'UI repensée'      },
-                  { c:C.primary, label:'Feature planifiée'},
+                  { c:C.green,   label:'Auth corrigée'         },
+                  { c:C.amber,   label:'Contrôles refaits'      },
+                  { c:C.green,   label:'Onboarding clarifié'    },
+                  { c:C.purple,  label:'Chat — en cours'        },
+                  { c:C.primary, label:'Transcription IA'       },
+                  { c:C.cyan,    label:'Whiteboard amélioré'    },
                 ].map(i => (
                   <TLBoxItem key={i.label} $c={i.c}>
                     <span className="dot" />{i.label}
@@ -834,11 +863,11 @@ export default function RoomPageNew() {
             </TLSide>
 
             <div>
-              <SecEyebrow {...rv(0)}>Changelog honnête · Vague 1</SecEyebrow>
-              <SecH {...rv(60)}>Ce que vous avez dit.<br />Ce qu'on a fait.</SecH>
+              <SecEyebrow {...rv(0)}>Changelog honnête · Bêta Vague 1</SecEyebrow>
+              <SecH {...rv(60)}>Vos mots exacts.<br />Nos actions concrètes.</SecH>
               <SecSub {...rv(120)}>
-                3 retours concrets reçus pendant la bêta.
-                Chacun a déclenché une action directe sur le produit.
+                3 testeurs ont rendu des rapports complets. 6 points remontés.
+                Aucun filtre, aucune reformulation marketing — les citations sont verbatim.
               </SecSub>
               <TLItems>
                 {CHANGELOG.map((e, i) => (
