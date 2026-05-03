@@ -1099,53 +1099,104 @@
       "mobileValue": "iOS & Android"
     },
     "props": {
-      "0": { "label": "4K", "desc": "Vidéo ultra-haute définition pour des réunions comme en présentiel." },
-      "1": { "label": "E2EE", "desc": "Chiffrement de bout en bout pour une confidentialité absolue." },
-      "2": { "label": "<200ms", "desc": "Latence ultra-faible pour des échanges naturels en temps réel." },
-      "3": { "label": "100+", "desc": "Participants simultanés sans compromis sur la qualité." }
+      "0": {
+        "label": "4K",
+        "desc": "Vidéo ultra-haute définition pour des réunions comme en présentiel."
+      },
+      "1": {
+        "label": "E2EE",
+        "desc": "Chiffrement de bout en bout pour une confidentialité absolue."
+      },
+      "2": {
+        "label": "<200ms",
+        "desc": "Latence ultra-faible pour des échanges naturels en temps réel."
+      },
+      "3": {
+        "label": "100+",
+        "desc": "Participants simultanés sans compromis sur la qualité."
+      }
     },
     "core": {
-      "title": "Fonctionnalités principales",
-      "subtitle": "Les capacités fondamentales qui font de VisioConnect la référence de la vidéo professionnelle.",
       "0": {
         "tag": "Vidéo",
         "title": "Vidéo HD Cristalline",
         "desc": "Profitez d'une qualité vidéo haute définition fluide, même avec une bande passante limitée.",
-        "bullets": { "0": "Jusqu'à 4K Ultra HD", "1": "Technologie adaptative", "2": "Codec nouvelle génération" }
+        "bullets": {
+          "0": "Jusqu'à 4K Ultra HD",
+          "1": "Technologie adaptative",
+          "2": "Codec nouvelle génération"
+        }
       },
       "1": {
         "tag": "Sécurité",
         "title": "Sécurité de Pointe",
         "desc": "Chiffrement de bout en bout et protocoles avancés pour une confidentialité totale.",
-        "bullets": { "0": "Chiffrement E2EE", "1": "Conformité RGPD", "2": "Authentification MFA" }
+        "bullets": {
+          "0": "Chiffrement E2EE",
+          "1": "Conformité RGPD",
+          "2": "Authentification MFA"
+        }
       },
       "2": {
         "tag": "Performance",
         "title": "Performance Ultra-Rapide",
         "desc": "Latence minimale et connexion instantanée pour des échanges naturels sans interruption.",
-        "bullets": { "0": "Latence < 200ms", "1": "Connexion instantanée", "2": "Infrastructure mondiale" }
-      }
+        "bullets": {
+          "0": "Latence < 200ms",
+          "1": "Connexion instantanée",
+          "2": "Infrastructure mondiale"
+        }
+      },
+      "title": "Fonctionnalités principales",
+      "subtitle": "Les capacités fondamentales qui font de VisioConnect la référence de la vidéo professionnelle."
     },
     "tools": {
+      "0": {
+        "title": "Réunions de Groupe",
+        "desc": "Accueillez de grandes équipes sans compromis sur la qualité. Idéal pour les webinaires et conférences."
+      },
+      "1": {
+        "title": "Compatible Mobile",
+        "desc": "Une expérience fluide sur iOS, Android et tablettes. Restez connecté en déplacement."
+      },
+      "2": {
+        "title": "Contrôles d'Admin",
+        "desc": "Salle d'attente, mise en sourdine, exclusion de participants et outils de modération avancés."
+      },
       "title": "Outils de collaboration",
-      "subtitle": "Tout ce dont votre équipe a besoin pour travailler ensemble, où qu'elle soit.",
-      "0": { "title": "Réunions de Groupe", "desc": "Accueillez de grandes équipes sans compromis sur la qualité. Idéal pour les webinaires et conférences." },
-      "1": { "title": "Compatible Mobile", "desc": "Une expérience fluide sur iOS, Android et tablettes. Restez connecté en déplacement." },
-      "2": { "title": "Contrôles d'Admin", "desc": "Salle d'attente, mise en sourdine, exclusion de participants et outils de modération avancés." }
+      "subtitle": "Tout ce dont votre équipe a besoin pour travailler ensemble, où qu'elle soit."
     },
     "howto": {
+      "0": {
+        "title": "Créez votre compte",
+        "desc": "Inscrivez-vous gratuitement en moins de 2 minutes, sans carte bancaire requise."
+      },
+      "1": {
+        "title": "Configurez votre espace",
+        "desc": "Personnalisez vos réunions et invitez vos collaborateurs en un clic."
+      },
+      "2": {
+        "title": "Lancez votre réunion",
+        "desc": "Démarrez instantanément ou planifiez à l'avance depuis n'importe quel appareil."
+      },
       "title": "Démarrer en 3 étapes",
-      "subtitle": "Simple, rapide et efficace. Rejoignez vos équipes en quelques minutes.",
-      "0": { "title": "Créez votre compte", "desc": "Inscrivez-vous gratuitement en moins de 2 minutes, sans carte bancaire requise." },
-      "1": { "title": "Configurez votre espace", "desc": "Personnalisez vos réunions et invitez vos collaborateurs en un clic." },
-      "2": { "title": "Lancez votre réunion", "desc": "Démarrez instantanément ou planifiez à l'avance depuis n'importe quel appareil." }
+      "subtitle": "Simple, rapide et efficace. Rejoignez vos équipes en quelques minutes."
     },
     "usecases": {
+      "0": {
+        "title": "Équipes en entreprise",
+        "desc": "Réunions d'équipe, points projet, présentations clients — tout en un seul outil professionnel."
+      },
+      "1": {
+        "title": "Enseignement à distance",
+        "desc": "Cours interactifs, salles de breakout et outils pédagogiques pour une expérience d'apprentissage enrichie."
+      },
+      "2": {
+        "title": "Événements et webinaires",
+        "desc": "Organisez des conférences, formations et événements en ligne pour de larges audiences."
+      },
       "title": "Pour tous les usages",
-      "subtitle": "Des équipes de toutes tailles et tous secteurs font confiance à VisioConnect.",
-      "0": { "title": "Équipes en entreprise", "desc": "Réunions d'équipe, points projet, présentations clients — tout en un seul outil professionnel." },
-      "1": { "title": "Enseignement à distance", "desc": "Cours interactifs, salles de breakout et outils pédagogiques pour une expérience d'apprentissage enrichie." },
-      "2": { "title": "Événements et webinaires", "desc": "Organisez des conférences, formations et événements en ligne pour de larges audiences." }
+      "subtitle": "Des équipes de toutes tailles et tous secteurs font confiance à VisioConnect."
     }
   },
   "login": {
@@ -2067,6 +2118,291 @@
       "pseudoPlaceholder": "Ex: Jean Dupont",
       "submit": "Déverrouiller et Rejoindre",
       "e2ee": "Protégé par cryptage de bout en bout (E2EE)"
+    },
+    "betaPage": {
+      "nav": {
+        "testers": "Testeurs",
+        "changelog": "Changelog",
+        "wave2": "Vague 2",
+        "criteria": "Critères",
+        "apply": "Candidater",
+        "openSpots": "15 places ouvertes"
+      },
+      "hero": {
+        "eyebrow": "Rapport honnête · Bêta Vague 1 — Vague 2 ouverte",
+        "h1Line1": "9 testeurs.",
+        "h1Line2": "Rien de caché.",
+        "h1Line3": "Tout documenté.",
+        "bullet1Bold": "3 bugs critiques corrigés",
+        "bullet1Rest": " — auth, icônes, onboarding",
+        "bullet2Bold": "4 correctifs en cours",
+        "bullet2Rest": " — chat, flou bg, whiteboard, IA mode complet",
+        "bullet3Bold": "10+ améliorations planifiées",
+        "bullet3Rest": " pour la Vague 2 — toutes issues des retours",
+        "p": "Chaque retour est ici, mot pour mot, avec ce qu'on a fait ou ce qu'on construit. La Vague 2 ouvre 15 places pour aller encore plus loin.",
+        "ctaPrimary": "Rejoindre la Vague 2",
+        "ctaSecondary": "Voir le changelog complet"
+      },
+      "panel": {
+        "title": "Rapport Bêta · Vague 1",
+        "badge": "Clôturée",
+        "bar1Label": "Testeurs actifs",
+        "bar1Value": "9 / 10",
+        "bar2Label": "Bugs critiques corrigés",
+        "bar2Value": "3 / 3",
+        "bar3Label": "Satisfaction",
+        "bar3Value": "4 / 5",
+        "bar4Label": "Retours détaillés",
+        "bar4Value": "3 rapports",
+        "cell1n": "9",
+        "cell1l": "testeurs",
+        "cell2n": "3",
+        "cell2l": "corrigés",
+        "cell3n": "15",
+        "cell3l": "places V2",
+        "cell4n": "4★",
+        "cell4l": "satisfaction"
+      },
+      "stats": {
+        "s1l": "testeurs Vague 1",
+        "s2l": "rapports détaillés reçus",
+        "s3l": "places Vague 2",
+        "s4l": "points remontés au total"
+      },
+      "testers": {
+        "sectionTitle": "Les 3 profils qui ont tout testé",
+        "tA": {
+          "role": "Designer / Développeur",
+          "env": "macOS · Chrome",
+          "positive": "Interface visuellement cohérente, chargement rapide",
+          "finds": [
+            "Auth : déconnexions toutes les 20–30 min",
+            "Bouton \"Rejoindre la réunion\" incompris",
+            "Partage d'écran : aucun retour visuel",
+            "Tableau blanc : zoom 100% grisé, SVG transparent",
+            "Wording IA trop vague (\"Posez-moi vos questions\")",
+            "Sondage : vote anonyme, résultats, clôture absents"
+          ]
+        },
+        "tB": {
+          "role": "Utilisateur métier",
+          "env": "Windows 10 · Chrome 147",
+          "positive": "\"La navigation est fluide et agréable, ça se charge vite, ça fait pro\"",
+          "finds": [
+            "Icônes identiques : IA vidéo ≠ Fonctionnalités IA",
+            "Caméra & micro coupés quand autre fenêtre ouverte",
+            "Flou arrière-plan : jauge inerte, ne se désactive pas",
+            "Bouton rejoindre/créer absent du tableau de bord",
+            "Enregistrement capte la voix même micro coupé"
+          ]
+        },
+        "tC": {
+          "role": "Profil technique",
+          "env": "Windows 10 · Ancienne webcam",
+          "positive": "\"C'est lisible, agréable, ça fait pro. Bon choix de police\"",
+          "finds": [
+            "Tableau blanc disparaît après quelques secondes",
+            "Transcription IA : ne fonctionne pas",
+            "IA plante en mode \"Complet\"",
+            "Chat masqué par barre onglets + se ferme après envoi",
+            "Statut abonnement introuvable après paiement"
+          ]
+        }
+      },
+      "founder": {
+        "label": "Ce que cette bêta m'a appris",
+        "text": "3 testeurs avec des profils très différents ont révélé des problèmes que je ne voyais plus — les déconnexions que je n'avais pas reproduites, les icônes que je ne remettais plus en question, le chat masqué que je testais toujours sur grand écran. Chaque retour m'a forcé à regarder le produit comme un vrai utilisateur. C'est exactement pour ça que la bêta existe, et c'est pour ça que la Vague 2 sera meilleure.",
+        "by": "Théo G. · Fondateur VisiConnect · Mai 2026"
+      },
+      "changelog": {
+        "sideTitle": "Journal · Vague 1",
+        "eyebrow": "Changelog honnête · Bêta Vague 1",
+        "titleLine1": "Vos mots exacts.",
+        "titleLine2": "Nos actions concrètes.",
+        "sub": "10 points remontés. 3 corrigés. 4 en cours. 3 planifiés pour la Vague 2. Aucune reformulation — les citations sont verbatim.",
+        "g1Status": "Corrigé",
+        "g2Status": "En cours",
+        "g3Status": "Planifié · Vague 2",
+        "badgeFixed": "Corrigé ✓",
+        "badgeInProg": "En cours",
+        "badgePrio1": "Priorité 1",
+        "badgePrio2": "Priorité 2",
+        "badgePlanned": "Planifié",
+        "e1Date": "Mai 2026 · Testeur A — macOS, Chrome",
+        "e1Title": "Auth instable — déconnexions aléatoires en pleine réunion",
+        "e1Desc": "Token Clerk v2 expirant silencieusement toutes les 20–30 min. Cause identifiée en 12h, migration Clerk Core 3 déployée sous 48h. Zéro déconnexion non sollicitée depuis le déploiement.",
+        "e1Quote": "Je me déconnectais sans raison en pleine réunion — pas utilisable dans cet état.",
+        "e2Date": "Mai 2026 · Testeurs B & C — Windows 10, Chrome",
+        "e2Title": "Icônes identiques pour deux actions différentes — barre de contrôle refaite",
+        "e2Desc": "\"Activer l'IA vidéo\" et \"Fonctionnalités IA\" partageaient le même pictogramme. Icônes différenciées, labels au survol, hiérarchie visuelle clarifiée sur toute la barre.",
+        "e2Quote": "Les boutons « Activer l'IA vidéo » et « Fonctionnalités IA » portent le même pictogramme alors que ce n'est pas la même action. Cela porte à confusion.",
+        "e3Date": "Mai 2026 · Testeur A — macOS, Chrome",
+        "e3Title": "Onboarding confus — CTA et emails d'invitation repensés",
+        "e3Desc": "\"Rejoindre la réunion\" ne reflétait pas l'action réelle (création de compte requise). Renommé avec phrase explicative. Bouton dupliqué en milieu et bas des emails pour maximiser le taux de clic.",
+        "e3Quote": "Difficultés de connexion — mauvaise compréhension du parcours d'entrée. Le bouton ne correspond pas à ce que j'attendais.",
+        "e4Date": "En cours · Testeurs B & C",
+        "e4Title": "Chat & assistant IA masqués par la barre d'onglets — se referme après envoi",
+        "e4Desc": "Zone de saisie partiellement cachée par la barre du navigateur. Chat se fermant et se désactivant automatiquement après chaque message envoyé. Correctif hauteur dynamique + persistance de l'état en cours.",
+        "e4Quote": "La fenêtre pour écrire est partiellement cachée. Une fois le message envoyé, le Chat se ferme et se désactive tout seul — il faut le rouvrir à chaque fois pour suivre.",
+        "e5Date": "En cours · Testeurs B & C",
+        "e5Title": "Flou arrière-plan : jauge sans effet, ne se désactive pas",
+        "e5Desc": "Jauge d'intensité visuellement présente mais sans impact réel. Flou restant actif même après désactivation depuis le panneau. Correctif du pipeline vidéo et de la logique d'état en cours.",
+        "e5Quote": "La jauge d'intensité du flou d'arrière-plan ne change rien. Elle ne se désactive pas, même lorsque la fonctionnalité est éteinte dans le tableau de bord.",
+        "e6Date": "En cours · Testeur C",
+        "e6Title": "Tableau blanc : disparaît après quelques secondes",
+        "e6Desc": "Tableau blanc s'affichant correctement puis se fermant automatiquement au bout de quelques secondes. Bug de gestion d'état lié au cycle de vie du composant identifié. Correctif en cours, reproduction stable.",
+        "e6Quote": "Le tableau blanc apparaît bien mais disparaît après quelques secondes. Je n'ai pas eu loisir de l'utiliser.",
+        "e7Date": "En cours · Testeur C",
+        "e7Title": "IA mode \"Complet\" plante — modes Performance et Équilibré stables",
+        "e7Desc": "Les deux premiers modes s'activent normalement. Le mode Complet provoque un crash du worker IA (dépassement mémoire WebWorker identifié). Patch de gestion mémoire en cours, sortie avec la Vague 2.",
+        "e7Quote": "Les modes performance et équilibré s'activent normalement mais ça plante quand je passe en mode complet.",
+        "e8Date": "Priorité 1 · Vague 2 · Demandé par les 3 testeurs",
+        "e8Title": "Transcription IA absente — copilote de réunion complet",
+        "e8Desc": "Signalé par les 3 testeurs comme point bloquant à l'adoption. La transcription ne fonctionnait pas. L'assistant IA passait de \"Posez-moi vos questions…\" (trop vague) à un vrai copilote : résumer la réunion, générer un compte-rendu structuré, répondre aux questions de contexte, traduire en direct.",
+        "e8Quote": "Pas de résumé, pas de notes — difficile de convaincre mon équipe de l'adopter. Et le message \"Posez-moi vos questions\" est trop vague, je ne sais pas quoi lui demander.",
+        "e9Date": "Priorité 2 · Vague 2 · 3 remontées cumulées",
+        "e9Title": "Tableau blanc v2 — caméra flottante, export PDF, bugs zoom & opacité",
+        "e9Desc": "Zoom 100% grisé, SVG exporté transparent, animateur invisible pendant le whiteboard. Vague 2 : caméra flottante déplaçable (drag & drop, 4 positions), export PDF, zoom réinitialisé, jauge opacité repositionnée.",
+        "e9Quote": "Lorsque le tableau blanc est utilisé, on ne voit plus l'animateur. Zoom grisé, SVG inutilisable. La jauge d'opacité est confondue avec la taille du crayon.",
+        "e10Date": "Planifié · Vague 2 · Testeur A",
+        "e10Title": "Sondage : vote anonyme + contrôle résultats + bouton clôturer",
+        "e10Desc": "\"Fonctionnalité intéressante mais incomplète.\" Trois options manquantes signalées comme critères différenciants entre outil amateur et outil pro.",
+        "e10Quote": "Vote anonyme ON/OFF, afficher résultats ON/OFF, clôturer le sondage — c'est du standard attendu, sinon ça fait outil amateur."
+      },
+      "compare": {
+        "eyebrow": "Avant / Après",
+        "title": "Ce qui existait. Ce qui arrive.",
+        "sub": "Chaque ligne de cette table est issue d'un retour testeur.",
+        "colFeat": "Fonctionnalité",
+        "colV1": "Vague 1",
+        "colV2": "Vague 2",
+        "feat1": "Auth stable (zéro déconnexion)",
+        "feat2": "Icônes uniques par action",
+        "feat3": "Onboarding clair (CTA + emails)",
+        "feat4": "Micro / caméra / partage d'écran",
+        "feat5": "Aperçu visuel partage d'écran",
+        "feat6": "Chat stable (ne se referme plus)",
+        "feat7": "Salles de breakout",
+        "feat8": "Tableau blanc",
+        "feat9": "Caméra flottante whiteboard",
+        "feat10": "Export PDF tableau blanc",
+        "feat11": "Transcription IA temps réel",
+        "feat12": "Copilote : résumé & compte-rendu auto",
+        "feat13": "Test audio + VU-mètre micro",
+        "feat14": "Sondage complet (anonyme, résultats)",
+        "feat15": "Statut abonnement dans le profil"
+      },
+      "features": {
+        "eyebrow": "Vague 2",
+        "title": "Construit sur vos retours",
+        "sub": "Chaque fonctionnalité ci-dessous a une origine directe dans les rapports de la Vague 1. Pas de roadmap inventée — des vrais problèmes, des vraies solutions.",
+        "f1Tag": "Priorité 1 · IA",
+        "f1Title": "Copilote de réunion — transcription, résumé, traduction",
+        "f1Desc": "Demandé par les 3 testeurs. L'assistant passe de \"Posez-moi vos questions…\" à un vrai copilote contextuel : résumer la réunion, générer un compte-rendu exportable, traduire en direct, répondre sur le contenu de la session.",
+        "f1Item1": "Transcription temps réel",
+        "f1Item2": "Compte-rendu structuré exportable",
+        "f1Item3": "Traduction en direct",
+        "f1Item4": "Export Notion / Markdown / PDF",
+        "f1Origin": "Transcription absente + wording IA trop vague",
+        "f2Tag": "Whiteboard",
+        "f2Title": "Caméra flottante pendant le tableau blanc",
+        "f2Desc": "L'animateur disparaît dès que le whiteboard est ouvert. Une bulle vidéo drag & drop maintient le lien humain sans gêner le contenu.",
+        "f2Item1": "Bulle vidéo repositionnable",
+        "f2Item2": "4 positions prédéfinies",
+        "f2Item3": "Taille ajustable",
+        "f2Origin": "Testeur A — \"on ne voit plus l'animateur\"",
+        "f3Tag": "Partage écran",
+        "f3Title": "Preview + badge de confirmation partage d'écran",
+        "f3Desc": "Aucun retour visuel ne confirmait que l'écran était partagé. Preview miniature animée + badge \"Vous partagez votre écran\" visible des deux côtés.",
+        "f3Item1": "Preview miniature temps réel",
+        "f3Item2": "Badge confirmation partageur",
+        "f3Item3": "Indicateur côté participants",
+        "f3Origin": "Testeur A — Mac, Chrome (partage écran sans retour)",
+        "f4Tag": "Audio",
+        "f4Title": "Test audio + VU-mètre micro en temps réel",
+        "f4Desc": "Citation exacte : \"aucun élément pour m'assurer que mon micro envoie bien le signal\". VU-mètre animé + test de sortie pour valider micro et enceintes avant chaque réunion.",
+        "f4Item1": "VU-mètre niveau micro animé",
+        "f4Item2": "Test enceintes / casque",
+        "f4Item3": "Validation avant de rejoindre",
+        "f4Origin": "Testeur C — \"je n'ai rien pour m'assurer du bon fonctionnement\"",
+        "f5Tag": "Sondage",
+        "f5Title": "Sondage complet — anonymat, résultats, clôture",
+        "f5Desc": "\"Fonctionnalité intéressante mais incomplète.\" Les 3 options manquantes qui font la différence entre outil amateur et outil professionnel.",
+        "f5Item1": "Vote anonyme ON/OFF",
+        "f5Item2": "Afficher/masquer résultats",
+        "f5Item3": "Bouton clôturer le sondage",
+        "f5Origin": "Testeur A — \"sinon ça fait outil amateur\"",
+        "f6Tag": "Profil",
+        "f6Title": "Tableau de bord abonnement visible",
+        "f6Desc": "Après paiement, impossible de confirmer si l'abonnement était actif. Un onglet dédié dans le profil affiche clairement le plan, la date de renouvellement et l'historique.",
+        "f6Item1": "Statut plan visible (Gratuit / Pro)",
+        "f6Item2": "Date de renouvellement",
+        "f6Item3": "Historique des paiements",
+        "f6Origin": "Testeur C — \"je reste dans le doute sur mon abonnement\""
+      },
+      "criteria": {
+        "eyebrow": "Sélection",
+        "titleLine1": "Ce que je cherche",
+        "titleLine2": "dans la Vague 2",
+        "sub": "15 places. Des critères honnêtes, pas une loterie. Si vous cochez ces trois points, votre dossier a toutes ses chances.",
+        "duration": "Durée estimée : 4 à 6 semaines",
+        "c1n": "01",
+        "c1Title": "Engagement régulier",
+        "c1Desc": "Revenir d'une semaine à l'autre. Utiliser le produit même imparfait. La Vague 1 a montré que les retours les plus utiles venaient des testeurs qui utilisaient vraiment l'outil, pas ceux qui l'ont ouvert une fois.",
+        "c2n": "02",
+        "c2Title": "Retours structurés",
+        "c2Desc": "Pas besoin d'être développeur. Mais reproduire le bug, décrire le contexte, donner son environnement (OS, navigateur, version) — c'est ce que les testeurs de la Vague 1 ont fait, et c'est ce qui a permis de corriger les bugs en 48h.",
+        "c3n": "03",
+        "c3Title": "Cas d'usage réel",
+        "c3Desc": "Startup, agence, freelance, enseignant — un contexte concret. Les 3 testeurs de la Vague 1 avaient des profils très différents : c'est exactement ce qui a rendu leurs retours complémentaires et précieux."
+      },
+      "form": {
+        "eyebrow": "Candidature ouverte",
+        "title": "Rejoindre la Vague 2",
+        "sub": "Dossier lu personnellement · Réponse sous 72h · 15 places",
+        "formTitle": "Formulaire de candidature",
+        "formSub": "Vague 2 · sélection en cours",
+        "slotLabel": "places",
+        "firstNameLbl": "Prénom",
+        "firstNamePh": "Votre prénom",
+        "lastNameLbl": "Nom",
+        "lastNamePh": "Votre nom",
+        "emailLbl": "Email",
+        "profileLbl": "Profil",
+        "profilePh": "Sélectionner…",
+        "profileDev": "Développeur·se",
+        "profileDesigner": "Designer UX/UI",
+        "profilePM": "Product Manager",
+        "profileFounder": "Fondateur·trice",
+        "profileOther": "Autre",
+        "usageLbl": "Usage principal",
+        "usagePh": "Sélectionner…",
+        "usageTeam": "Réunions d'équipe",
+        "usageClient": "Appels clients",
+        "usageEdu": "Enseignement / formation",
+        "usageDev": "Collaboration dev",
+        "usageOther": "Autre",
+        "toolsLbl": "Outils utilisés au quotidien",
+        "motivationLbl": "Pourquoi rejoindre la Vague 2 ?",
+        "motivationPh": "Décrivez votre contexte, votre usage et ce que vous apporteriez comme testeur. Soyez concret — OS, navigateur, cas d'usage réel…",
+        "motivationHint": "Minimum 40 caractères. Contexte concret apprécié.",
+        "privacy": "Données confidentielles — aucune revente.",
+        "submit": "Envoyer ma candidature",
+        "sending": "Envoi…",
+        "required": "Requis",
+        "emailInvalid": "Email invalide",
+        "minChars": "Minimum 40 caractères",
+        "successTitle": "Candidature envoyée !",
+        "successP": "Merci. Je lis chaque dossier personnellement\net je vous recontacte sous 72h.",
+        "backHome": "Retour à l'accueil",
+        "serverError": "Erreur serveur",
+        "genericError": "Une erreur est survenue."
+      },
+      "footer": {
+        "privacy": "Confidentialité",
+        "terms": "CGU",
+        "contact": "Contact"
+      }
     }
   }
 }

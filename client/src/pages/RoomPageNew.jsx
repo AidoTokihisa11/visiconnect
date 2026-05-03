@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled, { keyframes, css } from 'styled-components';
 import {
@@ -7,6 +7,7 @@ import {
   Mic, Monitor, Video, BarChart2, Layers, User, Zap, RefreshCw, AlertTriangle,
 } from 'lucide-react';
 import { useSafeLayout } from '../hooks/useSafeLayout';
+import { useTranslation } from '../hooks/useTranslation';
 
 /* ═══════════════════════════════════════════════════════════
    PALETTE — 100 % clair, zéro fond sombre
@@ -636,224 +637,8 @@ const FootLink  = styled.button`
 const FootCopy  = styled.div`font-size:.72rem;color:${C.muted};`;
 
 /* ═══════════════════════════════════════════════════════════
-   DONNÉES
+   DONNÉES (language-independent)
 ═══════════════════════════════════════════════════════════ */
-const TESTEURS = [
-  {
-    label:'T·A', color:C.primary,
-    role:'Designer / Développeur',
-    env:'macOS · Chrome',
-    positive:'Interface visuellement cohérente, chargement rapide',
-    finds:[
-      'Auth : déconnexions toutes les 20–30 min',
-      'Bouton "Rejoindre la réunion" incompris',
-      'Partage d\'écran : aucun retour visuel',
-      'Tableau blanc : zoom 100% grisé, SVG transparent',
-      'Wording IA trop vague ("Posez-moi vos questions")',
-      'Sondage : vote anonyme, résultats, clôture absents',
-    ],
-  },
-  {
-    label:'T·B', color:C.amber,
-    role:'Utilisateur métier',
-    env:'Windows 10 · Chrome 147',
-    positive:'"La navigation est fluide et agréable, ça se charge vite, ça fait pro"',
-    finds:[
-      'Icônes identiques : IA vidéo ≠ Fonctionnalités IA',
-      'Caméra & micro coupés quand autre fenêtre ouverte',
-      'Flou arrière-plan : jauge inerte, ne se désactive pas',
-      'Bouton rejoindre/créer absent du tableau de bord',
-      'Enregistrement capte la voix même micro coupé',
-    ],
-  },
-  {
-    label:'T·C', color:C.purple,
-    role:'Profil technique',
-    env:'Windows 10 · Ancienne webcam',
-    positive:'"C\'est lisible, agréable, ça fait pro. Bon choix de police"',
-    finds:[
-      'Tableau blanc disparaît après quelques secondes',
-      'Transcription IA : ne fonctionne pas',
-      'IA plante en mode "Complet"',
-      'Chat masqué par barre onglets + se ferme après envoi',
-      'Statut abonnement introuvable après paiement',
-    ],
-  },
-];
-
-const CHANGELOG_GROUPS = [
-  {
-    status:'Corrigé', color:C.green, bg:C.greenBg, bdr:C.greenBdr,
-    entries:[
-      {
-        date:'Mai 2026 · Testeur A — macOS, Chrome',
-        accent:C.green,
-        badge:{ label:'Corrigé ✓', bg:C.greenBg, c:C.green, bdr:C.greenBdr },
-        title:'Auth instable — déconnexions aléatoires en pleine réunion',
-        desc:'Token Clerk v2 expirant silencieusement toutes les 20–30 min. Cause identifiée en 12h, migration Clerk Core 3 déployée sous 48h. Zéro déconnexion non sollicitée depuis le déploiement.',
-        quote:'Je me déconnectais sans raison en pleine réunion — pas utilisable dans cet état.',
-      },
-      {
-        date:'Mai 2026 · Testeurs B & C — Windows 10, Chrome',
-        accent:C.green,
-        badge:{ label:'Corrigé ✓', bg:C.greenBg, c:C.green, bdr:C.greenBdr },
-        title:'Icônes identiques pour deux actions différentes — barre de contrôle refaite',
-        desc:'"Activer l\'IA vidéo" et "Fonctionnalités IA" partageaient le même pictogramme. Icônes différenciées, labels au survol, hiérarchie visuelle clarifiée sur toute la barre.',
-        quote:'Les boutons « Activer l\'IA vidéo » et « Fonctionnalités IA » portent le même pictogramme alors que ce n\'est pas la même action. Cela porte à confusion.',
-      },
-      {
-        date:'Mai 2026 · Testeur A — macOS, Chrome',
-        accent:C.green,
-        badge:{ label:'Corrigé ✓', bg:C.greenBg, c:C.green, bdr:C.greenBdr },
-        title:'Onboarding confus — CTA et emails d\'invitation repensés',
-        desc:'"Rejoindre la réunion" ne reflétait pas l\'action réelle (création de compte requise). Renommé avec phrase explicative. Bouton dupliqué en milieu et bas des emails pour maximiser le taux de clic.',
-        quote:'Difficultés de connexion — mauvaise compréhension du parcours d\'entrée. Le bouton ne correspond pas à ce que j\'attendais.',
-      },
-    ],
-  },
-  {
-    status:'En cours', color:C.purple, bg:C.purpleBg, bdr:C.purpleBdr,
-    entries:[
-      {
-        date:'En cours · Testeurs B & C',
-        accent:C.purple,
-        badge:{ label:'En cours', bg:C.purpleBg, c:C.purple, bdr:C.purpleBdr },
-        title:'Chat & assistant IA masqués par la barre d\'onglets — se referme après envoi',
-        desc:'Zone de saisie partiellement cachée par la barre du navigateur. Chat se fermant et se désactivant automatiquement après chaque message envoyé. Correctif hauteur dynamique + persistance de l\'état en cours.',
-        quote:'La fenêtre pour écrire est partiellement cachée. Une fois le message envoyé, le Chat se ferme et se désactive tout seul — il faut le rouvrir à chaque fois pour suivre.',
-      },
-      {
-        date:'En cours · Testeurs B & C',
-        accent:C.amber,
-        badge:{ label:'En cours', bg:C.amberBg, c:C.amber, bdr:C.amberBdr },
-        title:'Flou arrière-plan : jauge sans effet, ne se désactive pas',
-        desc:'Jauge d\'intensité visuellement présente mais sans impact réel. Flou restant actif même après désactivation depuis le panneau. Correctif du pipeline vidéo et de la logique d\'état en cours.',
-        quote:'La jauge d\'intensité du flou d\'arrière-plan ne change rien. Elle ne se désactive pas, même lorsque la fonctionnalité est éteinte dans le tableau de bord.',
-      },
-      {
-        date:'En cours · Testeur C',
-        accent:C.amber,
-        badge:{ label:'En cours', bg:C.amberBg, c:C.amber, bdr:C.amberBdr },
-        title:'Tableau blanc : disparaît après quelques secondes',
-        desc:'Tableau blanc s\'affichant correctement puis se fermant automatiquement au bout de quelques secondes. Bug de gestion d\'état lié au cycle de vie du composant identifié. Correctif en cours, reproduction stable.',
-        quote:'Le tableau blanc apparaît bien mais disparaît après quelques secondes. Je n\'ai pas eu loisir de l\'utiliser.',
-      },
-      {
-        date:'En cours · Testeur C',
-        accent:C.amber,
-        badge:{ label:'En cours', bg:C.amberBg, c:C.amber, bdr:C.amberBdr },
-        title:'IA mode "Complet" plante — modes Performance et Équilibré stables',
-        desc:'Les deux premiers modes s\'activent normalement. Le mode Complet provoque un crash du worker IA (dépassement mémoire WebWorker identifié). Patch de gestion mémoire en cours, sortie avec la Vague 2.',
-        quote:'Les modes performance et équilibré s\'activent normalement mais ça plante quand je passe en mode complet.',
-      },
-    ],
-  },
-  {
-    status:'Planifié · Vague 2', color:C.primary, bg:C.softBlue, bdr:C.blueTint,
-    entries:[
-      {
-        date:'Priorité 1 · Vague 2 · Demandé par les 3 testeurs',
-        accent:C.primary,
-        badge:{ label:'Priorité 1', bg:C.softBlue, c:C.primary, bdr:C.blueTint },
-        title:'Transcription IA absente — copilote de réunion complet',
-        desc:'Signalé par les 3 testeurs comme point bloquant à l\'adoption. La transcription ne fonctionnait pas. L\'assistant IA passait de "Posez-moi vos questions…" (trop vague, aucun déclencheur d\'usage) à un vrai copilote : résumer la réunion, générer un compte-rendu structuré, répondre aux questions de contexte, traduire en direct.',
-        quote:'Pas de résumé, pas de notes — difficile de convaincre mon équipe de l\'adopter. Et le message "Posez-moi vos questions" est trop vague, je ne sais pas quoi lui demander.',
-      },
-      {
-        date:'Priorité 2 · Vague 2 · 3 remontées cumulées',
-        accent:C.cyan,
-        badge:{ label:'Priorité 2', bg:C.cyanBg, c:C.cyan, bdr:C.cyanBdr },
-        title:'Tableau blanc v2 — caméra flottante, export PDF, bugs zoom & opacité',
-        desc:'Zoom 100% grisé, SVG exporté transparent, animateur invisible pendant le whiteboard, jauge opacité confondue avec taille crayon (même section), bouton fermer qui chevauche la palette. Vague 2 : caméra flottante déplaçable (drag & drop, 4 positions prédéfinies, activable/désactivable), export PDF, zoom réinitialisé, jauge opacité repositionnée avec icône distincte.',
-        quote:'Lorsque le tableau blanc est utilisé, on ne voit plus l\'animateur. Zoom grisé, SVG inutilisable. La jauge d\'opacité est confondue avec la taille du crayon — elle devrait être isolée avec un pictogramme.',
-      },
-      {
-        date:'Planifié · Vague 2 · Testeur A',
-        accent:C.amber,
-        badge:{ label:'Planifié', bg:C.amberBg, c:C.amber, bdr:C.amberBdr },
-        title:'Sondage : vote anonyme + contrôle résultats + bouton clôturer',
-        desc:'"Fonctionnalité intéressante mais incomplète." Trois options manquantes signalées comme critères différenciants entre outil amateur et outil pro : anonymat du vote activable, affichage/masquage des résultats en temps réel, bouton de clôture du sondage.',
-        quote:'"Vote anonyme ON/OFF, afficher résultats ON/OFF, clôturer le sondage — c\'est du standard attendu, sinon ça fait outil amateur."',
-      },
-    ],
-  },
-];
-
-const COMPARE_ROWS = [
-  { feat:'Auth stable (zéro déconnexion)',        v1:false, v2:true  },
-  { feat:'Icônes uniques par action',             v1:false, v2:true  },
-  { feat:'Onboarding clair (CTA + emails)',       v1:false, v2:true  },
-  { feat:'Micro / caméra / partage d\'écran',     v1:true,  v2:true  },
-  { feat:'Aperçu visuel partage d\'écran',        v1:false, v2:true  },
-  { feat:'Chat stable (ne se referme plus)',      v1:false, v2:true  },
-  { feat:'Salles de breakout',                    v1:true,  v2:true  },
-  { feat:'Tableau blanc',                         v1:true,  v2:true  },
-  { feat:'Caméra flottante whiteboard',           v1:false, v2:true  },
-  { feat:'Export PDF tableau blanc',              v1:false, v2:true  },
-  { feat:'Transcription IA temps réel',           v1:false, v2:true  },
-  { feat:'Copilote : résumé & compte-rendu auto', v1:false, v2:true  },
-  { feat:'Test audio + VU-mètre micro',           v1:false, v2:true  },
-  { feat:'Sondage complet (anonyme, résultats)',  v1:false, v2:true  },
-  { feat:'Statut abonnement dans le profil',      v1:false, v2:true  },
-];
-
-const FEATURES = [
-  {
-    icon:<Cpu size={20}/>, tag:'Priorité 1 · IA', wide:true,
-    accent:C.primary, ibg:C.softBlue, ibdr:C.blueTint, ic:C.primary,
-    tbg:C.softBlue, tc:C.primary, tbdr:C.blueTint,
-    title:'Copilote de réunion — transcription, résumé, traduction',
-    desc:'Demandé par les 3 testeurs. L\'assistant passe de "Posez-moi vos questions…" à un vrai copilote contextuel : résumer la réunion, générer un compte-rendu exportable, traduire en direct, répondre sur le contenu de la session.',
-    items:['Transcription temps réel','Compte-rendu structuré exportable','Traduction en direct','Export Notion / Markdown / PDF'],
-    origin:'Transcription absente + wording IA trop vague',
-  },
-  {
-    icon:<Video size={20}/>, tag:'Whiteboard', wide:false,
-    accent:C.purple, ibg:C.purpleBg, ibdr:C.purpleBdr, ic:C.purple,
-    tbg:C.purpleBg, tc:C.purple, tbdr:C.purpleBdr,
-    title:'Caméra flottante pendant le tableau blanc',
-    desc:'L\'animateur disparaît dès que le whiteboard est ouvert. Une bulle vidéo drag & drop maintient le lien humain sans gêner le contenu.',
-    items:['Bulle vidéo repositionnable','4 positions prédéfinies','Taille ajustable'],
-    origin:'Testeur A — "on ne voit plus l\'animateur"',
-  },
-  {
-    icon:<Monitor size={20}/>, tag:'Partage écran', wide:false,
-    accent:C.green, ibg:C.greenBg, ibdr:C.greenBdr, ic:C.green,
-    tbg:C.greenBg, tc:C.green, tbdr:C.greenBdr,
-    title:'Preview + badge de confirmation partage d\'écran',
-    desc:'Aucun retour visuel ne confirmait que l\'écran était partagé. Preview miniature animée + badge "Vous partagez votre écran" visible des deux côtés.',
-    items:['Preview miniature temps réel','Badge confirmation partageur','Indicateur côté participants'],
-    origin:'Testeur A — Mac, Chrome (partage écran sans retour)',
-  },
-  {
-    icon:<Mic size={20}/>, tag:'Audio', wide:false,
-    accent:C.amber, ibg:C.amberBg, ibdr:C.amberBdr, ic:C.amber,
-    tbg:C.amberBg, tc:C.amber, tbdr:C.amberBdr,
-    title:'Test audio + VU-mètre micro en temps réel',
-    desc:'Citation exacte : "aucun élément pour m\'assurer que mon micro envoie bien le signal". VU-mètre animé + test de sortie (phrase jouée) pour valider micro et enceintes avant chaque réunion.',
-    items:['VU-mètre niveau micro animé','Test enceintes / casque','Validation avant de rejoindre'],
-    origin:'Testeur C — "je n\'ai rien pour m\'assurer du bon fonctionnement"',
-  },
-  {
-    icon:<BarChart2 size={20}/>, tag:'Sondage', wide:false,
-    accent:C.cyan, ibg:C.cyanBg, ibdr:C.cyanBdr, ic:C.cyan,
-    tbg:C.cyanBg, tc:C.cyan, tbdr:C.cyanBdr,
-    title:'Sondage complet — anonymat, résultats, clôture',
-    desc:'"Fonctionnalité intéressante mais incomplète." Les 3 options manquantes qui font la différence entre outil amateur et outil professionnel.',
-    items:['Vote anonyme ON/OFF','Afficher/masquer résultats','Bouton clôturer le sondage'],
-    origin:'Testeur A — "sinon ça fait outil amateur"',
-  },
-  {
-    icon:<Layers size={20}/>, tag:'Profil', wide:false,
-    accent:C.slate, ibg:C.softBlue, ibdr:C.blueTint, ic:C.slate,
-    tbg:C.softBlue, tc:C.slate, tbdr:C.blueTint,
-    title:'Tableau de bord abonnement visible',
-    desc:'Après paiement, impossible de confirmer si l\'abonnement était actif. Un onglet dédié dans le profil affiche clairement le plan, la date de renouvellement et l\'historique.',
-    items:['Statut plan visible (Gratuit / Pro)','Date de renouvellement','Historique des paiements'],
-    origin:'Testeur C — "je reste dans le doute sur mon abonnement"',
-  },
-];
-
 const TOOLS = ['Figma','Notion','Slack','GitHub','Linear','VS Code','Jira','Discord','Miro','Loom'];
 
 /* ═══════════════════════════════════════════════════════════
@@ -862,6 +647,149 @@ const TOOLS = ['Figma','Notion','Slack','GitHub','Linear','VS Code','Jira','Disc
 export default function RoomPageNew() {
   const navigate = useNavigate();
   useSafeLayout();
+  const { t } = useTranslation();
+
+  /* ── TRANSLATED DATA ARRAYS ─────────────────────────── */
+  const TESTEURS = useMemo(() => [
+    {
+      label:'T·A', color:C.primary,
+      role:     t('room.betaPage.testers.tA.role'),
+      env:      t('room.betaPage.testers.tA.env'),
+      positive: t('room.betaPage.testers.tA.positive'),
+      finds:    t('room.betaPage.testers.tA.finds', { returnObjects: true }),
+    },
+    {
+      label:'T·B', color:C.amber,
+      role:     t('room.betaPage.testers.tB.role'),
+      env:      t('room.betaPage.testers.tB.env'),
+      positive: t('room.betaPage.testers.tB.positive'),
+      finds:    t('room.betaPage.testers.tB.finds', { returnObjects: true }),
+    },
+    {
+      label:'T·C', color:C.purple,
+      role:     t('room.betaPage.testers.tC.role'),
+      env:      t('room.betaPage.testers.tC.env'),
+      positive: t('room.betaPage.testers.tC.positive'),
+      finds:    t('room.betaPage.testers.tC.finds', { returnObjects: true }),
+    },
+  ], [t]);
+
+  const CHANGELOG_GROUPS = useMemo(() => [
+    {
+      status: t('room.betaPage.changelog.g1Status'), color:C.green, bg:C.greenBg, bdr:C.greenBdr,
+      entries:[
+        { date: t('room.betaPage.changelog.e1Date'), accent:C.green,
+          badge:{ label: t('room.betaPage.changelog.badgeFixed'), bg:C.greenBg, c:C.green, bdr:C.greenBdr },
+          title: t('room.betaPage.changelog.e1Title'), desc: t('room.betaPage.changelog.e1Desc'), quote: t('room.betaPage.changelog.e1Quote') },
+        { date: t('room.betaPage.changelog.e2Date'), accent:C.green,
+          badge:{ label: t('room.betaPage.changelog.badgeFixed'), bg:C.greenBg, c:C.green, bdr:C.greenBdr },
+          title: t('room.betaPage.changelog.e2Title'), desc: t('room.betaPage.changelog.e2Desc'), quote: t('room.betaPage.changelog.e2Quote') },
+        { date: t('room.betaPage.changelog.e3Date'), accent:C.green,
+          badge:{ label: t('room.betaPage.changelog.badgeFixed'), bg:C.greenBg, c:C.green, bdr:C.greenBdr },
+          title: t('room.betaPage.changelog.e3Title'), desc: t('room.betaPage.changelog.e3Desc'), quote: t('room.betaPage.changelog.e3Quote') },
+      ],
+    },
+    {
+      status: t('room.betaPage.changelog.g2Status'), color:C.purple, bg:C.purpleBg, bdr:C.purpleBdr,
+      entries:[
+        { date: t('room.betaPage.changelog.e4Date'), accent:C.purple,
+          badge:{ label: t('room.betaPage.changelog.badgeInProg'), bg:C.purpleBg, c:C.purple, bdr:C.purpleBdr },
+          title: t('room.betaPage.changelog.e4Title'), desc: t('room.betaPage.changelog.e4Desc'), quote: t('room.betaPage.changelog.e4Quote') },
+        { date: t('room.betaPage.changelog.e5Date'), accent:C.amber,
+          badge:{ label: t('room.betaPage.changelog.badgeInProg'), bg:C.amberBg, c:C.amber, bdr:C.amberBdr },
+          title: t('room.betaPage.changelog.e5Title'), desc: t('room.betaPage.changelog.e5Desc'), quote: t('room.betaPage.changelog.e5Quote') },
+        { date: t('room.betaPage.changelog.e6Date'), accent:C.amber,
+          badge:{ label: t('room.betaPage.changelog.badgeInProg'), bg:C.amberBg, c:C.amber, bdr:C.amberBdr },
+          title: t('room.betaPage.changelog.e6Title'), desc: t('room.betaPage.changelog.e6Desc'), quote: t('room.betaPage.changelog.e6Quote') },
+        { date: t('room.betaPage.changelog.e7Date'), accent:C.amber,
+          badge:{ label: t('room.betaPage.changelog.badgeInProg'), bg:C.amberBg, c:C.amber, bdr:C.amberBdr },
+          title: t('room.betaPage.changelog.e7Title'), desc: t('room.betaPage.changelog.e7Desc'), quote: t('room.betaPage.changelog.e7Quote') },
+      ],
+    },
+    {
+      status: t('room.betaPage.changelog.g3Status'), color:C.primary, bg:C.softBlue, bdr:C.blueTint,
+      entries:[
+        { date: t('room.betaPage.changelog.e8Date'), accent:C.primary,
+          badge:{ label: t('room.betaPage.changelog.badgePrio1'), bg:C.softBlue, c:C.primary, bdr:C.blueTint },
+          title: t('room.betaPage.changelog.e8Title'), desc: t('room.betaPage.changelog.e8Desc'), quote: t('room.betaPage.changelog.e8Quote') },
+        { date: t('room.betaPage.changelog.e9Date'), accent:C.cyan,
+          badge:{ label: t('room.betaPage.changelog.badgePrio2'), bg:C.cyanBg, c:C.cyan, bdr:C.cyanBdr },
+          title: t('room.betaPage.changelog.e9Title'), desc: t('room.betaPage.changelog.e9Desc'), quote: t('room.betaPage.changelog.e9Quote') },
+        { date: t('room.betaPage.changelog.e10Date'), accent:C.amber,
+          badge:{ label: t('room.betaPage.changelog.badgePlanned'), bg:C.amberBg, c:C.amber, bdr:C.amberBdr },
+          title: t('room.betaPage.changelog.e10Title'), desc: t('room.betaPage.changelog.e10Desc'), quote: t('room.betaPage.changelog.e10Quote') },
+      ],
+    },
+  ], [t]);
+
+  const COMPARE_ROWS = useMemo(() => [
+    { feat: t('room.betaPage.compare.feat1'),  v1:false, v2:true  },
+    { feat: t('room.betaPage.compare.feat2'),  v1:false, v2:true  },
+    { feat: t('room.betaPage.compare.feat3'),  v1:false, v2:true  },
+    { feat: t('room.betaPage.compare.feat4'),  v1:true,  v2:true  },
+    { feat: t('room.betaPage.compare.feat5'),  v1:false, v2:true  },
+    { feat: t('room.betaPage.compare.feat6'),  v1:false, v2:true  },
+    { feat: t('room.betaPage.compare.feat7'),  v1:true,  v2:true  },
+    { feat: t('room.betaPage.compare.feat8'),  v1:true,  v2:true  },
+    { feat: t('room.betaPage.compare.feat9'),  v1:false, v2:true  },
+    { feat: t('room.betaPage.compare.feat10'), v1:false, v2:true  },
+    { feat: t('room.betaPage.compare.feat11'), v1:false, v2:true  },
+    { feat: t('room.betaPage.compare.feat12'), v1:false, v2:true  },
+    { feat: t('room.betaPage.compare.feat13'), v1:false, v2:true  },
+    { feat: t('room.betaPage.compare.feat14'), v1:false, v2:true  },
+    { feat: t('room.betaPage.compare.feat15'), v1:false, v2:true  },
+  ], [t]);
+
+  const FEATURES = useMemo(() => [
+    {
+      icon:<Cpu size={20}/>, tag: t('room.betaPage.features.f1Tag'), wide:true,
+      accent:C.primary, ibg:C.softBlue, ibdr:C.blueTint, ic:C.primary,
+      tbg:C.softBlue, tc:C.primary, tbdr:C.blueTint,
+      title: t('room.betaPage.features.f1Title'), desc: t('room.betaPage.features.f1Desc'),
+      items:[t('room.betaPage.features.f1Item1'),t('room.betaPage.features.f1Item2'),t('room.betaPage.features.f1Item3'),t('room.betaPage.features.f1Item4')],
+      origin: t('room.betaPage.features.f1Origin'),
+    },
+    {
+      icon:<Video size={20}/>, tag: t('room.betaPage.features.f2Tag'), wide:false,
+      accent:C.purple, ibg:C.purpleBg, ibdr:C.purpleBdr, ic:C.purple,
+      tbg:C.purpleBg, tc:C.purple, tbdr:C.purpleBdr,
+      title: t('room.betaPage.features.f2Title'), desc: t('room.betaPage.features.f2Desc'),
+      items:[t('room.betaPage.features.f2Item1'),t('room.betaPage.features.f2Item2'),t('room.betaPage.features.f2Item3')],
+      origin: t('room.betaPage.features.f2Origin'),
+    },
+    {
+      icon:<Monitor size={20}/>, tag: t('room.betaPage.features.f3Tag'), wide:false,
+      accent:C.green, ibg:C.greenBg, ibdr:C.greenBdr, ic:C.green,
+      tbg:C.greenBg, tc:C.green, tbdr:C.greenBdr,
+      title: t('room.betaPage.features.f3Title'), desc: t('room.betaPage.features.f3Desc'),
+      items:[t('room.betaPage.features.f3Item1'),t('room.betaPage.features.f3Item2'),t('room.betaPage.features.f3Item3')],
+      origin: t('room.betaPage.features.f3Origin'),
+    },
+    {
+      icon:<Mic size={20}/>, tag: t('room.betaPage.features.f4Tag'), wide:false,
+      accent:C.amber, ibg:C.amberBg, ibdr:C.amberBdr, ic:C.amber,
+      tbg:C.amberBg, tc:C.amber, tbdr:C.amberBdr,
+      title: t('room.betaPage.features.f4Title'), desc: t('room.betaPage.features.f4Desc'),
+      items:[t('room.betaPage.features.f4Item1'),t('room.betaPage.features.f4Item2'),t('room.betaPage.features.f4Item3')],
+      origin: t('room.betaPage.features.f4Origin'),
+    },
+    {
+      icon:<BarChart2 size={20}/>, tag: t('room.betaPage.features.f5Tag'), wide:false,
+      accent:C.cyan, ibg:C.cyanBg, ibdr:C.cyanBdr, ic:C.cyan,
+      tbg:C.cyanBg, tc:C.cyan, tbdr:C.cyanBdr,
+      title: t('room.betaPage.features.f5Title'), desc: t('room.betaPage.features.f5Desc'),
+      items:[t('room.betaPage.features.f5Item1'),t('room.betaPage.features.f5Item2'),t('room.betaPage.features.f5Item3')],
+      origin: t('room.betaPage.features.f5Origin'),
+    },
+    {
+      icon:<Layers size={20}/>, tag: t('room.betaPage.features.f6Tag'), wide:false,
+      accent:C.slate, ibg:C.softBlue, ibdr:C.blueTint, ic:C.slate,
+      tbg:C.softBlue, tc:C.slate, tbdr:C.blueTint,
+      title: t('room.betaPage.features.f6Title'), desc: t('room.betaPage.features.f6Desc'),
+      items:[t('room.betaPage.features.f6Item1'),t('room.betaPage.features.f6Item2'),t('room.betaPage.features.f6Item3')],
+      origin: t('room.betaPage.features.f6Origin'),
+    },
+  ], [t]);
 
   const [pct,     setPct]     = useState(0);
   const [navUp,   setNavUp]   = useState(false);
@@ -901,12 +829,12 @@ export default function RoomPageNew() {
 
   function validate() {
     const e = {};
-    if (!form.firstName.trim())                          e.firstName  = 'Requis';
-    if (!form.lastName.trim())                           e.lastName   = 'Requis';
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email      = 'Email invalide';
-    if (!form.profile)                                   e.profile    = 'Requis';
-    if (!form.usage)                                     e.usage      = 'Requis';
-    if (form.motivation.trim().length < 40)              e.motivation = 'Minimum 40 caractères';
+    if (!form.firstName.trim())                          e.firstName  = t('room.betaPage.form.required');
+    if (!form.lastName.trim())                           e.lastName   = t('room.betaPage.form.required');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email      = t('room.betaPage.form.emailInvalid');
+    if (!form.profile)                                   e.profile    = t('room.betaPage.form.required');
+    if (!form.usage)                                     e.usage      = t('room.betaPage.form.required');
+    if (form.motivation.trim().length < 40)              e.motivation = t('room.betaPage.form.minChars');
     return e;
   }
 
@@ -921,10 +849,10 @@ export default function RoomPageNew() {
         body:JSON.stringify(form),
       });
       const d = await r.json();
-      if (!r.ok) throw new Error(d.error || 'Erreur serveur');
+      if (!r.ok) throw new Error(d.error || t('room.betaPage.form.serverError'));
       setSuccess(true);
     } catch(err) {
-      setApiErr(err.message || 'Une erreur est survenue.');
+      setApiErr(err.message || t('room.betaPage.form.genericError'));
     } finally { setLoading(false); }
   }
 
@@ -940,15 +868,15 @@ export default function RoomPageNew() {
             <span className="dot" /><span className="name">VisiConnect</span>
           </NavBrand>
           <NavLinks>
-            <NL href="#testeurs"    onClick={e => navGo(e,'testeurs')}>Testeurs</NL>
-            <NL href="#changelog"   onClick={e => navGo(e,'changelog')}>Changelog</NL>
-            <NL href="#vague2"      onClick={e => navGo(e,'vague2')}>Vague 2</NL>
-            <NL href="#criteres"    onClick={e => navGo(e,'criteres')}>Critères</NL>
-            <NL href="#candidature" onClick={e => navGo(e,'candidature')}>Candidater</NL>
+            <NL href="#testeurs"    onClick={e => navGo(e,'testeurs')}>{t('room.betaPage.nav.testers')}</NL>
+            <NL href="#changelog"   onClick={e => navGo(e,'changelog')}>{t('room.betaPage.nav.changelog')}</NL>
+            <NL href="#vague2"      onClick={e => navGo(e,'vague2')}>{t('room.betaPage.nav.wave2')}</NL>
+            <NL href="#criteres"    onClick={e => navGo(e,'criteres')}>{t('room.betaPage.nav.criteria')}</NL>
+            <NL href="#candidature" onClick={e => navGo(e,'candidature')}>{t('room.betaPage.nav.apply')}</NL>
           </NavLinks>
           <NavRight>
-            <OpenPill><span className="dot" />15 places ouvertes</OpenPill>
-            <NavCta onClick={() => go('candidature')}><ArrowRight size={14} />Candidater</NavCta>
+            <OpenPill><span className="dot" />{t('room.betaPage.nav.openSpots')}</OpenPill>
+            <NavCta onClick={() => go('candidature')}><ArrowRight size={14} />{t('room.betaPage.nav.apply')}</NavCta>
           </NavRight>
         </NavInner>
       </Nav>
@@ -957,36 +885,33 @@ export default function RoomPageNew() {
       <Hero>
         <HeroWrap>
           <HeroLeft>
-            <Eyebrow><span className="dot" />Rapport honnête · Bêta Vague 1 — Vague 2 ouverte</Eyebrow>
+            <Eyebrow><span className="dot" />{t('room.betaPage.hero.eyebrow')}</Eyebrow>
             <H1>
-              9 testeurs.<br />Rien de caché.<br /><em>Tout documenté.</em>
+              {t('room.betaPage.hero.h1Line1')}<br />{t('room.betaPage.hero.h1Line2')}<br /><em>{t('room.betaPage.hero.h1Line3')}</em>
             </H1>
             <HeroBullets>
-              <HeroBLi><span className="dot" /><strong>3 bugs critiques corrigés</strong> — auth, icônes, onboarding</HeroBLi>
-              <HeroBLi><span className="dot" /><strong>4 correctifs en cours</strong> — chat, flou bg, whiteboard, IA mode complet</HeroBLi>
-              <HeroBLi><span className="dot" /><strong>10+ améliorations planifiées</strong> pour la Vague 2 — toutes issues des retours</HeroBLi>
+              <HeroBLi><span className="dot" /><strong>{t('room.betaPage.hero.bullet1Bold')}</strong>{t('room.betaPage.hero.bullet1Rest')}</HeroBLi>
+              <HeroBLi><span className="dot" /><strong>{t('room.betaPage.hero.bullet2Bold')}</strong>{t('room.betaPage.hero.bullet2Rest')}</HeroBLi>
+              <HeroBLi><span className="dot" /><strong>{t('room.betaPage.hero.bullet3Bold')}</strong>{t('room.betaPage.hero.bullet3Rest')}</HeroBLi>
             </HeroBullets>
-            <HeroP>
-              Chaque retour est ici, mot pour mot, avec ce qu'on a fait ou ce qu'on construit.
-              La Vague 2 ouvre 15 places pour aller encore plus loin.
-            </HeroP>
+            <HeroP>{t('room.betaPage.hero.p')}</HeroP>
             <HeroActions>
-              <BtnPrimary onClick={() => go('candidature')}><Rocket size={15} />Rejoindre la Vague 2</BtnPrimary>
-              <BtnOutline onClick={() => go('changelog')}><ArrowRight size={15} />Voir le changelog complet</BtnOutline>
+              <BtnPrimary onClick={() => go('candidature')}><Rocket size={15} />{t('room.betaPage.hero.ctaPrimary')}</BtnPrimary>
+              <BtnOutline onClick={() => go('changelog')}><ArrowRight size={15} />{t('room.betaPage.hero.ctaSecondary')}</BtnOutline>
             </HeroActions>
           </HeroLeft>
 
           <Panel>
             <PHead>
-              <PTitle>Rapport Bêta · Vague 1</PTitle>
-              <PBadge>Clôturée</PBadge>
+              <PTitle>{t('room.betaPage.panel.title')}</PTitle>
+              <PBadge>{t('room.betaPage.panel.badge')}</PBadge>
             </PHead>
             <PBody>
               {[
-                { l:'Testeurs actifs',    v:'9 / 10',  p:90,  d:.2,  c:C.primary },
-                { l:'Bugs critiques corrigés', v:'3 / 3', p:100, d:.35, c:C.green },
-                { l:'Satisfaction',       v:'4 / 5',   p:80,  d:.5,  c:C.amber   },
-                { l:'Retours détaillés',  v:'3 rapports', p:100, d:.65, c:C.cyan },
+                { l: t('room.betaPage.panel.bar1Label'), v: t('room.betaPage.panel.bar1Value'), p:90,  d:.2,  c:C.primary },
+                { l: t('room.betaPage.panel.bar2Label'), v: t('room.betaPage.panel.bar2Value'), p:100, d:.35, c:C.green },
+                { l: t('room.betaPage.panel.bar3Label'), v: t('room.betaPage.panel.bar3Value'), p:80,  d:.5,  c:C.amber   },
+                { l: t('room.betaPage.panel.bar4Label'), v: t('room.betaPage.panel.bar4Value'), p:100, d:.65, c:C.cyan },
               ].map(m => (
                 <PBar key={m.l}>
                   <PBarTop><span className="l">{m.l}</span><span className="v">{m.v}</span></PBarTop>
@@ -994,10 +919,10 @@ export default function RoomPageNew() {
                 </PBar>
               ))}
               <PMini>
-                <PCell><div className="n">9</div><div className="l">testeurs</div></PCell>
-                <PCell><div className="n">3</div><div className="l">corrigés</div></PCell>
-                <PCell><div className="n">15</div><div className="l">places V2</div></PCell>
-                <PCell><div className="n">4★</div><div className="l">satisfaction</div></PCell>
+                <PCell><div className="n">{t('room.betaPage.panel.cell1n')}</div><div className="l">{t('room.betaPage.panel.cell1l')}</div></PCell>
+                <PCell><div className="n">{t('room.betaPage.panel.cell2n')}</div><div className="l">{t('room.betaPage.panel.cell2l')}</div></PCell>
+                <PCell><div className="n">{t('room.betaPage.panel.cell3n')}</div><div className="l">{t('room.betaPage.panel.cell3l')}</div></PCell>
+                <PCell><div className="n">{t('room.betaPage.panel.cell4n')}</div><div className="l">{t('room.betaPage.panel.cell4l')}</div></PCell>
               </PMini>
             </PBody>
           </Panel>
@@ -1008,10 +933,10 @@ export default function RoomPageNew() {
       <StatsBand>
         <StatsInner>
           {[
-            { n:'9',  sup:'',  l:'testeurs Vague 1',         d:0   },
-            { n:'3',  sup:'',  l:'rapports détaillés reçus', d:80  },
-            { n:'15', sup:'',  l:'places Vague 2',           d:160 },
-            { n:'10', sup:'+', l:'points remontés au total', d:240 },
+            { n:'9',  sup:'',  l: t('room.betaPage.stats.s1l'), d:0   },
+            { n:'3',  sup:'',  l: t('room.betaPage.stats.s2l'), d:80  },
+            { n:'15', sup:'',  l: t('room.betaPage.stats.s3l'), d:160 },
+            { n:'10', sup:'+', l: t('room.betaPage.stats.s4l'), d:240 },
           ].map(s => (
             <StatCell key={s.l} {...rv(s.d)}>
               <StatNum>{s.n}<sup>{s.sup}</sup></StatNum>
@@ -1024,7 +949,7 @@ export default function RoomPageNew() {
       {/* ── TESTEURS ────────────────────────────────── */}
       <TesterBand id="testeurs">
         <TBInner>
-          <TBTitle {...rv(0)}>Les 3 profils qui ont tout testé</TBTitle>
+          <TBTitle {...rv(0)}>{t('room.betaPage.testers.sectionTitle')}</TBTitle>
           <TBGrid>
             {TESTEURS.map((t, i) => (
               <TBCard key={i} $c={t.color} {...rv(i * 90)}>
@@ -1053,11 +978,9 @@ export default function RoomPageNew() {
         <FounderBox {...rv(0)}>
           <FdrAvatar>TG</FdrAvatar>
           <FdrContent>
-            <FdrLabel>Ce que cette bêta m'a appris</FdrLabel>
-            <FdrText>
-              3 testeurs avec des profils très différents ont révélé des problèmes que je ne voyais plus — les déconnexions que je n'avais pas reproduites, les icônes que je ne remettais plus en question, le chat masqué que je testais toujours sur grand écran. Chaque retour m'a forcé à regarder le produit comme un vrai utilisateur. C'est exactement pour ça que la bêta existe, et c'est pour ça que la Vague 2 sera meilleure.
-            </FdrText>
-            <FdrBy>Théo G. · Fondateur VisiConnect · Mai 2026</FdrBy>
+            <FdrLabel>{t('room.betaPage.founder.label')}</FdrLabel>
+            <FdrText>{t('room.betaPage.founder.text')}</FdrText>
+            <FdrBy>{t('room.betaPage.founder.by')}</FdrBy>
           </FdrContent>
         </FounderBox>
       </FounderBand>
@@ -1068,7 +991,7 @@ export default function RoomPageNew() {
           <CLOuter>
             <CLSide>
               <CLSideBox>
-                <CLSideTitle>Journal · Vague 1</CLSideTitle>
+                <CLSideTitle>{t('room.betaPage.changelog.sideTitle')}</CLSideTitle>
                 {CHANGELOG_GROUPS.map(g =>
                   g.entries.map((e, j) => (
                     <CLSideItem key={j} $c={g.color}>
@@ -1081,12 +1004,9 @@ export default function RoomPageNew() {
             </CLSide>
 
             <div>
-              <SecEyebrow {...rv(0)}>Changelog honnête · Bêta Vague 1</SecEyebrow>
-              <SecH {...rv(60)}>Vos mots exacts.<br />Nos actions concrètes.</SecH>
-              <SecSub {...rv(120)}>
-                10 points remontés. 3 corrigés. 4 en cours. 3 planifiés pour la Vague 2.
-                Aucune reformulation — les citations sont verbatim.
-              </SecSub>
+              <SecEyebrow {...rv(0)}>{t('room.betaPage.changelog.eyebrow')}</SecEyebrow>
+              <SecH {...rv(60)}>{t('room.betaPage.changelog.titleLine1')}<br />{t('room.betaPage.changelog.titleLine2')}</SecH>
+              <SecSub {...rv(120)}>{t('room.betaPage.changelog.sub')}</SecSub>
 
               <CLGroups>
                 {CHANGELOG_GROUPS.map((g, gi) => (
@@ -1123,14 +1043,14 @@ export default function RoomPageNew() {
       {/* ── COMPARE ─────────────────────────────────── */}
       <SecAlt>
         <W>
-          <SecEyebrow {...rv(0)}>Avant / Après</SecEyebrow>
-          <SecH {...rv(60)}>Ce qui existait. Ce qui arrive.</SecH>
-          <SecSub {...rv(120)}>Chaque ligne de cette table est issue d'un retour testeur.</SecSub>
+          <SecEyebrow {...rv(0)}>{t('room.betaPage.compare.eyebrow')}</SecEyebrow>
+          <SecH {...rv(60)}>{t('room.betaPage.compare.title')}</SecH>
+          <SecSub {...rv(120)}>{t('room.betaPage.compare.sub')}</SecSub>
           <CmpWrap {...rv(180)}>
             <CmpHead>
-              <CmpH>Fonctionnalité</CmpH>
-              <CmpH>Vague 1</CmpH>
-              <CmpH $hi>Vague 2</CmpH>
+              <CmpH>{t('room.betaPage.compare.colFeat')}</CmpH>
+              <CmpH>{t('room.betaPage.compare.colV1')}</CmpH>
+              <CmpH $hi>{t('room.betaPage.compare.colV2')}</CmpH>
             </CmpHead>
             {COMPARE_ROWS.map((r, i) => (
               <CmpRow key={i}>
@@ -1146,12 +1066,9 @@ export default function RoomPageNew() {
       {/* ── FEATURES VAGUE 2 ────────────────────────── */}
       <Sec id="vague2">
         <W>
-          <SecEyebrow {...rv(0)}>Vague 2</SecEyebrow>
-          <SecH {...rv(60)}>Construit sur vos retours</SecH>
-          <SecSub {...rv(120)}>
-            Chaque fonctionnalité ci-dessous a une origine directe dans les rapports de la Vague 1.
-            Pas de roadmap inventée — des vrais problèmes, des vraies solutions.
-          </SecSub>
+          <SecEyebrow {...rv(0)}>{t('room.betaPage.features.eyebrow')}</SecEyebrow>
+          <SecH {...rv(60)}>{t('room.betaPage.features.title')}</SecH>
+          <SecSub {...rv(120)}>{t('room.betaPage.features.sub')}</SecSub>
           <Bento>
             {FEATURES.map((f, i) => (
               <BCard key={i} $a={f.accent} $wide={f.wide} {...rv(i * 70)}>
@@ -1172,24 +1089,18 @@ export default function RoomPageNew() {
         <W>
           <CGrid>
             <div>
-              <SecEyebrow {...rv(0)}>Sélection</SecEyebrow>
-              <SecH {...rv(60)}>Ce que je cherche<br />dans la Vague 2</SecH>
-              <SecSub {...rv(120)}>
-                15 places. Des critères honnêtes, pas une loterie.
-                Si vous cochez ces trois points, votre dossier a toutes ses chances.
-              </SecSub>
+              <SecEyebrow {...rv(0)}>{t('room.betaPage.criteria.eyebrow')}</SecEyebrow>
+              <SecH {...rv(60)}>{t('room.betaPage.criteria.titleLine1')}<br />{t('room.betaPage.criteria.titleLine2')}</SecH>
+              <SecSub {...rv(120)}>{t('room.betaPage.criteria.sub')}</SecSub>
               <div {...rv(200)} style={{ display:'flex', alignItems:'center', gap:'.5rem', fontSize:'.8rem', color:C.muted }}>
-                <Clock size={13} />Durée estimée : 4 à 6 semaines
+                <Clock size={13} />{t('room.betaPage.criteria.duration')}
               </div>
             </div>
             <CItems>
               {[
-                { n:'01', c:C.green,   title:'Engagement régulier',
-                  desc:'Revenir d\'une semaine à l\'autre. Utiliser le produit même imparfait. La Vague 1 a montré que les retours les plus utiles venaient des testeurs qui utilisaient vraiment l\'outil, pas ceux qui l\'ont ouvert une fois.' },
-                { n:'02', c:C.amber,   title:'Retours structurés',
-                  desc:'Pas besoin d\'être développeur. Mais reproduire le bug, décrire le contexte, donner son environnement (OS, navigateur, version) — c\'est ce que les testeurs de la Vague 1 ont fait, et c\'est ce qui a permis de corriger les bugs en 48h.' },
-                { n:'03', c:C.primary, title:'Cas d\'usage réel',
-                  desc:'Startup, agence, freelance, enseignant — un contexte concret. Les 3 testeurs de la Vague 1 avaient des profils très différents : c\'est exactement ce qui a rendu leurs retours complémentaires et précieux.' },
+                { n: t('room.betaPage.criteria.c1n'), c:C.green,   title: t('room.betaPage.criteria.c1Title'), desc: t('room.betaPage.criteria.c1Desc') },
+                { n: t('room.betaPage.criteria.c2n'), c:C.amber,   title: t('room.betaPage.criteria.c2Title'), desc: t('room.betaPage.criteria.c2Desc') },
+                { n: t('room.betaPage.criteria.c3n'), c:C.primary, title: t('room.betaPage.criteria.c3Title'), desc: t('room.betaPage.criteria.c3Desc') },
               ].map((c, i) => (
                 <CCard key={i} $c={c.c} {...rv(i * 100)}>
                   <CNum $c={c.c}>{c.n}</CNum>
@@ -1206,11 +1117,11 @@ export default function RoomPageNew() {
         <W>
           <div style={{ maxWidth:820, margin:'0 auto 2.25rem', textAlign:'center' }}>
             <SecEyebrow {...rv(0)} style={{ justifyContent:'center','--d':'0ms' }}>
-              <Sparkles size={11} />Candidature ouverte
+              <Sparkles size={11} />{t('room.betaPage.form.eyebrow')}
             </SecEyebrow>
-            <SecH {...rv(60)} style={{ textAlign:'center' }}>Rejoindre la Vague 2</SecH>
+            <SecH {...rv(60)} style={{ textAlign:'center' }}>{t('room.betaPage.form.title')}</SecH>
             <SecSub {...rv(120)} style={{ margin:'0 auto', textAlign:'center', maxWidth:460 }}>
-              Dossier lu personnellement · Réponse sous 72h · 15 places
+              {t('room.betaPage.form.sub')}
             </SecSub>
           </div>
 
@@ -1218,22 +1129,22 @@ export default function RoomPageNew() {
             {success ? (
               <OkWrap>
                 <OkRing><CheckCircle2 size={28} /></OkRing>
-                <OkH>Candidature envoyée !</OkH>
-                <OkP>Merci. Je lis chaque dossier personnellement<br />et je vous recontacte sous 72h.</OkP>
+                <OkH>{t('room.betaPage.form.successTitle')}</OkH>
+                <OkP>{t('room.betaPage.form.successP')}</OkP>
                 <BtnPrimary onClick={() => navigate('/')} style={{ marginTop:'.5rem' }}>
-                  <ArrowLeft size={14} />Retour à l'accueil
+                  <ArrowLeft size={14} />{t('room.betaPage.form.backHome')}
                 </BtnPrimary>
               </OkWrap>
             ) : (
               <>
                 <FHead>
                   <div>
-                    <FHTitle>Formulaire de candidature</FHTitle>
-                    <FHSub>Vague 2 · sélection en cours</FHSub>
+                    <FHTitle>{t('room.betaPage.form.formTitle')}</FHTitle>
+                    <FHSub>{t('room.betaPage.form.formSub')}</FHSub>
                   </div>
                   <SlotBox>
                     <Clock size={12} />
-                    <span><span>15</span> places · {new Date().toLocaleDateString('fr-FR',{month:'long',year:'numeric'})}</span>
+                    <span><span>15</span> {t('room.betaPage.form.slotLabel')} · {new Date().toLocaleDateString('fr-FR',{month:'long',year:'numeric'})}</span>
                   </SlotBox>
                 </FHead>
 
@@ -1243,20 +1154,20 @@ export default function RoomPageNew() {
 
                     <FRow $c="1fr 1fr">
                       <FG>
-                        <Lbl>Prénom<Req>*</Req></Lbl>
-                        <Inp $e={errors.firstName} value={form.firstName} onChange={ev=>field('firstName',ev.target.value)} placeholder="Votre prénom" />
+                        <Lbl>{t('room.betaPage.form.firstNameLbl')}<Req>*</Req></Lbl>
+                        <Inp $e={errors.firstName} value={form.firstName} onChange={ev=>field('firstName',ev.target.value)} placeholder={t('room.betaPage.form.firstNamePh')} />
                         {errors.firstName && <FHint $e>{errors.firstName}</FHint>}
                       </FG>
                       <FG>
-                        <Lbl>Nom<Req>*</Req></Lbl>
-                        <Inp $e={errors.lastName} value={form.lastName} onChange={ev=>field('lastName',ev.target.value)} placeholder="Votre nom" />
+                        <Lbl>{t('room.betaPage.form.lastNameLbl')}<Req>*</Req></Lbl>
+                        <Inp $e={errors.lastName} value={form.lastName} onChange={ev=>field('lastName',ev.target.value)} placeholder={t('room.betaPage.form.lastNamePh')} />
                         {errors.lastName && <FHint $e>{errors.lastName}</FHint>}
                       </FG>
                     </FRow>
 
                     <FRow>
                       <FG>
-                        <Lbl>Email<Req>*</Req></Lbl>
+                        <Lbl>{t('room.betaPage.form.emailLbl')}<Req>*</Req></Lbl>
                         <Inp type="email" $e={errors.email} value={form.email} onChange={ev=>field('email',ev.target.value)} placeholder="votre@email.com" />
                         {errors.email && <FHint $e>{errors.email}</FHint>}
                       </FG>
@@ -1264,26 +1175,26 @@ export default function RoomPageNew() {
 
                     <FRow $c="1fr 1fr">
                       <FG>
-                        <Lbl>Profil<Req>*</Req></Lbl>
+                        <Lbl>{t('room.betaPage.form.profileLbl')}<Req>*</Req></Lbl>
                         <Sel $e={errors.profile} value={form.profile} onChange={ev=>field('profile',ev.target.value)}>
-                          <option value="">Sélectionner…</option>
-                          <option value="developer">Développeur·se</option>
-                          <option value="designer">Designer UX/UI</option>
-                          <option value="pm">Product Manager</option>
-                          <option value="founder">Fondateur·trice</option>
-                          <option value="other">Autre</option>
+                          <option value="">{t('room.betaPage.form.profilePh')}</option>
+                          <option value="developer">{t('room.betaPage.form.profileDev')}</option>
+                          <option value="designer">{t('room.betaPage.form.profileDesigner')}</option>
+                          <option value="pm">{t('room.betaPage.form.profilePM')}</option>
+                          <option value="founder">{t('room.betaPage.form.profileFounder')}</option>
+                          <option value="other">{t('room.betaPage.form.profileOther')}</option>
                         </Sel>
                         {errors.profile && <FHint $e>{errors.profile}</FHint>}
                       </FG>
                       <FG>
-                        <Lbl>Usage principal<Req>*</Req></Lbl>
+                        <Lbl>{t('room.betaPage.form.usageLbl')}<Req>*</Req></Lbl>
                         <Sel $e={errors.usage} value={form.usage} onChange={ev=>field('usage',ev.target.value)}>
-                          <option value="">Sélectionner…</option>
-                          <option value="team-meetings">Réunions d'équipe</option>
-                          <option value="client-calls">Appels clients</option>
-                          <option value="education">Enseignement / formation</option>
-                          <option value="dev-collab">Collaboration dev</option>
-                          <option value="other">Autre</option>
+                          <option value="">{t('room.betaPage.form.usagePh')}</option>
+                          <option value="team-meetings">{t('room.betaPage.form.usageTeam')}</option>
+                          <option value="client-calls">{t('room.betaPage.form.usageClient')}</option>
+                          <option value="education">{t('room.betaPage.form.usageEdu')}</option>
+                          <option value="dev-collab">{t('room.betaPage.form.usageDev')}</option>
+                          <option value="other">{t('room.betaPage.form.usageOther')}</option>
                         </Sel>
                         {errors.usage && <FHint $e>{errors.usage}</FHint>}
                       </FG>
@@ -1291,7 +1202,7 @@ export default function RoomPageNew() {
 
                     <FRow>
                       <FG>
-                        <Lbl>Outils utilisés au quotidien</Lbl>
+                        <Lbl>{t('room.betaPage.form.toolsLbl')}</Lbl>
                         <CWrap>
                           {TOOLS.map(t => (
                             <Chip key={t} type="button" $on={form.tools.includes(t)} onClick={()=>toggle(t)}>{t}</Chip>
@@ -1304,25 +1215,25 @@ export default function RoomPageNew() {
 
                     <FRow>
                       <FG>
-                        <Lbl>Pourquoi rejoindre la Vague 2 ?<Req>*</Req></Lbl>
+                        <Lbl>{t('room.betaPage.form.motivationLbl')}<Req>*</Req></Lbl>
                         <Txt
                           $e={errors.motivation}
                           value={form.motivation}
                           rows={5}
                           onChange={ev=>field('motivation',ev.target.value)}
-                          placeholder="Décrivez votre contexte, votre usage et ce que vous apporteriez comme testeur. Soyez concret — OS, navigateur, cas d'usage réel…"
+                          placeholder={t('room.betaPage.form.motivationPh')}
                         />
                         <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
-                          {errors.motivation ? <FHint $e>{errors.motivation}</FHint> : <FHint>Minimum 40 caractères. Contexte concret apprécié.</FHint>}
+                          {errors.motivation ? <FHint $e>{errors.motivation}</FHint> : <FHint>{t('room.betaPage.form.motivationHint')}</FHint>}
                           <CharCnt $ok={form.motivation.trim().length>=40}>{form.motivation.trim().length}&nbsp;/&nbsp;40+</CharCnt>
                         </div>
                       </FG>
                     </FRow>
 
                     <BotRow>
-                      <SecNote><Shield size={12} />Données confidentielles — aucune revente.</SecNote>
+                      <SecNote><Shield size={12} />{t('room.betaPage.form.privacy')}</SecNote>
                       <SubBtn type="submit" disabled={loading}>
-                        {loading ? <><SpinI size={15}/>Envoi…</> : <><Send size={15}/>Envoyer ma candidature</>}
+                        {loading ? <><SpinI size={15}/>{t('room.betaPage.form.sending')}</> : <><Send size={15}/>{t('room.betaPage.form.submit')}</>}
                       </SubBtn>
                     </BotRow>
                   </form>
@@ -1338,9 +1249,9 @@ export default function RoomPageNew() {
         <FootInner>
           <FootLogo><span className="d" />VisiConnect</FootLogo>
           <FootLinks>
-            <FootLink onClick={()=>navigate('/legal/privacy')}>Confidentialité</FootLink>
-            <FootLink onClick={()=>navigate('/legal/terms')}>CGU</FootLink>
-            <FootLink onClick={()=>navigate('/contact')}>Contact</FootLink>
+            <FootLink onClick={()=>navigate('/legal/privacy')}>{t('room.betaPage.footer.privacy')}</FootLink>
+            <FootLink onClick={()=>navigate('/legal/terms')}>{t('room.betaPage.footer.terms')}</FootLink>
+            <FootLink onClick={()=>navigate('/contact')}>{t('room.betaPage.footer.contact')}</FootLink>
           </FootLinks>
           <FootCopy>© {new Date().getFullYear()} VisiConnect</FootCopy>
         </FootInner>
