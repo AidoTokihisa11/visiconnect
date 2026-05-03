@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { useSafeLayout } from '../hooks/useSafeLayout';
 import { useTranslation } from '../hooks/useTranslation';
+import LanguageSelector from '../components/LanguageSelector';
 
 /* ═══════════════════════════════════════════════════════════
    PALETTE — 100 % clair, zéro fond sombre
@@ -875,6 +876,7 @@ export default function RoomPageNew() {
             <NL href="#candidature" onClick={e => navGo(e,'candidature')}>{t('room.betaPage.nav.apply')}</NL>
           </NavLinks>
           <NavRight>
+            <LanguageSelector />
             <OpenPill><span className="dot" />{t('room.betaPage.nav.openSpots')}</OpenPill>
             <NavCta onClick={() => go('candidature')}><ArrowRight size={14} />{t('room.betaPage.nav.apply')}</NavCta>
           </NavRight>
