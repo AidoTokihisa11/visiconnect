@@ -2432,7 +2432,8 @@
         "successP": "Gracias. Reviso cada candidatura personalmente\ny le responderé en 72h.",
         "backHome": "Volver al inicio",
         "serverError": "Error del servidor",
-        "genericError": "Ocurrió un error."
+        "genericError": "Ocurrió un error.",
+        "otherPh": "Especifica…"
       },
       "footer": {
         "privacy": "Privacidad",

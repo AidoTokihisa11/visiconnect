@@ -2212,7 +2212,7 @@
       "founder": {
         "label": "Ce que cette bêta m'a appris",
         "text": "3 testeurs avec des profils très différents ont révélé des problèmes que je ne voyais plus — les déconnexions que je n'avais pas reproduites, les icônes que je ne remettais plus en question, le chat masqué que je testais toujours sur grand écran. Chaque retour m'a forcé à regarder le produit comme un vrai utilisateur. C'est exactement pour ça que la bêta existe, et c'est pour ça que la Vague 2 sera meilleure.",
-        "by": "Théo G. · Fondateur VisiConnect · Mai 2026"
+        "by": "Théo G. · Fondateur VisioConnect · Mai 2026"
       },
       "changelog": {
         "sideTitle": "Journal · Vague 1",
@@ -2396,7 +2396,8 @@
         "successP": "Merci. Je lis chaque dossier personnellement\net je vous recontacte sous 72h.",
         "backHome": "Retour à l'accueil",
         "serverError": "Erreur serveur",
-        "genericError": "Une erreur est survenue."
+        "genericError": "Une erreur est survenue.",
+        "otherPh": "Précisez…"
       },
       "footer": {
         "privacy": "Confidentialité",

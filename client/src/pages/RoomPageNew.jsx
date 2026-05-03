@@ -794,7 +794,7 @@ export default function RoomPageNew() {
 
   const [pct,     setPct]     = useState(0);
   const [navUp,   setNavUp]   = useState(false);
-  const [form,    setForm]    = useState({ firstName:'', lastName:'', email:'', profile:'', usage:'', tools:[], motivation:'' });
+  const [form,    setForm]    = useState({ firstName:'', lastName:'', email:'', profile:'', profileCustom:'', usage:'', usageCustom:'', tools:[], motivation:'' });
   const [errors,  setErrors]  = useState({});
   const [apiErr,  setApiErr]  = useState('');
   const [loading, setLoading] = useState(false);
@@ -834,7 +834,9 @@ export default function RoomPageNew() {
     if (!form.lastName.trim())                           e.lastName   = t('room.betaPage.form.required');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email      = t('room.betaPage.form.emailInvalid');
     if (!form.profile)                                   e.profile    = t('room.betaPage.form.required');
+    if (form.profile === 'other' && !form.profileCustom.trim()) e.profileCustom = t('room.betaPage.form.required');
     if (!form.usage)                                     e.usage      = t('room.betaPage.form.required');
+    if (form.usage === 'other' && !form.usageCustom.trim())     e.usageCustom   = t('room.betaPage.form.required');
     if (form.motivation.trim().length < 40)              e.motivation = t('room.betaPage.form.minChars');
     return e;
   }
@@ -866,7 +868,7 @@ export default function RoomPageNew() {
       <Nav $up={navUp}>
         <NavInner>
           <NavBrand onClick={() => navigate('/')}>
-            <span className="dot" /><span className="name">VisiConnect</span>
+            <span className="dot" /><span className="name">VisioConnect</span>
           </NavBrand>
           <NavLinks>
             <NL href="#testeurs"    onClick={e => navGo(e,'testeurs')}>{t('room.betaPage.nav.testers')}</NL>
@@ -1186,7 +1188,17 @@ export default function RoomPageNew() {
                           <option value="founder">{t('room.betaPage.form.profileFounder')}</option>
                           <option value="other">{t('room.betaPage.form.profileOther')}</option>
                         </Sel>
+                        {form.profile === 'other' && (
+                          <Inp
+                            style={{ marginTop:'.5rem' }}
+                            $e={errors.profileCustom}
+                            value={form.profileCustom}
+                            onChange={ev=>field('profileCustom', ev.target.value)}
+                            placeholder={t('room.betaPage.form.otherPh')}
+                          />
+                        )}
                         {errors.profile && <FHint $e>{errors.profile}</FHint>}
+                        {errors.profileCustom && <FHint $e>{errors.profileCustom}</FHint>}
                       </FG>
                       <FG>
                         <Lbl>{t('room.betaPage.form.usageLbl')}<Req>*</Req></Lbl>
@@ -1198,7 +1210,17 @@ export default function RoomPageNew() {
                           <option value="dev-collab">{t('room.betaPage.form.usageDev')}</option>
                           <option value="other">{t('room.betaPage.form.usageOther')}</option>
                         </Sel>
+                        {form.usage === 'other' && (
+                          <Inp
+                            style={{ marginTop:'.5rem' }}
+                            $e={errors.usageCustom}
+                            value={form.usageCustom}
+                            onChange={ev=>field('usageCustom', ev.target.value)}
+                            placeholder={t('room.betaPage.form.otherPh')}
+                          />
+                        )}
                         {errors.usage && <FHint $e>{errors.usage}</FHint>}
+                        {errors.usageCustom && <FHint $e>{errors.usageCustom}</FHint>}
                       </FG>
                     </FRow>
 
@@ -1249,13 +1271,13 @@ export default function RoomPageNew() {
       {/* ── FOOTER ──────────────────────────────────── */}
       <Footer>
         <FootInner>
-          <FootLogo><span className="d" />VisiConnect</FootLogo>
+          <FootLogo><span className="d" />VisioConnect</FootLogo>
           <FootLinks>
             <FootLink onClick={()=>navigate('/legal/privacy')}>{t('room.betaPage.footer.privacy')}</FootLink>
             <FootLink onClick={()=>navigate('/legal/terms')}>{t('room.betaPage.footer.terms')}</FootLink>
             <FootLink onClick={()=>navigate('/contact')}>{t('room.betaPage.footer.contact')}</FootLink>
           </FootLinks>
-          <FootCopy>© {new Date().getFullYear()} VisiConnect</FootCopy>
+          <FootCopy>© {new Date().getFullYear()} VisioConnect</FootCopy>
         </FootInner>
       </Footer>
     </Page>

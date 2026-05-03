@@ -2399,7 +2399,8 @@
         "successP": "Thank you. I personally read every application\nand will get back to you within 72h.",
         "backHome": "Back to home",
         "serverError": "Server error",
-        "genericError": "An error occurred."
+        "genericError": "An error occurred.",
+        "otherPh": "Please specify…"
       },
       "footer": {
         "privacy": "Privacy",

@@ -26,7 +26,7 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method Not Allowed' });
 
-  const { firstName, lastName, email, profile, usage, tools, motivation } = req.body || {};
+  const { firstName, lastName, email, profile, profileCustom, usage, usageCustom, tools, motivation } = req.body || {};
 
   // Validation
   if (!firstName || typeof firstName !== 'string' || !firstName.trim()) {
@@ -41,8 +41,14 @@ module.exports = async function handler(req, res) {
   if (!profile || !PROFILE_LABELS[profile]) {
     return res.status(400).json({ error: 'Profil invalide.' });
   }
+  if (profile === 'other' && (!profileCustom || !profileCustom.trim())) {
+    return res.status(400).json({ error: 'Veuillez préciser votre profil.' });
+  }
   if (!usage || !USAGE_LABELS[usage]) {
     return res.status(400).json({ error: 'Usage invalide.' });
+  }
+  if (usage === 'other' && (!usageCustom || !usageCustom.trim())) {
+    return res.status(400).json({ error: 'Veuillez préciser votre usage.' });
   }
   if (!motivation || typeof motivation !== 'string' || motivation.trim().length < 40) {
     return res.status(400).json({ error: 'Motivation trop courte (40 caractères minimum).' });
@@ -51,8 +57,8 @@ module.exports = async function handler(req, res) {
   const fullName = `${firstName.trim()} ${lastName.trim()}`;
   const cleanEmail = email.trim().toLowerCase();
   const toolsStr = Array.isArray(tools) && tools.length > 0 ? tools.join(', ') : 'Aucun / pas encore';
-  const profileLabel = PROFILE_LABELS[profile];
-  const usageLabel = USAGE_LABELS[usage];
+  const profileLabel = profile === 'other' ? profileCustom.trim() : PROFILE_LABELS[profile];
+  const usageLabel   = usage   === 'other' ? usageCustom.trim()   : USAGE_LABELS[usage];
   const cleanMotivation = motivation.trim();
 
   const resend = new Resend(process.env.RESEND_API_KEY || 're_f7CXkPZ1_FouifSQZycKkbcStAoZkGgW8');

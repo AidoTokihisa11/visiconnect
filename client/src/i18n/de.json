@@ -2397,7 +2397,8 @@
         "successP": "Danke. Ich lese jede Bewerbung persönlich\nund melde mich innerhalb von 72h.",
         "backHome": "Zurück zur Startseite",
         "serverError": "Serverfehler",
-        "genericError": "Ein Fehler ist aufgetreten."
+        "genericError": "Ein Fehler ist aufgetreten.",
+        "otherPh": "Bitte angeben…"
       },
       "footer": {
         "privacy": "Datenschutz",
