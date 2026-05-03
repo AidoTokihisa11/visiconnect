@@ -3,19 +3,19 @@ const { Resend } = require('resend');
 const OWNER_EMAIL = 'theo.garces.aido@gmail.com';
 
 const PROFILE_LABELS = {
-  student: 'Étudiant(e)',
-  developer: 'Développeur / Tech',
-  designer: 'Designer / Créatif',
-  manager: 'Manager / Chef de projet',
-  freelance: 'Freelance / Auto-entrepreneur',
-  other: 'Autre',
+  developer: 'Développeur·se',
+  designer:  'Designer UX/UI',
+  pm:        'Product Manager',
+  founder:   'Fondateur·trice',
+  other:     'Autre',
 };
 
 const USAGE_LABELS = {
-  personal: 'Appels personnels (famille, amis)',
-  professional: 'Réunions professionnelles',
-  team: 'Travail en équipe / PME',
-  education: 'Cours / Formation en ligne',
+  'team-meetings': 'Réunions d\'équipe',
+  'client-calls':  'Appels clients',
+  'education':     'Enseignement / formation',
+  'dev-collab':    'Collaboration dev',
+  'other':         'Autre',
 };
 
 module.exports = async function handler(req, res) {
