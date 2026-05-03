@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from 'react';
-import { useUser, useAuth as useClerkAuth, useClerk, useSignIn, useSignUp } from '@clerk/react';
+import { useUser, useAuth as useClerkAuth, useSignIn, useSignUp } from '@clerk/react';
 import { useConvexAuth } from 'convex/react';
 
 const AuthContext = createContext({});
@@ -15,10 +15,9 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
   const { isSignedIn, signOut, isLoaded: isAuthLoaded } = useClerkAuth();
-  const clerk = useClerk();
-  const { signIn: clerkSignIn, setActive: setSignInActive } = useSignIn();
-  const { signUp: clerkSignUp, setActive: setSignUpActive } = useSignUp();
-  const { isAuthenticated: isConvexAuthed, isLoading: isConvexLoading } = useConvexAuth();
+  const { signIn: clerkSignIn } = useSignIn();
+  const { signUp: clerkSignUp } = useSignUp();
+  const { isLoading: isConvexLoading } = useConvexAuth();
 
   const isLoggedIn = !!isSignedIn;
 
@@ -38,15 +37,18 @@ export const AuthProvider = ({ children }) => {
     return err.errors?.[0]?.message || err.message || "Une erreur est survenue avec l'authentification.";
   };
 
-  // Implémentation via l'objet client global (Clerk instance) pour éviter les hooks asynchrones bloquants
+  // Nouvelle API Clerk Core 3 : signIn.sso() remplace authenticateWithRedirect()
   const signInWithProvider = async (provider) => {
     if (!clerkSignIn) return { error: { message: "Clerk n'est pas prêt." } };
     try {
-      await clerkSignIn.authenticateWithRedirect({
+      const { error } = await clerkSignIn.sso({
         strategy: `oauth_${provider}`,
-        redirectUrl: '/sso-callback',
-        redirectUrlComplete: '/'
+        redirectCallbackUrl: '/sso-callback',
+        redirectUrl: '/'
       });
+      if (error) {
+        return { error: { message: error.errors?.[0]?.message || error.message || "Erreur OAuth." } };
+      }
       return { success: true };
     } catch (err) {
       console.error(err);
@@ -58,61 +60,76 @@ export const AuthProvider = ({ children }) => {
   const signInWithGithub = () => signInWithProvider('github');
   const signInWithDiscord = () => signInWithProvider('discord');
 
+  // Nouvelle API Clerk Core 3 : signIn.password() + signIn.finalize()
   const signInWithEmail = async (email, password) => {
     if (!clerkSignIn) return { error: { message: "Clerk n'est pas prêt." } };
     try {
-      const res = await clerkSignIn.create({ identifier: email, password });
-      if (res.status === "complete") {
-        await setSignInActive({ session: res.createdSessionId });
-        return { data: { user: res }, success: true };
+      const { error } = await clerkSignIn.password({ emailAddress: email, password });
+      if (error) {
+        const code = error.errors?.[0]?.code;
+        if (code === 'form_password_incorrect') {
+          return { error: { message: "Mot de passe incorrect." } };
+        }
+        return { error: { message: error.errors?.[0]?.message || "Identifiants incorrects." } };
       }
-      if (res.status === "needs_second_factor") {
+      if (clerkSignIn.status === "complete") {
+        await clerkSignIn.finalize();
+        return { data: { user: clerkSignIn }, success: true };
+      }
+      if (clerkSignIn.status === "needs_second_factor") {
         return { error: { message: "Votre compte a la double authentification (2FA) activée. Veuillez désactiver le 2FA depuis les paramètres de votre compte, ou contactez le support." } };
       }
-      if (res.status === "needs_first_factor") {
+      if (clerkSignIn.status === "needs_first_factor") {
         return { error: { message: "Ce compte utilise une connexion sociale (Google, GitHub...). Veuillez utiliser le bouton de connexion sociale correspondant." } };
       }
-      return { error: { message: `Connexion incomplète (statut: ${res.status}). Veuillez réessayer ou contacter le support.` } };
+      return { error: { message: `Connexion incomplète (statut: ${clerkSignIn.status}). Veuillez réessayer ou contacter le support.` } };
     } catch (err) {
       return { error: { message: handleNetworkError(err) } };
     }
   };
 
+  // Nouvelle API Clerk Core 3 : signUp.password() + signUp.verifications.sendEmailCode()
   const signUpWithEmail = async (email, password) => {
     if (!clerkSignUp) return { error: { message: "Clerk n'est pas prêt." } };
     try {
-      // create() retourne la ressource SignUp fraîche avec toutes ses méthodes
-      const resource = await clerkSignUp.create({ emailAddress: email, password });
-
-      if (resource.status === "complete") {
-        await setSignUpActive({ session: resource.createdSessionId });
-        return { data: { user: resource }, success: true };
+      const { error } = await clerkSignUp.password({ emailAddress: email, password });
+      if (error) {
+        return { error: { message: error.errors?.[0]?.message || "Erreur lors de l'inscription." } };
       }
 
-      // Appel immédiat sur la ressource retournée — pas de re-render React entre les deux
-      await resource.prepareEmailAddressVerification({ strategy: "email_code" });
+      if (clerkSignUp.status === "complete") {
+        await clerkSignUp.finalize();
+        return { data: { user: clerkSignUp }, success: true };
+      }
+
+      // Envoi du code de vérification par email
+      await clerkSignUp.verifications.sendEmailCode();
       return { data: { requiresVerification: true, email }, success: true };
     } catch (err) {
       return { error: { message: handleNetworkError(err) } };
     }
   };
 
+  // Nouvelle API Clerk Core 3 : signUp.verifications.verifyEmailCode() + signUp.finalize()
   const verifyEmailCode = async (code) => {
     if (!clerkSignUp) return { error: { message: "Clerk n'est pas prêt." } };
     try {
-      const res = await clerkSignUp.attemptEmailAddressVerification({ code });
-      
-      if (res.status === "complete") {
-        await setSignUpActive({ session: res.createdSessionId });
-        return { data: { user: res }, success: true };
-      } else if (res.status === "missing_requirements") {
-        const missing = res.missingFields ? res.missingFields.join(", ") : "inconnu";
+      const { error } = await clerkSignUp.verifications.verifyEmailCode({ code });
+      if (error) {
+        return { error: { message: error.errors?.[0]?.message || "Code incorrect ou expiré." } };
+      }
+
+      if (clerkSignUp.status === "complete") {
+        await clerkSignUp.finalize();
+        return { data: { user: clerkSignUp }, success: true };
+      } else if (clerkSignUp.status === "missing_requirements") {
+        const missing = clerkSignUp.missingFields ? clerkSignUp.missingFields.join(", ") : "inconnu";
         return { 
           error: { 
             message: `Le code est valide, mais certains champs obligatoires sont configurés dans votre panel Clerk : [ ${missing} ]. Allez dans Clerk Dashboard → User & Authentication → Email, Phone, Username et passez ces champs en "Optionnel".`
           } 
         };
-      } else if (res.status === "abandoned") {
+      } else if (clerkSignUp.status === "abandoned") {
         return { error: { message: "La session d'inscription a expiré. Veuillez recommencer l'inscription depuis le début." } };
       } else {
         return { error: { message: "Vérification incomplète. Veuillez réessayer ou recommencer l'inscription." } };
