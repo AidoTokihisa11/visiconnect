@@ -18,7 +18,6 @@ import {
 
 export const MeetingInviteEmail = ({
   inviteeName = "Testeur",
-  betaCode = "VC-XXXX-XXXX",
 }) => {
   return (
     <Html lang="fr">
@@ -45,7 +44,7 @@ export const MeetingInviteEmail = ({
           fontStyle="normal"
         />
       </Head>
-      <Preview>🔑 Votre accès bêta VisioConnect est actif — Code : {betaCode}</Preview>
+      <Preview>🎉 Tu fais partie de la Bêta Privée VisioConnect — lis le guide avant tout</Preview>
 
       <Body style={bodyStyle}>
         <Container style={containerStyle}>
@@ -87,7 +86,7 @@ export const MeetingInviteEmail = ({
                 </td>
                 <td style={greetingTextCell}>
                   <Text style={greetingLineStyle}>Bonjour {inviteeName},</Text>
-                  <Text style={greetingSubStyle}>Bienvenue dans la bêta officielle de VisioConnect.</Text>
+                  <Text style={greetingSubStyle}>Tu as été sélectionné(e) parmi les 15 testeurs officiels de la bêta privée.</Text>
                 </td>
               </tr>
             </table>
@@ -97,32 +96,34 @@ export const MeetingInviteEmail = ({
 
             {/* ── INTRO ── */}
             <Text style={introText}>
-              Vous faites partie des <strong style={{ color: '#1d4ed8' }}>premiers testeurs officiels</strong> sélectionnés par l'équipe VisioConnect. Votre code d'accès nominatif ci-dessous vous donne accès à la réunion <strong style={{ color: '#1d4ed8' }}>Point de Synchronisation</strong>.
+              Tu fais partie des <strong style={{ color: '#1d4ed8' }}>15 personnes soigneusement sélectionnées</strong> pour tester VisioConnect avant son lancement public. Ce projet, c'est <strong>3 ans de travail</strong> — matin, midi et soir — et tes retours sont une condition directe de validation de mon diplôme.
+            </Text>
+            <Text style={introText}>
+              <strong>Une seule règle :</strong> lis le guide PDF en pièce jointe <strong>du début à la fin</strong> avant de commencer. Il contient tout ce dont tu as besoin, étape par étape.
             </Text>
 
             {/* ════════════════════════════════
-                BLOC CODE BÊTA — CENTRAL
+                BLOC SÉLECTION BÊTA
             ════════════════════════════════ */}
             <Section style={codeWrapperStyle}>
-              {/* Étiquette */}
               <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" style={{ borderCollapse: 'collapse' }}>
                 <tr>
                   <td style={{ textAlign: 'center', paddingBottom: '14px' }}>
                     <div style={codeLabelStyle}>
-                      <span style={codeLabelTextStyle}>🔑 VOTRE CODE D'ACCÈS BÊTA</span>
+                      <span style={codeLabelTextStyle}>🎯 BÊTA PRIVÉE — 15 PERSONNES SÉLECTIONNÉES</span>
                     </div>
                   </td>
                 </tr>
                 <tr>
                   <td style={{ textAlign: 'center', paddingBottom: '10px' }}>
                     <div style={codeBoxStyle}>
-                      <Text style={codeTextStyle}>{betaCode}</Text>
+                      <Text style={{ ...codeTextStyle, fontSize: '15px', letterSpacing: '0px' }}>Tu en fais partie.</Text>
                     </div>
                   </td>
                 </tr>
                 <tr>
                   <td style={{ textAlign: 'center' }}>
-                    <Text style={codeSubtextStyle}>↑ Copiez ce code et collez-le lors de votre première connexion</Text>
+                    <Text style={codeSubtextStyle}>Accès gratuit · Fonctionnalités Premium conservées à vie après le lancement</Text>
                   </td>
                 </tr>
               </table>
@@ -138,9 +139,9 @@ export const MeetingInviteEmail = ({
                     <div style={statusDotStyle} />
                   </td>
                   <td style={{ padding: '0' }}>
-                    <Text style={statusTitleStyle}>Bêta en cours — Fin le 30 avril 2026 à 00h30</Text>
+                    <Text style={statusTitleStyle}>Bêta en cours — accès immédiat</Text>
                     <Text style={statusBodyStyle}>
-                      La bêta officielle se termine le <strong style={{ color: '#15803d' }}>30 avril 2026 à 00h30</strong> (heure de Paris). Merci pour votre participation et vos retours précieux.
+                      La plateforme est <strong style={{ color: '#15803d' }}>accessible dès maintenant</strong>. Prends le temps de lire le guide avant de te lancer — chaque section est importante.
                     </Text>
                   </td>
                 </tr>
@@ -148,48 +149,10 @@ export const MeetingInviteEmail = ({
             </Section>
 
             {/* ════════════════════════════════
-                CALENDRIER DES FUSEAUX
-            ════════════════════════════════ */}
-            <Section style={calendarWrapperStyle}>
-              <Text style={sectionTitleStyle}>🗓️ Calendrier de la Bêta — Début & Fin</Text>
-              <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" style={{ borderCollapse: 'collapse', borderRadius: '8px', overflow: 'hidden' }}>
-                <thead>
-                  <tr>
-                    <th style={thStyleLeft}>Fuseau horaire</th>
-                    <th style={thStyleCenter}>Début</th>
-                    <th style={thStyleCenter}>Fin</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr style={{ backgroundColor: '#ffffff' }}>
-                    <td style={tdMainZone}>🇫🇷 France / Espagne / Italie (CEST)</td>
-                    <td style={tdCenter}>17 Avr · 10h30</td>
-                    <td style={tdEndHighlight}>30 Avr · 00h30</td>
-                  </tr>
-                  <tr style={{ backgroundColor: '#f8fafc' }}>
-                    <td style={tdZoneStyle}>🇵🇹 Portugal (WEST)</td>
-                    <td style={tdCenter}>17 Avr · 09h30</td>
-                    <td style={tdEndHighlight}>29 Avr · 23h30</td>
-                  </tr>
-                  <tr style={{ backgroundColor: '#ffffff' }}>
-                    <td style={tdZoneStyle}>🇺🇸 États-Unis · Est (EDT)</td>
-                    <td style={tdCenter}>17 Avr · 04h30</td>
-                    <td style={tdEndHighlight}>29 Avr · 18h30</td>
-                  </tr>
-                  <tr style={{ backgroundColor: '#f8fafc' }}>
-                    <td style={tdZoneStyle}>🇪🇨 Équateur (ECT)</td>
-                    <td style={tdCenter}>17 Avr · 03h30</td>
-                    <td style={tdEndHighlight}>29 Avr · 17h30</td>
-                  </tr>
-                </tbody>
-              </table>
-            </Section>
-
-            {/* ════════════════════════════════
                 ÉTAPES DE CONNEXION
             ════════════════════════════════ */}
             <Section style={stepsWrapperStyle}>
-              <Text style={sectionTitleStyle}>Comment accéder à la plateforme</Text>
+              <Text style={sectionTitleStyle}>Comment démarrer — en 3 étapes</Text>
 
               {/* Étape 1 */}
               <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" style={{ borderCollapse: 'collapse', marginBottom: '16px' }}>
@@ -198,25 +161,39 @@ export const MeetingInviteEmail = ({
                     <div style={stepBubble}>1</div>
                   </td>
                   <td style={stepContentCell}>
-                    <Text style={stepTitleStyle}>Créez votre compte</Text>
+                    <Text style={stepTitleStyle}>Lis le guide en pièce jointe</Text>
                     <Text style={stepBodyStyle}>
-                      Inscrivez-vous instantanément avec <strong>Google</strong> ou <strong>GitHub</strong>.<br />
-                      Ou par e-mail : vous recevrez un code à 6 chiffres pour vérifier votre identité.
+                      Le PDF joint contient toutes les missions de test, les scénarios Stripe, la checklist visioconférence et les instructions pas à pas. <strong>Lis-le avant de te connecter.</strong>
                     </Text>
                   </td>
                 </tr>
               </table>
 
               {/* Étape 2 */}
-              <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" style={{ borderCollapse: 'collapse' }}>
+              <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" style={{ borderCollapse: 'collapse', marginBottom: '16px' }}>
                 <tr>
                   <td style={stepNumberCell}>
                     <div style={stepBubble}>2</div>
                   </td>
                   <td style={stepContentCell}>
-                    <Text style={stepTitleStyle}>Entrez votre code bêta</Text>
+                    <Text style={stepTitleStyle}>Crée ton compte et explore la plateforme</Text>
                     <Text style={stepBodyStyle}>
-                      Collez le code <strong style={{ color: '#1d4ed8', fontFamily: 'monospace', letterSpacing: '1px' }}>{betaCode}</strong> dans le champ prévu lors de votre première connexion pour débloquer l'application.
+                      Inscris-toi en 30 secondes avec <strong>Google</strong> ou <strong>GitHub</strong>, ou par e-mail avec un code à 6 chiffres. Parcours ensuite toutes les pages du site.
+                    </Text>
+                  </td>
+                </tr>
+              </table>
+
+              {/* Étape 3 */}
+              <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" style={{ borderCollapse: 'collapse' }}>
+                <tr>
+                  <td style={stepNumberCell}>
+                    <div style={stepBubble}>3</div>
+                  </td>
+                  <td style={stepContentCell}>
+                    <Text style={stepTitleStyle}>Envoie tes retours</Text>
+                    <Text style={stepBodyStyle}>
+                      Via le formulaire Contact du site ou par e-mail à <strong>theo.garces.aido@gmail.com</strong>. Même 3 lignes suffisent — c'est cette étape qui compte le plus.
                     </Text>
                   </td>
                 </tr>
@@ -249,15 +226,8 @@ export const MeetingInviteEmail = ({
               <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" style={{ borderCollapse: 'collapse' }}>
                 <tr>
                   <td style={{ textAlign: 'center', paddingBottom: '12px' }}>
-                    <Button href="https://visioconnect-1.vercel.app/room/demo-123" style={btnPrimaryStyle}>
-                      → Rejoindre la réunion
-                    </Button>
-                  </td>
-                </tr>
-                <tr>
-                  <td style={{ textAlign: 'center' }}>
-                    <Button href="https://visioconnect-1.vercel.app/" style={btnSecondaryStyle}>
-                      Découvrir le site
+                    <Button href="https://visioconnect-1.vercel.app/demo" style={btnPrimaryStyle}>
+                      → Accéder à la plateforme
                     </Button>
                   </td>
                 </tr>
@@ -266,17 +236,16 @@ export const MeetingInviteEmail = ({
 
             {/* Liens de secours */}
             <Section style={fallbackSectionStyle}>
-              <Text style={fallbackTitleStyle}>Liens de secours :</Text>
               <Text style={fallbackItemStyle}>
-                Réunion :{' '}
-                <Link href="https://visioconnect-1.vercel.app/room/demo-123" style={linkInlineStyle}>
-                  visioconnect-1.vercel.app/room/demo-123
+                Lien direct :{' '}
+                <Link href="https://visioconnect-1.vercel.app/" style={linkInlineStyle}>
+                  visioconnect-1.vercel.app
                 </Link>
               </Text>
               <Text style={fallbackItemStyle}>
-                Site :{' '}
-                <Link href="https://visioconnect-1.vercel.app/" style={linkInlineStyle}>
-                  visioconnect-1.vercel.app
+                Contact :{' '}
+                <Link href="mailto:theo.garces.aido@gmail.com" style={linkInlineStyle}>
+                  theo.garces.aido@gmail.com
                 </Link>
               </Text>
             </Section>
@@ -288,11 +257,10 @@ export const MeetingInviteEmail = ({
               <tr>
                 <td>
                   <Text style={signoffStyle}>
-                    Merci pour votre confiance et votre aide précieuse dans les tests de VisioConnect.{' '}
-                    Vos retours sont essentiels pour améliorer la plateforme.
+                    Merci du fond du cœur de prendre de ton temps pour ça. 3 ans de travail se jouent en partie sur ces quelques heures de test. Je lis chaque retour personnellement.
                   </Text>
-                  <Text style={signoffStyle}>Cordialement,</Text>
-                  <Text style={signoffTeamStyle}>L'équipe VisioConnect</Text>
+                  <Text style={signoffStyle}>À bientôt sur la plateforme,</Text>
+                  <Text style={signoffTeamStyle}>Théo — Fondateur de VisioConnect</Text>
                 </td>
               </tr>
             </table>
