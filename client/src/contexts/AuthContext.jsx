@@ -1,5 +1,12 @@
 import React, { createContext, useContext } from 'react';
 import { useUser, useAuth as useClerkAuth, useSignIn, useSignUp } from '@clerk/react';
+// Clerk React v6 correct API:
+// signUp.create({ emailAddress, password })
+// signUp.prepareEmailAddressVerification({ strategy: 'email_code' })
+// signUp.attemptEmailAddressVerification({ code })
+// setActive({ session: signUp.createdSessionId })
+// signIn.create({ strategy: 'password', identifier: email, password })
+// setActive({ session: signIn.createdSessionId })
 import { useConvexAuth } from 'convex/react';
 
 const AuthContext = createContext({});
@@ -15,8 +22,8 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
   const { isSignedIn, signOut, isLoaded: isAuthLoaded } = useClerkAuth();
-  const { signIn: clerkSignIn } = useSignIn();
-  const { signUp: clerkSignUp } = useSignUp();
+  const { signIn: clerkSignIn, setActive: setSignInActive } = useSignIn();
+  const { signUp: clerkSignUp, setActive: setSignUpActive } = useSignUp();
   const { isLoading: isConvexLoading } = useConvexAuth();
 
   const isLoggedIn = !!isSignedIn;
@@ -60,81 +67,73 @@ export const AuthProvider = ({ children }) => {
   const signInWithGithub = () => signInWithProvider('github');
   const signInWithDiscord = () => signInWithProvider('discord');
 
-  // Nouvelle API Clerk Core 3 : signIn.password() + signIn.finalize()
+  // Clerk Core 2 (v6) : signIn.create({ strategy:'password', identifier, password })
   const signInWithEmail = async (email, password) => {
     if (!clerkSignIn) return { error: { message: "Clerk n'est pas prêt." } };
     try {
-      const { error } = await clerkSignIn.password({ emailAddress: email, password });
-      if (error) {
-        const code = error.errors?.[0]?.code;
-        if (code === 'form_password_incorrect') {
-          return { error: { message: "Mot de passe incorrect." } };
-        }
-        return { error: { message: error.errors?.[0]?.message || "Identifiants incorrects." } };
+      const result = await clerkSignIn.create({
+        strategy: 'password',
+        identifier: email,
+        password,
+      });
+      if (result.status === 'complete') {
+        await setSignInActive({ session: result.createdSessionId });
+        return { data: { user: result }, success: true };
       }
-      if (clerkSignIn.status === "complete") {
-        await clerkSignIn.finalize();
-        return { data: { user: clerkSignIn }, success: true };
+      if (result.status === 'needs_second_factor') {
+        return { error: { message: "Votre compte a la double authentification (2FA) activée. Veuillez la désactiver depuis les paramètres de votre compte." } };
       }
-      if (clerkSignIn.status === "needs_second_factor") {
-        return { error: { message: "Votre compte a la double authentification (2FA) activée. Veuillez désactiver le 2FA depuis les paramètres de votre compte, ou contactez le support." } };
-      }
-      if (clerkSignIn.status === "needs_first_factor") {
-        return { error: { message: "Ce compte utilise une connexion sociale (Google, GitHub...). Veuillez utiliser le bouton de connexion sociale correspondant." } };
-      }
-      return { error: { message: `Connexion incomplète (statut: ${clerkSignIn.status}). Veuillez réessayer ou contacter le support.` } };
+      return { error: { message: `Connexion incomplète (statut: ${result.status}). Veuillez réessayer.` } };
     } catch (err) {
+      const code = err.errors?.[0]?.code;
+      if (code === 'form_password_incorrect') return { error: { message: "Mot de passe incorrect." } };
+      if (code === 'form_identifier_not_found') return { error: { message: "Aucun compte trouvé avec cet email." } };
       return { error: { message: handleNetworkError(err) } };
     }
   };
 
-  // Nouvelle API Clerk Core 3 : signUp.password() + signUp.verifications.sendEmailCode()
+  // Clerk Core 2 (v6) : signUp.create() + prepareEmailAddressVerification()
   const signUpWithEmail = async (email, password) => {
     if (!clerkSignUp) return { error: { message: "Clerk n'est pas prêt." } };
     try {
-      const { error } = await clerkSignUp.password({ emailAddress: email, password });
-      if (error) {
-        return { error: { message: error.errors?.[0]?.message || "Erreur lors de l'inscription." } };
+      const result = await clerkSignUp.create({ emailAddress: email, password });
+
+      if (result.status === 'complete') {
+        await setSignUpActive({ session: result.createdSessionId });
+        return { data: { user: result }, success: true };
       }
 
-      if (clerkSignUp.status === "complete") {
-        await clerkSignUp.finalize();
-        return { data: { user: clerkSignUp }, success: true };
-      }
-
-      // Envoi du code de vérification par email
-      await clerkSignUp.verifications.sendEmailCode();
+      // Envoyer le code de vérification par email
+      await clerkSignUp.prepareEmailAddressVerification({ strategy: 'email_code' });
       return { data: { requiresVerification: true, email }, success: true };
     } catch (err) {
+      const code = err.errors?.[0]?.code;
+      if (code === 'form_identifier_exists') return { error: { message: "Un compte existe déjà avec cet email." } };
+      if (code === 'form_password_pwned') return { error: { message: "Ce mot de passe est trop commun. Choisissez-en un autre." } };
+      if (code === 'form_password_length_too_short') return { error: { message: "Le mot de passe est trop court." } };
       return { error: { message: handleNetworkError(err) } };
     }
   };
 
-  // Nouvelle API Clerk Core 3 : signUp.verifications.verifyEmailCode() + signUp.finalize()
+  // Clerk Core 2 (v6) : signUp.attemptEmailAddressVerification({ code })
   const verifyEmailCode = async (code) => {
     if (!clerkSignUp) return { error: { message: "Clerk n'est pas prêt." } };
     try {
-      const { error } = await clerkSignUp.verifications.verifyEmailCode({ code });
-      if (error) {
-        return { error: { message: error.errors?.[0]?.message || "Code incorrect ou expiré." } };
-      }
+      const result = await clerkSignUp.attemptEmailAddressVerification({ code });
 
-      if (clerkSignUp.status === "complete") {
-        await clerkSignUp.finalize();
-        return { data: { user: clerkSignUp }, success: true };
-      } else if (clerkSignUp.status === "missing_requirements") {
-        const missing = clerkSignUp.missingFields ? clerkSignUp.missingFields.join(", ") : "inconnu";
-        return { 
-          error: { 
-            message: `Le code est valide, mais certains champs obligatoires sont configurés dans votre panel Clerk : [ ${missing} ]. Allez dans Clerk Dashboard → User & Authentication → Email, Phone, Username et passez ces champs en "Optionnel".`
-          } 
-        };
-      } else if (clerkSignUp.status === "abandoned") {
-        return { error: { message: "La session d'inscription a expiré. Veuillez recommencer l'inscription depuis le début." } };
-      } else {
-        return { error: { message: "Vérification incomplète. Veuillez réessayer ou recommencer l'inscription." } };
+      if (result.status === 'complete') {
+        await setSignUpActive({ session: result.createdSessionId });
+        return { data: { user: result }, success: true };
       }
+      if (result.status === 'missing_requirements') {
+        const missing = result.missingFields?.join(', ') ?? 'inconnu';
+        return { error: { message: `Champs obligatoires manquants dans Clerk Dashboard : [ ${missing} ]. Allez dans User & Authentication → passez-les en "Optionnel".` } };
+      }
+      return { error: { message: `Vérification incomplète (statut: ${result.status}). Veuillez réessayer.` } };
     } catch (err) {
+      const code = err.errors?.[0]?.code;
+      if (code === 'form_code_incorrect') return { error: { message: "Code incorrect. Vérifiez votre email." } };
+      if (code === 'verification_expired') return { error: { message: "Code expiré. Veuillez recommencer l'inscription." } };
       return { error: { message: handleNetworkError(err) } };
     }
   };

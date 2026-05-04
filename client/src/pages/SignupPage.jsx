@@ -389,6 +389,9 @@ const SignupPage = () => {
     } else if (result.data?.requiresVerification) {
       setPendingVerification(true)
       setLoading(false)
+    } else {
+      // Inscription complète sans vérification email (rare selon config Clerk)
+      navigate('/dashboard')
     }
   }
 
