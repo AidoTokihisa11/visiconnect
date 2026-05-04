@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ArrowRight,
   BadgeCheck,
@@ -43,7 +43,6 @@ import {
   MetricsPanel,
   MetricsTile,
   PageContainer,
-  PrimaryButton,
   ProofCard,
   RevealBlock,
   SecondaryButton,
@@ -59,10 +58,126 @@ import {
 } from './DemoPageNew.styles';
 
 import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+
+// --- Modale saisie du pseudo ---
+const ModalOverlay = styled.div`
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+`;
+
+const ModalBox = styled.div`
+  background: #fff;
+  border-radius: 20px;
+  padding: 2.4rem 2rem 2rem;
+  width: min(90vw, 420px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+`;
+
+const ModalTitle = styled.h2`
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.2;
+`;
+
+const ModalSub = styled.p`
+  margin: -0.5rem 0 0;
+  font-size: 0.93rem;
+  color: #64748b;
+  line-height: 1.6;
+`;
+
+const ModalInput = styled.input`
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 1rem;
+  outline: none;
+  color: #0f172a;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+  &:focus {
+    border-color: hsl(var(--primary, 221 83% 53%));
+  }
+`;
+
+const ModalActions = styled.div`
+  display: flex;
+  gap: 0.75rem;
+`;
+
+const ModalSubmit = styled.button`
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 10px;
+  background: #2563eb;
+  color: #fff;
+  font-size: 0.97rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+  &:hover { background: #1d4ed8; }
+  &:disabled { opacity: 0.45; cursor: not-allowed; }
+`;
+
+const ModalCancel = styled.button`
+  padding: 0.75rem 1rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  background: transparent;
+  color: #64748b;
+  font-size: 0.97rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  &:hover { background: #f8fafc; }
+`;
+
+const LaunchButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.85rem 1.6rem;
+  border: none;
+  border-radius: 12px;
+  background: #2563eb;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  text-decoration: none;
+  &:hover { background: #1d4ed8; transform: translateY(-1px); }
+`;
 
 export default function DemoPageNew() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [demoRoomId] = React.useState(`demo-${Math.random().toString(36).substring(2, 9)}`);
+  const [showModal, setShowModal] = useState(false);
+  const [guestName, setGuestName] = useState('');
+
+  const handleLaunchDemo = () => setShowModal(true);
+
+  const handleJoin = () => {
+    const name = guestName.trim();
+    if (!name) return;
+    sessionStorage.setItem('guestDisplayName', name);
+    navigate(`/meeting/${demoRoomId}`);
+  };
 
   const highlights = [
     {
@@ -173,6 +288,30 @@ export default function DemoPageNew() {
 
   return (
     <PageContainer>
+      {showModal && (
+        <ModalOverlay onClick={() => setShowModal(false)}>
+          <ModalBox onClick={(e) => e.stopPropagation()}>
+            <ModalTitle>Rejoindre la démo live</ModalTitle>
+            <ModalSub>Entrez un prénom ou un pseudo pour participer à la démonstration. Aucun compte requis.</ModalSub>
+            <ModalInput
+              autoFocus
+              type="text"
+              maxLength={40}
+              placeholder="Votre prénom ou pseudo"
+              value={guestName}
+              onChange={(e) => setGuestName(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleJoin()}
+            />
+            <ModalActions>
+              <ModalCancel onClick={() => setShowModal(false)}>Annuler</ModalCancel>
+              <ModalSubmit onClick={handleJoin} disabled={!guestName.trim()}>
+                Lancer la démo →
+              </ModalSubmit>
+            </ModalActions>
+          </ModalBox>
+        </ModalOverlay>
+      )}
+
       <HeaderClean />
 
       <MainContent>
@@ -190,9 +329,9 @@ export default function DemoPageNew() {
                 {t('demo.hero.subtitle')}
               </HeroSubtitle>
               <HeroActions>
-                <PrimaryButton to={`/room/${demoRoomId}`}>
+                <LaunchButton onClick={handleLaunchDemo}>
                   <Play size={18} fill="currentColor" /> {t('demo.hero.launchDemo')}
-                </PrimaryButton>
+                </LaunchButton>
                 <SecondaryButton to="/contact">
                   {t('demo.hero.schedulePresentation')} <ArrowRight size={18} />
                 </SecondaryButton>

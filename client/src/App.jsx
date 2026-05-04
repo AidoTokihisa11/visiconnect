@@ -33,6 +33,7 @@ import AdminDashboard from './pages/AdminDashboard'; // Admin monitoring compone
 import TermsPage from './pages/TermsPage';
 import CookiesPage from './pages/CookiesPage';
 import DemoPageNew from './pages/DemoPageNew';
+import MeetingRoomPage from './pages/MeetingRoomPage';
 import ChangelogPage from './pages/ChangelogPage';
 import BlogPage from './pages/BlogPage';
 import PartnersPage from './pages/PartnersPage';
@@ -89,6 +90,7 @@ function App() {
                         <Route path="/login" element={<LoginPage />} />
                         <Route path="/signup" element={<SignupPage />} />
                         <Route path="/room/:roomId" element={<RoomPage />} />
+                        <Route path="/meeting/:roomId" element={<MeetingRoomPage />} />
                         <Route path="/admin" element={<AdminDashboard />} />
                         <Route path="/settings" element={<SettingsPage />} />
                         <Route path="/support" element={<SupportPageNew />} />
