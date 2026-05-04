@@ -61,7 +61,11 @@ module.exports = async function handler(req, res) {
   const usageLabel   = usage   === 'other' ? usageCustom.trim()   : USAGE_LABELS[usage];
   const cleanMotivation = motivation.trim();
 
-  const resend = new Resend(process.env.RESEND_API_KEY || 're_f7CXkPZ1_FouifSQZycKkbcStAoZkGgW8');
+  if (!process.env.RESEND_API_KEY) {
+    console.error('RESEND_API_KEY manquante dans les variables d\'environnement');
+    return res.status(500).json({ error: "Erreur de configuration serveur." });
+  }
+  const resend = new Resend(process.env.RESEND_API_KEY);
 
   try {
     // 1. Notification email to Théo
