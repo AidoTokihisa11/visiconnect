@@ -44,7 +44,7 @@ export const MeetingInviteEmail = ({
           fontStyle="normal"
         />
       </Head>
-      <Preview>🎉 Tu fais partie de la Bêta Privée VisioConnect — lis le guide avant tout</Preview>
+      <Preview>🎉 {inviteeName}, tu es l'un(e) des 15 — accès bêta VisioConnect activé</Preview>
 
       <Body style={bodyStyle}>
         <Container style={containerStyle}>
@@ -86,7 +86,7 @@ export const MeetingInviteEmail = ({
                 </td>
                 <td style={greetingTextCell}>
                   <Text style={greetingLineStyle}>Bonjour {inviteeName},</Text>
-                  <Text style={greetingSubStyle}>Tu as été sélectionné(e) parmi les 15 testeurs officiels de la bêta privée.</Text>
+                  <Text style={greetingSubStyle}>Bienvenue dans le cercle des pionniers VisioConnect.</Text>
                 </td>
               </tr>
             </table>
@@ -96,10 +96,13 @@ export const MeetingInviteEmail = ({
 
             {/* ── INTRO ── */}
             <Text style={introText}>
-              Tu fais partie des <strong style={{ color: '#1d4ed8' }}>15 personnes soigneusement sélectionnées</strong> pour tester VisioConnect avant son lancement public. Ce projet, c'est <strong>3 ans de travail</strong> — matin, midi et soir — et tes retours sont une condition directe de validation de mon diplôme.
+              Tu fais partie des <strong style={{ color: '#1d4ed8' }}>15 personnes soigneusement sélectionnées</strong> pour tester VisioConnect avant son lancement public. Ce projet, c'est <strong>3 ans de travail</strong> — et tes retours sont une condition directe de validation de mon diplôme.
             </Text>
             <Text style={introText}>
-              <strong>Une seule règle :</strong> lis le guide PDF en pièce jointe <strong>du début à la fin</strong> avant de commencer. Il contient tout ce dont tu as besoin, étape par étape.
+              <strong>Une seule consigne :</strong> lis le guide PDF joint <strong>du début à la fin</strong> avant de te connecter. Tout est dedans — pas d'improvisation.
+            </Text>
+            <Text style={disclaimerText}>
+              C'est mon premier projet d'envergure, construit seul de bout en bout. Certaines fonctionnalités peuvent se montrer capricieuses — un rechargement suffit souvent à les remettre en ordre. Je t'en remercie par avance pour ta patience, et pour chaque bug remonté.
             </Text>
 
             {/* ════════════════════════════════
@@ -110,7 +113,7 @@ export const MeetingInviteEmail = ({
                 <tr>
                   <td style={{ textAlign: 'center', paddingBottom: '14px' }}>
                     <div style={codeLabelStyle}>
-                      <span style={codeLabelTextStyle}>🎯 BÊTA PRIVÉE — 15 PERSONNES SÉLECTIONNÉES</span>
+                      <span style={codeLabelTextStyle}>� ACCÈS PIONNIER — BÊTA FERMÉE</span>
                     </div>
                   </td>
                 </tr>
@@ -123,7 +126,7 @@ export const MeetingInviteEmail = ({
                 </tr>
                 <tr>
                   <td style={{ textAlign: 'center' }}>
-                    <Text style={codeSubtextStyle}>Accès gratuit · Fonctionnalités Premium conservées à vie après le lancement</Text>
+                    <Text style={codeSubtextStyle}>Accès complet gratuit · Plan Pro offert à vie après le lancement public</Text>
                   </td>
                 </tr>
               </table>
@@ -139,9 +142,9 @@ export const MeetingInviteEmail = ({
                     <div style={statusDotStyle} />
                   </td>
                   <td style={{ padding: '0' }}>
-                    <Text style={statusTitleStyle}>Bêta en cours — accès immédiat</Text>
+                    <Text style={statusTitleStyle}>Plateforme active — prête à l'emploi</Text>
                     <Text style={statusBodyStyle}>
-                      La plateforme est <strong style={{ color: '#15803d' }}>accessible dès maintenant</strong>. Prends le temps de lire le guide avant de te lancer — chaque section est importante.
+                      Tout fonctionne. Crée ton compte, explore chaque fonctionnalité, note ce qui cloche ou ce qui t'impressionne. <strong style={{ color: '#15803d' }}>Chaque observation compte.</strong>
                     </Text>
                   </td>
                 </tr>
@@ -152,7 +155,7 @@ export const MeetingInviteEmail = ({
                 ÉTAPES DE CONNEXION
             ════════════════════════════════ */}
             <Section style={stepsWrapperStyle}>
-              <Text style={sectionTitleStyle}>Comment démarrer — en 3 étapes</Text>
+              <Text style={sectionTitleStyle}>Démarrer en 3 étapes</Text>
 
               {/* Étape 1 */}
               <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" style={{ borderCollapse: 'collapse', marginBottom: '16px' }}>
@@ -161,9 +164,9 @@ export const MeetingInviteEmail = ({
                     <div style={stepBubble}>1</div>
                   </td>
                   <td style={stepContentCell}>
-                    <Text style={stepTitleStyle}>Lis le guide en pièce jointe</Text>
+                    <Text style={stepTitleStyle}>Lire le guide — c'est obligatoire</Text>
                     <Text style={stepBodyStyle}>
-                      Le PDF joint contient toutes les missions de test, les scénarios Stripe, la checklist visioconférence et les instructions pas à pas. <strong>Lis-le avant de te connecter.</strong>
+                      Le PDF joint détaille chaque mission : création de compte, tests Stripe avec cartes fictives, lancement d'une visioconférence. <strong>10 minutes de lecture = zéro confusion.</strong>
                     </Text>
                   </td>
                 </tr>
@@ -176,9 +179,9 @@ export const MeetingInviteEmail = ({
                     <div style={stepBubble}>2</div>
                   </td>
                   <td style={stepContentCell}>
-                    <Text style={stepTitleStyle}>Crée ton compte et explore la plateforme</Text>
+                    <Text style={stepTitleStyle}>Explorer la plateforme sans retenue</Text>
                     <Text style={stepBodyStyle}>
-                      Inscris-toi en 30 secondes avec <strong>Google</strong> ou <strong>GitHub</strong>, ou par e-mail avec un code à 6 chiffres. Parcours ensuite toutes les pages du site.
+                      Clique partout. Teste chaque bouton, chaque page, chaque formulaire. <strong>Essaie de casser quelque chose</strong> — c'est exactement ce dont j'ai besoin.
                     </Text>
                   </td>
                 </tr>
@@ -191,9 +194,9 @@ export const MeetingInviteEmail = ({
                     <div style={stepBubble}>3</div>
                   </td>
                   <td style={stepContentCell}>
-                    <Text style={stepTitleStyle}>Envoie tes retours</Text>
+                    <Text style={stepTitleStyle}>M'envoyer tes retours</Text>
                     <Text style={stepBodyStyle}>
-                      Via le formulaire Contact du site ou par e-mail à <strong>theo.garces.aido@gmail.com</strong>. Même 3 lignes suffisent — c'est cette étape qui compte le plus.
+                      Via le formulaire Contact ou à <strong>theo.garces.aido@gmail.com</strong>. Pas besoin d'un rapport formel — <strong>3 lignes honnêtes valent mieux qu'un silence poli.</strong>
                     </Text>
                   </td>
                 </tr>
@@ -210,9 +213,9 @@ export const MeetingInviteEmail = ({
                     <Text style={guideIconStyle}>📎</Text>
                   </td>
                   <td>
-                    <Text style={guideTitleStyle}>Guide Bêta inclus en pièce jointe</Text>
+                    <Text style={guideTitleStyle}>📎 Guide bêta officiel — en pièce jointe</Text>
                     <Text style={guideBodyStyle}>
-                      Votre guide officiel au format PDF est joint à cet e-mail. Il contient toutes vos missions de test, les fonctionnalités à explorer et les informations utiles pour démarrer rapidement.
+                      Ton seul point de référence pour cette bêta. Lis-le <strong>avant</strong> de te connecter — tout est dedans, rien à deviner.
                     </Text>
                   </td>
                 </tr>
@@ -250,6 +253,17 @@ export const MeetingInviteEmail = ({
               </Text>
             </Section>
 
+            {/* ════════════════════════════════
+                CITATION
+            ════════════════════════════════ */}
+            <Section style={quoteWrapperStyle}>
+              <Text style={quoteMarkStyle}>&ldquo;</Text>
+              <Text style={quoteTextStyle}>
+                La grandeur d'un métier est peut-être, avant tout, d'unir des hommes.
+              </Text>
+              <Text style={quoteAuthorStyle}>— Antoine de Saint-Exupéry</Text>
+            </Section>
+
             <Hr style={hrStyle} />
 
             {/* ── SIGNATURE ── */}
@@ -257,10 +271,10 @@ export const MeetingInviteEmail = ({
               <tr>
                 <td>
                   <Text style={signoffStyle}>
-                    Merci du fond du cœur de prendre de ton temps pour ça. 3 ans de travail se jouent en partie sur ces quelques heures de test. Je lis chaque retour personnellement.
+                    Je lis chaque retour en entier. Vraiment. Ces quelques heures de ton temps peuvent changer la trajectoire de ce projet — et la mienne.
                   </Text>
-                  <Text style={signoffStyle}>À bientôt sur la plateforme,</Text>
-                  <Text style={signoffTeamStyle}>Théo — Fondateur de VisioConnect</Text>
+                  <Text style={signoffStyle}>Merci de faire partie de cette aventure,</Text>
+                  <Text style={signoffTeamStyle}>Théo — Fondateur &amp; développeur de VisioConnect</Text>
                 </td>
               </tr>
             </table>
@@ -423,6 +437,16 @@ const introText = {
   fontSize: '15px',
   lineHeight: '27px',
   margin: '0 0 28px',
+};
+
+const disclaimerText = {
+  color: '#6b7280',
+  fontSize: '13px',
+  lineHeight: '22px',
+  fontStyle: 'italic',
+  margin: '-12px 0 28px',
+  paddingLeft: '12px',
+  borderLeft: '3px solid #e5e7eb',
 };
 
 // ── CODE BÊTA ──
@@ -770,6 +794,42 @@ const footerCopyrightStyle = {
   fontWeight: '700',
   margin: '0',
   letterSpacing: '0.5px',
+};
+
+// ── CITATION ──
+const quoteWrapperStyle = {
+  borderLeft: '4px solid #1d4ed8',
+  backgroundColor: '#f0f7ff',
+  borderRadius: '0 12px 12px 0',
+  padding: '20px 24px',
+  margin: '24px 0',
+};
+
+const quoteMarkStyle = {
+  color: '#1d4ed8',
+  fontSize: '48px',
+  fontWeight: '800',
+  lineHeight: '1',
+  margin: '0 0 -8px',
+  display: 'block',
+};
+
+const quoteTextStyle = {
+  color: '#1e3a6e',
+  fontSize: '15px',
+  fontStyle: 'italic',
+  fontWeight: '500',
+  lineHeight: '1.7',
+  margin: '0 0 10px',
+};
+
+const quoteAuthorStyle = {
+  color: '#1d4ed8',
+  fontSize: '12px',
+  fontWeight: '700',
+  letterSpacing: '0.5px',
+  textTransform: 'uppercase',
+  margin: '0',
 };
 
 export default MeetingInviteEmail;

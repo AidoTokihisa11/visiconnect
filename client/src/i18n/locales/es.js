@@ -63,7 +63,7 @@ const esTranslations = {
     trustedBy: "Confiado por más de {{count}} empresas en todo el mundo",
     title1: "Videoconferencia ",
     title2: "simplemente profesional.",
-    testRoom: "Test Room Pro",
+    testRoom: "Unirse a la sala",
     titleLine1: "Videoconferencia",
     titleLine2: "simplemente profesional.",
   },

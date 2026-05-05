@@ -11,9 +11,9 @@
 
 ### Ce projet, c'est 3 ans de ma vie.
 
-Je m'appelle Théo. VisioConnect, c'est mon projet de fin d'études — **3 ans de travail, matin, midi et soir**, entre les cours, les week-ends, les vacances. Des centaines d'heures de code, de design, de tests, de nuits courtes.
+Je m'appelle Théo. VisioConnect, c'est mon projet de fin d'études — **3 ans de travail, matin, midi et soir**, entre les cours, les week-ends, les vacances. Des centaines d'heures de code, de design, de tests, de nuits courtes — **6 570 heures au total, pour être précis.**
 
-Ce n'est pas un exercice scolaire. C'est une vraie plateforme de visioconférence, construite de zéro, avec de vraies technologies professionnelles utilisées par des entreprises du monde entier.
+Ce n'est pas un exercice scolaire. C'est une vraie plateforme de visioconférence, construite de zéro, avec de vraies technologies professionnelles utilisées par des entreprises du monde entier — des licences payées au mois, des serveurs dédiés pour mener à bien cette bêta, soit des centaines d'euros investis.
 
 **Et pour valider mon diplôme, j'ai besoin de vos retours.**
 
@@ -120,7 +120,8 @@ Elle contient plusieurs éléments :
 #### 2. Sur la page d'accueil `/`
 
 En descendant sur la page, vous verrez :
-- Un **bouton principal** pour lancer une démo ou s'inscrire → cliquez dessus pour tester.
+- Un bouton **"Rejoindre la room"** (fond noir, avec une icône éclair) → cliquez dessus pour accéder directement à la démo.
+- Un bouton **"Essayer gratuitement"** (bleu) → redirige vers l'inscription.
 - Des **blocs de présentation** des fonctionnalités → faites défiler jusqu'en bas.
 - Un **pied de page** avec les liens légaux, réseaux sociaux, contact.
 
@@ -255,11 +256,13 @@ Parcourez **toutes les pages** de la plateforme, pas seulement la visioconféren
 
 **Option A — Via la page Démo (recommandé pour commencer)**
 1. Cliquez sur **"Démo"** dans la barre de navigation.
-2. Cliquez sur le bouton **"Lancer la démo live"**.
+2. Cliquez sur le bouton **"Lancer la démo →"**.
 3. Une fenêtre s'ouvre → saisissez votre **prénom ou pseudo** (ex. `Marie`).
 4. Cliquez sur **"Lancer la démo →"**.
 5. Le navigateur vous demande d'autoriser la **caméra** et le **microphone** → cliquez **"Autoriser"**.
 6. Vous êtes dans la salle. Copiez l'URL dans la barre d'adresse et envoyez-la à quelqu'un pour le faire rejoindre.
+
+> 💡 Vous pouvez aussi utiliser le bouton **"Rejoindre la room"** directement depuis la page d'accueil — il mène au même endroit.
 
 **Option B — Via votre compte (si disponible)**
 1. Connectez-vous et allez sur votre tableau de bord.

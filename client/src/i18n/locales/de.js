@@ -63,7 +63,7 @@ const deTranslations = {
     trustedBy: "Vertraut von über {{count}} Unternehmen weltweit",
     title1: "Videokonferenzen ",
     title2: "einfach professionell.",
-    testRoom: "Test Room Pro",
+    testRoom: "Raum betreten",
     titleLine1: "Videokonferenz",
     titleLine2: "einfach professionell.",
   },

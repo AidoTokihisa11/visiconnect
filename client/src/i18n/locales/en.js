@@ -65,7 +65,7 @@ const enTranslations = {
     trustedBy: "Trusted by over {{count}} companies worldwide",
     title1: "Video conferencing ",
     title2: "simply professional.",
-    testRoom: "Test Room Pro",
+    testRoom: "Join the room",
   },
   homeFeatures: {
     title: "Everything for successful meetings",

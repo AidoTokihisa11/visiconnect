@@ -63,7 +63,7 @@ const ruTranslations = {
     trustedBy: "Доверяют более {{count}} компаний по всему миру",
     title1: "Visioconférence ",
     title2: "simplement professionnelle.",
-    testRoom: "Test Room Pro",
+    testRoom: "Войти в комнату",
     titleLine1: "Видеоконференция",
     titleLine2: "просто профессионально.",
   },

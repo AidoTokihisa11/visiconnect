@@ -61,7 +61,7 @@ const frTranslations = {
     subtitle:
       "Connectez-vous avec vos équipes grâce à notre solution de visioconférence avancée et intuitive",
     startFree: "Démarrer gratuitement",
-    testRoom: "Test Room Pro",
+    testRoom: "Rejoindre la room",
     watchDemo: "Voir la démo",
     trustedBy: "Utilisé par plus de {{count}} entreprises dans le monde",
     title1: "Visioconférence ",
