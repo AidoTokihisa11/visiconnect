@@ -696,12 +696,37 @@
     "legal": "Legal"
   },
   "slider": {
-    "title1": "Dashboard Intuitivo",
+    "title1": "Panel Intuitivo",
     "desc1": "Controle sus reuniones con un clic.",
     "title2": "Modo Estudio",
-    "desc2": "Calidad 4K sin compromisos.",
+    "desc2": "Calidad 4K sin compromiso.",
     "title3": "Analíticas",
-    "desc3": "Siga el compromiso en tiempo real."
+    "desc3": "Siga la implicación en tiempo real.",
+    "ariaTabs": "Secciones de funcionalidades",
+    "dashboard": {
+      "meetings": "Reuniones",
+      "participants": "Participantes",
+      "avgDuration": "Duración media",
+      "weekly": "Semanal",
+      "monthly": "Mensual",
+      "yearly": "Anual"
+    },
+    "studio": {
+      "mic": "Micrófono",
+      "video": "Cámara",
+      "screen": "Compartir pantalla",
+      "chat": "Chat",
+      "participants": "Participantes",
+      "leave": "Salir"
+    },
+    "analytics": {
+      "engagement": "Implicación",
+      "retention": "Retención",
+      "quality": "Calidad",
+      "realtime": "Tiempo real",
+      "live": "En directo",
+      "participants": "Participantes"
+    }
   },
   "aboutProject": "Acerca del proyecto",
   "projectDescription": "VisioConnect nació de mi pasión por las tecnologías de comunicación modernas...",

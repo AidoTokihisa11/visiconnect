@@ -1026,11 +1026,36 @@
   },
   "slider": {
     "title1": "Intuitive Dashboard",
-    "desc1": "Control your meetings with one click.",
+    "desc1": "Control your meetings in one click.",
     "title2": "Studio Mode",
-    "desc2": "Uncompromised 4K quality.",
+    "desc2": "4K quality without compromise.",
     "title3": "Analytics",
-    "desc3": "Track engagement in real-time."
+    "desc3": "Track engagement in real time.",
+    "ariaTabs": "Feature sections",
+    "dashboard": {
+      "meetings": "Meetings",
+      "participants": "Participants",
+      "avgDuration": "Avg. duration",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "yearly": "Yearly"
+    },
+    "studio": {
+      "mic": "Microphone",
+      "video": "Camera",
+      "screen": "Screen share",
+      "chat": "Chat",
+      "participants": "Participants",
+      "leave": "Leave"
+    },
+    "analytics": {
+      "engagement": "Engagement",
+      "retention": "Retention",
+      "quality": "Quality",
+      "realtime": "Real time",
+      "live": "Live",
+      "participants": "Participants"
+    }
   },
   "philosophyValue": "Open Source",
   "passionLabel": "Passion",

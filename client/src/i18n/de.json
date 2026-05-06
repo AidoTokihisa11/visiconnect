@@ -666,7 +666,32 @@
     "title2": "Studio Modus",
     "desc2": "4K-Qualität ohne Kompromisse.",
     "title3": "Analytik",
-    "desc3": "Verfolgen Sie das Engagement in Echtzeit."
+    "desc3": "Verfolgen Sie das Engagement in Echtzeit.",
+    "ariaTabs": "Feature-Bereiche",
+    "dashboard": {
+      "meetings": "Meetings",
+      "participants": "Teilnehmer",
+      "avgDuration": "Ø Dauer",
+      "weekly": "Wöchentlich",
+      "monthly": "Monatlich",
+      "yearly": "Jährlich"
+    },
+    "studio": {
+      "mic": "Mikrofon",
+      "video": "Kamera",
+      "screen": "Bildschirm teilen",
+      "chat": "Chat",
+      "participants": "Teilnehmer",
+      "leave": "Verlassen"
+    },
+    "analytics": {
+      "engagement": "Engagement",
+      "retention": "Verbleib",
+      "quality": "Qualität",
+      "realtime": "Echtzeit",
+      "live": "Live",
+      "participants": "Teilnehmer"
+    }
   },
   "aboutProject": "Über das Projekt",
   "projectDescription": "VisioConnect entstand aus meiner Leidenschaft...",

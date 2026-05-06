@@ -1065,7 +1065,32 @@
     "title2": "Mode Studio",
     "desc2": "Qualité 4K sans compromis.",
     "title3": "Analytiques",
-    "desc3": "Suivez l'engagement en temps réel."
+    "desc3": "Suivez l'engagement en temps réel.",
+    "ariaTabs": "Sections de fonctionnalités",
+    "dashboard": {
+      "meetings": "Réunions",
+      "participants": "Participants",
+      "avgDuration": "Durée moy.",
+      "weekly": "Hebdo.",
+      "monthly": "Mensuel",
+      "yearly": "Annuel"
+    },
+    "studio": {
+      "mic": "Micro",
+      "video": "Caméra",
+      "screen": "Partage d'écran",
+      "chat": "Chat",
+      "participants": "Participants",
+      "leave": "Quitter"
+    },
+    "analytics": {
+      "engagement": "Engagement",
+      "retention": "Rétention",
+      "quality": "Qualité",
+      "realtime": "Temps réel",
+      "live": "En direct",
+      "participants": "Participants"
+    }
   },
   "featuresPage": {
     "hero": {
