@@ -12,16 +12,40 @@ import { useTranslation } from '../../hooks/useTranslation';
 const BottomBar = styled.div`
   /* Desktop: hauteur fixe, flex-shrink: 0 pour ne jamais shrink */
   flex-shrink: 0;
-  height: 76px;
-  background-color: ${THEME.panelBg};
-  backdrop-filter: blur(12px);
-  border-top: 1px solid ${THEME.border};
+  height: 80px;
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 40%),
+    linear-gradient(180deg, rgba(15,18,28,0.92) 0%, rgba(10,12,18,0.96) 100%);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border-top: 1px solid rgba(255,255,255,0.06);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0 1rem;
+  padding: 0 1.25rem;
   z-index: 60;
+  box-shadow:
+    0 -1px 0 rgba(255,255,255,0.04) inset,
+    0 -20px 40px -20px rgba(0,0,0,0.4);
+
+  /* Liseré lumineux subtil en haut */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(96,165,250,0.35) 25%,
+      rgba(167,139,250,0.35) 50%,
+      rgba(96,165,250,0.35) 75%,
+      transparent 100%);
+    pointer-events: none;
+  }
 
   @media (max-width: 768px) {
     /* Mobile: NE PLUS utiliser position absolute - rester dans le flux flex */
@@ -68,19 +92,42 @@ const ControlLabel = styled.span`
 
 const ControlButton = styled.button`
   flex-shrink: 0;
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  border: none;
-  background-color: ${props => props.$active ? (props.$activeColor || THEME.accent) : THEME.cardBg};
-  color: ${props => props.$active ? '#fff' : THEME.text};
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
+  border: 1px solid ${props => props.$active ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.08)'};
+  background: ${props => props.$active
+    ? `linear-gradient(180deg, ${props.$activeColor || '#3b82f6'} 0%, ${props.$activeColor ? props.$activeColor : '#2563eb'} 100%)`
+    : 'linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%)'};
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.18s cubic-bezier(0.4, 0, 0.2, 1),
+              background 0.18s ease,
+              box-shadow 0.18s ease,
+              border-color 0.18s ease;
   position: relative;
-  border: 1px solid ${props => props.$active ? 'transparent' : THEME.border};   
+  overflow: hidden;
+  box-shadow: ${props => props.$active
+    ? `0 6px 20px -4px ${props.$activeColor ? 'rgba(239,68,68,0.45)' : 'rgba(59,130,246,0.45)'},
+       inset 0 1px 0 rgba(255,255,255,0.20),
+       inset 0 -1px 0 rgba(0,0,0,0.15)`
+    : `inset 0 1px 0 rgba(255,255,255,0.06),
+       0 2px 8px -2px rgba(0,0,0,0.3)`};
+
+  /* Reflet supérieur premium */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 50%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.10) 0%, transparent 100%);
+    pointer-events: none;
+    border-radius: 14px 14px 0 0;
+    opacity: ${props => props.$active ? 0.6 : 0.3};
+  }
 
   @media (max-width: 768px) {
     /* Touch target minimum 48x48 pour accessibilité iOS/Android */
@@ -110,17 +157,33 @@ const ControlButton = styled.button`
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border-color: rgba(255,255,255,0.18);
+    background: ${props => props.$active
+      ? `linear-gradient(180deg, ${props.$activeColor || '#60a5fa'} 0%, ${props.$activeColor || '#3b82f6'} 100%)`
+      : 'linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.04) 100%)'};
+    box-shadow: ${props => props.$active
+      ? `0 10px 28px -6px ${props.$activeColor ? 'rgba(239,68,68,0.55)' : 'rgba(59,130,246,0.55)'},
+         inset 0 1px 0 rgba(255,255,255,0.25)`
+      : `0 8px 22px -6px rgba(0,0,0,0.5),
+         inset 0 1px 0 rgba(255,255,255,0.10)`};
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.96);
+    transition-duration: 0.08s;
   }
 
   &:focus-visible {
-    outline: 2px solid #3b82f6;
-    outline-offset: 2px;
+    outline: 2px solid #60a5fa;
+    outline-offset: 3px;
   }
 
   svg {
     width: 20px;
     height: 20px;
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow(0 1px 1px rgba(0,0,0,0.25));
   }
 `;
 
@@ -162,40 +225,53 @@ const NotificationBadge = styled.span`
 // Mic button glow ring — scales with audio level
 const MicRing = styled.div`
   position: relative;
-  border-radius: 12px;
+  border-radius: 14px;
   transition: box-shadow 0.08s ease-out;
   box-shadow: ${({ $level, $active }) =>
     $active && $level > 0.04
-      ? `0 0 0 ${Math.round(2 + $level * 12)}px rgba(59,130,246,${(0.25 + $level * 0.55).toFixed(2)})`
+      ? `0 0 0 ${Math.round(2 + $level * 10)}px rgba(96,165,250,${(0.20 + $level * 0.45).toFixed(2)}),
+         0 0 ${Math.round(8 + $level * 24)}px rgba(96,165,250,${(0.30 + $level * 0.40).toFixed(2)})`
       : 'none'};
 `;
 
 const EndCallButton = styled(ControlButton)`
-  background-color: ${THEME.danger};
-  width: 64px;
-  border-radius: 16px;
+  background: linear-gradient(180deg, #f87171 0%, #ef4444 50%, #dc2626 100%);
+  width: 72px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.18);
+  box-shadow:
+    0 6px 20px -4px rgba(239,68,68,0.55),
+    inset 0 1px 0 rgba(255,255,255,0.30),
+    inset 0 -1px 0 rgba(0,0,0,0.20);
 
   @media (max-width: 768px) {
     width: 52px;
     height: 44px;
     border-radius: 14px;
-    background-color: ${THEME.danger};
   }
 
   &:hover {
-    background-color: #dc2626;
+    background: linear-gradient(180deg, #fca5a5 0%, #f87171 50%, #ef4444 100%);
+    box-shadow:
+      0 12px 30px -6px rgba(239,68,68,0.70),
+      inset 0 1px 0 rgba(255,255,255,0.35);
+    transform: translateY(-2px);
   }
 `;
 
 const Separator = styled.div`
   flex-shrink: 0;
   width: 1px;
-  height: 40px;
-  background: ${THEME.border};
-  margin: 0 1.5rem;
+  height: 36px;
+  background: linear-gradient(180deg,
+    transparent 0%,
+    rgba(255,255,255,0.12) 30%,
+    rgba(255,255,255,0.12) 70%,
+    transparent 100%);
+  margin: 0 1.25rem;
 
   @media (max-width: 768px) {
-    display: none; // Hide on mobile entirely to save space
+    display: none;
   }
 `;
 
