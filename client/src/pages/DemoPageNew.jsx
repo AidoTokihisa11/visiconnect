@@ -291,21 +291,21 @@ export default function DemoPageNew() {
       {showModal && (
         <ModalOverlay onClick={() => setShowModal(false)}>
           <ModalBox onClick={(e) => e.stopPropagation()}>
-            <ModalTitle>Rejoindre la démo live</ModalTitle>
-            <ModalSub>Entrez un prénom ou un pseudo pour participer à la démonstration. Aucun compte requis.</ModalSub>
+            <ModalTitle>{t('demo.modal.title', 'Rejoindre la démo live')}</ModalTitle>
+            <ModalSub>{t('demo.modal.subtitle', 'Entrez un prénom ou un pseudo pour participer à la démonstration. Aucun compte requis.')}</ModalSub>
             <ModalInput
               autoFocus
               type="text"
               maxLength={40}
-              placeholder="Votre prénom ou pseudo"
+              placeholder={t('demo.modal.placeholder', 'Votre prénom ou pseudo')}
               value={guestName}
               onChange={(e) => setGuestName(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleJoin()}
             />
             <ModalActions>
-              <ModalCancel onClick={() => setShowModal(false)}>Annuler</ModalCancel>
+              <ModalCancel onClick={() => setShowModal(false)}>{t('demo.modal.cancel', 'Annuler')}</ModalCancel>
               <ModalSubmit onClick={handleJoin} disabled={!guestName.trim()}>
-                Lancer la démo →
+                {t('demo.modal.submit', 'Lancer la démo →')}
               </ModalSubmit>
             </ModalActions>
           </ModalBox>

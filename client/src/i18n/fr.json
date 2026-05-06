@@ -1332,6 +1332,13 @@
     }
   },
   "demo": {
+    "modal": {
+      "title": "Rejoindre la démo live",
+      "subtitle": "Entrez un prénom ou un pseudo pour participer à la démonstration. Aucun compte requis.",
+      "placeholder": "Votre prénom ou pseudo",
+      "cancel": "Annuler",
+      "submit": "Lancer la démo →"
+    },
     "hero": {
       "eyebrow": "Démo immersive de la plateforme",
       "title": "Découvrez la visioconférence de demain,",

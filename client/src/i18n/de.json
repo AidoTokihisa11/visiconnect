@@ -1306,6 +1306,13 @@
     }
   },
   "demo": {
+    "modal": {
+      "title": "An der Live-Demo teilnehmen",
+      "subtitle": "Geben Sie einen Vornamen oder einen Spitznamen ein, um an der Demo teilzunehmen. Kein Konto erforderlich.",
+      "placeholder": "Ihr Vorname oder Spitzname",
+      "cancel": "Abbrechen",
+      "submit": "Demo starten →"
+    },
     "hero": {
       "eyebrow": "Immersive Plattform-Demo",
       "title": "Entdecken Sie die Videokonferenz von morgen,",

@@ -1308,6 +1308,13 @@
     }
   },
   "demo": {
+    "modal": {
+      "title": "Join the live demo",
+      "subtitle": "Enter a first name or nickname to join the demo. No account required.",
+      "placeholder": "Your first name or nickname",
+      "cancel": "Cancel",
+      "submit": "Launch the demo →"
+    },
     "hero": {
       "eyebrow": "Immersive platform demo",
       "title": "Discover tomorrow's video conferencing,",

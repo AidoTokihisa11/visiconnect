@@ -4,6 +4,7 @@ import enTranslations from './en.json';
 import deTranslations from './de.json';
 import esTranslations from './es.json';
 import ruTranslations from './ru.json';
+import caTranslations from './ca.json';
 
 class TranslationService {
   constructor() {
@@ -14,7 +15,8 @@ class TranslationService {
       'en': enTranslations,
       'de': deTranslations,
       'es': esTranslations,
-      'ru': ruTranslations
+      'ru': ruTranslations,
+      'ca': caTranslations
     };
   }
 
@@ -89,7 +91,8 @@ class TranslationService {
       { code: 'en', name: 'English', flag: '🇺🇸' },
       { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
       { code: 'es', name: 'Español', flag: '🇪🇸' },
-      { code: 'ru', name: 'Русский', flag: '🇷🇺' }
+      { code: 'ru', name: 'Русский', flag: '🇷🇺' },
+      { code: 'ca', name: 'Català', flag: '🏴󠁥󠁳󠁣󠁴󠁿' }
     ];
   }
 
@@ -100,7 +103,8 @@ class TranslationService {
       'en': 'en-US',
       'de': 'de-DE',
       'es': 'es-ES',
-      'ru': 'ru-RU'
+      'ru': 'ru-RU',
+      'ca': 'ca-ES'
     };
 
     return new Intl.DateTimeFormat(
@@ -116,7 +120,8 @@ class TranslationService {
       'en': 'en-US',
       'de': 'de-DE',
       'es': 'es-ES',
-      'ru': 'ru-RU'
+      'ru': 'ru-RU',
+      'ca': 'ca-ES'
     };
 
     return new Intl.NumberFormat(
@@ -132,7 +137,8 @@ class TranslationService {
       'en': 'USD',
       'de': 'EUR',
       'es': 'EUR',
-      'ru': 'RUB'
+      'ru': 'RUB',
+      'ca': 'EUR'
     };
 
     return this.formatNumber(amount, {
