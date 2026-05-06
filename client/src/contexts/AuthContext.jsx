@@ -154,64 +154,84 @@ export const AuthProvider = ({ children }) => {
     return { success: true };
   };
 
-  // Clerk Core 3 : envoie un code de réinitialisation par email
+  // Clerk Core 3 (@clerk/react v6) — password reset flow:
+  //   1) signIn.create({ identifier })            → populates the identifier
+  //   2) signIn.resetPasswordEmailCode.sendCode() → sends the email code
+  //   3) signIn.resetPasswordEmailCode.verifyCode({ code }) → status: 'needs_new_password'
+  //   4) signIn.resetPasswordEmailCode.submitPassword({ password }) → status: 'complete'
+  //   5) signIn.finalize()                        → activates session
   const requestPasswordReset = async (email) => {
     if (!clerkSignIn) return { error: { message: "Clerk n'est pas prêt." } };
     try {
-      const result = await clerkSignIn.create({
-        strategy: 'reset_password_email_code',
-        identifier: email,
-      });
-      // Si create() ne lève pas d'erreur, le code a été envoyé.
-      // Le statut attendu est 'needs_first_factor' mais on accepte tout statut non-erreur.
-      if (result?.status === 'needs_first_factor' || result?.status) {
-        return { success: true };
+      // Step 1: populate identifier on the sign-in attempt.
+      const createRes = await clerkSignIn.create({ identifier: email });
+      if (createRes?.error) {
+        const code = createRes.error.errors?.[0]?.code;
+        if (code === 'form_identifier_not_found') {
+          return { error: { message: "Aucun compte trouvé avec cet email." } };
+        }
+        if (code === 'form_param_format_invalid') {
+          return { error: { message: "Format d'email invalide." } };
+        }
+        return { error: { message: handleNetworkError(createRes.error) } };
       }
-      // Pas de status mais pas d'exception non plus → considérer succès (Clerk envoie quand même l'email)
+
+      // Step 2: send the reset password email code.
+      if (!clerkSignIn.resetPasswordEmailCode?.sendCode) {
+        return { error: { message: "Cette version de Clerk ne supporte pas la réinitialisation par email." } };
+      }
+      const sendRes = await clerkSignIn.resetPasswordEmailCode.sendCode();
+      if (sendRes?.error) {
+        const code = sendRes.error.errors?.[0]?.code;
+        if (code === 'form_identifier_not_found') {
+          return { error: { message: "Aucun compte trouvé avec cet email." } };
+        }
+        return { error: { message: handleNetworkError(sendRes.error) } };
+      }
       return { success: true };
     } catch (err) {
-      const code = err.errors?.[0]?.code;
-      // ⚠️ Codes Clerk « non bloquants » : l'email de réinitialisation est envoyé malgré tout.
-      // On retourne success pour ne pas afficher une fausse erreur à l'utilisateur.
-      const NON_BLOCKING_CODES = [
-        'session_exists',
-        'identifier_already_signed_in',
-        'verification_already_verified',
-      ];
-      if (NON_BLOCKING_CODES.includes(code)) {
-        return { success: true };
-      }
-      if (code === 'form_identifier_not_found') {
-        return { error: { message: "Aucun compte trouvé avec cet email." } };
-      }
-      if (code === 'form_param_format_invalid') {
-        return { error: { message: "Format d'email invalide." } };
-      }
-      console.warn('[Clerk] requestPasswordReset error:', code, err);
+      console.warn('[Clerk] requestPasswordReset error:', err);
       return { error: { message: handleNetworkError(err) } };
     }
   };
 
-  // Clerk Core 3 : vérifie le code et définit le nouveau mot de passe
+  // Clerk Core 3 — verifies the code and sets a new password.
   const confirmPasswordReset = async (code, newPassword) => {
     if (!clerkSignIn) return { error: { message: "Clerk n'est pas prêt." } };
+    if (!clerkSignIn.resetPasswordEmailCode?.verifyCode) {
+      return { error: { message: "Réinitialisation indisponible. Veuillez recommencer depuis l'étape précédente." } };
+    }
     try {
-      const result = await clerkSignIn.attemptFirstFactor({
-        strategy: 'reset_password_email_code',
-        code,
-        password: newPassword,
-      });
-      if (result.status === 'complete') {
-        await clerkSignIn.finalize({ navigate: () => {} });
-        return { success: true };
+      // Step 3: verify the code from the email.
+      const verifyRes = await clerkSignIn.resetPasswordEmailCode.verifyCode({ code });
+      if (verifyRes?.error) {
+        const c = verifyRes.error.errors?.[0]?.code;
+        if (c === 'form_code_incorrect') return { error: { message: "Code incorrect. Vérifiez votre email." } };
+        if (c === 'verification_expired') return { error: { message: "Code expiré. Veuillez recommencer." } };
+        return { error: { message: handleNetworkError(verifyRes.error) } };
       }
-      return { error: { message: `Réinitialisation incomplète (statut: ${result.status}).` } };
+
+      // Step 4: submit the new password.
+      const submitRes = await clerkSignIn.resetPasswordEmailCode.submitPassword({ password: newPassword });
+      if (submitRes?.error) {
+        const c = submitRes.error.errors?.[0]?.code;
+        if (c === 'form_password_pwned') return { error: { message: "Ce mot de passe est trop commun. Choisissez-en un autre." } };
+        if (c === 'form_password_length_too_short') return { error: { message: "Le mot de passe est trop court (minimum 8 caractères)." } };
+        if (c === 'form_password_validation_failed') return { error: { message: "Mot de passe invalide. Respectez les critères de sécurité." } };
+        return { error: { message: handleNetworkError(submitRes.error) } };
+      }
+
+      // Step 5: activate the new session.
+      if (clerkSignIn.status === 'complete') {
+        try {
+          await clerkSignIn.finalize({ navigate: () => {} });
+        } catch (e) {
+          console.warn('[Clerk] finalize after reset failed:', e);
+        }
+      }
+      return { success: true };
     } catch (err) {
-      const code = err.errors?.[0]?.code;
-      if (code === 'form_code_incorrect') return { error: { message: "Code incorrect. Vérifiez votre email." } };
-      if (code === 'verification_expired') return { error: { message: "Code expiré. Veuillez recommencer." } };
-      if (code === 'form_password_pwned') return { error: { message: "Ce mot de passe est trop commun. Choisissez-en un autre." } };
-      if (code === 'form_password_length_too_short') return { error: { message: "Le mot de passe est trop court (minimum 8 caractères)." } };
+      console.warn('[Clerk] confirmPasswordReset error:', err);
       return { error: { message: handleNetworkError(err) } };
     }
   };

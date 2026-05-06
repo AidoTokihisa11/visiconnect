@@ -242,11 +242,13 @@ const Feature = ({
   description, 
   enabled, 
   available = true,
+  disabled = false,
   onToggle, 
   children,
   expandable = true 
 }) => {
   const [expanded, setExpanded] = useState(false);
+  const isInteractive = available && !disabled;
 
   return (
     <FeatureCard $enabled={enabled}>
@@ -268,9 +270,10 @@ const Feature = ({
           )}
           <Switch 
             $on={enabled} 
-            disabled={!available}
+            disabled={!isInteractive}
             onClick={(e) => {
               e.stopPropagation();
+              if (!isInteractive) return;
               onToggle();
             }}
             aria-label={`Toggle ${name}`}
@@ -559,7 +562,7 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
         }
         description="Chat multilingue • OpenRouter"
         enabled={false}
-        available={false}
+        disabled
         onToggle={() => {}}
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', opacity: 0.85 }}>

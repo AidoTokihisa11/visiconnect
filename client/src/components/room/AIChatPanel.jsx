@@ -355,11 +355,32 @@ export const AIChatPanel = ({ responseStyle = 'balanced', roomMessages = [], roo
     
     try {
       const latestRoomMessages = (roomMessages || []).slice(-50);
-      
-      if (!latestRoomMessages.length) {
-        const fallback = '# Résumé de réunion\n\nAucun message de réunion disponible pour le moment.';
-        setMeetingSummary(fallback);
-        setMessages((prev) => [...prev, { id: Date.now(), sender: 'ai', text: 'Aucun message à résumer pour le moment.' }]);
+
+      // Fallback source: when no real meeting chat exists yet, use the local
+      // AI-conversation history (excluding the bot welcome message + summary
+      // status notices) so the user still gets a meaningful summary instead of
+      // a dead-end "no messages" screen.
+      let sourceMessages = latestRoomMessages;
+      let usedFallbackSource = false;
+      if (!sourceMessages.length) {
+        const aiHistory = (messages || [])
+          .filter((m) => m.text && !/^Aucun message|Résumé local|✨ Résumé/.test(m.text))
+          .map((m) => ({
+            sender: m.sender === 'ai' ? 'Assistant IA' : 'Vous',
+            text: m.text,
+            timestamp: m.id || Date.now(),
+          }));
+        if (aiHistory.length) {
+          sourceMessages = aiHistory.slice(-50);
+          usedFallbackSource = true;
+        }
+      }
+
+      if (!sourceMessages.length) {
+        const empty = '# Résumé de réunion\n\nDémarrez la conversation ou ouvrez le chat de la réunion : un résumé sera généré automatiquement dès qu\'il y aura du contenu à analyser.';
+        setMeetingSummary(empty);
+        setAiError("Aucun contenu à résumer pour l'instant.");
+        setTimeout(() => setAiError(null), 4000);
         return;
       }
 
@@ -367,30 +388,33 @@ export const AIChatPanel = ({ responseStyle = 'balanced', roomMessages = [], roo
         // 🤖 Utilise SmartNotesService pour un résumé structuré
         const smartNotes = getSmartNotesService();
         const result = await smartNotes.generateMeetingSummary({
-          chatMessages: latestRoomMessages,
+          chatMessages: sourceMessages,
           meetingTitle: `Réunion - ${new Date().toLocaleDateString('fr-FR')}`,
           duration: 'En cours',
         });
         
         setMeetingSummary(normalizeMarkdownForDisplay(result.summary));
+        const note = usedFallbackSource
+          ? `✨ Résumé généré à partir de la conversation IA (modèle ${result.model}).`
+          : `✨ Résumé généré avec ${result.model}! Utilise le bouton Export Markdown pour le télécharger.`;
         setMessages((prev) => [...prev, { 
           id: Date.now(), 
           sender: 'ai', 
-          text: `✨ Résumé généré avec ${result.model}! Utilise le bouton Export Markdown pour le télécharger.` 
+          text: note,
         }]);
       } catch (e) {
         console.warn('[AIChatPanel] SmartNotesService error, fallback to local:', e);
         // Fallback to local summary
-        const summary = localSummary(latestRoomMessages);
+        const summary = localSummary(sourceMessages);
         setMeetingSummary(summary);
         setAiError("Résumé local généré (IA distante indisponible)");
         setTimeout(() => setAiError(null), 5000);
-        setMessages((prev) => [...prev, { id: Date.now(), sender: 'ai', text: 'Résumé local généré.' }]);
       }
     } catch (e) {
       const fallback = localSummary(roomMessages);
       setMeetingSummary(fallback);
-      setMessages((prev) => [...prev, { id: Date.now(), sender: 'ai', text: 'Résumé local généré.' }]);
+      setAiError("Résumé local généré.");
+      setTimeout(() => setAiError(null), 4000);
     } finally {
       setIsTyping(false);
     }
