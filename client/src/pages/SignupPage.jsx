@@ -448,7 +448,7 @@ const SignupPage = () => {
           {!pendingVerification ? (
             <>
               <Header>
-                <Logo>VisiConnect</Logo>
+                <Logo>VisioConnect</Logo>
                 <Title>{t('signup.title')}</Title>
                 <Subtitle>{t('signup.subtitle')}</Subtitle>
               </Header>

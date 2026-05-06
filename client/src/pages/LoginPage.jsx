@@ -367,7 +367,7 @@ const LoginPage = () => {
           )}
 
           <Header>
-            <Logo>VisiConnect</Logo>
+            <Logo>VisioConnect</Logo>
             <Title>{t('login.title')}</Title>
             <Subtitle>{t('login.subtitle')}</Subtitle>
           </Header>
