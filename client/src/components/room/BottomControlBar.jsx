@@ -12,7 +12,7 @@ import { useTranslation } from '../../hooks/useTranslation';
 const BottomBar = styled.div`
   /* Desktop: hauteur fixe, flex-shrink: 0 pour ne jamais shrink */
   flex-shrink: 0;
-  height: 92px;
+  height: 76px;
   background-color: ${THEME.panelBg};
   backdrop-filter: blur(12px);
   border-top: 1px solid ${THEME.border};
@@ -63,21 +63,7 @@ const ControlItem = styled.div`
 `;
 
 const ControlLabel = styled.span`
-  font-size: 11px;
-  font-weight: 500;
-  color: ${THEME.textMuted || 'rgba(255,255,255,0.7)'};
-  letter-spacing: 0.2px;
-  user-select: none;
-  pointer-events: none;
-  text-align: center;
-  max-width: 72px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-  @media (max-width: 768px) {
-    display: none;
-  }
+  display: none;
 `;
 
 const ControlButton = styled.button`
