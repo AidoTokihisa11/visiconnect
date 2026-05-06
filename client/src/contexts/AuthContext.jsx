@@ -46,16 +46,18 @@ export const AuthProvider = ({ children }) => {
     return err.errors?.[0]?.message || err.message || "Une erreur est survenue avec l'authentification.";
   };
 
-  // Clerk Core 3 : authenticateWithRedirect déclenche la redirection OAuth
+  // Clerk @clerk/react v6 : signIn.sso() déclenche la redirection OAuth
   const signInWithProvider = async (provider) => {
     if (!clerkSignIn) return { error: { message: "Clerk n'est pas prêt." } };
     try {
-      await clerkSignIn.authenticateWithRedirect({
+      const { error } = await clerkSignIn.sso({
         strategy: `oauth_${provider}`,
-        redirectUrl: `${window.location.origin}/sso-callback`,
-        redirectUrlComplete: '/'
+        redirectCallbackUrl: `${window.location.origin}/sso-callback`,
+        redirectUrl: window.location.origin + '/',
       });
-      // Cette fonction ne retourne pas — le navigateur redirige vers le provider OAuth
+      if (error) {
+        return { error: { message: error.errors?.[0]?.message || error.message || 'Erreur OAuth.' } };
+      }
       return { success: true };
     } catch (err) {
       console.error('[signInWithProvider]', err);
