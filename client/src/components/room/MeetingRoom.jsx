@@ -10,6 +10,7 @@ import { X, ChevronRight, Bot, PieChart, MessageSquare, Users, Hand, Sparkles } 
 import { useMeeting } from '../../hooks/useMeeting';
 import { useChat } from '../../hooks/useChat';
 import { usePricing } from '../../hooks/usePricing';
+import { useTranslation } from '../../hooks/useTranslation';
 import { useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 
@@ -261,6 +262,7 @@ const WhiteboardOverlay = styled(motion.div)`
 `;
 
 export const MeetingRoom = ({ onLeave, roomId, user }) => {
+  const { t } = useTranslation();
   const originalRoomId = new URLSearchParams(window.location.search).get('parent') || roomId;
 
   const activeBreakout = useQuery(api.breakout.getActiveBreakout, { meetingId: originalRoomId });
@@ -386,10 +388,10 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
   useEffect(() => {
     if (!deviceError) return;
     const msg = deviceError === 'mic_denied'
-      ? 'Micro bloqué — cliquez sur 🔒 dans la barre d\'adresse pour autoriser l\'accès.'
+      ? t('room.toasts.micBlocked', "Micro bloqué — cliquez sur 🔒 dans la barre d'adresse pour autoriser l'accès.")
       : deviceError === 'mic_error'
-      ? 'Erreur micro — rechargez la page ou vérifiez votre périphérique audio.'
-      : 'Caméra bloquée — cliquez sur 🔒 dans la barre d\'adresse pour autoriser l\'accès.';
+      ? t('room.toasts.micError', 'Erreur micro — rechargez la page ou vérifiez votre périphérique audio.')
+      : t('room.toasts.cameraBlocked', "Caméra bloquée — cliquez sur 🔒 dans la barre d'adresse pour autoriser l'accès.");
     setToast({ message: msg, type: 'poll' });
     const t = setTimeout(() => { setToast(null); clearDeviceError(); }, 5000);
     return () => clearTimeout(t);
@@ -398,9 +400,9 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
   useEffect(() => {
     if (!recordingError) return;
     const messages = {
-      permission_denied: 'Partage d’écran refusé. Vérifiez les permissions du navigateur.',
-      no_device: 'Aucun périphérique trouvé pour l’enregistrement.',
-      unknown: 'Erreur lors du démarrage de l’enregistrement.',
+      permission_denied: t('room.toasts.recordPermissionDenied', 'Partage d’écran refusé. Vérifiez les permissions du navigateur.'),
+      no_device: t('room.toasts.recordNoDevice', 'Aucun périphérique trouvé pour l’enregistrement.'),
+      unknown: t('room.toasts.recordUnknown', 'Erreur lors du démarrage de l’enregistrement.'),
     };
     setToast({ message: messages[recordingError] || messages.unknown, type: 'poll' });
     setTimeout(() => { setToast(null); clearRecordingError(); }, 4000);
@@ -435,8 +437,8 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
         
         // Show toast + sound for the last new message
         const lastMsg = otherMessages[otherMessages.length - 1];
-        const senderName = lastMsg.sender?.split('@')[0] || 'Quelqu\'un';
-        setToast({ message: `Nouveau message de ${senderName}`, type: 'chat' });
+        const senderName = lastMsg.sender?.split('@')[0] || t('room.toasts.someone', "Quelqu'un");
+        setToast({ message: t('room.toasts.newMessage', 'Nouveau message de {{name}}', { name: senderName }), type: 'chat' });
         setTimeout(() => setToast(null), 3000);
         playNotifSound();
       }
@@ -620,7 +622,7 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
     setIsHandRaised(prev => {
       const newState = !prev;
       if (newState) {
-        setToast({ message: '🖐️ Main levée !', type: 'hand' });
+        setToast({ message: t('room.toasts.handRaised', 'Main levée !'), type: 'hand' });
         setTimeout(() => setToast(null), 3000);
       }
       // Broadcast via LiveKit data channel
@@ -670,8 +672,8 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
                exit={{ scale: 0.9, y: 20 }}
                onClick={e => e.stopPropagation()}
              >
-               <h3><PieChart size={22} /> Nouveau Sondage!</h3>
-               <p className="poll-meta">Créé par {pollPopup.createdBy?.split('@')[0] || 'Quelqu\'un'}</p>
+               <h3><PieChart size={22} /> {t('room.pollPopup.title', 'Nouveau Sondage!')}</h3>
+               <p className="poll-meta">{t('room.pollPopup.createdBy', 'Créé par {{name}}', { name: pollPopup.createdBy?.split('@')[0] || t('room.toasts.someone', "Quelqu'un") })}</p>
                <p>{pollPopup.question}</p>
                <div style={{ display: 'flex', gap: '12px' }}>
                  <PollPopupButton 

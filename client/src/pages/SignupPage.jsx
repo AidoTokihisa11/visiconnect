@@ -619,14 +619,14 @@ const SignupPage = () => {
                   disabled={loading}
                   onClick={() => handleOAuth('google')}
                 >
-                  {oauthLoading === 'google' ? 'Connexion...' : <><FaGoogle color="#ea4335" /> Google</>}
+                  {oauthLoading === 'google' ? t('auth.signingIn', 'Connexion...') : <><FaGoogle color="#ea4335" /> Google</>}
                 </OAuthButton>
                 <OAuthButton
                   type="button"
                   disabled={loading}
                   onClick={() => handleOAuth('github')}
                 >
-                  {oauthLoading === 'github' ? 'Connexion...' : <><FaGithub /> GitHub</>}
+                  {oauthLoading === 'github' ? t('auth.signingIn', 'Connexion...') : <><FaGithub /> GitHub</>}
                 </OAuthButton>
               </OAuthButtons>
 

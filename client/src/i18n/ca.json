@@ -265,7 +265,8 @@
       "email": "Dirección de email",
       "sendReset": "Enviar enlace de restablecimiento",
       "backToLogin": "Tornar al inici de sessió"
-    }
+    },
+    "signingIn": "Connectant..."
   },
   "meeting": {
     "title": "Reunió",
@@ -2585,6 +2586,67 @@
           "Recarregueu la pàgina."
         ]
       }
+    },
+    "toasts": {
+      "micBlocked": "Micròfon bloquejat — feu clic a 🔒 a la barra d'adreces per permetre l'accés.",
+      "micError": "Error de micròfon — recarregueu la pàgina o comproveu el dispositiu d'àudio.",
+      "cameraBlocked": "Càmera bloquejada — feu clic a 🔒 a la barra d'adreces per permetre l'accés.",
+      "recordPermissionDenied": "Compartir pantalla denegat. Comproveu els permisos del navegador.",
+      "recordNoDevice": "No s'ha trobat cap dispositiu per enregistrar.",
+      "recordUnknown": "Error en iniciar l'enregistrament.",
+      "someone": "Algú",
+      "newMessage": "Nou missatge de {{name}}",
+      "handRaised": "Mà aixecada!"
+    },
+    "pollPopup": {
+      "title": "Nova enquesta!",
+      "createdBy": "Creada per {{name}}"
+    },
+    "polls": {
+      "title": "Enquestes",
+      "create": "Crear enquesta",
+      "empty": "Encara no hi ha enquestes",
+      "ended": "Finalitzada",
+      "active": "Activa",
+      "anon": "Anònima",
+      "hidden": "Resultats ocults",
+      "vote": "vot",
+      "votes": "vots",
+      "afterVote": "Els resultats seran visibles després del vostre vot",
+      "hideResults": "Amagar resultats",
+      "showResults": "Mostrar resultats",
+      "hideShort": "Amagar",
+      "showShort": "Mostrar",
+      "close": "Tancar l'enquesta",
+      "closeShort": "Tancar",
+      "newPoll": "Nova enquesta",
+      "questionPlaceholder": "La vostra pregunta...",
+      "optionPlaceholder": "Opció {{n}}",
+      "addOption": "Afegir opció",
+      "options": "Opcions",
+      "anonymousVote": "Vot anònim",
+      "showResultsOpt": "Mostrar resultats",
+      "cancel": "Cancel·lar",
+      "creating": "Creant...",
+      "submit": "Crear",
+      "anonymous": "Anònim",
+      "errEmptyQuestion": "Introduïu una pregunta.",
+      "errMinOptions": "Afegiu almenys 2 opcions.",
+      "errCreate": "Error en crear",
+      "errUnknown": "Error desconegut"
+    },
+    "invite": {
+      "title": "Convidar participants",
+      "subtitle": "Compartiu aquest enllaç amb les persones que vulgueu convidar a la reunió.",
+      "linkLabel": "Enllaç de la reunió",
+      "copy": "Copiar",
+      "copied": "Copiat",
+      "otherOptions": "Altres opcions per compartir",
+      "email": "Enviar per correu",
+      "sms": "Convidar per SMS",
+      "smsSoon": "Funció SMS aviat! (Només visual de moment)",
+      "emailSubject": "Invitació a una videoconferència",
+      "emailBody": "Uniu-vos a la meva reunió fent clic en aquest enllaç: {{url}}"
     }
   },
   "aiChatbot": {

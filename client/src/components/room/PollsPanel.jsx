@@ -4,6 +4,7 @@ import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 import { X, Plus, CheckCircle, Trash2, Eye, EyeOff, Lock, Unlock } from 'lucide-react';
+import { useTranslation } from '../../hooks/useTranslation';
 
 const PanelContainer = styled.div`
   width: 320px;
@@ -263,6 +264,7 @@ const SmallButton = styled.button`
 `;
 
 export default function PollsPanel({ meetingId, currentUser, onClose, onPollCreated }) {
+  const { t } = useTranslation();
   const polls = useQuery(api.polls.getPolls, { meetingId }) || [];
   const createPoll = useMutation(api.polls.createPoll);
   const votePoll = useMutation(api.polls.votePoll);
@@ -297,11 +299,11 @@ export default function PollsPanel({ meetingId, currentUser, onClose, onPollCrea
     setCreateError("");
     const validOptions = options.filter(o => o.trim() !== "");
     if (question.trim() === "") {
-      setCreateError("Veuillez saisir une question.");
+      setCreateError(t('room.polls.errEmptyQuestion', 'Veuillez saisir une question.'));
       return;
     }
     if (validOptions.length < 2) {
-      setCreateError("Ajoutez au moins 2 options.");
+      setCreateError(t('room.polls.errMinOptions', 'Ajoutez au moins 2 options.'));
       return;
     }
     setIsLoading(true);
@@ -310,7 +312,7 @@ export default function PollsPanel({ meetingId, currentUser, onClose, onPollCrea
         meetingId,
         question: question.trim(),
         options: validOptions,
-        createdBy: currentUser?.identity || "Anonyme",
+        createdBy: currentUser?.identity || t('room.polls.anonymous', 'Anonyme'),
         isAnonymous,
         showResults: showResultsOnCreate,
       });
@@ -318,8 +320,8 @@ export default function PollsPanel({ meetingId, currentUser, onClose, onPollCrea
       if (onPollCreated) onPollCreated();
     } catch (err) {
       console.error('createPoll error:', err);
-      const detail = err?.data?.message || err?.message || 'Erreur inconnue';
-      setCreateError(`Erreur lors de la création : ${detail}`);
+      const detail = err?.data?.message || err?.message || t('room.polls.errUnknown', 'Erreur inconnue');
+      setCreateError(`${t('room.polls.errCreate', 'Erreur lors de la création')} : ${detail}`);
     } finally {
       setIsLoading(false);
     }
@@ -331,7 +333,7 @@ export default function PollsPanel({ meetingId, currentUser, onClose, onPollCrea
   return (
     <PanelContainer>
       <Header>
-        <span>Sondages</span>
+        <span>{t('room.polls.title', 'Sondages')}</span>
         <IconButton onClick={onClose}><X size={20} /></IconButton>
       </Header>
       
@@ -339,12 +341,12 @@ export default function PollsPanel({ meetingId, currentUser, onClose, onPollCrea
         {!isCreating ? (
           <>
             <Button onClick={() => setIsCreating(true)}>
-              <Plus size={18} /> Créer un sondage
+              <Plus size={18} /> {t('room.polls.create', 'Créer un sondage')}
             </Button>
             
             {polls.length === 0 && (
               <div style={{ textAlign: 'center', color: 'rgba(255,255,255,0.3)', fontSize: '13px', marginTop: '24px' }}>
-                Aucun sondage pour l'instant
+                {t('room.polls.empty', "Aucun sondage pour l'instant")}
               </div>
             )}
 
@@ -363,19 +365,19 @@ export default function PollsPanel({ meetingId, currentUser, onClose, onPollCrea
                   {/* Badges */}
                   <PollMeta>
                     {!poll.isActive && (
-                      <Badge $color="rgba(239,68,68,0.15)" $textColor="#f87171">Terminé</Badge>
+                      <Badge $color="rgba(239,68,68,0.15)" $textColor="#f87171">{t('room.polls.ended', 'Terminé')}</Badge>
                     )}
                     {poll.isActive && (
-                      <Badge $color="rgba(34,197,94,0.12)" $textColor="#4ade80">En cours</Badge>
+                      <Badge $color="rgba(34,197,94,0.12)" $textColor="#4ade80">{t('room.polls.active', 'En cours')}</Badge>
                     )}
                     {poll.isAnonymous && (
-                      <Badge><Lock size={9} /> Anonyme</Badge>
+                      <Badge><Lock size={9} /> {t('room.polls.anon', 'Anonyme')}</Badge>
                     )}
                     {!(poll.showResults ?? true) && poll.isActive && !hasVoted && !isCreator(poll) && (
-                      <Badge><EyeOff size={9} /> Résultats masqués</Badge>
+                      <Badge><EyeOff size={9} /> {t('room.polls.hidden', 'Résultats masqués')}</Badge>
                     )}
                     <Badge $color="rgba(255,255,255,0.06)" $textColor="rgba(255,255,255,0.45)">
-                      {total} vote{total !== 1 ? 's' : ''}
+                      {total} {t(total !== 1 ? 'room.polls.votes' : 'room.polls.vote', total !== 1 ? 'votes' : 'vote')}
                     </Badge>
                   </PollMeta>
 
@@ -416,7 +418,7 @@ export default function PollsPanel({ meetingId, currentUser, onClose, onPollCrea
                   {/* Message si résultats masqués */}
                   {!canSeeResults && (
                     <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)', marginTop: '8px', textAlign: 'center' }}>
-                      Les résultats seront visibles après votre vote
+                      {t('room.polls.afterVote', 'Les résultats seront visibles après votre vote')}
                     </div>
                   )}
 
@@ -426,13 +428,13 @@ export default function PollsPanel({ meetingId, currentUser, onClose, onPollCrea
                       {poll.isActive && (
                         <>
                           <SmallButton
-                            title={(poll.showResults ?? true) ? 'Masquer les résultats' : 'Afficher les résultats'}
+                            title={(poll.showResults ?? true) ? t('room.polls.hideResults', 'Masquer les résultats') : t('room.polls.showResults', 'Afficher les résultats')}
                             onClick={() => toggleShowResults({ pollId: poll._id, show: !(poll.showResults ?? true) })}
                           >
-                            {(poll.showResults ?? true) ? <><EyeOff size={11} /> Masquer résultats</> : <><Eye size={11} /> Afficher résultats</>}
+                            {(poll.showResults ?? true) ? <><EyeOff size={11} /> {t('room.polls.hideShort', 'Masquer résultats')}</> : <><Eye size={11} /> {t('room.polls.showShort', 'Afficher résultats')}</>}
                           </SmallButton>
-                          <SmallButton $variant="danger" onClick={() => endPoll({ pollId: poll._id })} title="Clôturer le sondage">
-                            <CheckCircle size={11} /> Clôturer
+                          <SmallButton $variant="danger" onClick={() => endPoll({ pollId: poll._id })} title={t('room.polls.close', 'Clôturer le sondage')}>
+                            <CheckCircle size={11} /> {t('room.polls.closeShort', 'Clôturer')}
                           </SmallButton>
                         </>
                       )}
@@ -440,7 +442,7 @@ export default function PollsPanel({ meetingId, currentUser, onClose, onPollCrea
                         <SmallButton
                           onClick={() => toggleShowResults({ pollId: poll._id, show: !(poll.showResults ?? true) })}
                         >
-                          {(poll.showResults ?? true) ? <><EyeOff size={11} /> Masquer résultats</> : <><Eye size={11} /> Afficher résultats</>}
+                          {(poll.showResults ?? true) ? <><EyeOff size={11} /> {t('room.polls.hideShort', 'Masquer résultats')}</> : <><Eye size={11} /> {t('room.polls.showShort', 'Afficher résultats')}</>}
                         </SmallButton>
                       )}
                     </CreatorActions>
@@ -451,9 +453,9 @@ export default function PollsPanel({ meetingId, currentUser, onClose, onPollCrea
           </>
         ) : (
           <PollCard>
-            <h4 style={{ margin: '0 0 14px 0' }}>Nouveau sondage</h4>
+            <h4 style={{ margin: '0 0 14px 0' }}>{t('room.polls.newPoll', 'Nouveau sondage')}</h4>
             <Input 
-              placeholder="Votre question..." 
+              placeholder={t('room.polls.questionPlaceholder', 'Votre question...')}
               value={question} 
               onChange={e => setQuestion(e.target.value)} 
             />
@@ -461,7 +463,7 @@ export default function PollsPanel({ meetingId, currentUser, onClose, onPollCrea
             {options.map((opt, i) => (
               <div key={i} style={{ display: 'flex', gap: '8px' }}>
                 <Input 
-                  placeholder={`Option ${i + 1}`} 
+                  placeholder={t('room.polls.optionPlaceholder', 'Option {{n}}', { n: i + 1 })}
                   value={opt} 
                   onChange={e => {
                     const newOpts = [...options];
@@ -478,18 +480,18 @@ export default function PollsPanel({ meetingId, currentUser, onClose, onPollCrea
             ))}
             
             <Button style={{ background: 'transparent', border: `1px dashed ${THEME.primary}`, marginBottom: '12px' }} onClick={() => setOptions([...options, ""])}>
-              <Plus size={16} /> Ajouter une option
+              <Plus size={16} /> {t('room.polls.addOption', 'Ajouter une option')}
             </Button>
 
             {/* Options avancées */}
             <OptionsSection>
-              <div style={{ fontSize: '10px', fontWeight: 700, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '4px' }}>Options</div>
+              <div style={{ fontSize: '10px', fontWeight: 700, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '4px' }}>{t('room.polls.options', 'Options')}</div>
               <ToggleRow>
-                <ToggleLabel><Lock size={13} /> Vote anonyme</ToggleLabel>
+                <ToggleLabel><Lock size={13} /> {t('room.polls.anonymousVote', 'Vote anonyme')}</ToggleLabel>
                 <Toggle checked={isAnonymous} onChange={e => setIsAnonymous(e.target.checked)} />
               </ToggleRow>
               <ToggleRow>
-                <ToggleLabel><Eye size={13} /> Afficher les résultats</ToggleLabel>
+                <ToggleLabel><Eye size={13} /> {t('room.polls.showResultsOpt', 'Afficher les résultats')}</ToggleLabel>
                 <Toggle checked={showResultsOnCreate} onChange={e => setShowResultsOnCreate(e.target.checked)} />
               </ToggleRow>
             </OptionsSection>
@@ -500,9 +502,9 @@ export default function PollsPanel({ meetingId, currentUser, onClose, onPollCrea
               </div>
             )}
             <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
-              <Button style={{ background: THEME.surface }} onClick={resetForm} disabled={isLoading}>Annuler</Button>
+              <Button style={{ background: THEME.surface }} onClick={resetForm} disabled={isLoading}>{t('room.polls.cancel', 'Annuler')}</Button>
               <Button onClick={handleCreate} disabled={isLoading} style={{ opacity: isLoading ? 0.6 : 1 }}>
-                {isLoading ? 'Création...' : 'Créer'}
+                {isLoading ? t('room.polls.creating', 'Création...') : t('room.polls.submit', 'Créer')}
               </Button>
             </div>
           </PollCard>

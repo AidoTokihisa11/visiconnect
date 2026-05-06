@@ -265,7 +265,8 @@
       "email": "E-Mail-Adresse",
       "sendReset": "Reset-Link senden",
       "backToLogin": "Zurück zur Anmeldung"
-    }
+    },
+    "signingIn": "Anmeldung..."
   },
   "meeting": {
     "title": "Meeting",
@@ -2550,6 +2551,67 @@
           "Laden Sie die Seite neu."
         ]
       }
+    },
+    "toasts": {
+      "micBlocked": "Mikrofon blockiert — klicken Sie in der Adressleiste auf 🔒, um den Zugriff zu erlauben.",
+      "micError": "Mikrofonfehler — Seite neu laden oder Audiogerät prüfen.",
+      "cameraBlocked": "Kamera blockiert — klicken Sie in der Adressleiste auf 🔒, um den Zugriff zu erlauben.",
+      "recordPermissionDenied": "Bildschirmfreigabe abgelehnt. Browser-Berechtigungen prüfen.",
+      "recordNoDevice": "Kein Gerät zum Aufzeichnen gefunden.",
+      "recordUnknown": "Fehler beim Starten der Aufzeichnung.",
+      "someone": "Jemand",
+      "newMessage": "Neue Nachricht von {{name}}",
+      "handRaised": "Hand gehoben!"
+    },
+    "pollPopup": {
+      "title": "Neue Umfrage!",
+      "createdBy": "Erstellt von {{name}}"
+    },
+    "polls": {
+      "title": "Umfragen",
+      "create": "Umfrage erstellen",
+      "empty": "Noch keine Umfrage",
+      "ended": "Beendet",
+      "active": "Aktiv",
+      "anon": "Anonym",
+      "hidden": "Ergebnisse verborgen",
+      "vote": "Stimme",
+      "votes": "Stimmen",
+      "afterVote": "Ergebnisse werden nach Ihrer Stimmabgabe sichtbar",
+      "hideResults": "Ergebnisse verbergen",
+      "showResults": "Ergebnisse anzeigen",
+      "hideShort": "Verbergen",
+      "showShort": "Anzeigen",
+      "close": "Umfrage schließen",
+      "closeShort": "Schließen",
+      "newPoll": "Neue Umfrage",
+      "questionPlaceholder": "Ihre Frage...",
+      "optionPlaceholder": "Option {{n}}",
+      "addOption": "Option hinzufügen",
+      "options": "Optionen",
+      "anonymousVote": "Anonyme Abstimmung",
+      "showResultsOpt": "Ergebnisse anzeigen",
+      "cancel": "Abbrechen",
+      "creating": "Erstellen...",
+      "submit": "Erstellen",
+      "anonymous": "Anonym",
+      "errEmptyQuestion": "Bitte eine Frage eingeben.",
+      "errMinOptions": "Mindestens 2 Optionen hinzufügen.",
+      "errCreate": "Fehler beim Erstellen",
+      "errUnknown": "Unbekannter Fehler"
+    },
+    "invite": {
+      "title": "Teilnehmer einladen",
+      "subtitle": "Teilen Sie diesen Link mit den Personen, die Sie zu Ihrem Meeting einladen möchten.",
+      "linkLabel": "Meeting-Link",
+      "copy": "Kopieren",
+      "copied": "Kopiert",
+      "otherOptions": "Andere Freigabeoptionen",
+      "email": "Per E-Mail senden",
+      "sms": "Per SMS einladen",
+      "smsSoon": "SMS-Funktion kommt bald! (Vorerst nur visuell)",
+      "emailSubject": "Einladung zu einer Videokonferenz",
+      "emailBody": "Treten Sie meinem Meeting bei, indem Sie auf diesen Link klicken: {{url}}"
     }
   },
   "aiChatbot": {

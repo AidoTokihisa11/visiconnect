@@ -314,7 +314,8 @@
       "email": "Email address",
       "sendReset": "Send reset link",
       "backToLogin": "Back to login"
-    }
+    },
+    "signingIn": "Signing in..."
   },
   "meeting": {
     "title": "Meeting",
@@ -2552,6 +2553,67 @@
           "Reload the page."
         ]
       }
+    },
+    "toasts": {
+      "micBlocked": "Microphone blocked — click the 🔒 in the address bar to allow access.",
+      "micError": "Microphone error — reload the page or check your audio device.",
+      "cameraBlocked": "Camera blocked — click the 🔒 in the address bar to allow access.",
+      "recordPermissionDenied": "Screen share refused. Check your browser permissions.",
+      "recordNoDevice": "No device found for recording.",
+      "recordUnknown": "Error while starting the recording.",
+      "someone": "Someone",
+      "newMessage": "New message from {{name}}",
+      "handRaised": "Hand raised!"
+    },
+    "pollPopup": {
+      "title": "New poll!",
+      "createdBy": "Created by {{name}}"
+    },
+    "polls": {
+      "title": "Polls",
+      "create": "Create a poll",
+      "empty": "No poll yet",
+      "ended": "Ended",
+      "active": "Active",
+      "anon": "Anonymous",
+      "hidden": "Results hidden",
+      "vote": "vote",
+      "votes": "votes",
+      "afterVote": "Results will be visible after your vote",
+      "hideResults": "Hide results",
+      "showResults": "Show results",
+      "hideShort": "Hide results",
+      "showShort": "Show results",
+      "close": "Close the poll",
+      "closeShort": "Close",
+      "newPoll": "New poll",
+      "questionPlaceholder": "Your question...",
+      "optionPlaceholder": "Option {{n}}",
+      "addOption": "Add an option",
+      "options": "Options",
+      "anonymousVote": "Anonymous vote",
+      "showResultsOpt": "Show results",
+      "cancel": "Cancel",
+      "creating": "Creating...",
+      "submit": "Create",
+      "anonymous": "Anonymous",
+      "errEmptyQuestion": "Please enter a question.",
+      "errMinOptions": "Add at least 2 options.",
+      "errCreate": "Error while creating",
+      "errUnknown": "Unknown error"
+    },
+    "invite": {
+      "title": "Invite participants",
+      "subtitle": "Share this link with the people you want to invite to your meeting.",
+      "linkLabel": "Meeting link",
+      "copy": "Copy",
+      "copied": "Copied",
+      "otherOptions": "Other share options",
+      "email": "Send by email",
+      "sms": "Invite by SMS",
+      "smsSoon": "SMS feature coming soon! (Visual only for now)",
+      "emailSubject": "Video meeting invitation",
+      "emailBody": "Join my meeting by clicking this link: {{url}}"
     }
   },
   "aiChatbot": {

@@ -340,7 +340,8 @@
         "number": "Un chiffre",
         "special": "Un caractère spécial"
       }
-    }
+    },
+    "signingIn": "Connexion..."
   },
   "meeting": {
     "title": "Réunion",
@@ -2576,6 +2577,67 @@
           "Rechargez la page."
         ]
       }
+    },
+    "toasts": {
+      "micBlocked": "Micro bloqué — cliquez sur 🔒 dans la barre d'adresse pour autoriser l'accès.",
+      "micError": "Erreur micro — rechargez la page ou vérifiez votre périphérique audio.",
+      "cameraBlocked": "Caméra bloquée — cliquez sur 🔒 dans la barre d'adresse pour autoriser l'accès.",
+      "recordPermissionDenied": "Partage d’écran refusé. Vérifiez les permissions du navigateur.",
+      "recordNoDevice": "Aucun périphérique trouvé pour l’enregistrement.",
+      "recordUnknown": "Erreur lors du démarrage de l’enregistrement.",
+      "someone": "Quelqu'un",
+      "newMessage": "Nouveau message de {{name}}",
+      "handRaised": "Main levée !"
+    },
+    "pollPopup": {
+      "title": "Nouveau Sondage !",
+      "createdBy": "Créé par {{name}}"
+    },
+    "polls": {
+      "title": "Sondages",
+      "create": "Créer un sondage",
+      "empty": "Aucun sondage pour l'instant",
+      "ended": "Terminé",
+      "active": "En cours",
+      "anon": "Anonyme",
+      "hidden": "Résultats masqués",
+      "vote": "vote",
+      "votes": "votes",
+      "afterVote": "Les résultats seront visibles après votre vote",
+      "hideResults": "Masquer les résultats",
+      "showResults": "Afficher les résultats",
+      "hideShort": "Masquer résultats",
+      "showShort": "Afficher résultats",
+      "close": "Clôturer le sondage",
+      "closeShort": "Clôturer",
+      "newPoll": "Nouveau sondage",
+      "questionPlaceholder": "Votre question...",
+      "optionPlaceholder": "Option {{n}}",
+      "addOption": "Ajouter une option",
+      "options": "Options",
+      "anonymousVote": "Vote anonyme",
+      "showResultsOpt": "Afficher les résultats",
+      "cancel": "Annuler",
+      "creating": "Création...",
+      "submit": "Créer",
+      "anonymous": "Anonyme",
+      "errEmptyQuestion": "Veuillez saisir une question.",
+      "errMinOptions": "Ajoutez au moins 2 options.",
+      "errCreate": "Erreur lors de la création",
+      "errUnknown": "Erreur inconnue"
+    },
+    "invite": {
+      "title": "Inviter des participants",
+      "subtitle": "Partagez ce lien avec les personnes que vous souhaitez inviter à votre réunion.",
+      "linkLabel": "Lien de la réunion",
+      "copy": "Copier",
+      "copied": "Copié",
+      "otherOptions": "Autres options de partage",
+      "email": "Envoyer par email",
+      "sms": "Inviter par SMS",
+      "smsSoon": "Fonctionnalité SMS à venir ! (Visuel uniquement pour le moment)",
+      "emailSubject": "Invitation à une visioconférence",
+      "emailBody": "Rejoignez ma réunion en cliquant sur ce lien : {{url}}"
     }
   },
   "aiChatbot": {

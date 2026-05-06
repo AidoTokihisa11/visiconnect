@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Copy, Check, X, Mail, Link as LinkIcon, Smartphone } from 'lucide-react';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
+import { useTranslation } from '../../hooks/useTranslation';
 
 const Overlay = styled.div`
   position: fixed;
@@ -147,6 +148,7 @@ const ShareOptionBtn = styled.button`
 `;
 
 export const InviteModal = ({ isOpen, onClose }) => {
+  const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
   const [emailCopied, setEmailCopied] = useState(false);
 
@@ -162,8 +164,8 @@ export const InviteModal = ({ isOpen, onClose }) => {
   };
 
   const handleEmailShare = () => {
-    const subject = "Invitation à une visioconférence";
-    const body = `Rejoignez ma réunion en cliquant sur ce lien : ${inviteUrl}`;
+    const subject = t('room.invite.emailSubject', 'Invitation à une visioconférence');
+    const body = t('room.invite.emailBody', 'Rejoignez ma réunion en cliquant sur ce lien : {{url}}', { url: inviteUrl });
     window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
@@ -174,33 +176,33 @@ export const InviteModal = ({ isOpen, onClose }) => {
           <X size={20} />
         </CloseButton>
 
-        <Title>Inviter des participants</Title>
-        <Subtitle>Partagez ce lien avec les personnes que vous souhaitez inviter à votre réunion.</Subtitle>
+        <Title>{t('room.invite.title', 'Inviter des participants')}</Title>
+        <Subtitle>{t('room.invite.subtitle', 'Partagez ce lien avec les personnes que vous souhaitez inviter à votre réunion.')}</Subtitle>
 
         <Section>
           <SectionTitle>
             <LinkIcon size={16} />
-            Lien de la réunion
+            {t('room.invite.linkLabel', 'Lien de la réunion')}
           </SectionTitle>
           <LinkBox>
             <LinkInput value={inviteUrl} readOnly />
             <ActionButton onClick={handleCopyLink}>
               {copied ? <Check size={16} /> : <Copy size={16} />}
-              {copied ? 'Copié' : 'Copier'}
+              {copied ? t('room.invite.copied', 'Copié') : t('room.invite.copy', 'Copier')}
             </ActionButton>
           </LinkBox>
         </Section>
 
         <Section>
-          <SectionTitle>Autres options de partage</SectionTitle>
+          <SectionTitle>{t('room.invite.otherOptions', 'Autres options de partage')}</SectionTitle>
           <ShareOptions>
             <ShareOptionBtn onClick={handleEmailShare}>
               <Mail />
-              Envoyer par email
+              {t('room.invite.email', 'Envoyer par email')}
             </ShareOptionBtn>
-            <ShareOptionBtn onClick={() => alert("Fonctionnalité SMS à venir ! (Visuel uniquement pour le moment)")}>
+            <ShareOptionBtn onClick={() => alert(t('room.invite.smsSoon', 'Fonctionnalité SMS à venir ! (Visuel uniquement pour le moment)'))}>
               <Smartphone />
-              Inviter par SMS
+              {t('room.invite.sms', 'Inviter par SMS')}
             </ShareOptionBtn>
           </ShareOptions>
         </Section>

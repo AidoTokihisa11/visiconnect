@@ -441,14 +441,14 @@ const LoginPage = () => {
               onClick={() => handleOAuthLogin('google')}
               disabled={loading}
             >
-              {oauthLoading === 'google' ? 'Connexion...' : <><FaGoogle color="#ea4335" /> Google</>}
+              {oauthLoading === 'google' ? t('auth.signingIn', 'Connexion...') : <><FaGoogle color="#ea4335" /> Google</>}
             </OAuthButton>
             <OAuthButton
               type="button"
               onClick={() => handleOAuthLogin('github')}
               disabled={loading}
             >
-              {oauthLoading === 'github' ? 'Connexion...' : <><FaGithub /> GitHub</>}
+              {oauthLoading === 'github' ? t('auth.signingIn', 'Connexion...') : <><FaGithub /> GitHub</>}
             </OAuthButton>
           </OAuthButtons>
 

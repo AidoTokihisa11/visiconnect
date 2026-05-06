@@ -265,7 +265,8 @@
       "email": "Dirección de email",
       "sendReset": "Enviar enlace de restablecimiento",
       "backToLogin": "Volver al inicio de sesión"
-    }
+    },
+    "signingIn": "Conectando..."
   },
   "meeting": {
     "title": "Reunión",
@@ -2585,6 +2586,67 @@
           "Recarga la página."
         ]
       }
+    },
+    "toasts": {
+      "micBlocked": "Micrófono bloqueado — haz clic en 🔒 en la barra de direcciones para permitir el acceso.",
+      "micError": "Error de micrófono — recarga la página o comprueba tu dispositivo de audio.",
+      "cameraBlocked": "Cámara bloqueada — haz clic en 🔒 en la barra de direcciones para permitir el acceso.",
+      "recordPermissionDenied": "Pantalla compartida rechazada. Comprueba los permisos del navegador.",
+      "recordNoDevice": "No se ha encontrado ningún dispositivo para grabar.",
+      "recordUnknown": "Error al iniciar la grabación.",
+      "someone": "Alguien",
+      "newMessage": "Nuevo mensaje de {{name}}",
+      "handRaised": "¡Mano levantada!"
+    },
+    "pollPopup": {
+      "title": "¡Nueva encuesta!",
+      "createdBy": "Creada por {{name}}"
+    },
+    "polls": {
+      "title": "Encuestas",
+      "create": "Crear encuesta",
+      "empty": "No hay encuestas todavía",
+      "ended": "Finalizada",
+      "active": "Activa",
+      "anon": "Anónima",
+      "hidden": "Resultados ocultos",
+      "vote": "voto",
+      "votes": "votos",
+      "afterVote": "Los resultados serán visibles después de tu voto",
+      "hideResults": "Ocultar resultados",
+      "showResults": "Mostrar resultados",
+      "hideShort": "Ocultar resultados",
+      "showShort": "Mostrar resultados",
+      "close": "Cerrar la encuesta",
+      "closeShort": "Cerrar",
+      "newPoll": "Nueva encuesta",
+      "questionPlaceholder": "Tu pregunta...",
+      "optionPlaceholder": "Opción {{n}}",
+      "addOption": "Añadir opción",
+      "options": "Opciones",
+      "anonymousVote": "Voto anónimo",
+      "showResultsOpt": "Mostrar resultados",
+      "cancel": "Cancelar",
+      "creating": "Creando...",
+      "submit": "Crear",
+      "anonymous": "Anónimo",
+      "errEmptyQuestion": "Introduce una pregunta.",
+      "errMinOptions": "Añade al menos 2 opciones.",
+      "errCreate": "Error al crear",
+      "errUnknown": "Error desconocido"
+    },
+    "invite": {
+      "title": "Invitar participantes",
+      "subtitle": "Comparte este enlace con las personas que quieras invitar a tu reunión.",
+      "linkLabel": "Enlace de la reunión",
+      "copy": "Copiar",
+      "copied": "Copiado",
+      "otherOptions": "Otras opciones para compartir",
+      "email": "Enviar por correo",
+      "sms": "Invitar por SMS",
+      "smsSoon": "¡Función SMS próximamente! (Solo visual por ahora)",
+      "emailSubject": "Invitación a una videoconferencia",
+      "emailBody": "Únete a mi reunión haciendo clic en este enlace: {{url}}"
     }
   },
   "aiChatbot": {
