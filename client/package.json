@@ -1,6 +1,6 @@
 {
   "name": "visio-premium-client",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "dependencies": {
     "@clerk/react": "^6.1.0",
