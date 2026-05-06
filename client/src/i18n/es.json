@@ -1748,6 +1748,14 @@
       "desc": "Idioma y preferencias regionales"
     }
   },
+  "billing": {
+    "upgradeAction": "Cambiar a este plan",
+    "chooseAction": "Elegir",
+    "downgradeToStarter": "Volver al plan Starter (gratuito)"
+  },
+  "createMeetingModal": {
+    "title": "Crear una reunión"
+  },
   "account": {
     "dashboard": "Panel",
     "subtitle": "Gestione su perfil y preferencias.",

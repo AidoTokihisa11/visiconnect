@@ -1748,6 +1748,14 @@
       "desc": "Язык интерфейса и региональные настройки"
     }
   },
+  "billing": {
+    "upgradeAction": "Перейти на этот тариф",
+    "chooseAction": "Выбрать",
+    "downgradeToStarter": "Перейти на бесплатный тариф Starter"
+  },
+  "createMeetingModal": {
+    "title": "Создать встречу"
+  },
   "account": {
     "dashboard": "Панель управления",
     "subtitle": "Управляйте профилем и настройками.",

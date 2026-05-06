@@ -208,7 +208,7 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
           <ModalHeader>
             <h2>
               <Video size={22} />
-              Créer une réunion
+              {t('createMeetingModal.title', 'Créer une réunion')}
             </h2>
             <CloseButton
               onClick={onClose}

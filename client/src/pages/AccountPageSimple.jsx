@@ -554,7 +554,11 @@ const AccountPageSimple = () => {
                       opacity: planSwitching ? 0.7 : 1,
                     }}
                   >
-                    {planSwitching ? '…' : isUpgrade ? 'Passer à ce plan' : 'Choisir'}
+                    {planSwitching
+                      ? '…'
+                      : isUpgrade
+                        ? t('billing.upgradeAction', 'Passer à ce plan')
+                        : t('billing.chooseAction', 'Choisir')}
                   </button>
                 )}
               </div>
@@ -577,7 +581,7 @@ const AccountPageSimple = () => {
                 textDecoration: 'underline',
               }}
             >
-              Rétrograder vers le plan Starter (gratuit)
+              {t('billing.downgradeToStarter', 'Rétrograder vers le plan Starter (gratuit)')}
             </button>
           </div>
         )}

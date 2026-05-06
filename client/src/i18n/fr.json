@@ -1739,6 +1739,14 @@
       "desc": "Changez la langue de l'interface et vos préférences régionales"
     }
   },
+  "billing": {
+    "upgradeAction": "Passer à ce plan",
+    "chooseAction": "Choisir",
+    "downgradeToStarter": "Rétrograder vers le plan Starter (gratuit)"
+  },
+  "createMeetingModal": {
+    "title": "Créer une réunion"
+  },
   "account": {
     "dashboard": "Tableau de bord",
     "subtitle": "Gérez votre profil et vos préférences de compte.",

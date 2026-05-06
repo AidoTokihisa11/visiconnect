@@ -1713,6 +1713,14 @@
       "desc": "Sprache und regionale Einstellungen"
     }
   },
+  "billing": {
+    "upgradeAction": "Zu diesem Plan wechseln",
+    "chooseAction": "Auswählen",
+    "downgradeToStarter": "Auf den Starter-Plan zurückstufen (kostenlos)"
+  },
+  "createMeetingModal": {
+    "title": "Meeting erstellen"
+  },
   "account": {
     "dashboard": "Dashboard",
     "subtitle": "Verwalten Sie Ihr Profil und Ihre Kontoeinstellungen.",

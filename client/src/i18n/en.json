@@ -1715,6 +1715,14 @@
       "desc": "Change the interface language and your regional preferences"
     }
   },
+  "billing": {
+    "upgradeAction": "Switch to this plan",
+    "chooseAction": "Choose",
+    "downgradeToStarter": "Downgrade to the Starter plan (free)"
+  },
+  "createMeetingModal": {
+    "title": "Create a meeting"
+  },
   "account": {
     "dashboard": "Dashboard",
     "subtitle": "Manage your profile and account preferences.",
