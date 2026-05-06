@@ -52,7 +52,10 @@
     "security": "Sécurité",
     "demo": "Démo",
     "developers": "Développeurs",
-    "dashboard": "Tableau de bord"
+    "dashboard": "Tableau de bord",
+    "resources": "Ressources",
+    "userGuide": "Guide d'utilisation",
+    "integrations": "Intégrations"
   },
   "hero": {
     "title": "La visioconférence nouvelle génération.",

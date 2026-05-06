@@ -23,51 +23,52 @@ const corsHeaders = {
 
 // System prompts for different purposes
 const SYSTEM_PROMPTS = {
-  chat: `Tu es un assistant intelligent pour une plateforme de visioconférence professionnelle appelée VisiConnect. 
-Tu aides les utilisateurs avec:
-- Questions techniques (caméra, micro, qualité vidéo, latence)
-- Fonctionnalités de la plateforme (chat, sondages, partage d'écran, tableau blanc)
-- Bonnes pratiques pour les réunions en ligne
-- Résolution de problèmes courants
+  chat: `You are an intelligent assistant for VisiConnect, a professional video-conferencing platform.
+You help users with:
+- Technical questions (camera, mic, video quality, latency)
+- Platform features (chat, polls, screen share, whiteboard)
+- Best practices for online meetings
+- Troubleshooting common issues
 
-Réponds en français, de manière concise et professionnelle. Si tu ne connais pas la réponse, dis-le honnêtement.`,
+IMPORTANT LANGUAGE RULE: Always respond in the SAME language the user wrote in. Detect their language from the latest user message. If unclear, fall back to the language hint provided by the client (locale field). Never mix languages in one reply. Be concise and professional. If you don't know, say so honestly.`,
   
-  summary: `Tu es un assistant de réunion professionnel. Produis un résumé STRICTEMENT basé sur le transcript fourni (sans inventer).
-Format attendu:
-- Sections claires avec titres
-- Puces courtes et précises
-- Ton professionnel
+  summary: `You are a professional meeting assistant. Produce a summary STRICTLY based on the provided transcript (do not invent).
+Expected format:
+- Clear sections with titles
+- Short, precise bullets
+- Professional tone
 
-Sections obligatoires:
-1. Vue d'ensemble (2-3 phrases)
-2. Décisions prises
-3. Actions à faire (avec responsable si mentionné)
-4. Questions ouvertes
+Mandatory sections:
+1. Overview (2-3 sentences)
+2. Decisions made
+3. Action items (with owner if mentioned)
+4. Open questions
 
-Réponds en français.`,
+Respond in the SAME language as the source transcript (auto-detect). Default to the locale hint if the transcript is empty.`,
 
-  translation: `Tu es un traducteur professionnel. Traduis le texte fourni vers la langue demandée.
-Règles strictes:
-- Préserve le ton, le style et les nuances
-- Garde les noms propres, URLs, mentions @ et emojis intacts
-- Réponds UNIQUEMENT avec la traduction, sans commentaire ni explication
-- Si le texte est déjà dans la langue cible, retourne-le tel quel`,
+  translation: `You are a professional translator. Translate the provided text to the requested target language.
+Strict rules:
+- Preserve tone, style and nuances
+- Keep proper nouns, URLs, @mentions and emojis intact
+- Reply ONLY with the translation, no commentary or explanation
+- If the text is already in the target language, return it as-is`,
 
-  actionItems: `Tu es un assistant qui extrait les actions à faire d'une réunion.
-Format de sortie JSON strict:
+  actionItems: `You are an assistant that extracts action items from a meeting.
+Strict JSON output format:
 {
   "actions": [
-    {"task": "description", "assignee": "nom ou null", "deadline": "date ou null", "priority": "high|medium|low"}
+    {"task": "description", "assignee": "name or null", "deadline": "date or null", "priority": "high|medium|low"}
   ]
 }
-Réponds UNIQUEMENT avec le JSON valide, sans texte autour.`,
+Reply ONLY with valid JSON, no surrounding text. Use the same language as the input for the task descriptions.`,
 
-  keyNotes: `Tu es un assistant qui identifie les points clés d'une discussion.
-Règles:
-- Extrais les 5-10 points les plus importants
-- Utilise des puces courtes et précises
-- Priorise: décisions, problèmes, solutions, questions
-- Sois factuel, ne suppose pas`,
+  keyNotes: `You are an assistant that identifies key points of a discussion.
+Rules:
+- Extract the 5-10 most important points
+- Use short, precise bullets
+- Prioritize: decisions, problems, solutions, questions
+- Be factual, do not assume
+- Respond in the SAME language as the input.`,
 };
 
 /**
@@ -155,14 +156,19 @@ export default async function handler(req, res) {
   });
 
   try {
-    const { messages, style = 'balanced', purpose = 'chat' } = req.body;
+    const { messages, style = 'balanced', purpose = 'chat', locale } = req.body;
 
     if (!messages || !Array.isArray(messages)) {
       return res.status(400).json({ error: 'Messages array is required' });
     }
 
-    // Build conversation with system prompt
-    const systemPrompt = SYSTEM_PROMPTS[purpose] || SYSTEM_PROMPTS.chat;
+    // Inject locale hint so the model can fall back to it when language detection is ambiguous.
+    const baseSystemPrompt = SYSTEM_PROMPTS[purpose] || SYSTEM_PROMPTS.chat;
+    const localeHint = (typeof locale === 'string' && locale.length <= 16)
+      ? `\n\n[Client locale hint: "${locale}". Use this language as a fallback only if the user's intended language cannot be detected from their message.]`
+      : '';
+    const systemPrompt = baseSystemPrompt + localeHint;
+
     const fullMessages = [
       { role: 'system', content: systemPrompt },
       ...messages.slice(-15), // Limit context window

@@ -4,9 +4,12 @@ import {
   User, Camera, Mail, Building, Briefcase, 
   MapPin, Link as LinkIcon, Save, X, Phone,
   Loader2, LogOut, Shield, Menu, CreditCard, Star, CheckCircle,
-  Plus, ArrowRight, Video
+  Plus, ArrowRight, Video, Upload
 } from 'lucide-react';
 import CreateMeetingModal from '../components/CreateMeetingModal';
+import WebcamCaptureModal from '../components/WebcamCaptureModal';
+import Combobox from '../components/ui/Combobox';
+import { COUNTRIES } from '../config/countries';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import { useUserProfile } from '../hooks/useUserProfile';
@@ -57,6 +60,7 @@ const AccountPageSimple = () => {
   const [notification, setNotification] = useState(null);
   const [planSwitching, setPlanSwitching] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showWebcamModal, setShowWebcamModal] = useState(false);
   const [joinRoomId, setJoinRoomId] = useState('');
   const [joinError, setJoinError] = useState('');
 
@@ -90,9 +94,11 @@ const AccountPageSimple = () => {
     displayName: '',
     bio: '',
     phone: '',
+    phoneCountry: 'FR',
     company: '',
     jobTitle: '',
     location: '',
+    locationCountry: '',
     website: ''
   });
 
@@ -100,9 +106,11 @@ const AccountPageSimple = () => {
     displayName: metadata.displayName || profileData.displayName || fullName || '',
     bio: metadata.bio || profileData.bio || '',
     phone: metadata.phone || profileData.phone || '',
+    phoneCountry: metadata.phoneCountry || profileData.phoneCountry || 'FR',
     company: metadata.company || profileData.company || '',
     jobTitle: metadata.jobTitle || profileData.jobTitle || '',
     location: metadata.location || profileData.location || '',
+    locationCountry: metadata.locationCountry || profileData.locationCountry || '',
     website: metadata.website || profileData.website || '',
   });
 
@@ -125,7 +133,14 @@ const AccountPageSimple = () => {
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (!file || !user) return;
-    
+    await uploadAvatarFile(file);
+    // Reset input value so the same file can be re-uploaded if needed.
+    e.target.value = '';
+  };
+
+  // Shared avatar upload routine (used by file picker + webcam capture).
+  const uploadAvatarFile = async (file) => {
+    if (!file || !user) return;
     try {
       setIsSaving(true);
       await user.setProfileImage({ file });
@@ -210,16 +225,37 @@ const AccountPageSimple = () => {
               <div className="fallback">{getInitials(formData.displayName)}</div>
             )}
           </AvatarContainer>
-          <UploadButton>
-            <Camera size={16} />
+          <UploadButton title={t('account.avatar.upload', 'Téléverser une image')}>
+            <Upload size={16} />
             <input type="file" accept="image/*" onChange={handleImageChange} />
           </UploadButton>
         </AvatarWrapper>
         <ProfilePictureInfo>
           <h3>{t('account.avatar.title')}</h3>
           <p>{t('account.avatar.desc')}</p>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.75rem', padding: '0.4rem 0.75rem', background: '#f1f5f9', borderRadius: '2rem', fontSize: '0.8rem', color: '#475569', fontWeight: '500' }}>
-            <Shield size={14} color="#2563eb" /> {t('account.securityManaged')}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.75rem' }}>
+            <button
+              type="button"
+              onClick={() => setShowWebcamModal(true)}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                padding: '0.45rem 0.85rem',
+                borderRadius: '8px',
+                border: '1px solid #2563eb',
+                background: '#2563eb',
+                color: 'white',
+                fontSize: '0.82rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
+            >
+              <Camera size={14} /> {t('account.avatar.webcam', 'Prendre une photo')}
+            </button>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.4rem 0.75rem', background: '#f1f5f9', borderRadius: '2rem', fontSize: '0.78rem', color: '#475569', fontWeight: '500' }}>
+              <Shield size={13} color="#2563eb" /> {t('account.securityManaged')}
+            </div>
           </div>
         </ProfilePictureInfo>
       </ProfilePictureSection>
@@ -250,26 +286,65 @@ const AccountPageSimple = () => {
 
         <FormGroup>
           <Label><Phone size={18} /> {t('account.fields.phone')}</Label>
-          <InputWrapper>
-            <Input 
-              name="phone"
-              value={formData.phone}
-              onChange={handleInputChange}
-              placeholder={t('account.placeholders.phone')}
-            />
-          </InputWrapper>
+          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'stretch' }}>
+            <div style={{ flex: '0 0 180px' }}>
+              <Combobox
+                value={formData.phoneCountry}
+                onChange={(c) => setFormData((p) => ({ ...p, phoneCountry: c.code }))}
+                items={COUNTRIES}
+                getLabel={(c) => (
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <span style={{ fontSize: '1.05rem' }}>{c.flag}</span>
+                    <span style={{ fontWeight: 600 }}>{c.dial}</span>
+                    <span style={{ color: '#64748b', fontSize: '0.82rem' }}>{c.name}</span>
+                  </span>
+                )}
+                renderTrigger={(c) => (
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <span style={{ fontSize: '1.05rem' }}>{c.flag}</span>
+                    <span style={{ fontWeight: 600 }}>{c.dial}</span>
+                  </span>
+                )}
+                searchPlaceholder={t('account.fields.searchCountry', 'Rechercher un pays…')}
+              />
+            </div>
+            <InputWrapper style={{ flex: 1 }}>
+              <Input 
+                name="phone"
+                type="tel"
+                value={formData.phone}
+                onChange={handleInputChange}
+                placeholder="6 12 34 56 78"
+              />
+            </InputWrapper>
+          </div>
         </FormGroup>
         
         <FormGroup>
           <Label><MapPin size={18} /> {t('account.fields.location')}</Label>
-          <InputWrapper>
-            <Input 
-              name="location"
-              value={formData.location}
-              onChange={handleInputChange}
-              placeholder={t('account.placeholders.location')}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <Combobox
+              value={formData.locationCountry}
+              onChange={(c) => setFormData((p) => ({ ...p, locationCountry: c.code, location: p.location || c.name }))}
+              items={COUNTRIES}
+              getLabel={(c) => (
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <span style={{ fontSize: '1.05rem' }}>{c.flag}</span>
+                  <span>{c.name}</span>
+                </span>
+              )}
+              placeholder={t('account.placeholders.country', 'Sélectionner un pays…')}
+              searchPlaceholder={t('account.fields.searchCountry', 'Rechercher un pays…')}
             />
-          </InputWrapper>
+            <InputWrapper>
+              <Input 
+                name="location"
+                value={formData.location}
+                onChange={handleInputChange}
+                placeholder={t('account.placeholders.location')}
+              />
+            </InputWrapper>
+          </div>
         </FormGroup>
 
         <FormGroup>
@@ -574,6 +649,12 @@ const AccountPageSimple = () => {
             </div>
           </HeaderSection>
           <CreateMeetingModal isOpen={showCreateModal} onClose={() => setShowCreateModal(false)} />
+          <WebcamCaptureModal
+            isOpen={showWebcamModal}
+            onClose={() => setShowWebcamModal(false)}
+            onCapture={uploadAvatarFile}
+            title={t('account.avatar.webcamTitle', 'Capturer une photo de profil')}
+          />
         </motion.div>
 
         <DashboardGrid>

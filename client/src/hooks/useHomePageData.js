@@ -107,7 +107,7 @@ export const useHomePageData = () => {
         'Chat en temps réel',
       ]}) || [],
       ctaText: t('pricing.free.action', 'Commencer gratuitement'),
-      ctaLink: '/pricing',
+      ctaLink: '/signup',
       isPopular: false
     },
     {

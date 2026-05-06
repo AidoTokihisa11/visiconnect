@@ -315,16 +315,22 @@ const askExternalLLM = async (messages) => {
     throw new Error('AI proxy disabled (missing VITE_API_URL)');
   }
 
+  // Detect user locale to send as a hint to the backend (fallback only).
+  const locale = (typeof navigator !== 'undefined' && navigator.language)
+    ? navigator.language
+    : 'en';
+
   const payload = {
     messages: [
       {
         role: 'system',
-        content: 'Tu es l\'assistant officiel de VisiConnect. Reponds en francais, de facon claire et utile, sans inventer des informations produit inexistantes.',
+        content: 'You are the official VisiConnect assistant. Reply in the SAME language as the user. Be clear and helpful, never invent product information.',
       },
       ...messages,
     ],
     style: 'balanced',
     purpose: 'chat',
+    locale,
   };
 
   const res = await fetch(AI_PROXY_URL, {

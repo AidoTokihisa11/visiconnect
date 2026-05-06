@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from '../hooks/useTranslation';
 import { AnimatePresence } from 'framer-motion';
 import { 
   X, Calendar, Clock, Users, Video, Globe,
@@ -29,8 +31,11 @@ import {
 } from './CreateMeetingModal.styles';
 
 const CreateMeetingModal = ({ isOpen, onClose }) => {
+  const navigate = useNavigate();
+  const { t } = useTranslation();
   const [meetingId] = useState(() => Math.random().toString(36).slice(2, 11));
   const [linkCopied, setLinkCopied] = useState(false);
+  const [timeError, setTimeError] = useState('');
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -56,11 +61,57 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
     '09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00'
   ];
 
+  // Helper: "HH:MM" -> minutes since midnight (returns null if invalid)
+  const timeToMinutes = (hhmm) => {
+    if (!hhmm || typeof hhmm !== 'string') return null;
+    const match = /^(\d{1,2}):(\d{2})$/.exec(hhmm);
+    if (!match) return null;
+    const h = parseInt(match[1], 10);
+    const m = parseInt(match[2], 10);
+    if (h < 0 || h > 23 || m < 0 || m > 59) return null;
+    return h * 60 + m;
+  };
+
+  // Helper: minutes -> "HH:MM"
+  const minutesToTime = (mins) => {
+    const safe = ((mins % (24 * 60)) + 24 * 60) % (24 * 60);
+    const h = String(Math.floor(safe / 60)).padStart(2, '0');
+    const m = String(safe % 60).padStart(2, '0');
+    return `${h}:${m}`;
+  };
+
+  const isTimeRangeValid = useMemo(() => {
+    const s = timeToMinutes(formData.startTime);
+    const e = timeToMinutes(formData.endTime);
+    if (s === null || e === null) return true; // empty => no error yet
+    return e > s;
+  }, [formData.startTime, formData.endTime]);
+
+  // Re-evaluate user-facing error message reactively.
+  useEffect(() => {
+    if (!formData.startTime || !formData.endTime) {
+      setTimeError('');
+      return;
+    }
+    setTimeError(isTimeRangeValid
+      ? ''
+      : t('createMeetingModal.errors.endBeforeStart', "L'heure de fin doit être après l'heure de début."));
+  }, [formData.startTime, formData.endTime, isTimeRangeValid, t]);
+
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    setFormData(prev => {
+      const next = { ...prev, [field]: value };
+      // When the user picks a start time and no end time is set (or end <= start),
+      // auto-fill end = start + 30 min.
+      if (field === 'startTime') {
+        const startMins = timeToMinutes(value);
+        const endMins = timeToMinutes(prev.endTime);
+        if (startMins !== null && (endMins === null || endMins <= startMins)) {
+          next.endTime = minutesToTime(startMins + 30);
+        }
+      }
+      return next;
+    });
   };
 
   const sendInviteEmail = async (participant) => {
@@ -119,8 +170,15 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
   };
 
   const handleSubmit = () => {
-    window.location.href = `/room/${meetingId}`;
+    // Block submission if time range is invalid.
+    if (!isTimeRangeValid) {
+      setTimeError(t('createMeetingModal.errors.endBeforeStart', "L'heure de fin doit être après l'heure de début."));
+      return;
+    }
     onClose();
+    // Use react-router navigation to keep the SPA state
+    // (window.location.href would do a full page reload).
+    navigate(`/room/${meetingId}`);
   };
 
   const copyLink = () => {
@@ -227,9 +285,25 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
                     type="time"
                     value={formData.endTime}
                     onChange={(e) => handleInputChange('endTime', e.target.value)}
+                    style={timeError ? { borderColor: '#ef4444' } : undefined}
                   />
                 </FormField>
               </FormGrid>
+
+              {timeError && (
+                <div style={{
+                  marginTop: '0.5rem',
+                  padding: '0.5rem 0.75rem',
+                  background: 'rgba(239,68,68,0.08)',
+                  border: '1px solid rgba(239,68,68,0.3)',
+                  borderRadius: '8px',
+                  color: '#dc2626',
+                  fontSize: '0.85rem',
+                  fontWeight: 500,
+                }}>
+                  ⚠️ {timeError}
+                </div>
+              )}
 
               <FormField>
                 <label>Créneaux rapides</label>
@@ -239,9 +313,8 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
                       key={time}
                       selected={formData.startTime === time}
                       onClick={() => {
+                        // Use the same handler so end-time auto-fill stays consistent.
                         handleInputChange('startTime', time);
-                        const endTime = String(parseInt(time.split(':')[0]) + 1).padStart(2, '0') + ':00';
-                        handleInputChange('endTime', endTime);
                       }}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
@@ -438,8 +511,10 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
               <ActionButton
                 primary
                 onClick={handleSubmit}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                disabled={!isTimeRangeValid}
+                whileHover={isTimeRangeValid ? { scale: 1.02 } : undefined}
+                whileTap={isTimeRangeValid ? { scale: 0.98 } : undefined}
+                style={!isTimeRangeValid ? { opacity: 0.55, cursor: 'not-allowed' } : undefined}
               >
                 <Video size={15} />
                 Démarrer la réunion

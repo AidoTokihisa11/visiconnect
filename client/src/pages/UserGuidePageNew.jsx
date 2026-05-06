@@ -1,8 +1,40 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import { useTranslation } from '../hooks/useTranslation';
+
+// Map each (sectionIndex, itemIndex) to a real route or anchor.
+// External anchors (with #) point to the relevant section of an existing page.
+// Routes/anchors that don't exist yet fall back to the most relevant existing page.
+const GUIDE_LINK_MAP = {
+  // Premiers pas
+  '0-0': '/signup',
+  '0-1': '/account',
+  '0-2': '/demo',
+  '0-3': '/account#meetings',
+  // Pendant la réunion
+  '1-0': '/user-guide#screen-share',
+  '1-1': '/user-guide#whiteboard',
+  '1-2': '/user-guide#recording',
+  '1-3': '/user-guide#participants',
+  // Fonctionnalités avancées
+  '2-0': '/user-guide#transcription',
+  '2-1': '/user-guide#translation',
+  '2-2': '/integrations',
+  '2-3': '/user-guide#webinar',
+  // Paramètres & Compte
+  '3-0': '/account#notifications',
+  '3-1': '/account#billing',
+  '3-2': '/security',
+  '3-3': '/account#delete',
+  // Résolution de problèmes
+  '4-0': '/support#audio-video',
+  '4-1': '/support#connection',
+  '4-2': '/support#browsers',
+  '4-3': '/contact',
+};
 
 const COLORS = {
   primary: 'hsl(var(--primary))',
@@ -87,11 +119,11 @@ const Card = styled.div`
   border-radius: 12px;
   border: 1px solid ${COLORS.border};
   padding: 24px;
-  transition: transform 0.2s, background-color 0.3s ease, border-color 0.3s ease;
-  cursor: pointer;
+  transition: transform 0.2s, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.2s;
 
   &:hover {
     transform: translateY(-4px);
+    box-shadow: 0 10px 25px -10px rgba(0,0,0,0.15);
   }
 `;
 
@@ -114,30 +146,35 @@ const GuideList = styled.ul`
   margin: 0;
 `;
 
-const GuideLink = styled.li`
-  padding: 8px 0;
+const GuideLink = styled(Link)`
+  padding: 10px 0;
   border-bottom: 1px solid #f1f5f9;
   color: ${COLORS.text};
   font-size: 0.95rem;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  text-decoration: none;
+  transition: color 0.2s, padding-left 0.2s;
   
   &:last-child {
     border-bottom: none;
   }
 
   &:hover {
-    color: ${COLORS.primary}; 
+    color: ${COLORS.primary};
+    padding-left: 4px;
   }
 
   &::after {
     content: '→';
-    opacity: 0;
-    transition: opacity 0.2s;
+    opacity: 0.3;
+    transition: opacity 0.2s, transform 0.2s;
   }
 
-  ${Card}:hover &::after {
-    opacity: 0.5;
+  &:hover::after {
+    opacity: 1;
+    transform: translateX(2px);
   }
 `;
 
@@ -163,9 +200,14 @@ const UserGuidePageNew = () => {
                 <CategoryIcon>{icon}</CategoryIcon>
                 <CategoryTitle>{t(`userGuide.sections.${idx}.title`)}</CategoryTitle>
                 <GuideList>
-                  {Array.from({ length: itemCounts[idx] }).map((_, i) => (
-                    <GuideLink key={i}>{t(`userGuide.sections.${idx}.items.${i}`)}</GuideLink>
-                  ))}
+                  {Array.from({ length: itemCounts[idx] }).map((_, i) => {
+                    const target = GUIDE_LINK_MAP[`${idx}-${i}`] || '/support';
+                    return (
+                      <GuideLink key={i} to={target}>
+                        {t(`userGuide.sections.${idx}.items.${i}`)}
+                      </GuideLink>
+                    );
+                  })}
                 </GuideList>
               </Card>
             ))}

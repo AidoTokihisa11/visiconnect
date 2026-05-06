@@ -394,20 +394,20 @@ export default function HeaderClean() {
                 aria-expanded={resourcesOpen}
                 aria-haspopup="true"
               >
-                Ressources <ChevronDown size={14} style={{ transition: 'transform 0.2s', transform: resourcesOpen ? 'rotate(180deg)' : 'rotate(0deg)' }} />
+                {t('navigation.resources', 'Ressources')} <ChevronDown size={14} style={{ transition: 'transform 0.2s', transform: resourcesOpen ? 'rotate(180deg)' : 'rotate(0deg)' }} />
               </DropdownTrigger>
               <DropdownMenu $open={resourcesOpen}>
                 <DropdownItem to="/user-guide" onClick={() => setResourcesOpen(false)}>
-                  <BookOpen size={15} /> Guide d'utilisation
+                  <BookOpen size={15} /> {t('navigation.userGuide', 'Guide d\'utilisation')}
                 </DropdownItem>
                 <DropdownItem to="/docs" onClick={() => setResourcesOpen(false)}>
-                  <FileText size={15} /> Documentation
+                  <FileText size={15} /> {t('navigation.documentation', 'Documentation')}
                 </DropdownItem>
                 <DropdownItem to="/integrations" onClick={() => setResourcesOpen(false)}>
-                  <Puzzle size={15} /> Intégrations
+                  <Puzzle size={15} /> {t('navigation.integrations', 'Intégrations')}
                 </DropdownItem>
                 <DropdownItem to="/security" onClick={() => setResourcesOpen(false)}>
-                  <Shield size={15} /> Sécurité
+                  <Shield size={15} /> {t('navigation.security', 'Sécurité')}
                 </DropdownItem>
               </DropdownMenu>
             </DropdownWrapper>
@@ -419,10 +419,10 @@ export default function HeaderClean() {
                <>
                 <Button to="/dashboard" $variant="primary">
                   <User size={18} />
-                  Tableau de bord
+                  {t('navigation.dashboard', 'Tableau de bord')}
                 </Button>
                 <LogoutButton onClick={handleLogout}>
-                  Déconnexion
+                  {t('common.logout', 'Déconnexion')}
                 </LogoutButton>
                </>
             ) : (
@@ -447,20 +447,20 @@ export default function HeaderClean() {
             <MobileNavLink to="/pricing" onClick={() => setIsMobileMenuOpen(false)}>{t('navigation.pricing')}</MobileNavLink>
             <MobileNavLink to="/demo" onClick={() => setIsMobileMenuOpen(false)}>{t('navigation.demo')}</MobileNavLink>
             <MobileNavLink to="/developer" onClick={() => setIsMobileMenuOpen(false)}>{t('navigation.developers')}</MobileNavLink>
-            <MobileNavLink to="/user-guide" onClick={() => setIsMobileMenuOpen(false)}>Guide d'utilisation</MobileNavLink>
-            <MobileNavLink to="/docs" onClick={() => setIsMobileMenuOpen(false)}>Documentation</MobileNavLink>
-            <MobileNavLink to="/integrations" onClick={() => setIsMobileMenuOpen(false)}>Intégrations</MobileNavLink>
-            <MobileNavLink to="/security" onClick={() => setIsMobileMenuOpen(false)}>Sécurité</MobileNavLink>
+            <MobileNavLink to="/user-guide" onClick={() => setIsMobileMenuOpen(false)}>{t('navigation.userGuide', 'Guide d\'utilisation')}</MobileNavLink>
+            <MobileNavLink to="/docs" onClick={() => setIsMobileMenuOpen(false)}>{t('navigation.documentation', 'Documentation')}</MobileNavLink>
+            <MobileNavLink to="/integrations" onClick={() => setIsMobileMenuOpen(false)}>{t('navigation.integrations', 'Intégrations')}</MobileNavLink>
+            <MobileNavLink to="/security" onClick={() => setIsMobileMenuOpen(false)}>{t('navigation.security', 'Sécurité')}</MobileNavLink>
             <MobileNavLink to="/contact" onClick={() => setIsMobileMenuOpen(false)}>{t('navigation.contact')}</MobileNavLink>
             <div style={{ margin: '1rem 0', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 {user ? (
                    <>
                     <Button to="/dashboard" $variant="primary" onClick={() => setIsMobileMenuOpen(false)} style={{ justifyContent: 'center' }}>
                       <User size={18} />
-                      Tableau de bord
+                      {t('navigation.dashboard', 'Tableau de bord')}
                     </Button>
                     <LogoutButton onClick={handleLogout} style={{ justifyContent: 'center', width: '100%' }}>
-                      Déconnexion
+                      {t('common.logout', 'Déconnexion')}
                     </LogoutButton>
                    </>
                 ) : (

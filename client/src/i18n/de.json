@@ -52,7 +52,10 @@
     "security": "Sicherheit",
     "demo": "Demo",
     "developers": "Entwickler",
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "resources": "Ressourcen",
+    "userGuide": "Benutzerhandbuch",
+    "integrations": "Integrationen"
   },
   "hero": {
     "title": "Videokonferenz der nächsten Generation",

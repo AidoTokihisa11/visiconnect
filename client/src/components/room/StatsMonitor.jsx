@@ -1,8 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Activity, X } from 'lucide-react';
+import { VideoPresets } from 'livekit-client';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
+
+const QUALITY_OPTIONS = [
+  { id: 'h1080', label: '1080p (HD)', preset: VideoPresets.h1080 },
+  { id: 'h720', label: '720p (recommandé)', preset: VideoPresets.h720 },
+  { id: 'h540', label: '540p (économe)', preset: VideoPresets.h540 },
+  { id: 'h360', label: '360p (faible débit)', preset: VideoPresets.h360 },
+];
 
 /* 🖥️ Desktop: Overlay positionné */
 const StatsContainer = styled(motion.div)`
@@ -134,6 +142,29 @@ export const StatsMonitor = ({ participant, showStats = false, onClose }) => {
     bitrate: 'Dynamic',
     packetLoss: '0%'
   });
+  const [quality, setQuality] = useState('h720');
+  const [applyingQuality, setApplyingQuality] = useState(false);
+
+  // Determine if the participant is local (only LocalParticipant exposes setCameraEnabled).
+  const isLocal = !!participant && typeof participant.setCameraEnabled === 'function';
+
+  const handleQualityChange = useCallback(async (e) => {
+    const next = e.target.value;
+    setQuality(next);
+    if (!isLocal) return;
+    const opt = QUALITY_OPTIONS.find((o) => o.id === next);
+    if (!opt) return;
+    try {
+      setApplyingQuality(true);
+      await participant.setCameraEnabled(true, {
+        resolution: opt.preset.resolution,
+      });
+    } catch (err) {
+      console.error('[StatsMonitor] Failed to change camera quality:', err);
+    } finally {
+      setApplyingQuality(false);
+    }
+  }, [participant, isLocal]);
 
   useEffect(() => {
     if (!participant) return;
@@ -193,6 +224,33 @@ export const StatsMonitor = ({ participant, showStats = false, onClose }) => {
               <span>Mode</span>
               <span>Simulcast Enabled</span>
           </div>
+          {isLocal && (
+            <div style={{ marginTop: '0.6rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+              <label htmlFor="qualitySelect" style={{ fontSize: '0.7rem', color: THEME.textDim }}>
+                Qualité d'envoi
+              </label>
+              <select
+                id="qualitySelect"
+                value={quality}
+                onChange={handleQualityChange}
+                disabled={applyingQuality}
+                style={{
+                  background: 'rgba(255,255,255,0.08)',
+                  color: THEME.text,
+                  border: `1px solid ${THEME.border}`,
+                  borderRadius: 8,
+                  padding: '0.35rem 0.5rem',
+                  fontSize: '0.75rem',
+                  fontFamily: 'inherit',
+                  cursor: applyingQuality ? 'wait' : 'pointer',
+                }}
+              >
+                {QUALITY_OPTIONS.map((o) => (
+                  <option key={o.id} value={o.id}>{o.label}</option>
+                ))}
+              </select>
+            </div>
+          )}
           <div style={{ marginTop: '0.5rem', fontSize: '0.7rem', color: THEME.textDim }}>
               *La résolution s'adapte à la bande passante (4K &rarr; 1080p &rarr; 540p)
           </div>
@@ -233,6 +291,33 @@ export const StatsMonitor = ({ participant, showStats = false, onClose }) => {
                   <span>Mode</span>
                   <span>Optimisé Mobile</span>
               </div>
+              {isLocal && (
+                <div style={{ marginTop: '0.75rem' }}>
+                  <label htmlFor="qualitySelectMobile" style={{ fontSize: '0.75rem', color: THEME.textDim, display: 'block', marginBottom: '0.4rem' }}>
+                    Qualité d'envoi
+                  </label>
+                  <select
+                    id="qualitySelectMobile"
+                    value={quality}
+                    onChange={handleQualityChange}
+                    disabled={applyingQuality}
+                    style={{
+                      width: '100%',
+                      background: 'rgba(255,255,255,0.08)',
+                      color: THEME.text,
+                      border: `1px solid ${THEME.border}`,
+                      borderRadius: 10,
+                      padding: '0.6rem',
+                      fontSize: '0.85rem',
+                      fontFamily: 'inherit',
+                    }}
+                  >
+                    {QUALITY_OPTIONS.map((o) => (
+                      <option key={o.id} value={o.id}>{o.label}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
               <div style={{ marginTop: '1rem', fontSize: '0.75rem', color: THEME.textDim, textAlign: 'center' }}>
                   La qualité s'adapte automatiquement à votre connexion
               </div>

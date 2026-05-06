@@ -52,7 +52,10 @@
     "security": "Security",
     "demo": "Demo",
     "developers": "Developers",
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "resources": "Resources",
+    "userGuide": "User Guide",
+    "integrations": "Integrations"
   },
   "hero": {
     "titleLine1": "Next-generation",

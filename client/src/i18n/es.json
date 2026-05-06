@@ -52,7 +52,10 @@
     "security": "Seguridad",
     "demo": "Demo",
     "developers": "Desarrolladores",
-    "dashboard": "Panel de control"
+    "dashboard": "Panel de control",
+    "resources": "Recursos",
+    "userGuide": "Guía de usuario",
+    "integrations": "Integraciones"
   },
   "hero": {
     "title": "Videoconferencia de nueva generación",
