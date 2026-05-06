@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from 'react';
-import { useUser, useAuth as useClerkAuth, useSignIn, useSignUp } from '@clerk/react';
+import { useUser, useAuth as useClerkAuth, useSignIn, useSignUp, useClerk } from '@clerk/react';
 // Clerk Core 3 (@clerk/react v6) correct API:
 // signUp.password({ emailAddress, password })  → returns { error }
 // signUp.verifications.sendEmailCode()          → returns { error }
@@ -26,6 +26,7 @@ export const AuthProvider = ({ children }) => {
   const { isSignedIn, signOut, isLoaded: isAuthLoaded } = useClerkAuth();
   const { signIn: clerkSignIn } = useSignIn();
   const { signUp: clerkSignUp } = useSignUp();
+  const clerk = useClerk();
   const { isLoading: isConvexLoading } = useConvexAuth();
 
   const isLoggedIn = !!isSignedIn;
@@ -46,19 +47,15 @@ export const AuthProvider = ({ children }) => {
     return err.errors?.[0]?.message || err.message || "Une erreur est survenue avec l'authentification.";
   };
 
-  // Clerk @clerk/react v6 : signIn.sso() déclenche la redirection OAuth
-  const signInWithProvider = async (provider) => {
-    if (!clerkSignIn) return { error: { message: "Clerk n'est pas prêt." } };
+  // Clerk : authenticateWithRedirect via useClerk() — API stable depuis v4
+  const signInWithProvider = (provider) => {
+    if (!clerk) return { error: { message: "Clerk n'est pas prêt." } };
     try {
-      const { error } = await clerkSignIn.sso({
+      clerk.authenticateWithRedirect({
         strategy: `oauth_${provider}`,
-        redirectCallbackUrl: `${window.location.origin}/sso-callback`,
-        redirectUrl: window.location.origin + '/',
+        redirectUrl: `${window.location.origin}/sso-callback`,
+        redirectUrlComplete: '/',
       });
-      if (error) {
-        return { error: { message: error.errors?.[0]?.message || error.message || 'Erreur OAuth.' } };
-      }
-      return { success: true };
     } catch (err) {
       console.error('[signInWithProvider]', err);
       return { error: { message: handleNetworkError(err) } };
