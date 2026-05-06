@@ -48,12 +48,13 @@ export const AuthProvider = ({ children }) => {
 
   // Clerk v6 (Core 3) : signIn.sso() avec redirectCallbackUrl
   const signInWithProvider = async (provider) => {
-    if (!clerkSignIn) return { error: { message: "Clerk n'est pas prêt." } };
+    if (!clerkSignIn) return { error: { message: "Clerk n'est pas prêt. Veuillez rafraîchir la page." } };
     try {
+      const origin = window.location.origin;
       const { error } = await clerkSignIn.sso({
         strategy: `oauth_${provider}`,
-        redirectCallbackUrl: '/sso-callback',
-        redirectUrl: '/',
+        redirectCallbackUrl: `${origin}/sso-callback`,
+        redirectUrl: `${origin}/`,
       });
       if (error) {
         return { error: { message: handleNetworkError(error) } };

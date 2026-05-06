@@ -223,7 +223,7 @@ const OAuthButtons = styled.div`
   margin-bottom: 1.5rem;
 `
 
-const OAuthButton = styled(motion.button)`
+const OAuthButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -241,6 +241,10 @@ const OAuthButton = styled(motion.button)`
   &:hover:not(:disabled) {
     background: #f8fafc;
     border-color: #cbd5e1;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.97);
   }
 
   &:disabled {
@@ -295,6 +299,7 @@ const LoginPage = () => {
   })
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [oauthLoading, setOauthLoading] = useState(null)
   const [error, setError] = useState('')
 
   const syncCredentialsInput = (event) => {
@@ -332,15 +337,17 @@ const LoginPage = () => {
   const handleOAuthLogin = async (provider) => {
     try {
       setLoading(true)
+      setOauthLoading(provider)
+      setError('')
       const { error: oauthError } = await signInWithProvider(provider)
-
       if (oauthError) {
         setError(oauthError.message)
       }
     } catch (err) {
-      setError(err.message)
+      setError(err.message || t('login.error'))
     } finally {
       setLoading(false)
+      setOauthLoading(null)
     }
   }
 
@@ -433,17 +440,15 @@ const LoginPage = () => {
               type="button"
               onClick={() => handleOAuthLogin('google')}
               disabled={loading}
-              whileTap={{ scale: 0.98 }}
             >
-              <FaGoogle color="#ea4335" /> Google
+              {oauthLoading === 'google' ? 'Connexion...' : <><FaGoogle color="#ea4335" /> Google</>}
             </OAuthButton>
             <OAuthButton
               type="button"
               onClick={() => handleOAuthLogin('github')}
               disabled={loading}
-              whileTap={{ scale: 0.98 }}
             >
-              <FaGithub /> GitHub
+              {oauthLoading === 'github' ? 'Connexion...' : <><FaGithub /> GitHub</>}
             </OAuthButton>
           </OAuthButtons>
 

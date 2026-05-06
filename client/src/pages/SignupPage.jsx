@@ -227,7 +227,7 @@ const OAuthButtons = styled.div`
   margin-bottom: 1.5rem;
 `
 
-const OAuthButton = styled(motion.button)`
+const OAuthButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -245,6 +245,10 @@ const OAuthButton = styled(motion.button)`
   &:hover:not(:disabled) {
     background: #f8fafc;
     border-color: #cbd5e1;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.97);
   }
 
   &:disabled {
@@ -343,6 +347,7 @@ const SignupPage = () => {
   const [registrationForm, setRegistrationForm] = useState({ email: '', password: '' })
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [oauthLoading, setOauthLoading] = useState(null)
   const [error, setError] = useState('')
   const [pendingVerification, setPendingVerification] = useState(false)
   const [code, setCode] = useState('')
@@ -422,6 +427,7 @@ const SignupPage = () => {
 
   const handleOAuth = async (provider) => {
     setLoading(true)
+    setOauthLoading(provider)
     setError('')
     try {
       const action = provider === 'google' ? signInWithGoogle : signInWithGithub
@@ -433,6 +439,7 @@ const SignupPage = () => {
       setError(err.message || `Erreur d'inscription avec ${provider}`)
     } finally {
       setLoading(false)
+      setOauthLoading(null)
     }
   }
 
@@ -533,17 +540,15 @@ const SignupPage = () => {
                   type="button"
                   disabled={loading}
                   onClick={() => handleOAuth('google')}
-                  whileTap={{ scale: 0.98 }}
                 >
-                  <FaGoogle color="#ea4335" /> Google
+                  {oauthLoading === 'google' ? 'Connexion...' : <><FaGoogle color="#ea4335" /> Google</>}
                 </OAuthButton>
                 <OAuthButton
                   type="button"
                   disabled={loading}
                   onClick={() => handleOAuth('github')}
-                  whileTap={{ scale: 0.98 }}
                 >
-                  <FaGithub /> GitHub
+                  {oauthLoading === 'github' ? 'Connexion...' : <><FaGithub /> GitHub</>}
                 </OAuthButton>
               </OAuthButtons>
 
