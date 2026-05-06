@@ -187,11 +187,36 @@
     "plans": {
       "free": {
         "period": "/ месяц"
+      },
+      "starter": {
+        "description": "Откройте платформу без обязательств.",
+        "cta": "Начать бесплатно"
+      },
+      "pro": {
+        "description": "Для гибких команд и фрилансеров."
+      },
+      "business": {
+        "description": "Для крупных организаций."
       }
     },
     "features": {
-      "breakout_rooms": "Комнаты для групп"
-    }
+      "breakout_rooms": "Комнаты для групп",
+      "screenShare": "Демонстрация экрана",
+      "recording": "Запись",
+      "aiTranscription": "ИИ-транскрипции",
+      "upTo50": "До 50 участников",
+      "upTo200": "До 200 участников",
+      "unlimitedDuration": "Неограниченная длительность",
+      "unlimitedStorage": "Неограниченное хранилище",
+      "cloud5gb": "5 ГБ облачного хранилища",
+      "prioritySupport": "Приоритетная поддержка",
+      "aiTranscription10h": "ИИ-транскрипции (10 ч/мес)",
+      "ssoAdmin": "SSO и расширенное администрирование",
+      "unlimitedTranscriptions": "Неограниченные транскрипции"
+    },
+    "recommended": "РЕКОМЕНДУЕМ",
+    "perMonthPerUser": "/месяц на пользователя",
+    "subscribe": "Подписаться"
   },
   "contact": {
     "header": {
@@ -1813,7 +1838,85 @@
     }
   },
   "createMeetingModal": {
-    "title": "Создать встречу"
+    "title": "Создать встречу",
+    "defaultTitle": "Встреча VisiConnect",
+    "linkLabel": "Ссылка:",
+    "sections": {
+      "general": {
+        "title": "Общая информация",
+        "desc": "Определите основные детали вашей встречи"
+      },
+      "datetime": {
+        "title": "Дата и время",
+        "desc": "Запланируйте, когда состоится ваша встреча"
+      },
+      "participants": {
+        "title": "Участники",
+        "desc": "Пригласите людей на встречу"
+      },
+      "advanced": {
+        "title": "Расширенные настройки",
+        "desc": "Настройте параметры вашей встречи"
+      }
+    },
+    "fields": {
+      "title": "Название встречи",
+      "description": "Описание (необязательно)",
+      "date": "Дата",
+      "startTime": "Время начала",
+      "endTime": "Время окончания",
+      "quickSlots": "Быстрые слоты",
+      "addParticipant": "Добавить участника",
+      "meetingType": "Тип встречи",
+      "maxParticipants": "Макс. участников",
+      "recurringFrequency": "Частота повторения"
+    },
+    "placeholders": {
+      "title": "Напр.: Встреча отдела маркетинга",
+      "description": "Добавьте описание, повестку...",
+      "email": "email@example.com"
+    },
+    "types": {
+      "video": "Видеоконференция",
+      "audio": "Только аудио",
+      "webinar": "Вебинар",
+      "hybrid": "Гибридная"
+    },
+    "frequencies": {
+      "daily": "Ежедневно",
+      "weekly": "Еженедельно",
+      "monthly": "Ежемесячно",
+      "custom": "Пользовательская"
+    },
+    "toggles": {
+      "requireApproval": {
+        "label": "Требуется одобрение",
+        "desc": "Участники должны быть одобрены перед присоединением"
+      },
+      "allowRecording": {
+        "label": "Разрешить запись",
+        "desc": "Разрешить запись встречи"
+      },
+      "recurring": {
+        "label": "Повторяющаяся встреча",
+        "desc": "Автоматически повторять эту встречу"
+      }
+    },
+    "buttons": {
+      "add": "Добавить",
+      "cancel": "Отмена",
+      "draft": "Черновик",
+      "start": "Начать встречу",
+      "copy": "Копировать",
+      "copied": "Скопировано"
+    },
+    "status": {
+      "invited": "✓ Приглашён",
+      "pending": "Ожидание"
+    },
+    "errors": {
+      "endBeforeStart": "Время окончания должно быть позже времени начала."
+    }
   },
   "dashboardOverview": {
     "welcome": "Добро пожаловать",

@@ -253,3 +253,5 @@ bash.exe.stackdump
 # Permet de récupérer les configs sur nouveau PC
 !visiconnect-secrets.enc
 _archive/
+
+capture website/

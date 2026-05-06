@@ -187,11 +187,36 @@
     "plans": {
       "free": {
         "period": "/ Monat"
+      },
+      "starter": {
+        "description": "Um die Plattform unverbindlich zu entdecken.",
+        "cta": "Kostenlos starten"
+      },
+      "pro": {
+        "description": "Für agile Teams und Freelancer."
+      },
+      "business": {
+        "description": "Für Großunternehmen."
       }
     },
     "features": {
-      "breakout_rooms": "Breakout-Räume"
-    }
+      "breakout_rooms": "Breakout-Räume",
+      "screenShare": "Bildschirmfreigabe",
+      "recording": "Aufzeichnung",
+      "aiTranscription": "KI-Transkriptionen",
+      "upTo50": "Bis zu 50 Teilnehmer",
+      "upTo200": "Bis zu 200 Teilnehmer",
+      "unlimitedDuration": "Unbegrenzte Dauer",
+      "unlimitedStorage": "Unbegrenzter Speicher",
+      "cloud5gb": "5 GB Cloud-Speicher",
+      "prioritySupport": "Priority-Support",
+      "aiTranscription10h": "KI-Transkriptionen (10h/Monat)",
+      "ssoAdmin": "SSO & erweiterte Verwaltung",
+      "unlimitedTranscriptions": "Unbegrenzte Transkriptionen"
+    },
+    "recommended": "EMPFOHLEN",
+    "perMonthPerUser": "/Monat pro Nutzer",
+    "subscribe": "Abonnieren"
   },
   "contact": {
     "header": {
@@ -1778,7 +1803,85 @@
     }
   },
   "createMeetingModal": {
-    "title": "Meeting erstellen"
+    "title": "Meeting erstellen",
+    "defaultTitle": "VisiConnect-Meeting",
+    "linkLabel": "Link:",
+    "sections": {
+      "general": {
+        "title": "Allgemeine Informationen",
+        "desc": "Legen Sie die wichtigsten Details Ihres Meetings fest"
+      },
+      "datetime": {
+        "title": "Datum und Uhrzeit",
+        "desc": "Planen Sie, wann Ihr Meeting stattfindet"
+      },
+      "participants": {
+        "title": "Teilnehmer",
+        "desc": "Laden Sie Personen zu Ihrem Meeting ein"
+      },
+      "advanced": {
+        "title": "Erweiterte Einstellungen",
+        "desc": "Konfigurieren Sie die Optionen Ihres Meetings"
+      }
+    },
+    "fields": {
+      "title": "Meeting-Titel",
+      "description": "Beschreibung (optional)",
+      "date": "Datum",
+      "startTime": "Startzeit",
+      "endTime": "Endzeit",
+      "quickSlots": "Schnelle Zeitfenster",
+      "addParticipant": "Teilnehmer hinzufügen",
+      "meetingType": "Meeting-Typ",
+      "maxParticipants": "Max. Teilnehmer",
+      "recurringFrequency": "Wiederholungsfrequenz"
+    },
+    "placeholders": {
+      "title": "Z. B. Marketing-Team-Meeting",
+      "description": "Fügen Sie eine Beschreibung, Tagesordnung hinzu...",
+      "email": "email@beispiel.de"
+    },
+    "types": {
+      "video": "Videokonferenz",
+      "audio": "Nur Audio",
+      "webinar": "Webinar",
+      "hybrid": "Hybrid"
+    },
+    "frequencies": {
+      "daily": "Täglich",
+      "weekly": "Wöchentlich",
+      "monthly": "Monatlich",
+      "custom": "Benutzerdefiniert"
+    },
+    "toggles": {
+      "requireApproval": {
+        "label": "Genehmigung erforderlich",
+        "desc": "Teilnehmer müssen vor dem Beitritt genehmigt werden"
+      },
+      "allowRecording": {
+        "label": "Aufzeichnung erlauben",
+        "desc": "Aufzeichnung des Meetings erlauben"
+      },
+      "recurring": {
+        "label": "Wiederkehrendes Meeting",
+        "desc": "Dieses Meeting automatisch wiederholen"
+      }
+    },
+    "buttons": {
+      "add": "Hinzufügen",
+      "cancel": "Abbrechen",
+      "draft": "Entwurf",
+      "start": "Meeting starten",
+      "copy": "Kopieren",
+      "copied": "Kopiert"
+    },
+    "status": {
+      "invited": "✓ Eingeladen",
+      "pending": "Ausstehend"
+    },
+    "errors": {
+      "endBeforeStart": "Die Endzeit muss nach der Startzeit liegen."
+    }
   },
   "dashboardOverview": {
     "welcome": "Willkommen",

@@ -354,7 +354,7 @@ const FAQList = [
 ];
 
 const PricingPage = () => {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const { user } = useUser();
   
   const [openFAQ, setOpenFAQ] = useState(null);
@@ -379,7 +379,7 @@ const PricingPage = () => {
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan, billingCycle, userId: user?.id || '', userEmail: user?.primaryEmailAddress?.emailAddress || '' }),
+        body: JSON.stringify({ plan, billingCycle, userId: user?.id || '', userEmail: user?.primaryEmailAddress?.emailAddress || '', locale: language || (typeof navigator !== 'undefined' ? navigator.language : 'en') }),
       });
       
       const session = await response.json();
@@ -424,73 +424,73 @@ const PricingPage = () => {
         {/* FREE */}
         <PlanCard>
           <PlanTitle>Starter</PlanTitle>
-          <PlanDescription>Pour découvrir la plateforme sans engagement.</PlanDescription>
+          <PlanDescription>{t('pricing.plans.starter.description', 'Pour découvrir la plateforme sans engagement.')}</PlanDescription>
           <Price>
             <span className="currency">€</span>0
             <span className="period">{t('pricing.plans.free.period')}</span>
           </Price>
           <FeatureList>
-            <FeatureItem><Check size={18} /> Jusqu'à 3 participants</FeatureItem>
-            <FeatureItem><Check size={18} /> 45 min par réunion</FeatureItem>
-            <FeatureItem><Check size={18} /> Partage d'écran</FeatureItem>
-            <FeatureItem className="disabled"><X size={18} /> Enregistrement</FeatureItem>
-            <FeatureItem className="disabled"><X size={18} /> Transcriptions IA</FeatureItem>
+            <FeatureItem><Check size={18} /> {t('billing.features.starter.0', "Jusqu'à 3 participants")}</FeatureItem>
+            <FeatureItem><Check size={18} /> {t('billing.features.starter.1', '45 min par réunion')}</FeatureItem>
+            <FeatureItem><Check size={18} /> {t('pricing.features.screenShare', "Partage d'écran")}</FeatureItem>
+            <FeatureItem className="disabled"><X size={18} /> {t('pricing.features.recording', 'Enregistrement')}</FeatureItem>
+            <FeatureItem className="disabled"><X size={18} /> {t('pricing.features.aiTranscription', 'Transcriptions IA')}</FeatureItem>
           </FeatureList>
           <PlanButton 
             to="#" 
             className="outline"
             onClick={(e) => handleSubscribe(e, 'starter')}
           >
-            Commencer Gratuit
+            {t('pricing.plans.starter.cta', 'Commencer Gratuit')}
           </PlanButton>
         </PlanCard>
 
         {/* PRO */}
         <PlanCard $featured>
-          <PopularBadge>RECOMMANDÉ</PopularBadge>
+          <PopularBadge>{t('pricing.recommended', 'RECOMMANDÉ')}</PopularBadge>
           <PlanTitle>Pro</PlanTitle>
-          <PlanDescription>Pour les équipes agiles et les freelances.</PlanDescription>
+          <PlanDescription>{t('pricing.plans.pro.description', 'Pour les équipes agiles et les freelances.')}</PlanDescription>
           <Price>
             <span className="currency">€</span>15
-            <span className="period">/mois par utilisateur</span>
+            <span className="period">{t('pricing.perMonthPerUser', '/mois par utilisateur')}</span>
           </Price>
           <FeatureList>
-            <FeatureItem><Check size={18} /> Jusqu'à 50 participants</FeatureItem>
-            <FeatureItem><Check size={18} /> Durée illimitée</FeatureItem>
-            <FeatureItem><Check size={18} /> 5 Go de stockage Cloud</FeatureItem>
-            <FeatureItem><Check size={18} /> Support Prioritaire</FeatureItem>
-            <FeatureItem><Check size={18} /> Transcriptions IA (10h/mois)</FeatureItem>
+            <FeatureItem><Check size={18} /> {t('pricing.features.upTo50', "Jusqu'à 50 participants")}</FeatureItem>
+            <FeatureItem><Check size={18} /> {t('pricing.features.unlimitedDuration', 'Durée illimitée')}</FeatureItem>
+            <FeatureItem><Check size={18} /> {t('pricing.features.cloud5gb', '5 Go de stockage Cloud')}</FeatureItem>
+            <FeatureItem><Check size={18} /> {t('pricing.features.prioritySupport', 'Support Prioritaire')}</FeatureItem>
+            <FeatureItem><Check size={18} /> {t('pricing.features.aiTranscription10h', 'Transcriptions IA (10h/mois)')}</FeatureItem>
           </FeatureList>
           <PlanButton 
             to="#" 
             variant="primary" 
             onClick={(e) => handleSubscribe(e, 'pro')}
           >
-            S'abonner
+            {t('pricing.subscribe', "S'abonner")}
           </PlanButton>
         </PlanCard>
 
         {/* BUSINESS */}
         <PlanCard>
           <PlanTitle>Business</PlanTitle>
-          <PlanDescription>Pour les organisations à grande échelle.</PlanDescription>
+          <PlanDescription>{t('pricing.plans.business.description', 'Pour les organisations à grande échelle.')}</PlanDescription>
           <Price>
             <span className="currency">€</span>35
-            <span className="period">/mois par utilisateur</span>
+            <span className="period">{t('pricing.perMonthPerUser', '/mois par utilisateur')}</span>
           </Price>
           <FeatureList>
-            <FeatureItem><Check size={18} /> Jusqu'à 200 participants</FeatureItem>
-            <FeatureItem><Check size={18} /> Stockage illimité</FeatureItem>
+            <FeatureItem><Check size={18} /> {t('pricing.features.upTo200', "Jusqu'à 200 participants")}</FeatureItem>
+            <FeatureItem><Check size={18} /> {t('pricing.features.unlimitedStorage', 'Stockage illimité')}</FeatureItem>
             <FeatureItem><Check size={18} /> {t('pricing.features.breakout_rooms')}</FeatureItem>
-            <FeatureItem><Check size={18} /> SSO & Admin Avancé</FeatureItem>
-            <FeatureItem><Check size={18} /> Transcriptions Illimitées</FeatureItem>
+            <FeatureItem><Check size={18} /> {t('pricing.features.ssoAdmin', 'SSO & Admin Avancé')}</FeatureItem>
+            <FeatureItem><Check size={18} /> {t('pricing.features.unlimitedTranscriptions', 'Transcriptions Illimitées')}</FeatureItem>
           </FeatureList>
           <PlanButton 
             to="#" 
             className="outline"
             onClick={(e) => handleSubscribe(e, 'business')}
           >
-            S'abonner
+            {t('pricing.subscribe', "S'abonner")}
           </PlanButton>
         </PlanCard>
       </PricingGrid>

@@ -5,9 +5,10 @@ const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 const FREE_PLAN_DURATION_MS = 40 * 60 * 1000;
 const WARNING_THRESHOLD_MS = 5 * 60 * 1000;
 
-const buildCheckoutPayload = (priceId, subscriberId) => ({
+const buildCheckoutPayload = (priceId, subscriberId, locale) => ({
   priceId,
   userId: subscriberId,
+  locale,
   successUrl: `${window.location.origin}/success`,
   cancelUrl: `${window.location.origin}/cancel`,
 });
@@ -32,7 +33,12 @@ export const useSubscription = (subscriber) => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${subscriber.token}`,
         },
-        body: JSON.stringify(buildCheckoutPayload(priceId, subscriber.id)),
+        body: JSON.stringify(buildCheckoutPayload(
+          priceId,
+          subscriber.id,
+          (typeof localStorage !== 'undefined' ? localStorage.getItem('visiconnect.language') : null)
+            || (typeof navigator !== 'undefined' ? navigator.language : 'en')
+        )),
       });
 
       if (!response.ok) {

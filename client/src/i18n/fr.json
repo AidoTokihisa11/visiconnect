@@ -235,11 +235,36 @@
     "plans": {
       "free": {
         "period": "/ mois"
+      },
+      "starter": {
+        "description": "Pour découvrir la plateforme sans engagement.",
+        "cta": "Commencer Gratuit"
+      },
+      "pro": {
+        "description": "Pour les équipes agiles et les freelances."
+      },
+      "business": {
+        "description": "Pour les organisations à grande échelle."
       }
     },
     "features": {
-      "breakout_rooms": "Salles de sous-groupes"
-    }
+      "breakout_rooms": "Salles de sous-groupes",
+      "screenShare": "Partage d'écran",
+      "recording": "Enregistrement",
+      "aiTranscription": "Transcriptions IA",
+      "upTo50": "Jusqu'à 50 participants",
+      "upTo200": "Jusqu'à 200 participants",
+      "unlimitedDuration": "Durée illimitée",
+      "unlimitedStorage": "Stockage illimité",
+      "cloud5gb": "5 Go de stockage Cloud",
+      "prioritySupport": "Support Prioritaire",
+      "aiTranscription10h": "Transcriptions IA (10h/mois)",
+      "ssoAdmin": "SSO & Admin Avancé",
+      "unlimitedTranscriptions": "Transcriptions Illimitées"
+    },
+    "recommended": "RECOMMANDÉ",
+    "perMonthPerUser": "/mois par utilisateur",
+    "subscribe": "S'abonner"
   },
   "contact": {
     "header": {
@@ -1804,7 +1829,85 @@
     }
   },
   "createMeetingModal": {
-    "title": "Créer une réunion"
+    "title": "Créer une réunion",
+    "defaultTitle": "Réunion VisiConnect",
+    "linkLabel": "Lien :",
+    "sections": {
+      "general": {
+        "title": "Informations générales",
+        "desc": "Définissez les détails principaux de votre réunion"
+      },
+      "datetime": {
+        "title": "Date et heure",
+        "desc": "Planifiez quand aura lieu votre réunion"
+      },
+      "participants": {
+        "title": "Participants",
+        "desc": "Invitez des personnes à votre réunion"
+      },
+      "advanced": {
+        "title": "Paramètres avancés",
+        "desc": "Configurez les options de votre réunion"
+      }
+    },
+    "fields": {
+      "title": "Titre de la réunion",
+      "description": "Description (optionnel)",
+      "date": "Date",
+      "startTime": "Heure de début",
+      "endTime": "Heure de fin",
+      "quickSlots": "Créneaux rapides",
+      "addParticipant": "Ajouter un participant",
+      "meetingType": "Type de réunion",
+      "maxParticipants": "Nombre max de participants",
+      "recurringFrequency": "Fréquence de répétition"
+    },
+    "placeholders": {
+      "title": "Ex: Réunion équipe marketing",
+      "description": "Ajoutez une description, un ordre du jour...",
+      "email": "email@exemple.com"
+    },
+    "types": {
+      "video": "Visioconférence",
+      "audio": "Audio uniquement",
+      "webinar": "Webinaire",
+      "hybrid": "Hybride"
+    },
+    "frequencies": {
+      "daily": "Quotidienne",
+      "weekly": "Hebdomadaire",
+      "monthly": "Mensuelle",
+      "custom": "Personnalisée"
+    },
+    "toggles": {
+      "requireApproval": {
+        "label": "Approbation requise",
+        "desc": "Les participants doivent être approuvés avant de rejoindre"
+      },
+      "allowRecording": {
+        "label": "Autoriser l'enregistrement",
+        "desc": "Permettre l'enregistrement de la réunion"
+      },
+      "recurring": {
+        "label": "Réunion récurrente",
+        "desc": "Répéter cette réunion automatiquement"
+      }
+    },
+    "buttons": {
+      "add": "Ajouter",
+      "cancel": "Annuler",
+      "draft": "Brouillon",
+      "start": "Démarrer la réunion",
+      "copy": "Copier",
+      "copied": "Copié"
+    },
+    "status": {
+      "invited": "✓ Invité",
+      "pending": "En attente"
+    },
+    "errors": {
+      "endBeforeStart": "L'heure de fin doit être après l'heure de début."
+    }
   },
   "dashboardOverview": {
     "welcome": "Bienvenue",

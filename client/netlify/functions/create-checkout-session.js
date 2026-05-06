@@ -24,7 +24,14 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    const { plan, billingCycle } = JSON.parse(event.body);
+    const { plan, billingCycle, locale: rawLocale } = JSON.parse(event.body);
+
+    // Map UI locale to a Stripe-supported locale.
+    const STRIPE_LOCALES = new Set(['auto','bg','cs','da','de','el','en','en-GB','es','es-419','et','fi','fil','fr','fr-CA','hr','hu','id','it','ja','ko','lt','lv','ms','mt','nb','nl','pl','pt','pt-BR','ro','ru','sk','sl','sv','th','tr','vi','zh','zh-HK','zh-TW']);
+    const norm = (typeof rawLocale === 'string' ? rawLocale : '').trim().replace('_', '-');
+    const checkoutLocale = STRIPE_LOCALES.has(norm)
+      ? norm
+      : (STRIPE_LOCALES.has(norm.split('-')[0]) ? norm.split('-')[0] : 'auto');
 
     // Starter is free — skip Stripe
     if (plan === 'starter') {
@@ -69,6 +76,7 @@ exports.handler = async (event, context) => {
         },
       ],
       mode: 'subscription',
+      locale: checkoutLocale,
       success_url: `${origin}/success.html?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/pricing`,
     });

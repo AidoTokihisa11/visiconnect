@@ -23,7 +23,15 @@ module.exports = async function handler(req, res) {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY.trim());
 
   try {
-    const { plan, billingCycle, userId, userEmail } = req.body || {};
+    const { plan, billingCycle, userId, userEmail, locale: rawLocale } = req.body || {};
+
+    // Map UI locale to a Stripe-supported locale (https://stripe.com/docs/api/checkout/sessions/create#create_checkout_session-locale).
+    const STRIPE_LOCALES = new Set(['auto','bg','cs','da','de','el','en','en-GB','es','es-419','et','fi','fil','fr','fr-CA','hr','hu','id','it','ja','ko','lt','lv','ms','mt','nb','nl','pl','pt','pt-BR','ro','ru','sk','sl','sv','th','tr','vi','zh','zh-HK','zh-TW']);
+    const norm = (typeof rawLocale === 'string' ? rawLocale : '').trim();
+    const candidate = norm.replace('_', '-');
+    const checkoutLocale = STRIPE_LOCALES.has(candidate)
+      ? candidate
+      : (STRIPE_LOCALES.has(candidate.split('-')[0]) ? candidate.split('-')[0] : 'auto');
 
     // Starter is free — skip Stripe, activate directly
     if (plan === 'starter') {
@@ -75,7 +83,7 @@ module.exports = async function handler(req, res) {
         plan: plan,
         billingCycle: billingCycle || 'monthly',
       },
-      locale: 'fr',
+      locale: checkoutLocale,
       success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/pricing`,
     });

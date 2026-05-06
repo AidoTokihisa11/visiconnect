@@ -342,7 +342,7 @@ const CheckoutButton = styled(motion.button)`
 const CheckoutPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const [formData, setFormData] = useState({
     email: '',
     fullName: '',
@@ -430,6 +430,7 @@ const CheckoutPage = () => {
         body: JSON.stringify({
           plan: selectedPlan === 'starter' ? 'pro' : selectedPlan,
           billingCycle: isAnnual ? 'annual' : 'monthly',
+          locale: language || (typeof navigator !== 'undefined' ? navigator.language : 'en'),
         }),
       });
 

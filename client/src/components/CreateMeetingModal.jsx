@@ -123,7 +123,7 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
           email: participant.email,
           name: participant.name,
           meetingId,
-          meetingTitle: formData.title || 'Réunion VisiConnect',
+          meetingTitle: formData.title || t('createMeetingModal.defaultTitle', 'Réunion VisiConnect'),
           meetingLink,
           date: formData.date,
           startTime: formData.startTime,
@@ -181,7 +181,7 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
       const previous = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
       const entry = {
         id: meetingId,
-        title: formData.title || 'Réunion VisiConnect',
+        title: formData.title || t('createMeetingModal.defaultTitle', 'Réunion VisiConnect'),
         date: formData.date,
         startTime: formData.startTime,
         endTime: formData.endTime,
@@ -241,27 +241,27 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
             <FormSection>
               <div className="section-title">
                 <Video size={20} />
-                Informations générales
+                {t('createMeetingModal.sections.general.title', 'Informations générales')}
               </div>
               <div className="section-desc">
-                Définissez les détails principaux de votre réunion
+                {t('createMeetingModal.sections.general.desc', 'Définissez les détails principaux de votre réunion')}
               </div>
               
               <FormGrid columns="1fr">
                 <FormField>
-                  <label>Titre de la réunion</label>
+                  <label>{t('createMeetingModal.fields.title', 'Titre de la réunion')}</label>
                   <Input
                     type="text"
-                    placeholder="Ex: Réunion équipe marketing"
+                    placeholder={t('createMeetingModal.placeholders.title', 'Ex: Réunion équipe marketing')}
                     value={formData.title}
                     onChange={(e) => handleInputChange('title', e.target.value)}
                   />
                 </FormField>
                 
                 <FormField>
-                  <label>Description (optionnel)</label>
+                  <label>{t('createMeetingModal.fields.description', 'Description (optionnel)')}</label>
                   <TextArea
-                    placeholder="Ajoutez une description, un ordre du jour..."
+                    placeholder={t('createMeetingModal.placeholders.description', 'Ajoutez une description, un ordre du jour...')}
                     value={formData.description}
                     onChange={(e) => handleInputChange('description', e.target.value)}
                   />
@@ -272,15 +272,15 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
             <FormSection>
               <div className="section-title">
                 <Calendar size={20} />
-                Date et heure
+                {t('createMeetingModal.sections.datetime.title', 'Date et heure')}
               </div>
               <div className="section-desc">
-                Planifiez quand aura lieu votre réunion
+                {t('createMeetingModal.sections.datetime.desc', 'Planifiez quand aura lieu votre réunion')}
               </div>
               
               <FormGrid columns="1fr 1fr 1fr">
                 <FormField>
-                  <label>Date</label>
+                  <label>{t('createMeetingModal.fields.date', 'Date')}</label>
                   <Input
                     type="date"
                     value={formData.date}
@@ -289,7 +289,7 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
                 </FormField>
                 
                 <FormField>
-                  <label>Heure de début</label>
+                  <label>{t('createMeetingModal.fields.startTime', 'Heure de début')}</label>
                   <Input
                     type="time"
                     value={formData.startTime}
@@ -298,7 +298,7 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
                 </FormField>
                 
                 <FormField>
-                  <label>Heure de fin</label>
+                  <label>{t('createMeetingModal.fields.endTime', 'Heure de fin')}</label>
                   <Input
                     type="time"
                     value={formData.endTime}
@@ -324,7 +324,7 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
               )}
 
               <FormField>
-                <label>Créneaux rapides</label>
+                <label>{t('createMeetingModal.fields.quickSlots', 'Créneaux rapides')}</label>
                 <QuickTimeSlots>
                   {timeSlots.map(time => (
                     <TimeSlot
@@ -347,18 +347,18 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
             <FormSection>
               <div className="section-title">
                 <Users size={20} />
-                Participants
+                {t('createMeetingModal.sections.participants.title', 'Participants')}
               </div>
               <div className="section-desc">
-                Invitez des personnes à votre réunion
+                {t('createMeetingModal.sections.participants.desc', 'Invitez des personnes à votre réunion')}
               </div>
               
               <FormField>
-                <label>Ajouter un participant</label>
+                <label>{t('createMeetingModal.fields.addParticipant', 'Ajouter un participant')}</label>
                 <div style={{ display: 'flex', gap: '0.75rem' }}>
                   <Input
                     type="email"
-                    placeholder="email@exemple.com"
+                    placeholder={t('createMeetingModal.placeholders.email', 'email@exemple.com')}
                     value={newParticipantEmail}
                     onChange={(event) => setNewParticipantEmail(event.target.value)}
                     onKeyDown={(event) => {
@@ -375,7 +375,7 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
                     whileTap={{ scale: 0.98 }}
                   >
                     <Plus size={16} />
-                    Ajouter
+                    {t('createMeetingModal.buttons.add', 'Ajouter')}
                   </ActionButton>
                 </div>
               </FormField>
@@ -392,7 +392,9 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
                         <div className="email">{participant.email}</div>
                       </div>
                       <span className={`status-badge ${participant.status === 'sent' ? 'status-sent' : 'status-pending'}`}>
-                        {participant.status === 'sent' ? '✓ Invité' : 'En attente'}
+                        {participant.status === 'sent'
+                          ? t('createMeetingModal.status.invited', '✓ Invité')
+                          : t('createMeetingModal.status.pending', 'En attente')}
                       </span>
                       <button
                         className="remove"
@@ -409,28 +411,28 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
             <FormSection>
               <div className="section-title">
                 <Settings size={20} />
-                Paramètres avancés
+                {t('createMeetingModal.sections.advanced.title', 'Paramètres avancés')}
               </div>
               <div className="section-desc">
-                Configurez les options de votre réunion
+                {t('createMeetingModal.sections.advanced.desc', 'Configurez les options de votre réunion')}
               </div>
               
               <FormGrid columns="1fr 1fr">
                 <FormField>
-                  <label>Type de réunion</label>
+                  <label>{t('createMeetingModal.fields.meetingType', 'Type de réunion')}</label>
                   <Select
                     value={formData.type}
                     onChange={(e) => handleInputChange('type', e.target.value)}
                   >
-                    <option value="video">Visioconférence</option>
-                    <option value="audio">Audio uniquement</option>
-                    <option value="webinar">Webinaire</option>
-                    <option value="hybrid">Hybride</option>
+                    <option value="video">{t('createMeetingModal.types.video', 'Visioconférence')}</option>
+                    <option value="audio">{t('createMeetingModal.types.audio', 'Audio uniquement')}</option>
+                    <option value="webinar">{t('createMeetingModal.types.webinar', 'Webinaire')}</option>
+                    <option value="hybrid">{t('createMeetingModal.types.hybrid', 'Hybride')}</option>
                   </Select>
                 </FormField>
                 
                 <FormField>
-                  <label>Nombre max de participants</label>
+                  <label>{t('createMeetingModal.fields.maxParticipants', 'Nombre max de participants')}</label>
                   <Input
                     type="number"
                     min="2"
@@ -448,10 +450,10 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
                     onClick={() => handleInputChange('requireApproval', !formData.requireApproval)}
                   >
                     <div className="switch" />
-                    <div className="label">Approbation requise</div>
+                    <div className="label">{t('createMeetingModal.toggles.requireApproval.label', 'Approbation requise')}</div>
                   </ToggleSwitch>
                   <div className="field-desc">
-                    Les participants doivent être approuvés avant de rejoindre
+                    {t('createMeetingModal.toggles.requireApproval.desc', 'Les participants doivent être approuvés avant de rejoindre')}
                   </div>
                 </FormField>
                 
@@ -461,10 +463,10 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
                     onClick={() => handleInputChange('allowRecording', !formData.allowRecording)}
                   >
                     <div className="switch" />
-                    <div className="label">Autoriser l'enregistrement</div>
+                    <div className="label">{t('createMeetingModal.toggles.allowRecording.label', "Autoriser l'enregistrement")}</div>
                   </ToggleSwitch>
                   <div className="field-desc">
-                    Permettre l'enregistrement de la réunion
+                    {t('createMeetingModal.toggles.allowRecording.desc', "Permettre l'enregistrement de la réunion")}
                   </div>
                 </FormField>
               </FormGrid>
@@ -475,24 +477,24 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
                   onClick={() => handleInputChange('recurring', !formData.recurring)}
                 >
                   <div className="switch" />
-                  <div className="label">Réunion récurrente</div>
+                  <div className="label">{t('createMeetingModal.toggles.recurring.label', 'Réunion récurrente')}</div>
                 </ToggleSwitch>
                 <div className="field-desc">
-                  Répéter cette réunion automatiquement
+                  {t('createMeetingModal.toggles.recurring.desc', 'Répéter cette réunion automatiquement')}
                 </div>
               </FormField>
 
               {formData.recurring && (
                 <FormField>
-                  <label>Fréquence de répétition</label>
+                  <label>{t('createMeetingModal.fields.recurringFrequency', 'Fréquence de répétition')}</label>
                   <Select
                     value={formData.recurringType}
                     onChange={(e) => handleInputChange('recurringType', e.target.value)}
                   >
-                    <option value="daily">Quotidienne</option>
-                    <option value="weekly">Hebdomadaire</option>
-                    <option value="monthly">Mensuelle</option>
-                    <option value="custom">Personnalisée</option>
+                    <option value="daily">{t('createMeetingModal.frequencies.daily', 'Quotidienne')}</option>
+                    <option value="weekly">{t('createMeetingModal.frequencies.weekly', 'Hebdomadaire')}</option>
+                    <option value="monthly">{t('createMeetingModal.frequencies.monthly', 'Mensuelle')}</option>
+                    <option value="custom">{t('createMeetingModal.frequencies.custom', 'Personnalisée')}</option>
                   </Select>
                 </FormField>
               )}
@@ -501,10 +503,12 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
 
           <ModalFooter>
             <div className="link-row">
-              <span className="link-label">Lien :</span>
+              <span className="link-label">{t('createMeetingModal.linkLabel', 'Lien :')}</span>
               <span className="link-value">{meetingLink}</span>
               <button className={`copy-btn${linkCopied ? ' copied' : ''}`} onClick={copyLink}>
-                {linkCopied ? <><Check size={12} /> Copié</> : <><Copy size={12} /> Copier</>}
+                {linkCopied
+                  ? <><Check size={12} /> {t('createMeetingModal.buttons.copied', 'Copié')}</>
+                  : <><Copy size={12} /> {t('createMeetingModal.buttons.copy', 'Copier')}</>}
               </button>
             </div>
 
@@ -515,7 +519,7 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                Annuler
+                {t('createMeetingModal.buttons.cancel', 'Annuler')}
               </ActionButton>
               
               <ActionButton
@@ -523,7 +527,7 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
                 whileTap={{ scale: 0.98 }}
               >
                 <Save size={15} />
-                Brouillon
+                {t('createMeetingModal.buttons.draft', 'Brouillon')}
               </ActionButton>
               
               <ActionButton
@@ -535,7 +539,7 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
                 style={!isTimeRangeValid ? { opacity: 0.55, cursor: 'not-allowed' } : undefined}
               >
                 <Video size={15} />
-                Démarrer la réunion
+                {t('createMeetingModal.buttons.start', 'Démarrer la réunion')}
               </ActionButton>
             </div>
           </ModalFooter>

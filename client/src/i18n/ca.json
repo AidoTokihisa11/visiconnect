@@ -187,11 +187,36 @@
     "plans": {
       "free": {
         "period": "/ mes"
+      },
+      "starter": {
+        "description": "Per descobrir la plataforma sense compromís.",
+        "cta": "Començar gratis"
+      },
+      "pro": {
+        "description": "Per a equips àgils i autònoms."
+      },
+      "business": {
+        "description": "Per a organitzacions a gran escala."
       }
     },
     "features": {
-      "breakout_rooms": "Salas de grupos"
-    }
+      "breakout_rooms": "Salas de grupos",
+      "screenShare": "Compartir pantalla",
+      "recording": "Enregistrament",
+      "aiTranscription": "Transcripcions IA",
+      "upTo50": "Fins a 50 participants",
+      "upTo200": "Fins a 200 participants",
+      "unlimitedDuration": "Durada il·limitada",
+      "unlimitedStorage": "Emmagatzematge il·limitat",
+      "cloud5gb": "5 GB d'emmagatzematge al núvol",
+      "prioritySupport": "Suport prioritari",
+      "aiTranscription10h": "Transcripcions IA (10h/mes)",
+      "ssoAdmin": "SSO i administració avançada",
+      "unlimitedTranscriptions": "Transcripcions il·limitades"
+    },
+    "recommended": "RECOMANAT",
+    "perMonthPerUser": "/mes per usuari",
+    "subscribe": "Subscriure's"
   },
   "contact": {
     "header": {
@@ -1813,7 +1838,85 @@
     }
   },
   "createMeetingModal": {
-    "title": "Crear una reunió"
+    "title": "Crear una reunió",
+    "defaultTitle": "Reunió VisiConnect",
+    "linkLabel": "Enllaç:",
+    "sections": {
+      "general": {
+        "title": "Informació general",
+        "desc": "Definiu els detalls principals de la vostra reunió"
+      },
+      "datetime": {
+        "title": "Data i hora",
+        "desc": "Planifiqueu quan tindrà lloc la vostra reunió"
+      },
+      "participants": {
+        "title": "Participants",
+        "desc": "Convideu persones a la vostra reunió"
+      },
+      "advanced": {
+        "title": "Configuració avançada",
+        "desc": "Configureu les opcions de la vostra reunió"
+      }
+    },
+    "fields": {
+      "title": "Títol de la reunió",
+      "description": "Descripció (opcional)",
+      "date": "Data",
+      "startTime": "Hora d'inici",
+      "endTime": "Hora de fi",
+      "quickSlots": "Franges ràpides",
+      "addParticipant": "Afegir participant",
+      "meetingType": "Tipus de reunió",
+      "maxParticipants": "Màx. participants",
+      "recurringFrequency": "Freqüència de repetició"
+    },
+    "placeholders": {
+      "title": "P. ex.: Reunió de l'equip de màrqueting",
+      "description": "Afegiu una descripció, una agenda...",
+      "email": "correu@exemple.com"
+    },
+    "types": {
+      "video": "Videoconferència",
+      "audio": "Només àudio",
+      "webinar": "Webinar",
+      "hybrid": "Híbrida"
+    },
+    "frequencies": {
+      "daily": "Diària",
+      "weekly": "Setmanal",
+      "monthly": "Mensual",
+      "custom": "Personalitzada"
+    },
+    "toggles": {
+      "requireApproval": {
+        "label": "Aprovació requerida",
+        "desc": "Els participants han de ser aprovats abans d'unir-se"
+      },
+      "allowRecording": {
+        "label": "Permetre l'enregistrament",
+        "desc": "Permetre l'enregistrament de la reunió"
+      },
+      "recurring": {
+        "label": "Reunió recurrent",
+        "desc": "Repetir aquesta reunió automàticament"
+      }
+    },
+    "buttons": {
+      "add": "Afegir",
+      "cancel": "Cancel·lar",
+      "draft": "Esborrany",
+      "start": "Iniciar reunió",
+      "copy": "Copiar",
+      "copied": "Copiat"
+    },
+    "status": {
+      "invited": "✓ Convidat",
+      "pending": "Pendent"
+    },
+    "errors": {
+      "endBeforeStart": "L'hora de fi ha de ser posterior a l'hora d'inici."
+    }
   },
   "dashboardOverview": {
     "welcome": "Benvingut",

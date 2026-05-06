@@ -236,11 +236,36 @@
     "plans": {
       "free": {
         "period": "/month"
+      },
+      "starter": {
+        "description": "To discover the platform with no commitment.",
+        "cta": "Start Free"
+      },
+      "pro": {
+        "description": "For agile teams and freelancers."
+      },
+      "business": {
+        "description": "For large-scale organizations."
       }
     },
     "features": {
-      "breakout_rooms": "Breakout rooms"
-    }
+      "breakout_rooms": "Breakout rooms",
+      "screenShare": "Screen sharing",
+      "recording": "Recording",
+      "aiTranscription": "AI transcriptions",
+      "upTo50": "Up to 50 participants",
+      "upTo200": "Up to 200 participants",
+      "unlimitedDuration": "Unlimited duration",
+      "unlimitedStorage": "Unlimited storage",
+      "cloud5gb": "5 GB cloud storage",
+      "prioritySupport": "Priority support",
+      "aiTranscription10h": "AI transcriptions (10h/month)",
+      "ssoAdmin": "SSO & Advanced Admin",
+      "unlimitedTranscriptions": "Unlimited transcriptions"
+    },
+    "recommended": "RECOMMENDED",
+    "perMonthPerUser": "/month per user",
+    "subscribe": "Subscribe"
   },
   "contact": {
     "header": {
@@ -1780,7 +1805,85 @@
     }
   },
   "createMeetingModal": {
-    "title": "Create a meeting"
+    "title": "Create a meeting",
+    "defaultTitle": "VisiConnect Meeting",
+    "linkLabel": "Link:",
+    "sections": {
+      "general": {
+        "title": "General information",
+        "desc": "Define the main details of your meeting"
+      },
+      "datetime": {
+        "title": "Date and time",
+        "desc": "Plan when your meeting takes place"
+      },
+      "participants": {
+        "title": "Participants",
+        "desc": "Invite people to your meeting"
+      },
+      "advanced": {
+        "title": "Advanced settings",
+        "desc": "Configure your meeting options"
+      }
+    },
+    "fields": {
+      "title": "Meeting title",
+      "description": "Description (optional)",
+      "date": "Date",
+      "startTime": "Start time",
+      "endTime": "End time",
+      "quickSlots": "Quick slots",
+      "addParticipant": "Add participant",
+      "meetingType": "Meeting type",
+      "maxParticipants": "Max participants",
+      "recurringFrequency": "Recurrence frequency"
+    },
+    "placeholders": {
+      "title": "E.g. Marketing team meeting",
+      "description": "Add a description, agenda...",
+      "email": "email@example.com"
+    },
+    "types": {
+      "video": "Video conference",
+      "audio": "Audio only",
+      "webinar": "Webinar",
+      "hybrid": "Hybrid"
+    },
+    "frequencies": {
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "custom": "Custom"
+    },
+    "toggles": {
+      "requireApproval": {
+        "label": "Require approval",
+        "desc": "Participants must be approved before joining"
+      },
+      "allowRecording": {
+        "label": "Allow recording",
+        "desc": "Allow the meeting to be recorded"
+      },
+      "recurring": {
+        "label": "Recurring meeting",
+        "desc": "Repeat this meeting automatically"
+      }
+    },
+    "buttons": {
+      "add": "Add",
+      "cancel": "Cancel",
+      "draft": "Draft",
+      "start": "Start meeting",
+      "copy": "Copy",
+      "copied": "Copied"
+    },
+    "status": {
+      "invited": "✓ Invited",
+      "pending": "Pending"
+    },
+    "errors": {
+      "endBeforeStart": "End time must be after start time."
+    }
   },
   "dashboardOverview": {
     "welcome": "Welcome",

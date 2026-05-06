@@ -53,7 +53,7 @@ const AccountPageSimple = () => {
   const { signOut } = useClerk();
   const { user } = useUser();
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   
   const [activeTab, setActiveTab] = useState('profile');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -463,7 +463,7 @@ const AccountPageSimple = () => {
         const res = await fetch('/api/create-checkout-session', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ plan: targetPlan, billingCycle, userId: user?.id, userEmail: user?.primaryEmailAddress?.emailAddress || '' }),
+          body: JSON.stringify({ plan: targetPlan, billingCycle, userId: user?.id, userEmail: user?.primaryEmailAddress?.emailAddress || '', locale: language || (typeof navigator !== 'undefined' ? navigator.language : 'en') }),
         });
         const session = await res.json();
         if (session.error) { showNotification(session.error, 'error'); return; }
