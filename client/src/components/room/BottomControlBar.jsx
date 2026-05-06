@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import {
-  Mic, MicOff, Video, VideoOff, Phone, Monitor, MonitorOff,
-  MessageSquare, Sparkles, Layout, Activity, Settings2, MoreHorizontal, Circle, PieChart,
+  Mic, MicOff, Video, VideoOff, PhoneOff, Monitor, MonitorOff,
+  MessageSquare, Sparkles, Presentation, Activity, Settings2, MoreHorizontal, Circle, PieChart,
   Hand, Bot, Wand2, Square,
 } from 'lucide-react';
 import { useAudioLevel } from './AudioVisualizer';
@@ -12,14 +12,14 @@ import { useTranslation } from '../../hooks/useTranslation';
 const BottomBar = styled.div`
   /* Desktop: hauteur fixe, flex-shrink: 0 pour ne jamais shrink */
   flex-shrink: 0;
-  height: 80px;
+  height: 92px;
   background-color: ${THEME.panelBg};
   backdrop-filter: blur(12px);
   border-top: 1px solid ${THEME.border};
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
+  gap: 0.5rem;
   padding: 0 1rem;
   z-index: 60;
 
@@ -45,6 +45,38 @@ const BottomBar = styled.div`
     &::-webkit-scrollbar {
       display: none;
     }
+  }
+`;
+
+// Conteneur vertical icone+label (style Google Meet / Teams)
+const ControlItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex-shrink: 0;
+
+  @media (max-width: 768px) {
+    gap: 0;
+  }
+`;
+
+const ControlLabel = styled.span`
+  font-size: 11px;
+  font-weight: 500;
+  color: ${THEME.textMuted || 'rgba(255,255,255,0.7)'};
+  letter-spacing: 0.2px;
+  user-select: none;
+  pointer-events: none;
+  text-align: center;
+  max-width: 72px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @media (max-width: 768px) {
+    display: none;
   }
 `;
 
@@ -392,14 +424,25 @@ export const ControlBar = ({
           Background blur will be available soon
         </div>
 
-        {/* Core Mobile Buttons (Like Native App) */}
-        <EndCallButton className="focus-visible-ring" onClick={onLeave} $active title={t('room.controls.leave', 'Quitter')} aria-label={t('room.controls.leaveAria', 'Quitter la réunion')}>
-          <Phone style={{ transform: 'rotate(135deg)' }} />
-        </EndCallButton>
+        {/* === Bloc principal: Mic / Cam / Écran (style Meet) === */}
+        <MicRing $level={micLevel} $active={isMicrophoneEnabled}>
+          <ControlItem>
+            <ControlButton
+              className="focus-visible-ring"
+              onClick={controls.toggleMic}
+              disabled={isTogglingMic}
+              $active={isMicrophoneEnabled}
+              $activeColor={THEME.accent}
+              title={isMicrophoneEnabled ? t('room.controls.micOff', 'Désactiver le micro') : t('room.controls.micOn', 'Activer le micro')}
+              aria-label={isMicrophoneEnabled ? t('room.controls.micOff', 'Désactiver le micro') : t('room.controls.micOn', 'Activer le micro')}
+            >
+              {isMicrophoneEnabled ? <Mic /> : <MicOff color={THEME.danger} />}
+            </ControlButton>
+            <ControlLabel>{isMicrophoneEnabled ? t('room.controls.micLabelOn', 'Micro') : t('room.controls.micLabelOff', 'Muet')}</ControlLabel>
+          </ControlItem>
+        </MicRing>
 
-        
-        
-        <ButtonGroup style={{ position: 'relative' }}>
+        <ControlItem>
           <ControlButton
             className="focus-visible-ring"
             onClick={controls.toggleCamera}
@@ -411,113 +454,141 @@ export const ControlBar = ({
           >
             {isCameraEnabled ? <Video /> : <VideoOff color={THEME.danger} />}
           </ControlButton>
-        </ButtonGroup>
-
-        {/* IA Smart Enhancer Button - Touch target optimisé + Animation */}
-        <ButtonGroup>
-          <ControlButton
-            disabled={!isAiReady || isProcessingAI}
-            $active={isAIEnhanced}
-            onClick={toggleAIVideoEngine}
-            title={isProcessingAI ? t('room.controls.aiProcessing', 'Transition en cours...') : !isAiReady ? t('room.controls.aiLoading', "Modèles d'IA en cours de chargement...") : (isAIEnhanced ? t('room.controls.aiOff', "Désactiver l'IA") : t('room.controls.aiOn', "Activer l'IA vidéo"))}
-            aria-label={isAIEnhanced ? t('room.controls.aiEnhanceOff', "Désactiver l'amélioration IA") : t('room.controls.aiEnhanceOn', "Activer l'amélioration IA")}
-            className={isAIEnhanced ? 'ai-button-active' : ''}
-            style={{
-              background: isProcessingAI
-                ? 'rgba(100, 100, 100, 0.4)'
-                : isAIEnhanced 
-                  ? 'linear-gradient(135deg, #10B981 0%, #059669 50%, #047857 100%)' 
-                  : !isAiReady 
-                    ? 'rgba(100, 100, 100, 0.3)' 
-                    : undefined,
-              borderColor: isAIEnhanced && !isProcessingAI ? 'transparent' : undefined,
-              color: isAIEnhanced && !isProcessingAI ? 'white' : (!isAiReady || isProcessingAI) ? '#888' : undefined,
-              minWidth: '52px',
-              minHeight: '48px',
-              animation: isProcessingAI ? 'aiPulse 0.8s ease-in-out infinite' : isAIEnhanced ? 'aiPulse 2s ease-in-out infinite' : 'none',
-              boxShadow: isAIEnhanced && !isProcessingAI
-                ? '0 0 20px rgba(16, 185, 129, 0.5), 0 4px 15px rgba(16, 185, 129, 0.3)' 
-                : undefined,
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-              cursor: isProcessingAI ? 'wait' : undefined,
-            }}
-          >
-            <Sparkles size={22} strokeWidth={(isAIEnhanced && !isProcessingAI) ? 2.5 : 2} />
-          </ControlButton>
-        </ButtonGroup>
-
-
-
-
-        <MicRing $level={micLevel} $active={isMicrophoneEnabled}>
-          <ControlButton
-            className="focus-visible-ring"
-            onClick={controls.toggleMic}
-            disabled={isTogglingMic}
-            $active={isMicrophoneEnabled}
-            $activeColor={THEME.accent}
-            title={isMicrophoneEnabled ? t('room.controls.micOff', 'Désactiver le micro') : t('room.controls.micOn', 'Activer le micro')}
-            aria-label={isMicrophoneEnabled ? t('room.controls.micOff', 'Désactiver le micro') : t('room.controls.micOn', 'Activer le micro')}
-          >
-            {isMicrophoneEnabled ? <Mic /> : <MicOff color={THEME.danger} />}
-          </ControlButton>
-        </MicRing>
+          <ControlLabel>{isCameraEnabled ? t('room.controls.cameraLabelOn', 'Caméra') : t('room.controls.cameraLabelOff', 'Cam off')}</ControlLabel>
+        </ControlItem>
 
         {/* Desktop-only Quick Access */}
         <DesktopOnlyWrapper>
-          <ControlButton
-            onClick={controls.toggleScreenShare}
-            disabled={isTogglingScreen}
-            $active={isScreenShareEnabled}
-            $activeColor={THEME.accent}
-            title={t('room.controls.screenShare', "Partager l'écran")}
-          >
-            {isScreenShareEnabled ? <Monitor /> : <MonitorOff />}
-          </ControlButton>
+          <ControlItem>
+            <ControlButton
+              onClick={controls.toggleScreenShare}
+              disabled={isTogglingScreen}
+              $active={isScreenShareEnabled}
+              $activeColor={THEME.accent}
+              title={isScreenShareEnabled ? t('room.controls.screenShareStop', 'Arrêter le partage') : t('room.controls.screenShare', "Partager l'écran")}
+            >
+              <Monitor />
+            </ControlButton>
+            <ControlLabel>{isScreenShareEnabled ? t('room.controls.screenShareLabelOn', 'Arrêter') : t('room.controls.screenShareLabel', 'Présenter')}</ControlLabel>
+          </ControlItem>
 
-          <ControlButton onClick={toggleWhiteboard} $active={whiteboardOpen} $activeColor={THEME.accent} title={t('room.controls.whiteboard', 'Tableau Blanc (Tldraw)')}>
-            <Layout />
-          </ControlButton>
-
-
-          <ControlButton onClick={toggleRecording} $active={isRecording} $activeColor={THEME.danger} title={isRecording ? t('room.controls.recordStop', "Arrêter l'enregistrement") : t('room.controls.recordStart', "Démarrer l'enregistrement")}>
-            {isRecording
-              ? <Square fill="white" stroke="none" size={16} />
-              : <Circle fill="#ef4444" stroke="#ef4444" size={18} />}
-          </ControlButton>
-
-          <ControlButton onClick={() => setShowStats(!showStats)} $active={showStats} $activeColor="#10b981" title={t('room.controls.stats', 'Stats / Debug (4K)')}>
-            <Activity />
-          </ControlButton>
+          <ControlItem>
+            <ControlButton onClick={onRaiseHand} $active={isHandRaised} $activeColor="#f59e0b" title={isHandRaised ? t('room.controls.handDown', 'Baisser la main') : t('room.controls.handUp', 'Lever la main')}>
+              <Hand />
+            </ControlButton>
+            <ControlLabel>{t('room.controls.handLabel', 'Main')}</ControlLabel>
+          </ControlItem>
 
           <Separator />
-          
-          <ControlButton onClick={() => togglePanel('ai')} $active={activePanel === 'ai' && sidePanelOpen} $activeColor={THEME.accent} title={t('room.controls.aiAssistant', 'Assistant IA')}>
-            <Bot />
-          </ControlButton>
 
-          <ControlButton onClick={() => togglePanel('aiFeatures')} $active={activePanel === 'aiFeatures' && sidePanelOpen} $activeColor="#8b5cf6" title={t('room.controls.aiFeatures', 'Fonctionnalités IA')}>
-            <Wand2 />
-          </ControlButton>
+          {/* IA Smart Enhancer Button */}
+          <ControlItem>
+            <ControlButton
+              disabled={!isAiReady || isProcessingAI}
+              $active={isAIEnhanced}
+              onClick={toggleAIVideoEngine}
+              title={isProcessingAI ? t('room.controls.aiProcessing', 'Transition en cours...') : !isAiReady ? t('room.controls.aiLoading', "Modèles d'IA en cours de chargement...") : (isAIEnhanced ? t('room.controls.aiOff', "Désactiver l'IA") : t('room.controls.aiOn', "Activer l'IA vidéo"))}
+              aria-label={isAIEnhanced ? t('room.controls.aiEnhanceOff', "Désactiver l'amélioration IA") : t('room.controls.aiEnhanceOn', "Activer l'amélioration IA")}
+              className={isAIEnhanced ? 'ai-button-active' : ''}
+              style={{
+                background: isProcessingAI
+                  ? 'rgba(100, 100, 100, 0.4)'
+                  : isAIEnhanced
+                    ? 'linear-gradient(135deg, #10B981 0%, #059669 50%, #047857 100%)'
+                    : !isAiReady
+                      ? 'rgba(100, 100, 100, 0.3)'
+                      : undefined,
+                borderColor: isAIEnhanced && !isProcessingAI ? 'transparent' : undefined,
+                color: isAIEnhanced && !isProcessingAI ? 'white' : (!isAiReady || isProcessingAI) ? '#888' : undefined,
+                animation: isProcessingAI ? 'aiPulse 0.8s ease-in-out infinite' : isAIEnhanced ? 'aiPulse 2s ease-in-out infinite' : 'none',
+                boxShadow: isAIEnhanced && !isProcessingAI
+                  ? '0 0 20px rgba(16, 185, 129, 0.5), 0 4px 15px rgba(16, 185, 129, 0.3)'
+                  : undefined,
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                cursor: isProcessingAI ? 'wait' : undefined,
+              }}
+            >
+              <Sparkles size={22} strokeWidth={(isAIEnhanced && !isProcessingAI) ? 2.5 : 2} />
+            </ControlButton>
+            <ControlLabel>{t('room.controls.aiVideoLabel', 'IA vidéo')}</ControlLabel>
+          </ControlItem>
 
-          <ControlButton onClick={() => togglePanel('polls')} $active={activePanel === 'polls' && sidePanelOpen} $activeColor={THEME.accent} title={t('room.controls.polls', 'Sondages')}>
-            <PieChart />
-            {unreadPolls > 0 && <NotificationBadge>{unreadPolls}</NotificationBadge>}
-          </ControlButton>
+          <ControlItem>
+            <ControlButton onClick={() => togglePanel('ai')} $active={activePanel === 'ai' && sidePanelOpen} $activeColor={THEME.accent} title={t('room.controls.aiAssistant', 'Assistant IA')}>
+              <Bot />
+            </ControlButton>
+            <ControlLabel>{t('room.controls.aiAssistantLabel', 'Assistant')}</ControlLabel>
+          </ControlItem>
 
-          <ControlButton onClick={onRaiseHand} $active={isHandRaised} $activeColor="#f59e0b" title={isHandRaised ? t('room.controls.handDown', 'Baisser la main') : t('room.controls.handUp', 'Lever la main')}>
-            <Hand />
-          </ControlButton>
+          <ControlItem>
+            <ControlButton onClick={() => togglePanel('aiFeatures')} $active={activePanel === 'aiFeatures' && sidePanelOpen} $activeColor="#8b5cf6" title={t('room.controls.aiFeatures', 'Fonctionnalités IA')}>
+              <Wand2 />
+            </ControlButton>
+            <ControlLabel>{t('room.controls.aiFeaturesLabel', 'Outils IA')}</ControlLabel>
+          </ControlItem>
 
-          <ControlButton onClick={() => togglePanel('chat')} $active={activePanel === 'chat' && sidePanelOpen} $activeColor={THEME.accent} title={t('room.controls.chat', 'Chat')}>
-            <MessageSquare />
-            {unreadChat > 0 && <NotificationBadge>{unreadChat > 99 ? '99+' : unreadChat}</NotificationBadge>}
-          </ControlButton>
+          <Separator />
 
-          <ControlButton onClick={() => togglePanel('settings')} $active={activePanel === 'settings' && sidePanelOpen} $activeColor={THEME.accent} title={t('room.controls.settings', 'Paramètres')}>
-            <Settings2 />
-          </ControlButton>
+          <ControlItem>
+            <ControlButton onClick={toggleWhiteboard} $active={whiteboardOpen} $activeColor={THEME.accent} title={t('room.controls.whiteboard', 'Tableau blanc')}>
+              <Presentation />
+            </ControlButton>
+            <ControlLabel>{t('room.controls.whiteboardLabel', 'Tableau')}</ControlLabel>
+          </ControlItem>
+
+          <ControlItem>
+            <ControlButton onClick={() => togglePanel('polls')} $active={activePanel === 'polls' && sidePanelOpen} $activeColor={THEME.accent} title={t('room.controls.polls', 'Sondages')}>
+              <PieChart />
+              {unreadPolls > 0 && <NotificationBadge>{unreadPolls}</NotificationBadge>}
+            </ControlButton>
+            <ControlLabel>{t('room.controls.pollsLabel', 'Sondages')}</ControlLabel>
+          </ControlItem>
+
+          <ControlItem>
+            <ControlButton onClick={() => togglePanel('chat')} $active={activePanel === 'chat' && sidePanelOpen} $activeColor={THEME.accent} title={t('room.controls.chat', 'Chat')}>
+              <MessageSquare />
+              {unreadChat > 0 && <NotificationBadge>{unreadChat > 99 ? '99+' : unreadChat}</NotificationBadge>}
+            </ControlButton>
+            <ControlLabel>{t('room.controls.chatLabel', 'Chat')}</ControlLabel>
+          </ControlItem>
+
+          <ControlItem>
+            <ControlButton onClick={toggleRecording} $active={isRecording} $activeColor={THEME.danger} title={isRecording ? t('room.controls.recordStop', "Arrêter l'enregistrement") : t('room.controls.recordStart', "Démarrer l'enregistrement")}>
+              {isRecording
+                ? <Square fill="white" stroke="none" size={16} />
+                : <Circle fill="#ef4444" stroke="#ef4444" size={18} />}
+            </ControlButton>
+            <ControlLabel style={{ color: isRecording ? '#ef4444' : undefined }}>{isRecording ? t('room.controls.recordingLabel', 'REC') : t('room.controls.recordLabel', 'Enregistrer')}</ControlLabel>
+          </ControlItem>
+
+          <Separator />
+
+          <ControlItem>
+            <ControlButton onClick={() => togglePanel('settings')} $active={activePanel === 'settings' && sidePanelOpen} $activeColor={THEME.accent} title={t('room.controls.settings', 'Paramètres')}>
+              <Settings2 />
+            </ControlButton>
+            <ControlLabel>{t('room.controls.settingsLabel', 'Réglages')}</ControlLabel>
+          </ControlItem>
+
+          {showStats !== undefined && setShowStats && (
+            <ControlItem>
+              <ControlButton onClick={() => setShowStats(!showStats)} $active={showStats} $activeColor="#10b981" title={t('room.controls.stats', 'Stats / Debug')}>
+                <Activity />
+              </ControlButton>
+              <ControlLabel>{t('room.controls.statsLabel', 'Stats')}</ControlLabel>
+            </ControlItem>
+          )}
+
+          <Separator />
         </DesktopOnlyWrapper>
+
+        {/* === Bouton raccrocher — isolé à droite, rouge === */}
+        <ControlItem>
+          <EndCallButton className="focus-visible-ring" onClick={onLeave} $active title={t('room.controls.leave', 'Quitter')} aria-label={t('room.controls.leaveAria', 'Quitter la réunion')}>
+            <PhoneOff />
+          </EndCallButton>
+          <ControlLabel style={{ color: '#fca5a5' }}>{t('room.controls.leaveLabel', 'Quitter')}</ControlLabel>
+        </ControlItem>
 
         {/* Mobile 'More' Button */}
         <MobileOnlyWrapper>
@@ -557,7 +628,7 @@ export const ControlBar = ({
               <span>{t('room.controls.handRaised', 'Main levée')}</span>
             </ControlButton>
             <ControlButton onClick={() => { toggleWhiteboard(); setIsMoreMenuOpen(false); }} $active={whiteboardOpen} $activeColor={THEME.accent}>
-              <Layout />
+              <Presentation />
               <span>{t('room.controls.whiteboardShort', 'Tableau')}</span>
             </ControlButton>
             <ControlButton onClick={() => { toggleRecording(); setIsMoreMenuOpen(false); }} $active={isRecording} $activeColor={THEME.danger}>
