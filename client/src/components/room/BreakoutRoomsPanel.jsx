@@ -4,6 +4,7 @@ import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 import { X, Plus, Trash2, Users, ArrowRight } from 'lucide-react';
+import { useTranslation } from '../../hooks/useTranslation';
 
 const PanelContainer = styled.div`
   width: 320px;
@@ -35,13 +36,14 @@ const Input = styled.input`
 `;
 
 export default function BreakoutRoomsPanel({ meetingId, activeParticipants = [], onClose }) {
+  const { t } = useTranslation();
   const activeBreakout = useQuery(api.breakout.getActiveBreakout, { meetingId });
   const startBreakout = useMutation(api.breakout.startBreakout);
   const closeBreakout = useMutation(api.breakout.closeBreakout);
 
   const [rooms, setRooms] = useState([
-    { id: 'room-1', name: 'Salle 1', participants: [] },
-    { id: 'room-2', name: 'Salle 2', participants: [] }
+    { id: 'room-1', name: t('room.breakout.room', 'Salle') + ' 1', participants: [] },
+    { id: 'room-2', name: t('room.breakout.room', 'Salle') + ' 2', participants: [] }
   ]);
 
   const unassignedParticipants = activeParticipants.filter(
@@ -64,15 +66,15 @@ export default function BreakoutRoomsPanel({ meetingId, activeParticipants = [],
   const handleClose = async () => {
     await closeBreakout({ meetingId });
     setRooms([
-      { id: 'room-1', name: 'Salle 1', participants: [] },
-      { id: 'room-2', name: 'Salle 2', participants: [] }
+      { id: 'room-1', name: t('room.breakout.room', 'Salle') + ' 1', participants: [] },
+      { id: 'room-2', name: t('room.breakout.room', 'Salle') + ' 2', participants: [] }
     ]);
   };
 
   return (
     <PanelContainer>
       <Header>
-        <span>Salles de sous-commission</span>
+        <span>{t('room.breakout.title', 'Salles de sous-commission')}</span>
         <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer' }}><X size={20} /></button>
       </Header>
       
@@ -81,7 +83,7 @@ export default function BreakoutRoomsPanel({ meetingId, activeParticipants = [],
           <div>
             <div style={{ color: THEME.success, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
               <span style={{ width: 8, height: 8, borderRadius: '50%', background: THEME.success }} />
-              Breakout sessions en cours
+              {t('room.breakout.inProgress', 'Breakout sessions en cours')}
             </div>
             
             {activeBreakout.rooms.map(room => (
@@ -99,13 +101,13 @@ export default function BreakoutRoomsPanel({ meetingId, activeParticipants = [],
             ))}
             
             <Button style={{ background: THEME.danger }} onClick={handleClose}>
-              Clôturer les salles
+              {t('room.breakout.close', 'Clôturer les salles')}
             </Button>
           </div>
         ) : (
           <div>
             <div style={{ marginBottom: 16 }}>
-              <h4 style={{ margin: '0 0 8px 0', color: 'white' }}>Participants non assignés ({unassignedParticipants.length})</h4>
+              <h4 style={{ margin: '0 0 8px 0', color: 'white' }}>{t('room.breakout.unassigned', 'Participants non assignés')} ({unassignedParticipants.length})</h4>
               {unassignedParticipants.map(sp => (
                 <div key={sp.identity} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.05)', padding: 8, borderRadius: 4, marginBottom: 4, color: 'white', fontSize: 12 }}>
                   <span>{sp.name || sp.identity}</span>
@@ -114,7 +116,7 @@ export default function BreakoutRoomsPanel({ meetingId, activeParticipants = [],
                     onChange={(e) => handleAssign(e.target.value, sp.identity)}
                     defaultValue=""
                   >
-                    <option value="" disabled>Assigner à...</option>
+                    <option value="" disabled>{t('room.breakout.assignTo', 'Assigner à...')}</option>
                     {rooms.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
                   </select>
                 </div>
@@ -140,16 +142,16 @@ export default function BreakoutRoomsPanel({ meetingId, activeParticipants = [],
                       }} style={{ background: 'none', border: 'none', color: THEME.danger, cursor: 'pointer' }}><X size={12} /></button>
                     </div>
                   ))}
-                  {room.participants.length === 0 && <span style={{ fontSize: 12, opacity: 0.5 }}>Vide</span>}
+                  {room.participants.length === 0 && <span style={{ fontSize: 12, opacity: 0.5 }}>{t('room.breakout.empty', 'Vide')}</span>}
                 </div>
               </RoomCard>
             ))}
 
-            <Button style={{ background: 'transparent', border: `1px dashed ${THEME.primary}` }} onClick={() => setRooms([...rooms, { id: `room-${rooms.length + 1}`, name: `Salle ${rooms.length + 1}`, participants: [] }]) }>
-              <Plus size={16} /> Ajouter une salle
+            <Button style={{ background: 'transparent', border: `1px dashed ${THEME.primary}` }} onClick={() => setRooms([...rooms, { id: `room-${rooms.length + 1}`, name: `${t('room.breakout.room', 'Salle')} ${rooms.length + 1}`, participants: [] }]) }>
+              <Plus size={16} /> {t('room.breakout.addRoom', 'Ajouter une salle')}
             </Button>
             
-            <Button onClick={handleStart} style={{ marginTop: 24 }}>Démarrer les sessions</Button>
+            <Button onClick={handleStart} style={{ marginTop: 24 }}>{t('room.breakout.start', 'Démarrer les sessions')}</Button>
           </div>
         )}
       </Content>

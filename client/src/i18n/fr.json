@@ -2638,6 +2638,111 @@
       "smsSoon": "Fonctionnalité SMS à venir ! (Visuel uniquement pour le moment)",
       "emailSubject": "Invitation à une visioconférence",
       "emailBody": "Rejoignez ma réunion en cliquant sur ce lien : {{url}}"
+    },
+    "header": {
+      "ongoing": "Réunion en cours",
+      "e2eeActive": "Chiffrement E2EE actif",
+      "inviteTitle": "Inviter des participants",
+      "invite": "Inviter",
+      "participants": "Participants",
+      "signalQuality": "Qualité du signal",
+      "performance": "Performance"
+    },
+    "chat": {
+      "empty": "Aucun message. Soyez le premier à écrire !",
+      "you": "Vous",
+      "anonymous": "Anonyme",
+      "placeholder": "Écrivez un message…",
+      "enterToSend": "Appuyez sur Entrée pour envoyer"
+    },
+    "analytics": {
+      "activeParticipants": "Participants actifs",
+      "trendParticipants": "↑ 2 depuis 5 min",
+      "sessionDuration": "Durée de session",
+      "inProgress": "En cours",
+      "engagement": "Engagement",
+      "excellent": "Excellent",
+      "avgQuality": "Qualité moy.",
+      "stable": "Stable",
+      "engagementRateTitle": "Taux d’engagement en temps réel",
+      "networkStabilityTitle": "Stabilité du réseau (bitrate audio)",
+      "realtimeFooter": "Données mises à jour en temps réel via WebSocket"
+    },
+    "settings": {
+      "devices": "Périphériques",
+      "camera": "Caméra",
+      "microphone": "Microphone",
+      "speaker": "Haut-parleur",
+      "audioOutput": "Sortie audio",
+      "default": "Par défaut",
+      "refreshDevices": "Rafraîchir les périphériques",
+      "playing": "Lecture…",
+      "testSpeakers": "Tester les haut-parleurs",
+      "video": "Vidéo",
+      "maxQuality": "Qualité vidéo maximale",
+      "toggleMaxQuality": "Activer/désactiver la qualité maximale",
+      "videoDisplay": "Affichage vidéo",
+      "cover": "Remplir",
+      "contain": "Contenir",
+      "showLabels": "Afficher les noms des participants",
+      "toggleLabels": "Activer/désactiver les libellés",
+      "aiAssistant": "Assistant IA",
+      "responseMode": "Mode de réponse",
+      "concise": "Concis",
+      "balanced": "Équilibré",
+      "detailed": "Détaillé",
+      "aiHint": "Si une clé API LLM est configurée, l’assistant utilise un moteur externe. Sinon, fallback local enrichi.",
+      "interface": "Interface",
+      "widePanel": "Panneau latéral large",
+      "toggleWide": "Activer/désactiver le panneau large",
+      "statsMonitor": "Moniteur de statistiques",
+      "toggleStats": "Activer/désactiver le moniteur",
+      "notes": "Notes",
+      "notesHint": "Tous ces réglages sont appliqués en temps réel et conservés localement."
+    },
+    "breakout": {
+      "title": "Salles de sous-commission",
+      "room": "Salle",
+      "inProgress": "Sessions en cours",
+      "close": "Clôturer les salles",
+      "unassigned": "Participants non assignés",
+      "assignTo": "Assigner à…",
+      "empty": "Vide",
+      "addRoom": "Ajouter une salle",
+      "start": "Démarrer les sessions"
+    },
+    "transcription": {
+      "unavailable": "Transcription non disponible",
+      "notSupported": "Web Speech API non supportée par ce navigateur.",
+      "useChromeEdge": "Utilisez Chrome, Edge ou Safari.",
+      "active": "Transcription active",
+      "paused": "En pause",
+      "pause": "Pause",
+      "resume": "Reprendre",
+      "expand": "Agrandir",
+      "minimize": "Réduire",
+      "closeBtn": "Fermer",
+      "export": "Exporter",
+      "networkError": "Erreur réseau",
+      "willAppear": "La transcription apparaîtra ici…",
+      "listening": "En écoute…",
+      "clickMic": "Cliquez sur le micro pour démarrer"
+    },
+    "stats": {
+      "videoFlux": "Flux vidéo (test)",
+      "videoStats": "Statistiques vidéo",
+      "resolution": "Résolution",
+      "codec": "Codec",
+      "mode": "Mode",
+      "simulcast": "Simulcast activé",
+      "mobileOptimized": "Optimisé mobile",
+      "sendQuality": "Qualité d’envoi",
+      "adaptiveNote": "*La résolution s’adapte à la bande passante (4K → 1080p → 540p)",
+      "autoAdapt": "La qualité s’adapte automatiquement à votre connexion",
+      "q1080": "1080p (HD)",
+      "q720": "720p (recommandé)",
+      "q540": "540p (économe)",
+      "q360": "360p (faible débit)"
     }
   },
   "aiChatbot": {
@@ -2645,5 +2750,81 @@
     "subtitle": "IA Ultra-performante",
     "placeholder": "Posez votre question...",
     "greeting": "Bonjour ! Je suis l'IA ultra-performante de VisiConnect. Je connais la plateforme sur le bout des doigts. Comment puis-je vous aider ?"
+  },
+  "aiChatPanel": {
+    "greeting": "Bonjour ! Posez-moi vos questions sur la réunion.",
+    "remoteUnavailable": "Service IA distant indisponible. Bascule en mode local.",
+    "summaryEmpty": "Aucun message à résumer.",
+    "noContentToSummarize": "Pas assez de contenu pour générer un résumé.",
+    "localSummaryGenerated": "Résumé local généré.",
+    "localSummary": "Résumé local",
+    "subtitle": "Posez vos questions ou demandez un résumé",
+    "autoSummary": "Résumé auto",
+    "exportMarkdown": "Exporter en Markdown",
+    "summaryGenerated": "Résumé généré",
+    "thinking": "Réflexion en cours…",
+    "inputPlaceholder": "Écrivez votre message…"
+  },
+  "aiFeatures": {
+    "notSupported": "Non supporté sur ce navigateur",
+    "title": "Fonctionnalités IA",
+    "free": "Gratuit",
+    "lowEnd": "Mode léger",
+    "preset": {
+      "performance": "Performance",
+      "balanced": "Équilibré",
+      "full": "Complet"
+    },
+    "transcription": {
+      "name": "Transcription",
+      "desc": "Sous-titres en direct générés automatiquement"
+    },
+    "autoStart": "Démarrer automatiquement",
+    "smartNotes": {
+      "name": "Notes intelligentes",
+      "desc": "Synthèse et points clés générés par IA"
+    },
+    "aiModel": "Modèle IA",
+    "summaryNothingToTitle": "Rien à résumer pour le moment",
+    "summaryGenerateTitle": "Générer un résumé maintenant",
+    "generating": "Génération…",
+    "generateNow": "Générer maintenant",
+    "downloadMd": "Télécharger en Markdown",
+    "translation": {
+      "name": "Traduction",
+      "desc": "Traduction des sous-titres en direct",
+      "intro": "Choisissez la langue cible",
+      "targetLang": "Langue cible",
+      "soonHint": "Bientôt disponible"
+    },
+    "soon": "Bientôt",
+    "bgBlur": {
+      "name": "Arrière-plan",
+      "desc": "Floutez ou remplacez votre arrière-plan",
+      "intensity": "Intensité du flou",
+      "modeBlur": "Flou",
+      "modeImage": "Image"
+    },
+    "mode": "Mode",
+    "videoEnhance": {
+      "name": "Amélioration vidéo",
+      "desc": "Optimisations colorimétriques en temps réel",
+      "preset": "Préréglage",
+      "natural": "Naturel",
+      "vivid": "Vif",
+      "cinema": "Cinéma",
+      "lowLight": "Faible lumière",
+      "pro": "Pro"
+    },
+    "noise": {
+      "name": "Réduction de bruit",
+      "desc": "Atténue les bruits de fond",
+      "level": "Niveau",
+      "low": "Faible",
+      "moderate": "Modéré",
+      "high": "Élevé"
+    },
+    "errSummary": "Impossible de générer le résumé.",
+    "footer": "Les traitements IA s’exécutent localement quand c’est possible."
   }
 }

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Shield, Signal, Users, Cpu, UserPlus } from 'lucide-react';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 import { InviteModal } from './InviteModal';
+import { useTranslation } from '../../hooks/useTranslation';
 
 const HeaderContainer = styled.header`
   flex-shrink: 0;
@@ -185,16 +186,18 @@ const StatusItem = styled.div`
 
 export const RoomHeader = ({ roomName, isSecure, participantCount, quality }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { t } = useTranslation();
+  const fallbackName = t('room.header.ongoing', 'Réunion en cours');
 
   return (
     <HeaderContainer>
       {/* LEFT */}
       <RoomInfo>
-        <RoomName title={roomName || 'Réunion en cours'}>
-          {roomName || 'Réunion en cours'}
+        <RoomName title={roomName || fallbackName}>
+          {roomName || fallbackName}
         </RoomName>
         {isSecure && (
-          <SecureBadge title="Chiffrement E2EE actif">
+          <SecureBadge title={t('room.header.e2eeActive', 'Chiffrement E2EE actif')}>
             <Shield size={12} />
             <span className="badge-text">E2EE</span>
           </SecureBadge>
@@ -202,24 +205,24 @@ export const RoomHeader = ({ roomName, isSecure, participantCount, quality }) =>
       </RoomInfo>
 
       {/* CENTER */}
-      <InviteButton onClick={() => setIsModalOpen(true)} title="Inviter des participants">
+      <InviteButton onClick={() => setIsModalOpen(true)} title={t('room.header.inviteTitle', 'Inviter des participants')}>
         <UserPlus size={15} />
-        <span className="invite-text">Inviter</span>
+        <span className="invite-text">{t('room.header.invite', 'Inviter')}</span>
       </InviteButton>
 
       {/* RIGHT */}
       <ConnectionStatus>
-        <StatusItem title="Participants">
+        <StatusItem title={t('room.header.participants', 'Participants')}>
           <Users />
           <span>{participantCount || 1}</span>
         </StatusItem>
 
-        <StatusItem title="Qualité du signal">
+        <StatusItem title={t('room.header.signalQuality', 'Qualité du signal')}>
           <Signal style={{ color: quality === 'excellent' ? '#22c55e' : '#eab308' }} />
           <span className="stat-text">{quality === 'excellent' ? 'HD' : 'Std'}</span>
         </StatusItem>
 
-        <StatusItem className="hide-mobile" title="Performance">
+        <StatusItem className="hide-mobile" title={t('room.header.performance', 'Performance')}>
           <Cpu />
           <span className="stat-text">OK</span>
         </StatusItem>

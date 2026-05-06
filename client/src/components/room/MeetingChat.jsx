@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Send, User as UserIcon } from 'lucide-react';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
+import { useTranslation } from '../../hooks/useTranslation';
 
 const ChatContainer = styled.div`
   flex: 1;
@@ -148,6 +149,7 @@ const SendButton = styled.button`
 `;
 
 export const MeetingChat = ({ messages, messageText, setMessageText, onSendMessage, currentUserId }) => {
+  const { t } = useTranslation();
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
   const containerRef = useRef(null);
@@ -219,21 +221,21 @@ export const MeetingChat = ({ messages, messageText, setMessageText, onSendMessa
       <MessagesArea ref={scrollRef}>
         {messages.length === 0 ? (
           <div style={{ textAlign: 'center', opacity: 0.7, marginTop: '2rem', fontSize: '0.9rem', color: THEME.textDim }}>
-            Aucun message. Soyez le premier à écrire !
+            {t('room.chat.empty', 'Aucun message. Soyez le premier à écrire !')}
           </div>
         ) : (
           messages.map((msg, idx) => {
             // Détection correcte: comparer senderId avec currentUserId
             const isMe = msg.senderId === currentUserId || msg.sender === 'me';
             let displayName = msg.sender;
-            if (isMe) displayName = 'Vous';
+            if (isMe) displayName = t('room.chat.you', 'Vous');
             else if (displayName && displayName.includes('@')) displayName = displayName.split('@')[0];
 
             return (
               <MessageBubbleWrapper key={idx} $isMe={isMe}>
                 <MessageSender>
                   {!isMe && <UserIcon size={12} />}
-                  {displayName || 'Anonyme'}
+                  {displayName || t('room.chat.anonymous', 'Anonyme')}
                   {msg.timestamp && <span style={{ opacity: 0.6, marginLeft: '6px', fontSize: '0.65rem', fontWeight: 'normal' }}>• {formatTime(msg.timestamp)}</span>}
                 </MessageSender>
                 <MessageBubble $isMe={isMe}>
@@ -252,7 +254,7 @@ export const MeetingChat = ({ messages, messageText, setMessageText, onSendMessa
             value={messageText}
             onChange={handleInput}
             onKeyDown={handleKeyDown}
-            placeholder="Écrivez un message..."
+            placeholder={t('room.chat.placeholder', 'Écrivez un message...')}
             rows={1}
           />
           <SendButton 
@@ -268,7 +270,7 @@ export const MeetingChat = ({ messages, messageText, setMessageText, onSendMessa
           </SendButton>
         </InputWrapper>
         <div style={{ width: '100%', textAlign: 'center', marginTop: '10px', fontSize: '11px', color: THEME.textDim }}>
-          Appuyez sur Entrée pour envoyer
+          {t('room.chat.enterToSend', 'Appuyez sur Entrée pour envoyer')}
         </div>
       </ChatInputContainer>
     </ChatContainer>

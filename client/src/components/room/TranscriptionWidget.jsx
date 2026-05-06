@@ -23,6 +23,7 @@ import {
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 import { useTranscription } from '../../hooks/useTranscription';
 import { useAISettings } from '../../hooks/useAISettings';
+import { useTranslation } from '../../hooks/useTranslation';
 
 // Animation pulse pour indicateur d'écoute
 const pulse = keyframes`
@@ -210,6 +211,7 @@ const LANGUAGES = [
 ];
 
 export const TranscriptionWidget = ({ onClose }) => {
+  const { t } = useTranslation();
   const [isMinimized, setIsMinimized] = useState(false);
   const [language, setLanguage] = useState('fr-FR');
   const { settings, updateSettings } = useAISettings();
@@ -276,7 +278,7 @@ export const TranscriptionWidget = ({ onClose }) => {
         <Header $isMinimized={false}>
           <HeaderLeft>
             <CaptionsOff size={18} />
-            <span>Transcription non disponible</span>
+            <span>{t('room.transcription.unavailable', 'Transcription non disponible')}</span>
           </HeaderLeft>
           <IconButton onClick={onClose}>
             <X size={18} />
@@ -284,9 +286,9 @@ export const TranscriptionWidget = ({ onClose }) => {
         </Header>
         <EmptyState>
           <AlertCircle size={32} style={{ marginBottom: 8, opacity: 0.5 }} />
-          <p>Web Speech API non supportée par ce navigateur.</p>
+          <p>{t('room.transcription.notSupported', 'Web Speech API non supportée par ce navigateur.')}</p>
           <p style={{ fontSize: '0.8rem', marginTop: 8 }}>
-            Utilisez Chrome, Edge ou Safari.
+            {t('room.transcription.useChromeEdge', 'Utilisez Chrome, Edge ou Safari.')}
           </p>
         </EmptyState>
       </WidgetContainer>
@@ -301,17 +303,17 @@ export const TranscriptionWidget = ({ onClose }) => {
           <HeaderLeft>
             <StatusIndicator $isListening={isListening}>
               {isListening ? <Mic size={16} /> : <MicOff size={16} />}
-              <span>{isListening ? 'Transcription active' : 'En pause'}</span>
+              <span>{isListening ? t('room.transcription.active', 'Transcription active') : t('room.transcription.paused', 'En pause')}</span>
             </StatusIndicator>
           </HeaderLeft>
           <HeaderControls>
-            <IconButton onClick={toggle} title={isListening ? 'Pause' : 'Reprendre'}>
+            <IconButton onClick={toggle} title={isListening ? t('room.transcription.pause', 'Pause') : t('room.transcription.resume', 'Reprendre')}>
               {isListening ? <MicOff size={16} /> : <Mic size={16} />}
             </IconButton>
-            <IconButton onClick={() => setIsMinimized(false)} title="Agrandir">
+            <IconButton onClick={() => setIsMinimized(false)} title={t('room.transcription.expand', 'Agrandir')}>
               <Maximize2 size={16} />
             </IconButton>
-            <IconButton onClick={onClose} title="Fermer">
+            <IconButton onClick={onClose} title={t('room.transcription.closeBtn', 'Fermer')}>
               <X size={16} />
             </IconButton>
           </HeaderControls>
@@ -325,7 +327,7 @@ export const TranscriptionWidget = ({ onClose }) => {
       {error && !['no-speech', 'aborted'].includes(error) && (
         <ErrorBanner>
           <AlertCircle size={16} />
-          {error === 'network' ? 'Erreur réseau' : error}
+          {error === 'network' ? t('room.transcription.networkError', 'Erreur réseau') : error}
         </ErrorBanner>
       )}
       
@@ -333,7 +335,7 @@ export const TranscriptionWidget = ({ onClose }) => {
         <HeaderLeft>
           <StatusIndicator $isListening={isListening}>
             {isListening ? <Mic size={18} /> : <MicOff size={18} />}
-            <span>{isListening ? 'Transcription active' : 'En pause'}</span>
+            <span>{isListening ? t('room.transcription.active', 'Transcription active') : t('room.transcription.paused', 'En pause')}</span>
           </StatusIndicator>
           
           <LanguageSelect value={language} onChange={handleLanguageChange}>
@@ -344,20 +346,20 @@ export const TranscriptionWidget = ({ onClose }) => {
         </HeaderLeft>
         
         <HeaderControls>
-          <IconButton onClick={toggle} title={isListening ? 'Pause' : 'Reprendre'}>
+          <IconButton onClick={toggle} title={isListening ? t('room.transcription.pause', 'Pause') : t('room.transcription.resume', 'Reprendre')}>
             {isListening ? <MicOff size={18} /> : <Mic size={18} />}
           </IconButton>
           <IconButton 
             onClick={handleExport} 
             disabled={transcript.length === 0}
-            title="Exporter"
+            title={t('room.transcription.export', 'Exporter')}
           >
             <Download size={18} />
           </IconButton>
-          <IconButton onClick={() => setIsMinimized(true)} title="Minimiser">
+          <IconButton onClick={() => setIsMinimized(true)} title={t('room.transcription.minimize', 'Minimiser')}>
             <Minimize2 size={18} />
           </IconButton>
-          <IconButton onClick={onClose} title="Fermer">
+          <IconButton onClick={onClose} title={t('room.transcription.closeBtn', 'Fermer')}>
             <X size={18} />
           </IconButton>
         </HeaderControls>
@@ -367,9 +369,9 @@ export const TranscriptionWidget = ({ onClose }) => {
         {transcript.length === 0 && !interimText ? (
           <EmptyState>
             <Captions size={32} style={{ marginBottom: 8, opacity: 0.5 }} />
-            <p>La transcription apparaîtra ici...</p>
+            <p>{t('room.transcription.willAppear', 'La transcription apparaîtra ici...')}</p>
             <p style={{ fontSize: '0.8rem', marginTop: 8, color: THEME.textDim }}>
-              {isListening ? 'En écoute...' : 'Cliquez sur le micro pour démarrer'}
+              {isListening ? t('room.transcription.listening', 'En écoute...') : t('room.transcription.clickMic', 'Cliquez sur le micro pour démarrer')}
             </p>
           </EmptyState>
         ) : (

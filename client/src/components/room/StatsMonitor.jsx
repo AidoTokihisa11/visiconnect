@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Activity, X } from 'lucide-react';
 import { VideoPresets } from 'livekit-client';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
+import { useTranslation } from '../../hooks/useTranslation';
 
 const QUALITY_OPTIONS = [
   { id: 'h1080', label: '1080p (HD)', preset: VideoPresets.h1080 },
@@ -136,6 +137,13 @@ const CloseButton = styled.button`
 `;
 
 export const StatsMonitor = ({ participant, showStats = false, onClose }) => {
+  const { t } = useTranslation();
+  const QUALITY_OPTIONS_I18N = [
+    { id: 'h1080', label: t('room.stats.q1080', '1080p (HD)'), preset: VideoPresets.h1080 },
+    { id: 'h720', label: t('room.stats.q720', '720p (recommandé)'), preset: VideoPresets.h720 },
+    { id: 'h540', label: t('room.stats.q540', '540p (économe)'), preset: VideoPresets.h540 },
+    { id: 'h360', label: t('room.stats.q360', '360p (faible débit)'), preset: VideoPresets.h360 },
+  ];
   const [stats, setStats] = useState({
     resolution: 'Unknown',
     codec: 'Checking...',
@@ -211,23 +219,23 @@ export const StatsMonitor = ({ participant, showStats = false, onClose }) => {
     <>
       {/* 🖥️ Desktop: Overlay classique */}
       <StatsContainer initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-          <h4><Activity size={16} /> Flux Vidéo (Test)</h4>
+          <h4><Activity size={16} /> {t('room.stats.videoFlux', 'Flux Vidéo (Test)')}</h4>
           <div className="stat-row">
-              <span>Résolution</span>
+              <span>{t('room.stats.resolution', 'Résolution')}</span>
               <span style={{ color: '#4ade80' }}>{stats.resolution}</span>
           </div>
           <div className="stat-row">
-              <span>Codec</span>
+              <span>{t('room.stats.codec', 'Codec')}</span>
               <span>{stats.codec}</span>
           </div>
           <div className="stat-row">
-              <span>Mode</span>
-              <span>Simulcast Enabled</span>
+              <span>{t('room.stats.mode', 'Mode')}</span>
+              <span>{t('room.stats.simulcast', 'Simulcast activé')}</span>
           </div>
           {isLocal && (
             <div style={{ marginTop: '0.6rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
               <label htmlFor="qualitySelect" style={{ fontSize: '0.7rem', color: THEME.textDim }}>
-                Qualité d'envoi
+                {t('room.stats.sendQuality', "Qualité d'envoi")}
               </label>
               <select
                 id="qualitySelect"
@@ -245,14 +253,14 @@ export const StatsMonitor = ({ participant, showStats = false, onClose }) => {
                   cursor: applyingQuality ? 'wait' : 'pointer',
                 }}
               >
-                {QUALITY_OPTIONS.map((o) => (
+                {QUALITY_OPTIONS_I18N.map((o) => (
                   <option key={o.id} value={o.id}>{o.label}</option>
                 ))}
               </select>
             </div>
           )}
           <div style={{ marginTop: '0.5rem', fontSize: '0.7rem', color: THEME.textDim }}>
-              *La résolution s'adapte à la bande passante (4K &rarr; 1080p &rarr; 540p)
+              {t('room.stats.adaptiveNote', "*La résolution s'adapte à la bande passante (4K → 1080p → 540p)")}
           </div>
       </StatsContainer>
       
@@ -273,28 +281,28 @@ export const StatsMonitor = ({ participant, showStats = false, onClose }) => {
             >
               <h4>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <Activity size={18} /> Stats Vidéo
+                  <Activity size={18} /> {t('room.stats.videoStats', 'Stats Vidéo')}
                 </span>
                 <CloseButton onClick={onClose}>
                   <X size={18} />
                 </CloseButton>
               </h4>
               <div className="stat-row">
-                  <span>Résolution</span>
+                  <span>{t('room.stats.resolution', 'Résolution')}</span>
                   <span>{stats.resolution}</span>
               </div>
               <div className="stat-row">
-                  <span>Codec</span>
+                  <span>{t('room.stats.codec', 'Codec')}</span>
                   <span>{stats.codec}</span>
               </div>
               <div className="stat-row">
-                  <span>Mode</span>
-                  <span>Optimisé Mobile</span>
+                  <span>{t('room.stats.mode', 'Mode')}</span>
+                  <span>{t('room.stats.mobileOptimized', 'Optimisé Mobile')}</span>
               </div>
               {isLocal && (
                 <div style={{ marginTop: '0.75rem' }}>
                   <label htmlFor="qualitySelectMobile" style={{ fontSize: '0.75rem', color: THEME.textDim, display: 'block', marginBottom: '0.4rem' }}>
-                    Qualité d'envoi
+                    {t('room.stats.sendQuality', "Qualité d'envoi")}
                   </label>
                   <select
                     id="qualitySelectMobile"
@@ -312,14 +320,14 @@ export const StatsMonitor = ({ participant, showStats = false, onClose }) => {
                       fontFamily: 'inherit',
                     }}
                   >
-                    {QUALITY_OPTIONS.map((o) => (
+                    {QUALITY_OPTIONS_I18N.map((o) => (
                       <option key={o.id} value={o.id}>{o.label}</option>
                     ))}
                   </select>
                 </div>
               )}
               <div style={{ marginTop: '1rem', fontSize: '0.75rem', color: THEME.textDim, textAlign: 'center' }}>
-                  La qualité s'adapte automatiquement à votre connexion
+                  {t('room.stats.autoAdapt', "La qualité s'adapte automatiquement à votre connexion")}
               </div>
             </MobileModalContent>
           </MobileModalBackdrop>

@@ -2612,6 +2612,111 @@
       "smsSoon": "SMS-Funktion kommt bald! (Vorerst nur visuell)",
       "emailSubject": "Einladung zu einer Videokonferenz",
       "emailBody": "Treten Sie meinem Meeting bei, indem Sie auf diesen Link klicken: {{url}}"
+    },
+    "header": {
+      "ongoing": "Meeting läuft",
+      "e2eeActive": "E2EE-Verschlüsselung aktiv",
+      "inviteTitle": "Teilnehmer einladen",
+      "invite": "Einladen",
+      "participants": "Teilnehmer",
+      "signalQuality": "Signalqualität",
+      "performance": "Leistung"
+    },
+    "chat": {
+      "empty": "Keine Nachrichten. Sei der Erste!",
+      "you": "Du",
+      "anonymous": "Anonym",
+      "placeholder": "Nachricht schreiben …",
+      "enterToSend": "Eingabetaste zum Senden"
+    },
+    "analytics": {
+      "activeParticipants": "Aktive Teilnehmer",
+      "trendParticipants": "↑ 2 in 5 Min.",
+      "sessionDuration": "Sitzungsdauer",
+      "inProgress": "Läuft",
+      "engagement": "Beteiligung",
+      "excellent": "Ausgezeichnet",
+      "avgQuality": "Durchschn. Qualität",
+      "stable": "Stabil",
+      "engagementRateTitle": "Beteiligungsrate in Echtzeit",
+      "networkStabilityTitle": "Netzwerkstabilität (Audio-Bitrate)",
+      "realtimeFooter": "Daten in Echtzeit via WebSocket aktualisiert"
+    },
+    "settings": {
+      "devices": "Geräte",
+      "camera": "Kamera",
+      "microphone": "Mikrofon",
+      "speaker": "Lautsprecher",
+      "audioOutput": "Audioausgabe",
+      "default": "Standard",
+      "refreshDevices": "Geräte aktualisieren",
+      "playing": "Wiedergabe …",
+      "testSpeakers": "Lautsprecher testen",
+      "video": "Video",
+      "maxQuality": "Maximale Videoqualität",
+      "toggleMaxQuality": "Max. Qualität umschalten",
+      "videoDisplay": "Video-Anzeige",
+      "cover": "Füllen",
+      "contain": "Anpassen",
+      "showLabels": "Teilnehmernamen anzeigen",
+      "toggleLabels": "Namen umschalten",
+      "aiAssistant": "KI-Assistent",
+      "responseMode": "Antwortmodus",
+      "concise": "Knapp",
+      "balanced": "Ausgewogen",
+      "detailed": "Detailliert",
+      "aiHint": "Mit konfiguriertem LLM-API-Key nutzt der Assistent eine externe Engine. Sonst lokales Fallback.",
+      "interface": "Oberfläche",
+      "widePanel": "Breites Seitenpanel",
+      "toggleWide": "Breites Panel umschalten",
+      "statsMonitor": "Statistik-Monitor",
+      "toggleStats": "Statistik-Monitor umschalten",
+      "notes": "Hinweise",
+      "notesHint": "Alle Einstellungen wirken in Echtzeit und werden lokal gespeichert."
+    },
+    "breakout": {
+      "title": "Breakout-Räume",
+      "room": "Raum",
+      "inProgress": "Sitzungen laufen",
+      "close": "Räume schließen",
+      "unassigned": "Nicht zugewiesene Teilnehmer",
+      "assignTo": "Zuweisen zu …",
+      "empty": "Leer",
+      "addRoom": "Raum hinzufügen",
+      "start": "Sitzungen starten"
+    },
+    "transcription": {
+      "unavailable": "Transkription nicht verfügbar",
+      "notSupported": "Web Speech API wird von diesem Browser nicht unterstützt.",
+      "useChromeEdge": "Nutze Chrome, Edge oder Safari.",
+      "active": "Transkription aktiv",
+      "paused": "Pausiert",
+      "pause": "Pause",
+      "resume": "Fortsetzen",
+      "expand": "Vergrößern",
+      "minimize": "Verkleinern",
+      "closeBtn": "Schließen",
+      "export": "Exportieren",
+      "networkError": "Netzwerkfehler",
+      "willAppear": "Transkription erscheint hier …",
+      "listening": "Höre zu …",
+      "clickMic": "Auf das Mikro klicken zum Starten"
+    },
+    "stats": {
+      "videoFlux": "Videostream (Test)",
+      "videoStats": "Video-Statistik",
+      "resolution": "Auflösung",
+      "codec": "Codec",
+      "mode": "Modus",
+      "simulcast": "Simulcast aktiviert",
+      "mobileOptimized": "Mobil optimiert",
+      "sendQuality": "Sendequalität",
+      "adaptiveNote": "*Auflösung passt sich an die Bandbreite an (4K → 1080p → 540p)",
+      "autoAdapt": "Qualität passt sich automatisch an deine Verbindung an",
+      "q1080": "1080p (HD)",
+      "q720": "720p (empfohlen)",
+      "q540": "540p (effizient)",
+      "q360": "360p (geringe Bandbreite)"
     }
   },
   "aiChatbot": {
@@ -2619,5 +2724,81 @@
     "subtitle": "Ultraschnelle KI",
     "placeholder": "Stellen Sie Ihre Frage...",
     "greeting": "Hallo! Ich bin der KI-Assistent von VisiConnect. Ich kenne die Plattform in- und auswendig. Wie kann ich Ihnen heute helfen?"
+  },
+  "aiChatPanel": {
+    "greeting": "Hallo! Frag mich alles zum Meeting.",
+    "remoteUnavailable": "Remote-KI nicht verfügbar. Wechsel in den lokalen Modus.",
+    "summaryEmpty": "Keine Nachrichten zum Zusammenfassen.",
+    "noContentToSummarize": "Nicht genügend Inhalt für eine Zusammenfassung.",
+    "localSummaryGenerated": "Lokale Zusammenfassung erstellt.",
+    "localSummary": "Lokale Zusammenfassung",
+    "subtitle": "Stelle Fragen oder fordere eine Zusammenfassung an",
+    "autoSummary": "Auto-Zusammenfassung",
+    "exportMarkdown": "Als Markdown exportieren",
+    "summaryGenerated": "Zusammenfassung erstellt",
+    "thinking": "Denke nach …",
+    "inputPlaceholder": "Nachricht eingeben …"
+  },
+  "aiFeatures": {
+    "notSupported": "In diesem Browser nicht unterstützt",
+    "title": "KI-Funktionen",
+    "free": "Kostenlos",
+    "lowEnd": "Sparmodus",
+    "preset": {
+      "performance": "Leistung",
+      "balanced": "Ausgewogen",
+      "full": "Vollständig"
+    },
+    "transcription": {
+      "name": "Transkription",
+      "desc": "Automatische Live-Untertitel"
+    },
+    "autoStart": "Automatisch starten",
+    "smartNotes": {
+      "name": "Smarte Notizen",
+      "desc": "KI-Zusammenfassung und Kernpunkte"
+    },
+    "aiModel": "KI-Modell",
+    "summaryNothingToTitle": "Noch nichts zusammenzufassen",
+    "summaryGenerateTitle": "Zusammenfassung jetzt erstellen",
+    "generating": "Erstelle …",
+    "generateNow": "Jetzt erstellen",
+    "downloadMd": "Als Markdown herunterladen",
+    "translation": {
+      "name": "Übersetzung",
+      "desc": "Live-Untertitel-Übersetzung",
+      "intro": "Zielsprache wählen",
+      "targetLang": "Zielsprache",
+      "soonHint": "Bald verfügbar"
+    },
+    "soon": "Bald",
+    "bgBlur": {
+      "name": "Hintergrund",
+      "desc": "Hintergrund weichzeichnen oder ersetzen",
+      "intensity": "Stärke des Weichzeichners",
+      "modeBlur": "Weichzeichnen",
+      "modeImage": "Bild"
+    },
+    "mode": "Modus",
+    "videoEnhance": {
+      "name": "Video-Optimierung",
+      "desc": "Echtzeit-Farbeoptimierung",
+      "preset": "Voreinstellung",
+      "natural": "Natürlich",
+      "vivid": "Lebendig",
+      "cinema": "Kino",
+      "lowLight": "Schwaches Licht",
+      "pro": "Pro"
+    },
+    "noise": {
+      "name": "Rauschunterdrückung",
+      "desc": "Reduziert Hintergrundgeräusche",
+      "level": "Stufe",
+      "low": "Niedrig",
+      "moderate": "Mittel",
+      "high": "Hoch"
+    },
+    "errSummary": "Zusammenfassung konnte nicht erstellt werden.",
+    "footer": "KI-Verarbeitung läuft nach Möglichkeit lokal."
   }
 }

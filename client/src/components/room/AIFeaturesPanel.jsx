@@ -27,6 +27,7 @@ import {
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 import { useAISettings } from '../../hooks/useAISettings';
 import { getSmartNotesService } from '../../services/ai/SmartNotesService';
+import { useTranslation } from '../../hooks/useTranslation';
 
 const Wrapper = styled.div`
   display: flex;
@@ -249,6 +250,7 @@ const Feature = ({
 }) => {
   const [expanded, setExpanded] = useState(false);
   const isInteractive = available && !disabled;
+  const { t } = useTranslation();
 
   return (
     <FeatureCard $enabled={enabled}>
@@ -265,7 +267,7 @@ const Feature = ({
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           {!available && (
             <StatusIndicator $available={false}>
-              Non supporté
+              {t('aiFeatures.notSupported', 'Non supporté')}
             </StatusIndicator>
           )}
           <Switch 
@@ -295,9 +297,10 @@ const Feature = ({
 // Slider avec état local — ne déclenche setProcessor qu'au relâchement
 const BlurSliderRow = ({ currentValue, onCommit }) => {
   const [localValue, setLocalValue] = useState(currentValue);
+  const { t } = useTranslation();
   return (
     <OptionRow>
-      Intensité du flou
+      {t('aiFeatures.bgBlur.intensity', 'Intensité du flou')}
       <Slider
         type="range"
         min="5"
@@ -313,6 +316,7 @@ const BlurSliderRow = ({ currentValue, onCommit }) => {
 
 // Composant principal
 export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion VisiConnect' } = {}) => {
+  const { t } = useTranslation();
   const {
     settings,
     capabilities,
@@ -349,7 +353,7 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
       setSummary(result);
     } catch (e) {
       console.error('[SmartNotes] generate failed:', e);
-      setSummaryError(e?.message || 'Impossible de générer le résumé.');
+      setSummaryError(e?.message || t('aiFeatures.errSummary', 'Impossible de générer le résumé.'));
     } finally {
       setIsGeneratingSummary(false);
     }
@@ -382,15 +386,15 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
     <Wrapper>
       <Header>
         <Sparkles size={20} color={THEME.accent} />
-        <Title>Fonctionnalités IA</Title>
-        <Badge>Gratuit</Badge>
+        <Title>{t('aiFeatures.title', 'Fonctionnalités IA')}</Title>
+        <Badge>{t('aiFeatures.free', 'Gratuit')}</Badge>
       </Header>
 
       {isLowEndDevice && (
         <WarningBox>
           <AlertCircle size={16} color="#b45309" style={{ flexShrink: 0, marginTop: 2 }} />
           <WarningText>
-            Appareil à faibles ressources détecté. Certaines fonctionnalités sont désactivées pour préserver les performances.
+            {t('aiFeatures.lowEnd', 'Appareil à faibles ressources détecté. Certaines fonctionnalités sont désactivées pour préserver les performances.')}
           </WarningText>
         </WarningBox>
       )}
@@ -401,28 +405,28 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
           onClick={() => handlePreset('performance')}
         >
           <Zap size={14} style={{ marginRight: 4 }} />
-          Performance
+          {t('aiFeatures.preset.performance', 'Performance')}
         </PresetButton>
         <PresetButton 
           $active={activePreset === 'balanced'} 
           onClick={() => handlePreset('balanced')}
         >
-          Équilibré
+          {t('aiFeatures.preset.balanced', 'Équilibré')}
         </PresetButton>
         <PresetButton 
           $active={activePreset === 'full'} 
           onClick={() => handlePreset('full')}
         >
           <Sparkles size={14} style={{ marginRight: 4 }} />
-          Complet
+          {t('aiFeatures.preset.full', 'Complet')}
         </PresetButton>
       </PresetRow>
 
       {/* Transcription Live */}
       <Feature
         icon={Mic}
-        name="Transcription Live"
-        description="Web Speech API • 100% local"
+        name={t('aiFeatures.transcription.name', 'Transcription Live')}
+        description={t('aiFeatures.transcription.desc', 'Web Speech API • 100% local')}
         enabled={settings.transcription?.enabled}
         available={capabilities.transcription?.available}
         onToggle={() => toggleFeature('transcription')}
@@ -440,7 +444,7 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
           </Select>
         </OptionRow>
         <OptionRow>
-          Démarrer automatiquement
+          {t('aiFeatures.autoStart', 'Démarrer automatiquement')}
           <Switch 
             $on={settings.transcription?.autoStart}
             onClick={() => updateSettings('transcription', { autoStart: !settings.transcription?.autoStart })}
@@ -451,14 +455,14 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
       {/* Smart Notes */}
       <Feature
         icon={FileText}
-        name="Smart Notes"
-        description="Résumés IA • OpenRouter gratuit"
+        name={t('aiFeatures.smartNotes.name', 'Smart Notes')}
+        description={t('aiFeatures.smartNotes.desc', 'Résumés IA • OpenRouter gratuit')}
         enabled={settings.smartNotes?.enabled}
         available={capabilities.smartNotes?.available}
         onToggle={() => toggleFeature('smartNotes')}
       >
         <OptionRow>
-          Modèle IA
+          {t('aiFeatures.aiModel', 'Modèle IA')}
           <Select 
             value={settings.smartNotes?.model || 'meta-llama/llama-3.1-8b-instruct:free'}
             onChange={(e) => updateSettings('smartNotes', { model: e.target.value })}
@@ -493,11 +497,11 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
               opacity: (!chatMessages || chatMessages.length === 0) ? 0.55 : 1,
               transition: 'all 0.2s',
             }}
-            title={(!chatMessages || chatMessages.length === 0) ? 'Aucun message dans le chat à résumer pour le moment.' : 'Générer un résumé IA à partir du chat.'}
+            title={(!chatMessages || chatMessages.length === 0) ? t('aiFeatures.summaryNothingToTitle', 'Aucun message dans le chat à résumer pour le moment.') : t('aiFeatures.summaryGenerateTitle', 'Générer un résumé IA à partir du chat.')}
           >
             {isGeneratingSummary
-              ? <><Loader2 size={14} style={{ animation: 'spin 1s linear infinite' }} /> Génération...</>
-              : <><Sparkles size={14} /> Générer un résumé maintenant</>}
+              ? <><Loader2 size={14} style={{ animation: 'spin 1s linear infinite' }} /> {t('aiFeatures.generating', 'Génération...')}</>
+              : <><Sparkles size={14} /> {t('aiFeatures.generateNow', 'Générer un résumé maintenant')}</>}
           </button>
 
           {summaryError && (
@@ -509,7 +513,7 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
           {summary && (
             <div style={{ marginTop: '0.5rem', padding: '0.75rem', background: 'rgba(15,23,42,0.6)', border: `1px solid ${THEME.border}`, borderRadius: '8px', maxHeight: '260px', overflowY: 'auto' }}>
               <div style={{ fontSize: '0.72rem', color: THEME.textDim, marginBottom: '0.4rem' }}>
-                Résumé IA • {new Date(summary.generatedAt).toLocaleTimeString('fr-FR')}
+                Résumé IA • {new Date(summary.generatedAt).toLocaleTimeString()}
               </div>
               <div style={{ fontSize: '0.85rem', color: THEME.text, whiteSpace: 'pre-wrap', lineHeight: 1.55 }}>
                 {summary.summary}
@@ -531,7 +535,7 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
                   fontSize: '0.75rem',
                 }}
               >
-                <Download size={12} /> Télécharger (.md)
+                <Download size={12} /> {t('aiFeatures.downloadMd', 'Télécharger (.md)')}
               </button>
             </div>
           )}
@@ -543,7 +547,7 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
         icon={Languages}
         name={
           <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            Traduction Instantanée
+            {t('aiFeatures.translation.name', 'Traduction Instantanée')}
             <span style={{
               fontSize: '0.65rem',
               fontWeight: 700,
@@ -556,21 +560,21 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
               textTransform: 'uppercase',
               lineHeight: 1.5,
             }}>
-              Bientôt
+              {t('aiFeatures.soon', 'Bientôt')}
             </span>
           </span>
         }
-        description="Chat multilingue • OpenRouter"
+        description={t('aiFeatures.translation.desc', 'Chat multilingue • OpenRouter')}
         enabled={false}
         disabled
         onToggle={() => {}}
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', opacity: 0.85 }}>
           <div style={{ fontSize: '0.78rem', color: THEME.textDim, lineHeight: 1.5 }}>
-            Traduisez automatiquement les messages du chat dans votre langue, en temps réel.
+            {t('aiFeatures.translation.intro', 'Traduisez automatiquement les messages du chat dans votre langue, en temps réel.')}
           </div>
           <OptionRow>
-            Langue cible
+            {t('aiFeatures.translation.targetLang', 'Langue cible')}
             <Select disabled defaultValue="fr" style={{ opacity: 0.6, cursor: 'not-allowed' }}>
               <option value="fr">Français (FR)</option>
               <option value="en">English (EN)</option>
@@ -596,7 +600,7 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
             lineHeight: 1.45,
           }}>
             <Sparkles size={14} color="#818cf8" style={{ flexShrink: 0, marginTop: '2px' }} />
-            <span>Déploiement prévu prochainement — détection auto de la langue source &amp; traduction inline.</span>
+            <span>{t('aiFeatures.translation.soonHint', 'Déploiement prévu prochainement — détection auto de la langue source & traduction inline.')}</span>
           </div>
         </div>
       </Feature>
@@ -604,20 +608,20 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
       {/* Background Blur */}
       <Feature
         icon={Image}
-        name="Fond Flou IA"
-        description="MediaPipe • 100% local"
+        name={t('aiFeatures.bgBlur.name', 'Fond Flou IA')}
+        description={t('aiFeatures.bgBlur.desc', 'MediaPipe • 100% local')}
         enabled={settings.backgroundBlur?.enabled}
         available={capabilities.backgroundBlur?.available && !isLowEndDevice}
         onToggle={() => toggleFeature('backgroundBlur')}
       >
         <OptionRow>
-          Mode
+          {t('aiFeatures.mode', 'Mode')}
           <Select 
             value={settings.backgroundBlur?.mode || 'blur'}
             onChange={(e) => updateSettings('backgroundBlur', { mode: e.target.value })}
           >
-            <option value="blur">Flou</option>
-            <option value="image">Image personnalisée</option>
+            <option value="blur">{t('aiFeatures.bgBlur.modeBlur', 'Flou')}</option>
+            <option value="image">{t('aiFeatures.bgBlur.modeImage', 'Image personnalisée')}</option>
           </Select>
         </OptionRow>
         {settings.backgroundBlur?.mode === 'blur' && (
@@ -631,23 +635,23 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
       {/* Video Enhancement */}
       <Feature
         icon={Sliders}
-        name="Amélioration Vidéo"
-        description="Filtres CSS • Temps réel"
+        name={t('aiFeatures.videoEnhance.name', 'Amélioration Vidéo')}
+        description={t('aiFeatures.videoEnhance.desc', 'Filtres CSS • Temps réel')}
         enabled={settings.videoEnhancement?.enabled}
         available={capabilities.videoEnhancement?.available && !isLowEndDevice}
         onToggle={() => toggleFeature('videoEnhancement')}
       >
         <OptionRow>
-          Preset
+          {t('aiFeatures.videoEnhance.preset', 'Preset')}
           <Select 
             value={settings.videoEnhancement?.preset || 'natural'}
             onChange={(e) => updateSettings('videoEnhancement', { preset: e.target.value })}
           >
-            <option value="natural">Naturel</option>
-            <option value="vivid">Vif</option>
-            <option value="cinema">Cinéma</option>
-            <option value="lowLight">Faible lumière</option>
-            <option value="professional">Professionnel</option>
+            <option value="natural">{t('aiFeatures.videoEnhance.natural', 'Naturel')}</option>
+            <option value="vivid">{t('aiFeatures.videoEnhance.vivid', 'Vif')}</option>
+            <option value="cinema">{t('aiFeatures.videoEnhance.cinema', 'Cinéma')}</option>
+            <option value="lowLight">{t('aiFeatures.videoEnhance.lowLight', 'Faible lumière')}</option>
+            <option value="professional">{t('aiFeatures.videoEnhance.pro', 'Professionnel')}</option>
           </Select>
         </OptionRow>
       </Feature>
@@ -655,22 +659,22 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
       {/* Noise Suppression */}
       <Feature
         icon={Volume2}
-        name="Réduction de Bruit"
-        description="LiveKit native • Toujours actif"
+        name={t('aiFeatures.noise.name', 'Réduction de Bruit')}
+        description={t('aiFeatures.noise.desc', 'LiveKit native • Toujours actif')}
         enabled={settings.noiseSuppression?.enabled}
         available={true}
         onToggle={() => toggleFeature('noiseSuppression')}
         expandable={true}
       >
         <OptionRow>
-          Niveau
+          {t('aiFeatures.noise.level', 'Niveau')}
           <Select 
             value={settings.noiseSuppression?.level || 'moderate'}
             onChange={(e) => updateSettings('noiseSuppression', { level: e.target.value })}
           >
-            <option value="low">Léger</option>
-            <option value="moderate">Modéré</option>
-            <option value="high">Fort</option>
+            <option value="low">{t('aiFeatures.noise.low', 'Léger')}</option>
+            <option value="moderate">{t('aiFeatures.noise.moderate', 'Modéré')}</option>
+            <option value="high">{t('aiFeatures.noise.high', 'Fort')}</option>
           </Select>
         </OptionRow>
       </Feature>
@@ -688,8 +692,7 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
       }}>
         <Info size={14} style={{ flexShrink: 0, marginTop: 2 }} />
         <span>
-          Toutes les fonctionnalités IA utilisent des modèles open source gratuits ou des API navigateur natives. 
-          Aucun coût d'infrastructure.
+          {t('aiFeatures.footer', "Toutes les fonctionnalités IA utilisent des modèles open source gratuits ou des API navigateur natives. Aucun coût d'infrastructure.")}
         </span>
       </div>
     </Wrapper>

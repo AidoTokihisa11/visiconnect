@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { SlidersHorizontal, Sparkles, Camera, Palette, Mic, Volume2, RefreshCw, PlayCircle } from 'lucide-react';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
+import { useTranslation } from '../../hooks/useTranslation';
 
 const Wrapper = styled.div`
   display: flex;
@@ -120,6 +121,7 @@ const ActionButton = styled.button`
 `;
 
 export const RoomSettingsPanel = ({ settings, updateSetting, devices, selectedDevices, controls }) => {
+  const { t } = useTranslation();
   const [isTesting, setIsTesting] = useState(false);
 
   const playSpeakerTest = () => {
@@ -158,50 +160,50 @@ export const RoomSettingsPanel = ({ settings, updateSetting, devices, selectedDe
     <Wrapper>
       <Section>
         <SectionTitle>
-          <SlidersHorizontal size={16} /> Devices
+          <SlidersHorizontal size={16} /> {t('room.settings.devices', 'Périphériques')}
         </SectionTitle>
 
         <Row>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}><Camera size={14} /> Camera</span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}><Camera size={14} /> {t('room.settings.camera', 'Caméra')}</span>
           <Select
             value={selectedDevices?.cameraId || ''}
             onChange={(e) => controls?.setCameraDevice?.(e.target.value)}
           >
-            <option value="">Default</option>
+            <option value="">{t('room.settings.default', 'Par défaut')}</option>
             {(devices?.cameras || []).map((d) => (
-              <option key={d.deviceId} value={d.deviceId}>{d.label || 'Camera'}</option>
+              <option key={d.deviceId} value={d.deviceId}>{d.label || t('room.settings.camera', 'Caméra')}</option>
             ))}
           </Select>
         </Row>
 
         <Row>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}><Mic size={14} /> Micro</span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}><Mic size={14} /> {t('room.settings.microphone', 'Microphone')}</span>
           <Select
             value={selectedDevices?.microphoneId || ''}
             onChange={(e) => controls?.setMicrophoneDevice?.(e.target.value)}
           >
-            <option value="">Default</option>
+            <option value="">{t('room.settings.default', 'Par défaut')}</option>
             {(devices?.microphones || []).map((d) => (
-              <option key={d.deviceId} value={d.deviceId}>{d.label || 'Microphone'}</option>
+              <option key={d.deviceId} value={d.deviceId}>{d.label || t('room.settings.microphone', 'Microphone')}</option>
             ))}
           </Select>
         </Row>
 
         <Row>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}><Volume2 size={14} /> Sortie audio</span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}><Volume2 size={14} /> {t('room.settings.audioOutput', 'Sortie audio')}</span>
           <Select
             value={selectedDevices?.speakerId || ''}
             onChange={(e) => controls?.setSpeakerDevice?.(e.target.value)}
           >
-            <option value="">Default</option>
+            <option value="">{t('room.settings.default', 'Par défaut')}</option>
             {(devices?.speakers || []).map((d) => (
-              <option key={d.deviceId} value={d.deviceId}>{d.label || 'Speaker'}</option>
+              <option key={d.deviceId} value={d.deviceId}>{d.label || t('room.settings.speaker', 'Haut-parleur')}</option>
             ))}
           </Select>
         </Row>
 
         <ActionButton type="button" onClick={() => controls?.refreshDevices?.()}>
-          <RefreshCw size={14} /> Rafraichir les peripheriques
+          <RefreshCw size={14} /> {t('room.settings.refreshDevices', 'Rafraîchir les périphériques')}
         </ActionButton>
 
         <ActionButton
@@ -210,102 +212,101 @@ export const RoomSettingsPanel = ({ settings, updateSetting, devices, selectedDe
           disabled={isTesting}
           style={{ marginTop: '0.5rem', opacity: isTesting ? 0.6 : 1, cursor: isTesting ? 'wait' : 'pointer' }}
         >
-          <PlayCircle size={14} /> {isTesting ? 'Lecture...' : 'Tester les haut-parleurs'}
+          <PlayCircle size={14} /> {isTesting ? t('room.settings.playing', 'Lecture...') : t('room.settings.testSpeakers', 'Tester les haut-parleurs')}
         </ActionButton>
       </Section>
 
       <Section>
         <SectionTitle>
-          <Camera size={16} /> Video
+          <Camera size={16} /> {t('room.settings.video', 'Vidéo')}
         </SectionTitle>
 
         <Row>
-          Qualite video maximale
+          {t('room.settings.maxQuality', 'Qualité vidéo maximale')}
           <Switch
             type="button"
             $on={settings.maxQualityLock}
             onClick={() => updateSetting('maxQualityLock', !settings.maxQualityLock)}
-            aria-label="Toggle max quality lock"
+            aria-label={t('room.settings.toggleMaxQuality', 'Activer/désactiver la qualité maximale')}
           />
         </Row>
 
         <Row>
-          Affichage video
+          {t('room.settings.videoDisplay', 'Affichage vidéo')}
           <Select
             value={settings.videoFit}
             onChange={(e) => updateSetting('videoFit', e.target.value)}
           >
-            <option value="cover">Cover</option>
-            <option value="contain">Contain</option>
+            <option value="cover">{t('room.settings.cover', 'Remplir')}</option>
+            <option value="contain">{t('room.settings.contain', 'Contenir')}</option>
           </Select>
         </Row>
 
         <Row>
-          Afficher noms participants
+          {t('room.settings.showLabels', 'Afficher noms participants')}
           <Switch
             type="button"
             $on={settings.showParticipantLabels}
             onClick={() => updateSetting('showParticipantLabels', !settings.showParticipantLabels)}
-            aria-label="Toggle participant labels"
+            aria-label={t('room.settings.toggleLabels', 'Activer/désactiver les libellés participants')}
           />
         </Row>
       </Section>
 
       <Section>
         <SectionTitle>
-          <Sparkles size={16} /> Assistant IA
+          <Sparkles size={16} /> {t('room.settings.aiAssistant', 'Assistant IA')}
         </SectionTitle>
 
         <Row>
-          Mode de reponse
+          {t('room.settings.responseMode', 'Mode de réponse')}
           <Select
             value={settings.aiResponseStyle}
             onChange={(e) => updateSetting('aiResponseStyle', e.target.value)}
           >
-            <option value="concise">Concis</option>
-            <option value="balanced">Equilibre</option>
-            <option value="deep">Detaille</option>
+            <option value="concise">{t('room.settings.concise', 'Concis')}</option>
+            <option value="balanced">{t('room.settings.balanced', 'Équilibré')}</option>
+            <option value="deep">{t('room.settings.detailed', 'Détaillé')}</option>
           </Select>
         </Row>
 
         <Hint>
-          Si une cle API LLM est configuree, l'assistant repond avec un moteur externe.
-          Sinon, il utilise un fallback local enrichi.
+          {t('room.settings.aiHint', "Si une clé API LLM est configurée, l'assistant répond avec un moteur externe. Sinon, il utilise un fallback local enrichi.")}
         </Hint>
       </Section>
 
       <Section>
         <SectionTitle>
-          <Palette size={16} /> Interface
+          <Palette size={16} /> {t('room.settings.interface', 'Interface')}
         </SectionTitle>
 
         <Row>
-          Panneau lateral large
+          {t('room.settings.widePanel', 'Panneau latéral large')}
           <Switch
             type="button"
             $on={settings.widePanel}
             onClick={() => updateSetting('widePanel', !settings.widePanel)}
-            aria-label="Toggle wide panel"
+            aria-label={t('room.settings.toggleWide', 'Activer/désactiver le panneau large')}
           />
         </Row>
 
         <Row>
-          Stats monitor
+          {t('room.settings.statsMonitor', 'Moniteur de statistiques')}
           <Switch
             type="button"
             $on={settings.showStatsDefault}
             onClick={() => updateSetting('showStatsDefault', !settings.showStatsDefault)}
-            aria-label="Toggle stats monitor"
+            aria-label={t('room.settings.toggleStats', 'Activer/désactiver le moniteur de statistiques')}
           />
         </Row>
       </Section>
 
       <Section>
         <SectionTitle>
-          <SlidersHorizontal size={16} /> Notes
+          <SlidersHorizontal size={16} /> {t('room.settings.notes', 'Notes')}
         </SectionTitle>
         <Hint>
-          Tous ces reglages sont appliques en temps reel et conserves localement dans le navigateur.
+          {t('room.settings.notesHint', 'Tous ces réglages sont appliqués en temps réel et conservés localement dans le navigateur.')}
         </Hint>
       </Section>
     </Wrapper>

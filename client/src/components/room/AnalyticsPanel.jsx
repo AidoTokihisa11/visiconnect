@@ -6,6 +6,7 @@ import {
 import { motion } from 'framer-motion';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 import { Activity, Clock, Users, Zap, Signal } from 'lucide-react';
+import { useTranslation } from '../../hooks/useTranslation';
 
 const PanelContainer = styled.div`
   display: flex;
@@ -103,6 +104,7 @@ const AUDIO_QUALITY_DATA = [
 ];
 
 export const AnalyticsPanel = () => {
+    const { t } = useTranslation();
     const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
 
     useEffect(() => {
@@ -116,29 +118,29 @@ export const AnalyticsPanel = () => {
         <PanelContainer>
             <KPIGrid>
                 <KPICard whileHover={{ scale: 1.02 }}>
-                    <div className="label"><Users size={14} /> Participants Actifs</div>
+                    <div className="label"><Users size={14} /> {t('room.analytics.activeParticipants', 'Participants Actifs')}</div>
                     <div className="value">12</div>
-                    <div className="trend">↑ 2 depuis 5 min</div>
+                    <div className="trend">{t('room.analytics.trendParticipants', '↑ 2 depuis 5 min')}</div>
                 </KPICard>
                 <KPICard whileHover={{ scale: 1.02 }}>
-                    <div className="label"><Clock size={14} /> Durée Session</div>
+                    <div className="label"><Clock size={14} /> {t('room.analytics.sessionDuration', 'Durée Session')}</div>
                     <div className="value">34m</div>
-                    <div className="trend">En cours</div>
+                    <div className="trend">{t('room.analytics.inProgress', 'En cours')}</div>
                 </KPICard>
                 <KPICard whileHover={{ scale: 1.02 }}>
-                    <div className="label"><Zap size={14} /> Engagement</div>
+                    <div className="label"><Zap size={14} /> {t('room.analytics.engagement', 'Engagement')}</div>
                     <div className="value">87%</div>
-                    <div className="trend">Excellent</div>
+                    <div className="trend">{t('room.analytics.excellent', 'Excellent')}</div>
                 </KPICard>
                 <KPICard whileHover={{ scale: 1.02 }}>
-                    <div className="label"><Signal size={14} /> Qualité Moy.</div>
+                    <div className="label"><Signal size={14} /> {t('room.analytics.avgQuality', 'Qualité Moy.')}</div>
                     <div className="value">4.9/5</div>
-                    <div className="trend">Stable</div>
+                    <div className="trend">{t('room.analytics.stable', 'Stable')}</div>
                 </KPICard>
             </KPIGrid>
 
             <ChartContainer>
-                <h4>Taux d'Engagement en Temps Réel</h4>
+                <h4>{t('room.analytics.engagementRateTitle', "Taux d'Engagement en Temps Réel")}</h4>
                 <ResponsiveContainer width="100%" height={190} minWidth={0}>
                     <AreaChart data={INVOLVEMENT_DATA}>
                         <defs>
@@ -160,7 +162,7 @@ export const AnalyticsPanel = () => {
             </ChartContainer>
 
             <ChartContainer>
-                <h4>Stabilité du Réseau (Bitrate Audio)</h4>
+                <h4>{t('room.analytics.networkStabilityTitle', 'Stabilité du Réseau (Bitrate Audio)')}</h4>
                 <ResponsiveContainer width="100%" height={190} minWidth={0}>
                     <LineChart data={AUDIO_QUALITY_DATA}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
@@ -177,7 +179,7 @@ export const AnalyticsPanel = () => {
             
             <div style={{ marginTop: 'auto', padding: '1rem', background: THEME.panelBg, borderRadius: '8px', fontSize: '0.8rem', color: THEME.textDim, textAlign: 'center' }}>
                 <Activity size={14} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }} />
-                Données mises à jour en temps réel via WebSocket
+                {t('room.analytics.realtimeFooter', 'Données mises à jour en temps réel via WebSocket')}
             </div>
         </PanelContainer>
     );

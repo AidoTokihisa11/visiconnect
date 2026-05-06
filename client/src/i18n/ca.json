@@ -2647,6 +2647,111 @@
       "smsSoon": "Funció SMS aviat! (Només visual de moment)",
       "emailSubject": "Invitació a una videoconferència",
       "emailBody": "Uniu-vos a la meva reunió fent clic en aquest enllaç: {{url}}"
+    },
+    "header": {
+      "ongoing": "Reunió en curs",
+      "e2eeActive": "Xifratge E2EE actiu",
+      "inviteTitle": "Convidar participants",
+      "invite": "Convidar",
+      "participants": "Participants",
+      "signalQuality": "Qualitat del senyal",
+      "performance": "Rendiment"
+    },
+    "chat": {
+      "empty": "Cap missatge. Sigues el primer a escriure!",
+      "you": "Tu",
+      "anonymous": "Anònim",
+      "placeholder": "Escriu un missatge…",
+      "enterToSend": "Prem Retorn per enviar"
+    },
+    "analytics": {
+      "activeParticipants": "Participants actius",
+      "trendParticipants": "↑ 2 des de fa 5 min",
+      "sessionDuration": "Durada de sessió",
+      "inProgress": "En curs",
+      "engagement": "Implicació",
+      "excellent": "Excel·lent",
+      "avgQuality": "Qualitat mitjana",
+      "stable": "Estable",
+      "engagementRateTitle": "Taxa d'implicació en temps real",
+      "networkStabilityTitle": "Estabilitat de xarxa (bitrate àudio)",
+      "realtimeFooter": "Dades actualitzades en temps real via WebSocket"
+    },
+    "settings": {
+      "devices": "Dispositius",
+      "camera": "Càmera",
+      "microphone": "Micròfon",
+      "speaker": "Altaveu",
+      "audioOutput": "Sortida d'àudio",
+      "default": "Per defecte",
+      "refreshDevices": "Refresca dispositius",
+      "playing": "Reproduint…",
+      "testSpeakers": "Prova els altaveus",
+      "video": "Vídeo",
+      "maxQuality": "Qualitat de vídeo màxima",
+      "toggleMaxQuality": "Activa/desactiva qualitat màxima",
+      "videoDisplay": "Visualització de vídeo",
+      "cover": "Omplir",
+      "contain": "Contenir",
+      "showLabels": "Mostra noms dels participants",
+      "toggleLabels": "Alterna etiquetes",
+      "aiAssistant": "Assistent IA",
+      "responseMode": "Mode de resposta",
+      "concise": "Concís",
+      "balanced": "Equilibrat",
+      "detailed": "Detallat",
+      "aiHint": "Si hi ha una clau API LLM, l'assistent fa servir un motor extern. Si no, fallback local.",
+      "interface": "Interfície",
+      "widePanel": "Panell lateral ample",
+      "toggleWide": "Alterna panell ample",
+      "statsMonitor": "Monitor d'estadístiques",
+      "toggleStats": "Alterna monitor",
+      "notes": "Notes",
+      "notesHint": "Tots els ajustos s'apliquen en temps real i es desen localment."
+    },
+    "breakout": {
+      "title": "Sales de subgrup",
+      "room": "Sala",
+      "inProgress": "Sessions en curs",
+      "close": "Tanca les sales",
+      "unassigned": "Participants sense assignar",
+      "assignTo": "Assigna a…",
+      "empty": "Buida",
+      "addRoom": "Afegeix sala",
+      "start": "Inicia sessions"
+    },
+    "transcription": {
+      "unavailable": "Transcripció no disponible",
+      "notSupported": "La Web Speech API no és compatible amb aquest navegador.",
+      "useChromeEdge": "Fes servir Chrome, Edge o Safari.",
+      "active": "Transcripció activa",
+      "paused": "En pausa",
+      "pause": "Pausa",
+      "resume": "Reprèn",
+      "expand": "Amplia",
+      "minimize": "Minimitza",
+      "closeBtn": "Tanca",
+      "export": "Exporta",
+      "networkError": "Error de xarxa",
+      "willAppear": "La transcripció apareixerà aquí…",
+      "listening": "Escoltant…",
+      "clickMic": "Fes clic al micròfon per començar"
+    },
+    "stats": {
+      "videoFlux": "Flux de vídeo (test)",
+      "videoStats": "Estadístiques de vídeo",
+      "resolution": "Resolució",
+      "codec": "Còdec",
+      "mode": "Mode",
+      "simulcast": "Simulcast activat",
+      "mobileOptimized": "Optimitzat per a mòbil",
+      "sendQuality": "Qualitat d'enviament",
+      "adaptiveNote": "*La resolució s'adapta a l'amplada de banda (4K → 1080p → 540p)",
+      "autoAdapt": "La qualitat s'adapta automàticament a la teva connexió",
+      "q1080": "1080p (HD)",
+      "q720": "720p (recomanat)",
+      "q540": "540p (eficient)",
+      "q360": "360p (poc ample de banda)"
     }
   },
   "aiChatbot": {
@@ -2654,5 +2759,81 @@
     "subtitle": "IA ultra ràpida",
     "placeholder": "Feu la vostra pregunta...",
     "greeting": "Hola! Sóc l'assistent d'IA de VisiConnect. Conec la plataforma a fons. Com us puc ajudar avui?"
+  },
+  "aiChatPanel": {
+    "greeting": "Hola! Pregunta'm sobre la reunió.",
+    "remoteUnavailable": "Servei d'IA remot no disponible. Canviant a mode local.",
+    "summaryEmpty": "No hi ha missatges per resumir.",
+    "noContentToSummarize": "No hi ha prou contingut per generar un resum.",
+    "localSummaryGenerated": "Resum local generat.",
+    "localSummary": "Resum local",
+    "subtitle": "Fes preguntes o demana un resum",
+    "autoSummary": "Resum automàtic",
+    "exportMarkdown": "Exporta com a Markdown",
+    "summaryGenerated": "Resum generat",
+    "thinking": "Pensant…",
+    "inputPlaceholder": "Escriu el teu missatge…"
+  },
+  "aiFeatures": {
+    "notSupported": "No compatible amb aquest navegador",
+    "title": "Funcions d'IA",
+    "free": "Gratuït",
+    "lowEnd": "Mode lleuger",
+    "preset": {
+      "performance": "Rendiment",
+      "balanced": "Equilibrat",
+      "full": "Complet"
+    },
+    "transcription": {
+      "name": "Transcripció",
+      "desc": "Subtítols en directe automàtics"
+    },
+    "autoStart": "Inicia automàticament",
+    "smartNotes": {
+      "name": "Notes intel·ligents",
+      "desc": "Resum i punts clau per IA"
+    },
+    "aiModel": "Model d'IA",
+    "summaryNothingToTitle": "Encara res a resumir",
+    "summaryGenerateTitle": "Genera resum ara",
+    "generating": "Generant…",
+    "generateNow": "Genera ara",
+    "downloadMd": "Baixa com a Markdown",
+    "translation": {
+      "name": "Traducció",
+      "desc": "Traducció de subtítols en directe",
+      "intro": "Tria l'idioma de destí",
+      "targetLang": "Idioma de destí",
+      "soonHint": "Aviat"
+    },
+    "soon": "Aviat",
+    "bgBlur": {
+      "name": "Fons",
+      "desc": "Difumina o reemplaça el fons",
+      "intensity": "Intensitat del difuminat",
+      "modeBlur": "Difuminat",
+      "modeImage": "Imatge"
+    },
+    "mode": "Mode",
+    "videoEnhance": {
+      "name": "Millora de vídeo",
+      "desc": "Optimitzacions de color en temps real",
+      "preset": "Preajust",
+      "natural": "Natural",
+      "vivid": "Vívid",
+      "cinema": "Cinema",
+      "lowLight": "Poca llum",
+      "pro": "Pro"
+    },
+    "noise": {
+      "name": "Reducció de soroll",
+      "desc": "Redueix el soroll de fons",
+      "level": "Nivell",
+      "low": "Baix",
+      "moderate": "Moderat",
+      "high": "Alt"
+    },
+    "errSummary": "No s'ha pogut generar el resum.",
+    "footer": "El processament d'IA s'executa localment quan és possible."
   }
 }

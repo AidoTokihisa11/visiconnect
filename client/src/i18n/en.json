@@ -2614,6 +2614,111 @@
       "smsSoon": "SMS feature coming soon! (Visual only for now)",
       "emailSubject": "Video meeting invitation",
       "emailBody": "Join my meeting by clicking this link: {{url}}"
+    },
+    "header": {
+      "ongoing": "Meeting in progress",
+      "e2eeActive": "E2EE encryption active",
+      "inviteTitle": "Invite participants",
+      "invite": "Invite",
+      "participants": "Participants",
+      "signalQuality": "Signal quality",
+      "performance": "Performance"
+    },
+    "chat": {
+      "empty": "No messages yet. Be the first to write!",
+      "you": "You",
+      "anonymous": "Anonymous",
+      "placeholder": "Type a message…",
+      "enterToSend": "Press Enter to send"
+    },
+    "analytics": {
+      "activeParticipants": "Active participants",
+      "trendParticipants": "↑ 2 since 5 min",
+      "sessionDuration": "Session duration",
+      "inProgress": "In progress",
+      "engagement": "Engagement",
+      "excellent": "Excellent",
+      "avgQuality": "Avg. quality",
+      "stable": "Stable",
+      "engagementRateTitle": "Real-time engagement rate",
+      "networkStabilityTitle": "Network stability (audio bitrate)",
+      "realtimeFooter": "Data updated in real time via WebSocket"
+    },
+    "settings": {
+      "devices": "Devices",
+      "camera": "Camera",
+      "microphone": "Microphone",
+      "speaker": "Speaker",
+      "audioOutput": "Audio output",
+      "default": "Default",
+      "refreshDevices": "Refresh devices",
+      "playing": "Playing…",
+      "testSpeakers": "Test speakers",
+      "video": "Video",
+      "maxQuality": "Maximum video quality",
+      "toggleMaxQuality": "Toggle maximum quality",
+      "videoDisplay": "Video display",
+      "cover": "Cover",
+      "contain": "Contain",
+      "showLabels": "Show participant names",
+      "toggleLabels": "Toggle participant labels",
+      "aiAssistant": "AI assistant",
+      "responseMode": "Response mode",
+      "concise": "Concise",
+      "balanced": "Balanced",
+      "detailed": "Detailed",
+      "aiHint": "If an LLM API key is configured, the assistant uses an external engine. Otherwise, an enriched local fallback is used.",
+      "interface": "Interface",
+      "widePanel": "Wide side panel",
+      "toggleWide": "Toggle wide panel",
+      "statsMonitor": "Stats monitor",
+      "toggleStats": "Toggle stats monitor",
+      "notes": "Notes",
+      "notesHint": "All settings apply in real time and are stored locally."
+    },
+    "breakout": {
+      "title": "Breakout rooms",
+      "room": "Room",
+      "inProgress": "Sessions in progress",
+      "close": "Close rooms",
+      "unassigned": "Unassigned participants",
+      "assignTo": "Assign to…",
+      "empty": "Empty",
+      "addRoom": "Add a room",
+      "start": "Start sessions"
+    },
+    "transcription": {
+      "unavailable": "Transcription unavailable",
+      "notSupported": "Web Speech API is not supported by this browser.",
+      "useChromeEdge": "Use Chrome, Edge or Safari.",
+      "active": "Transcription active",
+      "paused": "Paused",
+      "pause": "Pause",
+      "resume": "Resume",
+      "expand": "Expand",
+      "minimize": "Minimize",
+      "closeBtn": "Close",
+      "export": "Export",
+      "networkError": "Network error",
+      "willAppear": "Transcription will appear here…",
+      "listening": "Listening…",
+      "clickMic": "Click the mic to start"
+    },
+    "stats": {
+      "videoFlux": "Video stream (test)",
+      "videoStats": "Video stats",
+      "resolution": "Resolution",
+      "codec": "Codec",
+      "mode": "Mode",
+      "simulcast": "Simulcast enabled",
+      "mobileOptimized": "Mobile optimized",
+      "sendQuality": "Send quality",
+      "adaptiveNote": "*Resolution adapts to bandwidth (4K → 1080p → 540p)",
+      "autoAdapt": "Quality adapts automatically to your connection",
+      "q1080": "1080p (HD)",
+      "q720": "720p (recommended)",
+      "q540": "540p (efficient)",
+      "q360": "360p (low bandwidth)"
     }
   },
   "aiChatbot": {
@@ -2621,5 +2726,81 @@
     "subtitle": "Ultra-fast AI",
     "placeholder": "Ask your question...",
     "greeting": "Hi! I'm the VisiConnect AI assistant. I know the platform inside out. How can I help you today?"
+  },
+  "aiChatPanel": {
+    "greeting": "Hi! Ask me anything about the meeting.",
+    "remoteUnavailable": "Remote AI service unavailable. Switching to local mode.",
+    "summaryEmpty": "No messages to summarize.",
+    "noContentToSummarize": "Not enough content to generate a summary.",
+    "localSummaryGenerated": "Local summary generated.",
+    "localSummary": "Local summary",
+    "subtitle": "Ask questions or request a summary",
+    "autoSummary": "Auto summary",
+    "exportMarkdown": "Export as Markdown",
+    "summaryGenerated": "Summary generated",
+    "thinking": "Thinking…",
+    "inputPlaceholder": "Type your message…"
+  },
+  "aiFeatures": {
+    "notSupported": "Not supported on this browser",
+    "title": "AI features",
+    "free": "Free",
+    "lowEnd": "Low-end mode",
+    "preset": {
+      "performance": "Performance",
+      "balanced": "Balanced",
+      "full": "Full"
+    },
+    "transcription": {
+      "name": "Transcription",
+      "desc": "Auto-generated live captions"
+    },
+    "autoStart": "Start automatically",
+    "smartNotes": {
+      "name": "Smart notes",
+      "desc": "AI-powered summary and key points"
+    },
+    "aiModel": "AI model",
+    "summaryNothingToTitle": "Nothing to summarize yet",
+    "summaryGenerateTitle": "Generate summary now",
+    "generating": "Generating…",
+    "generateNow": "Generate now",
+    "downloadMd": "Download as Markdown",
+    "translation": {
+      "name": "Translation",
+      "desc": "Live caption translation",
+      "intro": "Choose the target language",
+      "targetLang": "Target language",
+      "soonHint": "Coming soon"
+    },
+    "soon": "Soon",
+    "bgBlur": {
+      "name": "Background",
+      "desc": "Blur or replace your background",
+      "intensity": "Blur intensity",
+      "modeBlur": "Blur",
+      "modeImage": "Image"
+    },
+    "mode": "Mode",
+    "videoEnhance": {
+      "name": "Video enhancement",
+      "desc": "Real-time color optimizations",
+      "preset": "Preset",
+      "natural": "Natural",
+      "vivid": "Vivid",
+      "cinema": "Cinema",
+      "lowLight": "Low light",
+      "pro": "Pro"
+    },
+    "noise": {
+      "name": "Noise reduction",
+      "desc": "Reduces background noise",
+      "level": "Level",
+      "low": "Low",
+      "moderate": "Moderate",
+      "high": "High"
+    },
+    "errSummary": "Could not generate the summary.",
+    "footer": "AI processing runs locally whenever possible."
   }
 }

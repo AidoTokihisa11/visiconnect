@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Send, User, Sparkles, FileText, Download, Wand2, Loader2, ListTodo, Key } from 'lucide-react';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 import { getSmartNotesService } from '../../services/ai';
+import { useTranslation } from '../../hooks/useTranslation';
 
 // API route - uses relative path for Vercel serverless functions
 const AI_PROXY_URL = '/api/ai/chat';
@@ -173,7 +174,7 @@ const SpinnerIcon = styled(motion.div)`
   color: ${THEME.accent};
 `;
 
-const TypingIndicator = () => (
+const TypingIndicator = ({ label }) => (
   <ThinkingContainer
     initial={{ opacity: 0, y: 10 }}
     animate={{ opacity: 1, y: 0 }}
@@ -185,7 +186,7 @@ const TypingIndicator = () => (
     >
       <Loader2 size={16} />
     </SpinnerIcon>
-    <ThinkingText>L'IA réfléchit...</ThinkingText>
+    <ThinkingText>{label || "L'IA réfléchit..."}</ThinkingText>
   </ThinkingContainer>
 );
 
@@ -299,11 +300,12 @@ const asMarkdownDownload = (markdown, roomId) => {
 };
 
 export const AIChatPanel = ({ responseStyle = 'balanced', roomMessages = [], roomId = 'room' }) => {
+  const { t } = useTranslation();
   const [messages, setMessages] = useState([
     {
       id: 1,
       sender: 'ai',
-      text: 'Bonjour ! Je suis votre assistant VisiConnect. Posez-moi vos questions sur la vidéo, l\'audio, les paramètres ou toute fonctionnalité de la room.',
+      text: t('aiChatPanel.greeting', "Bonjour ! Je suis votre assistant VisiConnect. Posez-moi vos questions sur la vidéo, l'audio, les paramètres ou toute fonctionnalité de la room."),
     },
   ]);
   const [inputValue, setInputValue] = useState('');
@@ -340,7 +342,7 @@ export const AIChatPanel = ({ responseStyle = 'balanced', roomMessages = [], roo
       // Try local fallback first
       const fallback = localKnowledgeAnswer(userText, responseStyle);
       setMessages((prev) => [...prev, { id: Date.now() + 1, sender: 'ai', text: fallback }]);
-      setAiError("L'IA distante est momentanément indisponible. Réponse locale utilisée.");
+      setAiError(t('aiChatPanel.remoteUnavailable', "L'IA distante est momentanément indisponible. Réponse locale utilisée."));
       // Clear error after 5 seconds
       setTimeout(() => setAiError(null), 5000);
     } finally {
@@ -377,9 +379,9 @@ export const AIChatPanel = ({ responseStyle = 'balanced', roomMessages = [], roo
       }
 
       if (!sourceMessages.length) {
-        const empty = '# Résumé de réunion\n\nDémarrez la conversation ou ouvrez le chat de la réunion : un résumé sera généré automatiquement dès qu\'il y aura du contenu à analyser.';
+        const empty = t('aiChatPanel.summaryEmpty', '# Résumé de réunion\n\nDémarrez la conversation ou ouvrez le chat de la réunion : un résumé sera généré automatiquement dès qu\'il y aura du contenu à analyser.');
         setMeetingSummary(empty);
-        setAiError("Aucun contenu à résumer pour l'instant.");
+        setAiError(t('aiChatPanel.noContentToSummarize', "Aucun contenu à résumer pour l'instant."));
         setTimeout(() => setAiError(null), 4000);
         return;
       }
@@ -407,13 +409,13 @@ export const AIChatPanel = ({ responseStyle = 'balanced', roomMessages = [], roo
         // Fallback to local summary
         const summary = localSummary(sourceMessages);
         setMeetingSummary(summary);
-        setAiError("Résumé local généré (IA distante indisponible)");
+        setAiError(t('aiChatPanel.localSummaryGenerated', 'Résumé local généré (IA distante indisponible)'));
         setTimeout(() => setAiError(null), 5000);
       }
     } catch (e) {
       const fallback = localSummary(roomMessages);
       setMeetingSummary(fallback);
-      setAiError("Résumé local généré.");
+      setAiError(t('aiChatPanel.localSummary', 'Résumé local généré.'));
       setTimeout(() => setAiError(null), 4000);
     } finally {
       setIsTyping(false);
@@ -424,7 +426,7 @@ export const AIChatPanel = ({ responseStyle = 'balanced', roomMessages = [], roo
     <PanelContainer>
       <TopHint>
         <Sparkles size={14} style={{ display: 'inline', marginRight: '6px', verticalAlign: 'middle' }} />
-        Assistant IA VisiConnect — GROQ + OpenRouter
+        {t('aiChatPanel.subtitle', 'Assistant IA VisiConnect — GROQ + OpenRouter')}
       </TopHint>
 
       {aiError && (
@@ -435,17 +437,17 @@ export const AIChatPanel = ({ responseStyle = 'balanced', roomMessages = [], roo
 
       <ActionRow>
         <ActionButton type='button' onClick={generateMeetingSummary} disabled={isTyping}>
-          <Wand2 size={14} /> Résumé auto
+          <Wand2 size={14} /> {t('aiChatPanel.autoSummary', 'Résumé auto')}
         </ActionButton>
         <ActionButton type='button' onClick={() => asMarkdownDownload(meetingSummary || localSummary(roomMessages), roomId)}>
-          <Download size={14} /> Export Markdown
+          <Download size={14} /> {t('aiChatPanel.exportMarkdown', 'Export Markdown')}
         </ActionButton>
       </ActionRow>
 
       {meetingSummary && (
         <TopHint>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.35rem' }}>
-            <FileText size={14} /> Resume genere
+            <FileText size={14} /> {t('aiChatPanel.summaryGenerated', 'Résumé généré')}
           </div>
           <div style={{ whiteSpace: 'pre-wrap' }}>{meetingSummary.slice(0, 380)}{meetingSummary.length > 380 ? '...' : ''}</div>
         </TopHint>
@@ -475,13 +477,13 @@ export const AIChatPanel = ({ responseStyle = 'balanced', roomMessages = [], roo
             </MessageBubble>
           ))}
         </AnimatePresence>
-        {isTyping && <TypingIndicator />}
+        {isTyping && <TypingIndicator label={t('aiChatPanel.thinking', "L'IA réfléchit...")} />}
         <div ref={chatEndRef} />
       </ChatHistory>
 
       <InputArea>
         <Input
-          placeholder='Pose une question technique ou produit...'
+          placeholder={t('aiChatPanel.inputPlaceholder', 'Pose une question technique ou produit...')}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSend()}
