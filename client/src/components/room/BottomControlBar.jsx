@@ -38,6 +38,8 @@ const BottomBar = styled.div`
     border: none;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+    /* Toujours au-dessus du SidePanel mobile (z-65) — le bouton de raccrochage reste cliquable */
+    z-index: 80;
 
     &::-webkit-scrollbar {
       display: none;

@@ -246,6 +246,12 @@ export const Section = styled.section`
 export const SectionHeader = styled.div`
   max-width: 760px;
   margin-bottom: 2.6rem;
+
+  @media (max-width: 768px) {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
 `;
 
 export const SectionLabel = styled.div`
@@ -448,6 +454,10 @@ export const DarkText = styled.div`
     color: rgba(203, 213, 225, 0.88);
     line-height: 1.75;
     font-size: 1.04rem;
+  }
+
+  @media (max-width: 980px) {
+    text-align: center;
   }
 `;
 

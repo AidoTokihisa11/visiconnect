@@ -62,24 +62,35 @@ const Badge = styled.span`
 `;
 
 const OptionBtn = styled.button`
-  background: ${props => props.$voted ? THEME.primary : 'rgba(255, 255, 255, 0.1)'};
-  border: none;
+  background: ${props => props.$selected
+    ? THEME.primary
+    : props.$voted
+      ? 'rgba(59, 130, 246, 0.18)'
+      : 'rgba(255, 255, 255, 0.1)'};
+  border: 2px solid ${props => props.$selected
+    ? THEME.primary
+    : 'transparent'};
   width: 100%;
   text-align: left;
-  padding: 8px 12px;
-  border-radius: 6px;
+  padding: 10px 12px;
+  border-radius: 8px;
   color: white;
   margin-top: 8px;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: background 0.15s;
-  
+  gap: 10px;
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: ${props => props.$selected ? 600 : 400};
+  transform: ${props => props.$selected ? 'scale(1.02)' : 'scale(1)'};
+  box-shadow: ${props => props.$selected ? `0 4px 12px ${THEME.primary}55` : 'none'};
+
   &:hover:not(:disabled) {
     background: ${props => props.$voted ? THEME.primaryHover : 'rgba(255, 255, 255, 0.2)'};
+    transform: translateY(-1px);
   }
-  
+
   &:disabled {
     cursor: default;
   }
@@ -265,6 +276,13 @@ export default function PollsPanel({ meetingId, currentUser, onClose, onPollCrea
   const [showResultsOnCreate, setShowResultsOnCreate] = useState(true);
   const [createError, setCreateError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  // Stocke l'option votée par poll, côté client (le backend ne le stocke pas)
+  const [myVotes, setMyVotes] = useState(() => {
+    try {
+      const raw = localStorage.getItem('visiconnect_my_poll_votes');
+      return raw ? JSON.parse(raw) : {};
+    } catch { return {}; }
+  });
 
   const resetForm = () => {
     setIsCreating(false);
@@ -300,7 +318,8 @@ export default function PollsPanel({ meetingId, currentUser, onClose, onPollCrea
       if (onPollCreated) onPollCreated();
     } catch (err) {
       console.error('createPoll error:', err);
-      setCreateError("Erreur lors de la création. Réessayez.");
+      const detail = err?.data?.message || err?.message || 'Erreur inconnue';
+      setCreateError(`Erreur lors de la création : ${detail}`);
     } finally {
       setIsLoading(false);
     }
@@ -368,11 +387,26 @@ export default function PollsPanel({ meetingId, currentUser, onClose, onPollCrea
                       <div key={opt.id}>
                         <OptionBtn 
                           $voted={hasVoted}
+                          $selected={hasVoted && myVotes[poll._id] === opt.id}
                           disabled={hasVoted || !poll.isActive}
-                          onClick={() => votePoll({ pollId: poll._id, optionId: opt.id, userId: currentUser.identity })}
+                          onClick={async () => {
+                            try {
+                              await votePoll({ pollId: poll._id, optionId: opt.id, userId: currentUser.identity });
+                              const next = { ...myVotes, [poll._id]: opt.id };
+                              setMyVotes(next);
+                              try { localStorage.setItem('visiconnect_my_poll_votes', JSON.stringify(next)); } catch {}
+                            } catch (e) {
+                              console.error('votePoll error:', e);
+                            }
+                          }}
                         >
-                          <span>{opt.text}</span>
-                          {showPct && <span style={{ fontSize: '12px', opacity: 0.75 }}>{pct}%</span>}
+                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                            {hasVoted && myVotes[poll._id] === opt.id && (
+                              <CheckCircle size={16} style={{ flexShrink: 0 }} />
+                            )}
+                            {opt.text}
+                          </span>
+                          {showPct && <span style={{ fontSize: '12px', opacity: 0.85 }}>{pct}%</span>}
                         </OptionBtn>
                         {showPct && <ProgressBar $pct={pct} />}
                       </div>

@@ -20,10 +20,13 @@ import {
   Check,
   ChevronDown,
   ChevronUp,
-  Info
+  Info,
+  Download,
+  Loader2
 } from 'lucide-react';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 import { useAISettings } from '../../hooks/useAISettings';
+import { getSmartNotesService } from '../../services/ai/SmartNotesService';
 
 const Wrapper = styled.div`
   display: flex;
@@ -189,6 +192,11 @@ const Select = styled.select`
   font-size: 0.8rem;
   outline: none;
 
+  & option {
+    background: ${THEME.cardBg};
+    color: ${THEME.text};
+  }
+
   &:focus {
     border-color: ${THEME.accent};
   }
@@ -301,7 +309,7 @@ const BlurSliderRow = ({ currentValue, onCommit }) => {
 };
 
 // Composant principal
-export const AIFeaturesPanel = () => {
+export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion VisiConnect' } = {}) => {
   const {
     settings,
     capabilities,
@@ -312,6 +320,55 @@ export const AIFeaturesPanel = () => {
   } = useAISettings();
 
   const [activePreset, setActivePreset] = useState(null);
+  const [summary, setSummary] = useState(null);
+  const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
+  const [summaryError, setSummaryError] = useState('');
+
+  const handleGenerateSummary = async () => {
+    setSummaryError('');
+    setSummary(null);
+    setIsGeneratingSummary(true);
+    try {
+      const service = getSmartNotesService();
+      service.setPreferredModel?.(
+        settings.smartNotes?.model || 'meta-llama/llama-3.1-8b-instruct:free'
+      );
+      const normalizedMessages = (chatMessages || []).map((m) => ({
+        sender: m.sender || m.user || m.from || 'Anonyme',
+        text: m.text || m.message || m.content || '',
+      })).filter((m) => m.text);
+      const result = await service.generateMeetingSummary({
+        transcript: [],
+        chatMessages: normalizedMessages,
+        meetingTitle,
+        duration: 'En cours',
+      });
+      setSummary(result);
+    } catch (e) {
+      console.error('[SmartNotes] generate failed:', e);
+      setSummaryError(e?.message || 'Impossible de générer le résumé.');
+    } finally {
+      setIsGeneratingSummary(false);
+    }
+  };
+
+  const handleDownloadSummary = () => {
+    if (!summary) return;
+    try {
+      const md = getSmartNotesService().exportSummary(summary, 'markdown');
+      const blob = new Blob([md], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `compte-rendu-${Date.now()}.md`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error('[SmartNotes] export failed:', e);
+    }
+  };
 
   const handlePreset = (preset) => {
     applyPreset(preset);
@@ -408,6 +465,74 @@ export const AIFeaturesPanel = () => {
             <option value="qwen/qwen-2-7b-instruct:free">Qwen 2 7B</option>
           </Select>
         </OptionRow>
+
+        {/* Bouton de génération manuelle du résumé */}
+        <div style={{ marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <button
+            type="button"
+            onClick={handleGenerateSummary}
+            disabled={isGeneratingSummary || (!chatMessages || chatMessages.length === 0)}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.5rem',
+              padding: '0.55rem 0.9rem',
+              border: 'none',
+              borderRadius: '8px',
+              background: isGeneratingSummary
+                ? 'rgba(99,102,241,0.4)'
+                : 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
+              color: 'white',
+              fontWeight: 600,
+              fontSize: '0.85rem',
+              cursor: isGeneratingSummary ? 'wait' : 'pointer',
+              opacity: (!chatMessages || chatMessages.length === 0) ? 0.55 : 1,
+              transition: 'all 0.2s',
+            }}
+            title={(!chatMessages || chatMessages.length === 0) ? 'Aucun message dans le chat à résumer pour le moment.' : 'Générer un résumé IA à partir du chat.'}
+          >
+            {isGeneratingSummary
+              ? <><Loader2 size={14} style={{ animation: 'spin 1s linear infinite' }} /> Génération...</>
+              : <><Sparkles size={14} /> Générer un résumé maintenant</>}
+          </button>
+
+          {summaryError && (
+            <div style={{ fontSize: '0.78rem', color: '#f87171', padding: '6px 10px', background: 'rgba(239,68,68,0.08)', borderRadius: '6px', border: '1px solid rgba(239,68,68,0.25)' }}>
+              {summaryError}
+            </div>
+          )}
+
+          {summary && (
+            <div style={{ marginTop: '0.5rem', padding: '0.75rem', background: 'rgba(15,23,42,0.6)', border: `1px solid ${THEME.border}`, borderRadius: '8px', maxHeight: '260px', overflowY: 'auto' }}>
+              <div style={{ fontSize: '0.72rem', color: THEME.textDim, marginBottom: '0.4rem' }}>
+                Résumé IA • {new Date(summary.generatedAt).toLocaleTimeString('fr-FR')}
+              </div>
+              <div style={{ fontSize: '0.85rem', color: THEME.text, whiteSpace: 'pre-wrap', lineHeight: 1.55 }}>
+                {summary.summary}
+              </div>
+              <button
+                type="button"
+                onClick={handleDownloadSummary}
+                style={{
+                  marginTop: '0.6rem',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  padding: '0.35rem 0.65rem',
+                  border: `1px solid ${THEME.border}`,
+                  background: 'transparent',
+                  color: THEME.text,
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '0.75rem',
+                }}
+              >
+                <Download size={12} /> Télécharger (.md)
+              </button>
+            </div>
+          )}
+        </div>
       </Feature>
 
       {/* Traduction — Bientôt disponible */}

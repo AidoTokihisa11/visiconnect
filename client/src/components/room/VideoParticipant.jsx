@@ -6,6 +6,30 @@ import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 import { useAISettings } from '../../hooks/useAISettings';
 import { getVideoEnhancementService } from '../../services/ai';
 
+/**
+ * useParticipantAudioLevel — lit le niveau audio temps réel d'un participant LiveKit.
+ * `participant.audioLevel` est mis à jour par le RoomEngine à chaque frame.
+ */
+const useParticipantAudioLevel = (participant, isMicEnabled) => {
+  const [level, setLevel] = useState(0);
+  useEffect(() => {
+    if (!participant || !isMicEnabled) {
+      setLevel(0);
+      return;
+    }
+    let raf;
+    const tick = () => {
+      // audioLevel : 0..1 fourni par LiveKit
+      const lvl = typeof participant.audioLevel === 'number' ? participant.audioLevel : 0;
+      setLevel(lvl);
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [participant, isMicEnabled]);
+  return level;
+};
+
 // 📱 PiP Draggable Container - Position absolue contrôlée par state
 const DraggablePiPContainer = styled.div`
   position: fixed !important;
@@ -98,6 +122,22 @@ const UserLabel = styled.div`
   border: 1px solid ${THEME.border};
 `;
 
+// Anneau de gain autour du micro — scale en fonction du niveau audio
+const MicLevelRing = styled.span`
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  transition: box-shadow 0.08s linear;
+  box-shadow: ${({ $level, $active }) =>
+    $active && $level > 0.04
+      ? `0 0 0 ${Math.round(2 + $level * 8)}px rgba(16, 185, 129, ${(0.18 + $level * 0.45).toFixed(2)})`
+      : 'none'};
+`;
+
 const StatusIcons = styled.div`
   position: absolute;
   top: 1rem;
@@ -155,6 +195,9 @@ export const VideoParticipant = React.memo(({
     : (overrideCameraEnabled !== undefined ? overrideCameraEnabled : (participant?.isCameraEnabled ?? false));
     
   const isMicEnabled = overrideMicEnabled !== undefined ? overrideMicEnabled : (participant?.isMicrophoneEnabled ?? false);
+
+  // Niveau audio temps r\u00e9el pour l'anneau autour du micro
+  const micLevel = useParticipantAudioLevel(participant, isMicEnabled);
 
   // 📱 État pour la position du PiP déplaçable
   const [pipPosition, setPipPosition] = useState({ x: null, y: null });
@@ -311,7 +354,13 @@ export const VideoParticipant = React.memo(({
 
       {showLabel && !isPiP && (
         <UserLabel>
-          {isMicEnabled ? <Mic size={14} color="#059669" /> : <MicOff size={14} color="#dc2626" />}
+          {isMicEnabled ? (
+            <MicLevelRing $level={micLevel} $active={isMicEnabled}>
+              <Mic size={14} color="#059669" />
+            </MicLevelRing>
+          ) : (
+            <MicOff size={14} color="#dc2626" />
+          )}
           {participant?.name || participant?.identity || 'Inconnu'} {isLocal && '(Vous)'}
         </UserLabel>
       )}

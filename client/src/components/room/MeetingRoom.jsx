@@ -178,13 +178,15 @@ const SidePanel = styled(motion.div)`
   @media (max-width: 768px) {
     width: 100%;
     min-width: unset;
+    position: fixed;
     top: 0;
-    bottom: calc(70px + env(safe-area-inset-bottom, 12px));
+    /* Reserve enough space below for the BottomBar (~70px control row + extra mobile padding + safe-area). */
+    bottom: calc(96px + env(safe-area-inset-bottom, 12px));
     height: auto;
     max-height: none;
     border-radius: 0 0 20px 20px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-    z-index: 70; /* Above BottomBar (60) on mobile too */
+    z-index: 65; /* Below BottomBar (z-index 80 on mobile) so the End Call button stays clickable. */
     border-left: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
@@ -314,7 +316,21 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
   } = useMeeting(roomSettings.maxQualityLock);
 
   const { messages, sendMessage } = useChat(roomId, user, null);
-  usePricing(onLeave);
+
+  // Wrap onLeave: explicitly disconnect from LiveKit before navigating, otherwise the
+  // room can stay alive in the background and the user feels stuck on the page.
+  const handleLeave = React.useCallback(async () => {
+    try {
+      if (room?.disconnect) {
+        await room.disconnect(true);
+      }
+    } catch (e) {
+      console.warn('[MeetingRoom] room.disconnect failed:', e);
+    }
+    onLeave?.();
+  }, [room, onLeave]);
+
+  usePricing(handleLeave);
 
   // -- UI State --
   const [showStats, setShowStats] = useState(false);
@@ -772,7 +788,7 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
          isAIEnhanced={isAIEnhanced}
          isProcessingAI={isProcessingAI}
          toggleAIVideoEngine={toggleAIVideoEngine}
-         onLeave={onLeave}
+         onLeave={handleLeave}
          unreadChat={unreadChat}
          unreadPolls={unreadPolls}
          isHandRaised={isHandRaised}
@@ -831,7 +847,7 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
                {activePanel === 'breakout' && <BreakoutRoomsPanel meetingId={originalRoomId} activeParticipants={remoteParticipants.concat(localParticipant ? [localParticipant] : [])} onClose={() => togglePanel('breakout')} />}
 
                {activePanel === 'ai' && <AIChatPanel responseStyle={roomSettings.aiResponseStyle} roomMessages={messages} roomId={roomId} />}
-               {activePanel === 'aiFeatures' && <AIFeaturesPanel />}
+               {activePanel === 'aiFeatures' && <AIFeaturesPanel chatMessages={messages} meetingTitle={`Réunion ${roomId}`} />}
                {activePanel === 'settings' && (
                  <RoomSettingsPanel
                    settings={{ ...roomSettings, showStatsDefault: showStats }}

@@ -84,6 +84,13 @@ const Select = styled.select`
   white-space: nowrap;
   flex-shrink: 0;
 
+  /* Les <option> héritent du fond blanc du système → forcer un fond sombre + texte clair
+     pour éviter le « texte blanc sur blanc » dans le menu déroulant. */
+  & option {
+    background: ${THEME.cardBg};
+    color: ${THEME.text};
+  }
+
   &:focus {
     box-shadow: 0 0 0 3px ${THEME.ring};
   }

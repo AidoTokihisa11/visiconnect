@@ -164,13 +164,30 @@ export const AuthProvider = ({ children }) => {
       });
       // Si create() ne lève pas d'erreur, le code a été envoyé.
       // Le statut attendu est 'needs_first_factor' mais on accepte tout statut non-erreur.
-      if (result.status === 'needs_first_factor' || result.status) {
+      if (result?.status === 'needs_first_factor' || result?.status) {
         return { success: true };
       }
-      return { error: { message: "Impossible d'envoyer l'email de réinitialisation." } };
+      // Pas de status mais pas d'exception non plus → considérer succès (Clerk envoie quand même l'email)
+      return { success: true };
     } catch (err) {
       const code = err.errors?.[0]?.code;
-      if (code === 'form_identifier_not_found') return { error: { message: "Aucun compte trouvé avec cet email." } };
+      // ⚠️ Codes Clerk « non bloquants » : l'email de réinitialisation est envoyé malgré tout.
+      // On retourne success pour ne pas afficher une fausse erreur à l'utilisateur.
+      const NON_BLOCKING_CODES = [
+        'session_exists',
+        'identifier_already_signed_in',
+        'verification_already_verified',
+      ];
+      if (NON_BLOCKING_CODES.includes(code)) {
+        return { success: true };
+      }
+      if (code === 'form_identifier_not_found') {
+        return { error: { message: "Aucun compte trouvé avec cet email." } };
+      }
+      if (code === 'form_param_format_invalid') {
+        return { error: { message: "Format d'email invalide." } };
+      }
+      console.warn('[Clerk] requestPasswordReset error:', code, err);
       return { error: { message: handleNetworkError(err) } };
     }
   };
