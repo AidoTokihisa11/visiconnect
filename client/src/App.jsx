@@ -91,6 +91,7 @@ function App() {
                         <Route path="/" element={<HomePageClean />} />
                         <Route path="/login" element={<LoginPage />} />
                         <Route path="/signup" element={<SignupPage />} />
+                        <Route path="/register" element={<Navigate to="/signup" replace />} />
                         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
                         <Route path="/reset-password" element={<ResetPasswordPage />} />
                         <Route path="/room/:roomId" element={<RoomPage />} />

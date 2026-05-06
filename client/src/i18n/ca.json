@@ -2,170 +2,170 @@
   "common": {
     "loading": "Carregant...",
     "error": "Error",
-    "success": "Éxito",
+    "success": "Èxit",
     "cancel": "Cancel·lar",
     "confirm": "Confirmar",
     "save": "Desar",
     "edit": "Editar",
     "delete": "Eliminar",
-    "back": "Atrás",
+    "back": "Enrere",
     "next": "Següent",
     "previous": "Anterior",
-    "close": "Cerrar",
+    "close": "Tancar",
     "search": "Cercar",
     "filter": "Filtrar",
     "sort": "Ordenar",
     "email": "Correu",
     "password": "Contrasenya",
-    "name": "Nombre",
-    "firstName": "Nombre",
+    "name": "Nom",
+    "firstName": "Nom",
     "lastName": "Cognom",
     "phone": "Telèfon",
-    "address": "Dirección",
-    "city": "Ciudad",
+    "address": "Adreça",
+    "city": "Ciutat",
     "country": "País",
     "language": "Idioma",
     "settings": "Configuració",
     "profile": "Perfil",
     "logout": "Tancar la sessió",
-    "login": "Iniciar sesión",
+    "login": "Inicia sessió",
     "register": "Registrar-se",
-    "forgotPassword": "¿Olvidaste tu contrasenya?",
-    "allRightsReserved": "Todos los derechos reservados",
-    "lastUpdated": "Última actualización: {{date}}"
+    "forgotPassword": "Has oblidat la contrasenya?",
+    "allRightsReserved": "Tots els drets reservats",
+    "lastUpdated": "Última actualització: {{date}}"
   },
   "navigation": {
     "home": "Inici",
     "features": "Característiques",
     "pricing": "Preus",
-    "about": "Acerca de",
+    "about": "Sobre",
     "contact": "Contacte",
     "support": "Suport",
-    "documentation": "Documentación",
-    "community": "Comunidad",
+    "documentation": "Documentació",
+    "community": "Comunitat",
     "blog": "Blog",
-    "careers": "Carreras",
+    "careers": "Carreres",
     "legal": "Legal",
-    "privacy": "Privacidad",
-    "terms": "Termes de servicio",
+    "privacy": "Privacitat",
+    "terms": "Termes de servei",
     "cookies": "Cookies",
     "security": "Seguretat",
     "demo": "Demo",
-    "developers": "Desarrolladores",
+    "developers": "Desenvolupadors",
     "dashboard": "Tauler de control",
     "resources": "Recursos",
-    "userGuide": "Guía de usuario",
-    "integrations": "Integraciones"
+    "userGuide": "Guia d'usuari",
+    "integrations": "Integracions"
   },
   "hero": {
-    "title": "Videoconferencia de nueva generación",
-    "subtitle": "Calidad HD, inicio instantáneo, seguretat integrada. Únete a tu equipo con un clic, desde cualquier dispositivo.",
-    "startFree": "Probar gratuït",
-    "watchDemo": "Ver en acción",
-    "trustedBy": "Ya adoptado por {{count}}+ equipos",
+    "title": "Videoconferència de nova generació",
+    "subtitle": "Qualitat HD, inici instantani, seguretat integrada. Uneix-te al teu equip amb un clic, des de qualsevol dispositiu.",
+    "startFree": "Prova gratis",
+    "watchDemo": "Veure en acció",
+    "trustedBy": "Ja adoptat per més de {{count}} equips",
     "title1": "Videoconferencia ",
-    "title2": "de nueva generación.",
+    "title2": "de nova generació.",
     "testRoom": "Unir-se a la sala",
-    "titleLine1": "Videoconferencia",
-    "titleLine2": "de nueva generación."
+    "titleLine1": "Videoconferència",
+    "titleLine2": "de nova generació."
   },
   "features": {
-    "title": "Característiques poderosas",
-    "subtitle": "Todo lo que necesitas para reunions productivas",
+    "title": "Funcionalitats potents",
+    "subtitle": "Tot el que necessites per a reunions productives",
     "videoCall": {
-      "title": "Videollamadas HD",
-      "description": "Calidad de video cristalina fins a 4K con audio de calidad de estudio"
+      "title": "Videotrucades HD",
+      "description": "Qualitat de vídeo cristal·lina fins a 4K amb àudio de qualitat d'estudi"
     },
     "screenShare": {
       "title": "Compartir pantalla",
-      "description": "Comparte tu pantalla, aplicaciones o pestañas específicas"
+      "description": "Comparteix la teva pantalla, aplicacions o pestanyes específiques"
     },
     "recording": {
-      "title": "Grabación",
-      "description": "Graba tus reunions y accede a ellas más tarde"
+      "title": "Enregistrament",
+      "description": "Enregistra les teves reunions i accedeix-hi més tard"
     },
     "chat": {
-      "title": "Chat integrado",
-      "description": "Chatea durante las llamadas con missatges y archivos"
+      "title": "Xat integrat",
+      "description": "Xateja durant les trucades amb missatges i arxius"
     },
     "whiteboard": {
-      "title": "Pizarra",
-      "description": "Colabora visualmente con una pizarra integrada"
+      "title": "Pissarra",
+      "description": "Col·labora visualment amb una pissarra integrada"
     },
     "security": {
-      "title": "Seguretat avanzada",
-      "description": "Cifrado de extremo a extremo y controles de seguretat"
+      "title": "Seguretat avançada",
+      "description": "Xifrat d'extrem a extrem i controls de seguretat"
     }
   },
   "pricing": {
-    "title": "Preus simples y transparentes",
-    "subtitle": "Elige el plan que se adapte a tus necesidades",
+    "title": "Preus simples i transparents",
+    "subtitle": "Tria el pla que s'adapti a les teves necessitats",
     "monthly": "Mensual",
     "yearly": "Anual",
     "perMonth": "/mes",
-    "perUser": "por usuario",
+    "perUser": "per usuari",
     "free": {
       "title": "Starter",
       "price": "0€",
-      "description": "Para descubrir la plataforma sin compromiso.",
+      "description": "Per descobrir la plataforma sense compromís.",
       "features": [
         "Fins a 3 participants",
         "45 min per reunió",
         "Compartir pantalla",
-        "Chat en tiempo real"
+        "Xat en temps real"
       ],
-      "action": "Comenzar gratuït"
+      "action": "Comença gratis"
     },
     "pro": {
       "title": "Pro",
       "price": "15€",
-      "description": "Para equipos ágiles y freelancers.",
+      "description": "Per a equips àgils i autònoms.",
       "features": [
         "Fins a 50 participants",
-        "Duración il·limitada",
-        "5 GB de emmagatzematge Cloud",
-        "Suport prioritario",
-        "Transcripciones IA (10h/mes)"
+        "Durada il·limitada",
+        "5 GB d'emmagatzematge al núvol",
+        "Suport prioritari",
+        "Transcripcions IA (10h/mes)"
       ],
-      "action": "Suscribirse"
+      "action": "Subscriure-s'hi"
     },
     "enterprise": {
       "title": "Business",
       "price": "35€",
-      "description": "Para organizaciones a gran escala.",
+      "description": "Per a organitzacions a gran escala.",
       "features": [
         "Fins a 200 participants",
         "Emmagatzematge il·limitat",
-        "Salas de subgrupos",
-        "SSO y Administración avanzada",
-        "Transcripciones il·limitadas"
+        "Sales de subgrups",
+        "SSO i administració avançada",
+        "Transcripcions il·limitades"
       ],
-      "action": "Suscribirse"
+      "action": "Subscriure-s'hi"
     },
-    "getStarted": "Comenzar",
+    "getStarted": "Comença",
     "contactSales": "Contactar ventas",
     "popularBadge": "Popular",
     "compare": {
-      "title": "Compara nuestros planes",
+      "title": "Compara els nostres plans",
       "feature": "Característica",
       "starter": "Starter",
       "pro": "Pro",
       "business": "Business",
-      "max_participants": "Participants máx.",
-      "duration": "Duración de reunions",
+      "max_participants": "Participants màx.",
+      "duration": "Durada de reunions",
       "unlimited": "Il·limitat",
-      "quality": "Calidad de video",
-      "if_available": "si disponible",
+      "quality": "Qualitat de vídeo",
+      "if_available": "si està disponible",
       "support": "Suport",
-      "support_community": "Comunidad",
-      "support_phone": "Telèfon prioritario",
-      "recording": "Grabación en la nube",
-      "transcription": "Transcripción IA",
-      "hours": "horas",
-      "included": "Incluido"
+      "support_community": "Comunitat",
+      "support_phone": "Telèfon prioritari",
+      "recording": "Enregistrament al núvol",
+      "transcription": "Transcripció IA",
+      "hours": "hores",
+      "included": "Inclòs"
     },
     "faq": {
-      "title": "Preguntas frecuentes",
+      "title": "Preguntes freqüents",
       "q1": {
         "question": "¿Puedo cambiar de plan en cualquier momento?",
         "answer": "Sí, puede actualizar o reducir su subscripció en cualquier momento. El cambio se aplica inmediatamente y la diferencia se calcula proporcionalmente."
@@ -180,9 +180,9 @@
       }
     },
     "cta": {
-      "title": "¿Listo para empezar?",
-      "description": "Únase a miles de equipos que ya usan VisioConnect para sus reunions.",
-      "button": "Empezar gratuït"
+      "title": "A punt per començar?",
+      "description": "Uneix-te a milers d'equips que ja utilitzen VisioConnect per a les seves reunions.",
+      "button": "Comença gratis"
     },
     "plans": {
       "free": {
@@ -200,7 +200,7 @@
       }
     },
     "features": {
-      "breakout_rooms": "Salas de grupos",
+      "breakout_rooms": "Sales de grups",
       "screenShare": "Compartir pantalla",
       "recording": "Enregistrament",
       "aiTranscription": "Transcripcions IA",
@@ -220,76 +220,76 @@
   },
   "contact": {
     "header": {
-      "title_part1": "Contáctenos",
+      "title_part1": "Contacta'ns",
       "title_part2": "",
       "subtitle": "¿Tiene una pregunta, necesita una demo o suport? Nuestro equipo está aquí para ajudarle."
     },
     "info": {
-      "title": "Informació de contacto",
-      "desc": "No dude en contactarnos por email o mediante el formulario a continuación.",
+      "title": "Informació de contacte",
+      "desc": "No dubtis a contactar-nos per correu o mitjançant el formulari següent.",
       "email_title": "Correu",
-      "enterprise_title": "Empresas",
-      "enterprise_desc": "Para consultas empresariales, contacte a nuestro equipo comercial.",
-      "hours_title": "Horario"
+      "enterprise_title": "Empreses",
+      "enterprise_desc": "Per a consultes empresarials, contacta amb el nostre equip comercial.",
+      "hours_title": "Horari"
     },
     "form": {
       "success_title": "¡Missatge enviado con éxito!",
-      "error_title": "Error al enviar el missatge.",
-      "first_name": "Nombre",
-      "first_name_placeholder": "Su nombre",
+      "error_title": "Error en enviar el missatge.",
+      "first_name": "Nom",
+      "first_name_placeholder": "El teu nom",
       "last_name": "Cognom",
-      "last_name_placeholder": "Su cognom",
+      "last_name_placeholder": "El teu cognom",
       "email": "Correu",
-      "email_placeholder": "su@email.com",
+      "email_placeholder": "tu@email.com",
       "company": "Empresa",
-      "company_placeholder": "Su empresa (opcional)",
-      "category": "Categoría",
+      "company_placeholder": "La teva empresa (opcional)",
+      "category": "Categoria",
       "category_options": {
-        "demo": "Solicitud de demo",
-        "support": "Suport técnico",
-        "other": "Otro"
+        "demo": "Sol·licitud de demo",
+        "support": "Suport tècnic",
+        "other": "Altre"
       },
       "message": "Missatge",
-      "message_placeholder": "Describa su solicitud...",
-      "submitting": "Enviando...",
+      "message_placeholder": "Descriu la teva sol·licitud...",
+      "submitting": "Enviant...",
       "submit_button": "Enviar missatge"
     }
   },
   "auth": {
     "login": {
-      "title": "Iniciar sesión",
-      "subtitle": "Accede a tu compte de VisiConnect",
-      "email": "Dirección de email",
+      "title": "Inicia sessió",
+      "subtitle": "Accedeix al teu compte de VisiConnect",
+      "email": "Adreça de correu electrònic",
       "password": "Contrasenya",
-      "rememberMe": "Recordarme",
-      "forgotPassword": "¿Olvidaste tu contrasenya?",
-      "signIn": "Iniciar sesión",
-      "noAccount": "¿No tienes una compte?",
-      "createAccount": "Crear compte",
-      "orContinueWith": "O continuar con"
+      "rememberMe": "Recorda'm",
+      "forgotPassword": "Has oblidat la contrasenya?",
+      "signIn": "Inicia sessió",
+      "noAccount": "No tens un compte?",
+      "createAccount": "Crear un compte",
+      "orContinueWith": "O continua amb"
     },
     "signup": {
-      "title": "Crear compte",
-      "subtitle": "Únete a VisiConnect hoy",
-      "firstName": "Nombre",
+      "title": "Crear un compte",
+      "subtitle": "Uneix-te a VisiConnect avui",
+      "firstName": "Nom",
       "lastName": "Cognom",
-      "email": "Dirección de email",
+      "email": "Adreça de correu electrònic",
       "password": "Contrasenya",
-      "confirmPassword": "Confirmar contrasenya",
-      "acceptTerms": "Acepto los {{terms}} y la {{privacy}}",
-      "terms": "términos de servicio",
-      "privacy": "política de privacidad",
-      "createAccount": "Crear compte",
-      "alreadyHaveAccount": "¿Ya tienes una compte?",
-      "signIn": "Iniciar sesión",
-      "orContinueWith": "O continuar con"
+      "confirmPassword": "Confirma la contrasenya",
+      "acceptTerms": "Accepto els {{terms}} i la {{privacy}}",
+      "terms": "termes de servei",
+      "privacy": "política de privacitat",
+      "createAccount": "Crear un compte",
+      "alreadyHaveAccount": "Ja tens un compte?",
+      "signIn": "Inicia sessió",
+      "orContinueWith": "O continua amb"
     },
     "forgotPassword": {
-      "title": "Contrasenya olvidada",
-      "subtitle": "Ingresa tu email para restablecer tu contrasenya",
-      "email": "Dirección de email",
-      "sendReset": "Enviar enlace de restablecimiento",
-      "backToLogin": "Tornar al inici de sessió"
+      "title": "Contrasenya oblidada",
+      "subtitle": "Introdueix el teu correu per restablir la contrasenya",
+      "email": "Adreça de correu electrònic",
+      "sendReset": "Enviar enllaç de restabliment",
+      "backToLogin": "Tornar a l'inici de sessió"
     },
     "signingIn": "Connectant..."
   },
@@ -300,10 +300,10 @@
     "settings": "Configuració",
     "leave": "Sortir",
     "mute": "Silenciar",
-    "unmute": "Activar micrófono",
-    "video": "Cámara",
+    "unmute": "Activar micròfon",
+    "video": "Càmera",
     "screenShare": "Compartir pantalla",
-    "record": "Grabar",
+    "record": "Enregistrar",
     "endMeeting": "Terminar reunió",
     "inviteOthers": "Invitar a otros",
     "copyLink": "Copiar enlace",
@@ -312,7 +312,7 @@
   },
   "tutorial": {
     "title": "Guía de inicio",
-    "welcome": "¡Benvingut a VisiConnect!",
+    "welcome": "Benvingut a VisiConnect!",
     "step1": {
       "title": "Crear una reunió",
       "description": "Haz clic en \"Nueva reunió\" para comenzar"
@@ -342,12 +342,12 @@
     "serverError": "Error del servidor",
     "validation": "Error de validación",
     "unknown": "Ocurrió un error desconocido",
-    "tryAgain": "Por favor, inténtalo de nuevo",
+    "tryAgain": "Si us plau, torna-ho a provar",
     "contactSupport": "Contacta al suport si el problema persiste"
   },
   "success": {
     "accountCreated": "¡Compte creada exitosamente!",
-    "passwordReset": "Correu de restablecimiento enviado",
+    "passwordReset": "Correu de restabliment enviat",
     "settingsSaved": "Configuració guardada",
     "invitationSent": "Invitación enviada",
     "meetingCreated": "Reunió creada exitosamente",
@@ -386,12 +386,12 @@
   "featureInterfaceBenefit1": "Diseño responsivo",
   "featureInterfaceBenefit2": "Navegación intuitiva",
   "featureInterfaceBenefit3": "Temas personalizables",
-  "freePlan": "Plan Gratuït",
+  "freePlan": "Pla Gratuït",
   "proPlan": "Plan Pro",
   "maxParticipants": "participants máximos",
   "duration": "minutos de reunió",
   "unlimited": "il·limitat",
-  "getStarted": "Comenzar",
+  "getStarted": "Comença",
   "statValue1": "3",
   "statLabel1": "Testers activos",
   "statValue2": "2024",
@@ -402,7 +402,7 @@
   "statLabel4": "Hecho con pasión",
   "copyrightText": "© 2024 VisioConnect. Desarrollado con ♥ por Théo Garcès.",
   "developmentStatus": "Plataforma en desarrollo - Versión beta",
-  "heroTitle": "Videoconferencia",
+  "heroTitle": "Videoconferència",
   "heroSubtitle": "Simple y Eficaz",
   "heroDescription": "VisioConnect - Plataforma de videoconferencia desarrollada por Théo Garcès. Solución simple y eficaz para sus reunions en línea, actualmente probada por un pequeño equipo de 3 personas. Interfaz moderna, tecnología confiable.",
   "testPlatform": "Probar la plataforma",
@@ -428,7 +428,7 @@
   "directSupport": "Suport directo con Théo",
   "needsAdaptation": "Adaptación a necesidades",
   "contactMe": "Contáctame",
-  "aboutPageTitle": "Acerca de",
+  "aboutPageTitle": "Sobre",
   "aboutPageSubtitle": "Descubre la historia y visión detrás de VisioConnect",
   "securityPageTitle": "Seguretat",
   "securityPageSubtitle": "Su privacidad y seguretat son nuestras prioridades",
@@ -459,8 +459,8 @@
   "emailAddress": "Dirección de correo",
   "fullName": "Nombre completo",
   "subject": "Asunto",
-  "frequentQuestions": "Preguntas frecuentes",
-  "technicalSupport": "Suport técnico",
+  "frequentQuestions": "Preguntes freqüents",
+  "technicalSupport": "Suport tècnic",
   "userGuides": "Guías de usuario",
   "apiDocumentation": "Documentación API",
   "quickLinks": "Enlaces rápidos",
@@ -468,7 +468,7 @@
   "newsletter": "Boletín",
   "subscribeNewsletter": "Suscribirse al boletín",
   "emailPlaceholder": "Su dirección de correo",
-  "subscribe": "Suscribirse",
+  "subscribe": "Subscriure-s'hi",
   "comingSoonFeature": "Próximamente",
   "inDevelopment": "En desarrollo",
   "betaVersion": "Versión beta",
@@ -480,7 +480,7 @@
   "essentialCookies": "Cookies esenciales",
   "analyticsCookies": "Cookies de análisis",
   "integrations": {
-    "title": "Integraciones",
+    "title": "Integracions",
     "subtitle": "Conecte VisiConnect con sus herramientas favoritas para una experiencia fluida",
     "connectButton": "Connectar",
     "services": {
@@ -622,7 +622,7 @@
       "items": [
         "Compartir pantalla HD",
         "Pizarra colaborativa",
-        "Chat en tiempo real"
+        "Xat en temps real"
       ]
     },
     "meetings": {
@@ -713,7 +713,7 @@
     }
   },
   "footer": {
-    "rights": "Todos los derechos reservados",
+    "rights": "Tots els drets reservats",
     "developedWith": "Desarrollado con alma por un ingeniero independiente.",
     "optimizedFor": "Optimizado para rendimiento puro, no para las masas.",
     "product": "Producto",
@@ -769,7 +769,7 @@
   "contactDescription": "¿Una pregunta, sugerencia o quieres colaborar? ¡Contáctame!",
   "fullNamePlaceholder": "Nombre completo",
   "subjectPlaceholder": "Asunto",
-  "sending": "Enviando...",
+  "sending": "Enviant...",
   "messageSent": "¡Missatge enviado!",
   "product": "Producto",
   "scheduler": {
@@ -955,7 +955,7 @@
   "developmentInProgress": "Desarrollo en curso",
   "france": "Francia",
   "contactDeveloper": "Contactar al desarrollador",
-  "footerIntegrations": "Integraciones",
+  "footerIntegrations": "Integracions",
   "footerChangelog": "Novedades",
   "footerPartners": "Socios",
   "featuresPageTitle": "Funcionalidades",
@@ -986,14 +986,14 @@
   "advancedScreenShareBenefit1": "Uso compartido selectivo",
   "advancedScreenShareBenefit2": "Control remoto",
   "advancedScreenShareBenefit3": "Anotaciones",
-  "advancedScreenShareBenefit4": "Grabación",
+  "advancedScreenShareBenefit4": "Enregistrament",
   "interactiveWhiteboard": "Pizarra interactiva",
   "interactiveWhiteboardDesc": "Colabore en tiempo real en pizarras.",
   "interactiveWhiteboardBenefit1": "Herramientas de dibujo",
   "interactiveWhiteboardBenefit2": "Colaboración en tiempo real",
   "interactiveWhiteboardBenefit3": "Plantillas integradas",
   "interactiveWhiteboardBenefit4": "Exportación",
-  "integratedChat": "Chat integrado",
+  "integratedChat": "Xat integrat",
   "integratedChatDesc": "Comunicación de texto enriquecida con archivos.",
   "integratedChatBenefit1": "Missatges enriquecidos",
   "integratedChatBenefit2": "Compartir archivos",
@@ -1034,12 +1034,12 @@
   "completeAPIBenefit1": "API REST",
   "completeAPIBenefit2": "SDK JS",
   "completeAPIBenefit3": "Webhooks",
-  "completeAPIBenefit4": "Documentación",
+  "completeAPIBenefit4": "Documentació",
   "dataCollection": "Recopilación de datos",
   "dataUsage": "Uso de datos",
   "dataSharing": "Compartir datos",
   "userRights": "El teus derechos",
-  "serviceTerms": "Termes de servicio",
+  "serviceTerms": "Termes de servei",
   "userObligations": "Obligaciones del usuario",
   "serviceAvailability": "Disponibilidad del servicio",
   "liability": "Responsabilidad",
@@ -1097,7 +1097,7 @@
       "title": "Valores",
       "v1_title": "Simplicidad",
       "v1_text": "Diseño simple.",
-      "v2_title": "Privacidad",
+      "v2_title": "Privacitat",
       "v2_text": "Datos seguros.",
       "v3_title": "Escalabilidad",
       "v3_text": "Escalabilidad.",
@@ -1106,7 +1106,7 @@
         "description": "Diseño simple."
       },
       "privacy": {
-        "title": "Privacidad",
+        "title": "Privacitat",
         "description": "Datos seguros."
       },
       "accessibility": {
@@ -1170,16 +1170,16 @@
       }
     },
     "cta": {
-      "title": "¿Listo para transformar sus comunicaciones?",
-      "description": "Únase a miles de equipos que confían en VisioConnect.",
-      "button": "Comenzar Gratuït"
+      "title": "A punt per transformar les vostres comunicacions?",
+      "description": "Uneix-te a milers d'equips que confien en VisioConnect.",
+      "button": "Comença gratis"
     },
     "eyebrow": "Funcionalidades",
-    "heroCtaStart": "Comenzar gratuït",
+    "heroCtaStart": "Comença gratis",
     "heroCtaDemo": "Ver la demo",
     "overview": {
       "title": "Vista general de la plataforma",
-      "quality": "Calidad",
+      "quality": "Qualitat",
       "qualityValue": "4K Ultra HD",
       "security": "Seguretat",
       "securityValue": "E2EE",
@@ -1290,25 +1290,25 @@
     }
   },
   "login": {
-    "title": "Benvingut de nuevo",
-    "subtitle": "Inicie sesión para continuar",
+    "title": "Benvingut de nou",
+    "subtitle": "Inicia sessió per continuar",
     "email": "Correu",
-    "emailPlaceholder": "su@email.com",
+    "emailPlaceholder": "tu@email.com",
     "password": "Contrasenya",
-    "forgotPassword": "¿Olvidó su contrasenya?",
+    "forgotPassword": "Has oblidat la contrasenya?",
     "loading": "Iniciando sesión...",
-    "submit": "Iniciar sesión",
+    "submit": "Inicia sessió",
     "orContinue": "o continuar con",
     "devAccess": "🔑 Acceso Desarrollador (Local)",
-    "noAccount": "¿No tiene compte?",
-    "createAccount": "Crear una compte",
+    "noAccount": "No tens un compte?",
+    "createAccount": "Crear un compte",
     "error": "Ocurrió un error al iniciar sesión"
   },
   "signup": {
     "backHome": "Tornar al inicio",
-    "title": "Crear una compte",
+    "title": "Crear un compte",
     "subtitle": "Únase a nosotros y simplifique sus videollamadas.",
-    "email": "Correu profesional",
+    "email": "Correu professional",
     "emailPlaceholder": "nombre@empresa.com",
     "password": "Contrasenya",
     "passwordPlaceholder": "Cree una contrasenya segura",
@@ -1322,7 +1322,7 @@
     "submit": "Crear mi compte",
     "orSignupWith": "O registrar-se con",
     "hasAccount": "¿Ya tiene compte?",
-    "login": "Iniciar sesión",
+    "login": "Inicia sessió",
     "verifyTitle": "Verifique su email",
     "verifySubtitle": "Enviamos un código de 6 dígitos a",
     "verifying": "Verificando...",
@@ -1713,7 +1713,7 @@
     "contact": {
       "title": "Datos de contacto",
       "email": "Correu electrònic *",
-      "emailPlaceholder": "su@email.com",
+      "emailPlaceholder": "tu@email.com",
       "name": "Nombre completo *",
       "namePlaceholder": "Su nombre completo"
     },
@@ -1742,7 +1742,7 @@
         "feature1": "Fins a 10 participants",
         "feature2": "Reunions il·limitadas",
         "feature3": "Compartir pantalla",
-        "feature4": "Chat integrado",
+        "feature4": "Xat integrat",
         "feature5": "Grabación (1h/mes)"
       },
       "professional": {
@@ -1752,8 +1752,8 @@
         "feature3": "Pantalla compartida avanzada",
         "feature4": "Chat y archivos",
         "feature5": "Grabación il·limitada",
-        "feature6": "Integraciones",
-        "feature7": "Suport prioritario"
+        "feature6": "Integracions",
+        "feature7": "Suport prioritari"
       },
       "enterprise": {
         "name": "Plan Enterprise",
@@ -1822,17 +1822,17 @@
       },
       "pro": {
         "0": "Fins a 50 participants",
-        "1": "Duración il·limitada",
+        "1": "Durada il·limitada",
         "2": "5 GB de emmagatzematge",
         "3": "Suport por email (24h)",
         "4": "Transcripciones IA 10h/mes"
       },
       "business": {
         "0": "Fins a 200 participants",
-        "1": "Duración il·limitada",
+        "1": "Durada il·limitada",
         "2": "Emmagatzematge il·limitat",
         "3": "SSO y administración avanzada",
-        "4": "Transcripciones il·limitadas",
+        "4": "Transcripcions il·limitades",
         "5": "Suport telefónico dedicado"
       }
     }
@@ -1997,7 +1997,7 @@
   },
   "docs": {
     "hero": {
-      "title": "Documentación",
+      "title": "Documentació",
       "subtitle": "Todo lo que necesita para configurar y usar VisioConnect."
     },
     "search": "Cercar en la documentación...",
@@ -2166,7 +2166,7 @@
         "desc": "Integre VisioConnect en su oferta.",
         "bullets": {
           "0": "Tarifas preferenciales",
-          "1": "Suport prioritario",
+          "1": "Suport prioritari",
           "2": "Co-branding posible"
         }
       },
@@ -2521,8 +2521,8 @@
         "feat4": "Micrófono / cámara / pantalla compartida",
         "feat5": "Vista previa visual pantalla compartida",
         "feat6": "Chat estable",
-        "feat7": "Salas de grupos",
-        "feat8": "Pizarra",
+        "feat7": "Sales de grups",
+        "feat8": "Pissarra",
         "feat9": "Cámara flotante pizarra",
         "feat10": "Exportación PDF pizarra",
         "feat11": "Transcripción IA tiempo real",
@@ -2543,7 +2543,7 @@
         "f1Item3": "Traducción en directo",
         "f1Item4": "Exportar a Notion / Markdown / PDF",
         "f1Origin": "Transcripción ausente + redacción IA vaga",
-        "f2Tag": "Pizarra",
+        "f2Tag": "Pissarra",
         "f2Title": "Cámara flotante durante la pizarra",
         "f2Desc": "El presentador desaparece al abrir la pizarra. Burbuja de vídeo drag & drop.",
         "f2Item1": "Burbuja de vídeo reposicionable",
@@ -2602,10 +2602,10 @@
         "formTitle": "Formulario de candidatura",
         "formSub": "Oleada 2 · selección en curso",
         "slotLabel": "plazas",
-        "firstNameLbl": "Nombre",
-        "firstNamePh": "Su nombre",
+        "firstNameLbl": "Nom",
+        "firstNamePh": "El teu nom",
         "lastNameLbl": "Cognom",
-        "lastNamePh": "Su cognom",
+        "lastNamePh": "El teu cognom",
         "emailLbl": "Correu electrònic",
         "profileLbl": "Perfil",
         "profilePh": "Seleccionar…",
@@ -2613,14 +2613,14 @@
         "profileDesigner": "Diseñador/a UX/UI",
         "profilePM": "Product Manager",
         "profileFounder": "Fundador/a",
-        "profileOther": "Otro",
+        "profileOther": "Altre",
         "usageLbl": "Uso principal",
         "usagePh": "Seleccionar…",
         "usageTeam": "Reunions de equipo",
         "usageClient": "Llamadas de clientes",
         "usageEdu": "Enseñanza / formación",
         "usageDev": "Colaboración dev",
-        "usageOther": "Otro",
+        "usageOther": "Altre",
         "toolsLbl": "Herramientas de uso diario",
         "motivationLbl": "¿Por qué unir-se a la Oleada 2?",
         "motivationPh": "Describa su contexto, uso y lo que aportaría como evaluador.",
@@ -2639,7 +2639,7 @@
         "otherPh": "Especifica…"
       },
       "footer": {
-        "privacy": "Privacidad",
+        "privacy": "Privacitat",
         "terms": "Termes",
         "contact": "Contacte"
       }

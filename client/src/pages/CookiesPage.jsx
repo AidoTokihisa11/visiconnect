@@ -61,7 +61,7 @@ const CookiesPage = () => {
                 title="Gérer vos préférences"
                 description="Vous pouvez modifier vos préférences en matière de cookies à tout moment."
                 buttonText="Paramètres des cookies"
-                buttonLink="#"
+                buttonLink="/contact"
             />
         </LegalLayout>
     );

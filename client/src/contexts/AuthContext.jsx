@@ -48,11 +48,17 @@ export const AuthProvider = ({ children }) => {
 
   // Clerk Core 3 (@clerk/react v6) — OAuth via authenticateWithRedirect (stable API).
   const signInWithProvider = async (provider) => {
-    if (!clerkSignIn) return { error: { message: "Clerk n'est pas prêt. Veuillez rafraîchir la page." } };
+    console.log('[OAuth] Starting provider:', provider, '| clerkSignIn ready:', !!clerkSignIn);
+    if (!clerkSignIn) {
+      const msg = "Authentification non prête — veuillez patienter quelques secondes puis réessayer.";
+      console.error('[OAuth] clerkSignIn is null/undefined');
+      return { error: { message: msg } };
+    }
     try {
       const origin = window.location.origin;
       // The official method on Core 3 SignIn resource.
       if (typeof clerkSignIn.authenticateWithRedirect === 'function') {
+        console.log('[OAuth] Using authenticateWithRedirect →', `${origin}/sso-callback`);
         await clerkSignIn.authenticateWithRedirect({
           strategy: `oauth_${provider}`,
           redirectUrl: `${origin}/sso-callback`,
@@ -62,6 +68,7 @@ export const AuthProvider = ({ children }) => {
       }
       // Legacy fallback for older builds.
       if (typeof clerkSignIn.sso === 'function') {
+        console.log('[OAuth] Using legacy sso() method');
         const { error } = await clerkSignIn.sso({
           strategy: `oauth_${provider}`,
           redirectCallbackUrl: `${origin}/sso-callback`,
@@ -70,10 +77,13 @@ export const AuthProvider = ({ children }) => {
         if (error) return { error: { message: handleNetworkError(error) } };
         return { success: true };
       }
-      return { error: { message: "Méthode OAuth indisponible dans cette version de Clerk." } };
+      console.error('[OAuth] No OAuth method available on signIn resource', Object.keys(clerkSignIn || {}));
+      return { error: { message: "Méthode OAuth indisponible. Vérifiez la configuration Clerk (provider activé dans le dashboard)." } };
     } catch (err) {
-      console.error('[signInWithProvider]', err);
-      return { error: { message: handleNetworkError(err) } };
+      console.error('[signInWithProvider] caught error:', err, err?.errors);
+      // Clerk surfaces errors via err.errors[0]
+      const clerkMsg = err?.errors?.[0]?.longMessage || err?.errors?.[0]?.message;
+      return { error: { message: clerkMsg || handleNetworkError(err) } };
     }
   };
 

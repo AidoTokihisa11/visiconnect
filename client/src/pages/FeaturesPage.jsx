@@ -310,7 +310,7 @@ const FeaturesPage = () => {
             title={t('featuresPage.cta.title')}
             description={t('featuresPage.cta.description')}
             buttonText={t('featuresPage.cta.button')}
-            buttonLink="/register"
+            buttonLink="/signup"
           />
         </RevealBlock>
 

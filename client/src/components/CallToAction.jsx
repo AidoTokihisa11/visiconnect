@@ -1,7 +1,8 @@
 import React from "react";
 import styled, { keyframes } from "styled-components";
-import { ArrowRight, ArrowUpRight, Sparkles } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Sparkles, Check, Shield, Zap, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "../hooks/useTranslation";
 
 // ─── Animations ──────────────────────────────────────────────────────────────
 const fadeUp = keyframes`
@@ -28,23 +29,27 @@ const Wrapper = styled.section`
 `;
 
 const Inner = styled.div`
-  max-width: 860px;
+  max-width: 1080px;
   width: 100%;
-  background: linear-gradient(130deg, #1d4ed8 0%, #2563eb 48%, #3b82f6 100%);
-  border-radius: 28px;
-  padding: 72px 56px;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(96, 165, 250, 0.35) 0%, transparent 45%),
+    radial-gradient(circle at 80% 100%, rgba(167, 139, 250, 0.30) 0%, transparent 50%),
+    linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 35%, #2563eb 70%, #3b82f6 100%);
+  border-radius: 32px;
+  padding: 80px 64px;
   text-align: center;
   position: relative;
   overflow: hidden;
   box-shadow:
-    0 0 0 1px rgba(37, 99, 235, 0.4),
-    0 24px 64px -12px rgba(37, 99, 235, 0.45),
-    0 4px 16px rgba(0, 0, 0, 0.12);
+    0 0 0 1px rgba(96, 165, 250, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 32px 80px -16px rgba(37, 99, 235, 0.55),
+    0 8px 24px rgba(0, 0, 0, 0.18);
   animation: ${fadeUp} 0.6s ease both;
 
   @media (max-width: 640px) {
-    padding: 52px 28px;
-    border-radius: 20px;
+    padding: 56px 24px;
+    border-radius: 22px;
   }
 `;
 
@@ -197,17 +202,131 @@ const GhostBtn = styled.button`
   }
 `;
 
+// Liste de garanties sous les CTA
+const FeaturesRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-top: 32px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.85rem;
+  font-weight: 500;
+
+  > div {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  svg {
+    color: #86efac;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+    gap: 10px;
+  }
+`;
+
+// Stats au-dessus des CTAs
+const StatsBar = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin: 36px 0 32px;
+  padding: 24px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  width: 100%;
+  max-width: 600px;
+
+  @media (max-width: 640px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+`;
+
+const Stat = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+
+  .value {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  .label {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.72);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  @media (max-width: 640px) {
+    .value { font-size: 1.2rem; }
+    .label { font-size: 0.7rem; }
+  }
+`;
+
 // ─── Component ───────────────────────────────────────────────────────────────
 const CallToAction = ({
-  title = "Vous avez d'autres questions ?",
-  description = "Notre équipe commerciale est à votre disposition pour trouver l'offre qui correspond parfaitement à vos besoins.",
-  buttonText = "Contacter les ventes",
-  buttonLink = "/contact",
+  title,
+  description,
+  buttonText,
+  buttonLink = "/signup",
   eyebrow = null,
   secondaryText = null,
   secondaryLink = null,
+  showStats = true,
+  showFeatures = true,
+  stats: customStats = null,
+  features: customFeatures = null,
 }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
+  const _title = title || t('cta.defaultTitle', 'Prêt à transformer vos communications ?');
+  const _description = description || t('cta.defaultDescription', "Rejoignez les milliers d'équipes qui font confiance à VisioConnect.");
+  const _buttonText = buttonText || t('cta.defaultButton', 'Commencer gratuitement');
+  const _eyebrow = eyebrow !== null ? eyebrow : t('cta.defaultEyebrow', "Démarrez en moins d'une minute");
+
+  const stats = customStats || [
+    { value: '50K+', label: t('cta.stats.users', 'Utilisateurs') },
+    { value: '4.9★', label: t('cta.stats.rating', 'Note moyenne') },
+    { value: '99.9%', label: t('cta.stats.uptime', 'Disponibilité') },
+  ];
+
+  const features = customFeatures || [
+    { icon: <Check size={16} strokeWidth={3} />, label: t('cta.features.noCard', 'Sans carte de crédit') },
+    { icon: <Zap size={16} />, label: t('cta.features.instantStart', 'Configuration instantanée') },
+    { icon: <Shield size={16} />, label: t('cta.features.security', 'Chiffrement de bout en bout') },
+    { icon: <Users size={16} />, label: t('cta.features.upToFree', "Jusqu'à 3 participants gratuits") },
+  ];
+
+  const handlePrimary = () => {
+    if (buttonLink && (buttonLink.startsWith('http://') || buttonLink.startsWith('https://'))) {
+      window.open(buttonLink, '_blank', 'noopener,noreferrer');
+    } else {
+      navigate(buttonLink || '/signup');
+    }
+  };
+  const handleSecondary = () => {
+    if (!secondaryLink) return;
+    if (secondaryLink.startsWith('http://') || secondaryLink.startsWith('https://')) {
+      window.open(secondaryLink, '_blank', 'noopener,noreferrer');
+    } else {
+      navigate(secondaryLink);
+    }
+  };
 
   return (
     <Wrapper>
@@ -216,26 +335,46 @@ const CallToAction = ({
         <OrbB />
         <OrbC />
         <Content>
-          {eyebrow && (
+          {_eyebrow && (
             <Eyebrow>
               <Sparkles size={12} />
-              {eyebrow}
+              {_eyebrow}
             </Eyebrow>
           )}
-          <Title>{title}</Title>
-          <Description>{description}</Description>
+          <Title>{_title}</Title>
+          <Description>{_description}</Description>
+
+          {showStats && (
+            <StatsBar>
+              {stats.map((s, i) => (
+                <Stat key={i}>
+                  <span className="value">{s.value}</span>
+                  <span className="label">{s.label}</span>
+                </Stat>
+              ))}
+            </StatsBar>
+          )}
+
           <Actions>
-            <PrimaryBtn onClick={() => navigate(buttonLink)}>
-              {buttonText}
+            <PrimaryBtn onClick={handlePrimary}>
+              {_buttonText}
               <ArrowRight size={16} strokeWidth={2.5} />
             </PrimaryBtn>
             {secondaryText && secondaryLink && (
-              <GhostBtn onClick={() => navigate(secondaryLink)}>
+              <GhostBtn onClick={handleSecondary}>
                 {secondaryText}
                 <ArrowUpRight size={15} strokeWidth={2} />
               </GhostBtn>
             )}
           </Actions>
+
+          {showFeatures && (
+            <FeaturesRow>
+              {features.map((f, i) => (
+                <div key={i}>{f.icon}{f.label}</div>
+              ))}
+            </FeaturesRow>
+          )}
         </Content>
       </Inner>
     </Wrapper>
