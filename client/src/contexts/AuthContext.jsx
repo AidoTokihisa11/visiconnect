@@ -81,7 +81,7 @@ export const AuthProvider = ({ children }) => {
         return { error: { message: error.errors?.[0]?.message || "Erreur de connexion." } };
       }
       if (clerkSignIn.status === 'complete') {
-        await clerkSignIn.finalize();
+        await clerkSignIn.finalize({ navigate: () => {} });
         return { data: { user: clerkSignIn }, success: true };
       }
       if (clerkSignIn.status === 'needs_second_factor' || clerkSignIn.status === 'needs_client_trust') {
@@ -107,7 +107,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       if (clerkSignUp.status === 'complete') {
-        await clerkSignUp.finalize();
+        await clerkSignUp.finalize({ navigate: () => {} });
         return { data: { user: clerkSignUp }, success: true };
       }
 
@@ -135,7 +135,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       if (clerkSignUp.status === 'complete') {
-        await clerkSignUp.finalize();
+        await clerkSignUp.finalize({ navigate: () => {} });
         return { data: { user: clerkSignUp }, success: true };
       }
       if (clerkSignUp.status === 'missing_requirements') {
@@ -184,7 +184,7 @@ export const AuthProvider = ({ children }) => {
         password: newPassword,
       });
       if (result.status === 'complete') {
-        await clerkSignIn.finalize();
+        await clerkSignIn.finalize({ navigate: () => {} });
         return { success: true };
       }
       return { error: { message: `Réinitialisation incomplète (statut: ${result.status}).` } };

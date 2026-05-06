@@ -381,17 +381,20 @@ const SignupPage = () => {
     setLoading(true)
     setError('')
 
-    const result = await signUp(registrationForm.email, registrationForm.password)
+    try {
+      const result = await signUp(registrationForm.email, registrationForm.password)
 
-    if (result.error) {
-      setError(result.error.message || t('signup.errorCreate'))
+      if (result.error) {
+        setError(result.error.message || t('signup.errorCreate'))
+      } else if (result.data?.requiresVerification) {
+        setPendingVerification(true)
+      } else {
+        navigate('/dashboard')
+      }
+    } catch (err) {
+      setError(err.message || t('signup.errorCreate'))
+    } finally {
       setLoading(false)
-    } else if (result.data?.requiresVerification) {
-      setPendingVerification(true)
-      setLoading(false)
-    } else {
-      // Inscription complète sans vérification email (rare selon config Clerk)
-      navigate('/dashboard')
     }
   }
 
@@ -402,23 +405,33 @@ const SignupPage = () => {
     setLoading(true)
     setError('')
 
-    const result = await verifyEmailCode(code)
+    try {
+      const result = await verifyEmailCode(code)
 
-    if (result.error) {
-      setError(result.error.message || t('signup.errorCode'))
+      if (result.error) {
+        setError(result.error.message || t('signup.errorCode'))
+      } else {
+        navigate('/dashboard')
+      }
+    } catch (err) {
+      setError(err.message || t('signup.errorCode'))
+    } finally {
       setLoading(false)
-    } else {
-      navigate('/dashboard')
     }
   }
 
   const handleOAuth = async (provider) => {
     setLoading(true)
     setError('')
-    const action = provider === 'google' ? signInWithGoogle : signInWithGithub
-    const result = await action()
-    if (result.error) {
-      setError(result.error.message || `Erreur d'inscription avec ${provider}`)
+    try {
+      const action = provider === 'google' ? signInWithGoogle : signInWithGithub
+      const result = await action()
+      if (result?.error) {
+        setError(result.error.message || `Erreur d'inscription avec ${provider}`)
+      }
+    } catch (err) {
+      setError(err.message || `Erreur d'inscription avec ${provider}`)
+    } finally {
       setLoading(false)
     }
   }
