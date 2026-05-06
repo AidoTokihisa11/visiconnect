@@ -188,36 +188,65 @@ const PasswordCriteria = styled.div`
 // Strength bar: 4 segments, filled according to criteria count.
 const StrengthBarWrapper = styled.div`
   display: flex;
-  gap: 4px;
+  gap: 6px;
   margin-top: 0.75rem;
 `
 
+const strengthGradient = (strength) => {
+  if (strength === 1) return 'linear-gradient(90deg, #b91c1c, #ef4444)';
+  if (strength === 2) return 'linear-gradient(90deg, #ea580c, #fb923c)';
+  if (strength === 3) return 'linear-gradient(90deg, #ca8a04, #facc15)';
+  if (strength >= 4) return 'linear-gradient(90deg, #059669, #34d399)';
+  return '#1e293b';
+};
+
+const strengthGlow = (strength) => {
+  if (strength === 1) return '0 0 8px rgba(239,68,68,0.55)';
+  if (strength === 2) return '0 0 8px rgba(251,146,60,0.55)';
+  if (strength === 3) return '0 0 8px rgba(250,204,21,0.55)';
+  if (strength >= 4) return '0 0 10px rgba(52,211,153,0.65)';
+  return 'none';
+};
+
 const StrengthSegment = styled.div`
   flex: 1;
-  height: 4px;
-  border-radius: 2px;
-  transition: background-color 0.3s;
-  background-color: ${({ $strength, $index }) => {
-    if ($index >= $strength) return '#1e293b';
-    if ($strength === 1) return '#dc2626';
-    if ($strength === 2) return '#f97316';
-    if ($strength === 3) return '#eab308';
-    return '#10b981';
-  }};
+  height: 8px;
+  border-radius: 999px;
+  position: relative;
+  background: rgba(30, 41, 59, 0.85);
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.4);
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    transform-origin: left center;
+    transform: scaleX(${({ $strength, $index }) => ($index < $strength ? 1 : 0)});
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), background 0.3s, box-shadow 0.3s;
+    background: ${({ $strength, $index }) => ($index < $strength ? strengthGradient($strength) : 'transparent')};
+    box-shadow: ${({ $strength, $index }) => ($index < $strength ? strengthGlow($strength) : 'none')};
+  }
 `
 
 const StrengthLabel = styled.span`
-  font-size: 0.75rem;
-  font-weight: 500;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
   color: ${({ $strength }) => {
     if ($strength === 0) return '#64748b';
-    if ($strength === 1) return '#dc2626';
-    if ($strength === 2) return '#f97316';
-    if ($strength === 3) return '#eab308';
-    return '#10b981';
+    if ($strength === 1) return '#ef4444';
+    if ($strength === 2) return '#fb923c';
+    if ($strength === 3) return '#facc15';
+    return '#34d399';
   }};
-  margin-left: 0.5rem;
+  margin-left: 0.75rem;
   align-self: center;
+  min-width: 56px;
+  text-align: right;
+  text-shadow: ${({ $strength }) => ($strength >= 3 ? '0 0 8px rgba(52,211,153,0.45)' : 'none')};
+  transition: color 0.3s, text-shadow 0.3s;
 `
 
 const Criterion = styled.div`

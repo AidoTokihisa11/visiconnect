@@ -561,7 +561,42 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
         enabled={false}
         available={false}
         onToggle={() => {}}
-      />
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', opacity: 0.85 }}>
+          <div style={{ fontSize: '0.78rem', color: THEME.textDim, lineHeight: 1.5 }}>
+            Traduisez automatiquement les messages du chat dans votre langue, en temps réel.
+          </div>
+          <OptionRow>
+            Langue cible
+            <Select disabled defaultValue="fr" style={{ opacity: 0.6, cursor: 'not-allowed' }}>
+              <option value="fr">Français (FR)</option>
+              <option value="en">English (EN)</option>
+              <option value="es">Español (ES)</option>
+              <option value="de">Deutsch (DE)</option>
+              <option value="it">Italiano (IT)</option>
+              <option value="pt">Português (PT)</option>
+              <option value="ja">日本語 (JA)</option>
+              <option value="zh">中文 (ZH)</option>
+              <option value="ar">العربية (AR)</option>
+            </Select>
+          </OptionRow>
+          <div style={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '0.5rem',
+            padding: '0.55rem 0.7rem',
+            borderRadius: '8px',
+            border: `1px dashed ${THEME.border}`,
+            background: 'rgba(99,102,241,0.06)',
+            fontSize: '0.72rem',
+            color: THEME.textDim,
+            lineHeight: 1.45,
+          }}>
+            <Sparkles size={14} color="#818cf8" style={{ flexShrink: 0, marginTop: '2px' }} />
+            <span>Déploiement prévu prochainement — détection auto de la langue source &amp; traduction inline.</span>
+          </div>
+        </div>
+      </Feature>
 
       {/* Background Blur */}
       <Feature
