@@ -410,37 +410,33 @@ export const AIFeaturesPanel = () => {
         </OptionRow>
       </Feature>
 
-      {/* Traduction */}
+      {/* Traduction — Bientôt disponible */}
       <Feature
         icon={Languages}
-        name="Traduction Instantanée"
+        name={
+          <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            Traduction Instantanée
+            <span style={{
+              fontSize: '0.65rem',
+              fontWeight: 700,
+              letterSpacing: '0.05em',
+              padding: '2px 7px',
+              borderRadius: '999px',
+              background: 'rgba(99,102,241,0.2)',
+              color: '#818cf8',
+              border: '1px solid rgba(99,102,241,0.35)',
+              textTransform: 'uppercase',
+              lineHeight: 1.5,
+            }}>
+              Bientôt
+            </span>
+          </span>
+        }
         description="Chat multilingue • OpenRouter"
-        enabled={settings.translation?.enabled}
-        available={capabilities.translation?.available}
-        onToggle={() => toggleFeature('translation')}
-      >
-        <OptionRow>
-          Ma langue
-          <Select 
-            value={settings.translation?.targetLanguage || 'fr'}
-            onChange={(e) => updateSettings('translation', { targetLanguage: e.target.value })}
-          >
-            <option value="fr">Français</option>
-            <option value="en">English</option>
-            <option value="es">Español</option>
-            <option value="de">Deutsch</option>
-            <option value="it">Italiano</option>
-            <option value="pt">Português</option>
-          </Select>
-        </OptionRow>
-        <OptionRow>
-          Traduire automatiquement
-          <Switch 
-            $on={settings.translation?.autoTranslate}
-            onClick={() => updateSettings('translation', { autoTranslate: !settings.translation?.autoTranslate })}
-          />
-        </OptionRow>
-      </Feature>
+        enabled={false}
+        available={false}
+        onToggle={() => {}}
+      />
 
       {/* Background Blur */}
       <Feature

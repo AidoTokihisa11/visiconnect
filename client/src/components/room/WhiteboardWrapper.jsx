@@ -1,7 +1,9 @@
-import React, { memo } from 'react';
+import React, { memo, useCallback, useEffect, useRef } from 'react';
 import { Tldraw } from 'tldraw';
 import 'tldraw/tldraw.css';
 import styled from 'styled-components';
+import { useQuery, useMutation } from 'convex/react';
+import { api } from '../../../convex/_generated/api';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -119,11 +121,85 @@ class TldrawErrorBoundary extends React.Component {
 // React.memo prevents re-mounts when parent MeetingRoom re-renders
 // (state changes like chat messages, stats, etc. must not unmount Tldraw)
 export const WhiteboardWrapper = memo(({ roomId }) => {
+  const editorRef = useRef(null);
+  // Guard: true while we're applying a remote snapshot so the store listener
+  // doesn't immediately echo it back to Convex.
+  const isSyncingRef = useRef(false);
+  const debounceRef = useRef(null);
+  // Tracks the last JSON string we wrote, to skip redundant saves.
+  const lastSavedRef = useRef(null);
+
+  const remoteData = useQuery(
+    api.whiteboard.getWhiteboard,
+    roomId ? { meetingId: roomId } : 'skip',
+  );
+  const updateWhiteboard = useMutation(api.whiteboard.updateWhiteboard);
+
+  // Apply remote state whenever another participant saves a snapshot.
+  // We skip the update if we ourselves produced it (lastSavedRef equality check).
+  useEffect(() => {
+    const editor = editorRef.current;
+    if (!editor || !remoteData?.elements) return;
+    if (remoteData.elements === lastSavedRef.current) return;
+
+    try {
+      isSyncingRef.current = true;
+      editor.loadSnapshot(JSON.parse(remoteData.elements));
+    } catch (e) {
+      console.warn('[Whiteboard] Failed to apply remote state:', e);
+    } finally {
+      // Defer the flag reset so the store listener sees it during this microtask.
+      setTimeout(() => { isSyncingRef.current = false; }, 0);
+    }
+  }, [remoteData]);
+
+  const handleMount = useCallback((editor) => {
+    editorRef.current = editor;
+
+    // Load persisted state on first mount if Convex already has data.
+    if (remoteData?.elements) {
+      try {
+        isSyncingRef.current = true;
+        editor.loadSnapshot(JSON.parse(remoteData.elements));
+        lastSavedRef.current = remoteData.elements;
+      } catch (e) {
+        console.warn('[Whiteboard] Initial load failed:', e);
+      } finally {
+        setTimeout(() => { isSyncingRef.current = false; }, 0);
+      }
+    }
+
+    // Listen to user-originated document changes and debounce-save to Convex.
+    const unsubscribe = editor.store.listen(
+      () => {
+        if (isSyncingRef.current) return;
+        if (debounceRef.current) clearTimeout(debounceRef.current);
+        debounceRef.current = setTimeout(async () => {
+          try {
+            const elements = JSON.stringify(editor.getSnapshot());
+            if (elements === lastSavedRef.current) return;
+            lastSavedRef.current = elements;
+            await updateWhiteboard({ meetingId: roomId, elements, appState: '{}' });
+          } catch (e) {
+            console.error('[Whiteboard] Save failed:', e);
+          }
+        }, 300);
+      },
+      { source: 'user', scope: 'document' },
+    );
+
+    return () => {
+      unsubscribe();
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [roomId, updateWhiteboard]);
+
   return (
     <Wrapper>
       <TldrawErrorBoundary>
         <Tldraw
-          persistenceKey={`room-${roomId}`}
+          onMount={handleMount}
           autoFocus
           hideUi={false}
           licenseKey={import.meta.env.VITE_TLDRAW_LICENSE_KEY}

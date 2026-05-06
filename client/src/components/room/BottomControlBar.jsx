@@ -335,6 +335,10 @@ export const ControlBar = ({
   isHandRaised = false,
   onRaiseHand,
 }) => {
+  // Destructure device-toggle processing flags (safe defaults for old callers)
+  const isTogglingMic = controls?.isTogglingMic ?? false;
+  const isTogglingCamera = controls?.isTogglingCamera ?? false;
+  const isTogglingScreen = controls?.isTogglingScreen ?? false;
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
   const [showBlurSlider, setShowBlurSlider] = useState(false);
   const [showBlurToast, setShowBlurToast] = useState(false);
@@ -392,7 +396,15 @@ export const ControlBar = ({
         
         
         <ButtonGroup style={{ position: 'relative' }}>
-          <ControlButton className="focus-visible-ring" onClick={controls.toggleCamera} $active={isCameraEnabled} $activeColor={THEME.accent} title={isCameraEnabled ? "Désactiver la caméra" : "Activer la caméra"} aria-label={isCameraEnabled ? "Désactiver la caméra" : "Activer la caméra"}>
+          <ControlButton
+            className="focus-visible-ring"
+            onClick={controls.toggleCamera}
+            disabled={isTogglingCamera}
+            $active={isCameraEnabled}
+            $activeColor={THEME.accent}
+            title={isCameraEnabled ? "Désactiver la caméra" : "Activer la caméra"}
+            aria-label={isCameraEnabled ? "Désactiver la caméra" : "Activer la caméra"}
+          >
             {isCameraEnabled ? <Video /> : <VideoOff color={THEME.danger} />}
           </ControlButton>
         </ButtonGroup>
@@ -434,14 +446,28 @@ export const ControlBar = ({
 
 
         <MicRing $level={micLevel} $active={isMicrophoneEnabled}>
-          <ControlButton className="focus-visible-ring" onClick={controls.toggleMic} $active={isMicrophoneEnabled} $activeColor={THEME.accent} title={isMicrophoneEnabled ? "Désactiver le micro" : "Activer le micro"} aria-label={isMicrophoneEnabled ? "Désactiver le micro" : "Activer le micro"}>
+          <ControlButton
+            className="focus-visible-ring"
+            onClick={controls.toggleMic}
+            disabled={isTogglingMic}
+            $active={isMicrophoneEnabled}
+            $activeColor={THEME.accent}
+            title={isMicrophoneEnabled ? "Désactiver le micro" : "Activer le micro"}
+            aria-label={isMicrophoneEnabled ? "Désactiver le micro" : "Activer le micro"}
+          >
             {isMicrophoneEnabled ? <Mic /> : <MicOff color={THEME.danger} />}
           </ControlButton>
         </MicRing>
 
         {/* Desktop-only Quick Access */}
         <DesktopOnlyWrapper>
-          <ControlButton onClick={controls.toggleScreenShare} $active={isScreenShareEnabled} $activeColor={THEME.accent} title="Partager l'écran">
+          <ControlButton
+            onClick={controls.toggleScreenShare}
+            disabled={isTogglingScreen}
+            $active={isScreenShareEnabled}
+            $activeColor={THEME.accent}
+            title="Partager l'écran"
+          >
             {isScreenShareEnabled ? <Monitor /> : <MonitorOff />}
           </ControlButton>
 

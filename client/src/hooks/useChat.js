@@ -1,30 +1,21 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 
 export const useChat = (roomId, user, _socket) => {
-  const [localMessages, setLocalMessages] = useState([]);
-  const hasWarnedRef = useRef(false);
-
-  let rawMessages = null;
-  try {
-    rawMessages = useQuery(api.messages.getByMeetingId, roomId ? { meetingId: roomId } : "skip");
-  } catch (error) {
-    if (!hasWarnedRef.current) {
-      console.warn('Convex chat unavailable, using local fallback mode.', error);
-      hasWarnedRef.current = true;
-    }
-    rawMessages = null;
-  }
+  // useQuery suspends on loading — no try/catch wrapper needed
+  const rawMessages = useQuery(
+    api.messages.getByMeetingId,
+    roomId ? { meetingId: roomId } : 'skip',
+  );
   const sendMessageMutation = useMutation(api.messages.send);
-  const hasUser = Boolean(user);
+
   const userId = user?.id || 'anonymous';
   const userName = user?.name || 'Utilisateur';
 
   const messages = useMemo(() => {
-    const source = Array.isArray(rawMessages) ? rawMessages : localMessages;
-    if (!source) return [];
-    return source.map(msg => ({
+    if (!Array.isArray(rawMessages)) return [];
+    return rawMessages.map(msg => ({
       _id: msg._id,
       roomId: msg.meetingId,
       sender: msg.senderName,
@@ -32,33 +23,17 @@ export const useChat = (roomId, user, _socket) => {
       text: msg.text,
       timestamp: new Date(msg.timestamp).toISOString(),
     }));
-  }, [rawMessages, localMessages]);
+  }, [rawMessages]);
 
   const sendMessage = useCallback(async (text) => {
-    if (!text.trim() || !hasUser || !roomId) return;
+    if (!text.trim() || !user || !roomId) return;
+    await sendMessageMutation({
+      meetingId: roomId,
+      userId,
+      senderName: userName,
+      text: text.trim(),
+    });
+  }, [roomId, user, userId, userName, sendMessageMutation]);
 
-    try {
-      await sendMessageMutation({
-        meetingId: roomId,
-        userId,
-        senderName: userName,
-        text: text.trim(),
-      });
-    } catch (error) {
-      console.error("Erreur lors de l'envoi du message via Convex:", error);
-      setLocalMessages((prev) => [
-        ...prev,
-        {
-          _id: `local-${Date.now()}`,
-          meetingId: roomId,
-          userId,
-          senderName: userName,
-          text: text.trim(),
-          timestamp: Date.now(),
-        },
-      ]);
-    }
-  }, [roomId, hasUser, userId, userName, sendMessageMutation]);
-
-  return { messages: messages || [], sendMessage };
+  return { messages, sendMessage };
 };

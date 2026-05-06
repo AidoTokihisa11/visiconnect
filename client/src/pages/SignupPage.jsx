@@ -185,6 +185,41 @@ const PasswordCriteria = styled.div`
   gap: 0.5rem;
 `
 
+// Strength bar: 4 segments, filled according to criteria count.
+const StrengthBarWrapper = styled.div`
+  display: flex;
+  gap: 4px;
+  margin-top: 0.75rem;
+`
+
+const StrengthSegment = styled.div`
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  transition: background-color 0.3s;
+  background-color: ${({ $strength, $index }) => {
+    if ($index >= $strength) return '#1e293b';
+    if ($strength === 1) return '#dc2626';
+    if ($strength === 2) return '#f97316';
+    if ($strength === 3) return '#eab308';
+    return '#10b981';
+  }};
+`
+
+const StrengthLabel = styled.span`
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: ${({ $strength }) => {
+    if ($strength === 0) return '#64748b';
+    if ($strength === 1) return '#dc2626';
+    if ($strength === 2) return '#f97316';
+    if ($strength === 3) return '#eab308';
+    return '#10b981';
+  }};
+  margin-left: 0.5rem;
+  align-self: center;
+`
+
 const Criterion = styled.div`
   display: flex;
   align-items: center;
@@ -506,22 +541,36 @@ const SignupPage = () => {
                     </PasswordToggle>
                   </InputWrapper>
 
-                  {registrationForm.password.length > 0 && (
-                    <PasswordCriteria>
-                      <Criterion $met={passwordRules.length}>
-                        {passwordRules.length ? <Check size={14}/> : <X size={14}/>} {t('signup.criteria.length')}
-                      </Criterion>
-                      <Criterion $met={passwordRules.uppercase}>
-                        {passwordRules.uppercase ? <Check size={14}/> : <X size={14}/>} {t('signup.criteria.uppercase')}
-                      </Criterion>
-                      <Criterion $met={passwordRules.number}>
-                        {passwordRules.number ? <Check size={14}/> : <X size={14}/>} {t('signup.criteria.number')}
-                      </Criterion>
-                      <Criterion $met={passwordRules.special}>
-                        {passwordRules.special ? <Check size={14}/> : <X size={14}/>} {t('signup.criteria.special')}
-                      </Criterion>
-                    </PasswordCriteria>
-                  )}
+                  {registrationForm.password.length > 0 && (() => {
+                    const strength = Object.values(passwordRules).filter(Boolean).length;
+                    const labels = ['', 'Faible', 'Moyen', 'Bien', 'Fort'];
+                    return (
+                      <>
+                        <div style={{ display: 'flex', alignItems: 'center', marginTop: '0.75rem' }}>
+                          <StrengthBarWrapper style={{ flex: 1, marginTop: 0 }}>
+                            {[0, 1, 2, 3].map(i => (
+                              <StrengthSegment key={i} $strength={strength} $index={i} />
+                            ))}
+                          </StrengthBarWrapper>
+                          <StrengthLabel $strength={strength}>{labels[strength]}</StrengthLabel>
+                        </div>
+                        <PasswordCriteria>
+                          <Criterion $met={passwordRules.length}>
+                            {passwordRules.length ? <Check size={14}/> : <X size={14}/>} {t('signup.criteria.length')}
+                          </Criterion>
+                          <Criterion $met={passwordRules.uppercase}>
+                            {passwordRules.uppercase ? <Check size={14}/> : <X size={14}/>} {t('signup.criteria.uppercase')}
+                          </Criterion>
+                          <Criterion $met={passwordRules.number}>
+                            {passwordRules.number ? <Check size={14}/> : <X size={14}/>} {t('signup.criteria.number')}
+                          </Criterion>
+                          <Criterion $met={passwordRules.special}>
+                            {passwordRules.special ? <Check size={14}/> : <X size={14}/>} {t('signup.criteria.special')}
+                          </Criterion>
+                        </PasswordCriteria>
+                      </>
+                    );
+                  })()}
                 </FormGroup>
 
                 <SubmitButton

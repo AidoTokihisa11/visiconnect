@@ -41,6 +41,7 @@ module.exports = async function handler(req, res) {
       {
         identity: participantName || `guest_${String(Date.now()).slice(-6)}_${Math.random().toString(36).substring(2, 6)}`,
         name: participantName || 'Guest',
+        metadata: JSON.stringify({ displayName: participantName || 'Guest' }),
       }
     );
 

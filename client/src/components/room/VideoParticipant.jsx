@@ -312,7 +312,7 @@ export const VideoParticipant = React.memo(({
       {showLabel && !isPiP && (
         <UserLabel>
           {isMicEnabled ? <Mic size={14} color="#059669" /> : <MicOff size={14} color="#dc2626" />}
-          {participant?.identity || 'Inconnu'} {isLocal && '(Vous)'}
+          {participant?.name || participant?.identity || 'Inconnu'} {isLocal && '(Vous)'}
         </UserLabel>
       )}
     </>

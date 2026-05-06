@@ -322,20 +322,20 @@ export const useMeeting = (maxQualityLock = true) => {
 
   const [deviceError, setDeviceError] = useState(null);
   const clearDeviceError = useCallback(() => setDeviceError(null), []);
+  const [isTogglingMic, setIsTogglingMic] = useState(false);
+  const [isTogglingCamera, setIsTogglingCamera] = useState(false);
+  const [isTogglingScreen, setIsTogglingScreen] = useState(false);
 
   const toggleMic = useCallback(async () => {
-    if (!localParticipant) return;
+    if (!localParticipant || isTogglingMic) return;
+    setIsTogglingMic(true);
     const newState = !isMicrophoneEnabled;
     try {
-      // Si on réactive le micro, vérifier que la piste audio sous-jacente n'est pas terminée.
-      // Une piste en état 'ended' (après un .stop() direct) doit être redémarrée avant unmute.
       if (newState) {
         const audioPub = localParticipant.getTrackPublication(Track.Source.Microphone);
         if (audioPub?.track?.mediaStreamTrack?.readyState === 'ended') {
           console.warn('[toggleMic] Piste audio terminée — tentative de redémarrage...');
-          try {
-            await audioPub.track.restartTrack();
-          } catch (restartErr) {
+          try { await audioPub.track.restartTrack(); } catch (restartErr) {
             console.error('[toggleMic] restartTrack() échoué:', restartErr);
           }
         }
@@ -347,14 +347,16 @@ export const useMeeting = (maxQualityLock = true) => {
       if (err?.name === 'NotAllowedError' || err?.name === 'PermissionDeniedError') {
         setDeviceError('mic_denied');
       } else {
-        // Toute autre erreur (track ended, device not found, etc.)
         setDeviceError('mic_error');
       }
+    } finally {
+      setIsTogglingMic(false);
     }
-  }, [localParticipant, isMicrophoneEnabled]);
+  }, [localParticipant, isMicrophoneEnabled, isTogglingMic]);
 
   const toggleCamera = useCallback(async () => {
-    if (!localParticipant) return;
+    if (!localParticipant || isTogglingCamera) return;
+    setIsTogglingCamera(true);
     const newState = !isCameraEnabled;
     try {
       await localParticipant.setCameraEnabled(newState);
@@ -363,15 +365,20 @@ export const useMeeting = (maxQualityLock = true) => {
       if (err?.name === 'NotAllowedError' || err?.name === 'PermissionDeniedError') {
         setDeviceError('cam_denied');
       }
+    } finally {
+      setIsTogglingCamera(false);
     }
-  }, [localParticipant, isCameraEnabled]);
+  }, [localParticipant, isCameraEnabled, isTogglingCamera]);
+
   const toggleScreenShare = useCallback(async () => {
-    if (localParticipant) {
-      await localParticipant.setScreenShareEnabled(!isScreenShareEnabled, {
-         audio: true 
-      });
+    if (!localParticipant || isTogglingScreen) return;
+    setIsTogglingScreen(true);
+    try {
+      await localParticipant.setScreenShareEnabled(!isScreenShareEnabled, { audio: true });
+    } finally {
+      setIsTogglingScreen(false);
     }
-  }, [localParticipant, isScreenShareEnabled]);
+  }, [localParticipant, isScreenShareEnabled, isTogglingScreen]);
 
 
 const toggleBlur = useCallback(async (newRadius) => {
@@ -579,6 +586,9 @@ const toggleAIVideoEngine = useCallback(async () => {
       setCameraDevice,
       setMicrophoneDevice,
       setSpeakerDevice,
+      isTogglingMic,
+      isTogglingCamera,
+      isTogglingScreen,
     },
   };
 };

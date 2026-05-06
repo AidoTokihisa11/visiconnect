@@ -1,8 +1,9 @@
 // This component orchestrates the Room Logic
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 import { AnimatePresence, motion } from 'framer-motion';
 import { RoomAudioRenderer, StartAudio } from '@livekit/components-react';
+import { RoomEvent } from 'livekit-client';
 import { X, ChevronRight, Bot, PieChart, MessageSquare, Users, Hand, Sparkles } from 'lucide-react';
 
 // Hooks
@@ -353,6 +354,8 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
   
   // -- Raise Hand State --
   const [isHandRaised, setIsHandRaised] = useState(false);
+  // Map<participantIdentity, boolean> — tracks other participants' raised hands
+  const [raisedHands, setRaisedHands] = useState(new Map());
   
   // 🤖 AI Features State
   const { settings: aiSettings } = useAISettings();
@@ -569,17 +572,55 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
     setPanelFading(false);
   }, []);
 
-  // Toggle main levée + notification
-  const handleRaiseHand = () => {
+  // Listen for raise-hand data messages from other participants.
+  useEffect(() => {
+    if (!room) return;
+    const handleData = (payload, participant) => {
+      try {
+        const data = JSON.parse(new TextDecoder().decode(payload));
+        if (data.type === 'raise-hand') {
+          setRaisedHands(prev => {
+            const next = new Map(prev);
+            if (data.value) {
+              next.set(participant.identity, true);
+            } else {
+              next.delete(participant.identity);
+            }
+            return next;
+          });
+          if (data.value) {
+            setToast({ message: `🖐️ ${participant.name || participant.identity} lève la main`, type: 'hand' });
+            setTimeout(() => setToast(null), 3000);
+          }
+        }
+      } catch {}
+    };
+    room.on(RoomEvent.DataReceived, handleData);
+    return () => room.off(RoomEvent.DataReceived, handleData);
+  }, [room]);
+
+  // Toggle main levée + notification + broadcast aux autres participants.
+  const handleRaiseHand = useCallback(() => {
     setIsHandRaised(prev => {
       const newState = !prev;
       if (newState) {
         setToast({ message: '🖐️ Main levée !', type: 'hand' });
         setTimeout(() => setToast(null), 3000);
       }
+      // Broadcast via LiveKit data channel
+      if (room?.localParticipant) {
+        try {
+          const payload = new TextEncoder().encode(
+            JSON.stringify({ type: 'raise-hand', value: newState })
+          );
+          room.localParticipant.publishData(payload, { reliable: true });
+        } catch (e) {
+          console.warn('[RaiseHand] publishData failed:', e);
+        }
+      }
       return newState;
     });
-  };
+  }, [room]);
 
   return (
     <MainContent>
