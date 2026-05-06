@@ -26,35 +26,46 @@ class TranslationService {
     return Promise.resolve();
   }
 
-  // Get translated text
-  t(key, params = {}) {
+  // Get translated text. Second arg can be:
+  //  - a string  -> used as the fallback if the key is missing in all locales
+  //  - an object -> interpolation params (and { returnObjects: true } to get arrays/objects)
+  t(key, paramsOrFallback = {}) {
+    const isStringFallback = typeof paramsOrFallback === 'string';
+    const params = isStringFallback ? {} : (paramsOrFallback || {});
+    const stringFallback = isStringFallback ? paramsOrFallback : null;
+
     const keys = key.split('.');
     let translation = this.translations[this.currentLanguage];
-    
+
     // Navigate through nested object
     for (const k of keys) {
       translation = translation?.[k];
     }
-    
+
     // Fallback to default language if translation not found
-    if (!translation && this.currentLanguage !== this.fallbackLanguage) {
+    if (translation == null && this.currentLanguage !== this.fallbackLanguage) {
       translation = this.translations[this.fallbackLanguage];
       for (const k of keys) {
         translation = translation?.[k];
       }
     }
-    
-    // Return key if no translation found
-    if (!translation) {
-      console.warn(`Translation not found for key: ${key}`);
+
+    // Use provided string fallback if no translation found
+    if (translation == null) {
+      if (stringFallback != null) {
+        return this.replaceParams(stringFallback, params);
+      }
+      if (typeof console !== 'undefined' && console.warn) {
+        console.warn(`Translation not found for key: ${key}`);
+      }
       return key;
     }
 
     // Check if translation is an object or array (return as is if returnObjects is true)
     if (typeof translation === 'object' && params.returnObjects) {
-        return translation;
+      return translation;
     }
-    
+
     // Replace parameters in translation
     return this.replaceParams(translation, params);
   }

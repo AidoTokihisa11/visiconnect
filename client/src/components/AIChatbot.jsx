@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { MessageSquare, X, Send, Sparkles } from 'lucide-react';
 import { useAdmin } from '../contexts/AdminContext';
 import { useLocation } from 'react-router-dom';
+import { useTranslation } from '../hooks/useTranslation';
 
 const COLORS = {
   primary: '#0f172a',
@@ -310,21 +311,20 @@ const findBestMatch = (input) => {
 const normalizeForDisplay = (text = '') =>
   text.replace(/\*\*(.*?)\*\*/g, '$1').replace(/^#{1,6}\s*/gm, '').trim();
 
-const askExternalLLM = async (messages) => {
+const askExternalLLM = async (messages, uiLanguage) => {
   if (!import.meta.env.VITE_API_URL) {
     throw new Error('AI proxy disabled (missing VITE_API_URL)');
   }
 
-  // Detect user locale to send as a hint to the backend (fallback only).
-  const locale = (typeof navigator !== 'undefined' && navigator.language)
-    ? navigator.language
-    : 'en';
+  // Use the active UI language as the strongest hint, fallback to navigator.
+  const navLocale = (typeof navigator !== 'undefined' && navigator.language) ? navigator.language : 'en';
+  const locale = uiLanguage || navLocale;
 
   const payload = {
     messages: [
       {
         role: 'system',
-        content: `You are the official VisiConnect assistant. Auto-detect the language of the user's latest message and ALWAYS reply in that exact language. If the user's language cannot be reliably detected, use the locale "${locale}" as fallback. Never mix languages in a single answer. Be clear, concise, professional and never invent product information.`,
+        content: `You are the official VisiConnect assistant. The user interface is currently set to language code "${locale}". ALWAYS reply in that exact language unless the user clearly writes their message in another language — in that case mirror the user's language. Never mix languages in a single answer. Be clear, concise, professional and never invent product information.`,
       },
       ...messages,
     ],
@@ -350,15 +350,20 @@ const askExternalLLM = async (messages) => {
 
 const AIChatbot = () => {
     const { uiConfig = {}, setIsChatbotOpen } = useAdmin() || {};
-  const location = useLocation();
+    const location = useLocation();
+    const { t, language } = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
-    const [messages, setMessages] = useState([
-        {
-            id: 1,
-            text: "Bonjour ! Je suis l'IA ultra-performante de VisiConnect. Je connais la plateforme sur le bout des doigts. Comment puis-je vous aider ?",
-            isUser: false
-        }
-    ]);
+    const [messages, setMessages] = useState([]);
+
+    // Greeting message refreshes when UI language changes.
+    useEffect(() => {
+      setMessages([{
+        id: 1,
+        text: t('aiChatbot.greeting', "Bonjour ! Je suis l'IA ultra-performante de VisiConnect. Je connais la plateforme sur le bout des doigts. Comment puis-je vous aider ?"),
+        isUser: false,
+      }]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [language]);
     const [inputValue, setInputValue] = useState("");
     const [isTyping, setIsTyping] = useState(false);
 
@@ -387,7 +392,7 @@ const AIChatbot = () => {
           const llmText = await askExternalLLM([
             ...messages.slice(-8).map((m) => ({ role: m.isUser ? 'user' : 'assistant', content: m.text })),
             { role: 'user', content: text },
-          ]);
+          ], language);
           const botResponse = {
             id: Date.now() + 1,
             text: llmText,
@@ -430,8 +435,8 @@ const AIChatbot = () => {
                                     <Sparkles size={20} />
                                 </IconWrapper>
                                 <div>
-                                    <HeaderTitle>Assistant VisiConnect</HeaderTitle>
-                                    <div style={{ fontSize: '0.75rem', color: COLORS.lightText }}>IA Ultra-performante</div>
+                                    <HeaderTitle>{t('aiChatbot.title', 'Assistant VisiConnect')}</HeaderTitle>
+                                    <div style={{ fontSize: '0.75rem', color: COLORS.lightText }}>{t('aiChatbot.subtitle', 'IA Ultra-performante')}</div>
                                 </div>
                             </TitleContainer>
                             <CloseButton onClick={() => setIsOpen(false)}>
@@ -456,7 +461,7 @@ const AIChatbot = () => {
                         <InputArea onSubmit={handleSend}>
                             <Input
                                 type="text"
-                                placeholder="Posez votre question..."
+                                placeholder={t('aiChatbot.placeholder', 'Posez votre question...')}
                                 value={inputValue}
                                 onChange={(e) => setInputValue(e.target.value)}
                             />

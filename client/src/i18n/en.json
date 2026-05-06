@@ -1761,7 +1761,11 @@
     "subtitle": "Here is an overview of your activity.",
     "planLabel": "Plan",
     "never": "No meeting yet",
-    "greeting": { "morning": "Good morning", "afternoon": "Good afternoon", "evening": "Good evening" },
+    "greeting": {
+      "morning": "Good morning",
+      "afternoon": "Good afternoon",
+      "evening": "Good evening"
+    },
     "kpi": {
       "totalMeetings": "Meetings created",
       "thisMonth": "This month",
@@ -2477,6 +2481,83 @@
         "terms": "Terms",
         "contact": "Contact"
       }
+    },
+    "controls": {
+      "leave": "Leave",
+      "leaveAria": "Leave the meeting",
+      "cameraOn": "Turn camera on",
+      "cameraOff": "Turn camera off",
+      "micOn": "Unmute microphone",
+      "micOff": "Mute microphone",
+      "screenShare": "Share screen",
+      "share": "Share",
+      "whiteboard": "Whiteboard (Tldraw)",
+      "whiteboardShort": "Whiteboard",
+      "recordStart": "Start recording",
+      "recordStop": "Stop recording",
+      "record": "Record",
+      "stats": "Stats / Debug (4K)",
+      "debug": "Debug",
+      "aiAssistant": "AI Assistant",
+      "aiFeatures": "AI Features",
+      "aiOn": "Enable AI video",
+      "aiOff": "Disable AI",
+      "aiEnhanceOn": "Enable AI enhancement",
+      "aiEnhanceOff": "Disable AI enhancement",
+      "aiLoading": "Loading AI models...",
+      "aiProcessing": "Transitioning...",
+      "polls": "Polls",
+      "chat": "Chat",
+      "settings": "Settings",
+      "settingsShort": "Settings",
+      "handUp": "Raise hand",
+      "handDown": "Lower hand",
+      "handRaised": "Hand raised",
+      "more": "More options",
+      "blurSoon": "Background blur will be available soon"
+    },
+    "permissionDenied": {
+      "close": "Close",
+      "titleCamera": "Camera access blocked",
+      "titleMic": "Microphone access blocked",
+      "subtitleCamera": "Your browser blocked access to your camera.",
+      "subtitleMic": "Your browser blocked access to your microphone.",
+      "instructionsFor": "Instructions for",
+      "reload": "Reload page",
+      "learnMore": "Learn more about permissions on",
+      "steps": {
+        "chrome": [
+          "Click the 🔒 or 📷 icon in the address bar (left of the URL).",
+          "Select \"Always allow\" for the camera and microphone.",
+          "Reload the page with F5."
+        ],
+        "edge": [
+          "Click the 🔒 icon in the address bar.",
+          "Click \"Permissions for this site\".",
+          "Set Camera and Microphone to \"Allow\".",
+          "Reload the page."
+        ],
+        "firefox": [
+          "Click the 🔒 icon in the address bar.",
+          "Click the arrow (→) next to \"Secure Connection\".",
+          "Click \"More Information\" → \"Permissions\" tab.",
+          "Change Camera and Microphone to \"Allow\".",
+          "Reload the page."
+        ],
+        "safari": [
+          "From the \"Safari\" menu, open \"Preferences\" (⌘,).",
+          "Go to the \"Websites\" tab.",
+          "Select \"Camera\" or \"Microphone\" on the left.",
+          "Set this site to \"Allow\".",
+          "Reload the page."
+        ]
+      }
     }
+  },
+  "aiChatbot": {
+    "title": "VisiConnect Assistant",
+    "subtitle": "Ultra-fast AI",
+    "placeholder": "Ask your question...",
+    "greeting": "Hi! I'm the VisiConnect AI assistant. I know the platform inside out. How can I help you today?"
   }
 }

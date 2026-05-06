@@ -46,20 +46,31 @@ export const AuthProvider = ({ children }) => {
     return err.errors?.[0]?.message || err.message || "Une erreur est survenue avec l'authentification.";
   };
 
-  // Clerk v6 (Core 3) : signIn.sso() avec redirectCallbackUrl
+  // Clerk Core 3 (@clerk/react v6) — OAuth via authenticateWithRedirect (stable API).
   const signInWithProvider = async (provider) => {
     if (!clerkSignIn) return { error: { message: "Clerk n'est pas prêt. Veuillez rafraîchir la page." } };
     try {
       const origin = window.location.origin;
-      const { error } = await clerkSignIn.sso({
-        strategy: `oauth_${provider}`,
-        redirectCallbackUrl: `${origin}/sso-callback`,
-        redirectUrl: `${origin}/`,
-      });
-      if (error) {
-        return { error: { message: handleNetworkError(error) } };
+      // The official method on Core 3 SignIn resource.
+      if (typeof clerkSignIn.authenticateWithRedirect === 'function') {
+        await clerkSignIn.authenticateWithRedirect({
+          strategy: `oauth_${provider}`,
+          redirectUrl: `${origin}/sso-callback`,
+          redirectUrlComplete: `${origin}/`,
+        });
+        return { success: true };
       }
-      return { success: true };
+      // Legacy fallback for older builds.
+      if (typeof clerkSignIn.sso === 'function') {
+        const { error } = await clerkSignIn.sso({
+          strategy: `oauth_${provider}`,
+          redirectCallbackUrl: `${origin}/sso-callback`,
+          redirectUrl: `${origin}/`,
+        });
+        if (error) return { error: { message: handleNetworkError(error) } };
+        return { success: true };
+      }
+      return { error: { message: "Méthode OAuth indisponible dans cette version de Clerk." } };
     } catch (err) {
       console.error('[signInWithProvider]', err);
       return { error: { message: handleNetworkError(err) } };

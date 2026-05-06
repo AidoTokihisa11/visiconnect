@@ -1794,7 +1794,11 @@
     "subtitle": "Aquí tens un resumen de tu activitat.",
     "planLabel": "Plan",
     "never": "Sin reunions",
-    "greeting": { "morning": "Bon dia", "afternoon": "Bona tarda", "evening": "Bona nit" },
+    "greeting": {
+      "morning": "Bon dia",
+      "afternoon": "Bona tarda",
+      "evening": "Bona nit"
+    },
     "kpi": {
       "totalMeetings": "Reunions creades",
       "thisMonth": "Aquest mes",
@@ -2510,6 +2514,83 @@
         "terms": "Termes",
         "contact": "Contacte"
       }
+    },
+    "controls": {
+      "leave": "Sortir",
+      "leaveAria": "Sortir de la reunió",
+      "cameraOn": "Activar la càmera",
+      "cameraOff": "Desactivar la càmera",
+      "micOn": "Activar el micròfon",
+      "micOff": "Silenciar el micròfon",
+      "screenShare": "Compartir pantalla",
+      "share": "Compartir",
+      "whiteboard": "Pissarra (Tldraw)",
+      "whiteboardShort": "Pissarra",
+      "recordStart": "Iniciar enregistrament",
+      "recordStop": "Aturar enregistrament",
+      "record": "Enregistrar",
+      "stats": "Estadístiques / Debug (4K)",
+      "debug": "Debug",
+      "aiAssistant": "Assistent IA",
+      "aiFeatures": "Funcions IA",
+      "aiOn": "Activar IA de vídeo",
+      "aiOff": "Desactivar IA",
+      "aiEnhanceOn": "Activar millora IA",
+      "aiEnhanceOff": "Desactivar millora IA",
+      "aiLoading": "Carregant models d'IA...",
+      "aiProcessing": "Transició en curs...",
+      "polls": "Enquestes",
+      "chat": "Xat",
+      "settings": "Configuració",
+      "settingsShort": "Configuració",
+      "handUp": "Aixecar la mà",
+      "handDown": "Abaixar la mà",
+      "handRaised": "Mà aixecada",
+      "more": "Més opcions",
+      "blurSoon": "El difuminat de fons estarà disponible aviat"
+    },
+    "permissionDenied": {
+      "close": "Tancar",
+      "titleCamera": "Accés a la càmera bloquejat",
+      "titleMic": "Accés al micròfon bloquejat",
+      "subtitleCamera": "El navegador ha denegat l'accés a la càmera.",
+      "subtitleMic": "El navegador ha denegat l'accés al micròfon.",
+      "instructionsFor": "Instruccions per a",
+      "reload": "Recarregar la pàgina",
+      "learnMore": "Més informació sobre permisos a",
+      "steps": {
+        "chrome": [
+          "Feu clic a la icona 🔒 o 📷 a la barra d'adreces.",
+          "Seleccioneu «Permetre sempre» per a la càmera i el micròfon.",
+          "Recarregueu la pàgina amb F5."
+        ],
+        "edge": [
+          "Feu clic a la icona 🔒 a la barra d'adreces.",
+          "Feu clic a «Permisos per a aquest lloc».",
+          "Configureu Càmera i Micròfon a «Permetre».",
+          "Recarregueu la pàgina."
+        ],
+        "firefox": [
+          "Feu clic a la icona 🔒 a la barra d'adreces.",
+          "Feu clic a la fletxa (→) al costat de «Connexió segura».",
+          "Feu clic a «Més informació» → pestanya «Permisos».",
+          "Canvieu Càmera i Micròfon a «Permetre».",
+          "Recarregueu la pàgina."
+        ],
+        "safari": [
+          "Al menú «Safari», obriu «Preferències» (⌘,).",
+          "Aneu a la pestanya «Llocs web».",
+          "Seleccioneu «Càmera» o «Micròfon» a l'esquerra.",
+          "Configureu aquest lloc com a «Permetre».",
+          "Recarregueu la pàgina."
+        ]
+      }
     }
+  },
+  "aiChatbot": {
+    "title": "Assistent VisiConnect",
+    "subtitle": "IA ultra ràpida",
+    "placeholder": "Feu la vostra pregunta...",
+    "greeting": "Hola! Sóc l'assistent d'IA de VisiConnect. Conec la plataforma a fons. Com us puc ajudar avui?"
   }
 }

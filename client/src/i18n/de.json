@@ -1759,7 +1759,11 @@
     "subtitle": "Hier ist eine Übersicht Ihrer Aktivität.",
     "planLabel": "Plan",
     "never": "Keine Meetings",
-    "greeting": { "morning": "Guten Morgen", "afternoon": "Guten Tag", "evening": "Guten Abend" },
+    "greeting": {
+      "morning": "Guten Morgen",
+      "afternoon": "Guten Tag",
+      "evening": "Guten Abend"
+    },
     "kpi": {
       "totalMeetings": "Erstellte Meetings",
       "thisMonth": "Diesen Monat",
@@ -2475,6 +2479,83 @@
         "terms": "AGB",
         "contact": "Kontakt"
       }
+    },
+    "controls": {
+      "leave": "Verlassen",
+      "leaveAria": "Meeting verlassen",
+      "cameraOn": "Kamera einschalten",
+      "cameraOff": "Kamera ausschalten",
+      "micOn": "Mikrofon einschalten",
+      "micOff": "Mikrofon stummschalten",
+      "screenShare": "Bildschirm teilen",
+      "share": "Teilen",
+      "whiteboard": "Whiteboard (Tldraw)",
+      "whiteboardShort": "Whiteboard",
+      "recordStart": "Aufnahme starten",
+      "recordStop": "Aufnahme stoppen",
+      "record": "Aufnehmen",
+      "stats": "Statistik / Debug (4K)",
+      "debug": "Debug",
+      "aiAssistant": "KI-Assistent",
+      "aiFeatures": "KI-Funktionen",
+      "aiOn": "KI-Video aktivieren",
+      "aiOff": "KI deaktivieren",
+      "aiEnhanceOn": "KI-Verbesserung aktivieren",
+      "aiEnhanceOff": "KI-Verbesserung deaktivieren",
+      "aiLoading": "KI-Modelle werden geladen...",
+      "aiProcessing": "Übergang läuft...",
+      "polls": "Umfragen",
+      "chat": "Chat",
+      "settings": "Einstellungen",
+      "settingsShort": "Einstellungen",
+      "handUp": "Hand heben",
+      "handDown": "Hand senken",
+      "handRaised": "Hand gehoben",
+      "more": "Weitere Optionen",
+      "blurSoon": "Hintergrundunschärfe wird bald verfügbar sein"
+    },
+    "permissionDenied": {
+      "close": "Schließen",
+      "titleCamera": "Kamerazugriff blockiert",
+      "titleMic": "Mikrofonzugriff blockiert",
+      "subtitleCamera": "Der Browser hat den Zugriff auf Ihre Kamera verweigert.",
+      "subtitleMic": "Der Browser hat den Zugriff auf Ihr Mikrofon verweigert.",
+      "instructionsFor": "Anleitung für",
+      "reload": "Seite neu laden",
+      "learnMore": "Mehr über Berechtigungen in",
+      "steps": {
+        "chrome": [
+          "Klicken Sie auf das Symbol 🔒 oder 📷 in der Adressleiste.",
+          "Wählen Sie \"Immer zulassen\" für Kamera und Mikrofon.",
+          "Laden Sie die Seite mit F5 neu."
+        ],
+        "edge": [
+          "Klicken Sie auf das 🔒 Symbol in der Adressleiste.",
+          "Klicken Sie auf \"Berechtigungen für diese Website\".",
+          "Stellen Sie Kamera und Mikrofon auf \"Zulassen\".",
+          "Laden Sie die Seite neu."
+        ],
+        "firefox": [
+          "Klicken Sie auf das 🔒 Symbol in der Adressleiste.",
+          "Klicken Sie auf den Pfeil (→) neben \"Sichere Verbindung\".",
+          "Klicken Sie auf \"Weitere Informationen\" → Tab \"Berechtigungen\".",
+          "Ändern Sie Kamera und Mikrofon auf \"Zulassen\".",
+          "Laden Sie die Seite neu."
+        ],
+        "safari": [
+          "Öffnen Sie im \"Safari\"-Menü \"Einstellungen\" (⌘,).",
+          "Gehen Sie zum Tab \"Websites\".",
+          "Wählen Sie links \"Kamera\" oder \"Mikrofon\".",
+          "Stellen Sie diese Website auf \"Zulassen\".",
+          "Laden Sie die Seite neu."
+        ]
+      }
     }
+  },
+  "aiChatbot": {
+    "title": "VisiConnect-Assistent",
+    "subtitle": "Ultraschnelle KI",
+    "placeholder": "Stellen Sie Ihre Frage...",
+    "greeting": "Hallo! Ich bin der KI-Assistent von VisiConnect. Ich kenne die Plattform in- und auswendig. Wie kann ich Ihnen heute helfen?"
   }
 }

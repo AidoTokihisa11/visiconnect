@@ -1794,7 +1794,11 @@
     "subtitle": "Aquí tienes un resumen de tu actividad.",
     "planLabel": "Plan",
     "never": "Sin reuniones",
-    "greeting": { "morning": "Buenos días", "afternoon": "Buenas tardes", "evening": "Buenas noches" },
+    "greeting": {
+      "morning": "Buenos días",
+      "afternoon": "Buenas tardes",
+      "evening": "Buenas noches"
+    },
     "kpi": {
       "totalMeetings": "Reuniones creadas",
       "thisMonth": "Este mes",
@@ -2510,6 +2514,83 @@
         "terms": "Términos",
         "contact": "Contacto"
       }
+    },
+    "controls": {
+      "leave": "Salir",
+      "leaveAria": "Salir de la reunión",
+      "cameraOn": "Activar la cámara",
+      "cameraOff": "Desactivar la cámara",
+      "micOn": "Activar el micrófono",
+      "micOff": "Silenciar el micrófono",
+      "screenShare": "Compartir pantalla",
+      "share": "Compartir",
+      "whiteboard": "Pizarra (Tldraw)",
+      "whiteboardShort": "Pizarra",
+      "recordStart": "Iniciar grabación",
+      "recordStop": "Detener grabación",
+      "record": "Grabar",
+      "stats": "Estadísticas / Debug (4K)",
+      "debug": "Debug",
+      "aiAssistant": "Asistente IA",
+      "aiFeatures": "Funciones IA",
+      "aiOn": "Activar IA de vídeo",
+      "aiOff": "Desactivar IA",
+      "aiEnhanceOn": "Activar mejora IA",
+      "aiEnhanceOff": "Desactivar mejora IA",
+      "aiLoading": "Cargando modelos de IA...",
+      "aiProcessing": "Transición en curso...",
+      "polls": "Encuestas",
+      "chat": "Chat",
+      "settings": "Ajustes",
+      "settingsShort": "Ajustes",
+      "handUp": "Levantar la mano",
+      "handDown": "Bajar la mano",
+      "handRaised": "Mano levantada",
+      "more": "Más opciones",
+      "blurSoon": "El desenfoque de fondo estará disponible pronto"
+    },
+    "permissionDenied": {
+      "close": "Cerrar",
+      "titleCamera": "Acceso a la cámara bloqueado",
+      "titleMic": "Acceso al micrófono bloqueado",
+      "subtitleCamera": "El navegador ha denegado el acceso a tu cámara.",
+      "subtitleMic": "El navegador ha denegado el acceso a tu micrófono.",
+      "instructionsFor": "Instrucciones para",
+      "reload": "Recargar página",
+      "learnMore": "Más información sobre permisos en",
+      "steps": {
+        "chrome": [
+          "Haz clic en el icono 🔒 o 📷 en la barra de direcciones.",
+          "Selecciona \"Permitir siempre\" para la cámara y el micrófono.",
+          "Recarga la página con F5."
+        ],
+        "edge": [
+          "Haz clic en el icono 🔒 en la barra de direcciones.",
+          "Haz clic en \"Permisos para este sitio\".",
+          "Configura Cámara y Micrófono en \"Permitir\".",
+          "Recarga la página."
+        ],
+        "firefox": [
+          "Haz clic en el icono 🔒 en la barra de direcciones.",
+          "Haz clic en la flecha (→) junto a \"Conexión segura\".",
+          "Haz clic en \"Más información\" → pestaña \"Permisos\".",
+          "Cambia Cámara y Micrófono a \"Permitir\".",
+          "Recarga la página."
+        ],
+        "safari": [
+          "En el menú \"Safari\", abre \"Preferencias\" (⌘,).",
+          "Ve a la pestaña \"Sitios web\".",
+          "Selecciona \"Cámara\" o \"Micrófono\" a la izquierda.",
+          "Configura este sitio en \"Permitir\".",
+          "Recarga la página."
+        ]
+      }
     }
+  },
+  "aiChatbot": {
+    "title": "Asistente VisiConnect",
+    "subtitle": "IA ultra-rápida",
+    "placeholder": "Haz tu pregunta...",
+    "greeting": "¡Hola! Soy el asistente de IA de VisiConnect. Conozco la plataforma a fondo. ¿En qué puedo ayudarte hoy?"
   }
 }

@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { useAudioLevel } from './AudioVisualizer';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
+import { useTranslation } from '../../hooks/useTranslation';
 
 const BottomBar = styled.div`
   /* Desktop: hauteur fixe, flex-shrink: 0 pour ne jamais shrink */
@@ -337,6 +338,7 @@ export const ControlBar = ({
   isHandRaised = false,
   onRaiseHand,
 }) => {
+  const { t } = useTranslation();
   // Destructure device-toggle processing flags (safe defaults for old callers)
   const isTogglingMic = controls?.isTogglingMic ?? false;
   const isTogglingCamera = controls?.isTogglingCamera ?? false;
@@ -391,7 +393,7 @@ export const ControlBar = ({
         </div>
 
         {/* Core Mobile Buttons (Like Native App) */}
-        <EndCallButton className="focus-visible-ring" onClick={onLeave} $active title="Quitter" aria-label="Quitter la réunion">
+        <EndCallButton className="focus-visible-ring" onClick={onLeave} $active title={t('room.controls.leave', 'Quitter')} aria-label={t('room.controls.leaveAria', 'Quitter la réunion')}>
           <Phone style={{ transform: 'rotate(135deg)' }} />
         </EndCallButton>
 
@@ -404,8 +406,8 @@ export const ControlBar = ({
             disabled={isTogglingCamera}
             $active={isCameraEnabled}
             $activeColor={THEME.accent}
-            title={isCameraEnabled ? "Désactiver la caméra" : "Activer la caméra"}
-            aria-label={isCameraEnabled ? "Désactiver la caméra" : "Activer la caméra"}
+            title={isCameraEnabled ? t('room.controls.cameraOff', 'Désactiver la caméra') : t('room.controls.cameraOn', 'Activer la caméra')}
+            aria-label={isCameraEnabled ? t('room.controls.cameraOff', 'Désactiver la caméra') : t('room.controls.cameraOn', 'Activer la caméra')}
           >
             {isCameraEnabled ? <Video /> : <VideoOff color={THEME.danger} />}
           </ControlButton>
@@ -417,8 +419,8 @@ export const ControlBar = ({
             disabled={!isAiReady || isProcessingAI}
             $active={isAIEnhanced}
             onClick={toggleAIVideoEngine}
-            title={isProcessingAI ? "Transition en cours..." : !isAiReady ? "Modèles d'IA en cours de chargement..." : (isAIEnhanced ? "Désactiver l'IA" : "Activer l'IA vidéo")}
-            aria-label={isAIEnhanced ? "Désactiver l'amélioration IA" : "Activer l'amélioration IA"}
+            title={isProcessingAI ? t('room.controls.aiProcessing', 'Transition en cours...') : !isAiReady ? t('room.controls.aiLoading', "Modèles d'IA en cours de chargement...") : (isAIEnhanced ? t('room.controls.aiOff', "Désactiver l'IA") : t('room.controls.aiOn', "Activer l'IA vidéo"))}
+            aria-label={isAIEnhanced ? t('room.controls.aiEnhanceOff', "Désactiver l'amélioration IA") : t('room.controls.aiEnhanceOn', "Activer l'amélioration IA")}
             className={isAIEnhanced ? 'ai-button-active' : ''}
             style={{
               background: isProcessingAI
@@ -454,8 +456,8 @@ export const ControlBar = ({
             disabled={isTogglingMic}
             $active={isMicrophoneEnabled}
             $activeColor={THEME.accent}
-            title={isMicrophoneEnabled ? "Désactiver le micro" : "Activer le micro"}
-            aria-label={isMicrophoneEnabled ? "Désactiver le micro" : "Activer le micro"}
+            title={isMicrophoneEnabled ? t('room.controls.micOff', 'Désactiver le micro') : t('room.controls.micOn', 'Activer le micro')}
+            aria-label={isMicrophoneEnabled ? t('room.controls.micOff', 'Désactiver le micro') : t('room.controls.micOn', 'Activer le micro')}
           >
             {isMicrophoneEnabled ? <Mic /> : <MicOff color={THEME.danger} />}
           </ControlButton>
@@ -468,61 +470,61 @@ export const ControlBar = ({
             disabled={isTogglingScreen}
             $active={isScreenShareEnabled}
             $activeColor={THEME.accent}
-            title="Partager l'écran"
+            title={t('room.controls.screenShare', "Partager l'écran")}
           >
             {isScreenShareEnabled ? <Monitor /> : <MonitorOff />}
           </ControlButton>
 
-          <ControlButton onClick={toggleWhiteboard} $active={whiteboardOpen} $activeColor={THEME.accent} title="Tableau Blanc (Tldraw)">
+          <ControlButton onClick={toggleWhiteboard} $active={whiteboardOpen} $activeColor={THEME.accent} title={t('room.controls.whiteboard', 'Tableau Blanc (Tldraw)')}>
             <Layout />
           </ControlButton>
 
 
-          <ControlButton onClick={toggleRecording} $active={isRecording} $activeColor={THEME.danger} title={isRecording ? "Arrêter l'enregistrement" : "Démarrer l'enregistrement"}>
+          <ControlButton onClick={toggleRecording} $active={isRecording} $activeColor={THEME.danger} title={isRecording ? t('room.controls.recordStop', "Arrêter l'enregistrement") : t('room.controls.recordStart', "Démarrer l'enregistrement")}>
             {isRecording
               ? <Square fill="white" stroke="none" size={16} />
               : <Circle fill="#ef4444" stroke="#ef4444" size={18} />}
           </ControlButton>
 
-          <ControlButton onClick={() => setShowStats(!showStats)} $active={showStats} $activeColor="#10b981" title="Stats / Debug (4K)">
+          <ControlButton onClick={() => setShowStats(!showStats)} $active={showStats} $activeColor="#10b981" title={t('room.controls.stats', 'Stats / Debug (4K)')}>
             <Activity />
           </ControlButton>
 
           <Separator />
           
-          <ControlButton onClick={() => togglePanel('ai')} $active={activePanel === 'ai' && sidePanelOpen} $activeColor={THEME.accent} title="Assistant IA">
+          <ControlButton onClick={() => togglePanel('ai')} $active={activePanel === 'ai' && sidePanelOpen} $activeColor={THEME.accent} title={t('room.controls.aiAssistant', 'Assistant IA')}>
             <Bot />
           </ControlButton>
 
-          <ControlButton onClick={() => togglePanel('aiFeatures')} $active={activePanel === 'aiFeatures' && sidePanelOpen} $activeColor="#8b5cf6" title="Fonctionnalités IA">
+          <ControlButton onClick={() => togglePanel('aiFeatures')} $active={activePanel === 'aiFeatures' && sidePanelOpen} $activeColor="#8b5cf6" title={t('room.controls.aiFeatures', 'Fonctionnalités IA')}>
             <Wand2 />
           </ControlButton>
 
-          <ControlButton onClick={() => togglePanel('polls')} $active={activePanel === 'polls' && sidePanelOpen} $activeColor={THEME.accent} title="Sondages">
+          <ControlButton onClick={() => togglePanel('polls')} $active={activePanel === 'polls' && sidePanelOpen} $activeColor={THEME.accent} title={t('room.controls.polls', 'Sondages')}>
             <PieChart />
             {unreadPolls > 0 && <NotificationBadge>{unreadPolls}</NotificationBadge>}
           </ControlButton>
 
-          <ControlButton onClick={onRaiseHand} $active={isHandRaised} $activeColor="#f59e0b" title={isHandRaised ? "Baisser la main" : "Lever la main"}>
+          <ControlButton onClick={onRaiseHand} $active={isHandRaised} $activeColor="#f59e0b" title={isHandRaised ? t('room.controls.handDown', 'Baisser la main') : t('room.controls.handUp', 'Lever la main')}>
             <Hand />
           </ControlButton>
 
-          <ControlButton onClick={() => togglePanel('chat')} $active={activePanel === 'chat' && sidePanelOpen} $activeColor={THEME.accent} title="Chat">
+          <ControlButton onClick={() => togglePanel('chat')} $active={activePanel === 'chat' && sidePanelOpen} $activeColor={THEME.accent} title={t('room.controls.chat', 'Chat')}>
             <MessageSquare />
             {unreadChat > 0 && <NotificationBadge>{unreadChat > 99 ? '99+' : unreadChat}</NotificationBadge>}
           </ControlButton>
 
-          <ControlButton onClick={() => togglePanel('settings')} $active={activePanel === 'settings' && sidePanelOpen} $activeColor={THEME.accent} title="Paramètres">
+          <ControlButton onClick={() => togglePanel('settings')} $active={activePanel === 'settings' && sidePanelOpen} $activeColor={THEME.accent} title={t('room.controls.settings', 'Paramètres')}>
             <Settings2 />
           </ControlButton>
         </DesktopOnlyWrapper>
 
         {/* Mobile 'More' Button */}
         <MobileOnlyWrapper>
-          <ControlButton onClick={controls.toggleScreenShare} $active={isScreenShareEnabled} $activeColor={THEME.accent} title="Partager">
+          <ControlButton onClick={controls.toggleScreenShare} $active={isScreenShareEnabled} $activeColor={THEME.accent} title={t('room.controls.share', 'Partager')}>
             <Monitor />
           </ControlButton>
-          <ControlButton onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)} title="Plus d'options">
+          <ControlButton onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)} title={t('room.controls.more', "Plus d'options")}>
             <MoreHorizontal />
             {(unreadChat > 0 || unreadPolls > 0) && !isMoreMenuOpen && (
               <NotificationBadge>{(unreadChat + unreadPolls) > 99 ? '99+' : (unreadChat + unreadPolls)}</NotificationBadge>
@@ -534,43 +536,43 @@ export const ControlBar = ({
           <MobileMoreMenu $isOpen={isMoreMenuOpen}>
             <ControlButton onClick={() => { togglePanel('chat'); setIsMoreMenuOpen(false); }} $active={activePanel === 'chat' && sidePanelOpen} $activeColor={THEME.accent}>
               <MessageSquare />
-              <span>Chat</span>
+              <span>{t('room.controls.chat', 'Chat')}</span>
               {unreadChat > 0 && <NotificationBadge style={{ top: '4px', right: '4px' }}>{unreadChat > 99 ? '99+' : unreadChat}</NotificationBadge>}
             </ControlButton>
             <ControlButton onClick={() => { togglePanel('ai'); setIsMoreMenuOpen(false); }} $active={activePanel === 'ai' && sidePanelOpen} $activeColor={THEME.accent}>
               <Bot />
-              <span>Assistant IA</span>
+              <span>{t('room.controls.aiAssistant', 'Assistant IA')}</span>
             </ControlButton>
             <ControlButton onClick={() => { togglePanel('aiFeatures'); setIsMoreMenuOpen(false); }} $active={activePanel === 'aiFeatures' && sidePanelOpen} $activeColor="#8b5cf6">
               <Wand2 />
-              <span>IA Features</span>
+              <span>{t('room.controls.aiFeatures', 'Fonctionnalités IA')}</span>
             </ControlButton>
             <ControlButton onClick={() => { togglePanel('polls'); setIsMoreMenuOpen(false); }} $active={activePanel === 'polls' && sidePanelOpen} $activeColor={THEME.accent}>
               <PieChart />
-              <span>Sondages</span>
+              <span>{t('room.controls.polls', 'Sondages')}</span>
               {unreadPolls > 0 && <NotificationBadge style={{ top: '4px', right: '4px' }}>{unreadPolls}</NotificationBadge>}
             </ControlButton>
             <ControlButton onClick={() => { onRaiseHand?.(); setIsMoreMenuOpen(false); }} $active={isHandRaised} $activeColor="#f59e0b">
               <Hand />
-              <span>Main levée</span>
+              <span>{t('room.controls.handRaised', 'Main levée')}</span>
             </ControlButton>
             <ControlButton onClick={() => { toggleWhiteboard(); setIsMoreMenuOpen(false); }} $active={whiteboardOpen} $activeColor={THEME.accent}>
               <Layout />
-              <span>Tableau</span>
+              <span>{t('room.controls.whiteboardShort', 'Tableau')}</span>
             </ControlButton>
             <ControlButton onClick={() => { toggleRecording(); setIsMoreMenuOpen(false); }} $active={isRecording} $activeColor={THEME.danger}>
               {isRecording
                 ? <Square fill="white" stroke="none" size={16} />
                 : <Circle fill="#ef4444" stroke="#ef4444" size={18} />}
-              <span>Enregistrer</span>
+              <span>{t('room.controls.record', 'Enregistrer')}</span>
             </ControlButton>
             <ControlButton onClick={() => { togglePanel('settings'); setIsMoreMenuOpen(false); }} $active={activePanel === 'settings' && sidePanelOpen} $activeColor={THEME.accent}>
               <Settings2 />
-              <span>Réglages</span>
+              <span>{t('room.controls.settingsShort', 'Réglages')}</span>
             </ControlButton>
             <ControlButton onClick={() => { setShowStats(!showStats); setIsMoreMenuOpen(false); }} $active={showStats} $activeColor="#10b981">
               <Activity />
-              <span>Debug</span>
+              <span>{t('room.controls.debug', 'Debug')}</span>
             </ControlButton>
           </MobileMoreMenu>
 

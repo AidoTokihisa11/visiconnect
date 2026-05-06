@@ -6,6 +6,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Camera, Mic, X, AlertTriangle, ExternalLink } from 'lucide-react';
+import { useTranslation } from '../../hooks/useTranslation';
 
 // ─── Detect browser ───────────────────────────────────────────────────────────
 const detectBrowser = () => {
@@ -205,8 +206,10 @@ const HELP_URLS = {
  * @param {function} props.onClose — callback to dismiss
  */
 export const PermissionDeniedModal = ({ type, onClose }) => {
+  const { t } = useTranslation();
   const browser = detectBrowser();
-  const steps = INSTRUCTIONS[browser];
+  const localizedSteps = t(`room.permissionDenied.steps.${browser}`, { returnObjects: true });
+  const steps = Array.isArray(localizedSteps) ? localizedSteps : INSTRUCTIONS[browser];
   const isCamera = type === 'camera';
 
   return (
@@ -224,7 +227,7 @@ export const PermissionDeniedModal = ({ type, onClose }) => {
             exit={{ scale: 0.9, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 300, damping: 25 }}
           >
-            <CloseBtn onClick={onClose} aria-label="Fermer">
+            <CloseBtn onClick={onClose} aria-label={t('room.permissionDenied.close', 'Fermer')}>
               <X size={18} />
             </CloseBtn>
 
@@ -234,17 +237,17 @@ export const PermissionDeniedModal = ({ type, onClose }) => {
               </IconWrap>
               <div>
                 <Title>
-                  Accès {isCamera ? 'caméra' : 'microphone'} bloqué
+                  {isCamera ? t('room.permissionDenied.titleCamera', 'Accès caméra bloqué') : t('room.permissionDenied.titleMic', 'Accès microphone bloqué')}
                 </Title>
                 <Subtitle>
-                  Le navigateur a refusé l'accès à {isCamera ? 'votre caméra' : 'votre microphone'}.
+                  {isCamera ? t('room.permissionDenied.subtitleCamera', "Le navigateur a refusé l'accès à votre caméra.") : t('room.permissionDenied.subtitleMic', "Le navigateur a refusé l'accès à votre microphone.")}
                 </Subtitle>
               </div>
             </Header>
 
             <BrowserTag>
               {isCamera ? <Camera size={12} style={{ marginRight: 4 }} /> : <Mic size={12} style={{ marginRight: 4 }} />}
-              Instructions pour {BROWSER_LABELS[browser]}
+              {t('room.permissionDenied.instructionsFor', 'Instructions pour')} {BROWSER_LABELS[browser]}
             </BrowserTag>
 
             <Steps>
@@ -255,16 +258,16 @@ export const PermissionDeniedModal = ({ type, onClose }) => {
 
             <Actions>
               <ReloadBtn onClick={() => window.location.reload()}>
-                Recharger la page
+                {t('room.permissionDenied.reload', 'Recharger la page')}
               </ReloadBtn>
               <DismissBtn onClick={onClose}>
-                Fermer
+                {t('room.permissionDenied.close', 'Fermer')}
               </DismissBtn>
             </Actions>
 
             <HelpLink href={HELP_URLS[browser]} target="_blank" rel="noopener noreferrer">
               <ExternalLink size={12} />
-              En savoir plus sur les permissions {BROWSER_LABELS[browser]}
+              {t('room.permissionDenied.learnMore', 'En savoir plus sur les permissions')} {BROWSER_LABELS[browser]}
             </HelpLink>
           </Modal>
         </Backdrop>
