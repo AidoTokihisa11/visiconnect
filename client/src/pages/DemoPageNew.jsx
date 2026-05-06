@@ -167,7 +167,7 @@ export default function DemoPageNew() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [demoRoomId] = React.useState(`demo-${Math.random().toString(36).substring(2, 9)}`);
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(() => new URLSearchParams(window.location.search).get('join') === '1');
   const [guestName, setGuestName] = useState('');
 
   const handleLaunchDemo = () => setShowModal(true);

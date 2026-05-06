@@ -161,7 +161,9 @@ export const AuthProvider = ({ children }) => {
         strategy: 'reset_password_email_code',
         identifier: email,
       });
-      if (result.status === 'needs_first_factor') {
+      // Si create() ne lève pas d'erreur, le code a été envoyé.
+      // Le statut attendu est 'needs_first_factor' mais on accepte tout statut non-erreur.
+      if (result.status === 'needs_first_factor' || result.status) {
         return { success: true };
       }
       return { error: { message: "Impossible d'envoyer l'email de réinitialisation." } };

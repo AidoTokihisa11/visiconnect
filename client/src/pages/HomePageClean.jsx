@@ -237,7 +237,6 @@ const HeroHeadline = styled.h1`
   line-height: 1.1;
   color: ${COLORS.dark};
   letter-spacing: -0.05em;
-  white-space: nowrap;
 
   span {
     color: ${COLORS.primary};
@@ -583,7 +582,7 @@ export default function HomePageClean() {
         <HeroContainer>
           <HeroContent>
             <HeroHeadline>
-              <EditableText translationKey="hero.titleLine1" defaultValue={t('hero.titleLine1')} />{' '}
+              <EditableText translationKey="hero.titleLine1" defaultValue={t('hero.titleLine1')} /><br />
               <span><EditableText translationKey="hero.titleLine2" defaultValue={t('hero.titleLine2')} /></span>
             </HeroHeadline>
             <HeroSubhead>
@@ -593,7 +592,7 @@ export default function HomePageClean() {
               <Button to="/signup" $variant="primary" style={{ padding: '0.875rem 1.5rem', fontSize: '1.125rem' }}>
                 {t('hero.startFree')}
               </Button>
-              <Button to={`/room/demo-${Math.random().toString(36).substring(2, 9)}`} style={{ padding: '0.875rem 1.5rem', fontSize: '1.125rem', backgroundColor: '#0f172a', color: 'white', border: '1px solid #0f172a', display: 'flex', alignItems: 'center' }}>
+              <Button to="/demo?join=1" style={{ padding: '0.875rem 1.5rem', fontSize: '1.125rem', backgroundColor: '#0f172a', color: 'white', border: '1px solid #0f172a', display: 'flex', alignItems: 'center' }}>
                 <Zap size={18} style={{ marginRight: '8px' }} />
                 {t('hero.testRoom')}
               </Button>

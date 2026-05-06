@@ -241,9 +241,9 @@ export default function ForgotPasswordPage() {
           transition={{ duration: 0.4 }}
         >
           <Header>
-            <Logo>VisiConnect</Logo>
-            <Title>{t('forgotPassword.title', 'Mot de passe oublié')}</Title>
-            <Subtitle>{t('forgotPassword.subtitle', 'Entrez votre email pour recevoir un code de réinitialisation.')}</Subtitle>
+            <Logo>VisioConnect</Logo>
+            <Title>{t('auth.forgotPassword.title', 'Mot de passe oublié')}</Title>
+            <Subtitle>{t('auth.forgotPassword.subtitle', 'Entrez votre email pour recevoir un code de réinitialisation.')}</Subtitle>
           </Header>
 
           {error && (
@@ -264,16 +264,16 @@ export default function ForgotPasswordPage() {
             >
               <CheckCircle2 size={20} style={{ flexShrink: 0, marginTop: '2px' }} />
               <div>
-                <strong>{t('forgotPassword.emailSentTitle', 'Email envoyé !')}</strong>
+                <strong>{t('auth.forgotPassword.emailSentTitle', 'Email envoyé !')}</strong>
                 <br />
-                {t('forgotPassword.emailSentText', 'Un code de réinitialisation a été envoyé à')} <strong>{email}</strong>.{' '}
-                {t('forgotPassword.redirecting', 'Redirection en cours...')}
+                {t('auth.forgotPassword.emailSentText', 'Un code de réinitialisation a été envoyé à')} <strong>{email}</strong>.{' '}
+                {t('auth.forgotPassword.redirecting', 'Redirection en cours...')}
               </div>
             </SuccessMessage>
           ) : (
             <Form onSubmit={handleSubmit}>
               <FormGroup>
-                <Label htmlFor="email">{t('forgotPassword.emailLabel', 'Adresse email')}</Label>
+                <Label htmlFor="email">{t('auth.forgotPassword.emailLabel', 'Adresse email')}</Label>
                 <InputWrapper>
                   <IconWrapper><Mail size={18} /></IconWrapper>
                   <Input
@@ -281,7 +281,7 @@ export default function ForgotPasswordPage() {
                     id="email"
                     value={email}
                     onChange={(e) => { setEmail(e.target.value); setError('') }}
-                    placeholder={t('forgotPassword.emailPlaceholder', 'votre@email.com')}
+                    placeholder={t('auth.forgotPassword.emailPlaceholder', 'votre@email.com')}
                     required
                     autoComplete="email"
                     autoFocus
@@ -295,15 +295,15 @@ export default function ForgotPasswordPage() {
                 whileTap={{ scale: 0.98 }}
               >
                 {loading
-                  ? t('forgotPassword.sending', 'Envoi en cours...')
-                  : t('forgotPassword.sendCode', 'Envoyer le code')}
+                  ? t('auth.forgotPassword.sending', 'Envoi en cours...')
+                  : t('auth.forgotPassword.sendCode', 'Envoyer le code')}
               </SubmitButton>
             </Form>
           )}
 
           <FooterLink>
-            {t('forgotPassword.rememberedPassword', 'Vous vous souvenez de votre mot de passe ?')}
-            <Link to="/login">{t('forgotPassword.backToLogin', 'Se connecter')}</Link>
+            {t('auth.forgotPassword.rememberedPassword', 'Vous vous souvenez de votre mot de passe ?')}
+            <Link to="/login">{t('auth.forgotPassword.backToLogin', 'Se connecter')}</Link>
           </FooterLink>
         </FormContainer>
       </LeftPanel>

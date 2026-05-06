@@ -278,12 +278,12 @@ export default function ResetPasswordPage() {
     e.preventDefault()
 
     if (form.password !== form.confirm) {
-      setError(t('resetPassword.passwordMismatch', 'Les mots de passe ne correspondent pas.'))
+      setError(t('auth.resetPassword.passwordMismatch', 'Les mots de passe ne correspondent pas.'))
       return
     }
 
     if (!Object.values(passwordChecks).every(Boolean)) {
-      setError(t('resetPassword.passwordWeak', 'Le mot de passe ne respecte pas tous les critères.'))
+      setError(t('auth.resetPassword.passwordWeak', 'Le mot de passe ne respecte pas tous les critères.'))
       return
     }
 
@@ -307,7 +307,7 @@ export default function ResetPasswordPage() {
     <PageWrapper>
       <LeftPanel>
         <BackLink to="/forgot-password">
-          <ArrowLeft size={18} /> {t('resetPassword.back', 'Retour')}
+          <ArrowLeft size={18} /> {t('auth.resetPassword.back', 'Retour')}
         </BackLink>
 
         <FormContainer
@@ -323,18 +323,18 @@ export default function ResetPasswordPage() {
               <SuccessIcon>
                 <CheckCircle2 size={32} />
               </SuccessIcon>
-              <SuccessTitle>{t('resetPassword.successTitle', 'Mot de passe réinitialisé !')}</SuccessTitle>
+              <SuccessTitle>{t('auth.resetPassword.successTitle', 'Mot de passe réinitialisé !')}</SuccessTitle>
               <SuccessText>
-                {t('resetPassword.successText', 'Votre mot de passe a été mis à jour avec succès. Vous allez être redirigé vers la page de connexion...')}
+                {t('auth.resetPassword.successText', 'Votre mot de passe a été mis à jour avec succès. Vous allez être redirigé vers la page de connexion...')}
               </SuccessText>
             </SuccessMessage>
           ) : (
             <>
               <Header>
-                <Logo>VisiConnect</Logo>
-                <Title>{t('resetPassword.title', 'Nouveau mot de passe')}</Title>
+                <Logo>VisioConnect</Logo>
+                <Title>{t('auth.resetPassword.title', 'Nouveau mot de passe')}</Title>
                 <Subtitle>
-                  {t('resetPassword.subtitle', 'Entrez le code reçu par email et choisissez un nouveau mot de passe.')}
+                  {t('auth.resetPassword.subtitle', 'Entrez le code reçu par email et choisissez un nouveau mot de passe.')}
                 </Subtitle>
               </Header>
 
@@ -356,7 +356,7 @@ export default function ResetPasswordPage() {
 
               <Form onSubmit={handleSubmit}>
                 <FormGroup>
-                  <Label htmlFor="code">{t('resetPassword.codeLabel', 'Code de vérification')}</Label>
+                  <Label htmlFor="code">{t('auth.resetPassword.codeLabel', 'Code de vérification')}</Label>
                   <InputWrapper>
                     <IconWrapper><Hash size={18} /></IconWrapper>
                     <Input
@@ -365,7 +365,7 @@ export default function ResetPasswordPage() {
                       name="code"
                       value={form.code}
                       onChange={handleChange}
-                      placeholder={t('resetPassword.codePlaceholder', 'Ex: 123456')}
+                      placeholder={t('auth.resetPassword.codePlaceholder', 'Ex: 123456')}
                       required
                       autoFocus
                       autoComplete="one-time-code"
@@ -376,7 +376,7 @@ export default function ResetPasswordPage() {
                 </FormGroup>
 
                 <FormGroup>
-                  <Label htmlFor="password">{t('resetPassword.newPassword', 'Nouveau mot de passe')}</Label>
+                  <Label htmlFor="password">{t('auth.resetPassword.newPassword', 'Nouveau mot de passe')}</Label>
                   <InputWrapper>
                     <IconWrapper><Lock size={18} /></IconWrapper>
                     <Input
@@ -395,16 +395,16 @@ export default function ResetPasswordPage() {
                   </InputWrapper>
                   {form.password && (
                     <PasswordHints>
-                      <Hint $met={passwordChecks.length}>{t('resetPassword.hint.length', '8 caractères minimum')}</Hint>
-                      <Hint $met={passwordChecks.upper}>{t('resetPassword.hint.upper', 'Une majuscule')}</Hint>
-                      <Hint $met={passwordChecks.number}>{t('resetPassword.hint.number', 'Un chiffre')}</Hint>
-                      <Hint $met={passwordChecks.special}>{t('resetPassword.hint.special', 'Un caractère spécial')}</Hint>
+                      <Hint $met={passwordChecks.length}>{t('auth.resetPassword.hint.length', '8 caractères minimum')}</Hint>
+                      <Hint $met={passwordChecks.upper}>{t('auth.resetPassword.hint.upper', 'Une majuscule')}</Hint>
+                      <Hint $met={passwordChecks.number}>{t('auth.resetPassword.hint.number', 'Un chiffre')}</Hint>
+                      <Hint $met={passwordChecks.special}>{t('auth.resetPassword.hint.special', 'Un caractère spécial')}</Hint>
                     </PasswordHints>
                   )}
                 </FormGroup>
 
                 <FormGroup>
-                  <Label htmlFor="confirm">{t('resetPassword.confirmPassword', 'Confirmer le mot de passe')}</Label>
+                  <Label htmlFor="confirm">{t('auth.resetPassword.confirmPassword', 'Confirmer le mot de passe')}</Label>
                   <InputWrapper>
                     <IconWrapper><Lock size={18} /></IconWrapper>
                     <Input
@@ -429,8 +429,8 @@ export default function ResetPasswordPage() {
                   whileTap={{ scale: 0.98 }}
                 >
                   {loading
-                    ? t('resetPassword.loading', 'Réinitialisation...')
-                    : t('resetPassword.submit', 'Réinitialiser le mot de passe')}
+                    ? t('auth.resetPassword.loading', 'Réinitialisation...')
+                    : t('auth.resetPassword.submit', 'Réinitialiser le mot de passe')}
                 </SubmitButton>
               </Form>
             </>
