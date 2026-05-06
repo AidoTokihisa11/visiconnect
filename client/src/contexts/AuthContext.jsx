@@ -153,6 +153,49 @@ export const AuthProvider = ({ children }) => {
     return { success: true };
   };
 
+  // Clerk Core 3 : envoie un code de réinitialisation par email
+  const requestPasswordReset = async (email) => {
+    if (!clerkSignIn) return { error: { message: "Clerk n'est pas prêt." } };
+    try {
+      const result = await clerkSignIn.create({
+        strategy: 'reset_password_email_code',
+        identifier: email,
+      });
+      if (result.status === 'needs_first_factor') {
+        return { success: true };
+      }
+      return { error: { message: "Impossible d'envoyer l'email de réinitialisation." } };
+    } catch (err) {
+      const code = err.errors?.[0]?.code;
+      if (code === 'form_identifier_not_found') return { error: { message: "Aucun compte trouvé avec cet email." } };
+      return { error: { message: handleNetworkError(err) } };
+    }
+  };
+
+  // Clerk Core 3 : vérifie le code et définit le nouveau mot de passe
+  const confirmPasswordReset = async (code, newPassword) => {
+    if (!clerkSignIn) return { error: { message: "Clerk n'est pas prêt." } };
+    try {
+      const result = await clerkSignIn.attemptFirstFactor({
+        strategy: 'reset_password_email_code',
+        code,
+        password: newPassword,
+      });
+      if (result.status === 'complete') {
+        await clerkSignIn.finalize();
+        return { success: true };
+      }
+      return { error: { message: `Réinitialisation incomplète (statut: ${result.status}).` } };
+    } catch (err) {
+      const code = err.errors?.[0]?.code;
+      if (code === 'form_code_incorrect') return { error: { message: "Code incorrect. Vérifiez votre email." } };
+      if (code === 'verification_expired') return { error: { message: "Code expiré. Veuillez recommencer." } };
+      if (code === 'form_password_pwned') return { error: { message: "Ce mot de passe est trop commun. Choisissez-en un autre." } };
+      if (code === 'form_password_length_too_short') return { error: { message: "Le mot de passe est trop court (minimum 8 caractères)." } };
+      return { error: { message: handleNetworkError(err) } };
+    }
+  };
+
   const value = {
     user,
     isLoggedIn,
@@ -163,7 +206,10 @@ export const AuthProvider = ({ children }) => {
     signInWithProvider,
     signInWithGoogle,
     signInWithGithub,
-    signInWithDiscord,    logout
+    signInWithDiscord,
+    logout,
+    requestPasswordReset,
+    confirmPasswordReset,
   };
 
   // On bloque seulement le chargement critique global pour éviter un rendu prématuré

@@ -306,10 +306,37 @@
     },
     "forgotPassword": {
       "title": "Mot de passe oublié",
-      "subtitle": "Entrez votre email pour réinitialiser votre mot de passe",
-      "email": "Adresse email",
-      "sendReset": "Envoyer le lien de réinitialisation",
-      "backToLogin": "Retour à la connexion"
+      "subtitle": "Entrez votre email pour recevoir un code de réinitialisation.",
+      "emailLabel": "Adresse email",
+      "emailPlaceholder": "votre@email.com",
+      "sendCode": "Envoyer le code",
+      "sending": "Envoi en cours...",
+      "backToLogin": "Retour à la connexion",
+      "rememberedPassword": "Vous vous souvenez de votre mot de passe ?",
+      "emailSentTitle": "Email envoyé !",
+      "emailSentText": "Un code de réinitialisation a été envoyé à",
+      "redirecting": "Redirection en cours..."
+    },
+    "resetPassword": {
+      "title": "Nouveau mot de passe",
+      "subtitle": "Entrez le code reçu par email et choisissez un nouveau mot de passe.",
+      "back": "Retour",
+      "codeLabel": "Code de vérification",
+      "codePlaceholder": "Ex: 123456",
+      "newPassword": "Nouveau mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "submit": "Réinitialiser le mot de passe",
+      "loading": "Réinitialisation...",
+      "passwordMismatch": "Les mots de passe ne correspondent pas.",
+      "passwordWeak": "Le mot de passe ne respecte pas tous les critères.",
+      "successTitle": "Mot de passe réinitialisé !",
+      "successText": "Votre mot de passe a été mis à jour avec succès. Vous allez être redirigé vers la page de connexion...",
+      "hint": {
+        "length": "8 caractères minimum",
+        "upper": "Une majuscule",
+        "number": "Un chiffre",
+        "special": "Un caractère spécial"
+      }
     }
   },
   "meeting": {

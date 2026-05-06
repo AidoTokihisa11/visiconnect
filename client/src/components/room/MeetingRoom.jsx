@@ -367,8 +367,10 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
   useEffect(() => {
     if (!deviceError) return;
     const msg = deviceError === 'mic_denied'
-      ? 'Micro bloqué — cliquez sur 🔒 dans la barre d’adresse pour autoriser l’accès.'
-      : 'Caméra bloquée — cliquez sur 🔒 dans la barre d’adresse pour autoriser l’accès.';
+      ? 'Micro bloqué — cliquez sur 🔒 dans la barre d\'adresse pour autoriser l\'accès.'
+      : deviceError === 'mic_error'
+      ? 'Erreur micro — rechargez la page ou vérifiez votre périphérique audio.'
+      : 'Caméra bloquée — cliquez sur 🔒 dans la barre d\'adresse pour autoriser l\'accès.';
     setToast({ message: msg, type: 'poll' });
     const t = setTimeout(() => { setToast(null); clearDeviceError(); }, 5000);
     return () => clearTimeout(t);

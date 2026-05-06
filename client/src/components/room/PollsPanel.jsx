@@ -183,22 +183,31 @@ const Toggle = styled.input.attrs({ type: 'checkbox' })`
   width: 32px;
   height: 18px;
   border-radius: 9px;
-  background: ${props => props.checked ? THEME.primary : 'rgba(255,255,255,0.15)'};
+  background: rgba(255,255,255,0.15);
   position: relative;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, box-shadow 0.2s;
   flex-shrink: 0;
+
+  &:checked {
+    background: ${THEME.primary};
+    box-shadow: 0 0 0 2px ${THEME.primary}33;
+  }
 
   &::after {
     content: '';
     position: absolute;
     top: 2px;
-    left: ${props => props.checked ? '16px' : '2px'};
+    left: 2px;
     width: 14px;
     height: 14px;
     border-radius: 50%;
     background: white;
     transition: left 0.2s;
+  }
+
+  &:checked::after {
+    left: 16px;
   }
 `;
 

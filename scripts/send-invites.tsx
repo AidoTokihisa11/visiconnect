@@ -11,9 +11,7 @@ const resend = new Resend('re_f7CXkPZ1_FouifSQZycKkbcStAoZkGgW8');
 // LISTE DES BÊTA TESTEURS À PERSONNALISER
 // Chaque entrée : nom complet, email, et code bêta unique
 const betaTesters = [
-  { name: "Marlène Avonture", email: "avonture.marlene@gmail.com", betaCode: "VC-VXWX-O47D" },
-  { name: "Gab Maxxx", email: "gabmaxx@gmail.com", betaCode: "VC-YCXT-4XEH" },
-  { name: "Anthony De Amim", email: "deamim.contact@gmail.com", betaCode: "VC-NIUV-LT9V" },
+  { name: "Isabelle Ducasse Garcès", email: "isadgarces@gmail.com" },
 ];
 
 async function sendInvites() {
@@ -31,18 +29,17 @@ async function sendInvites() {
       const emailHtml = await render(
         <MeetingInviteEmail 
           inviteeName={tester.name}
-          betaCode={tester.betaCode}
         />
       );
 
       // 2. Envoyer l'email
-      const pdfPath = path.resolve(process.cwd(), 'server/public/Guide_officiel__Bta_Prive_VisioConnect.pdf');
+      const pdfPath = path.resolve(process.cwd(), 'server/public/Guide_Officiel_VisioConnect.pdf');
       const pdfContent = fs.readFileSync(pdfPath);
 
       const response = await resend.emails.send({
         from: 'VisioConnect <contact@visioconnect.pro>',
         to: tester.email,
-        subject: `🔑 Votre accès bêta VisioConnect est actif — Code : ${tester.betaCode}`,
+        subject: `Votre accès exclusif à la bêta fermé de VisioConnect, ${tester.name} !`,
         html: emailHtml,
         attachments: [
           {

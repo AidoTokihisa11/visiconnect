@@ -21,8 +21,8 @@ export const createPoll = mutation({
     showResults: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    const optionsWithVotes = args.options.map(text => ({
-      id: crypto.randomUUID(),
+    const optionsWithVotes = args.options.map((text, i) => ({
+      id: `opt_${Date.now()}_${i}_${Math.random().toString(36).substring(2, 9)}`,
       text,
       votes: 0
     }));

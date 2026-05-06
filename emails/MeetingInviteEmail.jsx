@@ -113,7 +113,7 @@ export const MeetingInviteEmail = ({
                 <tr>
                   <td style={{ textAlign: 'center', paddingBottom: '14px' }}>
                     <div style={codeLabelStyle}>
-                      <span style={codeLabelTextStyle}>� ACCÈS PIONNIER — BÊTA FERMÉE</span>
+                      <span style={codeLabelTextStyle}>🏆 ACCÈS PIONNIER — BÊTA FERMÉE</span>
                     </div>
                   </td>
                 </tr>
@@ -183,6 +183,9 @@ export const MeetingInviteEmail = ({
                     <Text style={stepBodyStyle}>
                       Clique partout. Teste chaque bouton, chaque page, chaque formulaire. <strong>Essaie de casser quelque chose</strong> — c'est exactement ce dont j'ai besoin.
                     </Text>
+                    <Text style={stepBodyStyle}>
+                      Pour lancer une visioconférence : depuis la page d'accueil, clique sur le bouton <strong>« Rejoindre la room »</strong> — <strong>un pseudo suffit</strong>, aucun code, aucune configuration. Tu entres, la salle est prête. À l'intérieur, un bouton <strong>« Inviter »</strong> génère un lien à partager instantanément avec un ami ou un membre de ta famille pour tester à deux en conditions réelles.
+                    </Text>
                   </td>
                 </tr>
               </table>
@@ -229,8 +232,8 @@ export const MeetingInviteEmail = ({
               <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" style={{ borderCollapse: 'collapse' }}>
                 <tr>
                   <td style={{ textAlign: 'center', paddingBottom: '12px' }}>
-                    <Button href="https://visioconnect-1.vercel.app/demo" style={btnPrimaryStyle}>
-                      → Accéder à la plateforme
+                    <Button href="https://visioconnect-1.vercel.app/" style={btnPrimaryStyle}>
+                      Accéder à la plateforme
                     </Button>
                   </td>
                 </tr>
@@ -251,17 +254,6 @@ export const MeetingInviteEmail = ({
                   theo.garces.aido@gmail.com
                 </Link>
               </Text>
-            </Section>
-
-            {/* ════════════════════════════════
-                CITATION
-            ════════════════════════════════ */}
-            <Section style={quoteWrapperStyle}>
-              <Text style={quoteMarkStyle}>&ldquo;</Text>
-              <Text style={quoteTextStyle}>
-                La grandeur d'un métier est peut-être, avant tout, d'unir des hommes.
-              </Text>
-              <Text style={quoteAuthorStyle}>— Antoine de Saint-Exupéry</Text>
             </Section>
 
             <Hr style={hrStyle} />

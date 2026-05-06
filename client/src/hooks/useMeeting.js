@@ -148,11 +148,17 @@ export const useMeeting = (maxQualityLock = true) => {
           console.warn('[Privacy Guard] Erreur arrêt micro:', e);
         }
 
-        // Fallback: arrêt direct des MediaStreamTracks (Safari iOS)
+        // Fallback: arrêt direct des MediaStreamTracks VIDÉO uniquement (Safari iOS)
+        // ⚠️ NE PAS appeler .stop() sur les pistes audio : une piste arrêtée (readyState=ended)
+        // ne peut plus être réactivée sans un nouvel appel getUserMedia, ce qui casse le micro.
+        // Pour l'audio, setMicrophoneEnabled(false) ci-dessus est suffisant.
         try {
           const pubs = localParticipant.getTrackPublications();
           pubs.forEach(pub => {
-            if (pub.track?.mediaStreamTrack && pub.track.source !== Track.Source.ScreenShare) {
+            if (
+              pub.track?.mediaStreamTrack &&
+              pub.track.source === Track.Source.Camera
+            ) {
               pub.track.mediaStreamTrack.stop();
             }
           });
@@ -321,11 +327,28 @@ export const useMeeting = (maxQualityLock = true) => {
     if (!localParticipant) return;
     const newState = !isMicrophoneEnabled;
     try {
+      // Si on réactive le micro, vérifier que la piste audio sous-jacente n'est pas terminée.
+      // Une piste en état 'ended' (après un .stop() direct) doit être redémarrée avant unmute.
+      if (newState) {
+        const audioPub = localParticipant.getTrackPublication(Track.Source.Microphone);
+        if (audioPub?.track?.mediaStreamTrack?.readyState === 'ended') {
+          console.warn('[toggleMic] Piste audio terminée — tentative de redémarrage...');
+          try {
+            await audioPub.track.restartTrack();
+          } catch (restartErr) {
+            console.error('[toggleMic] restartTrack() échoué:', restartErr);
+          }
+        }
+      }
       await localParticipant.setMicrophoneEnabled(newState);
       setIsMicManualMute(!newState);
     } catch (err) {
+      console.error('[toggleMic] Erreur:', err?.name, err?.message);
       if (err?.name === 'NotAllowedError' || err?.name === 'PermissionDeniedError') {
         setDeviceError('mic_denied');
+      } else {
+        // Toute autre erreur (track ended, device not found, etc.)
+        setDeviceError('mic_error');
       }
     }
   }, [localParticipant, isMicrophoneEnabled]);

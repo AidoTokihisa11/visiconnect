@@ -12,6 +12,8 @@ import SettingsPage from './pages/SettingsPage';
 import HomePageClean from './pages/HomePageClean';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 import RoomPage from './pages/RoomPageNew';
 import SupportPageNew from './pages/SupportPageNew';
 import AccountPageSimple from './pages/AccountPageSimple';
@@ -89,6 +91,8 @@ function App() {
                         <Route path="/" element={<HomePageClean />} />
                         <Route path="/login" element={<LoginPage />} />
                         <Route path="/signup" element={<SignupPage />} />
+                        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                        <Route path="/reset-password" element={<ResetPasswordPage />} />
                         <Route path="/room/:roomId" element={<RoomPage />} />
                         <Route path="/meeting/:roomId" element={<MeetingRoomPage />} />
                         <Route path="/admin" element={<AdminDashboard />} />

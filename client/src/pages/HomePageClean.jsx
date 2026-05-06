@@ -237,6 +237,7 @@ const HeroHeadline = styled.h1`
   line-height: 1.1;
   color: ${COLORS.dark};
   letter-spacing: -0.05em;
+  white-space: nowrap;
 
   span {
     color: ${COLORS.primary};
@@ -244,14 +245,17 @@ const HeroHeadline = styled.h1`
 
   @media (max-width: 900px) {
     font-size: 3rem;
+    white-space: normal;
   }
 
   @media (max-width: 768px) {
     font-size: 2.5rem;
+    white-space: normal;
   }
   
   @media (max-width: 480px) {
     font-size: 2rem;
+    white-space: normal;
   }
 `;
 
@@ -579,7 +583,7 @@ export default function HomePageClean() {
         <HeroContainer>
           <HeroContent>
             <HeroHeadline>
-              <EditableText translationKey="hero.titleLine1" defaultValue={t('hero.titleLine1')} /> <br/>
+              <EditableText translationKey="hero.titleLine1" defaultValue={t('hero.titleLine1')} />{' '}
               <span><EditableText translationKey="hero.titleLine2" defaultValue={t('hero.titleLine2')} /></span>
             </HeroHeadline>
             <HeroSubhead>
