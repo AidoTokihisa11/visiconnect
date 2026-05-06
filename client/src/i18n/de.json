@@ -1716,16 +1716,68 @@
   "billing": {
     "upgradeAction": "Zu diesem Plan wechseln",
     "chooseAction": "Auswählen",
-    "downgradeToStarter": "Auf den Starter-Plan zurückstufen (kostenlos)"
+    "downgradeToStarter": "Auf den Starter-Plan zurückstufen (kostenlos)",
+    "currentPlan": "Aktueller Plan",
+    "currentBadge": "Aktuell",
+    "free": "Kostenlos",
+    "perMonth": "/Monat",
+    "features": {
+      "starter": {
+        "0": "Bis zu 3 Teilnehmer",
+        "1": "45 Min. pro Meeting",
+        "2": "Bildschirmfreigabe"
+      },
+      "pro": {
+        "0": "Bis zu 50 Teilnehmer",
+        "1": "Unbegrenzte Dauer",
+        "2": "5 GB Cloud-Speicher",
+        "3": "E-Mail-Support (24h)",
+        "4": "KI-Transkriptionen 10h/Monat"
+      },
+      "business": {
+        "0": "Bis zu 200 Teilnehmer",
+        "1": "Unbegrenzte Dauer",
+        "2": "Unbegrenzter Speicher",
+        "3": "SSO & erweiterte Verwaltung",
+        "4": "Unbegrenzte Transkriptionen",
+        "5": "Dedizierter Telefonsupport"
+      }
+    }
   },
   "createMeetingModal": {
     "title": "Meeting erstellen"
   },
+  "dashboardOverview": {
+    "welcome": "Willkommen",
+    "subtitle": "Hier ist eine Übersicht Ihrer Aktivität.",
+    "planLabel": "Plan",
+    "never": "Keine Meetings",
+    "greeting": { "morning": "Guten Morgen", "afternoon": "Guten Tag", "evening": "Guten Abend" },
+    "kpi": {
+      "totalMeetings": "Erstellte Meetings",
+      "thisMonth": "Diesen Monat",
+      "timeBooked": "Geplante Zeit",
+      "invitedParticipants": "Eingeladene Teilnehmer"
+    },
+    "recent": {
+      "title": "Letzte Meetings",
+      "lastActivity": "Letzte Aktivität",
+      "empty": "Noch keine Meetings. Erstellen Sie Ihr erstes Meeting, um Ihre Aktivität hier zu sehen.",
+      "participants": "Teilnehmer",
+      "rejoin": "Fortsetzen"
+    }
+  },
   "account": {
     "dashboard": "Dashboard",
     "subtitle": "Verwalten Sie Ihr Profil und Ihre Kontoeinstellungen.",
+    "actions": {
+      "createMeeting": "Meeting erstellen",
+      "join": "Beitreten",
+      "joinPlaceholder": "Raum-ID oder Beta-Code (VC-XXXX-XXXX)"
+    },
     "tabs": {
       "profile": "Mein Profil",
+      "subscription": "Mein Abonnement",
       "security": "Sicherheit & Anmeldung"
     },
     "menu": "Menü",

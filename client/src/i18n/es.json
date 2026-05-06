@@ -1751,17 +1751,69 @@
   "billing": {
     "upgradeAction": "Cambiar a este plan",
     "chooseAction": "Elegir",
-    "downgradeToStarter": "Volver al plan Starter (gratuito)"
+    "downgradeToStarter": "Volver al plan Starter (gratuito)",
+    "currentPlan": "Plan actual",
+    "currentBadge": "Actual",
+    "free": "Gratis",
+    "perMonth": "/mes",
+    "features": {
+      "starter": {
+        "0": "Hasta 3 participantes",
+        "1": "45 min por reunión",
+        "2": "Compartir pantalla"
+      },
+      "pro": {
+        "0": "Hasta 50 participantes",
+        "1": "Duración ilimitada",
+        "2": "5 GB de almacenamiento",
+        "3": "Soporte por email (24h)",
+        "4": "Transcripciones IA 10h/mes"
+      },
+      "business": {
+        "0": "Hasta 200 participantes",
+        "1": "Duración ilimitada",
+        "2": "Almacenamiento ilimitado",
+        "3": "SSO y administración avanzada",
+        "4": "Transcripciones ilimitadas",
+        "5": "Soporte telefónico dedicado"
+      }
+    }
   },
   "createMeetingModal": {
     "title": "Crear una reunión"
   },
+  "dashboardOverview": {
+    "welcome": "Bienvenido",
+    "subtitle": "Aquí tienes un resumen de tu actividad.",
+    "planLabel": "Plan",
+    "never": "Sin reuniones",
+    "greeting": { "morning": "Buenos días", "afternoon": "Buenas tardes", "evening": "Buenas noches" },
+    "kpi": {
+      "totalMeetings": "Reuniones creadas",
+      "thisMonth": "Este mes",
+      "timeBooked": "Tiempo planificado",
+      "invitedParticipants": "Participantes invitados"
+    },
+    "recent": {
+      "title": "Reuniones recientes",
+      "lastActivity": "Última actividad",
+      "empty": "Aún no hay reuniones. Crea tu primera reunión para ver tu actividad aquí.",
+      "participants": "participantes",
+      "rejoin": "Reanudar"
+    }
+  },
   "account": {
     "dashboard": "Panel",
     "subtitle": "Gestione su perfil y preferencias.",
+    "actions": {
+      "createMeeting": "Crear una reunión",
+      "join": "Unirse",
+      "joinPlaceholder": "ID de sala o código beta (VC-XXXX-XXXX)"
+    },
     "tabs": {
-      "profile": "Mi Perfil",
-      "security": "Seguridad e Inicio de sesión"
+      "profile": "Mi perfil",
+      "subscription": "Mi suscripción",
+      "security": "Seguridad e inicio de sesión"
     },
     "menu": "Menú",
     "logout": "Cerrar sesión",

@@ -1718,16 +1718,68 @@
   "billing": {
     "upgradeAction": "Switch to this plan",
     "chooseAction": "Choose",
-    "downgradeToStarter": "Downgrade to the Starter plan (free)"
+    "downgradeToStarter": "Downgrade to the Starter plan (free)",
+    "currentPlan": "Current plan",
+    "currentBadge": "Current",
+    "free": "Free",
+    "perMonth": "/month",
+    "features": {
+      "starter": {
+        "0": "Up to 3 participants",
+        "1": "45 min per meeting",
+        "2": "Screen sharing"
+      },
+      "pro": {
+        "0": "Up to 50 participants",
+        "1": "Unlimited duration",
+        "2": "5 GB cloud storage",
+        "3": "Email support (24h)",
+        "4": "AI transcriptions 10h/month"
+      },
+      "business": {
+        "0": "Up to 200 participants",
+        "1": "Unlimited duration",
+        "2": "Unlimited storage",
+        "3": "SSO & advanced admin",
+        "4": "Unlimited transcriptions",
+        "5": "Dedicated phone support"
+      }
+    }
   },
   "createMeetingModal": {
     "title": "Create a meeting"
   },
+  "dashboardOverview": {
+    "welcome": "Welcome",
+    "subtitle": "Here is an overview of your activity.",
+    "planLabel": "Plan",
+    "never": "No meeting yet",
+    "greeting": { "morning": "Good morning", "afternoon": "Good afternoon", "evening": "Good evening" },
+    "kpi": {
+      "totalMeetings": "Meetings created",
+      "thisMonth": "This month",
+      "timeBooked": "Time booked",
+      "invitedParticipants": "Invited participants"
+    },
+    "recent": {
+      "title": "Recent meetings",
+      "lastActivity": "Last activity",
+      "empty": "No meetings yet. Create your first meeting to track your activity here.",
+      "participants": "participants",
+      "rejoin": "Resume"
+    }
+  },
   "account": {
     "dashboard": "Dashboard",
     "subtitle": "Manage your profile and account preferences.",
+    "actions": {
+      "createMeeting": "Create a meeting",
+      "join": "Join",
+      "joinPlaceholder": "Room ID or beta code (VC-XXXX-XXXX)"
+    },
     "tabs": {
       "profile": "My Profile",
+      "subscription": "My Subscription",
       "security": "Security & Login"
     },
     "menu": "Menu",

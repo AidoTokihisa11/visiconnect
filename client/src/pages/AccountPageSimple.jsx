@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import CreateMeetingModal from '../components/CreateMeetingModal';
 import WebcamCaptureModal from '../components/WebcamCaptureModal';
+import DashboardOverview from '../components/DashboardOverview';
 import Combobox from '../components/ui/Combobox';
 import { COUNTRIES } from '../config/countries';
 import HeaderClean from '../components/HeaderClean';
@@ -433,9 +434,26 @@ const AccountPageSimple = () => {
     const colors = tierColors[currentPlanId] || tierColors.starter;
 
     const featuresByPlan = {
-      starter: ['Jusqu\'à 3 participants', '45 min par réunion', 'Partage d\'écran'],
-      pro:     ['Jusqu\'à 50 participants', 'Durée illimitée', '5 Go stockage Cloud', 'Support Email (24h)', 'Transcriptions IA 10h/mois'],
-      business:['Jusqu\'à 200 participants', 'Durée illimitée', 'Stockage illimité', 'SSO & Admin avancé', 'Transcriptions illimitées', 'Support téléphonique dédié'],
+      starter: [
+        t('billing.features.starter.0', "Jusqu'à 3 participants"),
+        t('billing.features.starter.1', '45 min par réunion'),
+        t('billing.features.starter.2', "Partage d'écran"),
+      ],
+      pro: [
+        t('billing.features.pro.0', "Jusqu'à 50 participants"),
+        t('billing.features.pro.1', 'Durée illimitée'),
+        t('billing.features.pro.2', '5 Go stockage Cloud'),
+        t('billing.features.pro.3', 'Support Email (24h)'),
+        t('billing.features.pro.4', 'Transcriptions IA 10h/mois'),
+      ],
+      business: [
+        t('billing.features.business.0', "Jusqu'à 200 participants"),
+        t('billing.features.business.1', 'Durée illimitée'),
+        t('billing.features.business.2', 'Stockage illimité'),
+        t('billing.features.business.3', 'SSO & Admin avancé'),
+        t('billing.features.business.4', 'Transcriptions illimitées'),
+        t('billing.features.business.5', 'Support téléphonique dédié'),
+      ],
     };
 
     const handleUpgrade = async (targetPlan) => {
@@ -493,12 +511,12 @@ const AccountPageSimple = () => {
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <Star size={24} color={colors.badge} fill={colors.badge} />
               <div>
-                <div style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Plan actuel</div>
+                <div style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t('billing.currentPlan', 'Plan actuel')}</div>
                 <div style={{ fontSize: '1.5rem', fontWeight: '800', color: '#0f172a' }}>{currentPlan.name}</div>
               </div>
             </div>
             <div style={{ background: colors.badge, color: 'white', fontSize: '0.85rem', fontWeight: '700', padding: '0.35rem 1rem', borderRadius: '999px' }}>
-              {currentPlan.priceMonthly === 0 ? 'Gratuit' : `€${currentPlan.priceMonthly}/mois`}
+              {currentPlan.priceMonthly === 0 ? t('billing.free', 'Gratuit') : `€${currentPlan.priceMonthly}${t('billing.perMonth', '/mois')}`}
             </div>
           </div>
           <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 0', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -530,12 +548,12 @@ const AccountPageSimple = () => {
                 gap: '0.5rem',
               }}>
                 {isCurrentPlan && (
-                  <div style={{ position: 'absolute', top: '-10px', left: '50%', transform: 'translateX(-50%)', background: planColor.badge, color: 'white', fontSize: '0.7rem', fontWeight: '700', padding: '0.2rem 0.6rem', borderRadius: '999px', whiteSpace: 'nowrap' }}>Actuel</div>
+                  <div style={{ position: 'absolute', top: '-10px', left: '50%', transform: 'translateX(-50%)', background: planColor.badge, color: 'white', fontSize: '0.7rem', fontWeight: '700', padding: '0.2rem 0.6rem', borderRadius: '999px', whiteSpace: 'nowrap' }}>{t('billing.currentBadge', 'Actuel')}</div>
                 )}
                 <div style={{ fontWeight: '800', fontSize: '1rem', color: '#0f172a' }}>{plan.name}</div>
                 <div style={{ fontSize: '1.25rem', fontWeight: '700', color: '#2563eb' }}>
                   {plan.priceMonthly === 0 ? '€0' : `€${plan.priceMonthly}`}
-                  <span style={{ fontSize: '0.75rem', fontWeight: '500', color: '#64748b' }}>/mois</span>
+                  <span style={{ fontSize: '0.75rem', fontWeight: '500', color: '#64748b' }}>{t('billing.perMonth', '/mois')}</span>
                 </div>
                 {!isCurrentPlan && (
                   <button
@@ -613,14 +631,14 @@ const AccountPageSimple = () => {
                 onMouseOver={e => e.currentTarget.style.opacity = '0.88'}
                 onMouseOut={e => e.currentTarget.style.opacity = '1'}
               >
-                <Video size={17} /> Créer une réunion
+                <Video size={17} /> {t('account.actions.createMeeting', 'Créer une réunion')}
               </button>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
                 <form onSubmit={handleJoinRoom} style={{ display: 'flex', gap: '0.5rem' }}>
                   <input
                     value={joinRoomId}
                     onChange={e => { setJoinRoomId(e.target.value); setJoinError(''); }}
-                    placeholder="ID de salle ou code bêta (VC-XXXX-XXXX)"
+                    placeholder={t('account.actions.joinPlaceholder', 'ID de salle ou code bêta (VC-XXXX-XXXX)')}
                     style={{
                       padding: '0.6rem 1rem',
                       border: `1px solid ${joinError ? '#ef4444' : '#cbd5e1'}`,
@@ -641,7 +659,7 @@ const AccountPageSimple = () => {
                     onMouseOver={e => e.currentTarget.style.background = '#eff6ff'}
                     onMouseOut={e => e.currentTarget.style.background = 'white'}
                   >
-                    <ArrowRight size={16} /> Rejoindre
+                    <ArrowRight size={16} /> {t('account.actions.join', 'Rejoindre')}
                   </button>
                 </form>
                 {joinError && (
@@ -660,6 +678,13 @@ const AccountPageSimple = () => {
             title={t('account.avatar.webcamTitle', 'Capturer une photo de profil')}
           />
         </motion.div>
+
+        <DashboardOverview
+          user={user}
+          currentPlan={PLANS[user?.publicMetadata?.plan || user?.unsafeMetadata?.plan || 'starter'] || PLANS.starter}
+          onCreateMeeting={() => setShowCreateModal(true)}
+          onJoinMeeting={(id) => navigate(`/room/${id}`)}
+        />
 
         <DashboardGrid>
           {/* Sidebar */}
@@ -688,7 +713,7 @@ const AccountPageSimple = () => {
                   $active={activeTab === 'subscription'}
                   onClick={() => { setActiveTab('subscription'); setIsMobileMenuOpen(false); }}
                 >
-                  <CreditCard size={20} /> Mon Abonnement
+                  <CreditCard size={20} /> {t('account.tabs.subscription', 'Mon Abonnement')}
                 </NavItem>
                 <NavItem
                   $active={activeTab === 'security'}
@@ -712,7 +737,7 @@ const AccountPageSimple = () => {
           >
             <CardHeader>
               <CardTitle>
-                {activeTab === 'profile' ? t('account.personalInfo') : activeTab === 'subscription' ? 'Mon Abonnement' : t('account.securityTitle')}
+                {activeTab === 'profile' ? t('account.personalInfo') : activeTab === 'subscription' ? t('account.tabs.subscription', 'Mon Abonnement') : t('account.securityTitle')}
               </CardTitle>
             </CardHeader>
             <CardBody>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { Rocket, Video as VideoIcon, Zap, Settings, LifeBuoy } from 'lucide-react';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import { useTranslation } from '../hooks/useTranslation';
@@ -128,8 +129,14 @@ const Card = styled.div`
 `;
 
 const CategoryIcon = styled.div`
-  font-size: 2rem;
-  margin-bottom: 16px;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  background: rgba(37, 99, 235, 0.08);
   color: ${COLORS.primary};
 `;
 
@@ -178,7 +185,7 @@ const GuideLink = styled(Link)`
   }
 `;
 
-const icons = ["🚀", "🎥", "⚡", "⚙️", "🔧"];
+const SECTION_ICONS = [Rocket, VideoIcon, Zap, Settings, LifeBuoy];
 const itemCounts = [4, 4, 4, 4, 4];
 
 const UserGuidePageNew = () => {
@@ -195,9 +202,9 @@ const UserGuidePageNew = () => {
 
         <Section>
           <Grid>
-            {icons.map((icon, idx) => (
+            {SECTION_ICONS.map((Icon, idx) => (
               <Card key={idx}>
-                <CategoryIcon>{icon}</CategoryIcon>
+                <CategoryIcon><Icon size={22} strokeWidth={2} /></CategoryIcon>
                 <CategoryTitle>{t(`userGuide.sections.${idx}.title`)}</CategoryTitle>
                 <GuideList>
                   {Array.from({ length: itemCounts[idx] }).map((_, i) => {

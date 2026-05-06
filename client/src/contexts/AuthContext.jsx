@@ -248,6 +248,7 @@ export const AuthProvider = ({ children }) => {
     signInWithGithub,
     signInWithDiscord,
     logout,
+    signOut: logout,
     requestPasswordReset,
     confirmPasswordReset,
   };

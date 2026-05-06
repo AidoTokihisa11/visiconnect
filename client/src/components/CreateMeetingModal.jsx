@@ -175,6 +175,24 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
       setTimeError(t('createMeetingModal.errors.endBeforeStart', "L'heure de fin doit être après l'heure de début."));
       return;
     }
+    // Persist meeting locally so dashboard widgets can show recent activity.
+    try {
+      const STORAGE_KEY = 'visiconnect.recentMeetings';
+      const previous = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      const entry = {
+        id: meetingId,
+        title: formData.title || 'Réunion VisiConnect',
+        date: formData.date,
+        startTime: formData.startTime,
+        endTime: formData.endTime,
+        participants: formData.participants?.length || 0,
+        createdAt: Date.now(),
+      };
+      const next = [entry, ...previous.filter((m) => m.id !== meetingId)].slice(0, 25);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    } catch {
+      // localStorage may be unavailable — non-blocking
+    }
     onClose();
     // Use react-router navigation to keep the SPA state
     // (window.location.href would do a full page reload).
