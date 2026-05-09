@@ -9,11 +9,18 @@ import '@livekit/components-styles';
 const PageContainer = styled.div`
   width: 100vw;
   height: 100vh;
+  /* Use dynamic viewport height on mobile so the BottomBar is never hidden
+     behind the browser URL bar (Chrome/Safari on iOS & Android). */
+  height: 100dvh;
   background-color: #0f172a;
   color: white;
   display: flex;
   overflow: hidden;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
+
+  @supports not (height: 100dvh) {
+    height: -webkit-fill-available;
+  }
 `;
 
 const LoadingScreen = styled.div`

@@ -244,13 +244,14 @@ const normalizeMarkdownForDisplay = (text = '') => {
     .trim();
 };
 
-const fetchLLMResponse = async (conversation, style, purpose = 'chat') => {
+const fetchLLMResponse = async (conversation, style, purpose = 'chat', locale = 'fr') => {
   const body = {
     messages: [
       ...conversation,
     ],
     style,
     purpose,
+    locale,
   };
 
   const res = await fetch(AI_PROXY_URL, {
@@ -300,7 +301,7 @@ const asMarkdownDownload = (markdown, roomId) => {
 };
 
 export const AIChatPanel = ({ responseStyle = 'balanced', roomMessages = [], roomId = 'room' }) => {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -335,7 +336,7 @@ export const AIChatPanel = ({ responseStyle = 'balanced', roomMessages = [], roo
         .slice(-10)
         .map((m) => ({ role: m.sender === 'ai' ? 'assistant' : 'user', content: m.text }));
       
-      const aiText = await fetchLLMResponse(conversation, responseStyle, 'chat');
+      const aiText = await fetchLLMResponse(conversation, responseStyle, 'chat', language);
       setMessages((prev) => [...prev, { id: Date.now() + 1, sender: 'ai', text: aiText }]);
     } catch (e) {
       console.error('[AIChatPanel] Error:', e);

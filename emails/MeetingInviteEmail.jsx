@@ -17,12 +17,12 @@ import {
 } from '@react-email/components';
 
 export const MeetingInviteEmail = ({
-  inviteeName = "Testeur",
+  inviteeName = "Tester",
 }) => {
   return (
-    <Html lang="fr">
+    <Html lang="es">
       <Head>
-        <title>Votre accès bêta VisioConnect est actif</title>
+        <title>Tu acceso beta a VisioConnect está activo</title>
         <Font
           fontFamily="Inter"
           fallbackFontFamily="Helvetica, Arial, sans-serif"
@@ -44,7 +44,7 @@ export const MeetingInviteEmail = ({
           fontStyle="normal"
         />
       </Head>
-      <Preview>🎉 {inviteeName}, tu es l'un(e) des 15 — accès bêta VisioConnect activé</Preview>
+      <Preview>🎉 {inviteeName}, eres uno/una de los 15 — acceso beta a VisioConnect activado</Preview>
 
       <Body style={bodyStyle}>
         <Container style={containerStyle}>
@@ -66,7 +66,7 @@ export const MeetingInviteEmail = ({
                 <td style={{ textAlign: 'center' }}>
                   <Text style={brandNameStyle}>VisioConnect</Text>
                   <div style={betaBadgeStyle}>
-                    <span style={betaBadgeTextStyle}>● BÊTA PRIVÉE</span>
+                    <span style={betaBadgeTextStyle}>● BETA PRIVADA</span>
                   </div>
                 </td>
               </tr>
@@ -85,8 +85,8 @@ export const MeetingInviteEmail = ({
                   </div>
                 </td>
                 <td style={greetingTextCell}>
-                  <Text style={greetingLineStyle}>Bonjour {inviteeName},</Text>
-                  <Text style={greetingSubStyle}>Bienvenue dans le cercle des pionniers VisioConnect.</Text>
+                  <Text style={greetingLineStyle}>Hola {inviteeName},</Text>
+                  <Text style={greetingSubStyle}>Bienvenido/a al círculo de pioneros de VisioConnect.</Text>
                 </td>
               </tr>
             </table>
@@ -96,13 +96,13 @@ export const MeetingInviteEmail = ({
 
             {/* ── INTRO ── */}
             <Text style={introText}>
-              Tu fais partie des <strong style={{ color: '#1d4ed8' }}>15 personnes soigneusement sélectionnées</strong> pour tester VisioConnect avant son lancement public. Ce projet, c'est <strong>3 ans de travail</strong> — et tes retours sont une condition directe de validation de mon diplôme.
+              Formas parte de las <strong style={{ color: '#1d4ed8' }}>15 personas cuidadosamente seleccionadas</strong> para probar VisioConnect antes de su lanzamiento público. Este proyecto representa <strong>3 años de trabajo</strong> — y tus comentarios son una condición directa para la validación de mi título.
             </Text>
             <Text style={introText}>
-              <strong>Une seule consigne :</strong> lis le guide PDF joint <strong>du début à la fin</strong> avant de te connecter. Tout est dedans — pas d'improvisation.
+              <strong>Una sola consigna:</strong> lee el PDF adjunto <strong>de principio a fin</strong> antes de conectarte. Todo está ahí dentro — no hay nada que improvisar.
             </Text>
             <Text style={disclaimerText}>
-              C'est mon premier projet d'envergure, construit seul de bout en bout. Certaines fonctionnalités peuvent se montrer capricieuses — un rechargement suffit souvent à les remettre en ordre. Je t'en remercie par avance pour ta patience, et pour chaque bug remonté.
+              Es mi primer proyecto de envergadura, construido en solitario de principio a fin. Algunas funcionalidades pueden mostrarse caprichosas — a menudo basta con recargar la página para que todo vuelva a su sitio. Te agradezco de antemano tu paciencia y cada bug que me reportes.
             </Text>
 
             {/* ════════════════════════════════
@@ -113,20 +113,20 @@ export const MeetingInviteEmail = ({
                 <tr>
                   <td style={{ textAlign: 'center', paddingBottom: '14px' }}>
                     <div style={codeLabelStyle}>
-                      <span style={codeLabelTextStyle}>🏆 ACCÈS PIONNIER — BÊTA FERMÉE</span>
+                      <span style={codeLabelTextStyle}>🏆 ACCESO PIONERO — BETA CERRADA</span>
                     </div>
                   </td>
                 </tr>
                 <tr>
                   <td style={{ textAlign: 'center', paddingBottom: '10px' }}>
                     <div style={codeBoxStyle}>
-                      <Text style={{ ...codeTextStyle, fontSize: '15px', letterSpacing: '0px' }}>Tu en fais partie.</Text>
+                      <Text style={{ ...codeTextStyle, fontSize: '15px', letterSpacing: '0px' }}>Eres uno/una de ellos.</Text>
                     </div>
                   </td>
                 </tr>
                 <tr>
                   <td style={{ textAlign: 'center' }}>
-                    <Text style={codeSubtextStyle}>Accès complet gratuit · Plan Pro offert à vie après le lancement public</Text>
+                    <Text style={codeSubtextStyle}>Acceso completo gratuito · Plan Pro de por vida tras el lanzamiento público</Text>
                   </td>
                 </tr>
               </table>
@@ -142,9 +142,9 @@ export const MeetingInviteEmail = ({
                     <div style={statusDotStyle} />
                   </td>
                   <td style={{ padding: '0' }}>
-                    <Text style={statusTitleStyle}>Plateforme active — prête à l'emploi</Text>
+                    <Text style={statusTitleStyle}>Plataforma activa — lista para usar</Text>
                     <Text style={statusBodyStyle}>
-                      Tout fonctionne. Crée ton compte, explore chaque fonctionnalité, note ce qui cloche ou ce qui t'impressionne. <strong style={{ color: '#15803d' }}>Chaque observation compte.</strong>
+                      Todo funciona. Crea tu cuenta, explora cada funcionalidad, anota lo que falla o lo que te impresiona. <strong style={{ color: '#15803d' }}>Cada observación cuenta.</strong>
                     </Text>
                   </td>
                 </tr>
@@ -155,51 +155,51 @@ export const MeetingInviteEmail = ({
                 ÉTAPES DE CONNEXION
             ════════════════════════════════ */}
             <Section style={stepsWrapperStyle}>
-              <Text style={sectionTitleStyle}>Démarrer en 3 étapes</Text>
+              <Text style={sectionTitleStyle}>Empezar en 3 pasos</Text>
 
-              {/* Étape 1 */}
+              {/* Etapa 1 */}
               <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" style={{ borderCollapse: 'collapse', marginBottom: '16px' }}>
                 <tr>
                   <td style={stepNumberCell}>
                     <div style={stepBubble}>1</div>
                   </td>
                   <td style={stepContentCell}>
-                    <Text style={stepTitleStyle}>Lire le guide — c'est obligatoire</Text>
+                    <Text style={stepTitleStyle}>Lee la guía — es obligatorio</Text>
                     <Text style={stepBodyStyle}>
-                      Le PDF joint détaille chaque mission : création de compte, tests Stripe avec cartes fictives, lancement d'une visioconférence. <strong>10 minutes de lecture = zéro confusion.</strong>
+                      El PDF adjunto detalla cada misión: creación de cuenta, pruebas Stripe con tarjetas ficticias, lanzamiento de una videoconferencia. <strong>10 minutos de lectura = cero confusión.</strong>
                     </Text>
                   </td>
                 </tr>
               </table>
 
-              {/* Étape 2 */}
+              {/* Etapa 2 */}
               <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" style={{ borderCollapse: 'collapse', marginBottom: '16px' }}>
                 <tr>
                   <td style={stepNumberCell}>
                     <div style={stepBubble}>2</div>
                   </td>
                   <td style={stepContentCell}>
-                    <Text style={stepTitleStyle}>Explorer la plateforme sans retenue</Text>
+                    <Text style={stepTitleStyle}>Explora la plataforma sin reservas</Text>
                     <Text style={stepBodyStyle}>
-                      Clique partout. Teste chaque bouton, chaque page, chaque formulaire. <strong>Essaie de casser quelque chose</strong> — c'est exactement ce dont j'ai besoin.
+                      Haz clic en todas partes. Prueba cada botón, cada página, cada formulario. <strong>Intenta romper algo</strong> — es exactamente lo que necesito.
                     </Text>
                     <Text style={stepBodyStyle}>
-                      Pour lancer une visioconférence : depuis la page d'accueil, clique sur le bouton <strong>« Rejoindre la room »</strong> — <strong>un pseudo suffit</strong>, aucun code, aucune configuration. Tu entres, la salle est prête. À l'intérieur, un bouton <strong>« Inviter »</strong> génère un lien à partager instantanément avec un ami ou un membre de ta famille pour tester à deux en conditions réelles.
+                      Para iniciar una videoconferencia: desde la página principal, haz clic en el botón <strong>«Unirse a la sala»</strong> — <strong>basta con un alias</strong>, sin códigos ni configuración. Entras y la sala está lista. Dentro, un botón <strong>«Invitar»</strong> genera un enlace para compartir al instante con un amigo o un familiar y probar a dos en condiciones reales.
                     </Text>
                   </td>
                 </tr>
               </table>
 
-              {/* Étape 3 */}
+              {/* Etapa 3 */}
               <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" style={{ borderCollapse: 'collapse' }}>
                 <tr>
                   <td style={stepNumberCell}>
                     <div style={stepBubble}>3</div>
                   </td>
                   <td style={stepContentCell}>
-                    <Text style={stepTitleStyle}>M'envoyer tes retours</Text>
+                    <Text style={stepTitleStyle}>Envíame tus comentarios</Text>
                     <Text style={stepBodyStyle}>
-                      Via le formulaire Contact ou à <strong>theo.garces.aido@gmail.com</strong>. Pas besoin d'un rapport formel — <strong>3 lignes honnêtes valent mieux qu'un silence poli.</strong>
+                      A través del formulario de Contacto o a <strong>theo.garces.aido@gmail.com</strong>. No hace falta un informe formal — <strong>3 líneas honestas valen más que un silencio educado.</strong>
                     </Text>
                   </td>
                 </tr>
@@ -216,9 +216,9 @@ export const MeetingInviteEmail = ({
                     <Text style={guideIconStyle}>📎</Text>
                   </td>
                   <td>
-                    <Text style={guideTitleStyle}>📎 Guide bêta officiel — en pièce jointe</Text>
+                    <Text style={guideTitleStyle}>📎 Guía beta oficial — en archivo adjunto</Text>
                     <Text style={guideBodyStyle}>
-                      Ton seul point de référence pour cette bêta. Lis-le <strong>avant</strong> de te connecter — tout est dedans, rien à deviner.
+                      Tu único punto de referencia para esta beta. Léela <strong>antes</strong> de conectarte — todo está dentro, no hay nada que adivinar.
                     </Text>
                   </td>
                 </tr>
@@ -233,7 +233,7 @@ export const MeetingInviteEmail = ({
                 <tr>
                   <td style={{ textAlign: 'center', paddingBottom: '12px' }}>
                     <Button href="https://visioconnect-1.vercel.app/" style={btnPrimaryStyle}>
-                      Accéder à la plateforme
+                      Acceder a la plataforma
                     </Button>
                   </td>
                 </tr>
@@ -243,13 +243,13 @@ export const MeetingInviteEmail = ({
             {/* Liens de secours */}
             <Section style={fallbackSectionStyle}>
               <Text style={fallbackItemStyle}>
-                Lien direct :{' '}
+                Enlace directo:{' '}
                 <Link href="https://visioconnect-1.vercel.app/" style={linkInlineStyle}>
                   visioconnect-1.vercel.app
                 </Link>
               </Text>
               <Text style={fallbackItemStyle}>
-                Contact :{' '}
+                Contacto:{' '}
                 <Link href="mailto:theo.garces.aido@gmail.com" style={linkInlineStyle}>
                   theo.garces.aido@gmail.com
                 </Link>
@@ -263,10 +263,10 @@ export const MeetingInviteEmail = ({
               <tr>
                 <td>
                   <Text style={signoffStyle}>
-                    Je lis chaque retour en entier. Vraiment. Ces quelques heures de ton temps peuvent changer la trajectoire de ce projet — et la mienne.
+                    Leo cada comentario íntegramente. De verdad. Estas pocas horas de tu tiempo pueden cambiar la trayectoria de este proyecto — y la mía.
                   </Text>
-                  <Text style={signoffStyle}>Merci de faire partie de cette aventure,</Text>
-                  <Text style={signoffTeamStyle}>Théo — Fondateur &amp; développeur de VisioConnect</Text>
+                  <Text style={signoffStyle}>Gracias por formar parte de esta aventura,</Text>
+                  <Text style={signoffTeamStyle}>Théo — Fundador y desarrollador de VisioConnect</Text>
                 </td>
               </tr>
             </table>
@@ -278,14 +278,14 @@ export const MeetingInviteEmail = ({
           ════════════════════════════════ */}
           <Section style={footerStyle}>
             <Text style={footerTaglineStyle}>
-              Conçu pour une collaboration rapide, simple et sécurisée.
+              Diseñado para una colaboración rápida, sencilla y segura.
             </Text>
             <Hr style={footerHrStyle} />
             <Text style={footerLegalStyle}>
-              Vous recevez cet e-mail suite à une invitation directe à la bêta VisioConnect.
+              Recibes este correo tras una invitación directa a la beta de VisioConnect.
             </Text>
             <Text style={footerCopyrightStyle}>
-              © {new Date().getFullYear()} VisioConnect — Tous droits réservés.
+              © {new Date().getFullYear()} VisioConnect — Todos los derechos reservados.
             </Text>
           </Section>
 

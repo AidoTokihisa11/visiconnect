@@ -1801,6 +1801,12 @@
     "upgradeAction": "Passer à ce plan",
     "chooseAction": "Choisir",
     "downgradeToStarter": "Rétrograder vers le plan Starter (gratuit)",
+    "errors": {
+      "checkoutRedirect": "Erreur lors de la redirection vers le paiement.",
+      "confirmDowngrade": "Rétrograder vers le plan Starter ? Vous perdrez l'accès aux fonctionnalités Pro/Business à la fin de votre période de facturation.",
+      "downgradeSuccess": "Votre abonnement a été rétrogradé vers le plan Starter.",
+      "downgradeFailed": "Erreur lors de la rétrogradation."
+    },
     "currentPlan": "Plan actuel",
     "currentBadge": "Actuel",
     "free": "Gratuit",

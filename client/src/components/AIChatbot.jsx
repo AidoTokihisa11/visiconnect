@@ -427,7 +427,7 @@ const AIChatbot = () => {
     // Integration capability with Admin Context setting
     const position = uiConfig?.chatbotPosition || 'right';
 
-    if (location.pathname.startsWith('/room/')) {
+    if (location.pathname.startsWith('/room/') || location.pathname.startsWith('/meeting/')) {
       return null;
     }
 

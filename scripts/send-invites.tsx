@@ -11,7 +11,7 @@ const resend = new Resend('re_f7CXkPZ1_FouifSQZycKkbcStAoZkGgW8');
 // LISTE DES BÊTA TESTEURS À PERSONNALISER
 // Chaque entrée : nom complet, email, et code bêta unique
 const betaTesters = [
-  { name: "Isabelle Ducasse Garcès", email: "isadgarces@gmail.com" },
+  { name: "Fabia Pay B", email: "fabia_1968@hotmail.com" },
 ];
 
 async function sendInvites() {
@@ -33,17 +33,17 @@ async function sendInvites() {
       );
 
       // 2. Envoyer l'email
-      const pdfPath = path.resolve(process.cwd(), 'server/public/Guide_Officiel_VisioConnect.pdf');
+      const pdfPath = path.resolve(process.cwd(), 'server/public/Guia_Official_VisioConnect.pdf');
       const pdfContent = fs.readFileSync(pdfPath);
 
       const response = await resend.emails.send({
         from: 'VisioConnect <contact@visioconnect.pro>',
         to: tester.email,
-        subject: `Votre accès exclusif à la bêta fermé de VisioConnect, ${tester.name} !`,
+        subject: `Tu acceso exclusivo a la beta cerrada de VisioConnect, ${tester.name} !`,
         html: emailHtml,
         attachments: [
           {
-            filename: 'Guide_Beta_VisioConnect.pdf',
+            filename: 'Guia_Beta_VisioConnect.pdf',
             content: pdfContent,
           }
         ]

@@ -1810,6 +1810,12 @@
     "upgradeAction": "Cambiar a este plan",
     "chooseAction": "Elegir",
     "downgradeToStarter": "Volver al plan Starter (gratuito)",
+    "errors": {
+      "checkoutRedirect": "Error al redirigir al pago.",
+      "confirmDowngrade": "¿Cambiar al plan Starter? Perderás el acceso a las funciones Pro/Business al final del período de facturación.",
+      "downgradeSuccess": "Tu suscripción se ha cambiado al plan Starter.",
+      "downgradeFailed": "Error al cambiar de plan."
+    },
     "currentPlan": "Plan actual",
     "currentBadge": "Actual",
     "free": "Gratis",

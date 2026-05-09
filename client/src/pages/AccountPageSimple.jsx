@@ -469,14 +469,14 @@ const AccountPageSimple = () => {
         if (session.error) { showNotification(session.error, 'error'); return; }
         if (session.url) window.location.href = session.url;
       } catch (err) {
-        showNotification('Erreur lors de la redirection vers le paiement.', 'error');
+        showNotification(t('billing.errors.checkoutRedirect', 'Erreur lors de la redirection vers le paiement.'), 'error');
       } finally {
         setPlanSwitching(false);
       }
     };
 
     const handleDowngrade = async () => {
-      if (!window.confirm('Rétrograder vers le plan Starter ? Vous perdrez l\'accès aux fonctionnalités Pro/Business à la fin de votre période de facturation.')) return;
+      if (!window.confirm(t('billing.errors.confirmDowngrade', "Rétrograder vers le plan Starter ? Vous perdrez l'accès aux fonctionnalités Pro/Business à la fin de votre période de facturation."))) return;
       setPlanSwitching(true);
       try {
         await user.update({
@@ -489,9 +489,9 @@ const AccountPageSimple = () => {
           },
         });
         await user.reload();
-        showNotification('Votre abonnement a été rétrogradé vers le plan Starter.');
+        showNotification(t('billing.errors.downgradeSuccess', 'Votre abonnement a été rétrogradé vers le plan Starter.'));
       } catch (err) {
-        showNotification('Erreur lors de la rétrogradation.', 'error');
+        showNotification(t('billing.errors.downgradeFailed', 'Erreur lors de la rétrogradation.'), 'error');
       } finally {
         setPlanSwitching(false);
       }
