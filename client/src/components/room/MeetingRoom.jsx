@@ -412,10 +412,8 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
     localStorage.setItem('visiconnect_room_settings', JSON.stringify(roomSettings));
   }, [roomSettings]);
 
-  // Sync showStats ↔ roomSettings.showStatsDefault (bidirectional)
-  useEffect(() => {
-    setShowStats(roomSettings.showStatsDefault);
-  }, [roomSettings.showStatsDefault]);
+  // Stats monitor is OFF on join. It only opens when the user explicitly toggles
+  // it from the bottom bar button or from the settings panel (session-only).
 
   // -- Track new messages for notifications --
   useEffect(() => {
@@ -777,7 +775,7 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
          whiteboardOpen={whiteboardOpen}
          toggleWhiteboard={toggleWhiteboard}
          showStats={showStats}
-         setShowStats={(val) => { setShowStats(val); updateSetting('showStatsDefault', val); }}
+         setShowStats={(val) => { setShowStats(val); }}
          sidePanelOpen={sidePanelOpen}
          activePanel={activePanel}
          togglePanel={togglePanel}
