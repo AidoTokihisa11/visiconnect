@@ -4,6 +4,7 @@ import { useTranslation } from '../hooks/useTranslation';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { resolveStripeError } from '../lib/stripeErrors';
 import { 
   Video, 
   CreditCard, 
@@ -438,7 +439,9 @@ const CheckoutPage = () => {
 
       if (session.error) {
         console.error('Error from server:', session.error);
-        alert(t('checkout.error') + ': ' + session.error);
+        // M3 / US-BILL-01 — replace generic alert with mapped, localized message.
+        const detail = resolveStripeError(session.error, language);
+        alert(`${t('checkout.error', 'Erreur de paiement')} : ${detail}`);
         return;
       }
 
@@ -446,7 +449,8 @@ const CheckoutPage = () => {
       window.location.href = session.url;
     } catch (error) {
       console.error('Error processing checkout:', error);
-      alert(t('checkout.errorPayment'));
+      const detail = resolveStripeError(error, language);
+      alert(`${t('checkout.errorPayment', 'Le paiement a échoué')} — ${detail}`);
     }
   };
 

@@ -306,6 +306,13 @@ export default function PollsPanel({ meetingId, currentUser, onClose, onPollCrea
       setCreateError(t('room.polls.errMinOptions', 'Ajoutez au moins 2 options.'));
       return;
     }
+    if (!meetingId) {
+      // Defensive guard: in demo flows the meetingId might be missing if the
+      // user landed directly on /meeting without a route param. Surface a
+      // clear message rather than the opaque Convex 400.
+      setCreateError(t('room.polls.errNoMeeting', "Salle introuvable \u2014 rejoignez une r\u00e9union avant de cr\u00e9er un sondage."));
+      return;
+    }
     setIsLoading(true);
     try {
       await createPoll({
@@ -320,8 +327,18 @@ export default function PollsPanel({ meetingId, currentUser, onClose, onPollCrea
       if (onPollCreated) onPollCreated();
     } catch (err) {
       console.error('createPoll error:', err);
-      const detail = err?.data?.message || err?.message || t('room.polls.errUnknown', 'Erreur inconnue');
-      setCreateError(`${t('room.polls.errCreate', 'Erreur lors de la création')} : ${detail}`);
+      // Convex surfaces validation errors via err.data; auth/network via err.message.
+      const detail =
+        err?.data?.message ||
+        (typeof err?.data === 'string' ? err.data : null) ||
+        err?.message ||
+        t('room.polls.errUnknown', 'Erreur inconnue');
+      const friendly = /unauth|forbidden|not authenticated/i.test(detail)
+        ? t('room.polls.errAuth', 'Connectez-vous pour cr\u00e9er un sondage.')
+        : /network|failed to fetch/i.test(detail)
+          ? t('room.polls.errNetwork', 'Erreur r\u00e9seau \u2014 v\u00e9rifiez votre connexion.')
+          : detail;
+      setCreateError(`${t('room.polls.errCreate', 'Erreur lors de la cr\u00e9ation')} : ${friendly}`);
     } finally {
       setIsLoading(false);
     }

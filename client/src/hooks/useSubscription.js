@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
+import { resolveStripeError } from '../lib/stripeErrors';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 const FREE_PLAN_DURATION_MS = 40 * 60 * 1000;
@@ -48,7 +49,8 @@ export const useSubscription = (subscriber) => {
       const session = await response.json();
 
       if (session.error) {
-        throw new Error(session.error.message);
+        // M3 / US-BILL-01 — translate Stripe error codes to user-friendly text.
+        throw new Error(resolveStripeError(session.error));
       }
 
       const stripe = await stripePromise;
@@ -61,7 +63,7 @@ export const useSubscription = (subscriber) => {
       });
 
       if (stripeError) {
-        throw new Error(stripeError.message);
+        throw new Error(resolveStripeError(stripeError));
       }
 
     } catch (checkoutError) {

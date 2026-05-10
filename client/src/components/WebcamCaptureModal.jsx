@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import styled from 'styled-components';
-import { Camera, X, RefreshCw, Check, AlertCircle } from 'lucide-react';
+import { Camera, X, RefreshCw, Check, AlertCircle, Upload } from 'lucide-react';
 
 /**
  * Reusable webcam-capture modal.
@@ -144,35 +144,73 @@ const PrimaryBtn = styled.button`
 const WebcamCaptureModal = ({ isOpen, onClose, onCapture, title = 'Prendre une photo' }) => {
   const videoRef = useRef(null);
   const streamRef = useRef(null);
+  const fileInputRef = useRef(null);
   const [error, setError] = useState('');
   const [previewUrl, setPreviewUrl] = useState('');
   const [previewBlob, setPreviewBlob] = useState(null);
   const [isStarting, setIsStarting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isVideoReady, setIsVideoReady] = useState(false);
 
   const stopStream = useCallback(() => {
     if (streamRef.current) {
       streamRef.current.getTracks().forEach((t) => t.stop());
       streamRef.current = null;
     }
+    setIsVideoReady(false);
   }, []);
 
   const startStream = useCallback(async () => {
     setError('');
     setIsStarting(true);
+    setIsVideoReady(false);
     try {
+      // Hypothesis #4 — getUserMedia requires a secure context.
+      if (!window.isSecureContext && window.location.hostname !== 'localhost') {
+        throw new Error('La caméra n\'est accessible qu\'en HTTPS. Essayez via le site déployé.');
+      }
       if (!navigator.mediaDevices?.getUserMedia) {
         throw new Error('Votre navigateur ne supporte pas la capture webcam.');
       }
+
+      // Hypothesis #1 — probe permission so we can give a precise message.
+      try {
+        if (navigator.permissions?.query) {
+          const perm = await navigator.permissions.query({ name: 'camera' });
+          if (perm.state === 'denied') {
+            throw new Error('Accès caméra bloqué dans les paramètres du navigateur. Autorisez la caméra puis réessayez.');
+          }
+        }
+      } catch (probeErr) {
+        // permissions.query may throw on some browsers — non-fatal.
+        if (probeErr?.message?.includes('bloqué')) throw probeErr;
+      }
+
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { width: { ideal: 720 }, height: { ideal: 540 }, facingMode: 'user' },
         audio: false,
       });
       streamRef.current = stream;
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        await videoRef.current.play().catch(() => {});
+      const video = videoRef.current;
+      if (!video) {
+        // Race condition (hypothesis #5): component unmounted before we got here.
+        stream.getTracks().forEach((t) => t.stop());
+        return;
       }
+      video.srcObject = stream;
+      // Wait for metadata so videoWidth/Height are populated (hypothesis #6).
+      await new Promise((resolve) => {
+        if (video.readyState >= 1) return resolve();
+        const onMeta = () => { video.removeEventListener('loadedmetadata', onMeta); resolve(); };
+        video.addEventListener('loadedmetadata', onMeta);
+      });
+      try {
+        await video.play();
+      } catch (playErr) {
+        // Hypothesis #2 — autoplay policy. We surface the issue rather than swallow it.
+        console.warn('[WebcamCapture] play() failed:', playErr);
+      }
+      setIsVideoReady(true);
     } catch (e) {
       console.error('[WebcamCapture] getUserMedia failed:', e);
       const msg =
@@ -180,6 +218,10 @@ const WebcamCaptureModal = ({ isOpen, onClose, onCapture, title = 'Prendre une p
           ? 'Accès caméra refusé. Autorisez la caméra dans les paramètres de votre navigateur.'
           : e?.name === 'NotFoundError'
           ? 'Aucune caméra détectée sur cet appareil.'
+          : e?.name === 'NotReadableError'
+          ? 'La caméra est utilisée par une autre application (Zoom, Teams, OBS…). Fermez-la puis réessayez.'
+          : e?.name === 'OverconstrainedError'
+          ? 'Aucune caméra ne correspond aux contraintes demandées.'
           : e?.message || 'Impossible d\'accéder à la caméra.';
       setError(msg);
     } finally {
@@ -210,7 +252,11 @@ const WebcamCaptureModal = ({ isOpen, onClose, onCapture, title = 'Prendre une p
 
   const takeShot = () => {
     const video = videoRef.current;
-    if (!video || !video.videoWidth) return;
+    // Hypothesis #6 — guard against zero-sized canvas → black/empty image.
+    if (!video || !video.videoWidth || !video.videoHeight) {
+      setError('La vidéo n\'est pas encore prête. Patientez une seconde puis réessayez.');
+      return;
+    }
 
     const canvas = document.createElement('canvas');
     canvas.width = video.videoWidth;
@@ -223,7 +269,10 @@ const WebcamCaptureModal = ({ isOpen, onClose, onCapture, title = 'Prendre une p
 
     canvas.toBlob(
       (blob) => {
-        if (!blob) return;
+        if (!blob) {
+          setError('Capture impossible — réessayez.');
+          return;
+        }
         if (previewUrl) URL.revokeObjectURL(previewUrl);
         const url = URL.createObjectURL(blob);
         setPreviewBlob(blob);
@@ -233,6 +282,23 @@ const WebcamCaptureModal = ({ isOpen, onClose, onCapture, title = 'Prendre une p
       'image/jpeg',
       0.92
     );
+  };
+
+  // Fallback file picker (when the webcam refuses to start).
+  const handleFallbackFile = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      setError('Veuillez choisir une image.');
+      return;
+    }
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    const url = URL.createObjectURL(file);
+    setPreviewBlob(file);
+    setPreviewUrl(url);
+    setError('');
+    stopStream();
+    e.target.value = '';
   };
 
   const retake = () => {
@@ -291,6 +357,16 @@ const WebcamCaptureModal = ({ isOpen, onClose, onCapture, title = 'Prendre une p
             )}
           </VideoWrapper>
 
+          {/* Hidden fallback input — used when the webcam is unavailable. */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            capture="user"
+            onChange={handleFallbackFile}
+            style={{ display: 'none' }}
+          />
+
           <Footer>
             {previewUrl ? (
               <>
@@ -301,11 +377,21 @@ const WebcamCaptureModal = ({ isOpen, onClose, onCapture, title = 'Prendre une p
                   <Check size={14} /> {isSaving ? 'Enregistrement…' : 'Utiliser cette photo'}
                 </PrimaryBtn>
               </>
+            ) : error ? (
+              <>
+                <SecondaryBtn type="button" onClick={onClose}>Annuler</SecondaryBtn>
+                <SecondaryBtn type="button" onClick={startStream}>
+                  <RefreshCw size={14} /> Réessayer
+                </SecondaryBtn>
+                <PrimaryBtn type="button" onClick={() => fileInputRef.current?.click()}>
+                  <Upload size={14} /> Choisir un fichier
+                </PrimaryBtn>
+              </>
             ) : (
               <>
                 <SecondaryBtn type="button" onClick={onClose}>Annuler</SecondaryBtn>
-                <PrimaryBtn type="button" onClick={takeShot} disabled={isStarting || !!error}>
-                  <Camera size={14} /> {isStarting ? 'Démarrage…' : 'Capturer'}
+                <PrimaryBtn type="button" onClick={takeShot} disabled={isStarting || !isVideoReady}>
+                  <Camera size={14} /> {isStarting ? 'Démarrage…' : !isVideoReady ? 'Préparation…' : 'Capturer'}
                 </PrimaryBtn>
               </>
             )}

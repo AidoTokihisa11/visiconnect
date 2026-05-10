@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { useAuth } from '../contexts/AuthContext'
 import { useTranslation } from '../hooks/useTranslation'
 import { FaGoogle, FaGithub } from 'react-icons/fa'
-import { Mail, Lock, Eye, EyeOff, AlertCircle, ArrowLeft } from 'lucide-react'
+import { Mail, Lock, Eye, EyeOff, AlertCircle, ArrowLeft, Loader2 } from 'lucide-react'
 import AuthRightPanel from '../components/AuthRightPanel'
 
 const PageWrapper = styled.div`
@@ -287,10 +287,12 @@ const ErrorMessage = styled(motion.div)`
 const LoginPage = () => {
   const navigate = useNavigate()
   const { t } = useTranslation()
-  const { isLoggedIn, signIn, signInWithProvider, error: authError } = useAuth()
+  const { isLoggedIn, signIn, signInWithProvider, error: authError, loading: authLoading } = useAuth()
 
+  // Already-signed-in users land directly on the dashboard (US-AUTH-03).
+  // Avoid a flash of the login form by redirecting as soon as the auth state is known.
   React.useEffect(() => {
-    if (isLoggedIn) navigate("/")
+    if (isLoggedIn) navigate('/account', { replace: true })
   }, [isLoggedIn, navigate])
   
   const [credentials, setCredentials] = useState({
@@ -313,6 +315,7 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (loading || oauthLoading) return // Guard double-submit (US-AUTH-04).
     setLoading(true)
     setError('')
 
@@ -325,7 +328,7 @@ const LoginPage = () => {
       }
 
       if (data?.user) {
-        navigate('/')
+        navigate('/account', { replace: true })
       }
     } catch (err) {
       setError(err.message || t('login.error'))
@@ -335,18 +338,24 @@ const LoginPage = () => {
   }
 
   const handleOAuthLogin = async (provider) => {
+    if (loading || oauthLoading) return
+    if (authLoading) {
+      setError(t('login.authLoading', "Authentification en cours d'initialisation, réessayez dans une seconde."))
+      return
+    }
     try {
-      setLoading(true)
       setOauthLoading(provider)
       setError('')
       const { error: oauthError } = await signInWithProvider(provider)
+      // signInWithProvider triggers a full-page redirect on success — only
+      // an error path returns synchronously.
       if (oauthError) {
         setError(oauthError.message)
       }
     } catch (err) {
+      console.error('[LoginPage] OAuth error:', err)
       setError(err.message || t('login.error'))
     } finally {
-      setLoading(false)
       setOauthLoading(null)
     }
   }
@@ -426,10 +435,14 @@ const LoginPage = () => {
 
             <SubmitButton
               type="submit"
-              disabled={loading}
+              disabled={loading || !!oauthLoading}
               whileTap={{ scale: 0.98 }}
             >
-              {loading ? t('login.loading') : t('login.submit')}
+              {loading ? (
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'center' }}>
+                  <Loader2 size={16} className="animate-spin" /> {t('login.loading')}
+                </span>
+              ) : t('login.submit')}
             </SubmitButton>
           </Form>
 
@@ -439,16 +452,22 @@ const LoginPage = () => {
             <OAuthButton
               type="button"
               onClick={() => handleOAuthLogin('google')}
-              disabled={loading}
+              disabled={loading || !!oauthLoading}
+              aria-busy={oauthLoading === 'google'}
             >
-              {oauthLoading === 'google' ? t('auth.signingIn', 'Connexion...') : <><FaGoogle color="#ea4335" /> Google</>}
+              {oauthLoading === 'google'
+                ? (<><Loader2 size={16} className="animate-spin" /> {t('auth.signingIn', 'Connexion...')}</>)
+                : (<><FaGoogle color="#ea4335" /> Google</>)}
             </OAuthButton>
             <OAuthButton
               type="button"
               onClick={() => handleOAuthLogin('github')}
-              disabled={loading}
+              disabled={loading || !!oauthLoading}
+              aria-busy={oauthLoading === 'github'}
             >
-              {oauthLoading === 'github' ? t('auth.signingIn', 'Connexion...') : <><FaGithub /> GitHub</>}
+              {oauthLoading === 'github'
+                ? (<><Loader2 size={16} className="animate-spin" /> {t('auth.signingIn', 'Connexion...')}</>)
+                : (<><FaGithub /> GitHub</>)}
             </OAuthButton>
           </OAuthButtons>
 

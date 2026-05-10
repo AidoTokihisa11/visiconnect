@@ -270,6 +270,26 @@ const Feature = ({
               {t('aiFeatures.notSupported', 'Non supporté')}
             </StatusIndicator>
           )}
+          {/* m1 / US-DEMO-02 — explicit ON/OFF state next to the slider knob.
+              Beta-tester reported the bare round knob ("rond blanc gauche-droite")
+              wasn't self-explanatory. */}
+          {available && (
+            <span
+              aria-hidden="true"
+              style={{
+                fontSize: '0.7rem',
+                fontWeight: 700,
+                letterSpacing: '0.05em',
+                color: enabled ? THEME.accent : THEME.textDim,
+                minWidth: 28,
+                textAlign: 'right',
+              }}
+            >
+              {enabled
+                ? t('aiFeatures.on', 'ACTIVÉ')
+                : t('aiFeatures.off', 'INACTIF')}
+            </span>
+          )}
           <Switch 
             $on={enabled} 
             disabled={!isInteractive}
@@ -278,7 +298,10 @@ const Feature = ({
               if (!isInteractive) return;
               onToggle();
             }}
-            aria-label={`Toggle ${name}`}
+            role="switch"
+            aria-checked={!!enabled}
+            aria-label={`${name} — ${enabled ? t('aiFeatures.on', 'activé') : t('aiFeatures.off', 'inactif')}. ${t('aiFeatures.toggleHint', 'Cliquez pour changer.')}`}
+            title={enabled ? t('aiFeatures.clickToDisable', 'Cliquer pour désactiver') : t('aiFeatures.clickToEnable', 'Cliquer pour activer')}
           />
           {expandable && children && (
             expanded ? <ChevronUp size={16} color={THEME.textDim} /> : <ChevronDown size={16} color={THEME.textDim} />

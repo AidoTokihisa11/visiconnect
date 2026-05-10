@@ -13,12 +13,15 @@ import Combobox from '../components/ui/Combobox';
 import { COUNTRIES } from '../config/countries';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
+import { HelpPopover } from '../components/ui/HelpPopover';
 import { useUserProfile } from '../hooks/useUserProfile';
+import { useFormPersistence } from '../hooks/useFormPersistence';
 import { useClerk, useUser } from '@clerk/react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
 import { PLANS } from '../config/pricing';
 import { BETA_CODES } from '../config/betaCodes';
+import { resolveStripeError } from '../lib/stripeErrors';
 import {
   PageWrapper,
   ContentContainer,
@@ -103,6 +106,17 @@ const AccountPageSimple = () => {
     website: ''
   });
 
+  // ----------------------------------------------------------------------
+  // B4 / US-PROF-01 — Editable email via Clerk's emailAddresses API.
+  // Beta-tester reported the field was unclickable; root cause was the
+  // `disabled` attribute. We now allow add-and-verify flow.
+  // ----------------------------------------------------------------------
+  const [emailDraft, setEmailDraft] = useState('');
+  const [emailVerificationId, setEmailVerificationId] = useState(null);
+  const [emailCode, setEmailCode] = useState('');
+  const [emailBusy, setEmailBusy] = useState(false);
+  const [emailError, setEmailError] = useState('');
+
   const buildProfileFormData = (profileData, metadata, fullName) => ({
     displayName: metadata.displayName || profileData.displayName || fullName || '',
     bio: metadata.bio || profileData.bio || '',
@@ -119,7 +133,17 @@ const AccountPageSimple = () => {
     if (loading || !userProfile || !user) return;
     const metadata = user.unsafeMetadata || {};
     setFormData(buildProfileFormData(userProfile, metadata, user.fullName));
+    // Hydrate email draft with the current primary address.
+    setEmailDraft(user.primaryEmailAddress?.emailAddress || '');
   }, [loading, user, userProfile]);
+
+  // Persist profile form across navigation / accidental reloads (US-UX-03).
+  const { clear: clearPersistedForm } = useFormPersistence(
+    'account-profile',
+    formData,
+    setFormData,
+    { skip: loading || !user, warnOnLeave: true }
+  );
 
   const showNotification = (message, type = 'success') => {
     setNotification({ message, type });
@@ -140,19 +164,111 @@ const AccountPageSimple = () => {
   };
 
   // Shared avatar upload routine (used by file picker + webcam capture).
+  // M1 / US-PROF-02 — guarantees the avatar visually refreshes everywhere
+  // by reloading the Clerk user (which updates user.imageUrl) and bumping
+  // an in-state cache buster.
+  const [avatarVersion, setAvatarVersion] = useState(0);
   const uploadAvatarFile = async (file) => {
     if (!file || !user) return;
+    if (!file.type?.startsWith('image/')) {
+      showNotification(t('account.messages.avatarBadType', "Format d'image non supporté."), 'error');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      showNotification(t('account.messages.avatarTooLarge', "L'image doit faire moins de 5 Mo."), 'error');
+      return;
+    }
     try {
       setIsSaving(true);
       await user.setProfileImage({ file });
       await user.reload();
+      setAvatarVersion((v) => v + 1); // Cache-bust the <img> URL.
       showNotification(t('account.messages.avatarSuccess'));
     } catch (error) {
       console.error('Erreur image:', error);
-      showNotification(t('account.messages.avatarError'), 'error');
+      const msg = error?.errors?.[0]?.longMessage || error?.errors?.[0]?.message || error?.message;
+      showNotification(msg || t('account.messages.avatarError'), 'error');
     } finally {
       setIsSaving(false);
     }
+  };
+
+  // ----------------------------------------------------------------------
+  // B4 / US-PROF-01 — Email change handlers (Clerk emailAddresses API).
+  // ----------------------------------------------------------------------
+  const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+
+  const handleEmailRequestVerification = async () => {
+    if (!user) return;
+    setEmailError('');
+    const target = emailDraft.trim().toLowerCase();
+    if (!isValidEmail(target)) {
+      setEmailError(t('account.email.invalid', "Adresse email invalide."));
+      return;
+    }
+    if (target === user.primaryEmailAddress?.emailAddress?.toLowerCase()) {
+      setEmailError(t('account.email.same', "C'est déjà votre adresse principale."));
+      return;
+    }
+    setEmailBusy(true);
+    try {
+      // Reuse an existing pending entry if Clerk already has one.
+      const existing = user.emailAddresses?.find(
+        (ea) => ea.emailAddress?.toLowerCase() === target
+      );
+      const created = existing || (await user.createEmailAddress({ email: target }));
+      await created.prepareVerification({ strategy: 'email_code' });
+      setEmailVerificationId(created.id);
+      showNotification(t('account.email.codeSent', 'Code de vérification envoyé.'));
+    } catch (err) {
+      console.error('[email change] prepare failed:', err);
+      const msg = err?.errors?.[0]?.longMessage || err?.errors?.[0]?.message || err?.message;
+      setEmailError(msg || t('account.email.error', "Impossible d'envoyer le code."));
+    } finally {
+      setEmailBusy(false);
+    }
+  };
+
+  const handleEmailVerifyCode = async () => {
+    if (!user || !emailVerificationId) return;
+    setEmailError('');
+    const code = emailCode.trim();
+    if (!code) {
+      setEmailError(t('account.email.enterCode', 'Saisissez le code reçu par email.'));
+      return;
+    }
+    setEmailBusy(true);
+    try {
+      const target = user.emailAddresses?.find((ea) => ea.id === emailVerificationId);
+      if (!target) throw new Error('Verification entry not found');
+      await target.attemptVerification({ code });
+      // Promote it to primary, then drop the previous primary if it differs.
+      const previousPrimaryId = user.primaryEmailAddressId;
+      await user.update({ primaryEmailAddressId: target.id });
+      if (previousPrimaryId && previousPrimaryId !== target.id) {
+        const old = user.emailAddresses?.find((ea) => ea.id === previousPrimaryId);
+        try { await old?.destroy?.(); } catch (e) { /* keep silently if Clerk forbids */ }
+      }
+      await user.reload();
+      setEmailVerificationId(null);
+      setEmailCode('');
+      showNotification(t('account.email.updated', 'Adresse email mise à jour.'));
+    } catch (err) {
+      console.error('[email change] verify failed:', err);
+      const code = err?.errors?.[0]?.code;
+      if (code === 'form_code_incorrect') setEmailError(t('account.email.codeIncorrect', 'Code incorrect.'));
+      else if (code === 'verification_expired') setEmailError(t('account.email.codeExpired', 'Code expiré, recommencez.'));
+      else setEmailError(err?.errors?.[0]?.message || err?.message || t('account.email.error', "Vérification impossible."));
+    } finally {
+      setEmailBusy(false);
+    }
+  };
+
+  const cancelEmailChange = () => {
+    setEmailVerificationId(null);
+    setEmailCode('');
+    setEmailError('');
+    setEmailDraft(user?.primaryEmailAddress?.emailAddress || '');
   };
 
   const handleSave = async (e) => {
@@ -180,6 +296,7 @@ const AccountPageSimple = () => {
       }
 
       await updateProfile(formData);
+      clearPersistedForm(); // Snapshot is now the saved baseline.
       showNotification(t('account.messages.saveSuccess'));
     } catch (error) {
       console.error('Update error:', error);
@@ -221,7 +338,12 @@ const AccountPageSimple = () => {
         <AvatarWrapper>
           <AvatarContainer whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 300 }}>
             {user?.hasImage || user?.imageUrl ? (
-              <img src={user.imageUrl} alt="Profile" />
+              // Cache-buster (avatarVersion) forces the browser to reload the image
+              // immediately after a successful upload (M1 / US-PROF-02).
+              <img
+                src={`${user.imageUrl}${user.imageUrl?.includes('?') ? '&' : '?'}v=${avatarVersion}`}
+                alt="Profile"
+              />
             ) : (
               <div className="fallback">{getInitials(formData.displayName)}</div>
             )}
@@ -275,14 +397,113 @@ const AccountPageSimple = () => {
         </FormGroup>
 
         <FormGroup>
-          <Label><Mail size={18} /> {t('account.fields.email')}</Label>
+          <Label>
+            <Mail size={18} /> {t('account.fields.email')}
+            <HelpPopover
+              label={t('account.email.help', 'Pourquoi un code ?')}
+              title={t('account.email.helpTitle', "Changement d'adresse email")}
+            >
+              {t(
+                'account.email.helpBody',
+                "Pour sécuriser votre compte, nous envoyons un code de vérification à la nouvelle adresse avant de la rendre principale."
+              )}
+            </HelpPopover>
+          </Label>
           <InputWrapper>
-            <Input 
+            <Input
               type="email"
-              value={user?.primaryEmailAddress?.emailAddress || ''}
-              disabled
+              name="emailDraft"
+              value={emailDraft}
+              onChange={(e) => { setEmailDraft(e.target.value); setEmailError(''); }}
+              placeholder={t('account.placeholders.email', 'votre@email.com')}
+              autoComplete="email"
+              readOnly={emailBusy || !!emailVerificationId}
             />
           </InputWrapper>
+
+          {!emailVerificationId && emailDraft &&
+            user?.primaryEmailAddress?.emailAddress &&
+            emailDraft.trim().toLowerCase() !== user.primaryEmailAddress.emailAddress.toLowerCase() && (
+            <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem', flexWrap: 'wrap' }}>
+              <button
+                type="button"
+                onClick={handleEmailRequestVerification}
+                disabled={emailBusy}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+                  padding: '0.45rem 0.85rem', borderRadius: '8px',
+                  border: '1px solid #2563eb', background: '#2563eb', color: 'white',
+                  fontSize: '0.82rem', fontWeight: 600,
+                  cursor: emailBusy ? 'not-allowed' : 'pointer', opacity: emailBusy ? 0.7 : 1,
+                }}
+              >
+                {emailBusy ? <Loader2 size={14} className="animate-spin" /> : <Mail size={14} />}
+                {t('account.email.sendCode', 'Envoyer un code de vérification')}
+              </button>
+              <button
+                type="button"
+                onClick={cancelEmailChange}
+                disabled={emailBusy}
+                style={{
+                  padding: '0.45rem 0.85rem', borderRadius: '8px',
+                  border: '1px solid #e2e8f0', background: 'white', color: '#475569',
+                  fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer',
+                }}
+              >
+                {t('account.cancel', 'Annuler')}
+              </button>
+            </div>
+          )}
+
+          {emailVerificationId && (
+            <div style={{ marginTop: '0.6rem', padding: '0.75rem', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
+              <p style={{ fontSize: '0.82rem', color: '#475569', margin: '0 0 0.5rem' }}>
+                {t('account.email.codePrompt', 'Saisissez le code reçu sur')} <strong>{emailDraft}</strong>
+              </p>
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <Input
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  value={emailCode}
+                  onChange={(e) => { setEmailCode(e.target.value); setEmailError(''); }}
+                  placeholder="123456"
+                  style={{ maxWidth: '160px', letterSpacing: '0.2em', textAlign: 'center' }}
+                />
+                <button
+                  type="button"
+                  onClick={handleEmailVerifyCode}
+                  disabled={emailBusy}
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+                    padding: '0.45rem 0.85rem', borderRadius: '8px',
+                    border: '1px solid #2563eb', background: '#2563eb', color: 'white',
+                    fontSize: '0.82rem', fontWeight: 600,
+                    cursor: emailBusy ? 'not-allowed' : 'pointer', opacity: emailBusy ? 0.7 : 1,
+                  }}
+                >
+                  {emailBusy ? <Loader2 size={14} className="animate-spin" /> : <CheckCircle size={14} />}
+                  {t('account.email.verify', 'Vérifier')}
+                </button>
+                <button
+                  type="button"
+                  onClick={cancelEmailChange}
+                  disabled={emailBusy}
+                  style={{
+                    padding: '0.45rem 0.85rem', borderRadius: '8px',
+                    border: '1px solid #e2e8f0', background: 'white', color: '#475569',
+                    fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer',
+                  }}
+                >
+                  {t('account.cancel', 'Annuler')}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {emailError && (
+            <p style={{ fontSize: '0.8rem', color: '#ef4444', marginTop: '0.4rem' }}>{emailError}</p>
+          )}
         </FormGroup>
 
         <FormGroup>
@@ -466,10 +687,17 @@ const AccountPageSimple = () => {
           body: JSON.stringify({ plan: targetPlan, billingCycle, userId: user?.id, userEmail: user?.primaryEmailAddress?.emailAddress || '', locale: language || (typeof navigator !== 'undefined' ? navigator.language : 'en') }),
         });
         const session = await res.json();
-        if (session.error) { showNotification(session.error, 'error'); return; }
+        if (session.error) {
+          // M3 / US-BILL-01 — surface a precise message instead of "carte non valide".
+          showNotification(resolveStripeError(session.error, language), 'error');
+          return;
+        }
         if (session.url) window.location.href = session.url;
       } catch (err) {
-        showNotification(t('billing.errors.checkoutRedirect', 'Erreur lors de la redirection vers le paiement.'), 'error');
+        showNotification(
+          resolveStripeError(err, language) || t('billing.errors.checkoutRedirect', 'Erreur lors de la redirection vers le paiement.'),
+          'error'
+        );
       } finally {
         setPlanSwitching(false);
       }
