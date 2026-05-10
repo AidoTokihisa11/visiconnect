@@ -5,7 +5,7 @@ import { AnimatePresence } from 'framer-motion';
 import { 
   X, Calendar, Clock, Users, Video, Globe,
   MapPin, Bell, Repeat, Link, Copy, Settings,
-  Plus, Minus, ChevronDown, Check,
+  Plus, Minus, ChevronDown, Check, Loader2, AlertCircle,
   Mail, MessageSquare, Share2, Save, CheckCircle2
 } from 'lucide-react';
 import {
@@ -36,6 +36,10 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
   const [meetingId] = useState(() => Math.random().toString(36).slice(2, 11));
   const [linkCopied, setLinkCopied] = useState(false);
   const [timeError, setTimeError] = useState('');
+  // Async state for the "Démarrer la réunion" submission.
+  const [isStarting, setIsStarting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const [submitInfo, setSubmitInfo] = useState('');
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -55,7 +59,9 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
 
   const [newParticipantEmail, setNewParticipantEmail] = useState('');
 
-  const meetingLink = `${window.location.origin}/room/${meetingId}`;
+  // Public meeting URL: routes to MeetingRoomPage (the actual conference room).
+  // Beware: "/room/:id" maps to a beta-promo page, NOT the conference room.
+  const meetingLink = `${window.location.origin}/meeting/${meetingId}`;
 
   const timeSlots = [
     '09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00'
@@ -115,8 +121,9 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
   };
 
   const sendInviteEmail = async (participant) => {
+    // Returns { ok: boolean, error?: string } so the caller can aggregate results.
     try {
-      await fetch('/api/send-meeting-invite', {
+      const response = await fetch('/api/send-meeting-invite', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -129,14 +136,24 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
           startTime: formData.startTime,
         }),
       });
-    } catch {
-      // Invite will show as sent regardless; handle silently
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({}));
+        return { ok: false, error: body?.error || `HTTP ${response.status}` };
+      }
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, error: err?.message || 'network' };
     }
   };
 
   const addParticipant = () => {
     const normalizedEmail = newParticipantEmail.trim().toLowerCase();
-    if (!normalizedEmail.includes('@')) return;
+    // Strict email validation — prevents "foo@bar" without TLD.
+    const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!EMAIL_RE.test(normalizedEmail)) {
+      setSubmitError(t('createMeetingModal.errors.invalidEmail', "Adresse email invalide."));
+      return;
+    }
 
     setFormData(prev => {
       const alreadyInvited = prev.participants.some(
@@ -148,10 +165,8 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
         id: Date.now(),
         email: normalizedEmail,
         name: normalizedEmail.split('@')[0],
-        status: 'sent'
+        status: 'pending', // becomes 'sent' once "Démarrer" is clicked
       };
-
-      sendInviteEmail(newParticipant);
 
       return {
         ...prev,
@@ -159,6 +174,7 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
       };
     });
 
+    setSubmitError('');
     setNewParticipantEmail('');
   };
 
@@ -169,34 +185,78 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    setSubmitError('');
+    setSubmitInfo('');
     // Block submission if time range is invalid.
     if (!isTimeRangeValid) {
       setTimeError(t('createMeetingModal.errors.endBeforeStart', "L'heure de fin doit être après l'heure de début."));
       return;
     }
-    // Persist meeting locally so dashboard widgets can show recent activity.
+
+    setIsStarting(true);
     try {
-      const STORAGE_KEY = 'visiconnect.recentMeetings';
-      const previous = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-      const entry = {
-        id: meetingId,
-        title: formData.title || t('createMeetingModal.defaultTitle', 'Réunion VisiConnect'),
-        date: formData.date,
-        startTime: formData.startTime,
-        endTime: formData.endTime,
-        participants: formData.participants?.length || 0,
-        createdAt: Date.now(),
-      };
-      const next = [entry, ...previous.filter((m) => m.id !== meetingId)].slice(0, 25);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-    } catch {
-      // localStorage may be unavailable — non-blocking
+      // 1) Send invitations to every participant in parallel — each email
+      //    contains the final title/date and a CTA pointing to /meeting/:id.
+      const recipients = formData.participants || [];
+      let sentCount = 0;
+      let failed = [];
+      if (recipients.length > 0) {
+        const results = await Promise.all(recipients.map(p => sendInviteEmail(p)));
+        results.forEach((r, i) => {
+          if (r.ok) sentCount += 1;
+          else failed.push(recipients[i].email);
+        });
+        // Update participant statuses based on actual results.
+        setFormData(prev => ({
+          ...prev,
+          participants: prev.participants.map((p, i) => ({
+            ...p,
+            status: results[i]?.ok ? 'sent' : 'failed',
+          })),
+        }));
+      }
+
+      // 2) Persist meeting locally so dashboard widgets show recent activity.
+      try {
+        const STORAGE_KEY = 'visiconnect.recentMeetings';
+        const previous = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        const entry = {
+          id: meetingId,
+          title: formData.title || t('createMeetingModal.defaultTitle', 'Réunion VisiConnect'),
+          date: formData.date,
+          startTime: formData.startTime,
+          endTime: formData.endTime,
+          link: meetingLink,
+          participants: recipients.length,
+          createdAt: Date.now(),
+        };
+        const next = [entry, ...previous.filter((m) => m.id !== meetingId)].slice(0, 25);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      } catch {
+        // localStorage may be unavailable — non-blocking
+      }
+
+      // 3) If some invites failed, surface a non-blocking warning but still
+      //    let the host enter the room — they can resend manually later.
+      if (failed.length > 0) {
+        setSubmitInfo(
+          t('createMeetingModal.partialInvite',
+            `Invitation envoyée à ${sentCount}/${recipients.length} participants. Échec : ${failed.join(', ')}`)
+        );
+      }
+
+      onClose();
+      navigate(`/meeting/${meetingId}`);
+    } catch (err) {
+      console.error('[CreateMeeting] handleSubmit failed:', err);
+      setSubmitError(
+        err?.message ||
+        t('createMeetingModal.errors.startFailed', "Impossible de démarrer la réunion. Réessayez.")
+      );
+    } finally {
+      setIsStarting(false);
     }
-    onClose();
-    // Use react-router navigation to keep the SPA state
-    // (window.location.href would do a full page reload).
-    navigate(`/room/${meetingId}`);
   };
 
   const copyLink = () => {
@@ -391,10 +451,17 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
                         <div className="name">{participant.name}</div>
                         <div className="email">{participant.email}</div>
                       </div>
-                      <span className={`status-badge ${participant.status === 'sent' ? 'status-sent' : 'status-pending'}`}>
+                      <span className={`status-badge ${
+                        participant.status === 'sent'
+                          ? 'status-sent'
+                          : participant.status === 'failed'
+                            ? 'status-pending'
+                            : 'status-pending'}`}>
                         {participant.status === 'sent'
                           ? t('createMeetingModal.status.invited', '✓ Invité')
-                          : t('createMeetingModal.status.pending', 'En attente')}
+                          : participant.status === 'failed'
+                            ? t('createMeetingModal.status.failed', 'Échec d’envoi')
+                            : t('createMeetingModal.status.pending', 'En attente')}
                       </span>
                       <button
                         className="remove"
@@ -502,6 +569,26 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
           </ModalBody>
 
           <ModalFooter>
+            {(submitError || submitInfo) && (
+              <div
+                role={submitError ? 'alert' : 'status'}
+                style={{
+                  margin: '0 0 0.75rem',
+                  padding: '0.6rem 0.85rem',
+                  borderRadius: '8px',
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '0.5rem',
+                  fontSize: '0.85rem',
+                  background: submitError ? 'rgba(239,68,68,0.08)' : 'rgba(245,158,11,0.08)',
+                  border: `1px solid ${submitError ? 'rgba(239,68,68,0.3)' : 'rgba(245,158,11,0.3)'}`,
+                  color: submitError ? '#dc2626' : '#92400e',
+                }}
+              >
+                <AlertCircle size={16} style={{ flexShrink: 0, marginTop: 1 }} />
+                <span>{submitError || submitInfo}</span>
+              </div>
+            )}
             <div className="link-row">
               <span className="link-label">{t('createMeetingModal.linkLabel', 'Lien :')}</span>
               <span className="link-value">{meetingLink}</span>
@@ -516,6 +603,7 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
               <ActionButton
                 ghost
                 onClick={onClose}
+                disabled={isStarting}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -523,6 +611,7 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
               </ActionButton>
               
               <ActionButton
+                disabled={isStarting}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -533,13 +622,14 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
               <ActionButton
                 primary
                 onClick={handleSubmit}
-                disabled={!isTimeRangeValid}
-                whileHover={isTimeRangeValid ? { scale: 1.02 } : undefined}
-                whileTap={isTimeRangeValid ? { scale: 0.98 } : undefined}
-                style={!isTimeRangeValid ? { opacity: 0.55, cursor: 'not-allowed' } : undefined}
+                disabled={!isTimeRangeValid || isStarting}
+                whileHover={isTimeRangeValid && !isStarting ? { scale: 1.02 } : undefined}
+                whileTap={isTimeRangeValid && !isStarting ? { scale: 0.98 } : undefined}
+                style={(!isTimeRangeValid || isStarting) ? { opacity: 0.7, cursor: 'not-allowed' } : undefined}
               >
-                <Video size={15} />
-                {t('createMeetingModal.buttons.start', 'Démarrer la réunion')}
+                {isStarting
+                  ? <><Loader2 size={15} className="animate-spin" /> {t('createMeetingModal.buttons.starting', 'Démarrage…')}</>
+                  : <><Video size={15} /> {t('createMeetingModal.buttons.start', 'Démarrer la réunion')}</>}
               </ActionButton>
             </div>
           </ModalFooter>
