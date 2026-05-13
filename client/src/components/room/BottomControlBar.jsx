@@ -68,7 +68,19 @@ const ControlLabel = styled.span`
   display: none;
 `;
 
-const ControlButton = styled.button`
+const ControlButton = styled.button.attrs((props) => {
+  // Tooltip rapide (feedback bêta : « apparition lente des légendes »).
+  // On reroute le `title` vers `data-tip` (CSS instantané) tout en
+  // préservant l'accessibilité via aria-label si absent.
+  const { title, ...rest } = props;
+  if (!title) return rest;
+  return {
+    ...rest,
+    title: undefined,
+    'data-tip': title,
+    'aria-label': props['aria-label'] || title,
+  };
+})`
   flex-shrink: 0;
   width: 50px;
   height: 50px;
@@ -490,8 +502,8 @@ export const ControlBar = ({
               disabled={!isAiReady || isProcessingAI}
               $active={isAIEnhanced}
               onClick={toggleAIVideoEngine}
-              title={isProcessingAI ? t('room.controls.aiProcessing', 'Transition en cours...') : !isAiReady ? t('room.controls.aiLoading', "Modèles d'IA en cours de chargement...") : (isAIEnhanced ? t('room.controls.aiOff', "Désactiver l'IA") : t('room.controls.aiOn', "Activer l'IA vidéo"))}
-              aria-label={isAIEnhanced ? t('room.controls.aiEnhanceOff', "Désactiver l'amélioration IA") : t('room.controls.aiEnhanceOn', "Activer l'amélioration IA")}
+              title={isProcessingAI ? t('room.controls.aiProcessing', 'Transition en cours...') : !isAiReady ? t('room.controls.aiLoading', "Optimisation IA en cours de chargement...") : (isAIEnhanced ? t('room.controls.aiOff', "Désactiver l'optimisation IA audio/vidéo") : t('room.controls.aiOn', "Activer l'optimisation IA audio/vidéo"))}
+              aria-label={isAIEnhanced ? t('room.controls.aiEnhanceOff', "Désactiver l'optimisation IA (audio/vidéo)") : t('room.controls.aiEnhanceOn', "Activer l'optimisation IA (audio/vidéo)")}
               className={isAIEnhanced ? 'ai-button-active' : ''}
               style={{
                 background: isProcessingAI
@@ -513,7 +525,7 @@ export const ControlBar = ({
             >
               <Sparkles size={22} strokeWidth={(isAIEnhanced && !isProcessingAI) ? 2.5 : 2} />
             </ControlButton>
-            <ControlLabel>{t('room.controls.aiVideoLabel', 'IA vidéo')}</ControlLabel>
+            <ControlLabel>{t('room.controls.aiVideoLabel', 'Optim. A/V')}</ControlLabel>
           </ControlItem>
 
           <ControlItem>

@@ -371,7 +371,7 @@ const AIChatbot = () => {
     useEffect(() => {
       setMessages([{
         id: 1,
-        text: t('aiChatbot.greeting', "Bonjour ! Je suis l'IA ultra-performante de VisiConnect. Je connais la plateforme sur le bout des doigts. Comment puis-je vous aider ?"),
+        text: t('aiChatbot.greeting', "Bonjour 👋 Je peux vous aider à :\n• Résumer la réunion\n• Générer un compte-rendu automatique\n• Répondre à vos questions techniques (caméra, audio, partage d’écran...)\n• Traduire en direct les échanges\n\nPar quoi commencer ?"),
         isUser: false,
       }]);
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -306,7 +306,7 @@ export const AIChatPanel = ({ responseStyle = 'balanced', roomMessages = [], roo
     {
       id: 1,
       sender: 'ai',
-      text: t('aiChatPanel.greeting', "Bonjour ! Je suis votre assistant VisiConnect. Posez-moi vos questions sur la vidéo, l'audio, les paramètres ou toute fonctionnalité de la room."),
+      text: t('aiChatPanel.greeting', "Bonjour 👋 Je peux vous aider à :\n• Résumer la réunion en cours\n• Générer un compte-rendu automatique\n• Répondre à vos questions techniques (caméra, audio, qualité, partage d’écran)\n• Traduire en direct les échanges\n\nDites-moi ce dont vous avez besoin."),
     },
   ]);
   const [inputValue, setInputValue] = useState('');

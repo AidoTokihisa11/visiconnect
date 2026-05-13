@@ -156,6 +156,18 @@ export const WhiteboardWrapper = memo(({ roomId }) => {
   const handleMount = useCallback((editor) => {
     editorRef.current = editor;
 
+    // ============================================================
+    // EXPORT — Forcer un fond opaque (feedback bêta)
+    // « Le SVG exporté est inutilisable car transparent. »
+    // On active explicitement l'arrière-plan d'export pour que les
+    // PNG/SVG natifs de tldraw soient lisibles dans tout visualiseur.
+    // ============================================================
+    try {
+      editor.updateInstanceState({ exportBackground: true });
+    } catch (e) {
+      console.warn('[Whiteboard] Could not enable exportBackground:', e);
+    }
+
     // Load persisted state on first mount if Convex already has data.
     if (remoteData?.elements) {
       try {

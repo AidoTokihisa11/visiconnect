@@ -20,6 +20,7 @@ import { VideoGrid } from './VideoGrid';
 import { ControlBar } from './BottomControlBar';
 import { StatsMonitor } from './StatsMonitor';
 import { WhiteboardWrapper } from './WhiteboardWrapper';
+import { FloatingSelfCamera } from './FloatingSelfCamera';
 import { AIChatPanel } from './AIChatPanel';
 import { AIFeaturesPanel } from './AIFeaturesPanel';
 import { TranscriptionWidget } from './TranscriptionWidget';
@@ -258,6 +259,47 @@ const WhiteboardOverlay = styled(motion.div)`
   @media (max-width: 768px) {
     top: 60px; /* Mobile header height */
     bottom: 90px; /* Mobile bottom bar */
+  }
+`;
+
+// Badge d'indicateur de partage d'écran — feedback bêta :
+// « Afficher un retour visuel clair quand l'utilisateur partage son écran. »
+const ScreenShareBadge = styled(motion.div)`
+  position: fixed;
+  top: 84px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #fff;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 8px 22px rgba(16, 185, 129, 0.35);
+  z-index: 950;
+  white-space: nowrap;
+
+  &::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #fff;
+    animation: ssPulse 1.6s ease-in-out infinite;
+  }
+
+  @keyframes ssPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.55; transform: scale(0.85); }
+  }
+
+  @media (max-width: 768px) {
+    top: 66px;
+    font-size: 12px;
+    padding: 6px 12px;
   }
 `;
 
@@ -706,6 +748,23 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
 
        {/* 2. Overlays */}
        <AnimatePresence>
+        {isScreenShareEnabled && (
+          <ScreenShareBadge
+            key="screen-share-badge"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            role="status"
+            aria-live="polite"
+          >
+            <span aria-hidden="true">🖥️</span>
+            {t('room.screenShareBadge', 'Vous partagez votre écran')}
+          </ScreenShareBadge>
+        )}
+       </AnimatePresence>
+
+       <AnimatePresence>
         {whiteboardOpen && (
            <WhiteboardOverlay
              initial={{ opacity: 0, scale: 0.95 }}
@@ -713,6 +772,13 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
              exit={{ opacity: 0, scale: 0.95 }}
            >
              <WhiteboardWrapper roomId={roomId} userName={user?.name || 'Guest'} />
+             {/* Mini caméra flottante de l'animateur — préserve le lien humain */}
+             <FloatingSelfCamera
+               localParticipant={localParticipant}
+               isCameraEnabled={isCameraEnabled}
+               label={user?.name || 'Vous'}
+               initialCorner="bottom-right"
+             />
              <div style={{
                position: 'absolute',
                bottom: 16,

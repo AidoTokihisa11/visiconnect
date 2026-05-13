@@ -54,19 +54,30 @@ module.exports = async function handler(req, res) {
               <p style="margin: 4px 0 0; color: #64748b; font-size: 13px; font-family: monospace;">ID : ${meetingId || ''}</p>
             </div>
 
-            <!-- CTA Button -->
-            <div style="text-align: center; margin: 24px 0 16px;">
+            <!-- CTA Button #1 (haut/milieu du mail) -->
+            <div style="text-align: center; margin: 24px 0 12px;">
               <a href="${meetingLink}" style="display: inline-block; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; text-decoration: none; padding: 14px 32px; border-radius: 12px; font-weight: 700; font-size: 16px; letter-spacing: -0.2px; box-shadow: 0 4px 14px rgba(37,99,235,0.35);">
-                Rejoindre la réunion →
+                Créer votre compte pour rejoindre la réunion →
               </a>
             </div>
+
+            <p style="color: #475569; font-size: 13px; text-align: center; line-height: 1.5; margin: 8px 14px 4px;">
+              En cliquant sur le bouton, vous accédez à un espace de démonstration (bac à sable) — la création du compte se fait en quelques secondes.
+            </p>
 
             <p style="color: #94a3b8; font-size: 12px; text-align: center; margin: 12px 0 0;">
               Ou copiez ce lien : <span style="color: #2563eb;">${meetingLink}</span>
             </p>
           </div>
 
-          <p style="color: #94a3b8; font-size: 12px; text-align: center; margin-top: 20px;">
+          <!-- CTA Button #2 (bas du mail — augmente le taux de clic) -->
+          <div style="text-align: center; margin: 24px 0 4px;">
+            <a href="${meetingLink}" style="display: inline-block; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; text-decoration: none; padding: 12px 28px; border-radius: 12px; font-weight: 700; font-size: 15px; letter-spacing: -0.2px; box-shadow: 0 4px 14px rgba(37,99,235,0.30);">
+              Créer mon compte & rejoindre →
+            </a>
+          </div>
+
+          <p style="color: #94a3b8; font-size: 12px; text-align: center; margin-top: 16px;">
             © ${new Date().getFullYear()} VisiConnect · Cet email vous a été envoyé automatiquement
           </p>
         </div>

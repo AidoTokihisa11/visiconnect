@@ -111,6 +111,46 @@
   --transition-normal: 0.2s ease-in-out;
 }
 
+/* ============================================================
+   TOOLTIPS RAPIDES (feedback bêta : « apparition lente des
+   légendes boutons »). Le natif `title=` attend ~500-1500ms ;
+   on fournit un mécanisme `data-tip` instantané (≈80ms).
+   Usage : <button data-tip="Mon texte" data-tip-side="top">
+============================================================ */
+[data-tip] {
+  position: relative;
+}
+[data-tip]::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%) translateY(2px);
+  background: rgba(15, 23, 42, 0.96);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 4px 9px;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 80ms ease, transform 80ms ease;
+  z-index: 100000;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+[data-tip][data-tip-side="bottom"]::after {
+  bottom: auto;
+  top: calc(100% + 6px);
+  transform: translateX(-50%) translateY(-2px);
+}
+[data-tip]:hover::after,
+[data-tip]:focus-visible::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  transition-delay: 50ms;
+}
+
 * {
   margin: 0;
   padding: 0;
