@@ -1,9 +1,9 @@
-dddddddddddddd# DOSSIER PROFESSIONNEL — DP
+# DOSSIER PROFESSIONNEL — DP
 
 ## Titre professionnel : **Concepteur Développeur d'Applications** (niveau 6)
 
 **Code RNCP** : RNCP37873 — Arrêté du 22/12/2022
-**Session d'examen** : 3 juillet 2026 — Centre AFPA Orléans
+**Session d'examen** : 3 juillet 2026 — Centre CODA Orléans
 
 ---
 
@@ -14,7 +14,7 @@ dddddddddddddd# DOSSIER PROFESSIONNEL — DP
 | **Adresse** | `[À COMPLÉTER]` |
 | **Téléphone** | `[À COMPLÉTER]` |
 | **Courriel** | theo.garces.aido@gmail.com |
-| **Organisme de formation** | AFPA Orléans `[À CORRIGER si autre]` |
+| **Organisme de formation** | CODA Orléans |
 | **Période de formation** | Septembre 2023 → Septembre 2026 |
 | **Statut** | `[Alternance / Continue / Candidat libre — À PRÉCISER]` |
 | **Entreprise d'accueil** | `[À COMPLÉTER si alternance]` |
@@ -46,7 +46,7 @@ Fait à `[ville]`, le `[date]`. Signature :
 # 1. Présentation du candidat
 
 Je m'appelle **Théo GARCES**, je suis en formation **Concepteur
-Développeur d'Applications** à l'AFPA d'Orléans depuis septembre 2023,
+Développeur d'Applications** au CODA d'Orléans depuis septembre 2023,
 pour une session d'examen prévue le **3 juillet 2026**.
 
 Mon parcours combine :
