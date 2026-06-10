@@ -1,30 +1,41 @@
 const { Resend } = require('resend');
+const { applyCors } = require('./_lib/cors');
+const { requireAuth } = require('./_lib/auth');
+const { rateLimit } = require('./_lib/rateLimit');
+const { parseBody, schemas } = require('./_lib/schemas');
 
 module.exports = async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (applyCors(req, res)) return;
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method Not Allowed' });
 
-  const { email, name, meetingId, meetingTitle, meetingLink, date, startTime } = req.body || {};
+  // Anti-spam : 20 invitations max par heure par IP.
+  if (rateLimit(req, res, { key: 'invite', windowMs: 60 * 60_000, max: 20 })) return;
 
-  if (!email || typeof email !== 'string' || !email.includes('@')) {
-    return res.status(400).json({ error: 'Email invalide.' });
-  }
-  if (!meetingLink) {
-    return res.status(400).json({ error: 'Lien de réunion manquant.' });
-  }
+  const session = await requireAuth(req, res);
+  if (!session) return;
 
-  const resend = new Resend(process.env.RESEND_API_KEY || 're_f7CXkPZ1_FouifSQZycKkbcStAoZkGgW8');
+  const data = parseBody(schemas.meetingInvite, req, res);
+  if (!data) return;
+
+  const { email, name, meetingId, meetingTitle, meetingLink, date, startTime } = data;
+
+  if (!process.env.RESEND_API_KEY) {
+    console.error("RESEND_API_KEY manquante dans les variables d'environnement.");
+    return res.status(500).json({ error: 'Erreur de configuration serveur.' });
+  }
+  const resend = new Resend(process.env.RESEND_API_KEY);
   const displayName = name || email.split('@')[0];
   const title = meetingTitle || 'Réunion VisiConnect';
 
   let dateInfo = '';
   if (date) {
     const d = new Date(date);
-    const formatted = d.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    const formatted = d.toLocaleDateString('fr-FR', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
     dateInfo = `<p style="margin:4px 0; color:#64748b; font-size:14px;">📅 ${formatted}${startTime ? ' à ' + startTime : ''}</p>`;
   }
 

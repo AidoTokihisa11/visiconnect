@@ -14,7 +14,24 @@
     "env:encrypt": "node scripts/env-crypto.js encrypt",
     "env:decrypt": "node scripts/env-crypto.js decrypt",
     "start": "npm run dev",
-    "send-invites": "tsx scripts/send-invites.tsx"
+    "send-invites": "tsx scripts/send-invites.tsx",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write \"**/*.{js,jsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{js,jsx,json,md}\"",
+    "test": "npm run test --workspaces --if-present",
+    "test:server": "cd server && npm test",
+    "audit:high": "npm audit --audit-level=high",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
   },
   "keywords": [
     "visioconference",
@@ -34,6 +51,7 @@
   "devDependencies": {
     "@babel/plugin-syntax-jsx": "^7.28.6",
     "@babel/preset-react": "^7.28.5",
+    "@eslint/js": "^9.15.0",
     "@react-email/preview-server": "^5.2.10",
     "@react-email/ui": "^6.0.0",
     "@tolgee/cli": "^2.16.1",
@@ -43,6 +61,13 @@
     "@vitejs/plugin-react": "^5.1.4",
     "bing-translate-api": "^4.2.0",
     "concurrently": "^9.2.1",
+    "eslint": "^9.15.0",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "globals": "^15.12.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.3.3",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "tsx": "^4.21.0",

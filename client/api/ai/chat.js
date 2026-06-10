@@ -1,25 +1,23 @@
 /**
  * Vercel Serverless Function - AI Chat Proxy
- * 
+ *
  * Route: /api/ai/chat
- * 
+ *
  * Supports:
  * - GROQ API (primary - fast, free tier)
  * - OpenRouter API (fallback)
- * 
+ *
  * Environment Variables Required:
- * - GROQ_API_KEY: Your GROQ API key
- * - GROQ_MODEL: Model to use (default: llama-3.3-70b-versatile)
- * - OPENROUTER_API_KEY: Your OpenRouter API key (fallback)
- * - OPENROUTER_MODEL: OpenRouter model (default: meta-llama/llama-3.1-8b-instruct:free)
+ * - GROQ_API_KEY
+ * - GROQ_MODEL (optional, default: llama-3.3-70b-versatile)
+ * - OPENROUTER_API_KEY (optional fallback)
+ * - OPENROUTER_MODEL (optional, default: meta-llama/llama-3.1-8b-instruct:free)
  */
 
-// CORS headers for all responses
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
-};
+const { applyCors } = require('../_lib/cors');
+const { requireAuth } = require('../_lib/auth');
+const { rateLimit } = require('../_lib/rateLimit');
+const { parseBody, schemas } = require('../_lib/schemas');
 
 // System prompts for different purposes
 const SYSTEM_PROMPTS = {
@@ -38,7 +36,7 @@ LANGUAGE RULES (STRICT):
 5. Never mix two languages in one reply.
 
 Be concise and professional. If you don't know, say so honestly.`,
-  
+
   summary: `You are a professional meeting assistant. Produce a summary STRICTLY based on the provided transcript (do not invent).
 Expected format:
 - Clear sections with titles
@@ -88,7 +86,7 @@ async function callGroq(messages, model) {
   const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${apiKey}`,
+      Authorization: `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -118,7 +116,7 @@ async function callOpenRouter(messages, model) {
   const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${apiKey}`,
+      Authorization: `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
       'HTTP-Referer': 'https://visiconnect.vercel.app',
       'X-Title': 'VisiConnect AI Assistant',
@@ -143,37 +141,28 @@ async function callOpenRouter(messages, model) {
 /**
  * Main handler
  */
-export default async function handler(req, res) {
-  // Handle CORS preflight
-  if (req.method === 'OPTIONS') {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    return res.status(200).end();
-  }
+module.exports = async function handler(req, res) {
+  if (applyCors(req, res)) return;
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  // Only allow POST
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+  // 20 requêtes / minute / IP. L'IA est coûteuse, on protège.
+  if (rateLimit(req, res, { key: 'ai-chat', windowMs: 60_000, max: 20 })) return;
 
-  // Set CORS headers
-  Object.entries(corsHeaders).forEach(([key, value]) => {
-    res.setHeader(key, value);
-  });
+  const session = await requireAuth(req, res);
+  if (!session) return;
+
+  const data = parseBody(schemas.aiChat, req, res);
+  if (!data) return;
 
   try {
-    const { messages, style = 'balanced', purpose = 'chat', locale } = req.body;
-
-    if (!messages || !Array.isArray(messages)) {
-      return res.status(400).json({ error: 'Messages array is required' });
-    }
+    const { messages, purpose = 'chat', locale } = data;
 
     // Inject locale hint so the model can fall back to it when language detection is ambiguous.
     const baseSystemPrompt = SYSTEM_PROMPTS[purpose] || SYSTEM_PROMPTS.chat;
-    const localeHint = (typeof locale === 'string' && locale.length <= 16)
-      ? `\n\n[Client locale hint: "${locale}". Use this language as a fallback only if the user's intended language cannot be detected from their message.]`
-      : '';
+    const localeHint =
+      typeof locale === 'string' && locale.length <= 16
+        ? `\n\n[Client locale hint: "${locale}". Use this language as a fallback only if the user's intended language cannot be detected from their message.]`
+        : '';
     const systemPrompt = baseSystemPrompt + localeHint;
 
     const fullMessages = [
@@ -190,7 +179,7 @@ export default async function handler(req, res) {
       provider = 'groq';
     } catch (groqError) {
       console.error('[AI Chat] GROQ failed:', groqError.message);
-      
+
       // Fallback to OpenRouter
       try {
         content = await callOpenRouter(fullMessages);
@@ -206,14 +195,13 @@ export default async function handler(req, res) {
       provider,
       timestamp: new Date().toISOString(),
     });
-
   } catch (error) {
     console.error('[AI Chat] Error:', error.message);
-    
+
     return res.status(503).json({
       error: 'AI service temporarily unavailable',
       message: "L'IA est momentanément indisponible. Veuillez réessayer dans quelques instants.",
       fallback: true,
     });
   }
-}
+};

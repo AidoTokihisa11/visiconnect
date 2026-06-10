@@ -1,22 +1,23 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
+import { apiFetch } from '../lib/apiClient';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { resolveStripeError } from '../lib/stripeErrors';
-import { 
-  Video, 
-  CreditCard, 
-  Shield, 
-  Check, 
-  ArrowLeft, 
-  Lock, 
-  Users, 
-  Crown, 
+import {
+  Video,
+  CreditCard,
+  Shield,
+  Check,
+  ArrowLeft,
+  Lock,
+  Users,
+  Crown,
   Zap,
   AlertCircle,
-  Gift
+  Gift,
 } from 'lucide-react';
 
 const Container = styled.div`
@@ -55,7 +56,7 @@ const NavLogo = styled(motion.div)`
   font-weight: 800;
   text-decoration: none;
   color: var(--text-primary, #1e293b);
-  
+
   .logo-icon {
     width: 40px;
     height: 40px;
@@ -66,7 +67,7 @@ const NavLogo = styled(motion.div)`
     justify-content: center;
     box-shadow: 0 2px 10px rgba(37, 99, 235, 0.3);
   }
-  
+
   .logo-text {
     background: var(--primary-gradient, linear-gradient(135deg, #2563eb, #06b6d4));
     -webkit-background-clip: text;
@@ -353,11 +354,11 @@ const CheckoutPage = () => {
     billingAddress: '',
     city: '',
     zipCode: '',
-    country: ''
+    country: '',
   });
 
   const selectedPlan = searchParams.get('plan') || 'starter';
-  
+
   const plans = {
     starter: {
       name: t('checkout.plans.starter.name'),
@@ -369,8 +370,8 @@ const CheckoutPage = () => {
         t('checkout.plans.starter.feature2'),
         t('checkout.plans.starter.feature3'),
         t('checkout.plans.starter.feature4'),
-        t('checkout.plans.starter.feature5')
-      ]
+        t('checkout.plans.starter.feature5'),
+      ],
     },
     professional: {
       name: t('checkout.plans.professional.name'),
@@ -384,8 +385,8 @@ const CheckoutPage = () => {
         t('checkout.plans.professional.feature4'),
         t('checkout.plans.professional.feature5'),
         t('checkout.plans.professional.feature6'),
-        t('checkout.plans.professional.feature7')
-      ]
+        t('checkout.plans.professional.feature7'),
+      ],
     },
     enterprise: {
       name: t('checkout.plans.enterprise.name'),
@@ -399,9 +400,9 @@ const CheckoutPage = () => {
         t('checkout.plans.enterprise.feature4'),
         t('checkout.plans.enterprise.feature5'),
         t('checkout.plans.enterprise.feature6'),
-        t('checkout.plans.enterprise.feature7')
-      ]
-    }
+        t('checkout.plans.enterprise.feature7'),
+      ],
+    },
   };
 
   const currentPlan = plans[selectedPlan] || plans.starter;
@@ -410,20 +411,18 @@ const CheckoutPage = () => {
     const { name, value } = event.target;
     setFormData((previousData) => ({
       ...previousData,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       // Create Stripe checkout session
-      const apiUrl = import.meta.env.PROD 
-        ? (import.meta.env.VITE_API_URL || '') + '/api/create-checkout-session' 
-        : (import.meta.env.VITE_API_URL || 'http://localhost:3001') + '/api/create-checkout-session';
+      const apiUrl = '/api/create-checkout-session';
 
-      const response = await fetch(apiUrl, {
+      const response = await apiFetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -459,14 +458,19 @@ const CheckoutPage = () => {
       <Header
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
       >
         <Nav>
-          <NavLogo
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
+          <NavLogo whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Link
+              to="/"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.75rem',
+                textDecoration: 'none',
+              }}
+            >
               <div className="logo-icon">
                 <Video size={24} color="white" />
               </div>
@@ -493,9 +497,7 @@ const CheckoutPage = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <FormTitle>{t('checkout.title')}</FormTitle>
-            <FormSubtitle>
-              {t('checkout.subtitle')}
-            </FormSubtitle>
+            <FormSubtitle>{t('checkout.subtitle')}</FormSubtitle>
 
             <form onSubmit={handleSubmit}>
               <Section>
@@ -503,7 +505,7 @@ const CheckoutPage = () => {
                   <Lock size={20} />
                   {t('checkout.contact.title')}
                 </SectionTitle>
-                
+
                 <FormGroup>
                   <Label htmlFor="email">{t('checkout.contact.email')}</Label>
                   <Input
@@ -536,7 +538,7 @@ const CheckoutPage = () => {
                   <CreditCard size={20} />
                   {t('checkout.payment.title')}
                 </SectionTitle>
-                
+
                 <FormGroup>
                   <Label htmlFor="cardNumber">{t('checkout.payment.card')}</Label>
                   <Input
@@ -579,9 +581,7 @@ const CheckoutPage = () => {
 
                 <SecurityFeatures>
                   <Shield size={20} color="var(--accent-cyan, #06b6d4)" />
-                  <SecurityText>
-                    {t('checkout.payment.secure')}
-                  </SecurityText>
+                  <SecurityText>{t('checkout.payment.secure')}</SecurityText>
                 </SecurityFeatures>
               </Section>
 
@@ -590,7 +590,7 @@ const CheckoutPage = () => {
                   <AlertCircle size={20} />
                   {t('checkout.billing.title')}
                 </SectionTitle>
-                
+
                 <FormGroup>
                   <Label htmlFor="billingAddress">{t('checkout.billing.address')}</Label>
                   <Input
@@ -640,7 +640,7 @@ const CheckoutPage = () => {
             transition={{ duration: 0.6, delay: 0.4 }}
           >
             <SummaryTitle>{t('checkout.summary.title')}</SummaryTitle>
-            
+
             <PlanCard>
               <PlanName>
                 {currentPlan.icon}
@@ -648,7 +648,7 @@ const CheckoutPage = () => {
               </PlanName>
               <PlanPrice>{currentPlan.price}€</PlanPrice>
               <PlanBilling>{currentPlan.billing}</PlanBilling>
-              
+
               <FeaturesList>
                 {currentPlan.features.map((feature, index) => (
                   <Feature key={index}>
@@ -677,7 +677,13 @@ const CheckoutPage = () => {
               </DiscountRow>
               <TotalRow>
                 <span>{t('checkout.summary.total')}</span>
-                <span>{(parseFloat(currentPlan.price) * 1.2 - parseFloat(currentPlan.price) / 2).toFixed(2)}€</span>
+                <span>
+                  {(
+                    parseFloat(currentPlan.price) * 1.2 -
+                    parseFloat(currentPlan.price) / 2
+                  ).toFixed(2)}
+                  €
+                </span>
               </TotalRow>
             </PricingDetails>
 

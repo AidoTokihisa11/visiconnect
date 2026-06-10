@@ -1,0 +1,22 @@
+node_modules
+**/node_modules
+.git
+.github
+.vscode
+dist
+build
+client/build
+client/dist
+**/.env
+**/.env.*
+!**/.env.example
+*.log
+coverage
+.husky
+capture website
+scripts
+emails
+dossiers
+**/_generated
+*.md
+!README.md

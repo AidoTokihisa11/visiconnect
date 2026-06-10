@@ -1,0 +1,11 @@
+node_modules
+dist
+build
+.next
+.vercel
+.netlify
+**/_generated
+client/scripts
+capture website
+package-lock.json
+*.log

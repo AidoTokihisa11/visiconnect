@@ -1,12 +1,14 @@
 {
-  "name": "visio-premium-server",
-  "version": "1.0.0",
-  "description": "Serveur Node.js pour l'application de visioconférence Visio Premium",
-  "main": "index.js",
+  "name": "visiconnect-server",
+  "version": "2.0.0",
+  "description": "Serveur Node.js pour VisiConnect (visioconférence, chat, whiteboard, paiements)",
+  "main": "src/server.js",
   "scripts": {
-    "start": "node simple-server-no-db.js",
-    "dev": "nodemon simple-server-no-db.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "keywords": [
     "webrtc",
@@ -15,36 +17,29 @@
     "chat",
     "whiteboard"
   ],
-  "author": "Visio Premium Team",
+  "author": "Théo Garces",
   "license": "MIT",
   "dependencies": {
-    "@radix-ui/react-dropdown-menu": "^2.1.16",
-    "@radix-ui/react-slot": "^1.2.4",
-    "@react-email/components": "^1.0.12",
-    "@react-email/render": "^2.0.6",
-    "@stackframe/stack": "^2.8.39",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "cors": "^2.8.5",
+    "@clerk/backend": "^1.20.0",
     "dotenv": "^16.6.1",
     "express": "^4.21.2",
+    "express-rate-limit": "^7.4.1",
+    "helmet": "^8.0.0",
     "livekit-server-sdk": "^2.15.0",
-    "lucide-react": "^0.575.0",
-    "next-themes": "^0.4.6",
-    "pg": "^8.16.3",
+    "pino": "^9.5.0",
     "resend": "^6.11.0",
     "socket.io": "^4.8.1",
     "stripe": "^20.4.1",
-    "tailwind-merge": "^3.5.0",
-    "tailwindcss-animate": "^1.0.7",
-    "uuid": "^11.0.3"
+    "uuid": "^11.0.3",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "nodemon": "^3.1.10",
-    "react": "19.2.5",
-    "react-dom": "19.2.5"
+    "pino-pretty": "^11.3.0",
+    "supertest": "^7.0.0",
+    "vitest": "^2.1.5"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.0.0"
   }
 }

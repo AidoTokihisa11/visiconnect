@@ -1,10 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { 
-  User, Camera, Mail, Building, Briefcase, 
-  MapPin, Link as LinkIcon, Save, X, Phone,
-  Loader2, LogOut, Shield, Menu, CreditCard, Star, CheckCircle,
-  Plus, Video, Upload
+import { apiFetch } from '../lib/apiClient';
+import {
+  User,
+  Camera,
+  Mail,
+  Building,
+  Briefcase,
+  MapPin,
+  Link as LinkIcon,
+  Save,
+  X,
+  Phone,
+  Loader2,
+  LogOut,
+  Shield,
+  Menu,
+  CreditCard,
+  Star,
+  CheckCircle,
+  Plus,
+  Video,
+  Upload,
 } from 'lucide-react';
 import CreateMeetingModal from '../components/CreateMeetingModal';
 import WebcamCaptureModal from '../components/WebcamCaptureModal';
@@ -47,7 +64,7 @@ import {
   AvatarContainer,
   UploadButton,
   ProfilePictureInfo,
-  Notification
+  Notification,
 } from './AccountPageSimple.styles';
 
 const AccountPageSimple = () => {
@@ -56,7 +73,7 @@ const AccountPageSimple = () => {
   const { user } = useUser();
   const navigate = useNavigate();
   const { t, language } = useTranslation();
-  
+
   const [activeTab, setActiveTab] = useState('profile');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -71,7 +88,7 @@ const AccountPageSimple = () => {
     const id = Math.random().toString(36).substring(2, 9);
     navigate(`/meeting/${id}`);
   };
-  
+
   const [formData, setFormData] = useState({
     displayName: '',
     bio: '',
@@ -81,7 +98,7 @@ const AccountPageSimple = () => {
     jobTitle: '',
     location: '',
     locationCountry: '',
-    website: ''
+    website: '',
   });
 
   // ----------------------------------------------------------------------
@@ -130,7 +147,7 @@ const AccountPageSimple = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleImageChange = async (e) => {
@@ -149,11 +166,17 @@ const AccountPageSimple = () => {
   const uploadAvatarFile = async (file) => {
     if (!file || !user) return;
     if (!file.type?.startsWith('image/')) {
-      showNotification(t('account.messages.avatarBadType', "Format d'image non supporté."), 'error');
+      showNotification(
+        t('account.messages.avatarBadType', "Format d'image non supporté."),
+        'error'
+      );
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      showNotification(t('account.messages.avatarTooLarge', "L'image doit faire moins de 5 Mo."), 'error');
+      showNotification(
+        t('account.messages.avatarTooLarge', "L'image doit faire moins de 5 Mo."),
+        'error'
+      );
       return;
     }
     try {
@@ -181,7 +204,7 @@ const AccountPageSimple = () => {
     setEmailError('');
     const target = emailDraft.trim().toLowerCase();
     if (!isValidEmail(target)) {
-      setEmailError(t('account.email.invalid', "Adresse email invalide."));
+      setEmailError(t('account.email.invalid', 'Adresse email invalide.'));
       return;
     }
     if (target === user.primaryEmailAddress?.emailAddress?.toLowerCase()) {
@@ -191,9 +214,7 @@ const AccountPageSimple = () => {
     setEmailBusy(true);
     try {
       // Reuse an existing pending entry if Clerk already has one.
-      const existing = user.emailAddresses?.find(
-        (ea) => ea.emailAddress?.toLowerCase() === target
-      );
+      const existing = user.emailAddresses?.find((ea) => ea.emailAddress?.toLowerCase() === target);
       const created = existing || (await user.createEmailAddress({ email: target }));
       await created.prepareVerification({ strategy: 'email_code' });
       setEmailVerificationId(created.id);
@@ -225,7 +246,11 @@ const AccountPageSimple = () => {
       await user.update({ primaryEmailAddressId: target.id });
       if (previousPrimaryId && previousPrimaryId !== target.id) {
         const old = user.emailAddresses?.find((ea) => ea.id === previousPrimaryId);
-        try { await old?.destroy?.(); } catch (e) { /* keep silently if Clerk forbids */ }
+        try {
+          await old?.destroy?.();
+        } catch (e) {
+          /* keep silently if Clerk forbids */
+        }
       }
       await user.reload();
       setEmailVerificationId(null);
@@ -234,9 +259,16 @@ const AccountPageSimple = () => {
     } catch (err) {
       console.error('[email change] verify failed:', err);
       const code = err?.errors?.[0]?.code;
-      if (code === 'form_code_incorrect') setEmailError(t('account.email.codeIncorrect', 'Code incorrect.'));
-      else if (code === 'verification_expired') setEmailError(t('account.email.codeExpired', 'Code expiré, recommencez.'));
-      else setEmailError(err?.errors?.[0]?.message || err?.message || t('account.email.error', "Vérification impossible."));
+      if (code === 'form_code_incorrect')
+        setEmailError(t('account.email.codeIncorrect', 'Code incorrect.'));
+      else if (code === 'verification_expired')
+        setEmailError(t('account.email.codeExpired', 'Code expiré, recommencez.'));
+      else
+        setEmailError(
+          err?.errors?.[0]?.message ||
+            err?.message ||
+            t('account.email.error', 'Vérification impossible.')
+        );
     } finally {
       setEmailBusy(false);
     }
@@ -264,7 +296,10 @@ const AccountPageSimple = () => {
             lastName,
           });
         } catch (clerkError) {
-          console.warn("Mise à jour standard Clerk ignorée (paramètre first_name/last_name non activé sur votre dashboard Clerk): ", clerkError);
+          console.warn(
+            'Mise à jour standard Clerk ignorée (paramètre first_name/last_name non activé sur votre dashboard Clerk): ',
+            clerkError
+          );
         }
 
         await user.update({
@@ -298,7 +333,9 @@ const AccountPageSimple = () => {
     return (
       <PageWrapper>
         <HeaderClean />
-        <ContentContainer style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <ContentContainer
+          style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+        >
           <Loader2 className="animate-spin" size={48} color="#2563eb" />
         </ContentContainer>
         <FooterClean />
@@ -307,14 +344,17 @@ const AccountPageSimple = () => {
   }
 
   const renderProfileTab = () => (
-    <motion.form 
-      initial={{ opacity: 0, y: 10 }} 
-      animate={{ opacity: 1, y: 0 }} 
+    <motion.form
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
       onSubmit={handleSave}
     >
       <ProfilePictureSection>
         <AvatarWrapper>
-          <AvatarContainer whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 300 }}>
+          <AvatarContainer
+            whileHover={{ scale: 1.05 }}
+            transition={{ type: 'spring', stiffness: 300 }}
+          >
             {user?.hasImage || user?.imageUrl ? (
               // Cache-buster (avatarVersion) forces the browser to reload the image
               // immediately after a successful upload (M1 / US-PROF-02).
@@ -354,7 +394,19 @@ const AccountPageSimple = () => {
             >
               <Camera size={14} /> {t('account.avatar.webcam', 'Prendre une photo')}
             </button>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.4rem 0.75rem', background: '#f1f5f9', borderRadius: '2rem', fontSize: '0.78rem', color: '#475569', fontWeight: '500' }}>
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                padding: '0.4rem 0.75rem',
+                background: '#f1f5f9',
+                borderRadius: '2rem',
+                fontSize: '0.78rem',
+                color: '#475569',
+                fontWeight: '500',
+              }}
+            >
               <Shield size={13} color="#2563eb" /> {t('account.securityManaged')}
             </div>
           </div>
@@ -363,9 +415,11 @@ const AccountPageSimple = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
         <FormGroup>
-          <Label><User size={18} /> {t('account.fields.displayName')}</Label>
+          <Label>
+            <User size={18} /> {t('account.fields.displayName')}
+          </Label>
           <InputWrapper>
-            <Input 
+            <Input
               name="displayName"
               value={formData.displayName}
               onChange={handleInputChange}
@@ -383,7 +437,7 @@ const AccountPageSimple = () => {
             >
               {t(
                 'account.email.helpBody',
-                "Pour sécuriser votre compte, nous envoyons un code de vérification à la nouvelle adresse avant de la rendre principale."
+                'Pour sécuriser votre compte, nous envoyons un code de vérification à la nouvelle adresse avant de la rendre principale.'
               )}
             </HelpPopover>
           </Label>
@@ -392,51 +446,79 @@ const AccountPageSimple = () => {
               type="email"
               name="emailDraft"
               value={emailDraft}
-              onChange={(e) => { setEmailDraft(e.target.value); setEmailError(''); }}
+              onChange={(e) => {
+                setEmailDraft(e.target.value);
+                setEmailError('');
+              }}
               placeholder={t('account.placeholders.email', 'votre@email.com')}
               autoComplete="email"
               readOnly={emailBusy || !!emailVerificationId}
             />
           </InputWrapper>
 
-          {!emailVerificationId && emailDraft &&
+          {!emailVerificationId &&
+            emailDraft &&
             user?.primaryEmailAddress?.emailAddress &&
-            emailDraft.trim().toLowerCase() !== user.primaryEmailAddress.emailAddress.toLowerCase() && (
-            <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem', flexWrap: 'wrap' }}>
-              <button
-                type="button"
-                onClick={handleEmailRequestVerification}
-                disabled={emailBusy}
-                style={{
-                  display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
-                  padding: '0.45rem 0.85rem', borderRadius: '8px',
-                  border: '1px solid #2563eb', background: '#2563eb', color: 'white',
-                  fontSize: '0.82rem', fontWeight: 600,
-                  cursor: emailBusy ? 'not-allowed' : 'pointer', opacity: emailBusy ? 0.7 : 1,
-                }}
+            emailDraft.trim().toLowerCase() !==
+              user.primaryEmailAddress.emailAddress.toLowerCase() && (
+              <div
+                style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem', flexWrap: 'wrap' }}
               >
-                {emailBusy ? <Loader2 size={14} className="animate-spin" /> : <Mail size={14} />}
-                {t('account.email.sendCode', 'Envoyer un code de vérification')}
-              </button>
-              <button
-                type="button"
-                onClick={cancelEmailChange}
-                disabled={emailBusy}
-                style={{
-                  padding: '0.45rem 0.85rem', borderRadius: '8px',
-                  border: '1px solid #e2e8f0', background: 'white', color: '#475569',
-                  fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer',
-                }}
-              >
-                {t('account.cancel', 'Annuler')}
-              </button>
-            </div>
-          )}
+                <button
+                  type="button"
+                  onClick={handleEmailRequestVerification}
+                  disabled={emailBusy}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                    padding: '0.45rem 0.85rem',
+                    borderRadius: '8px',
+                    border: '1px solid #2563eb',
+                    background: '#2563eb',
+                    color: 'white',
+                    fontSize: '0.82rem',
+                    fontWeight: 600,
+                    cursor: emailBusy ? 'not-allowed' : 'pointer',
+                    opacity: emailBusy ? 0.7 : 1,
+                  }}
+                >
+                  {emailBusy ? <Loader2 size={14} className="animate-spin" /> : <Mail size={14} />}
+                  {t('account.email.sendCode', 'Envoyer un code de vérification')}
+                </button>
+                <button
+                  type="button"
+                  onClick={cancelEmailChange}
+                  disabled={emailBusy}
+                  style={{
+                    padding: '0.45rem 0.85rem',
+                    borderRadius: '8px',
+                    border: '1px solid #e2e8f0',
+                    background: 'white',
+                    color: '#475569',
+                    fontSize: '0.82rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                  }}
+                >
+                  {t('account.cancel', 'Annuler')}
+                </button>
+              </div>
+            )}
 
           {emailVerificationId && (
-            <div style={{ marginTop: '0.6rem', padding: '0.75rem', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
+            <div
+              style={{
+                marginTop: '0.6rem',
+                padding: '0.75rem',
+                background: '#f8fafc',
+                border: '1px solid #e2e8f0',
+                borderRadius: '8px',
+              }}
+            >
               <p style={{ fontSize: '0.82rem', color: '#475569', margin: '0 0 0.5rem' }}>
-                {t('account.email.codePrompt', 'Saisissez le code reçu sur')} <strong>{emailDraft}</strong>
+                {t('account.email.codePrompt', 'Saisissez le code reçu sur')}{' '}
+                <strong>{emailDraft}</strong>
               </p>
               <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                 <Input
@@ -444,7 +526,10 @@ const AccountPageSimple = () => {
                   inputMode="numeric"
                   autoComplete="one-time-code"
                   value={emailCode}
-                  onChange={(e) => { setEmailCode(e.target.value); setEmailError(''); }}
+                  onChange={(e) => {
+                    setEmailCode(e.target.value);
+                    setEmailError('');
+                  }}
                   placeholder="123456"
                   style={{ maxWidth: '160px', letterSpacing: '0.2em', textAlign: 'center' }}
                 />
@@ -453,14 +538,25 @@ const AccountPageSimple = () => {
                   onClick={handleEmailVerifyCode}
                   disabled={emailBusy}
                   style={{
-                    display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
-                    padding: '0.45rem 0.85rem', borderRadius: '8px',
-                    border: '1px solid #2563eb', background: '#2563eb', color: 'white',
-                    fontSize: '0.82rem', fontWeight: 600,
-                    cursor: emailBusy ? 'not-allowed' : 'pointer', opacity: emailBusy ? 0.7 : 1,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                    padding: '0.45rem 0.85rem',
+                    borderRadius: '8px',
+                    border: '1px solid #2563eb',
+                    background: '#2563eb',
+                    color: 'white',
+                    fontSize: '0.82rem',
+                    fontWeight: 600,
+                    cursor: emailBusy ? 'not-allowed' : 'pointer',
+                    opacity: emailBusy ? 0.7 : 1,
                   }}
                 >
-                  {emailBusy ? <Loader2 size={14} className="animate-spin" /> : <CheckCircle size={14} />}
+                  {emailBusy ? (
+                    <Loader2 size={14} className="animate-spin" />
+                  ) : (
+                    <CheckCircle size={14} />
+                  )}
                   {t('account.email.verify', 'Vérifier')}
                 </button>
                 <button
@@ -468,9 +564,14 @@ const AccountPageSimple = () => {
                   onClick={cancelEmailChange}
                   disabled={emailBusy}
                   style={{
-                    padding: '0.45rem 0.85rem', borderRadius: '8px',
-                    border: '1px solid #e2e8f0', background: 'white', color: '#475569',
-                    fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer',
+                    padding: '0.45rem 0.85rem',
+                    borderRadius: '8px',
+                    border: '1px solid #e2e8f0',
+                    background: 'white',
+                    color: '#475569',
+                    fontSize: '0.82rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
                   }}
                 >
                   {t('account.cancel', 'Annuler')}
@@ -480,12 +581,16 @@ const AccountPageSimple = () => {
           )}
 
           {emailError && (
-            <p style={{ fontSize: '0.8rem', color: '#ef4444', marginTop: '0.4rem' }}>{emailError}</p>
+            <p style={{ fontSize: '0.8rem', color: '#ef4444', marginTop: '0.4rem' }}>
+              {emailError}
+            </p>
           )}
         </FormGroup>
 
         <FormGroup>
-          <Label><Phone size={18} /> {t('account.fields.phone')}</Label>
+          <Label>
+            <Phone size={18} /> {t('account.fields.phone')}
+          </Label>
           <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'stretch' }}>
             <div style={{ flex: '0 0 180px' }}>
               <Combobox
@@ -509,7 +614,7 @@ const AccountPageSimple = () => {
               />
             </div>
             <InputWrapper style={{ flex: 1 }}>
-              <Input 
+              <Input
                 name="phone"
                 type="tel"
                 value={formData.phone}
@@ -519,13 +624,21 @@ const AccountPageSimple = () => {
             </InputWrapper>
           </div>
         </FormGroup>
-        
+
         <FormGroup>
-          <Label><MapPin size={18} /> {t('account.fields.location')}</Label>
+          <Label>
+            <MapPin size={18} /> {t('account.fields.location')}
+          </Label>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             <Combobox
               value={formData.locationCountry}
-              onChange={(c) => setFormData((p) => ({ ...p, locationCountry: c.code, location: p.location || c.name }))}
+              onChange={(c) =>
+                setFormData((p) => ({
+                  ...p,
+                  locationCountry: c.code,
+                  location: p.location || c.name,
+                }))
+              }
               items={COUNTRIES}
               getLabel={(c) => (
                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -537,7 +650,7 @@ const AccountPageSimple = () => {
               searchPlaceholder={t('account.fields.searchCountry', 'Rechercher un pays…')}
             />
             <InputWrapper>
-              <Input 
+              <Input
                 name="location"
                 value={formData.location}
                 onChange={handleInputChange}
@@ -548,9 +661,11 @@ const AccountPageSimple = () => {
         </FormGroup>
 
         <FormGroup>
-          <Label><Building size={18} /> {t('account.fields.company')}</Label>
+          <Label>
+            <Building size={18} /> {t('account.fields.company')}
+          </Label>
           <InputWrapper>
-            <Input 
+            <Input
               name="company"
               value={formData.company}
               onChange={handleInputChange}
@@ -560,9 +675,11 @@ const AccountPageSimple = () => {
         </FormGroup>
 
         <FormGroup>
-          <Label><Briefcase size={18} /> {t('account.fields.position')}</Label>
+          <Label>
+            <Briefcase size={18} /> {t('account.fields.position')}
+          </Label>
           <InputWrapper>
-            <Input 
+            <Input
               name="jobTitle"
               value={formData.jobTitle}
               onChange={handleInputChange}
@@ -571,11 +688,13 @@ const AccountPageSimple = () => {
           </InputWrapper>
         </FormGroup>
       </div>
-      
+
       <FormGroup style={{ marginTop: '0.5rem' }}>
-        <Label><LinkIcon size={18} /> {t('account.fields.website')}</Label>
+        <Label>
+          <LinkIcon size={18} /> {t('account.fields.website')}
+        </Label>
         <InputWrapper>
-          <Input 
+          <Input
             name="website"
             value={formData.website}
             onChange={handleInputChange}
@@ -586,7 +705,7 @@ const AccountPageSimple = () => {
 
       <FormGroup>
         <Label>{t('account.fields.bio')}</Label>
-        <TextArea 
+        <TextArea
           name="bio"
           value={formData.bio}
           onChange={handleInputChange}
@@ -603,16 +722,12 @@ const AccountPageSimple = () => {
           $variant="secondary"
           whileTap={{ scale: 0.98 }}
           onClick={() => {
-             setFormData(prev => ({...prev, displayName: user?.fullName || ''}));
+            setFormData((prev) => ({ ...prev, displayName: user?.fullName || '' }));
           }}
         >
           {t('account.cancel')}
         </Button>
-        <Button 
-          type="submit" 
-          disabled={isSaving}
-          whileTap={{ scale: 0.98 }}
-        >
+        <Button type="submit" disabled={isSaving} whileTap={{ scale: 0.98 }}>
           {isSaving ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />}
           {isSaving ? t('account.saving') : t('account.save')}
         </Button>
@@ -627,8 +742,8 @@ const AccountPageSimple = () => {
 
     const tierColors = {
       starter: { bg: '#f1f5f9', border: '#cbd5e1', badge: '#64748b' },
-      pro:     { bg: '#eff6ff', border: '#3b82f6', badge: '#2563eb' },
-      business:{ bg: '#f0fdf4', border: '#22c55e', badge: '#16a34a' },
+      pro: { bg: '#eff6ff', border: '#3b82f6', badge: '#2563eb' },
+      business: { bg: '#f0fdf4', border: '#22c55e', badge: '#16a34a' },
     };
     const colors = tierColors[currentPlanId] || tierColors.starter;
 
@@ -659,10 +774,16 @@ const AccountPageSimple = () => {
       setPlanSwitching(true);
       try {
         const billingCycle = 'monthly';
-        const res = await fetch('/api/create-checkout-session', {
+        const res = await apiFetch('/api/create-checkout-session', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ plan: targetPlan, billingCycle, userId: user?.id, userEmail: user?.primaryEmailAddress?.emailAddress || '', locale: language || (typeof navigator !== 'undefined' ? navigator.language : 'en') }),
+          body: JSON.stringify({
+            plan: targetPlan,
+            billingCycle,
+            userId: user?.id,
+            userEmail: user?.primaryEmailAddress?.emailAddress || '',
+            locale: language || (typeof navigator !== 'undefined' ? navigator.language : 'en'),
+          }),
         });
         const session = await res.json();
         if (session.error) {
@@ -673,7 +794,8 @@ const AccountPageSimple = () => {
         if (session.url) window.location.href = session.url;
       } catch (err) {
         showNotification(
-          resolveStripeError(err, language) || t('billing.errors.checkoutRedirect', 'Erreur lors de la redirection vers le paiement.'),
+          resolveStripeError(err, language) ||
+            t('billing.errors.checkoutRedirect', 'Erreur lors de la redirection vers le paiement.'),
           'error'
         );
       } finally {
@@ -682,7 +804,15 @@ const AccountPageSimple = () => {
     };
 
     const handleDowngrade = async () => {
-      if (!window.confirm(t('billing.errors.confirmDowngrade', "Rétrograder vers le plan Starter ? Vous perdrez l'accès aux fonctionnalités Pro/Business à la fin de votre période de facturation."))) return;
+      if (
+        !window.confirm(
+          t(
+            'billing.errors.confirmDowngrade',
+            "Rétrograder vers le plan Starter ? Vous perdrez l'accès aux fonctionnalités Pro/Business à la fin de votre période de facturation."
+          )
+        )
+      )
+        return;
       setPlanSwitching(true);
       try {
         await user.update({
@@ -695,9 +825,17 @@ const AccountPageSimple = () => {
           },
         });
         await user.reload();
-        showNotification(t('billing.errors.downgradeSuccess', 'Votre abonnement a été rétrogradé vers le plan Starter.'));
+        showNotification(
+          t(
+            'billing.errors.downgradeSuccess',
+            'Votre abonnement a été rétrogradé vers le plan Starter.'
+          )
+        );
       } catch (err) {
-        showNotification(t('billing.errors.downgradeFailed', 'Erreur lors de la rétrogradation.'), 'error');
+        showNotification(
+          t('billing.errors.downgradeFailed', 'Erreur lors de la rétrogradation.'),
+          'error'
+        );
       } finally {
         setPlanSwitching(false);
       }
@@ -706,28 +844,80 @@ const AccountPageSimple = () => {
     return (
       <div style={{ padding: '1.5rem 0' }}>
         {/* Current plan card */}
-        <div style={{
-          background: colors.bg,
-          border: `2px solid ${colors.border}`,
-          borderRadius: '16px',
-          padding: '1.5rem',
-          marginBottom: '1.5rem',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+        <div
+          style={{
+            background: colors.bg,
+            border: `2px solid ${colors.border}`,
+            borderRadius: '16px',
+            padding: '1.5rem',
+            marginBottom: '1.5rem',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: '1rem',
+              flexWrap: 'wrap',
+              gap: '0.5rem',
+            }}
+          >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <Star size={24} color={colors.badge} fill={colors.badge} />
               <div>
-                <div style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t('billing.currentPlan', 'Plan actuel')}</div>
-                <div style={{ fontSize: '1.5rem', fontWeight: '800', color: '#0f172a' }}>{currentPlan.name}</div>
+                <div
+                  style={{
+                    fontSize: '0.8rem',
+                    color: '#64748b',
+                    fontWeight: '600',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                  }}
+                >
+                  {t('billing.currentPlan', 'Plan actuel')}
+                </div>
+                <div style={{ fontSize: '1.5rem', fontWeight: '800', color: '#0f172a' }}>
+                  {currentPlan.name}
+                </div>
               </div>
             </div>
-            <div style={{ background: colors.badge, color: 'white', fontSize: '0.85rem', fontWeight: '700', padding: '0.35rem 1rem', borderRadius: '999px' }}>
-              {currentPlan.priceMonthly === 0 ? t('billing.free', 'Gratuit') : `€${currentPlan.priceMonthly}${t('billing.perMonth', '/mois')}`}
+            <div
+              style={{
+                background: colors.badge,
+                color: 'white',
+                fontSize: '0.85rem',
+                fontWeight: '700',
+                padding: '0.35rem 1rem',
+                borderRadius: '999px',
+              }}
+            >
+              {currentPlan.priceMonthly === 0
+                ? t('billing.free', 'Gratuit')
+                : `€${currentPlan.priceMonthly}${t('billing.perMonth', '/mois')}`}
             </div>
           </div>
-          <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 0', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <ul
+            style={{
+              listStyle: 'none',
+              padding: 0,
+              margin: '0 0 0',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.5rem',
+            }}
+          >
             {(featuresByPlan[currentPlanId] || []).map((feat, i) => (
-              <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: '#334155' }}>
+              <li
+                key={i}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  fontSize: '0.9rem',
+                  color: '#334155',
+                }}
+              >
                 <CheckCircle size={16} color={colors.badge} /> {feat}
               </li>
             ))}
@@ -735,36 +925,67 @@ const AccountPageSimple = () => {
         </div>
 
         {/* Plan selection grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem', marginBottom: '1.25rem' }}>
-          {Object.values(PLANS).map(plan => {
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: '0.75rem',
+            marginBottom: '1.25rem',
+          }}
+        >
+          {Object.values(PLANS).map((plan) => {
             const isCurrentPlan = plan.id === currentPlanId;
             const planColor = tierColors[plan.id] || tierColors.starter;
             const isUpgrade = plan.priceMonthly > currentPlan.priceMonthly;
-            const isDowngrade = plan.priceMonthly < currentPlan.priceMonthly && plan.id !== 'starter';
+            const isDowngrade =
+              plan.priceMonthly < currentPlan.priceMonthly && plan.id !== 'starter';
             return (
-              <div key={plan.id} style={{
-                background: isCurrentPlan ? planColor.bg : '#f8fafc',
-                border: `1px solid ${isCurrentPlan ? planColor.border : '#e2e8f0'}`,
-                borderRadius: '12px',
-                padding: '1rem',
-                textAlign: 'center',
-                position: 'relative',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.5rem',
-              }}>
+              <div
+                key={plan.id}
+                style={{
+                  background: isCurrentPlan ? planColor.bg : '#f8fafc',
+                  border: `1px solid ${isCurrentPlan ? planColor.border : '#e2e8f0'}`,
+                  borderRadius: '12px',
+                  padding: '1rem',
+                  textAlign: 'center',
+                  position: 'relative',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.5rem',
+                }}
+              >
                 {isCurrentPlan && (
-                  <div style={{ position: 'absolute', top: '-10px', left: '50%', transform: 'translateX(-50%)', background: planColor.badge, color: 'white', fontSize: '0.7rem', fontWeight: '700', padding: '0.2rem 0.6rem', borderRadius: '999px', whiteSpace: 'nowrap' }}>{t('billing.currentBadge', 'Actuel')}</div>
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '-10px',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      background: planColor.badge,
+                      color: 'white',
+                      fontSize: '0.7rem',
+                      fontWeight: '700',
+                      padding: '0.2rem 0.6rem',
+                      borderRadius: '999px',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {t('billing.currentBadge', 'Actuel')}
+                  </div>
                 )}
-                <div style={{ fontWeight: '800', fontSize: '1rem', color: '#0f172a' }}>{plan.name}</div>
+                <div style={{ fontWeight: '800', fontSize: '1rem', color: '#0f172a' }}>
+                  {plan.name}
+                </div>
                 <div style={{ fontSize: '1.25rem', fontWeight: '700', color: '#2563eb' }}>
                   {plan.priceMonthly === 0 ? '€0' : `€${plan.priceMonthly}`}
-                  <span style={{ fontSize: '0.75rem', fontWeight: '500', color: '#64748b' }}>{t('billing.perMonth', '/mois')}</span>
+                  <span style={{ fontSize: '0.75rem', fontWeight: '500', color: '#64748b' }}>
+                    {t('billing.perMonth', '/mois')}
+                  </span>
                 </div>
                 {!isCurrentPlan && (
                   <button
                     disabled={planSwitching}
-                    onClick={() => isUpgrade || isDowngrade ? handleUpgrade(plan.id) : null}
+                    onClick={() => (isUpgrade || isDowngrade ? handleUpgrade(plan.id) : null)}
                     style={{
                       marginTop: '0.25rem',
                       padding: '0.4rem 0.75rem',
@@ -817,25 +1038,41 @@ const AccountPageSimple = () => {
     <PageWrapper>
       <HeaderClean />
       <ContentContainer>
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }} 
-          animate={{ opacity: 1, y: 0 }} 
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
           <HeaderSection>
             <Title>{t('account.dashboard')}</Title>
             <Subtitle>{t('account.subtitle')}</Subtitle>
-            <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+            <div
+              style={{
+                display: 'flex',
+                gap: '0.75rem',
+                marginTop: '1.5rem',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+              }}
+            >
               <button
                 onClick={() => setShowCreateModal(true)}
                 style={{
-                  display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-                  padding: '0.6rem 1.25rem', background: '#2563eb', color: 'white',
-                  border: 'none', borderRadius: '8px', fontWeight: '600', fontSize: '0.95rem',
-                  cursor: 'pointer', transition: 'opacity 0.2s',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.6rem 1.25rem',
+                  background: '#2563eb',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  fontWeight: '600',
+                  fontSize: '0.95rem',
+                  cursor: 'pointer',
+                  transition: 'opacity 0.2s',
                 }}
-                onMouseOver={e => e.currentTarget.style.opacity = '0.88'}
-                onMouseOut={e => e.currentTarget.style.opacity = '1'}
+                onMouseOver={(e) => (e.currentTarget.style.opacity = '0.88')}
+                onMouseOut={(e) => (e.currentTarget.style.opacity = '1')}
               >
                 <Video size={17} /> {t('account.actions.createMeeting', 'Créer une réunion')}
               </button>
@@ -852,7 +1089,10 @@ const AccountPageSimple = () => {
 
         <DashboardOverview
           user={user}
-          currentPlan={PLANS[user?.publicMetadata?.plan || user?.unsafeMetadata?.plan || 'starter'] || PLANS.starter}
+          currentPlan={
+            PLANS[user?.publicMetadata?.plan || user?.unsafeMetadata?.plan || 'starter'] ||
+            PLANS.starter
+          }
           onCreateMeeting={() => setShowCreateModal(true)}
           onJoinMeeting={(id) => navigate(`/meeting/${id}`)}
         />
@@ -867,33 +1107,57 @@ const AccountPageSimple = () => {
             <MobileNavToggle onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <Menu size={20} color="#2563eb" />
-                <span>{activeTab === 'profile' ? t('account.tabs.profile') : t('account.tabs.security')}</span>
+                <span>
+                  {activeTab === 'profile' ? t('account.tabs.profile') : t('account.tabs.security')}
+                </span>
               </div>
-              <span style={{ fontSize: '0.8rem', color: '#64748b', background: '#f1f5f9', padding: '0.2rem 0.5rem', borderRadius: '1rem' }}>{t('account.menu')}</span>
+              <span
+                style={{
+                  fontSize: '0.8rem',
+                  color: '#64748b',
+                  background: '#f1f5f9',
+                  padding: '0.2rem 0.5rem',
+                  borderRadius: '1rem',
+                }}
+              >
+                {t('account.menu')}
+              </span>
             </MobileNavToggle>
 
             <Card style={{ padding: '0.5rem' }}>
               <NavMenu $isOpen={isMobileMenuOpen}>
                 <NavItem
                   $active={activeTab === 'profile'}
-                  onClick={() => { setActiveTab('profile'); setIsMobileMenuOpen(false); }}
+                  onClick={() => {
+                    setActiveTab('profile');
+                    setIsMobileMenuOpen(false);
+                  }}
                 >
                   <User size={20} /> {t('account.tabs.profile')}
                 </NavItem>
                 <NavItem
                   $active={activeTab === 'subscription'}
-                  onClick={() => { setActiveTab('subscription'); setIsMobileMenuOpen(false); }}
+                  onClick={() => {
+                    setActiveTab('subscription');
+                    setIsMobileMenuOpen(false);
+                  }}
                 >
                   <CreditCard size={20} /> {t('account.tabs.subscription', 'Mon Abonnement')}
                 </NavItem>
                 <NavItem
                   $active={activeTab === 'security'}
-                  onClick={() => { setActiveTab('security'); setIsMobileMenuOpen(false); }}
+                  onClick={() => {
+                    setActiveTab('security');
+                    setIsMobileMenuOpen(false);
+                  }}
                 >
                   <Shield size={20} /> {t('account.tabs.security')}
                 </NavItem>
                 <div style={{ height: '1px', background: '#e2e8f0', margin: '0.5rem 0' }} />
-                <NavItem onClick={handleSignOut} style={{ color: '#ef4444', borderLeftColor: 'transparent' }}>
+                <NavItem
+                  onClick={handleSignOut}
+                  style={{ color: '#ef4444', borderLeftColor: 'transparent' }}
+                >
                   <LogOut size={20} /> {t('account.logout')}
                 </NavItem>
               </NavMenu>
@@ -908,7 +1172,11 @@ const AccountPageSimple = () => {
           >
             <CardHeader>
               <CardTitle>
-                {activeTab === 'profile' ? t('account.personalInfo') : activeTab === 'subscription' ? t('account.tabs.subscription', 'Mon Abonnement') : t('account.securityTitle')}
+                {activeTab === 'profile'
+                  ? t('account.personalInfo')
+                  : activeTab === 'subscription'
+                    ? t('account.tabs.subscription', 'Mon Abonnement')
+                    : t('account.securityTitle')}
               </CardTitle>
             </CardHeader>
             <CardBody>
@@ -941,31 +1209,50 @@ const AccountPageSimple = () => {
                     exit={{ opacity: 0, x: -20 }}
                     transition={{ duration: 0.3 }}
                   >
-                <div style={{ textAlign: 'center', padding: '3rem 1rem' }}>
-                  <motion.div
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ type: "spring", stiffness: 200, delay: 0.1 }}
-                  >
-                    <Shield size={64} color="#2563eb" style={{ margin: '0 auto 1.5rem auto', opacity: 0.9 }} />
+                    <div style={{ textAlign: 'center', padding: '3rem 1rem' }}>
+                      <motion.div
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ type: 'spring', stiffness: 200, delay: 0.1 }}
+                      >
+                        <Shield
+                          size={64}
+                          color="#2563eb"
+                          style={{ margin: '0 auto 1.5rem auto', opacity: 0.9 }}
+                        />
+                      </motion.div>
+                      <h3
+                        style={{
+                          fontSize: '1.5rem',
+                          fontWeight: '700',
+                          marginBottom: '1rem',
+                          color: '#0f172a',
+                        }}
+                      >
+                        {t('account.securityManaged')}
+                      </h3>
+                      <p
+                        style={{
+                          color: '#64748b',
+                          maxWidth: '450px',
+                          margin: '0 auto',
+                          lineHeight: '1.6',
+                          fontSize: '1.05rem',
+                        }}
+                      >
+                        {t('account.securityDesc')}
+                      </p>
+                    </div>
                   </motion.div>
-                  <h3 style={{ fontSize: '1.5rem', fontWeight: '700', marginBottom: '1rem', color: '#0f172a' }}>
-                    {t('account.securityManaged')}
-                  </h3>
-                  <p style={{ color: '#64748b', maxWidth: '450px', margin: '0 auto', lineHeight: '1.6', fontSize: '1.05rem' }}>
-                    {t('account.securityDesc')}
-                  </p>
-                </div>
-                  </motion.div>
-              )}
-            </AnimatePresence>
+                )}
+              </AnimatePresence>
             </CardBody>
           </Card>
         </DashboardGrid>
       </ContentContainer>
-      
+
       <FooterClean />
-      
+
       <AnimatePresence>
         {notification && (
           <Notification
@@ -983,4 +1270,3 @@ const AccountPageSimple = () => {
 };
 
 export default AccountPageSimple;
-

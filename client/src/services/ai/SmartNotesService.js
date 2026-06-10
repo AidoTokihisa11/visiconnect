@@ -1,10 +1,12 @@
 /**
  * SmartNotesService - Génération de résumés IA via OpenRouter
- * 
+ *
  * Utilise les modèles gratuits:
  * - meta-llama/llama-3.1-8b-instruct:free
  * - mistralai/mistral-7b-instruct:free
  */
+
+import { apiFetch } from '../../lib/apiClient';
 
 const AI_ENDPOINT = '/api/ai/chat';
 
@@ -42,16 +44,14 @@ class SmartNotesService {
 
     if (chatMessages && chatMessages.length > 0) {
       context += `## Messages du chat\n`;
-      context += chatMessages
-        .map((msg) => `${msg.sender || 'Anonyme'}: ${msg.text}`)
-        .join('\n');
+      context += chatMessages.map((msg) => `${msg.sender || 'Anonyme'}: ${msg.text}`).join('\n');
     }
 
     if (!transcript?.length && !chatMessages?.length) {
       throw new Error('Aucun contenu à résumer');
     }
 
-    const response = await fetch(AI_ENDPOINT, {
+    const response = await apiFetch(AI_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -83,11 +83,12 @@ class SmartNotesService {
    * Génère des points d'action à partir du résumé
    */
   async extractActionItems(summaryOrTranscript) {
-    const content = typeof summaryOrTranscript === 'string'
-      ? summaryOrTranscript
-      : summaryOrTranscript.map((e) => e.text).join(' ');
+    const content =
+      typeof summaryOrTranscript === 'string'
+        ? summaryOrTranscript
+        : summaryOrTranscript.map((e) => e.text).join(' ');
 
-    const response = await fetch(AI_ENDPOINT, {
+    const response = await apiFetch(AI_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -113,11 +114,11 @@ Réponds UNIQUEMENT avec le JSON, sans texte autour.`,
     });
 
     if (!response.ok) {
-      throw new Error('Erreur lors de l\'extraction des actions');
+      throw new Error("Erreur lors de l'extraction des actions");
     }
 
     const data = await response.json();
-    
+
     try {
       // Parse le JSON de la réponse
       const jsonMatch = data.content.match(/\{[\s\S]*\}/);
@@ -137,7 +138,7 @@ Réponds UNIQUEMENT avec le JSON, sans texte autour.`,
   async generateKeyNotes(transcript) {
     const text = transcript.map((e) => e.text).join(' ');
 
-    const response = await fetch(AI_ENDPOINT, {
+    const response = await apiFetch(AI_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -194,7 +195,10 @@ Sois concis et précis.`,
 <body>
   <h1>Compte-rendu de réunion</h1>
   <p><em>Généré le ${new Date(generatedAt).toLocaleString('fr-FR')}</em></p>
-  ${content.replace(/\n/g, '<br>').replace(/^## (.+)$/gm, '<h2>$1</h2>').replace(/^- (.+)$/gm, '<li>$1</li>')}
+  ${content
+    .replace(/\n/g, '<br>')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^- (.+)$/gm, '<li>$1</li>')}
 </body>
 </html>`;
     }

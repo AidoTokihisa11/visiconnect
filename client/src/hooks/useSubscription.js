@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { resolveStripeError } from '../lib/stripeErrors';
+import { apiFetch } from '../lib/apiClient';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 const FREE_PLAN_DURATION_MS = 40 * 60 * 1000;
@@ -28,18 +29,21 @@ export const useSubscription = (subscriber) => {
     setError(null);
 
     try {
-      const response = await fetch('/api/create-checkout-session', {
+      const response = await apiFetch('/api/create-checkout-session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${subscriber.token}`,
         },
-        body: JSON.stringify(buildCheckoutPayload(
-          priceId,
-          subscriber.id,
-          (typeof localStorage !== 'undefined' ? localStorage.getItem('visiconnect.language') : null)
-            || (typeof navigator !== 'undefined' ? navigator.language : 'en')
-        )),
+        body: JSON.stringify(
+          buildCheckoutPayload(
+            priceId,
+            subscriber.id,
+            (typeof localStorage !== 'undefined'
+              ? localStorage.getItem('visiconnect.language')
+              : null) || (typeof navigator !== 'undefined' ? navigator.language : 'en')
+          )
+        ),
       });
 
       if (!response.ok) {
@@ -65,7 +69,6 @@ export const useSubscription = (subscriber) => {
       if (stripeError) {
         throw new Error(resolveStripeError(stripeError));
       }
-
     } catch (checkoutError) {
       setError(checkoutError.message);
     } finally {

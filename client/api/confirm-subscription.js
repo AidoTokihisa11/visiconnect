@@ -1,19 +1,26 @@
 const Stripe = require('stripe');
+const { applyCors } = require('./_lib/cors');
+const { requireAuth } = require('./_lib/auth');
+const { rateLimit } = require('./_lib/rateLimit');
+const { parseBody, schemas } = require('./_lib/schemas');
 
 module.exports = async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (applyCors(req, res)) return;
   if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
+
+  if (rateLimit(req, res, { key: 'confirm-sub', windowMs: 60_000, max: 20 })) return;
+
+  const session = await requireAuth(req, res);
+  if (!session) return;
 
   if (!process.env.STRIPE_SECRET_KEY) {
     return res.status(500).json({ error: 'STRIPE_SECRET_KEY non configurée.' });
   }
 
-  const { sessionId } = req.body || {};
-  if (!sessionId) return res.status(400).json({ error: 'sessionId requis.' });
+  const data = parseBody(schemas.confirmSubscription, req, res);
+  if (!data) return;
+
+  const { sessionId } = data;
 
   try {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY.trim());
@@ -38,10 +45,8 @@ module.exports = async function handler(req, res) {
       billingCycle: billingCycle || 'monthly',
       subscribedAt: new Date().toISOString(),
     });
-
   } catch (err) {
     console.error('confirm-subscription error:', err.message);
     return res.status(500).json({ error: err.message });
   }
 };
-

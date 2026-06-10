@@ -3,34 +3,43 @@ import styled, { css } from 'styled-components';
 import { Check, X, ChevronDown, ChevronUp, Star, Shield, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
+import { apiFetch } from '../lib/apiClient';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import { useTranslation } from '../hooks/useTranslation';
 import { useUser } from '@clerk/react';
 import CallToAction from '../components/CallToAction';
 
-const stripePromise = loadStripe('pk_test_51T5EwZ8YZRxeQjiW412gOFLsaZ4fn6ArvMjf74OphD9WhovPuRDde4qOGwrpdwlnFQIt1apdfwnWNfjbt6n0CkkB00p9k8z1MO');
+const stripePromise = loadStripe(
+  'pk_test_51T5EwZ8YZRxeQjiW412gOFLsaZ4fn6ArvMjf74OphD9WhovPuRDde4qOGwrpdwlnFQIt1apdfwnWNfjbt6n0CkkB00p9k8z1MO'
+);
 
 const COLORS = {
-  primary: 'hsl(var(--primary))',    
-  secondary: 'hsl(var(--muted-foreground))', 
-  dark: 'hsl(var(--foreground))',      
-  text: 'hsl(var(--foreground))',      
-  lightText: 'hsl(var(--muted-foreground))', 
+  primary: 'hsl(var(--primary))',
+  secondary: 'hsl(var(--muted-foreground))',
+  dark: 'hsl(var(--foreground))',
+  text: 'hsl(var(--foreground))',
+  lightText: 'hsl(var(--muted-foreground))',
   background: 'hsl(var(--background))',
   white: 'hsl(var(--card))',
-  border: 'hsl(var(--border))',    
-  success: 'hsl(var(--primary))',   
+  border: 'hsl(var(--border))',
+  success: 'hsl(var(--primary))',
   warning: 'hsl(var(--destructive))',
-  error: 'hsl(var(--destructive))'
+  error: 'hsl(var(--destructive))',
 };
 
 const PageContainer = styled.div`
   min-height: 100vh;
   background-color: ${COLORS.background};
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family:
+    'Inter',
+    system-ui,
+    -apple-system,
+    sans-serif;
   color: ${COLORS.text};
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 `;
 
 const HeroSection = styled.div`
@@ -82,32 +91,37 @@ const PricingGrid = styled.div`
 
 const PlanCard = styled.div`
   background-color: ${COLORS.white};
-  border: 1px solid ${props => props.$featured ? COLORS.primary : COLORS.border};
+  border: 1px solid ${(props) => (props.$featured ? COLORS.primary : COLORS.border)};
   border-radius: 20px;
   padding: 2.5rem;
   display: flex;
   flex-direction: column;
   position: relative;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+
   @media (max-width: 640px) {
     padding: 1.5rem;
   }
-  
-  ${props => props.$featured && css`
-    box-shadow: 0 25px 50px -12px rgba(37, 99, 235, 0.25);
-    transform: scale(1.05);
-    z-index: 10;
-    border-width: 2px;
 
-    @media (max-width: 900px) {
-      transform: none;
-      z-index: 1;
-    }
-  `}
+  ${(props) =>
+    props.$featured &&
+    css`
+      box-shadow: 0 25px 50px -12px rgba(37, 99, 235, 0.25);
+      transform: scale(1.05);
+      z-index: 10;
+      border-width: 2px;
+
+      @media (max-width: 900px) {
+        transform: none;
+        z-index: 1;
+      }
+    `}
 
   &:hover {
-    transform: ${props => props.$featured ? 'scale(1.05) translateY(-5px)' : 'translateY(-5px)'};
+    transform: ${(props) =>
+      props.$featured ? 'scale(1.05) translateY(-5px)' : 'translateY(-5px)'};
     box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
   }
 `;
@@ -147,12 +161,12 @@ const Price = styled.div`
   margin-bottom: 2rem;
   display: flex;
   align-items: baseline;
-  
+
   span.currency {
     font-size: 2rem;
     margin-right: 4px;
   }
-  
+
   span.period {
     font-size: 1.125rem;
     font-weight: 500;
@@ -201,24 +215,27 @@ const PlanButton = styled(Link)`
   font-weight: 600;
   text-decoration: none;
   transition: all 0.2s;
-  
-  ${props => props.variant === 'primary' ? css`
-    background-color: ${COLORS.primary};
-    color: ${COLORS.white};
-    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
-    &:hover {
-      background-color: #1d4ed8;
-      box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4);
-    }
-  ` : css`
-    background-color: ${COLORS.white};
-    color: ${COLORS.dark};
-    border: 1px solid ${COLORS.border};
-    &:hover {
-      background-color: #f8fafc;
-      border-color: #cbd5e1;
-    }
-  `}
+
+  ${(props) =>
+    props.variant === 'primary'
+      ? css`
+          background-color: ${COLORS.primary};
+          color: ${COLORS.white};
+          box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+          &:hover {
+            background-color: #1d4ed8;
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4);
+          }
+        `
+      : css`
+          background-color: ${COLORS.white};
+          color: ${COLORS.dark};
+          border: 1px solid ${COLORS.border};
+          &:hover {
+            background-color: #f8fafc;
+            border-color: #cbd5e1;
+          }
+        `}
 `;
 
 // --- COMPARISON TABLE ---
@@ -247,14 +264,16 @@ const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
   background: ${COLORS.white};
-  
-  th, td {
+
+  th,
+  td {
     padding: 1.25rem;
     text-align: center;
     border-bottom: 1px solid ${COLORS.border};
   }
 
-  th:first-child, td:first-child {
+  th:first-child,
+  td:first-child {
     text-align: left;
     font-weight: 600;
     color: ${COLORS.dark};
@@ -318,7 +337,7 @@ const FAQQuestion = styled.button`
   color: ${COLORS.dark};
   cursor: pointer;
   padding: 0;
-  
+
   &:hover {
     color: ${COLORS.primary};
   }
@@ -328,35 +347,41 @@ const FAQAnswer = styled.div`
   margin-top: 1rem;
   color: ${COLORS.lightText};
   line-height: 1.6;
-  display: ${props => props.$isOpen ? 'block' : 'none'};
+  display: ${(props) => (props.$isOpen ? 'block' : 'none')};
   animation: slideDown 0.3s ease-out;
 
   @keyframes slideDown {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 `;
 
 // --- DATA ---
 const FAQList = [
   {
-    q: "pricing.faq.q1.question",
-    a: "pricing.faq.q1.answer"
+    q: 'pricing.faq.q1.question',
+    a: 'pricing.faq.q1.answer',
   },
   {
-    q: "pricing.faq.q2.question",
-    a: "pricing.faq.q2.answer"
+    q: 'pricing.faq.q2.question',
+    a: 'pricing.faq.q2.answer',
   },
   {
-    q: "pricing.faq.q4.question",
-    a: "pricing.faq.q4.answer"
-  }
+    q: 'pricing.faq.q4.question',
+    a: 'pricing.faq.q4.answer',
+  },
 ];
 
 const PricingPage = () => {
   const { t, language } = useTranslation();
   const { user } = useUser();
-  
+
   const [openFAQ, setOpenFAQ] = useState(null);
 
   useEffect(() => {
@@ -370,20 +395,24 @@ const PricingPage = () => {
   const handleSubscribe = async (e, plan) => {
     e.preventDefault();
     const billingCycle = 'monthly';
-    
-    try {
-      const apiUrl = import.meta.env.PROD 
-        ? (import.meta.env.VITE_API_URL || '') + '/api/create-checkout-session' 
-        : (import.meta.env.VITE_API_URL || 'http://localhost:3001') + '/api/create-checkout-session';
 
-      const response = await fetch(apiUrl, {
+    try {
+      const apiUrl = '/api/create-checkout-session';
+
+      const response = await apiFetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan, billingCycle, userId: user?.id || '', userEmail: user?.primaryEmailAddress?.emailAddress || '', locale: language || (typeof navigator !== 'undefined' ? navigator.language : 'en') }),
+        body: JSON.stringify({
+          plan,
+          billingCycle,
+          userId: user?.id || '',
+          userEmail: user?.primaryEmailAddress?.emailAddress || '',
+          locale: language || (typeof navigator !== 'undefined' ? navigator.language : 'en'),
+        }),
       });
-      
+
       const session = await response.json();
-      
+
       if (session.error) {
         alert(session.error);
         return;
@@ -412,35 +441,46 @@ const PricingPage = () => {
       <HeaderClean />
 
       <HeroSection>
-        <HeroTitle>Investissez dans <span>Votre Collaboration</span></HeroTitle>
+        <HeroTitle>
+          Investissez dans <span>Votre Collaboration</span>
+        </HeroTitle>
         <HeroSubtitle>
           Des tarifications transparentes. Aucun frais caché. Annulez à tout moment.
         </HeroSubtitle>
-
-        
       </HeroSection>
 
       <PricingGrid>
         {/* FREE */}
         <PlanCard>
           <PlanTitle>Starter</PlanTitle>
-          <PlanDescription>{t('pricing.plans.starter.description', 'Pour découvrir la plateforme sans engagement.')}</PlanDescription>
+          <PlanDescription>
+            {t(
+              'pricing.plans.starter.description',
+              'Pour découvrir la plateforme sans engagement.'
+            )}
+          </PlanDescription>
           <Price>
             <span className="currency">€</span>0
             <span className="period">{t('pricing.plans.free.period')}</span>
           </Price>
           <FeatureList>
-            <FeatureItem><Check size={18} /> {t('billing.features.starter.0', "Jusqu'à 3 participants")}</FeatureItem>
-            <FeatureItem><Check size={18} /> {t('billing.features.starter.1', '45 min par réunion')}</FeatureItem>
-            <FeatureItem><Check size={18} /> {t('pricing.features.screenShare', "Partage d'écran")}</FeatureItem>
-            <FeatureItem className="disabled"><X size={18} /> {t('pricing.features.recording', 'Enregistrement')}</FeatureItem>
-            <FeatureItem className="disabled"><X size={18} /> {t('pricing.features.aiTranscription', 'Transcriptions IA')}</FeatureItem>
+            <FeatureItem>
+              <Check size={18} /> {t('billing.features.starter.0', "Jusqu'à 3 participants")}
+            </FeatureItem>
+            <FeatureItem>
+              <Check size={18} /> {t('billing.features.starter.1', '45 min par réunion')}
+            </FeatureItem>
+            <FeatureItem>
+              <Check size={18} /> {t('pricing.features.screenShare', "Partage d'écran")}
+            </FeatureItem>
+            <FeatureItem className="disabled">
+              <X size={18} /> {t('pricing.features.recording', 'Enregistrement')}
+            </FeatureItem>
+            <FeatureItem className="disabled">
+              <X size={18} /> {t('pricing.features.aiTranscription', 'Transcriptions IA')}
+            </FeatureItem>
           </FeatureList>
-          <PlanButton 
-            to="#" 
-            className="outline"
-            onClick={(e) => handleSubscribe(e, 'starter')}
-          >
+          <PlanButton to="#" className="outline" onClick={(e) => handleSubscribe(e, 'starter')}>
             {t('pricing.plans.starter.cta', 'Commencer Gratuit')}
           </PlanButton>
         </PlanCard>
@@ -449,23 +489,32 @@ const PricingPage = () => {
         <PlanCard $featured>
           <PopularBadge>{t('pricing.recommended', 'RECOMMANDÉ')}</PopularBadge>
           <PlanTitle>Pro</PlanTitle>
-          <PlanDescription>{t('pricing.plans.pro.description', 'Pour les équipes agiles et les freelances.')}</PlanDescription>
+          <PlanDescription>
+            {t('pricing.plans.pro.description', 'Pour les équipes agiles et les freelances.')}
+          </PlanDescription>
           <Price>
             <span className="currency">€</span>15
             <span className="period">{t('pricing.perMonthPerUser', '/mois par utilisateur')}</span>
           </Price>
           <FeatureList>
-            <FeatureItem><Check size={18} /> {t('pricing.features.upTo50', "Jusqu'à 50 participants")}</FeatureItem>
-            <FeatureItem><Check size={18} /> {t('pricing.features.unlimitedDuration', 'Durée illimitée')}</FeatureItem>
-            <FeatureItem><Check size={18} /> {t('pricing.features.cloud5gb', '5 Go de stockage Cloud')}</FeatureItem>
-            <FeatureItem><Check size={18} /> {t('pricing.features.prioritySupport', 'Support Prioritaire')}</FeatureItem>
-            <FeatureItem><Check size={18} /> {t('pricing.features.aiTranscription10h', 'Transcriptions IA (10h/mois)')}</FeatureItem>
+            <FeatureItem>
+              <Check size={18} /> {t('pricing.features.upTo50', "Jusqu'à 50 participants")}
+            </FeatureItem>
+            <FeatureItem>
+              <Check size={18} /> {t('pricing.features.unlimitedDuration', 'Durée illimitée')}
+            </FeatureItem>
+            <FeatureItem>
+              <Check size={18} /> {t('pricing.features.cloud5gb', '5 Go de stockage Cloud')}
+            </FeatureItem>
+            <FeatureItem>
+              <Check size={18} /> {t('pricing.features.prioritySupport', 'Support Prioritaire')}
+            </FeatureItem>
+            <FeatureItem>
+              <Check size={18} />{' '}
+              {t('pricing.features.aiTranscription10h', 'Transcriptions IA (10h/mois)')}
+            </FeatureItem>
           </FeatureList>
-          <PlanButton 
-            to="#" 
-            variant="primary" 
-            onClick={(e) => handleSubscribe(e, 'pro')}
-          >
+          <PlanButton to="#" variant="primary" onClick={(e) => handleSubscribe(e, 'pro')}>
             {t('pricing.subscribe', "S'abonner")}
           </PlanButton>
         </PlanCard>
@@ -473,23 +522,32 @@ const PricingPage = () => {
         {/* BUSINESS */}
         <PlanCard>
           <PlanTitle>Business</PlanTitle>
-          <PlanDescription>{t('pricing.plans.business.description', 'Pour les organisations à grande échelle.')}</PlanDescription>
+          <PlanDescription>
+            {t('pricing.plans.business.description', 'Pour les organisations à grande échelle.')}
+          </PlanDescription>
           <Price>
             <span className="currency">€</span>35
             <span className="period">{t('pricing.perMonthPerUser', '/mois par utilisateur')}</span>
           </Price>
           <FeatureList>
-            <FeatureItem><Check size={18} /> {t('pricing.features.upTo200', "Jusqu'à 200 participants")}</FeatureItem>
-            <FeatureItem><Check size={18} /> {t('pricing.features.unlimitedStorage', 'Stockage illimité')}</FeatureItem>
-            <FeatureItem><Check size={18} /> {t('pricing.features.breakout_rooms')}</FeatureItem>
-            <FeatureItem><Check size={18} /> {t('pricing.features.ssoAdmin', 'SSO & Admin Avancé')}</FeatureItem>
-            <FeatureItem><Check size={18} /> {t('pricing.features.unlimitedTranscriptions', 'Transcriptions Illimitées')}</FeatureItem>
+            <FeatureItem>
+              <Check size={18} /> {t('pricing.features.upTo200', "Jusqu'à 200 participants")}
+            </FeatureItem>
+            <FeatureItem>
+              <Check size={18} /> {t('pricing.features.unlimitedStorage', 'Stockage illimité')}
+            </FeatureItem>
+            <FeatureItem>
+              <Check size={18} /> {t('pricing.features.breakout_rooms')}
+            </FeatureItem>
+            <FeatureItem>
+              <Check size={18} /> {t('pricing.features.ssoAdmin', 'SSO & Admin Avancé')}
+            </FeatureItem>
+            <FeatureItem>
+              <Check size={18} />{' '}
+              {t('pricing.features.unlimitedTranscriptions', 'Transcriptions Illimitées')}
+            </FeatureItem>
           </FeatureList>
-          <PlanButton 
-            to="#" 
-            className="outline"
-            onClick={(e) => handleSubscribe(e, 'business')}
-          >
+          <PlanButton to="#" className="outline" onClick={(e) => handleSubscribe(e, 'business')}>
             {t('pricing.subscribe', "S'abonner")}
           </PlanButton>
         </PlanCard>
@@ -563,18 +621,16 @@ const PricingPage = () => {
               {t(item.q)}
               {openFAQ === index ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
             </FAQQuestion>
-            <FAQAnswer $isOpen={openFAQ === index}>
-              {t(item.a)}
-            </FAQAnswer>
+            <FAQAnswer $isOpen={openFAQ === index}>{t(item.a)}</FAQAnswer>
           </FAQItem>
         ))}
       </FAQSection>
 
       <CallToAction
-         title={t('pricing.cta.title')}
-         description={t('pricing.cta.description')}
-         buttonText={t('pricing.cta.button')}
-         buttonLink="/contact"
+        title={t('pricing.cta.title')}
+        description={t('pricing.cta.description')}
+        buttonText={t('pricing.cta.button')}
+        buttonLink="/contact"
       />
 
       <FooterClean />

@@ -1,10 +1,21 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, User, Sparkles, FileText, Download, Wand2, Loader2, ListTodo, Key } from 'lucide-react';
+import {
+  Send,
+  User,
+  Sparkles,
+  FileText,
+  Download,
+  Wand2,
+  Loader2,
+  ListTodo,
+  Key,
+} from 'lucide-react';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 import { getSmartNotesService } from '../../services/ai';
 import { useTranslation } from '../../hooks/useTranslation';
+import { apiFetch } from '../../lib/apiClient';
 
 // API route - uses relative path for Vercel serverless functions
 const AI_PROXY_URL = '/api/ai/chat';
@@ -246,15 +257,13 @@ const normalizeMarkdownForDisplay = (text = '') => {
 
 const fetchLLMResponse = async (conversation, style, purpose = 'chat', locale = 'fr') => {
   const body = {
-    messages: [
-      ...conversation,
-    ],
+    messages: [...conversation],
     style,
     purpose,
     locale,
   };
 
-  const res = await fetch(AI_PROXY_URL, {
+  const res = await apiFetch(AI_PROXY_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -267,7 +276,9 @@ const fetchLLMResponse = async (conversation, style, purpose = 'chat', locale = 
   }
 
   const data = await res.json();
-  return normalizeMarkdownForDisplay(data?.content || 'Je n’ai pas pu produire une reponse pour le moment.');
+  return normalizeMarkdownForDisplay(
+    data?.content || 'Je n’ai pas pu produire une reponse pour le moment.'
+  );
 };
 
 const localSummary = (roomMessages = []) => {
@@ -279,7 +290,10 @@ const localSummary = (roomMessages = []) => {
     bySpeaker.set(key, (bySpeaker.get(key) || 0) + 1);
   });
 
-  const highlights = latest.slice(-5).map((m) => `- ${m.sender || 'Inconnu'}: ${m.text}`).join('\n');
+  const highlights = latest
+    .slice(-5)
+    .map((m) => `- ${m.sender || 'Inconnu'}: ${m.text}`)
+    .join('\n');
   const participants = Array.from(bySpeaker.entries())
     .map(([name, count]) => `- ${name}: ${count} message(s)`)
     .join('\n');
@@ -306,7 +320,10 @@ export const AIChatPanel = ({ responseStyle = 'balanced', roomMessages = [], roo
     {
       id: 1,
       sender: 'ai',
-      text: t('aiChatPanel.greeting', "Bonjour 👋 Je peux vous aider à :\n• Résumer la réunion en cours\n• Générer un compte-rendu automatique\n• Répondre à vos questions techniques (caméra, audio, qualité, partage d’écran)\n• Traduire en direct les échanges\n\nDites-moi ce dont vous avez besoin."),
+      text: t(
+        'aiChatPanel.greeting',
+        'Bonjour 👋 Je peux vous aider à :\n• Résumer la réunion en cours\n• Générer un compte-rendu automatique\n• Répondre à vos questions techniques (caméra, audio, qualité, partage d’écran)\n• Traduire en direct les échanges\n\nDites-moi ce dont vous avez besoin.'
+      ),
     },
   ]);
   const [inputValue, setInputValue] = useState('');
@@ -335,7 +352,7 @@ export const AIChatPanel = ({ responseStyle = 'balanced', roomMessages = [], roo
       const conversation = [...messages, userMsg]
         .slice(-10)
         .map((m) => ({ role: m.sender === 'ai' ? 'assistant' : 'user', content: m.text }));
-      
+
       const aiText = await fetchLLMResponse(conversation, responseStyle, 'chat', language);
       setMessages((prev) => [...prev, { id: Date.now() + 1, sender: 'ai', text: aiText }]);
     } catch (e) {
@@ -343,7 +360,12 @@ export const AIChatPanel = ({ responseStyle = 'balanced', roomMessages = [], roo
       // Try local fallback first
       const fallback = localKnowledgeAnswer(userText, responseStyle);
       setMessages((prev) => [...prev, { id: Date.now() + 1, sender: 'ai', text: fallback }]);
-      setAiError(t('aiChatPanel.remoteUnavailable', "L'IA distante est momentanément indisponible. Réponse locale utilisée."));
+      setAiError(
+        t(
+          'aiChatPanel.remoteUnavailable',
+          "L'IA distante est momentanément indisponible. Réponse locale utilisée."
+        )
+      );
       // Clear error after 5 seconds
       setTimeout(() => setAiError(null), 5000);
     } finally {
@@ -355,7 +377,7 @@ export const AIChatPanel = ({ responseStyle = 'balanced', roomMessages = [], roo
     if (isTyping) return;
     setIsTyping(true);
     setAiError(null);
-    
+
     try {
       const latestRoomMessages = (roomMessages || []).slice(-50);
 
@@ -380,9 +402,14 @@ export const AIChatPanel = ({ responseStyle = 'balanced', roomMessages = [], roo
       }
 
       if (!sourceMessages.length) {
-        const empty = t('aiChatPanel.summaryEmpty', '# Résumé de réunion\n\nDémarrez la conversation ou ouvrez le chat de la réunion : un résumé sera généré automatiquement dès qu\'il y aura du contenu à analyser.');
+        const empty = t(
+          'aiChatPanel.summaryEmpty',
+          "# Résumé de réunion\n\nDémarrez la conversation ou ouvrez le chat de la réunion : un résumé sera généré automatiquement dès qu'il y aura du contenu à analyser."
+        );
         setMeetingSummary(empty);
-        setAiError(t('aiChatPanel.noContentToSummarize', "Aucun contenu à résumer pour l'instant."));
+        setAiError(
+          t('aiChatPanel.noContentToSummarize', "Aucun contenu à résumer pour l'instant.")
+        );
         setTimeout(() => setAiError(null), 4000);
         return;
       }
@@ -395,22 +422,27 @@ export const AIChatPanel = ({ responseStyle = 'balanced', roomMessages = [], roo
           meetingTitle: `Réunion - ${new Date().toLocaleDateString('fr-FR')}`,
           duration: 'En cours',
         });
-        
+
         setMeetingSummary(normalizeMarkdownForDisplay(result.summary));
         const note = usedFallbackSource
           ? `✨ Résumé généré à partir de la conversation IA (modèle ${result.model}).`
           : `✨ Résumé généré avec ${result.model}! Utilise le bouton Export Markdown pour le télécharger.`;
-        setMessages((prev) => [...prev, { 
-          id: Date.now(), 
-          sender: 'ai', 
-          text: note,
-        }]);
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Date.now(),
+            sender: 'ai',
+            text: note,
+          },
+        ]);
       } catch (e) {
         console.warn('[AIChatPanel] SmartNotesService error, fallback to local:', e);
         // Fallback to local summary
         const summary = localSummary(sourceMessages);
         setMeetingSummary(summary);
-        setAiError(t('aiChatPanel.localSummaryGenerated', 'Résumé local généré (IA distante indisponible)'));
+        setAiError(
+          t('aiChatPanel.localSummaryGenerated', 'Résumé local généré (IA distante indisponible)')
+        );
         setTimeout(() => setAiError(null), 5000);
       }
     } catch (e) {
@@ -426,31 +458,43 @@ export const AIChatPanel = ({ responseStyle = 'balanced', roomMessages = [], roo
   return (
     <PanelContainer>
       <TopHint>
-        <Sparkles size={14} style={{ display: 'inline', marginRight: '6px', verticalAlign: 'middle' }} />
+        <Sparkles
+          size={14}
+          style={{ display: 'inline', marginRight: '6px', verticalAlign: 'middle' }}
+        />
         {t('aiChatPanel.subtitle', 'Assistant IA VisiConnect — GROQ + OpenRouter')}
       </TopHint>
 
-      {aiError && (
-        <ErrorMessage>
-          {aiError}
-        </ErrorMessage>
-      )}
+      {aiError && <ErrorMessage>{aiError}</ErrorMessage>}
 
       <ActionRow>
-        <ActionButton type='button' onClick={generateMeetingSummary} disabled={isTyping}>
+        <ActionButton type="button" onClick={generateMeetingSummary} disabled={isTyping}>
           <Wand2 size={14} /> {t('aiChatPanel.autoSummary', 'Résumé auto')}
         </ActionButton>
-        <ActionButton type='button' onClick={() => asMarkdownDownload(meetingSummary || localSummary(roomMessages), roomId)}>
+        <ActionButton
+          type="button"
+          onClick={() => asMarkdownDownload(meetingSummary || localSummary(roomMessages), roomId)}
+        >
           <Download size={14} /> {t('aiChatPanel.exportMarkdown', 'Export Markdown')}
         </ActionButton>
       </ActionRow>
 
       {meetingSummary && (
         <TopHint>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.35rem' }}>
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              marginBottom: '0.35rem',
+            }}
+          >
             <FileText size={14} /> {t('aiChatPanel.summaryGenerated', 'Résumé généré')}
           </div>
-          <div style={{ whiteSpace: 'pre-wrap' }}>{meetingSummary.slice(0, 380)}{meetingSummary.length > 380 ? '...' : ''}</div>
+          <div style={{ whiteSpace: 'pre-wrap' }}>
+            {meetingSummary.slice(0, 380)}
+            {meetingSummary.length > 380 ? '...' : ''}
+          </div>
         </TopHint>
       )}
 
@@ -484,7 +528,10 @@ export const AIChatPanel = ({ responseStyle = 'balanced', roomMessages = [], roo
 
       <InputArea>
         <Input
-          placeholder={t('aiChatPanel.inputPlaceholder', 'Pose une question technique ou produit...')}
+          placeholder={t(
+            'aiChatPanel.inputPlaceholder',
+            'Pose une question technique ou produit...'
+          )}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSend()}

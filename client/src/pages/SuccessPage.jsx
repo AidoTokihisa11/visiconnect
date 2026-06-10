@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
 import { useUser } from '@clerk/react';
+import { apiFetch } from '../lib/apiClient';
 import { CheckCircle, Loader2 } from 'lucide-react';
 import styled from 'styled-components';
 
@@ -62,7 +63,7 @@ const SuccessPage = () => {
 
     const confirmSubscription = async () => {
       try {
-        const res = await fetch('/api/confirm-subscription', {
+        const res = await apiFetch('/api/confirm-subscription', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ sessionId }),

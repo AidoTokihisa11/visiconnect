@@ -1,62 +1,133 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+/**
+ * Netlify Function \u2014 POST /.netlify/functions/create-checkout-session
+ *
+ * Cible de fallback (production sur Vercel). M\u00eame garde-fous CORS et
+ * validation que la version Vercel.
+ */
+const stripeFactory = require('stripe');
 
-exports.handler = async (event, context) => {
-  const headers = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS'
+const ALLOWED_ORIGINS = [
+  'https://visioconnect.pro',
+  'https://www.visioconnect.pro',
+  'https://visiconnect.pro',
+  'https://www.visiconnect.pro',
+  'http://localhost:5173',
+  'http://localhost:3000',
+];
+
+function buildHeaders(origin) {
+  return {
+    'Access-Control-Allow-Origin': ALLOWED_ORIGINS.includes(origin) ? origin : '',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    Vary: 'Origin',
+    'Content-Type': 'application/json',
   };
+}
 
-  if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 200, headers, body: 'OK' };
-  }
+const STRIPE_LOCALES = new Set([
+  'auto',
+  'bg',
+  'cs',
+  'da',
+  'de',
+  'el',
+  'en',
+  'en-GB',
+  'es',
+  'es-419',
+  'et',
+  'fi',
+  'fil',
+  'fr',
+  'fr-CA',
+  'hr',
+  'hu',
+  'id',
+  'it',
+  'ja',
+  'ko',
+  'lt',
+  'lv',
+  'ms',
+  'mt',
+  'nb',
+  'nl',
+  'pl',
+  'pt',
+  'pt-BR',
+  'ro',
+  'ru',
+  'sk',
+  'sl',
+  'sv',
+  'th',
+  'tr',
+  'vi',
+  'zh',
+  'zh-HK',
+  'zh-TW',
+]);
 
+const PLAN_PRICES = {
+  pro: { monthly: 1500, annual: 14400, name: 'VisiConnect Pro' },
+  business: { monthly: 3500, annual: 34800, name: 'VisiConnect Business' },
+};
+
+exports.handler = async (event) => {
+  const origin = event.headers?.origin || event.headers?.Origin || '';
+  const headers = buildHeaders(origin);
+
+  if (event.httpMethod === 'OPTIONS') return { statusCode: 204, headers, body: '' };
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, headers, body: 'Method Not Allowed' };
+    return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method Not Allowed' }) };
   }
 
   if (!process.env.STRIPE_SECRET_KEY) {
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ error: 'STRIPE_SECRET_KEY non configurée sur le serveur Netlify.' })
+      body: JSON.stringify({ error: 'STRIPE_SECRET_KEY non configur\u00e9e.' }),
     };
   }
 
+  let body;
   try {
-    const { plan, billingCycle, locale: rawLocale } = JSON.parse(event.body);
+    body = JSON.parse(event.body || '{}');
+  } catch {
+    return { statusCode: 400, headers, body: JSON.stringify({ error: 'JSON invalide.' }) };
+  }
 
-    // Map UI locale to a Stripe-supported locale.
-    const STRIPE_LOCALES = new Set(['auto','bg','cs','da','de','el','en','en-GB','es','es-419','et','fi','fil','fr','fr-CA','hr','hu','id','it','ja','ko','lt','lv','ms','mt','nb','nl','pl','pt','pt-BR','ro','ru','sk','sl','sv','th','tr','vi','zh','zh-HK','zh-TW']);
-    const norm = (typeof rawLocale === 'string' ? rawLocale : '').trim().replace('_', '-');
-    const checkoutLocale = STRIPE_LOCALES.has(norm)
-      ? norm
-      : (STRIPE_LOCALES.has(norm.split('-')[0]) ? norm.split('-')[0] : 'auto');
+  const { plan, billingCycle, locale: rawLocale } = body;
 
-    // Starter is free — skip Stripe
-    if (plan === 'starter') {
-      return { statusCode: 200, headers, body: JSON.stringify({ free: true, plan: 'starter', message: 'Plan Starter activé' }) };
-    }
+  if (plan === 'starter') {
+    return { statusCode: 200, headers, body: JSON.stringify({ free: true, plan: 'starter' }) };
+  }
 
-    let amount = 0;
-    let name = '';
+  const tier = PLAN_PRICES[plan];
+  if (!tier) {
+    return { statusCode: 400, headers, body: JSON.stringify({ error: 'Plan invalide.' }) };
+  }
+  const cycle = billingCycle === 'annual' ? 'annual' : 'monthly';
+  const amount = tier[cycle];
+  if (!amount || amount <= 0) {
+    return { statusCode: 400, headers, body: JSON.stringify({ error: 'Montant invalide.' }) };
+  }
 
-    if (plan === 'pro') {
-      amount = billingCycle === 'annual' ? 14400 : 1500;
-      name = 'VisiConnect Pro';
-    } else if (plan === 'business') {
-      amount = billingCycle === 'annual' ? 34800 : 3500;
-      name = 'VisiConnect Business';
-    } else {
-      return { statusCode: 400, headers, body: JSON.stringify({ error: 'Plan invalide. Valeurs acceptées : starter, pro, business.' }) };
-    }
+  const norm = (typeof rawLocale === 'string' ? rawLocale : '').trim().replace('_', '-');
+  const checkoutLocale = STRIPE_LOCALES.has(norm)
+    ? norm
+    : STRIPE_LOCALES.has(norm.split('-')[0])
+      ? norm.split('-')[0]
+      : 'auto';
 
-    if (amount <= 0) {
-      return { statusCode: 400, headers, body: JSON.stringify({ error: 'Montant invalide pour le plan sélectionné.' }) };
-    }
+  const stripe = stripeFactory(process.env.STRIPE_SECRET_KEY.trim());
 
-    // Default to the referring origin, fallback to Netlify or localhost
-    const origin = event.headers.origin || event.headers.referer?.replace(/\/$/, '') || 'http://localhost:5173';
+  try {
+    const checkoutOrigin =
+      (ALLOWED_ORIGINS.includes(origin) ? origin : null) ||
+      event.headers?.referer?.replace(/\/$/, '') ||
+      'https://visioconnect.pro';
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -64,35 +135,22 @@ exports.handler = async (event, context) => {
         {
           price_data: {
             currency: 'eur',
-            product_data: {
-              name: name,
-            },
+            product_data: { name: tier.name },
             unit_amount: amount,
-            recurring: {
-              interval: billingCycle === 'annual' ? 'year' : 'month',
-            },
+            recurring: { interval: cycle === 'annual' ? 'year' : 'month' },
           },
           quantity: 1,
         },
       ],
       mode: 'subscription',
       locale: checkoutLocale,
-      success_url: `${origin}/success.html?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/pricing`,
+      success_url: `${checkoutOrigin}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${checkoutOrigin}/pricing`,
     });
 
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify({ id: session.id, url: session.url }),
-    };
-
-  } catch (error) {
-    console.error('Erreur création session Stripe:', error.message);
-    return {
-      statusCode: 500,
-      headers,
-      body: JSON.stringify({ error: error.message }),
-    };
+    return { statusCode: 200, headers, body: JSON.stringify({ id: session.id, url: session.url }) };
+  } catch (err) {
+    console.error('[netlify checkout] Stripe error:', err && err.message ? err.message : err);
+    return { statusCode: 500, headers, body: JSON.stringify({ error: 'Erreur Stripe.' }) };
   }
 };

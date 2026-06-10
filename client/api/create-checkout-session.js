@@ -1,37 +1,81 @@
 const Stripe = require('stripe');
+const { applyCors } = require('./_lib/cors');
+const { requireAuth } = require('./_lib/auth');
+const { rateLimit } = require('./_lib/rateLimit');
+const { parseBody, schemas } = require('./_lib/schemas');
 
 module.exports = async function handler(req, res) {
-  // 1. Configuration CORS pour Vercel
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (applyCors(req, res)) return;
+  if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
 
-  // Gérer la requête preflight (OPTIONS)
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
+  if (rateLimit(req, res, { key: 'checkout', windowMs: 60_000, max: 10 })) return;
 
-  // Vérifier la méthode POST
-  if (req.method !== 'POST') {
-    return res.status(405).send('Method Not Allowed');
-  }
+  const session = await requireAuth(req, res);
+  if (!session) return;
 
   if (!process.env.STRIPE_SECRET_KEY) {
-    return res.status(500).json({ error: 'STRIPE_SECRET_KEY non configurée dans Vercel.' });
+    return res.status(500).json({ error: 'STRIPE_SECRET_KEY non configurée.' });
   }
+
+  const data = parseBody(schemas.checkout, req, res);
+  if (!data) return;
 
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY.trim());
 
   try {
-    const { plan, billingCycle, userId, userEmail, locale: rawLocale } = req.body || {};
+    const { plan, billingCycle, userEmail, locale: rawLocale } = data;
 
     // Map UI locale to a Stripe-supported locale (https://stripe.com/docs/api/checkout/sessions/create#create_checkout_session-locale).
-    const STRIPE_LOCALES = new Set(['auto','bg','cs','da','de','el','en','en-GB','es','es-419','et','fi','fil','fr','fr-CA','hr','hu','id','it','ja','ko','lt','lv','ms','mt','nb','nl','pl','pt','pt-BR','ro','ru','sk','sl','sv','th','tr','vi','zh','zh-HK','zh-TW']);
+    const STRIPE_LOCALES = new Set([
+      'auto',
+      'bg',
+      'cs',
+      'da',
+      'de',
+      'el',
+      'en',
+      'en-GB',
+      'es',
+      'es-419',
+      'et',
+      'fi',
+      'fil',
+      'fr',
+      'fr-CA',
+      'hr',
+      'hu',
+      'id',
+      'it',
+      'ja',
+      'ko',
+      'lt',
+      'lv',
+      'ms',
+      'mt',
+      'nb',
+      'nl',
+      'pl',
+      'pt',
+      'pt-BR',
+      'ro',
+      'ru',
+      'sk',
+      'sl',
+      'sv',
+      'th',
+      'tr',
+      'vi',
+      'zh',
+      'zh-HK',
+      'zh-TW',
+    ]);
     const norm = (typeof rawLocale === 'string' ? rawLocale : '').trim();
     const candidate = norm.replace('_', '-');
     const checkoutLocale = STRIPE_LOCALES.has(candidate)
       ? candidate
-      : (STRIPE_LOCALES.has(candidate.split('-')[0]) ? candidate.split('-')[0] : 'auto');
+      : STRIPE_LOCALES.has(candidate.split('-')[0])
+        ? candidate.split('-')[0]
+        : 'auto';
 
     // Starter is free — skip Stripe, activate directly
     if (plan === 'starter') {
@@ -48,7 +92,9 @@ module.exports = async function handler(req, res) {
       amount = billingCycle === 'annual' ? 34800 : 3500; // matches src/config/pricing.js PLANS.business
       name = 'VisiConnect Business';
     } else {
-      return res.status(400).json({ error: 'Plan invalide. Valeurs acceptées : starter, pro, business.' });
+      return res
+        .status(400)
+        .json({ error: 'Plan invalide. Valeurs acceptées : starter, pro, business.' });
     }
 
     if (amount <= 0) {
@@ -57,7 +103,11 @@ module.exports = async function handler(req, res) {
 
     // Determine origin for redirect URLs
     const PROTOCOL = process.env.NODE_ENV === 'development' ? 'http' : 'https';
-    const origin = req.headers.origin || (req.headers.referer ? req.headers.referer.replace(/\/$/, '') : `${PROTOCOL}://${req.headers.host}`);
+    const origin =
+      req.headers.origin ||
+      (req.headers.referer
+        ? req.headers.referer.replace(/\/$/, '')
+        : `${PROTOCOL}://${req.headers.host}`);
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -79,7 +129,7 @@ module.exports = async function handler(req, res) {
       ],
       mode: 'subscription',
       metadata: {
-        userId: userId || '',
+        userId: session.userId || '',
         plan: plan,
         billingCycle: billingCycle || 'monthly',
       },
@@ -89,7 +139,6 @@ module.exports = async function handler(req, res) {
     });
 
     return res.status(200).json({ id: session.id, url: session.url });
-
   } catch (error) {
     console.error('Erreur création session Stripe:', error.message);
     return res.status(500).json({ error: error.message });

@@ -1,69 +1,66 @@
 const { Resend } = require('resend');
+const { applyCors } = require('./_lib/cors');
+const { rateLimit } = require('./_lib/rateLimit');
+const { parseBody, schemas } = require('./_lib/schemas');
 
 const OWNER_EMAIL = 'theo.garces.aido@gmail.com';
 
 const PROFILE_LABELS = {
   developer: 'Développeur·se',
-  designer:  'Designer UX/UI',
-  pm:        'Product Manager',
-  founder:   'Fondateur·trice',
-  other:     'Autre',
+  designer: 'Designer UX/UI',
+  pm: 'Product Manager',
+  founder: 'Fondateur·trice',
+  other: 'Autre',
 };
 
 const USAGE_LABELS = {
-  'team-meetings': 'Réunions d\'équipe',
-  'client-calls':  'Appels clients',
-  'education':     'Enseignement / formation',
-  'dev-collab':    'Collaboration dev',
-  'other':         'Autre',
+  'team-meetings': "Réunions d'équipe",
+  'client-calls': 'Appels clients',
+  education: 'Enseignement / formation',
+  'dev-collab': 'Collaboration dev',
+  other: 'Autre',
 };
 
 module.exports = async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (applyCors(req, res)) return;
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method Not Allowed' });
 
-  const { firstName, lastName, email, profile, profileCustom, usage, usageCustom, tools, motivation } = req.body || {};
+  // 5 candidatures max / heure / IP
+  if (rateLimit(req, res, { key: 'beta-apply', windowMs: 60 * 60_000, max: 5 })) return;
 
-  // Validation
-  if (!firstName || typeof firstName !== 'string' || !firstName.trim()) {
-    return res.status(400).json({ error: 'Prénom requis.' });
-  }
-  if (!lastName || typeof lastName !== 'string' || !lastName.trim()) {
-    return res.status(400).json({ error: 'Nom requis.' });
-  }
-  if (!email || typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
-    return res.status(400).json({ error: 'Adresse email invalide.' });
-  }
-  if (!profile || !PROFILE_LABELS[profile]) {
-    return res.status(400).json({ error: 'Profil invalide.' });
-  }
+  const data = parseBody(schemas.betaApply, req, res);
+  if (!data) return;
+
+  const {
+    firstName,
+    lastName,
+    email,
+    profile,
+    profileCustom,
+    usage,
+    usageCustom,
+    tools,
+    motivation,
+  } = data;
+
   if (profile === 'other' && (!profileCustom || !profileCustom.trim())) {
     return res.status(400).json({ error: 'Veuillez préciser votre profil.' });
-  }
-  if (!usage || !USAGE_LABELS[usage]) {
-    return res.status(400).json({ error: 'Usage invalide.' });
   }
   if (usage === 'other' && (!usageCustom || !usageCustom.trim())) {
     return res.status(400).json({ error: 'Veuillez préciser votre usage.' });
   }
-  if (!motivation || typeof motivation !== 'string' || motivation.trim().length < 40) {
-    return res.status(400).json({ error: 'Motivation trop courte (40 caractères minimum).' });
-  }
 
   const fullName = `${firstName.trim()} ${lastName.trim()}`;
   const cleanEmail = email.trim().toLowerCase();
-  const toolsStr = Array.isArray(tools) && tools.length > 0 ? tools.join(', ') : 'Aucun / pas encore';
+  const toolsStr =
+    Array.isArray(tools) && tools.length > 0 ? tools.join(', ') : 'Aucun / pas encore';
   const profileLabel = profile === 'other' ? profileCustom.trim() : PROFILE_LABELS[profile];
-  const usageLabel   = usage   === 'other' ? usageCustom.trim()   : USAGE_LABELS[usage];
+  const usageLabel = usage === 'other' ? usageCustom.trim() : USAGE_LABELS[usage];
   const cleanMotivation = motivation.trim();
 
   if (!process.env.RESEND_API_KEY) {
-    console.error('RESEND_API_KEY manquante dans les variables d\'environnement');
-    return res.status(500).json({ error: "Erreur de configuration serveur." });
+    console.error("RESEND_API_KEY manquante dans les variables d'environnement");
+    return res.status(500).json({ error: 'Erreur de configuration serveur.' });
   }
   const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -167,6 +164,8 @@ module.exports = async function handler(req, res) {
     return res.status(200).json({ success: true });
   } catch (err) {
     console.error('Resend error:', err);
-    return res.status(500).json({ error: "Erreur lors de l'envoi des emails. Veuillez réessayer." });
+    return res
+      .status(500)
+      .json({ error: "Erreur lors de l'envoi des emails. Veuillez réessayer." });
   }
 };

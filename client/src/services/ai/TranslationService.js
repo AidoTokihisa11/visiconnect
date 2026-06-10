@@ -1,9 +1,11 @@
 /**
  * TranslationService - Traduction instantanée via OpenRouter
- * 
+ *
  * Détecte automatiquement les langues différentes dans le chat
  * et traduit à la volée avec des modèles gratuits
  */
+
+import { apiFetch } from '../../lib/apiClient';
 
 const AI_ENDPOINT = '/api/ai/chat';
 
@@ -77,7 +79,7 @@ class TranslationService {
 
     // Détecte la langue source si non fournie
     const detected = sourceLang || this.detectLanguage(text);
-    
+
     // Pas de traduction si même langue
     if (detected === targetLang) {
       return text;
@@ -90,7 +92,7 @@ class TranslationService {
     }
 
     try {
-      const response = await fetch(AI_ENDPOINT, {
+      const response = await apiFetch(AI_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -140,7 +142,7 @@ Règles:
    */
   async translateChatMessage(message) {
     const sourceLang = this.detectLanguage(message.text);
-    
+
     // Pas de traduction nécessaire
     if (sourceLang === this.userLanguage) {
       return {
@@ -166,9 +168,7 @@ Règles:
    * Traduit plusieurs messages en batch
    */
   async translateBatch(messages) {
-    const results = await Promise.all(
-      messages.map((msg) => this.translateChatMessage(msg))
-    );
+    const results = await Promise.all(messages.map((msg) => this.translateChatMessage(msg)));
     return results;
   }
 

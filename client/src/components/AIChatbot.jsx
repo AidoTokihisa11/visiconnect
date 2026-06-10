@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { AnimatePresence, motion } from 'framer-motion';
 import { MessageSquare, X, Send, Sparkles } from 'lucide-react';
 import { useAdmin } from '../contexts/AdminContext';
+import { apiFetch } from '../lib/apiClient';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
 
@@ -28,7 +29,10 @@ const ChatContainer = styled(motion.div)`
   display: flex;
   flex-direction: column;
   pointer-events: none;
-  ${props => props.$position === 'left' ? 'left: 1.5rem; align-items: flex-start;' : 'right: 1.5rem; align-items: flex-end;'}
+  ${(props) =>
+    props.$position === 'left'
+      ? 'left: 1.5rem; align-items: flex-start;'
+      : 'right: 1.5rem; align-items: flex-end;'}
 `;
 
 const ChatButton = styled(motion.button)`
@@ -139,12 +143,15 @@ const MessageBubble = styled.div`
   line-height: 1.5;
   word-wrap: break-word;
 
-  ${props => props.$isUser ? `
+  ${(props) =>
+    props.$isUser
+      ? `
     align-self: flex-end;
     background-color: ${COLORS.userBubble};
     color: ${COLORS.userText};
     border-bottom-right-radius: 4px;
-  ` : `
+  `
+      : `
     align-self: flex-start;
     background-color: ${COLORS.botBubble};
     color: ${COLORS.text};
@@ -170,12 +177,22 @@ const TypingIndicator = styled.div`
     animation: bounce 1.4s infinite ease-in-out both;
   }
 
-  span:nth-child(1) { animation-delay: -0.32s; }
-  span:nth-child(2) { animation-delay: -0.16s; }
+  span:nth-child(1) {
+    animation-delay: -0.32s;
+  }
+  span:nth-child(2) {
+    animation-delay: -0.16s;
+  }
 
   @keyframes bounce {
-    0%, 80%, 100% { transform: scale(0); }
-    40% { transform: scale(1); }
+    0%,
+    80%,
+    100% {
+      transform: scale(0);
+    }
+    40% {
+      transform: scale(1);
+    }
   }
 `;
 
@@ -233,53 +250,65 @@ const SendButton = styled.button`
 // --- KNOWLEDGE BASE SIMULATION ---
 const knowledgeBase = [
   {
-    tags: ["prix", "tarif", "abonnement", "combien", "payant", "gratuit", "premium"],
-    response: "VisiConnect propose plusieurs formules : une version gratuite (Membres Basic) idéale pour les petites réunions, et des abonnements Premium/Pro offrant des réunions illimitées, la 4K, des salles de sous-commission, et l'accès au tableau blanc avancé."
+    tags: ['prix', 'tarif', 'abonnement', 'combien', 'payant', 'gratuit', 'premium'],
+    response:
+      "VisiConnect propose plusieurs formules : une version gratuite (Membres Basic) idéale pour les petites réunions, et des abonnements Premium/Pro offrant des réunions illimitées, la 4K, des salles de sous-commission, et l'accès au tableau blanc avancé.",
   },
   {
-    tags: ["tableau", "blanc", "dessin", "tableau blanc", "dessiner", "schéma"],
-    response: "Le tableau blanc interactif de VisiConnect vous permet de dessiner, d'ajouter des formes et des notes en temps réel avec tous les participants. Il est accessible directement depuis la barre d'outils de votre salle de réunion."
+    tags: ['tableau', 'blanc', 'dessin', 'tableau blanc', 'dessiner', 'schéma'],
+    response:
+      "Le tableau blanc interactif de VisiConnect vous permet de dessiner, d'ajouter des formes et des notes en temps réel avec tous les participants. Il est accessible directement depuis la barre d'outils de votre salle de réunion.",
   },
   {
-    tags: ["sécurité", "chiffrement", "sécurisé", "données", "confidenciel"],
-    response: "La sécurité est notre priorité. Toutes les communications sur VisiConnect sont protégées par un chiffrement de bout en bout (E2EE), et nous offrons des options de salle d'attente et de mot de passe pour contrôler l'accès à vos réunions."
+    tags: ['sécurité', 'chiffrement', 'sécurisé', 'données', 'confidenciel'],
+    response:
+      "La sécurité est notre priorité. Toutes les communications sur VisiConnect sont protégées par un chiffrement de bout en bout (E2EE), et nous offrons des options de salle d'attente et de mot de passe pour contrôler l'accès à vos réunions.",
   },
   {
-    tags: ["4k", "qualité", "hd", "haute définition", "vidéo"],
-    response: "Vous pouvez activer la qualité 4K UHD dans les paramètres de votre caméra (icône engrenage pendant la réunion). Cela garantit une clarté optimale si votre équipement et votre connexion le permettent."
+    tags: ['4k', 'qualité', 'hd', 'haute définition', 'vidéo'],
+    response:
+      'Vous pouvez activer la qualité 4K UHD dans les paramètres de votre caméra (icône engrenage pendant la réunion). Cela garantit une clarté optimale si votre équipement et votre connexion le permettent.',
   },
   {
-    tags: ["partage", "écran", "présenter", "partager", "presentation"],
-    response: "Pour partager votre écran, cliquez sur l'icône 'Partager l'écran' en bas de la fenêtre de réunion. Vous pouvez choisir de partager tout votre écran, une fenêtre d'application ou un onglet de navigateur."
+    tags: ['partage', 'écran', 'présenter', 'partager', 'presentation'],
+    response:
+      "Pour partager votre écran, cliquez sur l'icône 'Partager l'écran' en bas de la fenêtre de réunion. Vous pouvez choisir de partager tout votre écran, une fenêtre d'application ou un onglet de navigateur.",
   },
   {
-    tags: ["inscription", "compte", "creer", "inscrire", "login"],
-    response: "Pour créer un compte, cliquez sur 'Créer un compte' en haut à droite. Vous aurez besoin d'un email professionnel, ou vous pouvez vous inscrire en un clic via Google ou GitHub."
+    tags: ['inscription', 'compte', 'creer', 'inscrire', 'login'],
+    response:
+      "Pour créer un compte, cliquez sur 'Créer un compte' en haut à droite. Vous aurez besoin d'un email professionnel, ou vous pouvez vous inscrire en un clic via Google ou GitHub.",
   },
   {
-    tags: ["micro", "audio", "entends", "son", "parle", "sourd"],
-    response: "Si vous avez des problèmes de son, vérifiez que votre micro/casque est bien sélectionné dans les Paramètres > Audio. Assurez-vous également que votre navigateur autorise VisiConnect à utiliser le microphone."
+    tags: ['micro', 'audio', 'entends', 'son', 'parle', 'sourd'],
+    response:
+      'Si vous avez des problèmes de son, vérifiez que votre micro/casque est bien sélectionné dans les Paramètres > Audio. Assurez-vous également que votre navigateur autorise VisiConnect à utiliser le microphone.',
   },
   {
-    tags: ["caméra", "video", "marche pas", "cam", "voir"],
-    response: "Si votre caméra ne fonctionne pas, vérifiez dans Paramètres > Vidéo que la bonne source est sélectionnée, assurez-vous qu'aucune autre application n'utilise la caméra, et vérifiez les autorisations de votre navigateur."
+    tags: ['caméra', 'video', 'marche pas', 'cam', 'voir'],
+    response:
+      "Si votre caméra ne fonctionne pas, vérifiez dans Paramètres > Vidéo que la bonne source est sélectionnée, assurez-vous qu'aucune autre application n'utilise la caméra, et vérifiez les autorisations de votre navigateur.",
   },
   {
-    tags: ["fonctionnalités", "features", "quoi", "pourquoi", "visiconnect"],
-    response: "VisiConnect est une plateforme ultra-performante offrant : Appels vidéo 4K, Audio spatial, Chat en direct, Messagerie privée, Tableau blanc collaboratif, Partage d'écran fluide, et une sécurité de bout en bout."
+    tags: ['fonctionnalités', 'features', 'quoi', 'pourquoi', 'visiconnect'],
+    response:
+      "VisiConnect est une plateforme ultra-performante offrant : Appels vidéo 4K, Audio spatial, Chat en direct, Messagerie privée, Tableau blanc collaboratif, Partage d'écran fluide, et une sécurité de bout en bout.",
   },
   {
-    tags: ["salut", "bonjour", "hey", "coucou", "hello"],
-    response: "Bonjour ! Bienvenue sur VisiConnect. Je suis l'IA de la plateforme, entraînée pour répondre à toutes vos questions. Que puis-je faire pour vous aujourd'hui ?"
+    tags: ['salut', 'bonjour', 'hey', 'coucou', 'hello'],
+    response:
+      "Bonjour ! Bienvenue sur VisiConnect. Je suis l'IA de la plateforme, entraînée pour répondre à toutes vos questions. Que puis-je faire pour vous aujourd'hui ?",
   },
   {
-    tags: ["merci", "thanks", "super", "génial", "top"],
-    response: "Avec grand plaisir ! N'hésitez pas si vous avez la moindre question concernant VisiConnect ou ses fonctionnalités."
+    tags: ['merci', 'thanks', 'super', 'génial', 'top'],
+    response:
+      "Avec grand plaisir ! N'hésitez pas si vous avez la moindre question concernant VisiConnect ou ses fonctionnalités.",
   },
   {
-    tags: ["qui", "es tu", "nom", "ia", "robot", "agent"],
-    response: "Je suis VisiBot, l'Intelligence Artificielle ultra-performante de VisiConnect. Mon rôle est de vous guider, de vous aider à résoudre vos problèmes et de tout vous expliquer sur notre plateforme !"
-  }
+    tags: ['qui', 'es tu', 'nom', 'ia', 'robot', 'agent'],
+    response:
+      "Je suis VisiBot, l'Intelligence Artificielle ultra-performante de VisiConnect. Mon rôle est de vous guider, de vous aider à résoudre vos problèmes et de tout vous expliquer sur notre plateforme !",
+  },
 ];
 
 const AI_PROXY_URL = `${import.meta.env.VITE_API_URL || ''}/api/ai/chat`;
@@ -291,7 +320,7 @@ const findBestMatch = (input) => {
 
   for (const item of knowledgeBase) {
     let score = 0;
-    item.tags.forEach(tag => {
+    item.tags.forEach((tag) => {
       // Basic strict presence check
       if (normInput.includes(tag)) score += 2;
     });
@@ -303,13 +332,16 @@ const findBestMatch = (input) => {
   }
 
   if (highestScore > 0) return bestMatch;
-  
+
   // Default fallback if no match
   return "C'est une excellente question. VisiConnect propose tellement de fonctionnalités (4K, tableau blanc, sécurité E2E) que la réponse pourrait dépendre de votre situation exacte. Pouvez-vous reformuler ou préciser de quelle partie de la plateforme vous parlez ?";
 };
 
 const normalizeForDisplay = (text = '') =>
-  text.replace(/\*\*(.*?)\*\*/g, '$1').replace(/^#{1,6}\s*/gm, '').trim();
+  text
+    .replace(/\*\*(.*?)\*\*/g, '$1')
+    .replace(/^#{1,6}\s*/gm, '')
+    .trim();
 
 const askExternalLLM = async (messages, uiLanguage) => {
   if (!import.meta.env.VITE_API_URL) {
@@ -317,7 +349,8 @@ const askExternalLLM = async (messages, uiLanguage) => {
   }
 
   // Use the active UI language as the strongest hint, fallback to navigator.
-  const navLocale = (typeof navigator !== 'undefined' && navigator.language) ? navigator.language : 'en';
+  const navLocale =
+    typeof navigator !== 'undefined' && navigator.language ? navigator.language : 'en';
   const locale = uiLanguage || navLocale;
 
   const payload = {
@@ -345,7 +378,7 @@ CONTENT RULES:
     locale,
   };
 
-  const res = await fetch(AI_PROXY_URL, {
+  const res = await apiFetch(AI_PROXY_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -354,146 +387,160 @@ CONTENT RULES:
   });
   if (res.ok) {
     const data = await res.json();
-    return normalizeForDisplay(data?.content || 'Je n\'ai pas pu repondre pour le moment.');
+    return normalizeForDisplay(data?.content || "Je n'ai pas pu repondre pour le moment.");
   }
 
   throw new Error('External LLM unavailable');
 };
 
 const AIChatbot = () => {
-    const { uiConfig = {}, setIsChatbotOpen } = useAdmin() || {};
-    const location = useLocation();
-    const { t, language } = useTranslation();
-    const [isOpen, setIsOpen] = useState(false);
-    const [messages, setMessages] = useState([]);
+  const { uiConfig = {}, setIsChatbotOpen } = useAdmin() || {};
+  const location = useLocation();
+  const { t, language } = useTranslation();
+  const [isOpen, setIsOpen] = useState(false);
+  const [messages, setMessages] = useState([]);
 
-    // Greeting message refreshes when UI language changes.
-    useEffect(() => {
-      setMessages([{
+  // Greeting message refreshes when UI language changes.
+  useEffect(() => {
+    setMessages([
+      {
         id: 1,
-        text: t('aiChatbot.greeting', "Bonjour 👋 Je peux vous aider à :\n• Résumer la réunion\n• Générer un compte-rendu automatique\n• Répondre à vos questions techniques (caméra, audio, partage d’écran...)\n• Traduire en direct les échanges\n\nPar quoi commencer ?"),
+        text: t(
+          'aiChatbot.greeting',
+          'Bonjour 👋 Je peux vous aider à :\n• Résumer la réunion\n• Générer un compte-rendu automatique\n• Répondre à vos questions techniques (caméra, audio, partage d’écran...)\n• Traduire en direct les échanges\n\nPar quoi commencer ?'
+        ),
         isUser: false,
-      }]);
+      },
+    ]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [language]);
-    const [inputValue, setInputValue] = useState("");
-    const [isTyping, setIsTyping] = useState(false);
+  }, [language]);
+  const [inputValue, setInputValue] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
 
-    const messagesEndRef = useRef(null);
+  const messagesEndRef = useRef(null);
 
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    };
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
-    useEffect(() => {
-        scrollToBottom();
-    }, [messages, isTyping, isOpen]);
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, isTyping, isOpen]);
 
-    const handleSend = async (e) => {
-        e.preventDefault();
-        if (!inputValue.trim()) return;
+  const handleSend = async (e) => {
+    e.preventDefault();
+    if (!inputValue.trim()) return;
 
-        const text = inputValue;
-        setInputValue("");
-        
-        const userMessage = { id: Date.now(), text, isUser: true };
-        setMessages((prev) => [...prev, userMessage]);
-        setIsTyping(true);
+    const text = inputValue;
+    setInputValue('');
 
-        try {
-          const llmText = await askExternalLLM([
-            ...messages.slice(-8).map((m) => ({ role: m.isUser ? 'user' : 'assistant', content: m.text })),
-            { role: 'user', content: text },
-          ], language);
-          const botResponse = {
-            id: Date.now() + 1,
-            text: llmText,
-            isUser: false
-          };
-          setMessages((prev) => [...prev, botResponse]);
-        } catch (error) {
-          const botText = findBestMatch(text);
-          const botResponse = {
-            id: Date.now() + 1,
-            text: botText,
-            isUser: false
-          };
-          setMessages((prev) => [...prev, botResponse]);
-        } finally {
-          setIsTyping(false);
-        }
-    };
+    const userMessage = { id: Date.now(), text, isUser: true };
+    setMessages((prev) => [...prev, userMessage]);
+    setIsTyping(true);
 
-    // Integration capability with Admin Context setting
-    const position = uiConfig?.chatbotPosition || 'right';
-
-    if (location.pathname.startsWith('/room/') || location.pathname.startsWith('/meeting/')) {
-      return null;
+    try {
+      const llmText = await askExternalLLM(
+        [
+          ...messages
+            .slice(-8)
+            .map((m) => ({ role: m.isUser ? 'user' : 'assistant', content: m.text })),
+          { role: 'user', content: text },
+        ],
+        language
+      );
+      const botResponse = {
+        id: Date.now() + 1,
+        text: llmText,
+        isUser: false,
+      };
+      setMessages((prev) => [...prev, botResponse]);
+    } catch (error) {
+      const botText = findBestMatch(text);
+      const botResponse = {
+        id: Date.now() + 1,
+        text: botText,
+        isUser: false,
+      };
+      setMessages((prev) => [...prev, botResponse]);
+    } finally {
+      setIsTyping(false);
     }
+  };
 
-    return (
-        <ChatContainer $position={position} initial={false}>
-            <AnimatePresence>
-                {isOpen && (
-                    <ChatWindow
-                        initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                        transition={{ duration: 0.2 }}
-                    >
-                        <Header>
-                            <TitleContainer>
-                                <IconWrapper>
-                                    <Sparkles size={20} />
-                                </IconWrapper>
-                                <div>
-                                    <HeaderTitle>{t('aiChatbot.title', 'Assistant VisiConnect')}</HeaderTitle>
-                                    <div style={{ fontSize: '0.75rem', color: COLORS.lightText }}>{t('aiChatbot.subtitle', 'IA Ultra-performante')}</div>
-                                </div>
-                            </TitleContainer>
-                            <CloseButton onClick={() => setIsOpen(false)}>
-                                <X size={20} />
-                            </CloseButton>
-                        </Header>
+  // Integration capability with Admin Context setting
+  const position = uiConfig?.chatbotPosition || 'right';
 
-                        <MessagesArea>
-                            {messages.map((msg) => (
-                                <MessageBubble key={msg.id} $isUser={msg.isUser}>
-                                    {msg.text}
-                                </MessageBubble>
-                            ))}
-                            {isTyping && (
-                                <TypingIndicator>
-                                    <span /><span /><span />
-                                </TypingIndicator>
-                            )}
-                            <div ref={messagesEndRef} />
-                        </MessagesArea>
+  if (location.pathname.startsWith('/room/') || location.pathname.startsWith('/meeting/')) {
+    return null;
+  }
 
-                        <InputArea onSubmit={handleSend}>
-                            <Input
-                                type="text"
-                                placeholder={t('aiChatbot.placeholder', 'Posez votre question...')}
-                                value={inputValue}
-                                onChange={(e) => setInputValue(e.target.value)}
-                            />
-                            <SendButton type="submit" disabled={!inputValue.trim()}>
-                                <Send size={18} />
-                            </SendButton>
-                        </InputArea>
-                    </ChatWindow>
-                )}
-            </AnimatePresence>
+  return (
+    <ChatContainer $position={position} initial={false}>
+      <AnimatePresence>
+        {isOpen && (
+          <ChatWindow
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+          >
+            <Header>
+              <TitleContainer>
+                <IconWrapper>
+                  <Sparkles size={20} />
+                </IconWrapper>
+                <div>
+                  <HeaderTitle>{t('aiChatbot.title', 'Assistant VisiConnect')}</HeaderTitle>
+                  <div style={{ fontSize: '0.75rem', color: COLORS.lightText }}>
+                    {t('aiChatbot.subtitle', 'IA Ultra-performante')}
+                  </div>
+                </div>
+              </TitleContainer>
+              <CloseButton onClick={() => setIsOpen(false)}>
+                <X size={20} />
+              </CloseButton>
+            </Header>
 
-            <ChatButton
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setIsOpen(!isOpen)}
-            >
-                {isOpen ? <X size={24} /> : <MessageSquare size={24} />}
-            </ChatButton>
-        </ChatContainer>
-    );
+            <MessagesArea>
+              {messages.map((msg) => (
+                <MessageBubble key={msg.id} $isUser={msg.isUser}>
+                  {msg.text}
+                </MessageBubble>
+              ))}
+              {isTyping && (
+                <TypingIndicator>
+                  <span />
+                  <span />
+                  <span />
+                </TypingIndicator>
+              )}
+              <div ref={messagesEndRef} />
+            </MessagesArea>
+
+            <InputArea onSubmit={handleSend}>
+              <Input
+                type="text"
+                placeholder={t('aiChatbot.placeholder', 'Posez votre question...')}
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+              />
+              <SendButton type="submit" disabled={!inputValue.trim()}>
+                <Send size={18} />
+              </SendButton>
+            </InputArea>
+          </ChatWindow>
+        )}
+      </AnimatePresence>
+
+      <ChatButton
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        {isOpen ? <X size={24} /> : <MessageSquare size={24} />}
+      </ChatButton>
+    </ChatContainer>
+  );
 };
 
 export default AIChatbot;

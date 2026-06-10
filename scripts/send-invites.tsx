@@ -5,13 +5,19 @@ import { Resend } from 'resend';
 import { render } from '@react-email/components';
 import { MeetingInviteEmail } from '../emails/MeetingInviteEmail';
 
-// Le token Resend actuel (ou process.env.RESEND_API_KEY)
-const resend = new Resend('re_f7CXkPZ1_FouifSQZycKkbcStAoZkGgW8');
+// Fail fast : on refuse de démarrer si la clé n'est pas fournie via l'environnement.
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
+if (!RESEND_API_KEY) {
+  console.error('❌ RESEND_API_KEY manquante. Renseignez-la dans votre .env avant d\'exécuter ce script.');
+  process.exit(1);
+}
+const resend = new Resend(RESEND_API_KEY);
 
 // LISTE DES BÊTA TESTEURS À PERSONNALISER
 // Chaque entrée : nom complet, email, et code bêta unique
 const betaTesters = [
-  { name: "Fabia Pay B", email: "fabia_1968@hotmail.com" },
+  { name: "Anthony Deamim", email: "deamim.contact@gmail.com" },
+  { name: "Maëlle Guillemet", email: "guillemet.maelle@gmail.com" },
 ];
 
 async function sendInvites() {
@@ -33,17 +39,17 @@ async function sendInvites() {
       );
 
       // 2. Envoyer l'email
-      const pdfPath = path.resolve(process.cwd(), 'server/public/Guia_Official_VisioConnect.pdf');
+      const pdfPath = path.resolve(process.cwd(), 'client/public/Guide_beta_VisioConnect.pdf');
       const pdfContent = fs.readFileSync(pdfPath);
 
       const response = await resend.emails.send({
         from: 'VisioConnect <contact@visioconnect.pro>',
         to: tester.email,
-        subject: `Tu acceso exclusivo a la beta cerrada de VisioConnect, ${tester.name} !`,
+        subject: `Votre accès exclusif à la bêta fermée de VisioConnect, ${tester.name} !`,
         html: emailHtml,
         attachments: [
           {
-            filename: 'Guia_Beta_VisioConnect.pdf',
+            filename: 'Guide_Beta_VisioConnect.pdf',
             content: pdfContent,
           }
         ]
