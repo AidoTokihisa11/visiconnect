@@ -18,15 +18,15 @@ WORKDIR /app
 RUN addgroup -S app && adduser -S app -G app
 
 ENV NODE_ENV=production \
-    PORT=5000
+    PORT=5099
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY server/src ./src
 COPY server/package.json ./
 
 USER app
-EXPOSE 5000
+EXPOSE 5099
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
-  CMD wget -qO- http://127.0.0.1:5000/health || exit 1
+  CMD wget -qO- http://127.0.0.1:5099/health || exit 1
 
 CMD ["node", "src/server.js"]

@@ -1,6 +1,6 @@
 version: "3.9"
 
-# Compose minimal pour un VPS Hetzner CX22 (2 vCPU / 4 Go RAM).
+# Compose minimal pour un VPS DigitalOcean Droplet FRA1 (2 vCPU / 2 Go RAM).
 # Les variables de production sont fournies via le fichier .env (non commit\u00e9).
 
 services:
@@ -13,9 +13,9 @@ services:
     restart: unless-stopped
     env_file: .env
     expose:
-      - "5000"
+      - "5099"
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:5000/health"]
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:5099/health"]
       interval: 30s
       timeout: 5s
       retries: 3

@@ -78,27 +78,27 @@ invalidé, transferts hors UE).
 
 L'occasion m'a paru intéressante de proposer une alternative
 **européenne, simple, transparente et conforme** : datacenter en
-Allemagne (Hetzner, Falkenstein), médiacontent WebRTC routé via
+Allemagne (DigitalOcean FRA1, Frankfurt), médiacontent WebRTC routé via
 LiveKit Cloud (Frankfurt), tarification claire et sans rétention de
 quota artificielle.
 
 ## 2.2 Acteurs
 
-| Rôle                       | Personne            | Mission                                                                                |
-| -------------------------- | ------------------- | -------------------------------------------------------------------------------------- |
-| Concepteur-développeur     | Théo GARCES         | Conception, développement, tests, déploiement, maintenance — toutes les couches.       |
-| Référente pédagogique      | Formatrice CODA     | Suivi, validation des jalons, revues techniques.                                       |
-| Bêta-testeurs              | 12 personnes        | Tests fonctionnels, feedback UX (cf. `BILAN_RETOURS_BETA.md`).                         |
-| Hébergeur d'infrastructure | Hetzner Online GmbH | VPS Falkenstein (Allemagne) — sous-traitant RGPD documenté.                            |
-| Médiacontent WebRTC        | LiveKit Inc.        | SFU géré + TURN — région Europe — sous-traitant RGPD.                                  |
-| Paiements                  | Stripe Payments EU  | Encaissement abonnements — Stripe Payments Europe Ltd, conformité PCI-DSS niveau 1.    |
-| Routeur d'emails           | Resend Inc.         | Envoi des emails transactionnels (invitations, codes bêta) — sous-traitant documenté.  |
-| Identité utilisateur       | Clerk Inc.          | Authentification, gestion des sessions — sous-traitant RGPD.                           |
+| Rôle                       | Personne           | Mission                                                                               |
+| -------------------------- | ------------------ | ------------------------------------------------------------------------------------- |
+| Concepteur-développeur     | Théo GARCES        | Conception, développement, tests, déploiement, maintenance — toutes les couches.      |
+| Référente pédagogique      | Formatrice CODA    | Suivi, validation des jalons, revues techniques.                                      |
+| Bêta-testeurs              | 12 personnes       | Tests fonctionnels, feedback UX (cf. `BILAN_RETOURS_BETA.md`).                        |
+| Hébergeur d'infrastructure | DigitalOcean Inc.  | VPS Frankfurt (Allemagne, FRA1) — sous-traitant RGPD documenté.                       |
+| Médiacontent WebRTC        | LiveKit Inc.       | SFU géré + TURN — région Europe — sous-traitant RGPD.                                 |
+| Paiements                  | Stripe Payments EU | Encaissement abonnements — Stripe Payments Europe Ltd, conformité PCI-DSS niveau 1.   |
+| Routeur d'emails           | Resend Inc.        | Envoi des emails transactionnels (invitations, codes bêta) — sous-traitant documenté. |
+| Identité utilisateur       | Clerk Inc.         | Authentification, gestion des sessions — sous-traitant RGPD.                          |
 
 ## 2.3 Contraintes spécifiques
 
 - **Contrainte budgétaire** : projet auto-financé, le coût mensuel
-  d'exploitation doit rester sous **10 € HT/mois**.
+  d'exploitation doit rester sous **15 € HT/mois**.
 - **Contrainte juridique** : RGPD (UE), datacenter UE obligatoire pour
   les données identifiantes.
 - **Contrainte temporelle** : compatible avec la formation CDA — pas
@@ -132,14 +132,14 @@ conformité européenne, et un tarif lisible (gratuit → 15 € → 35 €).
 
 ## 3.2 Objectifs
 
-| ID    | Objectif                                                                              | Mesure                                                                  |
-| ----- | ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| OBJ-1 | Permettre à un utilisateur de **créer** une réunion vidéo en moins de **30 secondes** | Mesuré au chronomètre lors des sessions bêta (résultat : 22 s en moy.). |
-| OBJ-2 | Permettre à un invité de **rejoindre** une réunion sans installer de logiciel         | WebRTC pur, fonctionne dans Chrome / Firefox / Safari / Edge.           |
-| OBJ-3 | Garantir la **confidentialité** des médias et des messages                            | Médias E2EE possibles via LiveKit (option), TLS 1.3 sur la signalisation. |
-| OBJ-4 | Permettre l'**internationalisation** au lancement                                     | 6 langues livrées dès la v1 (fr/en/es/it/pt/ca).                        |
-| OBJ-5 | Tenir un **coût d'infrastructure** sous **10 € HT/mois** hors paiements clients       | Hetzner CX22 (4 €) + LiveKit Cloud (free tier) + Resend (free tier).    |
-| OBJ-6 | **Couvrir les 11 CP du référentiel CDA** pour soutenir l'examen                       | Matrice de traçabilité dans le DP (annexe A.4).                          |
+| ID    | Objectif                                                                              | Mesure                                                                      |
+| ----- | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| OBJ-1 | Permettre à un utilisateur de **créer** une réunion vidéo en moins de **30 secondes** | Mesuré au chronomètre lors des sessions bêta (résultat : 22 s en moy.).     |
+| OBJ-2 | Permettre à un invité de **rejoindre** une réunion sans installer de logiciel         | WebRTC pur, fonctionne dans Chrome / Firefox / Safari / Edge.               |
+| OBJ-3 | Garantir la **confidentialité** des médias et des messages                            | Médias E2EE possibles via LiveKit (option), TLS 1.3 sur la signalisation.   |
+| OBJ-4 | Permettre l'**internationalisation** au lancement                                     | 6 langues livrées dès la v1 (fr/en/es/it/pt/ca).                            |
+| OBJ-5 | Tenir un **coût d'infrastructure** sous **15 € HT/mois** hors paiements clients       | DigitalOcean FRA1 (~11 €) + LiveKit Cloud (free tier) + Resend (free tier). |
+| OBJ-6 | **Couvrir les 11 CP du référentiel CDA** pour soutenir l'examen                       | Matrice de traçabilité dans le DP (annexe A.4).                             |
 
 ## 3.3 Périmètre fonctionnel livré
 
@@ -196,27 +196,27 @@ conformité européenne, et un tarif lisible (gratuit → 15 € → 35 €).
 
 ## 4.2 Exigences non fonctionnelles
 
-| ID     | Exigence                                                                   | Cible                                  |
-| ------ | -------------------------------------------------------------------------- | -------------------------------------- |
-| ENF-01 | Disponibilité de l'API                                                     | 99 % mensuel (≈ 7 h d'indispo / mois). |
-| ENF-02 | Time-to-first-byte (page d'accueil)                                        | < 800 ms p95 (mesuré Lighthouse).      |
-| ENF-03 | Latence de chat                                                            | < 200 ms p95 entre deux participants.  |
-| ENF-04 | Sécurité OWASP Top 10                                                      | 0 finding critique restant.            |
-| ENF-05 | Conformité RGPD                                                            | Datacenter UE, sous-traitants listés. |
-| ENF-06 | Accessibilité                                                              | WCAG 2.1 niveau AA visé.               |
-| ENF-07 | Coût d'infra mensuel                                                       | < 10 € HT.                             |
+| ID     | Exigence                            | Cible                                  |
+| ------ | ----------------------------------- | -------------------------------------- |
+| ENF-01 | Disponibilité de l'API              | 99 % mensuel (≈ 7 h d'indispo / mois). |
+| ENF-02 | Time-to-first-byte (page d'accueil) | < 800 ms p95 (mesuré Lighthouse).      |
+| ENF-03 | Latence de chat                     | < 200 ms p95 entre deux participants.  |
+| ENF-04 | Sécurité OWASP Top 10               | 0 finding critique restant.            |
+| ENF-05 | Conformité RGPD                     | Datacenter UE, sous-traitants listés.  |
+| ENF-06 | Accessibilité                       | WCAG 2.1 niveau AA visé.               |
+| ENF-07 | Coût d'infra mensuel                | < 10 € HT.                             |
 
 ## 4.3 Contraintes techniques imposées par moi-même (justifications)
 
-| Contrainte                                          | Justification                                                                                   |
-| --------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| Frontend en **React 18 + Vite 5**                   | Compétence demandée par le référentiel CDA + écosystème mature.                                 |
-| Backend en **Node.js Express**                      | Permet de réutiliser JavaScript/TypeScript de bout en bout. Démontre CP6 (architecture en couches). |
-| Médiacontent en **LiveKit Cloud**                   | Auto-hébergement WebRTC à 200 utilisateurs = serveur dédié 50 €/mois minimum → hors budget.      |
-| Données temps réel en **Convex**                    | Backend-as-a-service réactif, schéma typé, plus simple qu'un Redis Pub/Sub à maintenir seul.    |
-| Authentification déléguée à **Clerk**               | Réduction du périmètre attaqué (pas de hash maison, pas de gestion de sessions à risque).       |
-| Paiements via **Stripe**                            | Conformité PCI-DSS gérée par Stripe → réduction radicale du risque réglementaire.                |
-| Déploiement sur **Hetzner CX22** + Docker Compose   | Tient le budget, démontre la maîtrise CP10 (déploiement) sans dépendance à un PaaS.             |
+| Contrainte                                                     | Justification                                                                                       |
+| -------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Frontend en **React 18 + Vite 5**                              | Compétence demandée par le référentiel CDA + écosystème mature.                                     |
+| Backend en **Node.js Express**                                 | Permet de réutiliser JavaScript/TypeScript de bout en bout. Démontre CP6 (architecture en couches). |
+| Médiacontent en **LiveKit Cloud**                              | Auto-hébergement WebRTC à 200 utilisateurs = serveur dédié 50 €/mois minimum → hors budget.         |
+| Données temps réel en **Convex**                               | Backend-as-a-service réactif, schéma typé, plus simple qu'un Redis Pub/Sub à maintenir seul.        |
+| Authentification déléguée à **Clerk**                          | Réduction du périmètre attaqué (pas de hash maison, pas de gestion de sessions à risque).           |
+| Paiements via **Stripe**                                       | Conformité PCI-DSS gérée par Stripe → réduction radicale du risque réglementaire.                   |
+| Déploiement sur **DigitalOcean Droplet FRA1** + Docker Compose | Tient le budget, démontre la maîtrise CP10 (déploiement) sans dépendance à un PaaS.                 |
 
 ---
 
@@ -235,7 +235,7 @@ rituels qui apportent une valeur :
   (`feat:`, `fix:`, `chore:`, `docs:`, `security:`).
 - **Convention de commit** : `Conventional Commits` (ex.
   `feat(meeting): add breakout rooms`, `fix(auth): clerk token expired
-  handler`).
+handler`).
 - **Branches courtes** : `feat/*`, `fix/*`, `chore/*` — fusion sur
   `main` après revue (auto-revue en mode solo).
 - **Revue de fin de semaine** : chaque vendredi, je relis les commits
@@ -244,16 +244,16 @@ rituels qui apportent une valeur :
 
 ## 5.2 Outils
 
-| Catégorie       | Outil                                | Usage                                                                |
-| --------------- | ------------------------------------ | -------------------------------------------------------------------- |
-| Versionnement   | Git + GitHub                         | Source unique de vérité, branches courtes, PR avec auto-revue.       |
-| Suivi de tâches | GitHub Projects                      | Kanban, traçabilité commit ↔ issue.                                  |
-| IDE             | VS Code + ESLint + Prettier          | Linter automatique, formatage à la sauvegarde.                       |
-| Maquettage      | Figma                                | Wireframes, palette, composants, prototypes interactifs.             |
-| Communication   | Discord (groupe bêta)                | Feedback bêta-testeurs.                                              |
-| CI              | GitHub Actions                       | Lint + tests + build + audit npm sur chaque push.                    |
-| Déploiement     | SSH + Docker Compose                 | Procédure manuelle versionnée dans `infra/deploy/runbook.md`.        |
-| Monitoring      | `pm2` + journaux Pino + Hetzner Cloud | Suivi processus + logs applicatifs structurés JSON.                  |
+| Catégorie       | Outil                                      | Usage                                                          |
+| --------------- | ------------------------------------------ | -------------------------------------------------------------- |
+| Versionnement   | Git + GitHub                               | Source unique de vérité, branches courtes, PR avec auto-revue. |
+| Suivi de tâches | GitHub Projects                            | Kanban, traçabilité commit ↔ issue.                            |
+| IDE             | VS Code + ESLint + Prettier                | Linter automatique, formatage à la sauvegarde.                 |
+| Maquettage      | Figma                                      | Wireframes, palette, composants, prototypes interactifs.       |
+| Communication   | Discord (groupe bêta)                      | Feedback bêta-testeurs.                                        |
+| CI              | GitHub Actions                             | Lint + tests + build + audit npm sur chaque push.              |
+| Déploiement     | SSH + Docker Compose                       | Procédure manuelle versionnée dans `infra/deploy/runbook.md`.  |
+| Monitoring      | `pm2` + journaux Pino + DigitalOcean Cloud | Suivi processus + logs applicatifs structurés JSON.            |
 
 ## 5.3 Planning macro
 
@@ -262,29 +262,29 @@ ne sont pas strictement séquentielles : la sécurité, la documentation
 et les tests se sont intensifiés sur les 3 derniers mois en
 préparation de l'examen.
 
-| Phase                                  | Période               | Livrable principal                                                      |
-| -------------------------------------- | --------------------- | ----------------------------------------------------------------------- |
-| Cadrage & maquettes                    | oct. 2023 → déc. 2023 | Wireframes Figma, prototype navigable, choix techniques validés.        |
-| Front-end MVP (auth + dashboard)       | janv. 2024 → mars 2024 | Page d'accueil, inscription Clerk, dashboard, modale création réunion.  |
-| i18n (6 langues)                       | avr. 2024 → juin 2024 | Système i18next, scripts de traduction, sélecteur de langue.            |
-| Module visio (LiveKit + Convex)        | mai 2024 → sept. 2024 | Salle de réunion, chat, whiteboard, breakout, polls.                    |
-| Module IA + outils annexes             | oct. 2024 → janv. 2025 | Assistant IA (Groq + OpenRouter en repli), export PDF.                  |
-| Phase bêta + retours                   | févr. 2025 → mars 2025 | 12 testeurs, `BILAN_RETOURS_BETA.md`, ajustements UX.                   |
-| Paiements Stripe                       | avr. 2025 → mai 2025  | 3 plans, upgrade/downgrade, webhook signé.                              |
-| Mise en production v1                  | juin 2025             | Domaine `visioconnect.pro`, certificat Let's Encrypt, premiers clients. |
-| **Audit + hardening + tests + CI/CD**  | mars 2026 → mai 2026  | Branche `chore/exam-hardening`, 14 findings corrigés, 26 tests verts.   |
-| **Préparation examen (DP + Dossier)**  | mai 2026 → juin 2026  | Dossier Professionnel + Dossier Projet.                                 |
+| Phase                                 | Période                | Livrable principal                                                      |
+| ------------------------------------- | ---------------------- | ----------------------------------------------------------------------- |
+| Cadrage & maquettes                   | oct. 2023 → déc. 2023  | Wireframes Figma, prototype navigable, choix techniques validés.        |
+| Front-end MVP (auth + dashboard)      | janv. 2024 → mars 2024 | Page d'accueil, inscription Clerk, dashboard, modale création réunion.  |
+| i18n (6 langues)                      | avr. 2024 → juin 2024  | Système i18next, scripts de traduction, sélecteur de langue.            |
+| Module visio (LiveKit + Convex)       | mai 2024 → sept. 2024  | Salle de réunion, chat, whiteboard, breakout, polls.                    |
+| Module IA + outils annexes            | oct. 2024 → janv. 2025 | Assistant IA (Groq + OpenRouter en repli), export PDF.                  |
+| Phase bêta + retours                  | févr. 2025 → mars 2025 | 12 testeurs, `BILAN_RETOURS_BETA.md`, ajustements UX.                   |
+| Paiements Stripe                      | avr. 2025 → mai 2025   | 3 plans, upgrade/downgrade, webhook signé.                              |
+| Mise en production v1                 | juin 2025              | Domaine `visioconnect.pro`, certificat Let's Encrypt, premiers clients. |
+| **Audit + hardening + tests + CI/CD** | mars 2026 → mai 2026   | Branche `chore/exam-hardening`, 14 findings corrigés, 26 tests verts.   |
+| **Préparation examen (DP + Dossier)** | mai 2026 → juin 2026   | Dossier Professionnel + Dossier Projet.                                 |
 
 ## 5.4 Risques projet et mitigations
 
-| Risque                                    | Probabilité | Impact   | Mitigation                                                                                            |
-| ----------------------------------------- | :---------: | :------: | ----------------------------------------------------------------------------------------------------- |
-| Indisponibilité de LiveKit Cloud          |   Faible    |  Élevé   | Périmètre testable en local avec un container LiveKit. Plan de bascule vers self-hosted documenté.    |
-| Fuite de clé API                          |   Moyenne   | Critique | `.env` ignoré par Git, validation Zod fail-fast au démarrage, `git secrets` en pre-commit (à venir).  |
-| Coût Stripe explose                       |    Faible    |  Élevé   | Tarification fixe par plan (pas d'usage variable). Webhook signé pour éviter les fausses upgrades.    |
-| Faille XSS dans le tableau blanc           |   Moyenne   |  Élevé   | tldraw rend en SVG/Canvas — pas d'`innerHTML`. CSP stricte côté Nginx.                                |
-| Indisponibilité du VPS                     |    Faible    |  Moyen   | Sauvegarde quotidienne du volume `data` (cron + rsync vers stockage externe), runbook de redéploiement. |
-| Abandon du projet par moi-même             |    Faible    |  Élevé   | Documentation complète (DP + Dossier + runbook) → un repreneur peut redémarrer en moins de 2 jours.   |
+| Risque                           | Probabilité |  Impact  | Mitigation                                                                                              |
+| -------------------------------- | :---------: | :------: | ------------------------------------------------------------------------------------------------------- |
+| Indisponibilité de LiveKit Cloud |   Faible    |  Élevé   | Périmètre testable en local avec un container LiveKit. Plan de bascule vers self-hosted documenté.      |
+| Fuite de clé API                 |   Moyenne   | Critique | `.env` ignoré par Git, validation Zod fail-fast au démarrage, `git secrets` en pre-commit (à venir).    |
+| Coût Stripe explose              |   Faible    |  Élevé   | Tarification fixe par plan (pas d'usage variable). Webhook signé pour éviter les fausses upgrades.      |
+| Faille XSS dans le tableau blanc |   Moyenne   |  Élevé   | tldraw rend en SVG/Canvas — pas d'`innerHTML`. CSP stricte côté Nginx.                                  |
+| Indisponibilité du VPS           |   Faible    |  Moyen   | Sauvegarde quotidienne du volume `data` (cron + rsync vers stockage externe), runbook de redéploiement. |
+| Abandon du projet par moi-même   |   Faible    |  Élevé   | Documentation complète (DP + Dossier + runbook) → un repreneur peut redémarrer en moins de 2 jours.     |
 
 ---
 
@@ -463,21 +463,21 @@ Les **5 couches** côté serveur (du haut vers le bas) :
 
 ## 7.2 Choix technologiques (justifications)
 
-| Couche               | Technologie                | Alternative envisagée    | Justification du choix retenu                                                                                       |
-| -------------------- | -------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------- |
-| Front-end            | React 18 + Vite 5          | Next.js 14 / Remix       | Vite = HMR rapide, build minimal. Next.js apporterait du SSR mais ajoute une complexité (App Router, RSC) non utile. |
-| Style                | Tailwind CSS 3             | CSS Modules / Emotion    | Productivité, classes utilitaires, purge automatique → CSS final < 30 ko gzip.                                       |
-| Animation            | Framer Motion 11           | GSAP                     | API React-first, intégration prop-by-prop, déclaratif.                                                              |
-| Auth                 | Clerk                      | Auth maison + bcrypt     | Sortir l'auth du périmètre attaqué : pas de fuite de hash, MFA, OAuth fournis. Coût acceptable au volume cible.     |
-| BDD temps réel        | Convex                     | Firebase / Supabase      | Schéma typé, transactions ACID, fonctions serveur déployées avec le code, pas de règles de sécurité YAML à maintenir. |
-| Médiacontent WebRTC   | LiveKit Cloud              | Jitsi / mediasoup auto-hébergés | Auto-hébergement = serveur dédié 50 €/mois mini + maintenance kernel/coturn. LiveKit Cloud reste sous le budget.    |
-| Paiements            | Stripe                     | Mollie / PayPal          | Webhook signé, dashboard mature, conformité PCI-DSS niveau 1, doc française.                                         |
-| Emails               | Resend                     | SendGrid / Postmark      | API React Email, templates JSX réutilisables (cohérent avec mon stack).                                              |
-| IA                   | Groq (Llama 3) + OpenRouter (fallback) | OpenAI direct  | Groq = inférence très rapide (≤ 600 ms p95), prix < OpenAI. OpenRouter en repli si Groq HS.                          |
-| i18n                 | i18next + react-i18next    | next-intl / FormatJS     | Mature, ressources JSON simples à versionner, scripts de traduction faciles.                                          |
-| Reverse-proxy         | Nginx 1.27 (alpine)        | Traefik / Caddy          | Standard de fait, ressources mémoire faibles, support WebSocket natif, certbot bien intégré.                         |
-| Hébergement           | Hetzner CX22 (DE)          | OVH / Scaleway           | Meilleur rapport perf/prix UE (4 € HT/mois), datacenter Falkenstein ISO 27001.                                       |
-| Conteneurisation     | Docker + Docker Compose    | Kubernetes (k3s)         | k8s sur 1 VPS = sur-ingénierie. Compose suffit jusqu'à 5 services.                                                  |
+| Couche              | Technologie                            | Alternative envisagée           | Justification du choix retenu                                                                                         |
+| ------------------- | -------------------------------------- | ------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| Front-end           | React 18 + Vite 5                      | Next.js 14 / Remix              | Vite = HMR rapide, build minimal. Next.js apporterait du SSR mais ajoute une complexité (App Router, RSC) non utile.  |
+| Style               | Tailwind CSS 3                         | CSS Modules / Emotion           | Productivité, classes utilitaires, purge automatique → CSS final < 30 ko gzip.                                        |
+| Animation           | Framer Motion 11                       | GSAP                            | API React-first, intégration prop-by-prop, déclaratif.                                                                |
+| Auth                | Clerk                                  | Auth maison + bcrypt            | Sortir l'auth du périmètre attaqué : pas de fuite de hash, MFA, OAuth fournis. Coût acceptable au volume cible.       |
+| BDD temps réel      | Convex                                 | Firebase / Supabase             | Schéma typé, transactions ACID, fonctions serveur déployées avec le code, pas de règles de sécurité YAML à maintenir. |
+| Médiacontent WebRTC | LiveKit Cloud                          | Jitsi / mediasoup auto-hébergés | Auto-hébergement = serveur dédié 50 €/mois mini + maintenance kernel/coturn. LiveKit Cloud reste sous le budget.      |
+| Paiements           | Stripe                                 | Mollie / PayPal                 | Webhook signé, dashboard mature, conformité PCI-DSS niveau 1, doc française.                                          |
+| Emails              | Resend                                 | SendGrid / Postmark             | API React Email, templates JSX réutilisables (cohérent avec mon stack).                                               |
+| IA                  | Groq (Llama 3) + OpenRouter (fallback) | OpenAI direct                   | Groq = inférence très rapide (≤ 600 ms p95), prix < OpenAI. OpenRouter en repli si Groq HS.                           |
+| i18n                | i18next + react-i18next                | next-intl / FormatJS            | Mature, ressources JSON simples à versionner, scripts de traduction faciles.                                          |
+| Reverse-proxy       | Nginx 1.27 (alpine)                    | Traefik / Caddy                 | Standard de fait, ressources mémoire faibles, support WebSocket natif, certbot bien intégré.                          |
+| Hébergement         | DigitalOcean Droplet FRA1 (DE)         | OVH / Scaleway                  | Datacenter Frankfurt (DE), conformité RGPD intra-UE, ISO 27001, rapport perf/prix adapté au budget.                   |
+| Conteneurisation    | Docker + Docker Compose                | Kubernetes (k3s)                | k8s sur 1 VPS = sur-ingénierie. Compose suffit jusqu'à 5 services.                                                    |
 
 ## 7.3 Diagrammes de séquence
 
@@ -533,17 +533,17 @@ WebSocket.
 
 ## 8.2 Tables (collections)
 
-| Table             | Rôle                                          | Index principaux                          |
-| ----------------- | --------------------------------------------- | ----------------------------------------- |
-| `users`           | Profil utilisateur, plan d'abonnement          | `by_email`                                |
-| `meetings`        | Métadonnées d'une réunion                     | `by_host`, `by_status`                    |
-| `messages`        | Messages de chat                              | `by_meeting`                              |
-| `whiteboards`     | État du tableau blanc                         | `by_meeting`                              |
-| `cursors`         | Positions des curseurs collaboratifs          | `by_meeting`, `by_meeting_and_user`       |
-| `notifications`   | Notifications utilisateur                      | `by_user`                                 |
-| `cookieConsents`  | Traces de consentement RGPD                   | `by_session`, `by_user`                   |
-| `polls`           | Sondages dans une réunion                     | `by_meeting`                              |
-| `breakoutRooms`   | Sous-groupes d'une réunion                    | `by_meeting` (composite avec `status`)    |
+| Table            | Rôle                                  | Index principaux                       |
+| ---------------- | ------------------------------------- | -------------------------------------- |
+| `users`          | Profil utilisateur, plan d'abonnement | `by_email`                             |
+| `meetings`       | Métadonnées d'une réunion             | `by_host`, `by_status`                 |
+| `messages`       | Messages de chat                      | `by_meeting`                           |
+| `whiteboards`    | État du tableau blanc                 | `by_meeting`                           |
+| `cursors`        | Positions des curseurs collaboratifs  | `by_meeting`, `by_meeting_and_user`    |
+| `notifications`  | Notifications utilisateur             | `by_user`                              |
+| `cookieConsents` | Traces de consentement RGPD           | `by_session`, `by_user`                |
+| `polls`          | Sondages dans une réunion             | `by_meeting`                           |
+| `breakoutRooms`  | Sous-groupes d'une réunion            | `by_meeting` (composite avec `status`) |
 
 ## 8.3 Schéma physique extrait
 
@@ -650,7 +650,7 @@ client/src/
 
 ```javascript
 // client/src/lib/apiClient.js
-const BASE = import.meta.env.VITE_API_BASE_URL || "";
+const BASE = import.meta.env.VITE_API_BASE_URL || '';
 
 async function getAuthHeader() {
   // Récupère le JWT Clerk depuis la session courante
@@ -663,7 +663,7 @@ export async function apiFetch(path, init = {}) {
   const res = await fetch(`${BASE}${path}`, {
     ...init,
     headers: { ...auth, ...(init.headers || {}) },
-    credentials: "include",
+    credentials: 'include',
   });
   if (!res.ok) throw new ApiError(res.status, await res.text());
   return res;
@@ -671,9 +671,9 @@ export async function apiFetch(path, init = {}) {
 
 export async function apiPostJson(path, body, init = {}) {
   return apiFetch(path, {
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify(body),
-    headers: { "Content-Type": "application/json", ...(init.headers || {}) },
+    headers: { 'Content-Type': 'application/json', ...(init.headers || {}) },
   });
 }
 ```
@@ -723,28 +723,28 @@ server/src/
 ### Extrait — `config/env.js` (validation fail-fast)
 
 ```javascript
-import { z } from "zod";
+import { z } from 'zod';
 
 const schema = z.object({
-  NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
+  NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   PORT: z.coerce.number().int().positive().default(5099),
   ALLOWED_ORIGINS: z.string().min(1),
-  CLERK_SECRET_KEY: z.string().startsWith("sk_"),
+  CLERK_SECRET_KEY: z.string().startsWith('sk_'),
   LIVEKIT_API_KEY: z.string().min(1),
   LIVEKIT_API_SECRET: z.string().min(1),
   LIVEKIT_URL: z.string().url(),
-  STRIPE_SECRET_KEY: z.string().startsWith("sk_"),
-  STRIPE_WEBHOOK_SECRET: z.string().startsWith("whsec_"),
-  RESEND_API_KEY: z.string().startsWith("re_").optional(),
+  STRIPE_SECRET_KEY: z.string().startsWith('sk_'),
+  STRIPE_WEBHOOK_SECRET: z.string().startsWith('whsec_'),
+  RESEND_API_KEY: z.string().startsWith('re_').optional(),
   GROQ_API_KEY: z.string().min(1).optional(),
   OPENROUTER_API_KEY: z.string().min(1).optional(),
-  LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default("info"),
+  LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
 });
 
 const parsed = schema.safeParse(process.env);
 if (!parsed.success) {
   // eslint-disable-next-line no-console
-  console.error("❌ Invalid environment variables:", parsed.error.format());
+  console.error('❌ Invalid environment variables:', parsed.error.format());
   process.exit(1);
 }
 
@@ -754,18 +754,18 @@ export const env = parsed.data;
 ### Extrait — `services/livekitService.js` (cœur métier visio)
 
 ```javascript
-import { AccessToken } from "livekit-server-sdk";
-import { env } from "../config/env.js";
+import { AccessToken } from 'livekit-server-sdk';
+import { env } from '../config/env.js';
 
 const TTL_SECONDS = 4 * 60 * 60; // 4 h
 
-export function issueAccessToken({ userId, roomName, role = "participant", name }) {
+export function issueAccessToken({ userId, roomName, role = 'participant', name }) {
   if (!userId) {
-    throw new Error("issueAccessToken: userId requis");
+    throw new Error('issueAccessToken: userId requis');
   }
   const at = new AccessToken(env.LIVEKIT_API_KEY, env.LIVEKIT_API_SECRET, {
-    identity: userId,             // identité = userId Clerk (non-spoofable)
-    name,                         // pseudo affiché
+    identity: userId, // identité = userId Clerk (non-spoofable)
+    name, // pseudo affiché
     ttl: TTL_SECONDS,
   });
   at.addGrant({
@@ -773,13 +773,14 @@ export function issueAccessToken({ userId, roomName, role = "participant", name 
     room: roomName,
     canPublish: true,
     canSubscribe: true,
-    roomAdmin: role === "host",   // privilèges modération réservés à l'hôte
+    roomAdmin: role === 'host', // privilèges modération réservés à l'hôte
   });
   return at.toJwt();
 }
 ```
 
 > **Décisions clefs** :
+>
 > - `identity = userId` (pas `email`) : impossibilité d'usurper l'identité
 >   d'un autre utilisateur.
 > - `roomAdmin` réservé à `role === "host"` : un participant ne peut pas
@@ -790,14 +791,14 @@ export function issueAccessToken({ userId, roomName, role = "participant", name 
 ### Extrait — `middleware/requireAuth.js`
 
 ```javascript
-import { verifyToken } from "@clerk/backend";
-import { env } from "../config/env.js";
-import { logger } from "../lib/logger.js";
+import { verifyToken } from '@clerk/backend';
+import { env } from '../config/env.js';
+import { logger } from '../lib/logger.js';
 
 export async function requireAuth(req, res, next) {
   const header = req.headers.authorization;
-  if (!header?.startsWith("Bearer ")) {
-    return res.status(401).json({ error: "missing_bearer" });
+  if (!header?.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'missing_bearer' });
   }
   try {
     const payload = await verifyToken(header.slice(7), {
@@ -806,8 +807,8 @@ export async function requireAuth(req, res, next) {
     req.session = { userId: payload.sub, claims: payload };
     next();
   } catch (err) {
-    logger.warn({ err: err.message }, "auth_invalid_token");
-    res.status(401).json({ error: "invalid_token" });
+    logger.warn({ err: err.message }, 'auth_invalid_token');
+    res.status(401).json({ error: 'invalid_token' });
   }
 }
 ```
@@ -829,30 +830,30 @@ Le module visio combine **trois canaux** :
 ### Extrait — `socket/index.js` (auth handshake)
 
 ```javascript
-import { Server } from "socket.io";
-import { verifyToken } from "@clerk/backend";
-import { env } from "../config/env.js";
+import { Server } from 'socket.io';
+import { verifyToken } from '@clerk/backend';
+import { env } from '../config/env.js';
 
 export function attachSocketIo(httpServer) {
   const io = new Server(httpServer, {
-    cors: { origin: env.ALLOWED_ORIGINS.split(","), credentials: true },
+    cors: { origin: env.ALLOWED_ORIGINS.split(','), credentials: true },
   });
 
   io.use(async (socket, next) => {
     const token = socket.handshake.auth?.token;
-    if (!token) return next(new Error("unauthorized"));
+    if (!token) return next(new Error('unauthorized'));
     try {
       const payload = await verifyToken(token, { secretKey: env.CLERK_SECRET_KEY });
       socket.data.userId = payload.sub;
       socket.data.joinedRooms = new Set();
       next();
     } catch {
-      next(new Error("unauthorized"));
+      next(new Error('unauthorized'));
     }
   });
 
-  io.on("connection", (socket) => {
-    socket.on("join-room", (roomId) => {
+  io.on('connection', (socket) => {
+    socket.on('join-room', (roomId) => {
       // L'autorisation effective de rejoindre est vérifiée côté Convex
       socket.join(roomId);
       socket.data.joinedRooms.add(roomId);
@@ -874,20 +875,20 @@ export function attachSocketIo(httpServer) {
 
 ```javascript
 export async function postStripeWebhook(req, res) {
-  const sig = req.headers["stripe-signature"];
+  const sig = req.headers['stripe-signature'];
   let event;
   try {
     event = stripeService.verifyWebhook(req.body, sig);
   } catch (err) {
-    logger.warn({ err: err.message }, "stripe_webhook_signature_invalid");
+    logger.warn({ err: err.message }, 'stripe_webhook_signature_invalid');
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
   switch (event.type) {
-    case "checkout.session.completed":
+    case 'checkout.session.completed':
       await stripeService.handleCheckoutCompleted(event.data.object);
       break;
-    case "customer.subscription.deleted":
+    case 'customer.subscription.deleted':
       await stripeService.handleSubscriptionDeleted(event.data.object);
       break;
   }
@@ -906,11 +907,11 @@ Configuration `i18next` avec détection automatique du navigateur :
 
 ```javascript
 // client/src/i18n/i18n.js
-import i18n from "i18next";
-import { initReactI18next } from "react-i18next";
-import LanguageDetector from "i18next-browser-languagedetector";
-import fr from "./locales/fr/translation.json";
-import en from "./locales/en/translation.json";
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+import fr from './locales/fr/translation.json';
+import en from './locales/en/translation.json';
 // … es, it, pt, ca
 
 i18n
@@ -918,9 +919,9 @@ i18n
   .use(initReactI18next)
   .init({
     resources: { fr: { translation: fr }, en: { translation: en } /* … */ },
-    fallbackLng: "fr",
-    supportedLngs: ["fr", "en", "es", "it", "pt", "ca"],
-    detection: { order: ["querystring", "localStorage", "navigator"], caches: ["localStorage"] },
+    fallbackLng: 'fr',
+    supportedLngs: ['fr', 'en', 'es', 'it', 'pt', 'ca'],
+    detection: { order: ['querystring', 'localStorage', 'navigator'], caches: ['localStorage'] },
     interpolation: { escapeValue: false }, // React échappe déjà
   });
 ```
@@ -940,48 +941,52 @@ synchroniser les clés entre langues (`add_room_i18n.js`,
 > beaucoup de tests d'unité (rapides), un noyau de tests d'intégration
 > ciblant les middlewares de sécurité.
 
-| Niveau                     | Outil                       | Couverture cible                               |
-| -------------------------- | --------------------------- | ---------------------------------------------- |
-| Tests unitaires (services) | Vitest                      | `livekitService`, schémas Zod                  |
-| Tests d'intégration HTTP   | Vitest + Supertest          | Auth Clerk, CORS allowlist, routes santé       |
-| Tests manuels              | Bêta-testeurs (12 personnes) | Parcours utilisateur complets, multi-navigateur |
-| Lint statique              | ESLint flat config + Prettier | 100 % des fichiers .js/.jsx                  |
-| Audit dépendances          | `npm audit --audit-level=high` | À chaque pipeline CI                        |
+| Niveau                     | Outil                          | Couverture cible                                |
+| -------------------------- | ------------------------------ | ----------------------------------------------- |
+| Tests unitaires (services) | Vitest                         | `livekitService`, schémas Zod                   |
+| Tests d'intégration HTTP   | Vitest + Supertest             | Auth Clerk, CORS allowlist, routes santé        |
+| Tests manuels              | Bêta-testeurs (12 personnes)   | Parcours utilisateur complets, multi-navigateur |
+| Lint statique              | ESLint flat config + Prettier  | 100 % des fichiers .js/.jsx                     |
+| Audit dépendances          | `npm audit --audit-level=high` | À chaque pipeline CI                            |
 
 ## 10.2 Suite Vitest+Supertest livrée
 
 26 tests verts, exécutés en ~600 ms, organisés en 5 fichiers :
 
-| Fichier                       | Tests | Vérifie                                                                                            |
-| ----------------------------- | ----: | -------------------------------------------------------------------------------------------------- |
-| `tests/auth.test.js`          |     4 | 401 sans header, 401 Bearer mal formé, 401 token invalide, 401 sur `/api/user/profile`             |
-| `tests/cors.test.js`          |     3 | Allow-Origin pour origine listée, refus origine inconnue, OPTIONS 204 (preflight)                  |
-| `tests/health.test.js`        |     3 | `/health` 200, `/api/health` (`nodeEnv === "test"`), 404 sur route inconnue                        |
-| `tests/schemas.test.js`       |    11 | livekitTokenSchema (regex, longueur), emailSchema, aiChatSchema (min 1, max 30), checkoutSchema    |
-| `tests/livekitService.test.js` |     5 | userId requis, JWT 3-parts, identity = sub = userId, roomAdmin host only, TTL ±5 s                  |
+| Fichier                        | Tests | Vérifie                                                                                         |
+| ------------------------------ | ----: | ----------------------------------------------------------------------------------------------- |
+| `tests/auth.test.js`           |     4 | 401 sans header, 401 Bearer mal formé, 401 token invalide, 401 sur `/api/user/profile`          |
+| `tests/cors.test.js`           |     3 | Allow-Origin pour origine listée, refus origine inconnue, OPTIONS 204 (preflight)               |
+| `tests/health.test.js`         |     3 | `/health` 200, `/api/health` (`nodeEnv === "test"`), 404 sur route inconnue                     |
+| `tests/schemas.test.js`        |    11 | livekitTokenSchema (regex, longueur), emailSchema, aiChatSchema (min 1, max 30), checkoutSchema |
+| `tests/livekitService.test.js` |     5 | userId requis, JWT 3-parts, identity = sub = userId, roomAdmin host only, TTL ±5 s              |
 
 ### Extrait — `tests/livekitService.test.js`
 
 ```javascript
-import { describe, it, expect } from "vitest";
-import { decodeJwt } from "jose";
-import { issueAccessToken } from "../src/services/livekitService.js";
+import { describe, it, expect } from 'vitest';
+import { decodeJwt } from 'jose';
+import { issueAccessToken } from '../src/services/livekitService.js';
 
-describe("livekitService", () => {
-  it("rejette une demande sans userId", () => {
-    expect(() => issueAccessToken({ roomName: "r1" })).toThrow(/userId/);
+describe('livekitService', () => {
+  it('rejette une demande sans userId', () => {
+    expect(() => issueAccessToken({ roomName: 'r1' })).toThrow(/userId/);
   });
 
   it("émet un JWT à 3 segments dont l'identité est le userId", async () => {
-    const token = await issueAccessToken({ userId: "user_123", roomName: "r1" });
-    expect(token.split(".")).toHaveLength(3);
+    const token = await issueAccessToken({ userId: 'user_123', roomName: 'r1' });
+    expect(token.split('.')).toHaveLength(3);
     const payload = decodeJwt(token);
-    expect(payload.sub).toBe("user_123");
+    expect(payload.sub).toBe('user_123');
   });
 
   it("accorde roomAdmin uniquement à l'hôte", async () => {
-    const hostToken = await issueAccessToken({ userId: "u1", roomName: "r1", role: "host" });
-    const guestToken = await issueAccessToken({ userId: "u2", roomName: "r1", role: "participant" });
+    const hostToken = await issueAccessToken({ userId: 'u1', roomName: 'r1', role: 'host' });
+    const guestToken = await issueAccessToken({
+      userId: 'u2',
+      roomName: 'r1',
+      role: 'participant',
+    });
     expect(decodeJwt(hostToken).video.roomAdmin).toBe(true);
     expect(decodeJwt(guestToken).video.roomAdmin).toBeFalsy();
   });
@@ -1014,11 +1019,11 @@ on:
     branches: [main]
 
 jobs:
-  lint:           # ESLint flat config sur tout le repo
-  format:         # Prettier --check
-  test-server:    # cd server && npm test
-  build-client:   # cd client && npm run build (Vite)
-  audit:          # npm audit --audit-level=high (continue-on-error)
+  lint: # ESLint flat config sur tout le repo
+  format: # Prettier --check
+  test-server: # cd server && npm test
+  build-client: # cd client && npm run build (Vite)
+  audit: # npm audit --audit-level=high (continue-on-error)
 ```
 
 Cache `npm` activé sur les **trois** lockfiles (root / client /
@@ -1056,31 +1061,33 @@ findings critiques et élevés ont été corrigés sur la branche
 
 ## 11.2 Synthèse des findings
 
-| ID    | Finding                                              | Sévérité     | Mapping OWASP / CWE             | Statut     |
-| ----- | ---------------------------------------------------- | ------------ | ------------------------------- | ---------- |
-| F-01  | Émission de tokens LiveKit sans authentification     | 🔴 Critique  | A01 BAC / CWE-862               | Corrigé    |
-| F-04  | Clé API Resend hardcodée dans 4 fichiers committés    | 🔴 Critique  | A02 / CWE-798                   | Corrigé    |
-| F-05  | Spoofing d'identité via header `x-user-email`         | 🔴 Critique  | A07 / CWE-287                   | Corrigé    |
-| F-06  | Absence de validation des entrées (Zod)               | 🔴 Critique  | A03 / CWE-20                    | Corrigé    |
-| F-02  | CORS wildcard `*`                                     | 🟠 Élevée    | A05 / CWE-942                   | Corrigé    |
-| F-03  | Absence de rate-limit                                 | 🟠 Élevée    | A04 / CWE-770                   | Corrigé    |
-| F-07  | Stack traces fuite en prod                            | 🟠 Élevée    | A05 / CWE-209                   | Corrigé    |
-| F-08  | Webhook Stripe sans vérification de signature         | 🟠 Élevée    | A08 / CWE-345                   | Corrigé    |
-| F-09  | Logs en clair (PII utilisateur)                       | 🟠 Élevée    | RGPD art. 32                    | Corrigé    |
-| F-10  | Aucun test automatisé                                 | 🟡 Modérée   | CDA CP9                         | Corrigé    |
-| F-11  | Aucune CI/CD                                          | 🟡 Modérée   | CDA CP9                         | Corrigé    |
-| F-12  | Pas de Helmet (CSP / HSTS / X-Frame-Options absents)  | 🟡 Modérée   | A05                             | Corrigé    |
-| F-13  | Mock LiveKit silencieux (`fail open`)                 | 🟡 Modérée   | CWE-754                         | Corrigé    |
-| F-14  | Backend 100 % serverless (CDA CP10 mal couvert)       | 🟡 Modérée   | CDA CP10                        | Corrigé    |
+| ID   | Finding                                              | Sévérité    | Mapping OWASP / CWE | Statut  |
+| ---- | ---------------------------------------------------- | ----------- | ------------------- | ------- |
+| F-01 | Émission de tokens LiveKit sans authentification     | 🔴 Critique | A01 BAC / CWE-862   | Corrigé |
+| F-04 | Clé API Resend hardcodée dans 4 fichiers committés   | 🔴 Critique | A02 / CWE-798       | Corrigé |
+| F-05 | Spoofing d'identité via header `x-user-email`        | 🔴 Critique | A07 / CWE-287       | Corrigé |
+| F-06 | Absence de validation des entrées (Zod)              | 🔴 Critique | A03 / CWE-20        | Corrigé |
+| F-02 | CORS wildcard `*`                                    | 🟠 Élevée   | A05 / CWE-942       | Corrigé |
+| F-03 | Absence de rate-limit                                | 🟠 Élevée   | A04 / CWE-770       | Corrigé |
+| F-07 | Stack traces fuite en prod                           | 🟠 Élevée   | A05 / CWE-209       | Corrigé |
+| F-08 | Webhook Stripe sans vérification de signature        | 🟠 Élevée   | A08 / CWE-345       | Corrigé |
+| F-09 | Logs en clair (PII utilisateur)                      | 🟠 Élevée   | RGPD art. 32        | Corrigé |
+| F-10 | Aucun test automatisé                                | 🟡 Modérée  | CDA CP9             | Corrigé |
+| F-11 | Aucune CI/CD                                         | 🟡 Modérée  | CDA CP9             | Corrigé |
+| F-12 | Pas de Helmet (CSP / HSTS / X-Frame-Options absents) | 🟡 Modérée  | A05                 | Corrigé |
+| F-13 | Mock LiveKit silencieux (`fail open`)                | 🟡 Modérée  | CWE-754             | Corrigé |
+| F-14 | Backend 100 % serverless (CDA CP10 mal couvert)      | 🟡 Modérée  | CDA CP10            | Corrigé |
 
 ## 11.3 Mesures de sécurité applicative implémentées
 
 ### Authentification systématique
+
 - JWT Clerk vérifié par `@clerk/backend` sur **chaque** route
   authentifiée (Express + Vercel Functions + Socket.IO handshake).
 - Identité dérivée du `sub` du JWT, jamais d'un header client.
 
 ### Validation systématique
+
 - Schémas Zod centralisés dans `server/src/schemas/index.js`.
 - Helper générique `validate(req, schema)` dans
   `middleware/validate.js`.
@@ -1089,6 +1096,7 @@ findings critiques et élevés ont été corrigés sur la branche
   LiveKit.
 
 ### Rate-limit
+
 - 3 profils différenciés via `express-rate-limit` :
   - `globalLimiter` : 300 req / 15 min / IP (toutes routes).
   - `tokenLimiter` : 10 req / min / IP (endpoint `/livekit/token`,
@@ -1097,22 +1105,26 @@ findings critiques et élevés ont été corrigés sur la branche
     pour bloquer le spam transactionnel).
 
 ### Headers de sécurité
+
 - `helmet` activé : CSP, HSTS, X-Frame-Options, X-Content-Type-Options,
   Referrer-Policy.
 - HSTS également en niveau Nginx (`max-age=63072000; includeSubDomains; preload`).
 
 ### Webhook signé
+
 - Vérification stricte de la signature Stripe via
   `stripe.webhooks.constructEvent(rawBody, sig, secret)`. En cas
   d'échec : 400 et log warn avec corrélation IP.
 
 ### Journalisation conforme RGPD
+
 - Logger `pino` avec **redact** sur les chemins `req.headers.authorization`,
   `req.body.password`, `req.body.email` (remplacés par `[Redacted]`).
 - Helper `maskEmail("contact@visioconnect.pro")` → `c***@v******.pro`
   pour les logs métier où il faut tracer un identifiant approximatif.
 
 ### Secrets
+
 - `.env` ignoré par Git, validé au démarrage par `config/env.js` :
   fail-fast si une variable obligatoire manque ou est mal formée.
 - `git secrets` + revue manuelle avant commit (procédure documentée
@@ -1120,16 +1132,16 @@ findings critiques et élevés ont été corrigés sur la branche
 
 ## 11.4 Mesures de sécurité d'infrastructure
 
-| Mesure                      | Mise en œuvre                                                                            |
-| --------------------------- | ----------------------------------------------------------------------------------------- |
-| Pare-feu OS                 | UFW : ports 22 (SSH) / 80 (HTTP redir) / 443 (HTTPS) seuls ouverts.                        |
-| Bruteforce SSH              | `fail2ban` activé (jail `sshd`).                                                          |
-| Accès SSH                    | Authentification par clé uniquement, root login désactivé, utilisateur applicatif `deploy`. |
-| Chiffrement transport        | TLS 1.3 via Let's Encrypt (renouvellement automatique certbot).                            |
-| Image Docker                | Multi-stage `node:20-alpine`, utilisateur non-root `app`, HEALTHCHECK intégré.             |
-| Surface d'attaque conteneur  | `.dockerignore` exhaustif (pas de `.git`, pas de `node_modules` source).                   |
-| Mises à jour OS              | `unattended-upgrades` configuré (security only).                                           |
-| Sauvegardes                  | Cron quotidien `rsync` du volume `data/` vers stockage externe + rétention 14 jours.       |
+| Mesure                      | Mise en œuvre                                                                               |
+| --------------------------- | ------------------------------------------------------------------------------------------- |
+| Pare-feu OS                 | UFW : ports 22 (SSH) / 80 (HTTP redir) / 443 (HTTPS) seuls ouverts.                         |
+| Bruteforce SSH              | `fail2ban` activé (jail `sshd`).                                                            |
+| Accès SSH                   | Authentification par clé uniquement, root login désactivé, utilisateur applicatif `deploy`. |
+| Chiffrement transport       | TLS 1.3 via Let's Encrypt (renouvellement automatique certbot).                             |
+| Image Docker                | Multi-stage `node:20-alpine`, utilisateur non-root `app`, HEALTHCHECK intégré.              |
+| Surface d'attaque conteneur | `.dockerignore` exhaustif (pas de `.git`, pas de `node_modules` source).                    |
+| Mises à jour OS             | `unattended-upgrades` configuré (security only).                                            |
+| Sauvegardes                 | Cron quotidien `rsync` du volume `data/` vers stockage externe + rétention 14 jours.        |
 
 ---
 
@@ -1139,7 +1151,7 @@ findings critiques et élevés ont été corrigés sur la branche
 
 ```
                   ┌─────────────────────┐
-                  │   Cloudflare DNS    │
+                  │   OVH DNS           │
                   │ visioconnect.pro    │
                   │ api.visioconnect.pro│
                   └──────────┬──────────┘
@@ -1152,8 +1164,8 @@ findings critiques et élevés ont été corrigés sur la branche
                              │ XHR
                              ▼
             ┌─────────────────────────────┐
-            │   Hetzner CX22 (Falkenstein) │
-            │  Nginx 1.27 (TLS 1.3)        │
+            │   DigitalOcean Droplet (FRA1)  │
+            │  Nginx 1.27 (TLS 1.3)         │
             │  ↓                           │
             │  Docker Compose              │
             │   ├─ api (Node 20 + Express) │
@@ -1212,8 +1224,8 @@ services:
     restart: unless-stopped
     depends_on: [api]
     ports:
-      - "80:80"
-      - "443:443"
+      - '80:80'
+      - '443:443'
     volumes:
       - ./infra/deploy/nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
@@ -1280,13 +1292,13 @@ server {
 ## 12.5 Sauvegardes et plan de reprise
 
 - **Volumétrie** : la BDD principale est Convex (managé). Le serveur
-  Hetzner ne stocke que des logs et un éventuel volume `data/`
+  DigitalOcean ne stocke que des logs et un éventuel volume `data/`
   applicatif (configurations runtime).
-- **Sauvegarde quotidienne** : cron 03:00 → snapshot Hetzner +
+- **Sauvegarde quotidienne** : cron 03:00 → snapshot DigitalOcean +
   rsync chiffré du volume `data/` vers un stockage externe (Backblaze
   B2, ~0,005 €/Go/mois).
 - **Durée de rétention** : 14 jours.
-- **Procédure de reprise** : provisionner un nouveau VPS Hetzner CX22,
+- **Procédure de reprise** : provisionner un nouveau Droplet DigitalOcean FRA1,
   appliquer le runbook `infra/deploy/runbook.md` (durcissement →
   Docker → Compose → restore volume `data/` depuis B2). RTO estimé :
   **~ 30 min**.
@@ -1297,18 +1309,18 @@ server {
 
 ## 13.1 Sources suivies
 
-| Source                             | Fréquence       | Type d'information               |
-| ---------------------------------- | --------------- | -------------------------------- |
-| **OWASP Top 10**                    | Tous les 3 ans  | Vulnérabilités web majeures      |
-| **CVE Details / GitHub Advisories** | Hebdomadaire    | Failles dans les dépendances     |
-| **The Hacker News**                 | Quotidienne     | Actualité cybersécurité          |
-| **Risky Business**                  | Hebdomadaire    | Podcast — analyse géopolitique   |
-| **Mozilla Security Blog**           | Bimensuel       | Nouveautés navigateurs / WebRTC  |
-| **CNIL (newsletter)**               | Mensuel         | Droit du numérique français      |
-| **EFF (Electronic Frontier Foundation)** | Bimensuel  | Droits numériques                |
-| **Stripe Engineering Blog**         | Mensuel         | Sécurité paiement                |
-| **LiveKit Changelog**                | Push GitHub     | Mises à jour SDK WebRTC          |
-| **Clerk Docs / Changelog**           | Push GitHub     | Évolutions SDK auth              |
+| Source                                   | Fréquence      | Type d'information              |
+| ---------------------------------------- | -------------- | ------------------------------- |
+| **OWASP Top 10**                         | Tous les 3 ans | Vulnérabilités web majeures     |
+| **CVE Details / GitHub Advisories**      | Hebdomadaire   | Failles dans les dépendances    |
+| **The Hacker News**                      | Quotidienne    | Actualité cybersécurité         |
+| **Risky Business**                       | Hebdomadaire   | Podcast — analyse géopolitique  |
+| **Mozilla Security Blog**                | Bimensuel      | Nouveautés navigateurs / WebRTC |
+| **CNIL (newsletter)**                    | Mensuel        | Droit du numérique français     |
+| **EFF (Electronic Frontier Foundation)** | Bimensuel      | Droits numériques               |
+| **Stripe Engineering Blog**              | Mensuel        | Sécurité paiement               |
+| **LiveKit Changelog**                    | Push GitHub    | Mises à jour SDK WebRTC         |
+| **Clerk Docs / Changelog**               | Push GitHub    | Évolutions SDK auth             |
 
 ## 13.2 Application concrète (exemple — incident clé Resend)
 
@@ -1350,13 +1362,13 @@ concret de veille de sécurité aboutissant à un correctif immédiat.
 
 ## 14.1 Niveaux de maintenance assurés
 
-| Type                             | Description                                                                              | Fréquence cible      |
-| -------------------------------- | ---------------------------------------------------------------------------------------- | -------------------- |
-| **Maintenance corrective**       | Correction des bugs signalés (issues GitHub).                                            | Hebdomadaire.        |
-| **Maintenance préventive**       | Mise à jour des dépendances (`npm outdated`, Renovate à venir).                          | Mensuelle.           |
-| **Maintenance évolutive**        | Nouvelles fonctionnalités (roadmap publique GitHub Projects).                            | Trimestrielle.       |
-| **Maintenance sécurité**         | Application des patches CVE (`npm audit fix`), revue OWASP annuelle.                     | Continu + annuel.    |
-| **Maintenance d'infrastructure** | `apt upgrade` Ubuntu, renouvellement Let's Encrypt (automatique), rotation des secrets.  | Mensuelle / annuelle. |
+| Type                             | Description                                                                             | Fréquence cible       |
+| -------------------------------- | --------------------------------------------------------------------------------------- | --------------------- |
+| **Maintenance corrective**       | Correction des bugs signalés (issues GitHub).                                           | Hebdomadaire.         |
+| **Maintenance préventive**       | Mise à jour des dépendances (`npm outdated`, Renovate à venir).                         | Mensuelle.            |
+| **Maintenance évolutive**        | Nouvelles fonctionnalités (roadmap publique GitHub Projects).                           | Trimestrielle.        |
+| **Maintenance sécurité**         | Application des patches CVE (`npm audit fix`), revue OWASP annuelle.                    | Continu + annuel.     |
+| **Maintenance d'infrastructure** | `apt upgrade` Ubuntu, renouvellement Let's Encrypt (automatique), rotation des secrets. | Mensuelle / annuelle. |
 
 ## 14.2 Observabilité
 
@@ -1365,14 +1377,14 @@ concret de veille de sécurité aboutissant à un correctif immédiat.
   `logrotate`.
 - **Logs Nginx** : `access.log` + `error.log`, rotation `logrotate`
   hebdomadaire (compression gzip, rétention 30 jours).
-- **Métriques système** : Hetzner Cloud Console (CPU, RAM, réseau,
+- **Métriques système** : DigitalOcean Cloud Console (CPU, RAM, réseau,
   disque) — alerting automatique si CPU > 80 % pendant 10 min.
 - **Healthcheck** : route `/health` interrogée toutes les 30 s par le
   HEALTHCHECK Docker. Si KO 3 fois → conteneur marqué unhealthy.
 
 ## 14.3 Procédure de gestion d'incident
 
-1. **Détection** : alerte Hetzner ou erreur signalée (utilisateur,
+1. **Détection** : alerte DigitalOcean ou erreur signalée (utilisateur,
    monitoring, log).
 2. **Triage** : niveau de sévérité (P1 — service en panne / P2 —
    dégradation / P3 — anomalie isolée).
@@ -1400,36 +1412,36 @@ structure juridique (auto-entreprise / SASU) est planifiée pour
 
 ### 15.1.2 Bases légales
 
-| Traitement                          | Base légale (art. 6)             |
-| ----------------------------------- | -------------------------------- |
-| Création de compte (email, nom)     | Exécution du contrat (1.b)       |
-| Abonnement payant                   | Exécution du contrat (1.b)       |
-| Cookies analytiques                 | Consentement (1.a) — bandeau     |
-| Cookies marketing                   | Consentement (1.a) — bandeau     |
-| Logs techniques (IP, user-agent)    | Intérêt légitime (1.f)           |
-| Communications transactionnelles    | Exécution du contrat (1.b)       |
+| Traitement                       | Base légale (art. 6)         |
+| -------------------------------- | ---------------------------- |
+| Création de compte (email, nom)  | Exécution du contrat (1.b)   |
+| Abonnement payant                | Exécution du contrat (1.b)   |
+| Cookies analytiques              | Consentement (1.a) — bandeau |
+| Cookies marketing                | Consentement (1.a) — bandeau |
+| Logs techniques (IP, user-agent) | Intérêt légitime (1.f)       |
+| Communications transactionnelles | Exécution du contrat (1.b)   |
 
 ### 15.1.3 Sous-traitants documentés (article 28)
 
-| Sous-traitant       | Rôle                       | Localisation des données    | Engagement RGPD              |
-| ------------------- | -------------------------- | --------------------------- | ---------------------------- |
-| Hetzner Online GmbH | VPS                        | Falkenstein (DE)            | DPA disponible, certif. ISO 27001 |
-| Cloudflare          | DNS                        | Globale (entry EU)          | DPA + SCC                    |
-| Vercel              | Hébergement front          | UE (région auto)            | DPA standard                 |
-| LiveKit Inc.        | SFU média                  | Région EU configurée        | DPA + SCC (Schrems II)       |
-| Convex              | Base de données            | Configurable EU             | DPA disponible               |
-| Stripe Payments Europe Ltd | Paiements           | UE (Irlande)                | DPA + PCI-DSS niveau 1       |
-| Resend Inc.         | Emails transactionnels     | UE (configurable)           | DPA + SCC                    |
-| Clerk Inc.          | Identité utilisateur       | UE                          | DPA + SCC                    |
-| Groq                | IA (notes de réunion)      | US (clause SCC + redaction) | SCC, données minimisées       |
-| OpenRouter          | IA (fallback)              | US                          | SCC, données minimisées       |
+| Sous-traitant              | Rôle                   | Localisation des données    | Engagement RGPD                             |
+| -------------------------- | ---------------------- | --------------------------- | ------------------------------------------- |
+| DigitalOcean Inc.          | VPS                    | Frankfurt (DE, FRA1)        | DPA disponible, ISO 27001, SCC (Schrems II) |
+| OVH SAS                    | DNS                    | Paris (FR)                  | DPA disponible, transferts intra-UE         |
+| Vercel                     | Hébergement front      | UE (région auto)            | DPA standard                                |
+| LiveKit Inc.               | SFU média              | Région EU configurée        | DPA + SCC (Schrems II)                      |
+| Convex                     | Base de données        | Configurable EU             | DPA disponible                              |
+| Stripe Payments Europe Ltd | Paiements              | UE (Irlande)                | DPA + PCI-DSS niveau 1                      |
+| Resend Inc.                | Emails transactionnels | UE (configurable)           | DPA + SCC                                   |
+| Clerk Inc.                 | Identité utilisateur   | UE                          | DPA + SCC                                   |
+| Groq                       | IA (notes de réunion)  | US (clause SCC + redaction) | SCC, données minimisées                     |
+| OpenRouter                 | IA (fallback)          | US                          | SCC, données minimisées                     |
 
 ### 15.1.4 Mesures techniques (art. 32)
 
 - **Chiffrement en transit** : TLS 1.2+/1.3 sur toutes les
   communications.
 - **Chiffrement au repos** : géré par les sous-traitants (Convex,
-  Hetzner block storage chiffré).
+  DigitalOcean block storage chiffré).
 - **Pseudonymisation** : `identity = userId Clerk` (opaque) plutôt que
   `email` dans les tokens et les logs.
 - **Minimisation** : pas de stockage des messages chat plus de 30 jours
@@ -1573,7 +1585,7 @@ nouvelle fonctionnalité touchant des données personnelles.
 - **Docker / Compose** — <https://docs.docker.com>
 - **Nginx** — <https://nginx.org/en/docs/>
 - **Let's Encrypt / certbot** — <https://eff-certbot.readthedocs.io>
-- **Hetzner Cloud Docs** — <https://docs.hetzner.com/cloud/>
+- **DigitalOcean Docs** — <https://docs.digitalocean.com/>
 
 ## Lectures de fond (sécurité)
 
@@ -1588,19 +1600,19 @@ nouvelle fonctionnalité touchant des données personnelles.
 
 ## Annexe A — Liens code source
 
-| Élément                   | URL                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------- |
-| Repository                | <https://github.com/AidoTokihisa11/visiconnect>                                              |
-| Branche de hardening      | `chore/exam-hardening`                                                                       |
-| Production                | <https://visioconnect.pro>                                                                   |
-| API publique              | <https://api.visioconnect.pro/health>                                                        |
+| Élément              | URL                                             |
+| -------------------- | ----------------------------------------------- |
+| Repository           | <https://github.com/AidoTokihisa11/visiconnect> |
+| Branche de hardening | `chore/exam-hardening`                          |
+| Production           | <https://visioconnect.pro>                      |
+| API publique         | <https://api.visioconnect.pro/health>           |
 
 ## Annexe B — Documents joints (au dossier candidat)
 
 1. `dossiers/00_AUDIT_INITIAL.md` — audit OWASP + CDA + RGPD (14 findings).
 2. `dossiers/01_MISE_A_NIVEAU.md` — bilan technique des stages A-H.
 3. `dossiers/02_DOSSIER_PROFESSIONNEL.md` — DP (livrable distinct).
-4. `infra/deploy/runbook.md` — runbook de déploiement Hetzner.
+4. `infra/deploy/runbook.md` — runbook de déploiement DigitalOcean.
 5. `BILAN_RETOURS_BETA.md` — synthèse phase bêta (12 testeurs).
 6. `GUIDE_BETA_TESTEUR.md` — guide remis aux testeurs.
 7. Captures d'écran (dossier `captures website/`).
@@ -1656,46 +1668,46 @@ nouvelle fonctionnalité touchant des données personnelles.
 
 ## Annexe D — Matrice de traçabilité Compétences ↔ Sections du Dossier Projet
 
-| CP    | Intitulé                                                                  | Démontré section(s)              |
-| ----- | ------------------------------------------------------------------------- | --------------------------------- |
-| CP1   | Maquetter une application                                                  | §6.3                              |
-| CP2   | Développer une interface utilisateur web statique et adaptable            | §6.3, §9.1                        |
-| CP3   | Développer une interface utilisateur web dynamique                        | §9.1, §9.5                        |
-| CP4   | Développer la partie front-end d'une application web                      | §9.1, §9.3                        |
-| CP5   | Développer la partie back-end d'une application web                       | §9.2, §9.3, §9.4                  |
-| CP6   | Concevoir une base de données                                             | §8                                |
-| CP7   | Mettre en place une base de données                                       | §8.3, §8.4                        |
-| CP8   | Développer des composants d'accès aux données                             | §9.2 (services/), §8.5            |
-| CP9   | Préparer et exécuter les plans de tests d'une application                 | §10                               |
-| CP10  | Préparer et documenter le déploiement d'une application                   | §12                               |
-| CP11  | Contribuer à la mise en production dans une démarche DevOps               | §10.3, §12.4, §14                 |
+| CP   | Intitulé                                                       | Démontré section(s)    |
+| ---- | -------------------------------------------------------------- | ---------------------- |
+| CP1  | Maquetter une application                                      | §6.3                   |
+| CP2  | Développer une interface utilisateur web statique et adaptable | §6.3, §9.1             |
+| CP3  | Développer une interface utilisateur web dynamique             | §9.1, §9.5             |
+| CP4  | Développer la partie front-end d'une application web           | §9.1, §9.3             |
+| CP5  | Développer la partie back-end d'une application web            | §9.2, §9.3, §9.4       |
+| CP6  | Concevoir une base de données                                  | §8                     |
+| CP7  | Mettre en place une base de données                            | §8.3, §8.4             |
+| CP8  | Développer des composants d'accès aux données                  | §9.2 (services/), §8.5 |
+| CP9  | Préparer et exécuter les plans de tests d'une application      | §10                    |
+| CP10 | Préparer et documenter le déploiement d'une application        | §12                    |
+| CP11 | Contribuer à la mise en production dans une démarche DevOps    | §10.3, §12.4, §14      |
 
 ## Annexe E — Glossaire
 
-| Terme       | Définition                                                                                          |
-| ----------- | --------------------------------------------------------------------------------------------------- |
-| **AT**      | Activité-Type (référentiel REAC).                                                                   |
-| **CDA**     | Concepteur Développeur d'Applications (titre professionnel niveau 6).                              |
-| **CP**      | Compétence Professionnelle (REAC CDA).                                                              |
-| **CSP**     | Content Security Policy — header HTTP contre XSS.                                                   |
-| **CWE**     | Common Weakness Enumeration — taxonomie MITRE des faiblesses logicielles.                          |
-| **DPA**     | Data Processing Agreement — contrat de sous-traitance RGPD (art. 28).                              |
-| **HSTS**    | HTTP Strict Transport Security — force le navigateur à utiliser HTTPS.                              |
-| **JWT**     | JSON Web Token — jeton signé, format standard d'authentification stateless.                         |
-| **MoSCoW**  | Méthode de priorisation : Must / Should / Could / Won't.                                            |
-| **OWASP**   | Open Web Application Security Project — référence sécurité applicative.                            |
-| **PII**     | Personally Identifiable Information — donnée à caractère personnel.                                 |
-| **PWA**     | Progressive Web App.                                                                                |
-| **REAC**    | Référentiel Emploi Activités Compétences (cadre du titre professionnel).                            |
-| **RGPD**    | Règlement Général sur la Protection des Données (UE 2016/679).                                      |
-| **RNCP**    | Répertoire National des Certifications Professionnelles.                                            |
-| **RTO**     | Recovery Time Objective — temps maximal pour restaurer un service.                                  |
-| **SCC**     | Standard Contractual Clauses (clauses-types européennes pour transferts hors UE).                  |
-| **SFU**     | Selective Forwarding Unit — architecture WebRTC où le serveur relaie les flux sans les transcoder. |
-| **TLS**     | Transport Layer Security — chiffrement du transport (successeur de SSL).                            |
-| **TTL**     | Time To Live — durée de validité d'un token.                                                        |
-| **WCAG**    | Web Content Accessibility Guidelines — normes d'accessibilité W3C.                                  |
-| **WebRTC**  | Web Real-Time Communication — protocoles audio/vidéo P2P standardisés W3C/IETF.                    |
+| Terme      | Définition                                                                                         |
+| ---------- | -------------------------------------------------------------------------------------------------- |
+| **AT**     | Activité-Type (référentiel REAC).                                                                  |
+| **CDA**    | Concepteur Développeur d'Applications (titre professionnel niveau 6).                              |
+| **CP**     | Compétence Professionnelle (REAC CDA).                                                             |
+| **CSP**    | Content Security Policy — header HTTP contre XSS.                                                  |
+| **CWE**    | Common Weakness Enumeration — taxonomie MITRE des faiblesses logicielles.                          |
+| **DPA**    | Data Processing Agreement — contrat de sous-traitance RGPD (art. 28).                              |
+| **HSTS**   | HTTP Strict Transport Security — force le navigateur à utiliser HTTPS.                             |
+| **JWT**    | JSON Web Token — jeton signé, format standard d'authentification stateless.                        |
+| **MoSCoW** | Méthode de priorisation : Must / Should / Could / Won't.                                           |
+| **OWASP**  | Open Web Application Security Project — référence sécurité applicative.                            |
+| **PII**    | Personally Identifiable Information — donnée à caractère personnel.                                |
+| **PWA**    | Progressive Web App.                                                                               |
+| **REAC**   | Référentiel Emploi Activités Compétences (cadre du titre professionnel).                           |
+| **RGPD**   | Règlement Général sur la Protection des Données (UE 2016/679).                                     |
+| **RNCP**   | Répertoire National des Certifications Professionnelles.                                           |
+| **RTO**    | Recovery Time Objective — temps maximal pour restaurer un service.                                 |
+| **SCC**    | Standard Contractual Clauses (clauses-types européennes pour transferts hors UE).                  |
+| **SFU**    | Selective Forwarding Unit — architecture WebRTC où le serveur relaie les flux sans les transcoder. |
+| **TLS**    | Transport Layer Security — chiffrement du transport (successeur de SSL).                           |
+| **TTL**    | Time To Live — durée de validité d'un token.                                                       |
+| **WCAG**   | Web Content Accessibility Guidelines — normes d'accessibilité W3C.                                 |
+| **WebRTC** | Web Real-Time Communication — protocoles audio/vidéo P2P standardisés W3C/IETF.                    |
 
 ---
 

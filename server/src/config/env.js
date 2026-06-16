@@ -16,7 +16,7 @@ const schema = z.object({
   PORT: z
     .string()
     .regex(/^\d+$/, 'PORT doit \u00eatre num\u00e9rique')
-    .default('5000')
+    .default('5099')
     .transform((v) => parseInt(v, 10)),
 
   // CORS — liste blanche d'origines (CSV)
