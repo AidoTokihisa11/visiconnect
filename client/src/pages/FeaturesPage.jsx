@@ -98,7 +98,6 @@ const FeaturesPage = () => {
     <PageContainer>
       <HeaderClean />
       <MainContent>
-
         {/* ── Hero ── */}
         <HeroSection>
           <HeroContainer>
@@ -106,12 +105,8 @@ const FeaturesPage = () => {
               <Eyebrow>
                 <Sparkles size={16} /> {t('featuresPage.eyebrow')}
               </Eyebrow>
-              <HeroTitle>
-                {t('featuresPage.hero.title')}
-              </HeroTitle>
-              <HeroSubtitle>
-                {t('featuresPage.hero.subtitle')}
-              </HeroSubtitle>
+              <HeroTitle>{t('featuresPage.hero.title')}</HeroTitle>
+              <HeroSubtitle>{t('featuresPage.hero.subtitle')}</HeroSubtitle>
               <HeroActions>
                 <PrimaryButton as={Link} to="/register">
                   {t('featuresPage.heroCtaStart')} <ArrowRight size={18} />
@@ -184,9 +179,15 @@ const FeaturesPage = () => {
               <h3>{t('featuresPage.core.0.title')}</h3>
               <p>{t('featuresPage.core.0.desc')}</p>
               <BulletList>
-                <BulletItem><BadgeCheck size={16} /> {t('featuresPage.core.0.bullets.0')}</BulletItem>
-                <BulletItem><BadgeCheck size={16} /> {t('featuresPage.core.0.bullets.1')}</BulletItem>
-                <BulletItem><BadgeCheck size={16} /> {t('featuresPage.core.0.bullets.2')}</BulletItem>
+                <BulletItem>
+                  <BadgeCheck size={16} /> {t('featuresPage.core.0.bullets.0')}
+                </BulletItem>
+                <BulletItem>
+                  <BadgeCheck size={16} /> {t('featuresPage.core.0.bullets.1')}
+                </BulletItem>
+                <BulletItem>
+                  <BadgeCheck size={16} /> {t('featuresPage.core.0.bullets.2')}
+                </BulletItem>
               </BulletList>
             </ProgramCard>
 
@@ -195,9 +196,15 @@ const FeaturesPage = () => {
               <h3>{t('featuresPage.core.1.title')}</h3>
               <p>{t('featuresPage.core.1.desc')}</p>
               <BulletList>
-                <BulletItem><BadgeCheck size={16} /> {t('featuresPage.core.1.bullets.0')}</BulletItem>
-                <BulletItem><BadgeCheck size={16} /> {t('featuresPage.core.1.bullets.1')}</BulletItem>
-                <BulletItem><BadgeCheck size={16} /> {t('featuresPage.core.1.bullets.2')}</BulletItem>
+                <BulletItem>
+                  <BadgeCheck size={16} /> {t('featuresPage.core.1.bullets.0')}
+                </BulletItem>
+                <BulletItem>
+                  <BadgeCheck size={16} /> {t('featuresPage.core.1.bullets.1')}
+                </BulletItem>
+                <BulletItem>
+                  <BadgeCheck size={16} /> {t('featuresPage.core.1.bullets.2')}
+                </BulletItem>
               </BulletList>
             </ProgramCard>
 
@@ -206,9 +213,15 @@ const FeaturesPage = () => {
               <h3>{t('featuresPage.core.2.title')}</h3>
               <p>{t('featuresPage.core.2.desc')}</p>
               <BulletList>
-                <BulletItem><BadgeCheck size={16} /> {t('featuresPage.core.2.bullets.0')}</BulletItem>
-                <BulletItem><BadgeCheck size={16} /> {t('featuresPage.core.2.bullets.1')}</BulletItem>
-                <BulletItem><BadgeCheck size={16} /> {t('featuresPage.core.2.bullets.2')}</BulletItem>
+                <BulletItem>
+                  <BadgeCheck size={16} /> {t('featuresPage.core.2.bullets.0')}
+                </BulletItem>
+                <BulletItem>
+                  <BadgeCheck size={16} /> {t('featuresPage.core.2.bullets.1')}
+                </BulletItem>
+                <BulletItem>
+                  <BadgeCheck size={16} /> {t('featuresPage.core.2.bullets.2')}
+                </BulletItem>
               </BulletList>
             </ProgramCard>
           </ProgramGrid>
@@ -223,19 +236,25 @@ const FeaturesPage = () => {
 
           <BenefitsGrid>
             <BenefitCard data-reveal style={{ '--reveal-delay': '60ms' }}>
-              <IconBox><Users size={24} /></IconBox>
+              <IconBox>
+                <Users size={24} />
+              </IconBox>
               <h3>{t('featuresPage.tools.0.title')}</h3>
               <p>{t('featuresPage.tools.0.desc')}</p>
             </BenefitCard>
 
             <BenefitCard data-reveal style={{ '--reveal-delay': '140ms' }}>
-              <IconBox><Smartphone size={24} /></IconBox>
+              <IconBox>
+                <Smartphone size={24} />
+              </IconBox>
               <h3>{t('featuresPage.tools.1.title')}</h3>
               <p>{t('featuresPage.tools.1.desc')}</p>
             </BenefitCard>
 
             <BenefitCard data-reveal style={{ '--reveal-delay': '220ms' }}>
-              <IconBox><Lock size={24} /></IconBox>
+              <IconBox>
+                <Lock size={24} />
+              </IconBox>
               <h3>{t('featuresPage.tools.2.title')}</h3>
               <p>{t('featuresPage.tools.2.desc')}</p>
             </BenefitCard>
@@ -285,19 +304,25 @@ const FeaturesPage = () => {
 
           <BenefitsGrid>
             <BenefitCard data-reveal style={{ '--reveal-delay': '60ms' }}>
-              <IconBox><Building2 size={24} /></IconBox>
+              <IconBox>
+                <Building2 size={24} />
+              </IconBox>
               <h3>{t('featuresPage.usecases.0.title')}</h3>
               <p>{t('featuresPage.usecases.0.desc')}</p>
             </BenefitCard>
 
             <BenefitCard data-reveal style={{ '--reveal-delay': '140ms' }}>
-              <IconBox><BookOpen size={24} /></IconBox>
+              <IconBox>
+                <BookOpen size={24} />
+              </IconBox>
               <h3>{t('featuresPage.usecases.1.title')}</h3>
               <p>{t('featuresPage.usecases.1.desc')}</p>
             </BenefitCard>
 
             <BenefitCard data-reveal style={{ '--reveal-delay': '220ms' }}>
-              <IconBox><CalendarClock size={24} /></IconBox>
+              <IconBox>
+                <CalendarClock size={24} />
+              </IconBox>
               <h3>{t('featuresPage.usecases.2.title')}</h3>
               <p>{t('featuresPage.usecases.2.desc')}</p>
             </BenefitCard>
@@ -313,7 +338,6 @@ const FeaturesPage = () => {
             buttonLink="/signup"
           />
         </RevealBlock>
-
       </MainContent>
       <FooterClean />
     </PageContainer>
@@ -321,4 +345,3 @@ const FeaturesPage = () => {
 };
 
 export default FeaturesPage;
-

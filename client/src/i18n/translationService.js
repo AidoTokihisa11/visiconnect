@@ -11,12 +11,12 @@ class TranslationService {
     this.currentLanguage = localStorage.getItem('visiconnect_language') || 'fr';
     this.fallbackLanguage = 'fr';
     this.translations = {
-      'fr': frTranslations,
-      'en': enTranslations,
-      'de': deTranslations,
-      'es': esTranslations,
-      'ru': ruTranslations,
-      'ca': caTranslations
+      fr: frTranslations,
+      en: enTranslations,
+      de: deTranslations,
+      es: esTranslations,
+      ru: ruTranslations,
+      ca: caTranslations,
     };
   }
 
@@ -31,7 +31,7 @@ class TranslationService {
   //  - an object -> interpolation params (and { returnObjects: true } to get arrays/objects)
   t(key, paramsOrFallback = {}) {
     const isStringFallback = typeof paramsOrFallback === 'string';
-    const params = isStringFallback ? {} : (paramsOrFallback || {});
+    const params = isStringFallback ? {} : paramsOrFallback || {};
     const stringFallback = isStringFallback ? paramsOrFallback : null;
 
     const keys = key.split('.');
@@ -83,11 +83,13 @@ class TranslationService {
   setLanguage(language) {
     this.currentLanguage = language;
     localStorage.setItem('visiconnect_language', language);
-    
+
     // Trigger language change event
-    window.dispatchEvent(new CustomEvent('languageChanged', { 
-      detail: { language } 
-    }));
+    window.dispatchEvent(
+      new CustomEvent('languageChanged', {
+        detail: { language },
+      })
+    );
   }
 
   // Get current language
@@ -103,58 +105,56 @@ class TranslationService {
       { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
       { code: 'es', name: 'Español', flag: '🇪🇸' },
       { code: 'ru', name: 'Русский', flag: '🇷🇺' },
-      { code: 'ca', name: 'Català', flag: '🏴󠁥󠁳󠁣󠁴󠁿' }
+      { code: 'ca', name: 'Català', flag: '🏴󠁥󠁳󠁣󠁴󠁿' },
     ];
   }
 
   // Format date according to current language
   formatDate(date, options = {}) {
     const locales = {
-      'fr': 'fr-FR',
-      'en': 'en-US',
-      'de': 'de-DE',
-      'es': 'es-ES',
-      'ru': 'ru-RU',
-      'ca': 'ca-ES'
+      fr: 'fr-FR',
+      en: 'en-US',
+      de: 'de-DE',
+      es: 'es-ES',
+      ru: 'ru-RU',
+      ca: 'ca-ES',
     };
 
-    return new Intl.DateTimeFormat(
-      locales[this.currentLanguage] || locales['fr'], 
-      options
-    ).format(date);
+    return new Intl.DateTimeFormat(locales[this.currentLanguage] || locales['fr'], options).format(
+      date
+    );
   }
 
   // Format number according to current language
   formatNumber(number, options = {}) {
     const locales = {
-      'fr': 'fr-FR',
-      'en': 'en-US',
-      'de': 'de-DE',
-      'es': 'es-ES',
-      'ru': 'ru-RU',
-      'ca': 'ca-ES'
+      fr: 'fr-FR',
+      en: 'en-US',
+      de: 'de-DE',
+      es: 'es-ES',
+      ru: 'ru-RU',
+      ca: 'ca-ES',
     };
 
-    return new Intl.NumberFormat(
-      locales[this.currentLanguage] || locales['fr'], 
-      options
-    ).format(number);
+    return new Intl.NumberFormat(locales[this.currentLanguage] || locales['fr'], options).format(
+      number
+    );
   }
 
   // Format currency according to current language
   formatCurrency(amount, currency = 'EUR') {
     const currencyMap = {
-      'fr': 'EUR',
-      'en': 'USD',
-      'de': 'EUR',
-      'es': 'EUR',
-      'ru': 'RUB',
-      'ca': 'EUR'
+      fr: 'EUR',
+      en: 'USD',
+      de: 'EUR',
+      es: 'EUR',
+      ru: 'RUB',
+      ca: 'EUR',
     };
 
     return this.formatNumber(amount, {
       style: 'currency',
-      currency: currency || currencyMap[this.currentLanguage] || 'EUR'
+      currency: currency || currencyMap[this.currentLanguage] || 'EUR',
     });
   }
 }

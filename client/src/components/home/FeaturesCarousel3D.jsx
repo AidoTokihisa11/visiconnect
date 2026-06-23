@@ -88,7 +88,7 @@ const NavButton = styled.button`
   justify-content: center;
   cursor: pointer;
   color: #1e293b;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   transition: all 0.2s;
 
   &:hover {
@@ -109,7 +109,7 @@ const ImageSide = styled.div`
   position: relative;
   height: 500px;
   perspective: 1000px;
-  
+
   @media (max-width: 768px) {
     height: 350px;
     order: -1; // Image on top on mobile
@@ -131,11 +131,11 @@ const ImageCard = styled(motion.div)`
   height: 90%;
   background: white;
   border-radius: 24px;
-  border: 1px solid rgba(255,255,255,0.8);
+  border: 1px solid rgba(255, 255, 255, 0.8);
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   overflow: hidden;
   transform-style: preserve-3d;
-  
+
   img {
     width: 100%;
     height: 100%;
@@ -147,7 +147,7 @@ const ImageCard = styled(motion.div)`
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.2) 0%, transparent 40%);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.2) 0%, transparent 40%);
   }
 `;
 
@@ -161,28 +161,31 @@ export default function FeaturesCarousel3D() {
       title: t('featuresCarousel.slide1.title'),
       subtitle: t('featuresCarousel.slide1.subtitle'),
       description: t('featuresCarousel.slide1.description'),
-      image: "https://images.unsplash.com/photo-1531403009284-440f080d1e12?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
+      image:
+        'https://images.unsplash.com/photo-1531403009284-440f080d1e12?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80',
       icon: Monitor,
-      tag: t('featuresCarousel.slide1.tag')
+      tag: t('featuresCarousel.slide1.tag'),
     },
     {
       id: 2,
       title: t('featuresCarousel.slide2.title'),
       subtitle: t('featuresCarousel.slide2.subtitle'),
       description: t('featuresCarousel.slide2.description'),
-      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
+      image:
+        'https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80',
       icon: Globe,
-      tag: t('featuresCarousel.slide2.tag')
+      tag: t('featuresCarousel.slide2.tag'),
     },
     {
       id: 3,
       title: t('featuresCarousel.slide3.title'),
       subtitle: t('featuresCarousel.slide3.subtitle'),
       description: t('featuresCarousel.slide3.description'),
-      image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
+      image:
+        'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80',
       icon: Smartphone,
-      tag: t('featuresCarousel.slide3.tag')
-    }
+      tag: t('featuresCarousel.slide3.tag'),
+    },
   ];
 
   const nextSlide = () => {
@@ -199,7 +202,7 @@ export default function FeaturesCarousel3D() {
     <Wrapper>
       <Container>
         <ContentSide>
-          <AnimatePresence mode='wait'>
+          <AnimatePresence mode="wait">
             <motion.div
               key={currentSlide.id}
               initial={{ opacity: 0, x: -20 }}
@@ -217,7 +220,7 @@ export default function FeaturesCarousel3D() {
               <Description>{currentSlide.description}</Description>
             </motion.div>
           </AnimatePresence>
-          
+
           <Controls>
             <NavButton onClick={prevSlide} aria-label="Précédent">
               <ChevronLeft size={24} />
@@ -231,27 +234,27 @@ export default function FeaturesCarousel3D() {
         <ImageSide>
           <CardStack>
             <AnimatePresence initial={false} mode="popLayout">
-               {/* Background Card (Next) */}
-               <ImageCard
-                  key={(index + 1) % SLIDES.length}
-                  initial={{ scale: 0.8, opacity: 0, z: -100, x: 40 }}
-                  animate={{ scale: 0.9, opacity: 0.4, z: -50, x: 40, rotateY: 5 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.5 }}
-               >
-                 <img src={SLIDES[(index + 1) % SLIDES.length].image} alt="" />
-               </ImageCard>
+              {/* Background Card (Next) */}
+              <ImageCard
+                key={(index + 1) % SLIDES.length}
+                initial={{ scale: 0.8, opacity: 0, z: -100, x: 40 }}
+                animate={{ scale: 0.9, opacity: 0.4, z: -50, x: 40, rotateY: 5 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <img src={SLIDES[(index + 1) % SLIDES.length].image} alt="" />
+              </ImageCard>
 
-               {/* Active Card */}
-               <ImageCard
-                  key={index}
-                  initial={{ opacity: 0, scale: 0.9, x: 100, rotateY: 10 }}
-                  animate={{ opacity: 1, scale: 1, x: 0, rotateY: 0, zIndex: 10 }}
-                  exit={{ opacity: 0, scale: 0.9, x: -100, rotateY: -10 }}
-                  transition={{ type: "spring", stiffness: 200, damping: 20 }}
-               >
-                  <img src={currentSlide.image} alt={currentSlide.title} />
-               </ImageCard>
+              {/* Active Card */}
+              <ImageCard
+                key={index}
+                initial={{ opacity: 0, scale: 0.9, x: 100, rotateY: 10 }}
+                animate={{ opacity: 1, scale: 1, x: 0, rotateY: 0, zIndex: 10 }}
+                exit={{ opacity: 0, scale: 0.9, x: -100, rotateY: -10 }}
+                transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+              >
+                <img src={currentSlide.image} alt={currentSlide.title} />
+              </ImageCard>
             </AnimatePresence>
           </CardStack>
         </ImageSide>

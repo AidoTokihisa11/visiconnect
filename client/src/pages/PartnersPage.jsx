@@ -102,12 +102,8 @@ const PartnersPage = () => {
               <Eyebrow>
                 <Handshake size={16} /> {t('partners.hero.title')}
               </Eyebrow>
-              <HeroTitle>
-                {t('partners.hero.subtitle')}
-              </HeroTitle>
-              <HeroSubtitle>
-                {t('partners.hero.desc')}
-              </HeroSubtitle>
+              <HeroTitle>{t('partners.hero.subtitle')}</HeroTitle>
+              <HeroSubtitle>{t('partners.hero.desc')}</HeroSubtitle>
               <HeroActions>
                 <PrimaryButton href="/contact">
                   {t('partners.hero.ctaTeam')} <ArrowRight size={18} />
@@ -169,9 +165,7 @@ const PartnersPage = () => {
         <Section data-reveal>
           <SectionHeader>
             <SectionTitle>{t('partners.why.title')}</SectionTitle>
-            <SectionText>
-              {t('partners.why.subtitle')}
-            </SectionText>
+            <SectionText>{t('partners.why.subtitle')}</SectionText>
           </SectionHeader>
 
           <BenefitsGrid>
@@ -180,9 +174,7 @@ const PartnersPage = () => {
                 <LineChart size={24} />
               </IconBox>
               <h3>{t('partners.why.reasons.0.title')}</h3>
-              <p>
-                {t('partners.why.reasons.0.desc')}
-              </p>
+              <p>{t('partners.why.reasons.0.desc')}</p>
             </BenefitCard>
 
             <BenefitCard data-reveal style={{ '--reveal-delay': '140ms' }}>
@@ -190,9 +182,7 @@ const PartnersPage = () => {
                 <ShieldCheck size={24} />
               </IconBox>
               <h3>{t('partners.why.reasons.1.title')}</h3>
-              <p>
-                {t('partners.why.reasons.1.desc')}
-              </p>
+              <p>{t('partners.why.reasons.1.desc')}</p>
             </BenefitCard>
 
             <BenefitCard data-reveal style={{ '--reveal-delay': '220ms' }}>
@@ -200,9 +190,7 @@ const PartnersPage = () => {
                 <Users size={24} />
               </IconBox>
               <h3>{t('partners.why.reasons.2.title')}</h3>
-              <p>
-                {t('partners.why.reasons.2.desc')}
-              </p>
+              <p>{t('partners.why.reasons.2.desc')}</p>
             </BenefitCard>
           </BenefitsGrid>
         </Section>
@@ -210,48 +198,58 @@ const PartnersPage = () => {
         <Section data-reveal>
           <SectionHeader>
             <SectionTitle>{t('partners.formats.title')}</SectionTitle>
-            <SectionText>
-              {t('partners.formats.subtitle')}
-            </SectionText>
+            <SectionText>{t('partners.formats.subtitle')}</SectionText>
           </SectionHeader>
 
           <ProgramGrid>
             <ProgramCard data-reveal style={{ '--reveal-delay': '60ms' }}>
               <div className="tag">{t('partners.formats.0.type')}</div>
               <h3>{t('partners.formats.0.title')}</h3>
-              <p>
-                {t('partners.formats.0.desc')}
-              </p>
+              <p>{t('partners.formats.0.desc')}</p>
               <BulletList>
-                <BulletItem><BadgeCheck size={16} /> {t('partners.formats.0.bullets.0')}</BulletItem>
-                <BulletItem><BadgeCheck size={16} /> {t('partners.formats.0.bullets.1')}</BulletItem>
-                <BulletItem><BadgeCheck size={16} /> {t('partners.formats.0.bullets.2')}</BulletItem>
+                <BulletItem>
+                  <BadgeCheck size={16} /> {t('partners.formats.0.bullets.0')}
+                </BulletItem>
+                <BulletItem>
+                  <BadgeCheck size={16} /> {t('partners.formats.0.bullets.1')}
+                </BulletItem>
+                <BulletItem>
+                  <BadgeCheck size={16} /> {t('partners.formats.0.bullets.2')}
+                </BulletItem>
               </BulletList>
             </ProgramCard>
 
             <ProgramCard data-reveal style={{ '--reveal-delay': '140ms' }}>
               <div className="tag">{t('partners.formats.1.type')}</div>
               <h3>{t('partners.formats.1.title')}</h3>
-              <p>
-                {t('partners.formats.1.desc')}
-              </p>
+              <p>{t('partners.formats.1.desc')}</p>
               <BulletList>
-                <BulletItem><BadgeCheck size={16} /> {t('partners.formats.1.bullets.0')}</BulletItem>
-                <BulletItem><BadgeCheck size={16} /> {t('partners.formats.1.bullets.1')}</BulletItem>
-                <BulletItem><BadgeCheck size={16} /> {t('partners.formats.1.bullets.2')}</BulletItem>
+                <BulletItem>
+                  <BadgeCheck size={16} /> {t('partners.formats.1.bullets.0')}
+                </BulletItem>
+                <BulletItem>
+                  <BadgeCheck size={16} /> {t('partners.formats.1.bullets.1')}
+                </BulletItem>
+                <BulletItem>
+                  <BadgeCheck size={16} /> {t('partners.formats.1.bullets.2')}
+                </BulletItem>
               </BulletList>
             </ProgramCard>
 
             <ProgramCard data-reveal style={{ '--reveal-delay': '220ms' }}>
               <div className="tag">{t('partners.formats.2.type')}</div>
               <h3>{t('partners.formats.2.title')}</h3>
-              <p>
-                {t('partners.formats.2.desc')}
-              </p>
+              <p>{t('partners.formats.2.desc')}</p>
               <BulletList>
-                <BulletItem><BadgeCheck size={16} /> {t('partners.formats.2.bullets.0')}</BulletItem>
-                <BulletItem><BadgeCheck size={16} /> {t('partners.formats.2.bullets.1')}</BulletItem>
-                <BulletItem><BadgeCheck size={16} /> {t('partners.formats.2.bullets.2')}</BulletItem>
+                <BulletItem>
+                  <BadgeCheck size={16} /> {t('partners.formats.2.bullets.0')}
+                </BulletItem>
+                <BulletItem>
+                  <BadgeCheck size={16} /> {t('partners.formats.2.bullets.1')}
+                </BulletItem>
+                <BulletItem>
+                  <BadgeCheck size={16} /> {t('partners.formats.2.bullets.2')}
+                </BulletItem>
               </BulletList>
             </ProgramCard>
           </ProgramGrid>
@@ -260,9 +258,7 @@ const PartnersPage = () => {
         <Section data-reveal>
           <SectionHeader>
             <SectionTitle>{t('partners.collab.title')}</SectionTitle>
-            <SectionText>
-              {t('partners.collab.subtitle')}
-            </SectionText>
+            <SectionText>{t('partners.collab.subtitle')}</SectionText>
           </SectionHeader>
 
           <Timeline>
@@ -270,9 +266,7 @@ const PartnersPage = () => {
               <TimelineStep>01</TimelineStep>
               <TimelineContent>
                 <h3>{t('partners.collab.steps.0.title')}</h3>
-                <p>
-                  {t('partners.collab.steps.0.desc')}
-                </p>
+                <p>{t('partners.collab.steps.0.desc')}</p>
               </TimelineContent>
             </TimelineItem>
 
@@ -280,9 +274,7 @@ const PartnersPage = () => {
               <TimelineStep>02</TimelineStep>
               <TimelineContent>
                 <h3>{t('partners.collab.steps.1.title')}</h3>
-                <p>
-                  {t('partners.collab.steps.1.desc')}
-                </p>
+                <p>{t('partners.collab.steps.1.desc')}</p>
               </TimelineContent>
             </TimelineItem>
 
@@ -290,9 +282,7 @@ const PartnersPage = () => {
               <TimelineStep>03</TimelineStep>
               <TimelineContent>
                 <h3>{t('partners.collab.steps.2.title')}</h3>
-                <p>
-                  {t('partners.collab.steps.2.desc')}
-                </p>
+                <p>{t('partners.collab.steps.2.desc')}</p>
               </TimelineContent>
             </TimelineItem>
           </Timeline>
@@ -301,9 +291,7 @@ const PartnersPage = () => {
         <Section data-reveal>
           <SectionHeader>
             <SectionTitle>{t('partners.profiles.title')}</SectionTitle>
-            <SectionText>
-              {t('partners.profiles.subtitle')}
-            </SectionText>
+            <SectionText>{t('partners.profiles.subtitle')}</SectionText>
           </SectionHeader>
 
           <BenefitsGrid>
@@ -312,9 +300,7 @@ const PartnersPage = () => {
                 <Building2 size={24} />
               </IconBox>
               <h3>{t('partners.profiles.items.0.title')}</h3>
-              <p>
-                {t('partners.profiles.items.0.desc')}
-              </p>
+              <p>{t('partners.profiles.items.0.desc')}</p>
             </BenefitCard>
 
             <BenefitCard data-reveal style={{ '--reveal-delay': '140ms' }}>
@@ -322,9 +308,7 @@ const PartnersPage = () => {
                 <Briefcase size={24} />
               </IconBox>
               <h3>{t('partners.profiles.items.1.title')}</h3>
-              <p>
-                {t('partners.profiles.items.1.desc')}
-              </p>
+              <p>{t('partners.profiles.items.1.desc')}</p>
             </BenefitCard>
 
             <BenefitCard data-reveal style={{ '--reveal-delay': '220ms' }}>
@@ -332,9 +316,7 @@ const PartnersPage = () => {
                 <Handshake size={24} />
               </IconBox>
               <h3>{t('partners.profiles.items.2.title')}</h3>
-              <p>
-                {t('partners.profiles.items.2.desc')}
-              </p>
+              <p>{t('partners.profiles.items.2.desc')}</p>
             </BenefitCard>
           </BenefitsGrid>
         </Section>

@@ -16,7 +16,11 @@ const PageContainer = styled.div`
   color: white;
   display: flex;
   overflow: hidden;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family:
+    'Inter',
+    system-ui,
+    -apple-system,
+    sans-serif;
 
   @supports not (height: 100dvh) {
     height: -webkit-fill-available;
@@ -39,11 +43,15 @@ const LoadingScreen = styled.div`
 const Spinner = styled.div`
   width: 36px;
   height: 36px;
-  border: 3px solid rgba(255,255,255,0.1);
+  border: 3px solid rgba(255, 255, 255, 0.1);
   border-top-color: #2563eb;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
-  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
 `;
 
 export default function MeetingRoomPage() {

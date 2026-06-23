@@ -42,6 +42,6 @@ export const usePricing = (onTimeLimitReached) => {
     timeLeft,
     showUpgradeModal,
     setShowUpgradeModal,
-    upgradeToPro
+    upgradeToPro,
   };
 };

@@ -5,16 +5,16 @@ import FooterClean from '../components/FooterClean';
 import { useTranslation } from '../hooks/useTranslation';
 
 const COLORS = {
-  primary: 'hsl(var(--primary))',    
+  primary: 'hsl(var(--primary))',
   primaryHover: 'hsl(var(--primary))',
-  secondary: 'hsl(var(--secondary))',  
-  dark: 'hsl(var(--foreground))',       
-  text: 'hsl(var(--foreground))',       
-  lightText: 'hsl(var(--muted-foreground))',  
-  background: 'hsl(var(--background))', 
+  secondary: 'hsl(var(--secondary))',
+  dark: 'hsl(var(--foreground))',
+  text: 'hsl(var(--foreground))',
+  lightText: 'hsl(var(--muted-foreground))',
+  background: 'hsl(var(--background))',
   white: 'hsl(var(--card))',
-  border: 'hsl(var(--border))',     
-  success: '#16a34a',    
+  border: 'hsl(var(--border))',
+  success: '#16a34a',
 };
 
 const PageContainer = styled.div`
@@ -23,7 +23,9 @@ const PageContainer = styled.div`
   color: ${COLORS.text};
   display: flex;
   flex-direction: column;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 `;
 
 const MainContent = styled.main`
@@ -76,7 +78,11 @@ const SearchInput = styled.input`
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   background-color: ${COLORS.white};
   color: ${COLORS.text};
-  transition: all 0.2s ease, background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  transition:
+    all 0.2s ease,
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
 
   &:focus {
     border-color: ${COLORS.primary};
@@ -112,7 +118,10 @@ const CategoryCard = styled.a`
   border-radius: 16px;
   border: 1px solid ${COLORS.border};
   text-decoration: none;
-  transition: all 0.2s ease, background-color 0.3s ease, border-color 0.3s ease;
+  transition:
+    all 0.2s ease,
+    background-color 0.3s ease,
+    border-color 0.3s ease;
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -127,8 +136,8 @@ const CategoryCard = styled.a`
 const IconBox = styled.div`
   width: 48px;
   height: 48px;
-  background-color: ${props => props.bgColor || '#eff6ff'};
-  color: ${props => props.color || COLORS.primary};
+  background-color: ${(props) => props.bgColor || '#eff6ff'};
+  color: ${(props) => props.color || COLORS.primary};
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -162,7 +171,9 @@ const ContactSection = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 `;
 
 const ContactTitle = styled.h2`
@@ -209,25 +220,33 @@ const SupportPageNew = () => {
 
         <CategoriesGrid>
           <CategoryCard href="#getting-started">
-            <IconBox bgColor="#eff6ff" color="#2563eb">🚀</IconBox>
+            <IconBox bgColor="#eff6ff" color="#2563eb">
+              🚀
+            </IconBox>
             <CategoryTitle>{t('support.categories.0.title')}</CategoryTitle>
             <CategoryDesc>{t('support.categories.0.desc')}</CategoryDesc>
           </CategoryCard>
-          
+
           <CategoryCard href="#troubleshooting">
-            <IconBox bgColor="#fef2f2" color="#dc2626">🛠️</IconBox>
+            <IconBox bgColor="#fef2f2" color="#dc2626">
+              🛠️
+            </IconBox>
             <CategoryTitle>{t('support.categories.1.title')}</CategoryTitle>
             <CategoryDesc>{t('support.categories.1.desc')}</CategoryDesc>
           </CategoryCard>
 
           <CategoryCard href="#account">
-            <IconBox bgColor="#f0fdf4" color="#16a34a">👤</IconBox>
+            <IconBox bgColor="#f0fdf4" color="#16a34a">
+              👤
+            </IconBox>
             <CategoryTitle>{t('support.categories.2.title')}</CategoryTitle>
             <CategoryDesc>{t('support.categories.2.desc')}</CategoryDesc>
           </CategoryCard>
 
           <CategoryCard href="#billing">
-            <IconBox bgColor="#fff7ed" color="#ea580c">💳</IconBox>
+            <IconBox bgColor="#fff7ed" color="#ea580c">
+              💳
+            </IconBox>
             <CategoryTitle>{t('support.categories.3.title')}</CategoryTitle>
             <CategoryDesc>{t('support.categories.3.desc')}</CategoryDesc>
           </CategoryCard>
@@ -235,9 +254,7 @@ const SupportPageNew = () => {
 
         <ContactSection>
           <ContactTitle>{t('support.cta.title')}</ContactTitle>
-          <ContactText>
-            {t('support.cta.description')}
-          </ContactText>
+          <ContactText>{t('support.cta.description')}</ContactText>
           <ContactButton>{t('support.cta.button')}</ContactButton>
         </ContactSection>
       </MainContent>

@@ -165,19 +165,28 @@ export const InviteModal = ({ isOpen, onClose }) => {
 
   const handleEmailShare = () => {
     const subject = t('room.invite.emailSubject', 'Invitation à une visioconférence');
-    const body = t('room.invite.emailBody', 'Rejoignez ma réunion en cliquant sur ce lien : {{url}}', { url: inviteUrl });
+    const body = t(
+      'room.invite.emailBody',
+      'Rejoignez ma réunion en cliquant sur ce lien : {{url}}',
+      { url: inviteUrl }
+    );
     window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
   return (
     <Overlay onClick={onClose}>
-      <ModalContent onClick={e => e.stopPropagation()}>
+      <ModalContent onClick={(e) => e.stopPropagation()}>
         <CloseButton onClick={onClose}>
           <X size={20} />
         </CloseButton>
 
         <Title>{t('room.invite.title', 'Inviter des participants')}</Title>
-        <Subtitle>{t('room.invite.subtitle', 'Partagez ce lien avec les personnes que vous souhaitez inviter à votre réunion.')}</Subtitle>
+        <Subtitle>
+          {t(
+            'room.invite.subtitle',
+            'Partagez ce lien avec les personnes que vous souhaitez inviter à votre réunion.'
+          )}
+        </Subtitle>
 
         <Section>
           <SectionTitle>
@@ -200,7 +209,16 @@ export const InviteModal = ({ isOpen, onClose }) => {
               <Mail />
               {t('room.invite.email', 'Envoyer par email')}
             </ShareOptionBtn>
-            <ShareOptionBtn onClick={() => alert(t('room.invite.smsSoon', 'Fonctionnalité SMS à venir ! (Visuel uniquement pour le moment)'))}>
+            <ShareOptionBtn
+              onClick={() =>
+                alert(
+                  t(
+                    'room.invite.smsSoon',
+                    'Fonctionnalité SMS à venir ! (Visuel uniquement pour le moment)'
+                  )
+                )
+              }
+            >
               <Smartphone />
               {t('room.invite.sms', 'Inviter par SMS')}
             </ShareOptionBtn>

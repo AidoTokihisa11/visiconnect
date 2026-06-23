@@ -6,36 +6,36 @@ export const useSystemMetrics = () => {
     memory: {
       used: 0,
       total: 0,
-      percentage: 0
+      percentage: 0,
     },
     connection: {
       type: 'unknown',
       effectiveType: 'unknown',
       downlink: 0,
-      rtt: 0
+      rtt: 0,
     },
     performance: {
       loadTime: 0,
       domContentLoaded: 0,
-      firstPaint: 0
+      firstPaint: 0,
     },
     battery: {
       level: 0,
       charging: false,
       chargingTime: 0,
-      dischargingTime: 0
+      dischargingTime: 0,
     },
     screen: {
       width: window.screen.width,
       height: window.screen.height,
       colorDepth: window.screen.colorDepth,
-      pixelRatio: window.devicePixelRatio
+      pixelRatio: window.devicePixelRatio,
     },
     userAgent: {
       browser: '',
       os: '',
-      device: ''
-    }
+      device: '',
+    },
   });
 
   const [serverMetrics, setServerMetrics] = useState({
@@ -44,7 +44,7 @@ export const useSystemMetrics = () => {
     activeConnections: 0,
     memoryUsage: 0,
     cpuUsage: 0,
-    networkLatency: 0
+    networkLatency: 0,
   });
 
   const [loading, setLoading] = useState(true);
@@ -82,11 +82,13 @@ export const useSystemMetrics = () => {
     if (window.performance) {
       const navigation = performance.getEntriesByType('navigation')[0];
       const paint = performance.getEntriesByType('paint');
-      
+
       return {
         loadTime: navigation ? Math.round(navigation.loadEventEnd - navigation.loadEventStart) : 0,
-        domContentLoaded: navigation ? Math.round(navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart) : 0,
-        firstPaint: paint.find(p => p.name === 'first-paint')?.startTime || 0
+        domContentLoaded: navigation
+          ? Math.round(navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart)
+          : 0,
+        firstPaint: paint.find((p) => p.name === 'first-paint')?.startTime || 0,
       };
     }
     return { loadTime: 0, domContentLoaded: 0, firstPaint: 0 };
@@ -99,7 +101,7 @@ export const useSystemMetrics = () => {
         type: navigator.connection.type || 'unknown',
         effectiveType: navigator.connection.effectiveType || 'unknown',
         downlink: navigator.connection.downlink || 0,
-        rtt: navigator.connection.rtt || 0
+        rtt: navigator.connection.rtt || 0,
       };
     }
     return { type: 'unknown', effectiveType: 'unknown', downlink: 0, rtt: 0 };
@@ -114,7 +116,7 @@ export const useSystemMetrics = () => {
           level: Math.round(battery.level * 100),
           charging: battery.charging,
           chargingTime: battery.chargingTime,
-          dischargingTime: battery.dischargingTime
+          dischargingTime: battery.dischargingTime,
         };
       } catch (error) {
         // Battery API not available
@@ -131,7 +133,7 @@ export const useSystemMetrics = () => {
       return {
         used: Math.round(used / 1024 / 1024), // MB
         total: Math.round(total / 1024 / 1024), // MB
-        percentage: Math.round((used / total) * 100)
+        percentage: Math.round((used / total) * 100),
       };
     }
     return { used: 0, total: 0, percentage: 0 };
@@ -155,12 +157,12 @@ export const useSystemMetrics = () => {
     // Simuler directement les métriques serveur car il n'y a pas de backend pour les fournir dans cette version
     // Cela évite les erreurs 400 constants dans la console
     setServerMetrics({
-      uptime: Date.now() - (Math.random() * 86400000), // Uptime aléatoire
+      uptime: Date.now() - Math.random() * 86400000, // Uptime aléatoire
       responseTime: Math.random() * 100 + 20,
       activeConnections: Math.floor(Math.random() * 50),
       cpuUsage: Math.floor(Math.random() * 60) + 10,
       memoryUsage: Math.floor(Math.random() * 40) + 20,
-      requestsPerSecond: Math.floor(Math.random() * 100)
+      requestsPerSecond: Math.floor(Math.random() * 100),
     });
   };
 
@@ -168,10 +170,10 @@ export const useSystemMetrics = () => {
     const updateMetrics = async () => {
       try {
         setLoading(true);
-        
+
         const [batteryInfo, networkLatency] = await Promise.all([
           getBatteryInfo(),
-          measureNetworkLatency()
+          measureNetworkLatency(),
         ]);
 
         setMetrics({
@@ -183,10 +185,10 @@ export const useSystemMetrics = () => {
             width: window.screen.width,
             height: window.screen.height,
             colorDepth: window.screen.colorDepth,
-            pixelRatio: window.devicePixelRatio
+            pixelRatio: window.devicePixelRatio,
           },
           userAgent: detectUserAgent(),
-          networkLatency
+          networkLatency,
         });
 
         await fetchServerMetrics();
@@ -209,7 +211,7 @@ export const useSystemMetrics = () => {
 
     // Écouter les changements de batterie
     if (navigator.getBattery) {
-      navigator.getBattery().then(battery => {
+      navigator.getBattery().then((battery) => {
         battery.addEventListener('chargingchange', updateMetrics);
         battery.addEventListener('levelchange', updateMetrics);
       });

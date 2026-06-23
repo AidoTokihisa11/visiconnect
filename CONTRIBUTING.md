@@ -5,6 +5,7 @@ Thank you for your interest in contributing to VisiConnect! This document provid
 ## 📋 Code of Conduct
 
 By participating in this project, you agree to:
+
 - Be respectful to all contributors
 - Accept constructive criticism
 - Focus on what's best for the community
@@ -48,6 +49,7 @@ git checkout -b fix/bug-description
 ```
 
 Branch naming:
+
 - `feature/` - New features
 - `fix/` - Bug fixes
 - `docs/` - Documentation
@@ -94,6 +96,7 @@ git push origin feature/your-feature-name
 ```
 
 Create a Pull Request on GitHub with:
+
 - Clear title
 - Detailed description
 - Reference to related issues
@@ -123,7 +126,7 @@ import PropTypes from 'prop-types';
 
 const MyComponent = ({ title, onAction }) => {
   const [state, setState] = useState(null);
-  
+
   return (
     <div className="p-4">
       <h2>{title}</h2>
@@ -133,7 +136,7 @@ const MyComponent = ({ title, onAction }) => {
 
 MyComponent.propTypes = {
   title: PropTypes.string.isRequired,
-  onAction: PropTypes.func
+  onAction: PropTypes.func,
 };
 
 export default MyComponent;
@@ -160,6 +163,7 @@ describe('MyComponent', () => {
 ## 🔍 Code Review
 
 Expect:
+
 - Questions about design choices
 - Requests for changes
 - Improvement suggestions

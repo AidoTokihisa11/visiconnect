@@ -15,7 +15,7 @@ export const useRecording = () => {
       // Capture both screen and audio
       const screenStream = await navigator.mediaDevices.getDisplayMedia({
         video: true,
-        audio: true
+        audio: true,
       });
 
       // Only capture mic if it's currently enabled in the meeting
@@ -34,15 +34,15 @@ export const useRecording = () => {
       const tracks = [
         ...screenStream.getVideoTracks(),
         ...micAudioTracks,
-        ...screenStream.getAudioTracks()
+        ...screenStream.getAudioTracks(),
       ];
-      
+
       const combinedStream = new MediaStream(tracks);
       streamRef.current = combinedStream;
 
       recorderRef.current = new RecordRTC(combinedStream, {
         type: 'video',
-        mimeType: 'video/webm'
+        mimeType: 'video/webm',
       });
 
       recorderRef.current.startRecording();
@@ -60,25 +60,25 @@ export const useRecording = () => {
         setRecordingError('no_device');
       } else {
         setRecordingError('unknown');
-        console.error('Erreur lors du démarrage de l\'enregistrement:', error);
+        console.error("Erreur lors du démarrage de l'enregistrement:", error);
       }
     }
-  }, []);;
+  }, []);
 
   const stopRecording = useCallback(() => {
     if (recorderRef.current) {
       recorderRef.current.stopRecording(() => {
         const blob = recorderRef.current.getBlob();
         const url = URL.createObjectURL(blob);
-        
+
         // Auto download
         const a = document.createElement('a');
         a.style.display = 'none';
         a.href = url;
-        a.download = `VisiConnect-Recording-${new Date().toISOString().slice(0,10)}.webm`;
+        a.download = `VisiConnect-Recording-${new Date().toISOString().slice(0, 10)}.webm`;
         document.body.appendChild(a);
         a.click();
-        
+
         setTimeout(() => {
           document.body.removeChild(a);
           window.URL.revokeObjectURL(url);
@@ -87,22 +87,25 @@ export const useRecording = () => {
         setIsRecording(false);
         recorderRef.current.destroy();
         recorderRef.current = null;
-        
+
         if (streamRef.current) {
-          streamRef.current.getTracks().forEach(track => track.stop());
+          streamRef.current.getTracks().forEach((track) => track.stop());
           streamRef.current = null;
         }
       });
     }
   }, []);
 
-  const toggleRecording = useCallback((options = {}) => {
-    if (isRecording) {
-      stopRecording();
-    } else {
-      startRecording(options);
-    }
-  }, [isRecording, startRecording, stopRecording]);
+  const toggleRecording = useCallback(
+    (options = {}) => {
+      if (isRecording) {
+        stopRecording();
+      } else {
+        startRecording(options);
+      }
+    },
+    [isRecording, startRecording, stopRecording]
+  );
 
   return {
     isRecording,
@@ -110,6 +113,6 @@ export const useRecording = () => {
     clearRecordingError,
     startRecording,
     stopRecording,
-    toggleRecording
+    toggleRecording,
   };
 };

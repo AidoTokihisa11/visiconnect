@@ -107,38 +107,38 @@ const SettingsPage = () => {
       icon: User,
       title: t('settings.profile.title'),
       description: t('settings.profile.desc'),
-      onClick: () => {}
+      onClick: () => {},
     },
     {
       icon: Shield,
       title: t('settings.security.title'),
       description: t('settings.security.desc'),
-      onClick: () => {}
+      onClick: () => {},
     },
     {
       icon: CreditCard,
       title: t('settings.billing.title'),
       description: t('settings.billing.desc'),
-      onClick: () => {}
+      onClick: () => {},
     },
     {
       icon: Bell,
       title: t('settings.notifications.title'),
       description: t('settings.notifications.desc'),
-      onClick: () => {}
+      onClick: () => {},
     },
     {
       icon: Palette,
       title: t('settings.appearance.title'),
       description: t('settings.appearance.desc'),
-      onClick: () => {}
+      onClick: () => {},
     },
     {
       icon: Globe,
       title: t('settings.language.title'),
       description: t('settings.language.desc'),
-      onClick: () => {}
-    }
+      onClick: () => {},
+    },
   ];
 
   return (

@@ -1,8 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import {
-  Video, Clock, Users, TrendingUp, Calendar, Sparkles, ArrowRight,
-} from 'lucide-react';
+import { Video, Clock, Users, TrendingUp, Calendar, Sparkles, ArrowRight } from 'lucide-react';
 import { useTranslation } from '../hooks/useTranslation';
 
 const STORAGE_KEY = 'visiconnect.recentMeetings';
@@ -62,7 +60,8 @@ const DashboardOverview = ({ user, currentPlan, onCreateMeeting, onJoinMeeting }
       totalMinutes,
       totalParticipants,
       lastMeetingAt: meetings[0]?.createdAt || null,
-      uptime: monthMeetings.length > 0 ? Math.min(100, Math.round((monthMeetings.length / 30) * 100)) : 0,
+      uptime:
+        monthMeetings.length > 0 ? Math.min(100, Math.round((monthMeetings.length / 30) * 100)) : 0,
     };
   }, [meetings]);
 
@@ -152,18 +151,54 @@ const DashboardOverview = ({ user, currentPlan, onCreateMeeting, onJoinMeeting }
         }}
       >
         <div>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.78rem', color: '#64748b', fontWeight: 600, letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              fontSize: '0.78rem',
+              color: '#64748b',
+              fontWeight: 600,
+              letterSpacing: '0.04em',
+              textTransform: 'uppercase',
+            }}
+          >
             <Sparkles size={14} color="#2563eb" />
-            {t(`dashboardOverview.greeting.${greetingKey}`, greetingKey === 'morning' ? 'Bonjour' : greetingKey === 'afternoon' ? 'Bon après-midi' : 'Bonsoir')}
+            {t(
+              `dashboardOverview.greeting.${greetingKey}`,
+              greetingKey === 'morning'
+                ? 'Bonjour'
+                : greetingKey === 'afternoon'
+                  ? 'Bon après-midi'
+                  : 'Bonsoir'
+            )}
           </div>
-          <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', margin: '0.25rem 0 0', letterSpacing: '-0.01em' }}>
+          <h2
+            style={{
+              fontSize: '1.4rem',
+              fontWeight: 800,
+              color: '#0f172a',
+              margin: '0.25rem 0 0',
+              letterSpacing: '-0.01em',
+            }}
+          >
             {displayName ? `${displayName}` : t('dashboardOverview.welcome', 'Bienvenue')}
           </h2>
           <p style={{ margin: '0.25rem 0 0', color: '#475569', fontSize: '0.92rem' }}>
             {t('dashboardOverview.subtitle', 'Voici un aperçu de votre activité.')}
           </p>
         </div>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: '#f1f5f9', border: '1px solid #e2e8f0', borderRadius: '999px', padding: '0.4rem 0.85rem' }}>
+        <div
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            background: '#f1f5f9',
+            border: '1px solid #e2e8f0',
+            borderRadius: '999px',
+            padding: '0.4rem 0.85rem',
+          }}
+        >
           <TrendingUp size={15} color="#2563eb" />
           <span style={{ fontSize: '0.82rem', color: '#0f172a', fontWeight: 600 }}>
             {t('dashboardOverview.planLabel', 'Plan')} <strong>{planName}</strong>
@@ -195,17 +230,34 @@ const DashboardOverview = ({ user, currentPlan, onCreateMeeting, onJoinMeeting }
           >
             <div
               style={{
-                width: 38, height: 38, borderRadius: 10, background: bg, color: accent,
-                display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                width: 38,
+                height: 38,
+                borderRadius: 10,
+                background: bg,
+                color: accent,
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
               }}
             >
               <Icon size={18} />
             </div>
             <div style={{ minWidth: 0 }}>
-              <div style={{ fontSize: '0.74rem', color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              <div
+                style={{
+                  fontSize: '0.74rem',
+                  color: '#64748b',
+                  fontWeight: 600,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.04em',
+                }}
+              >
                 {label}
               </div>
-              <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', lineHeight: 1.2 }}>
+              <div
+                style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', lineHeight: 1.2 }}
+              >
                 {value}
               </div>
             </div>
@@ -213,12 +265,20 @@ const DashboardOverview = ({ user, currentPlan, onCreateMeeting, onJoinMeeting }
         ))}
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.6rem' }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: '0.6rem',
+        }}
+      >
         <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700, color: '#0f172a' }}>
           {t('dashboardOverview.recent.title', 'Réunions récentes')}
         </h3>
         <span style={{ fontSize: '0.78rem', color: '#64748b' }}>
-          {t('dashboardOverview.recent.lastActivity', 'Dernière activité')} : {formatRelative(stats.lastMeetingAt)}
+          {t('dashboardOverview.recent.lastActivity', 'Dernière activité')} :{' '}
+          {formatRelative(stats.lastMeetingAt)}
         </span>
       </div>
 
@@ -234,10 +294,22 @@ const DashboardOverview = ({ user, currentPlan, onCreateMeeting, onJoinMeeting }
             background: '#f8fafc',
           }}
         >
-          {t('dashboardOverview.recent.empty', 'Aucune réunion pour le moment. Créez votre première réunion pour suivre votre activité ici.')}
+          {t(
+            'dashboardOverview.recent.empty',
+            'Aucune réunion pour le moment. Créez votre première réunion pour suivre votre activité ici.'
+          )}
         </div>
       ) : (
-        <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        <ul
+          style={{
+            listStyle: 'none',
+            padding: 0,
+            margin: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.5rem',
+          }}
+        >
           {meetings.slice(0, 5).map((m) => (
             <li
               key={m.id}
@@ -253,13 +325,35 @@ const DashboardOverview = ({ user, currentPlan, onCreateMeeting, onJoinMeeting }
               }}
             >
               <div style={{ minWidth: 0, flex: 1 }}>
-                <div style={{ fontSize: '0.92rem', fontWeight: 600, color: '#0f172a', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <div
+                  style={{
+                    fontSize: '0.92rem',
+                    fontWeight: 600,
+                    color: '#0f172a',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
                   {m.title}
                 </div>
-                <div style={{ fontSize: '0.78rem', color: '#64748b', display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                  <span>{m.date} · {m.startTime}–{m.endTime}</span>
+                <div
+                  style={{
+                    fontSize: '0.78rem',
+                    color: '#64748b',
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: '0.5rem',
+                  }}
+                >
+                  <span>
+                    {m.date} · {m.startTime}–{m.endTime}
+                  </span>
                   {m.participants > 0 && (
-                    <span>· {m.participants} {t('dashboardOverview.recent.participants', 'participants')}</span>
+                    <span>
+                      · {m.participants}{' '}
+                      {t('dashboardOverview.recent.participants', 'participants')}
+                    </span>
                   )}
                 </div>
               </div>
@@ -267,10 +361,18 @@ const DashboardOverview = ({ user, currentPlan, onCreateMeeting, onJoinMeeting }
                 type="button"
                 onClick={() => onJoinMeeting?.(m.id)}
                 style={{
-                  display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
-                  padding: '0.4rem 0.7rem', background: '#eff6ff', color: '#2563eb',
-                  border: '1px solid #bfdbfe', borderRadius: '8px', fontSize: '0.82rem',
-                  fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.3rem',
+                  padding: '0.4rem 0.7rem',
+                  background: '#eff6ff',
+                  color: '#2563eb',
+                  border: '1px solid #bfdbfe',
+                  borderRadius: '8px',
+                  fontSize: '0.82rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
                 }}
               >
                 {t('dashboardOverview.recent.rejoin', 'Reprendre')} <ArrowRight size={14} />

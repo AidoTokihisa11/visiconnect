@@ -25,7 +25,9 @@ const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   font-family: 'Inter', sans-serif;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 `;
 
 const MainContent = styled.main`
@@ -38,7 +40,9 @@ const Hero = styled.section`
   padding: 60px 24px;
   text-align: center;
   border-bottom: 1px solid ${COLORS.border};
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 `;
 
 const Title = styled.h1`
@@ -95,7 +99,9 @@ const SystemCard = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 `;
 
 const SystemName = styled.h3`
@@ -105,7 +111,12 @@ const SystemName = styled.h3`
 `;
 
 const StatusIndicator = styled.span`
-  color: ${props => props.status === 'operational' ? COLORS.success : props.status === 'degraded' ? COLORS.warning : COLORS.danger};
+  color: ${(props) =>
+    props.status === 'operational'
+      ? COLORS.success
+      : props.status === 'degraded'
+        ? COLORS.warning
+        : COLORS.danger};
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -126,7 +137,9 @@ const UptimeSection = styled.section`
   padding: 32px;
   border-radius: 12px;
   border: 1px solid ${COLORS.border};
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 `;
 
 const SectionTitle = styled.h2`
@@ -218,9 +231,7 @@ const StatusPageNew = () => {
 
           <UptimeSection>
             <SectionTitle>{t('status.uptimeTitle')}</SectionTitle>
-            <UptimeGraph>
-              {t('status.uptimeChart')}
-            </UptimeGraph>
+            <UptimeGraph>{t('status.uptimeChart')}</UptimeGraph>
           </UptimeSection>
 
           <IncidentHistory>

@@ -1,19 +1,29 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { Video, Menu, X, User, ChevronDown, BookOpen, Shield, Puzzle, FileText } from 'lucide-react';
+import {
+  Video,
+  Menu,
+  X,
+  User,
+  ChevronDown,
+  BookOpen,
+  Shield,
+  Puzzle,
+  FileText,
+} from 'lucide-react';
 import LanguageSelector from './LanguageSelector';
 
 import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from '../hooks/useTranslation';
 
 const COLORS = {
-  primary: 'hsl(var(--primary))',    
-  secondary: 'hsl(var(--muted-foreground))',  
-  dark: 'hsl(var(--foreground))',       
+  primary: 'hsl(var(--primary))',
+  secondary: 'hsl(var(--muted-foreground))',
+  dark: 'hsl(var(--foreground))',
   white: 'hsl(var(--background))',
-  border: 'hsl(var(--border))',     
-  background: 'hsl(var(--secondary))', 
+  border: 'hsl(var(--border))',
+  background: 'hsl(var(--secondary))',
 };
 
 const SHADOWS = {
@@ -31,13 +41,15 @@ const HeaderContainer = styled.header`
   height: 80px;
   display: flex;
   align-items: center;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 
   @media (max-width: 1024px) {
     padding: 0 1.5rem;
     height: 76px;
   }
-  
+
   @media (max-width: 640px) {
     height: 68px;
     padding: 0 1.25rem;
@@ -125,7 +137,9 @@ const NavLink = styled(Link)`
 
   &:hover {
     color: ${COLORS.primary};
-    &::after { width: 100%; }
+    &::after {
+      width: 100%;
+    }
   }
 `;
 
@@ -159,11 +173,11 @@ const DropdownMenu = styled.div`
   background-color: hsl(var(--card));
   border: 1px solid ${COLORS.border};
   border-radius: 10px;
-  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.12);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12);
   min-width: 200px;
   padding: 0.5rem;
   z-index: 1100;
-  display: ${props => props.$open ? 'flex' : 'none'};
+  display: ${(props) => (props.$open ? 'flex' : 'none')};
   flex-direction: column;
   gap: 0.15rem;
 `;
@@ -226,7 +240,9 @@ const Button = styled(Link)`
     font-size: 0.9rem;
   }
 
-  ${props => props.$variant === 'primary' ? `
+  ${(props) =>
+    props.$variant === 'primary'
+      ? `
     background-color: ${COLORS.primary};
     color: hsl(var(--primary-foreground));
     border: 1px solid ${COLORS.primary};
@@ -235,7 +251,8 @@ const Button = styled(Link)`
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
     }
-  ` : `
+  `
+      : `
     background-color: transparent;
     color: ${COLORS.secondary};
     border: 1px solid ${COLORS.border};
@@ -260,7 +277,7 @@ const MobileMenuButton = styled.button`
     background-color: hsl(var(--muted));
     color: ${COLORS.dark};
   }
-  
+
   @media (max-width: 768px) {
     display: flex;
   }
@@ -302,13 +319,13 @@ const MobileMenuOverlay = styled.div`
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 999;
-  display: ${props => props.$isOpen ? 'block' : 'none'};
+  display: ${(props) => (props.$isOpen ? 'block' : 'none')};
   backdrop-filter: blur(4px);
 
   @media (max-width: 1024px) {
     top: 76px;
   }
-  
+
   @media (max-width: 640px) {
     top: 68px;
   }
@@ -325,7 +342,7 @@ const MobileMenuContent = styled.div`
   overflow-y: auto;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   width: 100%;
-  
+
   @media (max-width: 640px) {
     max-height: calc(100vh - 68px);
     padding: 1.25rem 1.25rem;
@@ -341,7 +358,9 @@ const MobileNavLink = styled(Link)`
   border-radius: 8px;
   display: flex;
   align-items: center;
-  transition: background-color 0.15s, color 0.15s;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
 
   &:hover {
     background-color: hsl(var(--muted));
@@ -394,11 +413,18 @@ export default function HeaderClean() {
                 aria-expanded={resourcesOpen}
                 aria-haspopup="true"
               >
-                {t('navigation.resources', 'Ressources')} <ChevronDown size={14} style={{ transition: 'transform 0.2s', transform: resourcesOpen ? 'rotate(180deg)' : 'rotate(0deg)' }} />
+                {t('navigation.resources', 'Ressources')}{' '}
+                <ChevronDown
+                  size={14}
+                  style={{
+                    transition: 'transform 0.2s',
+                    transform: resourcesOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                  }}
+                />
               </DropdownTrigger>
               <DropdownMenu $open={resourcesOpen}>
                 <DropdownItem to="/user-guide" onClick={() => setResourcesOpen(false)}>
-                  <BookOpen size={15} /> {t('navigation.userGuide', 'Guide d\'utilisation')}
+                  <BookOpen size={15} /> {t('navigation.userGuide', "Guide d'utilisation")}
                 </DropdownItem>
                 <DropdownItem to="/docs" onClick={() => setResourcesOpen(false)}>
                   <FileText size={15} /> {t('navigation.documentation', 'Documentation')}
@@ -416,7 +442,7 @@ export default function HeaderClean() {
 
           <AuthButtons>
             {user ? (
-               <>
+              <>
                 <Button to="/dashboard" $variant="primary">
                   <User size={18} />
                   {t('navigation.dashboard', 'Tableau de bord')}
@@ -424,11 +450,15 @@ export default function HeaderClean() {
                 <LogoutButton onClick={handleLogout}>
                   {t('common.logout', 'Déconnexion')}
                 </LogoutButton>
-               </>
+              </>
             ) : (
               <>
-                <Button to="/login" $variant="ghost">{t('common.login')}</Button>
-                <Button to="/signup" $variant="primary">{t('common.register')}</Button>
+                <Button to="/login" $variant="ghost">
+                  {t('common.login')}
+                </Button>
+                <Button to="/signup" $variant="primary">
+                  {t('common.register')}
+                </Button>
               </>
             )}
             <LanguageSelector />
@@ -442,36 +472,78 @@ export default function HeaderClean() {
 
       {isMobileMenuOpen && (
         <MobileMenuOverlay $isOpen={isMobileMenuOpen} onClick={() => setIsMobileMenuOpen(false)}>
-          <MobileMenuContent onClick={e => e.stopPropagation()}>
-            <MobileNavLink to="/features" onClick={() => setIsMobileMenuOpen(false)}>{t('navigation.features')}</MobileNavLink>
-            <MobileNavLink to="/pricing" onClick={() => setIsMobileMenuOpen(false)}>{t('navigation.pricing')}</MobileNavLink>
-            <MobileNavLink to="/demo" onClick={() => setIsMobileMenuOpen(false)}>{t('navigation.demo')}</MobileNavLink>
-            <MobileNavLink to="/developer" onClick={() => setIsMobileMenuOpen(false)}>{t('navigation.developers')}</MobileNavLink>
-            <MobileNavLink to="/user-guide" onClick={() => setIsMobileMenuOpen(false)}>{t('navigation.userGuide', 'Guide d\'utilisation')}</MobileNavLink>
-            <MobileNavLink to="/docs" onClick={() => setIsMobileMenuOpen(false)}>{t('navigation.documentation', 'Documentation')}</MobileNavLink>
-            <MobileNavLink to="/integrations" onClick={() => setIsMobileMenuOpen(false)}>{t('navigation.integrations', 'Intégrations')}</MobileNavLink>
-            <MobileNavLink to="/security" onClick={() => setIsMobileMenuOpen(false)}>{t('navigation.security', 'Sécurité')}</MobileNavLink>
-            <MobileNavLink to="/contact" onClick={() => setIsMobileMenuOpen(false)}>{t('navigation.contact')}</MobileNavLink>
-            <div style={{ margin: '1rem 0', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                {user ? (
-                   <>
-                    <Button to="/dashboard" $variant="primary" onClick={() => setIsMobileMenuOpen(false)} style={{ justifyContent: 'center' }}>
-                      <User size={18} />
-                      {t('navigation.dashboard', 'Tableau de bord')}
-                    </Button>
-                    <LogoutButton onClick={handleLogout} style={{ justifyContent: 'center', width: '100%' }}>
-                      {t('common.logout', 'Déconnexion')}
-                    </LogoutButton>
-                   </>
-                ) : (
-                  <>
-                    <Button to="/login" $variant="ghost" onClick={() => setIsMobileMenuOpen(false)} style={{ justifyContent: 'center' }}>{t('common.login')}</Button>
-                    <Button to="/signup" $variant="primary" onClick={() => setIsMobileMenuOpen(false)} style={{ justifyContent: 'center' }}>{t('common.register')}</Button>
-                  </>
-                )}
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                  <LanguageSelector />
-                </div>
+          <MobileMenuContent onClick={(e) => e.stopPropagation()}>
+            <MobileNavLink to="/features" onClick={() => setIsMobileMenuOpen(false)}>
+              {t('navigation.features')}
+            </MobileNavLink>
+            <MobileNavLink to="/pricing" onClick={() => setIsMobileMenuOpen(false)}>
+              {t('navigation.pricing')}
+            </MobileNavLink>
+            <MobileNavLink to="/demo" onClick={() => setIsMobileMenuOpen(false)}>
+              {t('navigation.demo')}
+            </MobileNavLink>
+            <MobileNavLink to="/developer" onClick={() => setIsMobileMenuOpen(false)}>
+              {t('navigation.developers')}
+            </MobileNavLink>
+            <MobileNavLink to="/user-guide" onClick={() => setIsMobileMenuOpen(false)}>
+              {t('navigation.userGuide', "Guide d'utilisation")}
+            </MobileNavLink>
+            <MobileNavLink to="/docs" onClick={() => setIsMobileMenuOpen(false)}>
+              {t('navigation.documentation', 'Documentation')}
+            </MobileNavLink>
+            <MobileNavLink to="/integrations" onClick={() => setIsMobileMenuOpen(false)}>
+              {t('navigation.integrations', 'Intégrations')}
+            </MobileNavLink>
+            <MobileNavLink to="/security" onClick={() => setIsMobileMenuOpen(false)}>
+              {t('navigation.security', 'Sécurité')}
+            </MobileNavLink>
+            <MobileNavLink to="/contact" onClick={() => setIsMobileMenuOpen(false)}>
+              {t('navigation.contact')}
+            </MobileNavLink>
+            <div
+              style={{ margin: '1rem 0', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}
+            >
+              {user ? (
+                <>
+                  <Button
+                    to="/dashboard"
+                    $variant="primary"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    style={{ justifyContent: 'center' }}
+                  >
+                    <User size={18} />
+                    {t('navigation.dashboard', 'Tableau de bord')}
+                  </Button>
+                  <LogoutButton
+                    onClick={handleLogout}
+                    style={{ justifyContent: 'center', width: '100%' }}
+                  >
+                    {t('common.logout', 'Déconnexion')}
+                  </LogoutButton>
+                </>
+              ) : (
+                <>
+                  <Button
+                    to="/login"
+                    $variant="ghost"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    style={{ justifyContent: 'center' }}
+                  >
+                    {t('common.login')}
+                  </Button>
+                  <Button
+                    to="/signup"
+                    $variant="primary"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    style={{ justifyContent: 'center' }}
+                  >
+                    {t('common.register')}
+                  </Button>
+                </>
+              )}
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <LanguageSelector />
+              </div>
             </div>
           </MobileMenuContent>
         </MobileMenuOverlay>

@@ -45,9 +45,17 @@ export const ModalContent = styled(motion.div)`
   display: flex;
   flex-direction: column;
 
-  &::-webkit-scrollbar { width: 5px; }
-  &::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 3px; }
-  &::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+  }
 
   @media (max-width: 600px) {
     border-radius: 16px;
@@ -78,7 +86,9 @@ export const ModalHeader = styled.div`
   @media (max-width: 600px) {
     padding: 1.25rem;
     border-radius: 16px 16px 0 0;
-    h2 { font-size: 1.1rem; }
+    h2 {
+      font-size: 1.1rem;
+    }
   }
 `;
 
@@ -119,8 +129,13 @@ export const FormSection = styled.div`
   padding: 1.5rem 0;
   border-bottom: 1px solid #f1f5f9;
 
-  &:first-child { padding-top: 0; }
-  &:last-child { border-bottom: none; padding-bottom: 0; }
+  &:first-child {
+    padding-top: 0;
+  }
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
 
   .section-title {
     color: ${C.text};
@@ -142,7 +157,7 @@ export const FormSection = styled.div`
 
 export const FormGrid = styled.div`
   display: grid;
-  grid-template-columns: ${props => props.columns || '1fr'};
+  grid-template-columns: ${(props) => props.columns || '1fr'};
   gap: 1rem;
 
   @media (max-width: 600px) {
@@ -191,7 +206,9 @@ export const Input = styled.input`
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
   }
 
-  &::placeholder { color: ${C.textLight}; }
+  &::placeholder {
+    color: ${C.textLight};
+  }
 `;
 
 export const TextArea = styled.textarea`
@@ -215,7 +232,9 @@ export const TextArea = styled.textarea`
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
   }
 
-  &::placeholder { color: ${C.textLight}; }
+  &::placeholder {
+    color: ${C.textLight};
+  }
 `;
 
 export const Select = styled.select`
@@ -243,7 +262,10 @@ export const Select = styled.select`
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
   }
 
-  option { background: white; color: ${C.text}; }
+  option {
+    background: white;
+    color: ${C.text};
+  }
 `;
 
 export const ToggleSwitch = styled.div`
@@ -257,7 +279,7 @@ export const ToggleSwitch = styled.div`
     position: relative;
     width: 44px;
     height: 24px;
-    background: ${props => props.checked ? C.primary : '#cbd5e1'};
+    background: ${(props) => (props.checked ? C.primary : '#cbd5e1')};
     border-radius: 12px;
     transition: background 0.25s;
     flex-shrink: 0;
@@ -266,13 +288,13 @@ export const ToggleSwitch = styled.div`
       content: '';
       position: absolute;
       top: 3px;
-      left: ${props => props.checked ? '23px' : '3px'};
+      left: ${(props) => (props.checked ? '23px' : '3px')};
       width: 18px;
       height: 18px;
       background: white;
       border-radius: 50%;
       transition: left 0.25s;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     }
   }
 
@@ -300,7 +322,9 @@ export const ParticipantItem = styled.div`
   border-radius: 12px;
   transition: border-color 0.2s;
 
-  &:hover { border-color: ${C.primary}; }
+  &:hover {
+    border-color: ${C.primary};
+  }
 
   .avatar {
     width: 36px;
@@ -397,7 +421,9 @@ export const AddParticipantButton = styled(motion.button)`
   white-space: nowrap;
   transition: background 0.2s;
 
-  &:hover { background: ${C.primaryHover}; }
+  &:hover {
+    background: ${C.primaryHover};
+  }
 `;
 
 export const QuickTimeSlots = styled.div`
@@ -409,9 +435,9 @@ export const QuickTimeSlots = styled.div`
 
 export const TimeSlot = styled(motion.button)`
   padding: 0.5rem 1rem;
-  background: ${props => props.selected ? C.primary : C.surface};
-  color: ${props => props.selected ? 'white' : C.textMuted};
-  border: 1.5px solid ${props => props.selected ? C.primary : C.border};
+  background: ${(props) => (props.selected ? C.primary : C.surface)};
+  color: ${(props) => (props.selected ? 'white' : C.textMuted)};
+  border: 1.5px solid ${(props) => (props.selected ? C.primary : C.border)};
   border-radius: 8px;
   font-weight: 600;
   font-size: 0.875rem;
@@ -419,9 +445,9 @@ export const TimeSlot = styled(motion.button)`
   transition: all 0.2s;
 
   &:hover {
-    background: ${props => props.selected ? C.primaryHover : C.primaryLight};
+    background: ${(props) => (props.selected ? C.primaryHover : C.primaryLight)};
     border-color: ${C.primary};
-    color: ${props => props.selected ? 'white' : C.primary};
+    color: ${(props) => (props.selected ? 'white' : C.primary)};
   }
 `;
 
@@ -478,7 +504,9 @@ export const ModalFooter = styled.div`
     flex-shrink: 0;
     transition: background 0.2s;
 
-    &:hover { background: ${C.primaryHover}; }
+    &:hover {
+      background: ${C.primaryHover};
+    }
   }
 
   .actions {
@@ -491,7 +519,9 @@ export const ModalFooter = styled.div`
   @media (max-width: 600px) {
     padding: 1rem 1.25rem;
     border-radius: 0 0 16px 16px;
-    .actions { justify-content: stretch; }
+    .actions {
+      justify-content: stretch;
+    }
   }
 `;
 
@@ -508,7 +538,9 @@ export const ActionButton = styled(motion.button)`
   transition: all 0.2s;
   white-space: nowrap;
 
-  ${props => props.primary ? `
+  ${(props) =>
+    props.primary
+      ? `
     background: linear-gradient(135deg, #2563eb, #1d4ed8);
     color: white;
     border: none;
@@ -518,12 +550,15 @@ export const ActionButton = styled(motion.button)`
       box-shadow: 0 4px 16px rgba(37, 99, 235, 0.45);
       transform: translateY(-1px);
     }
-  ` : props.ghost ? `
+  `
+      : props.ghost
+        ? `
     background: transparent;
     color: #64748b;
     border: 1.5px solid #e2e8f0;
     &:hover { background: #f8fafc; color: #0f172a; border-color: #cbd5e1; }
-  ` : `
+  `
+        : `
     background: #eff6ff;
     color: #2563eb;
     border: 1.5px solid #dbeafe;

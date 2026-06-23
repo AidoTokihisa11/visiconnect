@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
-import styled from 'styled-components'
-import { motion } from 'framer-motion'
-import { Lock, Eye, EyeOff, Hash, AlertCircle, CheckCircle2, ArrowLeft } from 'lucide-react'
-import { useAuth } from '../contexts/AuthContext'
-import { useTranslation } from '../hooks/useTranslation'
-import AuthRightPanel from '../components/AuthRightPanel'
+import React, { useState } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import styled from 'styled-components';
+import { motion } from 'framer-motion';
+import { Lock, Eye, EyeOff, Hash, AlertCircle, CheckCircle2, ArrowLeft } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { useTranslation } from '../hooks/useTranslation';
+import AuthRightPanel from '../components/AuthRightPanel';
 
 const PageWrapper = styled.div`
   display: flex;
@@ -16,7 +16,7 @@ const PageWrapper = styled.div`
   @media (min-width: 1024px) {
     flex-direction: row;
   }
-`
+`;
 
 const LeftPanel = styled.div`
   flex: 1;
@@ -25,14 +25,16 @@ const LeftPanel = styled.div`
   padding: 2rem;
   overflow-y: auto;
 
-  &::-webkit-scrollbar { display: none; }
+  &::-webkit-scrollbar {
+    display: none;
+  }
   -ms-overflow-style: none;
   scrollbar-width: none;
 
   @media (min-width: 1024px) {
     padding: 2rem 4rem;
   }
-`
+`;
 
 const BackLink = styled(Link)`
   display: inline-flex;
@@ -45,8 +47,10 @@ const BackLink = styled(Link)`
   transition: color 0.2s;
   margin-bottom: 2rem;
 
-  &:hover { color: #0f172a; }
-`
+  &:hover {
+    color: #0f172a;
+  }
+`;
 
 const FormContainer = styled(motion.div)`
   width: 100%;
@@ -55,62 +59,62 @@ const FormContainer = styled(motion.div)`
   display: flex;
   flex-direction: column;
   justify-content: center;
-`
+`;
 
 const Header = styled.div`
   margin-bottom: 2.5rem;
-`
+`;
 
 const Logo = styled.div`
   font-size: 1.5rem;
   font-weight: 800;
   color: #2563eb;
   margin-bottom: 1.5rem;
-`
+`;
 
 const Title = styled.h2`
   font-size: 2rem;
   font-weight: 700;
   color: #0f172a;
   margin-bottom: 0.5rem;
-`
+`;
 
 const Subtitle = styled.p`
   font-size: 1rem;
   color: #64748b;
   line-height: 1.5;
-`
+`;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-`
+`;
 
 const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-`
+`;
 
 const Label = styled.label`
   font-size: 0.9rem;
   font-weight: 600;
   color: #334155;
-`
+`;
 
 const InputWrapper = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-`
+`;
 
 const IconWrapper = styled.div`
   position: absolute;
   left: 1rem;
   color: #94a3b8;
   display: flex;
-`
+`;
 
 const Input = styled.input`
   width: 100%;
@@ -129,8 +133,10 @@ const Input = styled.input`
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
   }
 
-  &::placeholder { color: #94a3b8; }
-`
+  &::placeholder {
+    color: #94a3b8;
+  }
+`;
 
 const PasswordToggle = styled.button`
   position: absolute;
@@ -142,15 +148,17 @@ const PasswordToggle = styled.button`
   display: flex;
   padding: 4px;
 
-  &:hover { color: #475569; }
-`
+  &:hover {
+    color: #475569;
+  }
+`;
 
 const PasswordHints = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
   margin-top: 0.25rem;
-`
+`;
 
 const Hint = styled.span`
   font-size: 0.8rem;
@@ -164,7 +172,7 @@ const Hint = styled.span`
     content: '${({ $met }) => ($met ? '✓' : '·')}';
     font-weight: 700;
   }
-`
+`;
 
 const SubmitButton = styled(motion.button)`
   width: 100%;
@@ -188,7 +196,7 @@ const SubmitButton = styled(motion.button)`
     opacity: 0.6;
     cursor: not-allowed;
   }
-`
+`;
 
 const ErrorMessage = styled(motion.div)`
   display: flex;
@@ -202,7 +210,7 @@ const ErrorMessage = styled(motion.div)`
   font-size: 0.9rem;
   line-height: 1.4;
   margin-bottom: 1.5rem;
-`
+`;
 
 const SuccessMessage = styled(motion.div)`
   display: flex;
@@ -211,7 +219,7 @@ const SuccessMessage = styled(motion.div)`
   text-align: center;
   gap: 1rem;
   padding: 2rem;
-`
+`;
 
 const SuccessIcon = styled.div`
   width: 64px;
@@ -222,19 +230,19 @@ const SuccessIcon = styled.div`
   align-items: center;
   justify-content: center;
   color: #22c55e;
-`
+`;
 
 const SuccessTitle = styled.h3`
   font-size: 1.5rem;
   font-weight: 700;
   color: #0f172a;
-`
+`;
 
 const SuccessText = styled.p`
   font-size: 0.95rem;
   color: #64748b;
   line-height: 1.5;
-`
+`;
 
 const EmailInfo = styled.div`
   background: #eff6ff;
@@ -244,64 +252,66 @@ const EmailInfo = styled.div`
   font-size: 0.85rem;
   color: #1e40af;
   margin-bottom: 0.5rem;
-`
+`;
 
 export default function ResetPasswordPage() {
-  const { t } = useTranslation()
-  const { confirmPasswordReset } = useAuth()
-  const navigate = useNavigate()
-  const location = useLocation()
+  const { t } = useTranslation();
+  const { confirmPasswordReset } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const emailFromState = location.state?.email || ''
+  const emailFromState = location.state?.email || '';
 
-  const [form, setForm] = useState({ code: '', password: '', confirm: '' })
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirm, setShowConfirm] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [success, setSuccess] = useState(false)
+  const [form, setForm] = useState({ code: '', password: '', confirm: '' });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
 
   const passwordChecks = {
     length: form.password.length >= 8,
     upper: /[A-Z]/.test(form.password),
     number: /[0-9]/.test(form.password),
     special: /[^A-Za-z0-9]/.test(form.password),
-  }
+  };
 
   const handleChange = (e) => {
-    const { name, value } = e.target
-    setForm((prev) => ({ ...prev, [name]: value }))
-    setError('')
-  }
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+    setError('');
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (form.password !== form.confirm) {
-      setError(t('auth.resetPassword.passwordMismatch', 'Les mots de passe ne correspondent pas.'))
-      return
+      setError(t('auth.resetPassword.passwordMismatch', 'Les mots de passe ne correspondent pas.'));
+      return;
     }
 
     if (!Object.values(passwordChecks).every(Boolean)) {
-      setError(t('auth.resetPassword.passwordWeak', 'Le mot de passe ne respecte pas tous les critères.'))
-      return
+      setError(
+        t('auth.resetPassword.passwordWeak', 'Le mot de passe ne respecte pas tous les critères.')
+      );
+      return;
     }
 
-    setLoading(true)
-    setError('')
+    setLoading(true);
+    setError('');
 
-    const { error: resetError } = await confirmPasswordReset(form.code, form.password)
+    const { error: resetError } = await confirmPasswordReset(form.code, form.password);
 
     if (resetError) {
-      setError(resetError.message)
-      setLoading(false)
-      return
+      setError(resetError.message);
+      setLoading(false);
+      return;
     }
 
-    setSuccess(true)
-    setLoading(false)
-    setTimeout(() => navigate('/login'), 3000)
-  }
+    setSuccess(true);
+    setLoading(false);
+    setTimeout(() => navigate('/login'), 3000);
+  };
 
   return (
     <PageWrapper>
@@ -316,16 +326,18 @@ export default function ResetPasswordPage() {
           transition={{ duration: 0.4 }}
         >
           {success ? (
-            <SuccessMessage
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
+            <SuccessMessage initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
               <SuccessIcon>
                 <CheckCircle2 size={32} />
               </SuccessIcon>
-              <SuccessTitle>{t('auth.resetPassword.successTitle', 'Mot de passe réinitialisé !')}</SuccessTitle>
+              <SuccessTitle>
+                {t('auth.resetPassword.successTitle', 'Mot de passe réinitialisé !')}
+              </SuccessTitle>
               <SuccessText>
-                {t('auth.resetPassword.successText', 'Votre mot de passe a été mis à jour avec succès. Vous allez être redirigé vers la page de connexion...')}
+                {t(
+                  'auth.resetPassword.successText',
+                  'Votre mot de passe a été mis à jour avec succès. Vous allez être redirigé vers la page de connexion...'
+                )}
               </SuccessText>
             </SuccessMessage>
           ) : (
@@ -334,7 +346,10 @@ export default function ResetPasswordPage() {
                 <Logo>VisioConnect</Logo>
                 <Title>{t('auth.resetPassword.title', 'Nouveau mot de passe')}</Title>
                 <Subtitle>
-                  {t('auth.resetPassword.subtitle', 'Entrez le code reçu par email et choisissez un nouveau mot de passe.')}
+                  {t(
+                    'auth.resetPassword.subtitle',
+                    'Entrez le code reçu par email et choisissez un nouveau mot de passe.'
+                  )}
                 </Subtitle>
               </Header>
 
@@ -356,9 +371,13 @@ export default function ResetPasswordPage() {
 
               <Form onSubmit={handleSubmit}>
                 <FormGroup>
-                  <Label htmlFor="code">{t('auth.resetPassword.codeLabel', 'Code de vérification')}</Label>
+                  <Label htmlFor="code">
+                    {t('auth.resetPassword.codeLabel', 'Code de vérification')}
+                  </Label>
                   <InputWrapper>
-                    <IconWrapper><Hash size={18} /></IconWrapper>
+                    <IconWrapper>
+                      <Hash size={18} />
+                    </IconWrapper>
                     <Input
                       type="text"
                       id="code"
@@ -376,9 +395,13 @@ export default function ResetPasswordPage() {
                 </FormGroup>
 
                 <FormGroup>
-                  <Label htmlFor="password">{t('auth.resetPassword.newPassword', 'Nouveau mot de passe')}</Label>
+                  <Label htmlFor="password">
+                    {t('auth.resetPassword.newPassword', 'Nouveau mot de passe')}
+                  </Label>
                   <InputWrapper>
-                    <IconWrapper><Lock size={18} /></IconWrapper>
+                    <IconWrapper>
+                      <Lock size={18} />
+                    </IconWrapper>
                     <Input
                       type={showPassword ? 'text' : 'password'}
                       id="password"
@@ -395,18 +418,30 @@ export default function ResetPasswordPage() {
                   </InputWrapper>
                   {form.password && (
                     <PasswordHints>
-                      <Hint $met={passwordChecks.length}>{t('auth.resetPassword.hint.length', '8 caractères minimum')}</Hint>
-                      <Hint $met={passwordChecks.upper}>{t('auth.resetPassword.hint.upper', 'Une majuscule')}</Hint>
-                      <Hint $met={passwordChecks.number}>{t('auth.resetPassword.hint.number', 'Un chiffre')}</Hint>
-                      <Hint $met={passwordChecks.special}>{t('auth.resetPassword.hint.special', 'Un caractère spécial')}</Hint>
+                      <Hint $met={passwordChecks.length}>
+                        {t('auth.resetPassword.hint.length', '8 caractères minimum')}
+                      </Hint>
+                      <Hint $met={passwordChecks.upper}>
+                        {t('auth.resetPassword.hint.upper', 'Une majuscule')}
+                      </Hint>
+                      <Hint $met={passwordChecks.number}>
+                        {t('auth.resetPassword.hint.number', 'Un chiffre')}
+                      </Hint>
+                      <Hint $met={passwordChecks.special}>
+                        {t('auth.resetPassword.hint.special', 'Un caractère spécial')}
+                      </Hint>
                     </PasswordHints>
                   )}
                 </FormGroup>
 
                 <FormGroup>
-                  <Label htmlFor="confirm">{t('auth.resetPassword.confirmPassword', 'Confirmer le mot de passe')}</Label>
+                  <Label htmlFor="confirm">
+                    {t('auth.resetPassword.confirmPassword', 'Confirmer le mot de passe')}
+                  </Label>
                   <InputWrapper>
-                    <IconWrapper><Lock size={18} /></IconWrapper>
+                    <IconWrapper>
+                      <Lock size={18} />
+                    </IconWrapper>
                     <Input
                       type={showConfirm ? 'text' : 'password'}
                       id="confirm"
@@ -423,11 +458,7 @@ export default function ResetPasswordPage() {
                   </InputWrapper>
                 </FormGroup>
 
-                <SubmitButton
-                  type="submit"
-                  disabled={loading}
-                  whileTap={{ scale: 0.98 }}
-                >
+                <SubmitButton type="submit" disabled={loading} whileTap={{ scale: 0.98 }}>
                   {loading
                     ? t('auth.resetPassword.loading', 'Réinitialisation...')
                     : t('auth.resetPassword.submit', 'Réinitialiser le mot de passe')}
@@ -439,5 +470,5 @@ export default function ResetPasswordPage() {
       </LeftPanel>
       <AuthRightPanel />
     </PageWrapper>
-  )
+  );
 }

@@ -142,7 +142,9 @@ export const PrimaryButton = styled.a`
   border: 1px solid ${COLORS.primary};
   background: ${COLORS.primary};
   color: white;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 
   &:hover {
     transform: translateY(-1px);

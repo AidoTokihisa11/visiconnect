@@ -193,9 +193,7 @@ export const RoomHeader = ({ roomName, isSecure, participantCount, quality }) =>
     <HeaderContainer>
       {/* LEFT */}
       <RoomInfo>
-        <RoomName title={roomName || fallbackName}>
-          {roomName || fallbackName}
-        </RoomName>
+        <RoomName title={roomName || fallbackName}>{roomName || fallbackName}</RoomName>
         {isSecure && (
           <SecureBadge title={t('room.header.e2eeActive', 'Chiffrement E2EE actif')}>
             <Shield size={12} />
@@ -205,7 +203,10 @@ export const RoomHeader = ({ roomName, isSecure, participantCount, quality }) =>
       </RoomInfo>
 
       {/* CENTER */}
-      <InviteButton onClick={() => setIsModalOpen(true)} title={t('room.header.inviteTitle', 'Inviter des participants')}>
+      <InviteButton
+        onClick={() => setIsModalOpen(true)}
+        title={t('room.header.inviteTitle', 'Inviter des participants')}
+      >
         <UserPlus size={15} />
         <span className="invite-text">{t('room.header.invite', 'Inviter')}</span>
       </InviteButton>
@@ -228,10 +229,7 @@ export const RoomHeader = ({ roomName, isSecure, participantCount, quality }) =>
         </StatusItem>
       </ConnectionStatus>
 
-      <InviteModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
+      <InviteModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </HeaderContainer>
   );
 };

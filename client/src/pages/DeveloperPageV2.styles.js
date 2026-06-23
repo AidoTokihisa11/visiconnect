@@ -42,13 +42,17 @@ export const PageContainer = styled.div`
   color: ${COLORS.foreground};
   display: flex;
   flex-direction: column;
-  font-family: 'Inter', -apple-system, sans-serif;
+  font-family:
+    'Inter',
+    -apple-system,
+    sans-serif;
 `;
 
 export const HeroSection = styled.section`
   padding: 8rem 1.5rem 6rem;
-  background: radial-gradient(circle at 15% 50%, rgba(14, 165, 233, 0.08), transparent 25%),
-              radial-gradient(circle at 85% 30%, rgba(14, 165, 233, 0.05), transparent 25%);
+  background:
+    radial-gradient(circle at 15% 50%, rgba(14, 165, 233, 0.08), transparent 25%),
+    radial-gradient(circle at 85% 30%, rgba(14, 165, 233, 0.05), transparent 25%);
   border-bottom: 1px solid ${COLORS.border};
   text-align: center;
 `;
@@ -116,30 +120,33 @@ export const Button = styled.a`
   font-size: 1rem;
   text-decoration: none;
   transition: all 0.2s ease;
-  
-  ${props => props.$primary ? css`
-    background: ${COLORS.primary};
-    color: white;
-    box-shadow: 0 4px 14px rgba(14, 165, 233, 0.25);
-    border: 1px solid transparent;
-    
-    &:hover {
-      background: ${COLORS.primaryDark};
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(14, 165, 233, 0.3);
-    }
-  ` : css`
-    background: white;
-    color: ${COLORS.foreground};
-    border: 1px solid ${COLORS.border};
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-    
-    &:hover {
-      border-color: ${COLORS.primary};
-      color: ${COLORS.primaryDark};
-      transform: translateY(-2px);
-    }
-  `}
+
+  ${(props) =>
+    props.$primary
+      ? css`
+          background: ${COLORS.primary};
+          color: white;
+          box-shadow: 0 4px 14px rgba(14, 165, 233, 0.25);
+          border: 1px solid transparent;
+
+          &:hover {
+            background: ${COLORS.primaryDark};
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.3);
+          }
+        `
+      : css`
+          background: white;
+          color: ${COLORS.foreground};
+          border: 1px solid ${COLORS.border};
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+
+          &:hover {
+            border-color: ${COLORS.primary};
+            color: ${COLORS.primaryDark};
+            transform: translateY(-2px);
+          }
+        `}
 `;
 
 export const SectionTitle = styled.h2`
@@ -175,7 +182,7 @@ export const Card = styled.div`
   border-radius: 24px;
   padding: 2.5rem;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
   display: flex;
   flex-direction: column;
 

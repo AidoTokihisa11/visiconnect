@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import styled from 'styled-components'
-import { motion } from 'framer-motion'
-import { useAuth } from '../contexts/AuthContext'
-import { FaGoogle, FaGithub } from 'react-icons/fa'
-import { Mail, Lock, Eye, EyeOff, AlertCircle, ArrowLeft, Check, X } from 'lucide-react'
-import AuthRightPanel from '../components/AuthRightPanel'
-import { useTranslation } from '../hooks/useTranslation'
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import styled from 'styled-components';
+import { motion } from 'framer-motion';
+import { useAuth } from '../contexts/AuthContext';
+import { FaGoogle, FaGithub } from 'react-icons/fa';
+import { Mail, Lock, Eye, EyeOff, AlertCircle, ArrowLeft, Check, X } from 'lucide-react';
+import AuthRightPanel from '../components/AuthRightPanel';
+import { useTranslation } from '../hooks/useTranslation';
 
 const PageWrapper = styled.div`
   display: flex;
@@ -17,7 +17,7 @@ const PageWrapper = styled.div`
   @media (min-width: 1024px) {
     flex-direction: row;
   }
-`
+`;
 
 const LeftPanel = styled.div`
   flex: 1;
@@ -35,7 +35,7 @@ const LeftPanel = styled.div`
   @media (min-width: 1024px) {
     padding: 2rem 4rem;
   }
-`
+`;
 
 const BackLink = styled(Link)`
   display: inline-flex;
@@ -51,7 +51,7 @@ const BackLink = styled(Link)`
   &:hover {
     color: #0f172a;
   }
-`
+`;
 
 const FormContainer = styled(motion.div)`
   width: 100%;
@@ -60,61 +60,61 @@ const FormContainer = styled(motion.div)`
   display: flex;
   flex-direction: column;
   justify-content: center;
-`
+`;
 
 const Header = styled.div`
   margin-bottom: 2.5rem;
-`
+`;
 
 const Logo = styled.div`
   font-size: 1.5rem;
   font-weight: 800;
   color: #2563eb;
   margin-bottom: 1.5rem;
-`
+`;
 
 const Title = styled.h2`
   font-size: 2rem;
   font-weight: 700;
   color: #0f172a;
   margin-bottom: 0.5rem;
-`
+`;
 
 const Subtitle = styled.p`
   font-size: 1rem;
   color: #64748b;
-`
+`;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-`
+`;
 
 const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-`
+`;
 
 const Label = styled.label`
   font-size: 0.9rem;
   font-weight: 600;
   color: #334155;
-`
+`;
 
 const InputWrapper = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-`
+`;
 
 const IconWrapper = styled.div`
   position: absolute;
   left: 1rem;
   color: #94a3b8;
   display: flex;
-`
+`;
 
 const Input = styled.input`
   width: 100%;
@@ -136,7 +136,7 @@ const Input = styled.input`
   &::placeholder {
     color: #94a3b8;
   }
-`
+`;
 
 const PasswordToggle = styled.button`
   position: absolute;
@@ -151,7 +151,7 @@ const PasswordToggle = styled.button`
   &:hover {
     color: #475569;
   }
-`
+`;
 
 /* Simple, sober, professional style (removed shadows/3D) */
 const SubmitButton = styled(motion.button)`
@@ -176,21 +176,21 @@ const SubmitButton = styled(motion.button)`
     opacity: 0.6;
     cursor: not-allowed;
   }
-`
+`;
 
 const PasswordCriteria = styled.div`
   margin-top: 0.75rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.5rem;
-`
+`;
 
 // Strength bar: 4 segments, filled according to criteria count.
 const StrengthBarWrapper = styled.div`
   display: flex;
   gap: 6px;
   margin-top: 0.75rem;
-`
+`;
 
 const strengthGradient = (strength) => {
   if (strength === 1) return 'linear-gradient(90deg, #b91c1c, #ef4444)';
@@ -215,7 +215,7 @@ const StrengthSegment = styled.div`
   position: relative;
   background: rgba(30, 41, 59, 0.85);
   overflow: hidden;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.4);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
 
   &::after {
     content: '';
@@ -224,11 +224,16 @@ const StrengthSegment = styled.div`
     border-radius: 999px;
     transform-origin: left center;
     transform: scaleX(${({ $strength, $index }) => ($index < $strength ? 1 : 0)});
-    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), background 0.3s, box-shadow 0.3s;
-    background: ${({ $strength, $index }) => ($index < $strength ? strengthGradient($strength) : 'transparent')};
-    box-shadow: ${({ $strength, $index }) => ($index < $strength ? strengthGlow($strength) : 'none')};
+    transition:
+      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      background 0.3s,
+      box-shadow 0.3s;
+    background: ${({ $strength, $index }) =>
+      $index < $strength ? strengthGradient($strength) : 'transparent'};
+    box-shadow: ${({ $strength, $index }) =>
+      $index < $strength ? strengthGlow($strength) : 'none'};
   }
-`
+`;
 
 const StrengthLabel = styled.span`
   font-size: 0.78rem;
@@ -246,22 +251,24 @@ const StrengthLabel = styled.span`
   min-width: 56px;
   text-align: right;
   text-shadow: ${({ $strength }) => ($strength >= 3 ? '0 0 8px rgba(52,211,153,0.45)' : 'none')};
-  transition: color 0.3s, text-shadow 0.3s;
-`
+  transition:
+    color 0.3s,
+    text-shadow 0.3s;
+`;
 
 const Criterion = styled.div`
   display: flex;
   align-items: center;
   font-size: 0.8rem;
   font-weight: 500;
-  color: ${props => props.$met ? '#10b981' : '#94a3b8'};
+  color: ${(props) => (props.$met ? '#10b981' : '#94a3b8')};
   transition: color 0.2s;
 
   svg {
     margin-right: 6px;
     font-size: 12px;
   }
-`
+`;
 
 const Divider = styled.div`
   display: flex;
@@ -269,7 +276,8 @@ const Divider = styled.div`
   text-align: center;
   margin: 1.5rem 0;
 
-  &::before, &::after {
+  &::before,
+  &::after {
     content: '';
     flex: 1;
     border-bottom: 1px solid #e2e8f0;
@@ -282,14 +290,14 @@ const Divider = styled.div`
     font-weight: 500;
     text-transform: uppercase;
   }
-`
+`;
 
 const OAuthButtons = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
   margin-bottom: 1.5rem;
-`
+`;
 
 const OAuthButton = styled.button`
   display: flex;
@@ -319,7 +327,7 @@ const OAuthButton = styled.button`
     opacity: 0.6;
     cursor: not-allowed;
   }
-`
+`;
 
 const FooterLink = styled.div`
   text-align: center;
@@ -336,7 +344,7 @@ const FooterLink = styled.div`
       text-decoration: underline;
     }
   }
-`
+`;
 
 const ErrorMessage = styled(motion.div)`
   display: flex;
@@ -350,12 +358,12 @@ const ErrorMessage = styled(motion.div)`
   margin-bottom: 1.5rem;
   font-size: 0.9rem;
   line-height: 1.4;
-`
+`;
 
 // Verification Layout Elements
 const VerifyContainer = styled.div`
   text-align: center;
-`
+`;
 
 const OTPGroup = styled.div`
   display: flex;
@@ -363,12 +371,13 @@ const OTPGroup = styled.div`
   gap: 0.5rem;
   margin: 2rem 0;
   position: relative;
-`
+`;
 
 const OTPChar = styled.div`
   width: 45px;
   height: 55px;
-  border: 1px solid ${props => props.$active ? '#0f172a' : props.$filled ? '#cbd5e1' : '#e2e8f0'};
+  border: 1px solid
+    ${(props) => (props.$active ? '#0f172a' : props.$filled ? '#cbd5e1' : '#e2e8f0')};
   border-radius: 0.5rem;
   display: flex;
   align-items: center;
@@ -376,10 +385,10 @@ const OTPChar = styled.div`
   font-size: 1.5rem;
   font-weight: 600;
   color: #0f172a;
-  background: ${props => props.$active ? '#f8fafc' : 'white'};
-  box-shadow: ${props => props.$active ? '0 0 0 2px rgba(15, 23, 42, 0.1)' : 'none'};
+  background: ${(props) => (props.$active ? '#f8fafc' : 'white')};
+  box-shadow: ${(props) => (props.$active ? '0 0 0 2px rgba(15, 23, 42, 0.1)' : 'none')};
   transition: all 0.2s;
-`
+`;
 
 const HiddenInput = styled.input`
   position: absolute;
@@ -389,7 +398,7 @@ const HiddenInput = styled.input`
   height: 100%;
   opacity: 0;
   cursor: pointer;
-`
+`;
 
 const SuccessIconBox = styled.div`
   width: 64px;
@@ -401,111 +410,111 @@ const SuccessIconBox = styled.div`
   align-items: center;
   justify-content: center;
   margin: 0 auto 1.5rem;
-`
+`;
 
 const SignupPage = () => {
-  const navigate = useNavigate()
-  const { isLoggedIn, signUp, signInWithGoogle, signInWithGithub, verifyEmailCode } = useAuth()
-  const { t } = useTranslation()
+  const navigate = useNavigate();
+  const { isLoggedIn, signUp, signInWithGoogle, signInWithGithub, verifyEmailCode } = useAuth();
+  const { t } = useTranslation();
 
-  const [registrationForm, setRegistrationForm] = useState({ email: '', password: '' })
-  const [showPassword, setShowPassword] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [oauthLoading, setOauthLoading] = useState(null)
-  const [error, setError] = useState('')
-  const [pendingVerification, setPendingVerification] = useState(false)
-  const [code, setCode] = useState('')
+  const [registrationForm, setRegistrationForm] = useState({ email: '', password: '' });
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [oauthLoading, setOauthLoading] = useState(null);
+  const [error, setError] = useState('');
+  const [pendingVerification, setPendingVerification] = useState(false);
+  const [code, setCode] = useState('');
 
   const passwordRules = {
     length: registrationForm.password.length >= 8,
     uppercase: /[A-Z]/.test(registrationForm.password),
     number: /[0-9]/.test(registrationForm.password),
-    special: /[^A-Za-z0-9]/.test(registrationForm.password)
-  }
+    special: /[^A-Za-z0-9]/.test(registrationForm.password),
+  };
 
   React.useEffect(() => {
     if (isLoggedIn && !pendingVerification) {
-      navigate('/dashboard')
+      navigate('/dashboard');
     }
-  }, [isLoggedIn, pendingVerification, navigate])
+  }, [isLoggedIn, pendingVerification, navigate]);
 
   const syncRegistrationInput = (event) => {
-    const { name, value } = event.target
-    setRegistrationForm((previousForm) => ({ ...previousForm, [name]: value }))
-    if (error) setError('')
-  }
+    const { name, value } = event.target;
+    setRegistrationForm((previousForm) => ({ ...previousForm, [name]: value }));
+    if (error) setError('');
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (!registrationForm.email || !registrationForm.password) {
-      setError(t('signup.errorFields'))
-      return
+      setError(t('signup.errorFields'));
+      return;
     }
-    const allPasswordRulesPassed = Object.values(passwordRules).every(Boolean)
+    const allPasswordRulesPassed = Object.values(passwordRules).every(Boolean);
     if (!allPasswordRulesPassed) {
-       setError(t('signup.errorPassword'))
-       return
+      setError(t('signup.errorPassword'));
+      return;
     }
 
-    setLoading(true)
-    setError('')
+    setLoading(true);
+    setError('');
 
     try {
-      const result = await signUp(registrationForm.email, registrationForm.password)
+      const result = await signUp(registrationForm.email, registrationForm.password);
 
       if (result.error) {
-        setError(result.error.message || t('signup.errorCreate'))
+        setError(result.error.message || t('signup.errorCreate'));
       } else if (result.data?.requiresVerification) {
-        setPendingVerification(true)
+        setPendingVerification(true);
       } else {
-        navigate('/dashboard')
+        navigate('/dashboard');
       }
     } catch (err) {
-      setError(err.message || t('signup.errorCreate'))
+      setError(err.message || t('signup.errorCreate'));
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleVerify = async (e) => {
-    e.preventDefault()
-    if (code.length < 6) return
+    e.preventDefault();
+    if (code.length < 6) return;
 
-    setLoading(true)
-    setError('')
+    setLoading(true);
+    setError('');
 
     try {
-      const result = await verifyEmailCode(code)
+      const result = await verifyEmailCode(code);
 
       if (result.error) {
-        setError(result.error.message || t('signup.errorCode'))
+        setError(result.error.message || t('signup.errorCode'));
       } else {
-        navigate('/dashboard')
+        navigate('/dashboard');
       }
     } catch (err) {
-      setError(err.message || t('signup.errorCode'))
+      setError(err.message || t('signup.errorCode'));
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleOAuth = async (provider) => {
-    setLoading(true)
-    setOauthLoading(provider)
-    setError('')
+    setLoading(true);
+    setOauthLoading(provider);
+    setError('');
     try {
-      const action = provider === 'google' ? signInWithGoogle : signInWithGithub
-      const result = await action()
+      const action = provider === 'google' ? signInWithGoogle : signInWithGithub;
+      const result = await action();
       if (result?.error) {
-        setError(result.error.message || `Erreur d'inscription avec ${provider}`)
+        setError(result.error.message || `Erreur d'inscription avec ${provider}`);
       }
     } catch (err) {
-      setError(err.message || `Erreur d'inscription avec ${provider}`)
+      setError(err.message || `Erreur d'inscription avec ${provider}`);
     } finally {
-      setLoading(false)
-      setOauthLoading(null)
+      setLoading(false);
+      setOauthLoading(null);
     }
-  }
+  };
 
   return (
     <PageWrapper>
@@ -541,7 +550,9 @@ const SignupPage = () => {
                 <FormGroup>
                   <Label>{t('signup.email')}</Label>
                   <InputWrapper>
-                    <IconWrapper><Mail size={18} /></IconWrapper>
+                    <IconWrapper>
+                      <Mail size={18} />
+                    </IconWrapper>
                     <Input
                       type="email"
                       name="email"
@@ -556,9 +567,11 @@ const SignupPage = () => {
                 <FormGroup>
                   <Label>{t('signup.password')}</Label>
                   <InputWrapper>
-                    <IconWrapper><Lock size={18} /></IconWrapper>
+                    <IconWrapper>
+                      <Lock size={18} />
+                    </IconWrapper>
                     <Input
-                      type={showPassword ? "text" : "password"}
+                      type={showPassword ? 'text' : 'password'}
                       name="password"
                       placeholder={t('signup.passwordPlaceholder')}
                       value={registrationForm.password}
@@ -566,67 +579,84 @@ const SignupPage = () => {
                       required
                     />
                     <PasswordToggle type="button" onClick={() => setShowPassword(!showPassword)}>
-                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </PasswordToggle>
                   </InputWrapper>
 
-                  {registrationForm.password.length > 0 && (() => {
-                    const strength = Object.values(passwordRules).filter(Boolean).length;
-                    const labels = ['', 'Faible', 'Moyen', 'Bien', 'Fort'];
-                    return (
-                      <>
-                        <div style={{ display: 'flex', alignItems: 'center', marginTop: '0.75rem' }}>
-                          <StrengthBarWrapper style={{ flex: 1, marginTop: 0 }}>
-                            {[0, 1, 2, 3].map(i => (
-                              <StrengthSegment key={i} $strength={strength} $index={i} />
-                            ))}
-                          </StrengthBarWrapper>
-                          <StrengthLabel $strength={strength}>{labels[strength]}</StrengthLabel>
-                        </div>
-                        <PasswordCriteria>
-                          <Criterion $met={passwordRules.length}>
-                            {passwordRules.length ? <Check size={14}/> : <X size={14}/>} {t('signup.criteria.length')}
-                          </Criterion>
-                          <Criterion $met={passwordRules.uppercase}>
-                            {passwordRules.uppercase ? <Check size={14}/> : <X size={14}/>} {t('signup.criteria.uppercase')}
-                          </Criterion>
-                          <Criterion $met={passwordRules.number}>
-                            {passwordRules.number ? <Check size={14}/> : <X size={14}/>} {t('signup.criteria.number')}
-                          </Criterion>
-                          <Criterion $met={passwordRules.special}>
-                            {passwordRules.special ? <Check size={14}/> : <X size={14}/>} {t('signup.criteria.special')}
-                          </Criterion>
-                        </PasswordCriteria>
-                      </>
-                    );
-                  })()}
+                  {registrationForm.password.length > 0 &&
+                    (() => {
+                      const strength = Object.values(passwordRules).filter(Boolean).length;
+                      const labels = ['', 'Faible', 'Moyen', 'Bien', 'Fort'];
+                      return (
+                        <>
+                          <div
+                            style={{ display: 'flex', alignItems: 'center', marginTop: '0.75rem' }}
+                          >
+                            <StrengthBarWrapper style={{ flex: 1, marginTop: 0 }}>
+                              {[0, 1, 2, 3].map((i) => (
+                                <StrengthSegment key={i} $strength={strength} $index={i} />
+                              ))}
+                            </StrengthBarWrapper>
+                            <StrengthLabel $strength={strength}>{labels[strength]}</StrengthLabel>
+                          </div>
+                          <PasswordCriteria>
+                            <Criterion $met={passwordRules.length}>
+                              {passwordRules.length ? <Check size={14} /> : <X size={14} />}{' '}
+                              {t('signup.criteria.length')}
+                            </Criterion>
+                            <Criterion $met={passwordRules.uppercase}>
+                              {passwordRules.uppercase ? <Check size={14} /> : <X size={14} />}{' '}
+                              {t('signup.criteria.uppercase')}
+                            </Criterion>
+                            <Criterion $met={passwordRules.number}>
+                              {passwordRules.number ? <Check size={14} /> : <X size={14} />}{' '}
+                              {t('signup.criteria.number')}
+                            </Criterion>
+                            <Criterion $met={passwordRules.special}>
+                              {passwordRules.special ? <Check size={14} /> : <X size={14} />}{' '}
+                              {t('signup.criteria.special')}
+                            </Criterion>
+                          </PasswordCriteria>
+                        </>
+                      );
+                    })()}
                 </FormGroup>
 
                 <SubmitButton
                   type="submit"
-                  disabled={loading || (registrationForm.password.length > 0 && !Object.values(passwordRules).every(Boolean))}
+                  disabled={
+                    loading ||
+                    (registrationForm.password.length > 0 &&
+                      !Object.values(passwordRules).every(Boolean))
+                  }
                   whileTap={{ scale: 0.98 }}
                 >
                   {loading ? t('signup.loading') : t('signup.submit')}
                 </SubmitButton>
               </Form>
 
-              <Divider><span>{t('signup.orSignupWith')}</span></Divider>
+              <Divider>
+                <span>{t('signup.orSignupWith')}</span>
+              </Divider>
 
               <OAuthButtons>
-                <OAuthButton
-                  type="button"
-                  disabled={loading}
-                  onClick={() => handleOAuth('google')}
-                >
-                  {oauthLoading === 'google' ? t('auth.signingIn', 'Connexion...') : <><FaGoogle color="#ea4335" /> Google</>}
+                <OAuthButton type="button" disabled={loading} onClick={() => handleOAuth('google')}>
+                  {oauthLoading === 'google' ? (
+                    t('auth.signingIn', 'Connexion...')
+                  ) : (
+                    <>
+                      <FaGoogle color="#ea4335" /> Google
+                    </>
+                  )}
                 </OAuthButton>
-                <OAuthButton
-                  type="button"
-                  disabled={loading}
-                  onClick={() => handleOAuth('github')}
-                >
-                  {oauthLoading === 'github' ? t('auth.signingIn', 'Connexion...') : <><FaGithub /> GitHub</>}
+                <OAuthButton type="button" disabled={loading} onClick={() => handleOAuth('github')}>
+                  {oauthLoading === 'github' ? (
+                    t('auth.signingIn', 'Connexion...')
+                  ) : (
+                    <>
+                      <FaGithub /> GitHub
+                    </>
+                  )}
                 </OAuthButton>
               </OAuthButtons>
 
@@ -643,7 +673,8 @@ const SignupPage = () => {
                 </SuccessIconBox>
                 <Title>{t('signup.verifyTitle')}</Title>
                 <Subtitle style={{ marginBottom: '1.5rem', lineHeight: '1.5' }}>
-                  {t('signup.verifySubtitle')}<br/>
+                  {t('signup.verifySubtitle')}
+                  <br />
                   <strong style={{ color: '#0f172a' }}>{registrationForm.email}</strong>
                 </Subtitle>
 
@@ -655,7 +686,7 @@ const SignupPage = () => {
                         $active={code.length === index}
                         $filled={code.length > index}
                       >
-                        {code[index] || ""}
+                        {code[index] || ''}
                       </OTPChar>
                     ))}
                     <HiddenInput
@@ -680,16 +711,15 @@ const SignupPage = () => {
               </motion.div>
             </VerifyContainer>
           )}
-
         </FormContainer>
       </LeftPanel>
 
-      <AuthRightPanel 
+      <AuthRightPanel
         title={t('signup.rightPanel.title')}
         description={t('signup.rightPanel.desc')}
       />
     </PageWrapper>
-  )
-}
+  );
+};
 
-export default SignupPage
+export default SignupPage;

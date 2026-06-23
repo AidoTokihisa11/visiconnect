@@ -82,26 +82,22 @@ const AuthorTitle = styled.div`
 
 // ========== COMPONENT ==========
 
-const TestimonialCard = ({ 
-  quote, 
-  author, 
-  title, 
-  ...props 
-}) => {
-  const initials = author
-    ?.split(' ')
-    .map(n => n[0])
-    .join('')
-    .toUpperCase() || '?';
+const TestimonialCard = ({ quote, author, title, ...props }) => {
+  const initials =
+    author
+      ?.split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase() || '?';
 
   return (
     <Card {...props}>
       <QuoteIcon>
         <Quote size={20} />
       </QuoteIcon>
-      
+
       <Text>{quote}</Text>
-      
+
       <AuthorSection>
         <Avatar title={author}>{initials}</Avatar>
         <AuthorInfo>

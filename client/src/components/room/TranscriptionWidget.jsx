@@ -1,24 +1,24 @@
 /**
  * TranscriptionWidget - Widget flottant pour afficher la transcription en temps réel
- * 
+ *
  * Utilise Web Speech API - Gratuit, client-side only
  * Compatible: Chrome, Edge, Safari
  */
 
 import React, { useState, useEffect, useRef } from 'react';
 import styled, { keyframes, css } from 'styled-components';
-import { 
-  Captions, 
-  CaptionsOff, 
-  X, 
-  Minimize2, 
-  Maximize2, 
+import {
+  Captions,
+  CaptionsOff,
+  X,
+  Minimize2,
+  Maximize2,
   Download,
   Languages,
   Settings,
   AlertCircle,
-  Mic, 
-  MicOff 
+  Mic,
+  MicOff,
 } from 'lucide-react';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 import { useTranscription } from '../../hooks/useTranscription';
@@ -39,28 +39,28 @@ const fadeIn = keyframes`
 // Container principal - positionné en bas de l'écran
 const WidgetContainer = styled.div`
   position: fixed;
-  bottom: ${props => props.$isMinimized ? '100px' : '120px'};
+  bottom: ${(props) => (props.$isMinimized ? '100px' : '120px')};
   left: 50%;
   transform: translateX(-50%);
   z-index: 150;
-  width: ${props => props.$isMinimized ? 'auto' : 'min(90vw, 700px)'};
-  max-height: ${props => props.$isMinimized ? '48px' : '200px'};
+  width: ${(props) => (props.$isMinimized ? 'auto' : 'min(90vw, 700px)')};
+  max-height: ${(props) => (props.$isMinimized ? '48px' : '200px')};
   background: ${THEME.panelBg};
   backdrop-filter: blur(16px);
   border: 1px solid ${THEME.border};
-  border-radius: ${props => props.$isMinimized ? '24px' : '16px'};
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  border-radius: ${(props) => (props.$isMinimized ? '24px' : '16px')};
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   overflow: hidden;
   transition: all 0.3s ease;
   animation: ${fadeIn} 0.3s ease;
 
   @media (max-width: 768px) {
-    bottom: ${props => props.$isMinimized ? '80px' : '100px'};
-    width: ${props => props.$isMinimized ? 'auto' : 'calc(100vw - 24px)'};
-    left: ${props => props.$isMinimized ? 'auto' : '12px'};
-    right: ${props => props.$isMinimized ? '12px' : 'auto'};
-    transform: ${props => props.$isMinimized ? 'none' : 'none'};
-    max-height: ${props => props.$isMinimized ? '40px' : '150px'};
+    bottom: ${(props) => (props.$isMinimized ? '80px' : '100px')};
+    width: ${(props) => (props.$isMinimized ? 'auto' : 'calc(100vw - 24px)')};
+    left: ${(props) => (props.$isMinimized ? 'auto' : '12px')};
+    right: ${(props) => (props.$isMinimized ? '12px' : 'auto')};
+    transform: ${(props) => (props.$isMinimized ? 'none' : 'none')};
+    max-height: ${(props) => (props.$isMinimized ? '40px' : '150px')};
   }
 `;
 
@@ -70,8 +70,8 @@ const Header = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 8px 12px;
-  border-bottom: ${props => props.$isMinimized ? 'none' : `1px solid ${THEME.border}`};
-  background: rgba(0,0,0,0.2);
+  border-bottom: ${(props) => (props.$isMinimized ? 'none' : `1px solid ${THEME.border}`)};
+  background: rgba(0, 0, 0, 0.2);
 `;
 
 const HeaderLeft = styled.div`
@@ -85,12 +85,14 @@ const StatusIndicator = styled.div`
   align-items: center;
   gap: 6px;
   font-size: 0.85rem;
-  color: ${props => props.$isListening ? '#10b981' : THEME.textDim};
+  color: ${(props) => (props.$isListening ? '#10b981' : THEME.textDim)};
 
   svg {
-    ${props => props.$isListening && css`
-      animation: ${pulse} 1.5s ease-in-out infinite;
-    `}
+    ${(props) =>
+      props.$isListening &&
+      css`
+        animation: ${pulse} 1.5s ease-in-out infinite;
+      `}
   }
 `;
 
@@ -114,7 +116,7 @@ const IconButton = styled.button`
   transition: all 0.2s ease;
 
   &:hover {
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     color: ${THEME.text};
   }
 
@@ -142,7 +144,7 @@ const TranscriptLine = styled.div`
   font-size: 0.95rem;
   line-height: 1.5;
   color: ${THEME.text};
-  
+
   &:last-child {
     margin-bottom: 0;
   }
@@ -181,7 +183,7 @@ const ErrorBanner = styled.div`
 
 // Language selector dropdown
 const LanguageSelect = styled.select`
-  background: rgba(0,0,0,0.3);
+  background: rgba(0, 0, 0, 0.3);
   border: 1px solid ${THEME.border};
   border-radius: 6px;
   color: ${THEME.text};
@@ -216,7 +218,7 @@ export const TranscriptionWidget = ({ onClose }) => {
   const [language, setLanguage] = useState('fr-FR');
   const { settings, updateSettings } = useAISettings();
   const transcriptRef = useRef(null);
-  
+
   const {
     isListening,
     transcript,
@@ -269,7 +271,11 @@ export const TranscriptionWidget = ({ onClose }) => {
   // Format timestamp
   const formatTime = (timestamp) => {
     const date = new Date(timestamp);
-    return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    return date.toLocaleTimeString('fr-FR', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    });
   };
 
   if (!isSupported) {
@@ -286,7 +292,12 @@ export const TranscriptionWidget = ({ onClose }) => {
         </Header>
         <EmptyState>
           <AlertCircle size={32} style={{ marginBottom: 8, opacity: 0.5 }} />
-          <p>{t('room.transcription.notSupported', 'Web Speech API non supportée par ce navigateur.')}</p>
+          <p>
+            {t(
+              'room.transcription.notSupported',
+              'Web Speech API non supportée par ce navigateur.'
+            )}
+          </p>
           <p style={{ fontSize: '0.8rem', marginTop: 8 }}>
             {t('room.transcription.useChromeEdge', 'Utilisez Chrome, Edge ou Safari.')}
           </p>
@@ -303,14 +314,28 @@ export const TranscriptionWidget = ({ onClose }) => {
           <HeaderLeft>
             <StatusIndicator $isListening={isListening}>
               {isListening ? <Mic size={16} /> : <MicOff size={16} />}
-              <span>{isListening ? t('room.transcription.active', 'Transcription active') : t('room.transcription.paused', 'En pause')}</span>
+              <span>
+                {isListening
+                  ? t('room.transcription.active', 'Transcription active')
+                  : t('room.transcription.paused', 'En pause')}
+              </span>
             </StatusIndicator>
           </HeaderLeft>
           <HeaderControls>
-            <IconButton onClick={toggle} title={isListening ? t('room.transcription.pause', 'Pause') : t('room.transcription.resume', 'Reprendre')}>
+            <IconButton
+              onClick={toggle}
+              title={
+                isListening
+                  ? t('room.transcription.pause', 'Pause')
+                  : t('room.transcription.resume', 'Reprendre')
+              }
+            >
               {isListening ? <MicOff size={16} /> : <Mic size={16} />}
             </IconButton>
-            <IconButton onClick={() => setIsMinimized(false)} title={t('room.transcription.expand', 'Agrandir')}>
+            <IconButton
+              onClick={() => setIsMinimized(false)}
+              title={t('room.transcription.expand', 'Agrandir')}
+            >
               <Maximize2 size={16} />
             </IconButton>
             <IconButton onClick={onClose} title={t('room.transcription.closeBtn', 'Fermer')}>
@@ -330,33 +355,49 @@ export const TranscriptionWidget = ({ onClose }) => {
           {error === 'network' ? t('room.transcription.networkError', 'Erreur réseau') : error}
         </ErrorBanner>
       )}
-      
+
       <Header $isMinimized={false}>
         <HeaderLeft>
           <StatusIndicator $isListening={isListening}>
             {isListening ? <Mic size={18} /> : <MicOff size={18} />}
-            <span>{isListening ? t('room.transcription.active', 'Transcription active') : t('room.transcription.paused', 'En pause')}</span>
+            <span>
+              {isListening
+                ? t('room.transcription.active', 'Transcription active')
+                : t('room.transcription.paused', 'En pause')}
+            </span>
           </StatusIndicator>
-          
+
           <LanguageSelect value={language} onChange={handleLanguageChange}>
-            {LANGUAGES.map(lang => (
-              <option key={lang.code} value={lang.code}>{lang.label}</option>
+            {LANGUAGES.map((lang) => (
+              <option key={lang.code} value={lang.code}>
+                {lang.label}
+              </option>
             ))}
           </LanguageSelect>
         </HeaderLeft>
-        
+
         <HeaderControls>
-          <IconButton onClick={toggle} title={isListening ? t('room.transcription.pause', 'Pause') : t('room.transcription.resume', 'Reprendre')}>
+          <IconButton
+            onClick={toggle}
+            title={
+              isListening
+                ? t('room.transcription.pause', 'Pause')
+                : t('room.transcription.resume', 'Reprendre')
+            }
+          >
             {isListening ? <MicOff size={18} /> : <Mic size={18} />}
           </IconButton>
-          <IconButton 
-            onClick={handleExport} 
+          <IconButton
+            onClick={handleExport}
             disabled={transcript.length === 0}
             title={t('room.transcription.export', 'Exporter')}
           >
             <Download size={18} />
           </IconButton>
-          <IconButton onClick={() => setIsMinimized(true)} title={t('room.transcription.minimize', 'Minimiser')}>
+          <IconButton
+            onClick={() => setIsMinimized(true)}
+            title={t('room.transcription.minimize', 'Minimiser')}
+          >
             <Minimize2 size={18} />
           </IconButton>
           <IconButton onClick={onClose} title={t('room.transcription.closeBtn', 'Fermer')}>
@@ -371,7 +412,9 @@ export const TranscriptionWidget = ({ onClose }) => {
             <Captions size={32} style={{ marginBottom: 8, opacity: 0.5 }} />
             <p>{t('room.transcription.willAppear', 'La transcription apparaîtra ici...')}</p>
             <p style={{ fontSize: '0.8rem', marginTop: 8, color: THEME.textDim }}>
-              {isListening ? t('room.transcription.listening', 'En écoute...') : t('room.transcription.clickMic', 'Cliquez sur le micro pour démarrer')}
+              {isListening
+                ? t('room.transcription.listening', 'En écoute...')
+                : t('room.transcription.clickMic', 'Cliquez sur le micro pour démarrer')}
             </p>
           </EmptyState>
         ) : (

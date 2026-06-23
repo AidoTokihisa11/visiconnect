@@ -1,6 +1,6 @@
 /**
  * useTranscription - Hook React pour la transcription live
- * 
+ *
  * Utilise Web Speech API (gratuit, côté client)
  */
 
@@ -35,7 +35,7 @@ export const useTranscription = (options = {}) => {
     });
 
     if (!initialized) {
-      setError('Impossible d\'initialiser la transcription');
+      setError("Impossible d'initialiser la transcription");
       return;
     }
 
@@ -69,7 +69,7 @@ export const useTranscription = (options = {}) => {
   // Démarre la transcription
   const start = useCallback(() => {
     if (!serviceRef.current) return;
-    
+
     setError(null);
     const started = serviceRef.current.start();
     setIsListening(started);
@@ -78,7 +78,7 @@ export const useTranscription = (options = {}) => {
   // Arrête la transcription
   const stop = useCallback(() => {
     if (!serviceRef.current) return;
-    
+
     serviceRef.current.stop();
     setIsListening(false);
   }, []);
@@ -126,7 +126,7 @@ export const useTranscription = (options = {}) => {
     transcript,
     interimText,
     error,
-    
+
     // Actions
     start,
     stop,

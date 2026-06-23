@@ -129,8 +129,13 @@ const ModalSubmit = styled.button`
   font-weight: 700;
   cursor: pointer;
   transition: background 0.2s;
-  &:hover { background: #1d4ed8; }
-  &:disabled { opacity: 0.45; cursor: not-allowed; }
+  &:hover {
+    background: #1d4ed8;
+  }
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
 `;
 
 const ModalCancel = styled.button`
@@ -143,7 +148,9 @@ const ModalCancel = styled.button`
   font-weight: 600;
   cursor: pointer;
   transition: background 0.15s;
-  &:hover { background: #f8fafc; }
+  &:hover {
+    background: #f8fafc;
+  }
 `;
 
 const LaunchButton = styled.button`
@@ -158,16 +165,23 @@ const LaunchButton = styled.button`
   font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s, transform 0.15s;
+  transition:
+    background 0.2s,
+    transform 0.15s;
   text-decoration: none;
-  &:hover { background: #1d4ed8; transform: translateY(-1px); }
+  &:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+  }
 `;
 
 export default function DemoPageNew() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [demoRoomId] = React.useState(`demo-${Math.random().toString(36).substring(2, 9)}`);
-  const [showModal, setShowModal] = useState(() => new URLSearchParams(window.location.search).get('join') === '1');
+  const [showModal, setShowModal] = useState(
+    () => new URLSearchParams(window.location.search).get('join') === '1'
+  );
   const [guestName, setGuestName] = useState('');
 
   const handleLaunchDemo = () => setShowModal(true);
@@ -292,7 +306,12 @@ export default function DemoPageNew() {
         <ModalOverlay onClick={() => setShowModal(false)}>
           <ModalBox onClick={(e) => e.stopPropagation()}>
             <ModalTitle>{t('demo.modal.title', 'Rejoindre la démo live')}</ModalTitle>
-            <ModalSub>{t('demo.modal.subtitle', 'Entrez un prénom ou un pseudo pour participer à la démonstration. Aucun compte requis.')}</ModalSub>
+            <ModalSub>
+              {t(
+                'demo.modal.subtitle',
+                'Entrez un prénom ou un pseudo pour participer à la démonstration. Aucun compte requis.'
+              )}
+            </ModalSub>
             <ModalInput
               autoFocus
               type="text"
@@ -303,7 +322,9 @@ export default function DemoPageNew() {
               onKeyDown={(e) => e.key === 'Enter' && handleJoin()}
             />
             <ModalActions>
-              <ModalCancel onClick={() => setShowModal(false)}>{t('demo.modal.cancel', 'Annuler')}</ModalCancel>
+              <ModalCancel onClick={() => setShowModal(false)}>
+                {t('demo.modal.cancel', 'Annuler')}
+              </ModalCancel>
               <ModalSubmit onClick={handleJoin} disabled={!guestName.trim()}>
                 {t('demo.modal.submit', 'Lancer la démo →')}
               </ModalSubmit>
@@ -325,9 +346,7 @@ export default function DemoPageNew() {
                 {t('demo.hero.title')}
                 <span>{t('demo.hero.titleHighlight')}</span>
               </HeroTitle>
-              <HeroSubtitle>
-                {t('demo.hero.subtitle')}
-              </HeroSubtitle>
+              <HeroSubtitle>{t('demo.hero.subtitle')}</HeroSubtitle>
               <HeroActions>
                 <LaunchButton onClick={handleLaunchDemo}>
                   <Play size={18} fill="currentColor" /> {t('demo.hero.launchDemo')}
@@ -337,9 +356,15 @@ export default function DemoPageNew() {
                 </SecondaryButton>
               </HeroActions>
               <HeroMeta>
-                <MetaPill><Gauge size={16} /> {t('demo.hero.meta.latency')}</MetaPill>
-                <MetaPill><Bot size={16} /> {t('demo.hero.meta.ai')}</MetaPill>
-                <MetaPill><ShieldCheck size={16} /> {t('demo.hero.meta.enterprise')}</MetaPill>
+                <MetaPill>
+                  <Gauge size={16} /> {t('demo.hero.meta.latency')}
+                </MetaPill>
+                <MetaPill>
+                  <Bot size={16} /> {t('demo.hero.meta.ai')}
+                </MetaPill>
+                <MetaPill>
+                  <ShieldCheck size={16} /> {t('demo.hero.meta.enterprise')}
+                </MetaPill>
               </HeroMeta>
             </HeroContent>
 
@@ -356,16 +381,20 @@ export default function DemoPageNew() {
 
         <Section data-reveal>
           <SectionHeader>
-            <SectionLabel><Sparkles size={16} /> {t('demo.sections.difference.label')}</SectionLabel>
+            <SectionLabel>
+              <Sparkles size={16} /> {t('demo.sections.difference.label')}
+            </SectionLabel>
             <SectionTitle>{t('demo.sections.difference.title')}</SectionTitle>
-            <SectionText>
-              {t('demo.sections.difference.text')}
-            </SectionText>
+            <SectionText>{t('demo.sections.difference.text')}</SectionText>
           </SectionHeader>
 
           <CardGrid>
             {highlights.map((item, index) => (
-              <FeatureCard key={item.title} data-reveal style={{ '--reveal-delay': `${index * 80}ms` }}>
+              <FeatureCard
+                key={item.title}
+                data-reveal
+                style={{ '--reveal-delay': `${index * 80}ms` }}
+              >
                 <IconBox>{item.icon}</IconBox>
                 <h3>{item.title}</h3>
                 <p>{item.description}</p>
@@ -376,16 +405,20 @@ export default function DemoPageNew() {
 
         <Section data-reveal>
           <SectionHeader>
-            <SectionLabel><Layers3 size={16} /> {t('demo.sections.workflow.label')}</SectionLabel>
+            <SectionLabel>
+              <Layers3 size={16} /> {t('demo.sections.workflow.label')}
+            </SectionLabel>
             <SectionTitle>{t('demo.sections.workflow.title')}</SectionTitle>
-            <SectionText>
-              {t('demo.sections.workflow.text')}
-            </SectionText>
+            <SectionText>{t('demo.sections.workflow.text')}</SectionText>
           </SectionHeader>
 
           <WorkflowGrid>
             {workflowSteps.map((item, index) => (
-              <WorkflowCard key={item.step} data-reveal style={{ '--reveal-delay': `${index * 90}ms` }}>
+              <WorkflowCard
+                key={item.step}
+                data-reveal
+                style={{ '--reveal-delay': `${index * 90}ms` }}
+              >
                 <StepBadge>{item.step}</StepBadge>
                 <WorkflowContent>
                   <h3>{item.title}</h3>
@@ -399,16 +432,24 @@ export default function DemoPageNew() {
         <DarkBand>
           <DarkContainer data-reveal>
             <DarkText>
-              <SectionLabel style={{ color: '#93c5fd' }}><Gauge size={16} /> {t('demo.darkband.label')}</SectionLabel>
+              <SectionLabel style={{ color: '#93c5fd' }}>
+                <Gauge size={16} /> {t('demo.darkband.label')}
+              </SectionLabel>
               <h2>{t('demo.darkband.title')}</h2>
-              <p>
-                {t('demo.darkband.text')}
-              </p>
+              <p>{t('demo.darkband.text')}</p>
               <BulletGrid>
-                <Bullet><BadgeCheck size={16} /> {t('demo.darkband.bullets.0')}</Bullet>
-                <Bullet><BadgeCheck size={16} /> {t('demo.darkband.bullets.1')}</Bullet>
-                <Bullet><BadgeCheck size={16} /> {t('demo.darkband.bullets.2')}</Bullet>
-                <Bullet><BadgeCheck size={16} /> {t('demo.darkband.bullets.3')}</Bullet>
+                <Bullet>
+                  <BadgeCheck size={16} /> {t('demo.darkband.bullets.0')}
+                </Bullet>
+                <Bullet>
+                  <BadgeCheck size={16} /> {t('demo.darkband.bullets.1')}
+                </Bullet>
+                <Bullet>
+                  <BadgeCheck size={16} /> {t('demo.darkband.bullets.2')}
+                </Bullet>
+                <Bullet>
+                  <BadgeCheck size={16} /> {t('demo.darkband.bullets.3')}
+                </Bullet>
               </BulletGrid>
             </DarkText>
 
@@ -443,16 +484,20 @@ export default function DemoPageNew() {
 
         <Section data-reveal>
           <SectionHeader>
-            <SectionLabel><Globe size={16} /> {t('demo.sections.usecases.label')}</SectionLabel>
+            <SectionLabel>
+              <Globe size={16} /> {t('demo.sections.usecases.label')}
+            </SectionLabel>
             <SectionTitle>{t('demo.sections.usecases.title')}</SectionTitle>
-            <SectionText>
-              {t('demo.sections.usecases.text')}
-            </SectionText>
+            <SectionText>{t('demo.sections.usecases.text')}</SectionText>
           </SectionHeader>
 
           <CardGrid>
             {useCases.map((item, index) => (
-              <FeatureCard key={item.title} data-reveal style={{ '--reveal-delay': `${index * 80}ms` }}>
+              <FeatureCard
+                key={item.title}
+                data-reveal
+                style={{ '--reveal-delay': `${index * 80}ms` }}
+              >
                 <IconBox>{item.icon}</IconBox>
                 <h3>{item.title}</h3>
                 <p>{item.description}</p>

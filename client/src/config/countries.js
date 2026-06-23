@@ -36,7 +36,7 @@ export const COUNTRIES = [
   { code: 'TN', name: 'Tunisie', dial: '+216', flag: '🇹🇳' },
   { code: 'EG', name: 'Égypte', dial: '+20', flag: '🇪🇬' },
   { code: 'SN', name: 'Sénégal', dial: '+221', flag: '🇸🇳' },
-  { code: 'CI', name: 'Côte d\'Ivoire', dial: '+225', flag: '🇨🇮' },
+  { code: 'CI', name: "Côte d'Ivoire", dial: '+225', flag: '🇨🇮' },
   { code: 'CM', name: 'Cameroun', dial: '+237', flag: '🇨🇲' },
   { code: 'ZA', name: 'Afrique du Sud', dial: '+27', flag: '🇿🇦' },
   { code: 'NG', name: 'Nigeria', dial: '+234', flag: '🇳🇬' },
@@ -78,8 +78,6 @@ export const COUNTRIES = [
   { code: 'VE', name: 'Venezuela', dial: '+58', flag: '🇻🇪' },
 ];
 
-export const findCountryByCode = (code) =>
-  COUNTRIES.find((c) => c.code === code) || null;
+export const findCountryByCode = (code) => COUNTRIES.find((c) => c.code === code) || null;
 
-export const findCountryByDial = (dial) =>
-  COUNTRIES.find((c) => c.dial === dial) || null;
+export const findCountryByDial = (dial) => COUNTRIES.find((c) => c.dial === dial) || null;

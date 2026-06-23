@@ -36,7 +36,8 @@ const Trigger = styled.button`
   border-radius: 6px;
   transition: background 0.15s;
 
-  &:hover, &:focus-visible {
+  &:hover,
+  &:focus-visible {
     background: rgba(37, 99, 235, 0.08);
     outline: none;
   }
@@ -96,7 +97,9 @@ const CloseButton = styled.button`
   display: flex;
   align-items: center;
 
-  &:hover { color: #0f172a; }
+  &:hover {
+    color: #0f172a;
+  }
 `;
 
 const Wrapper = styled.span`
@@ -104,12 +107,7 @@ const Wrapper = styled.span`
   display: inline-block;
 `;
 
-export const HelpPopover = ({
-  label = 'En savoir plus',
-  title,
-  children,
-  className,
-}) => {
+export const HelpPopover = ({ label = 'En savoir plus', title, children, className }) => {
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef(null);
   const triggerId = useId();
@@ -121,7 +119,9 @@ export const HelpPopover = ({
     const onDocClick = (e) => {
       if (wrapperRef.current && !wrapperRef.current.contains(e.target)) setOpen(false);
     };
-    const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
+    const onKey = (e) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
     document.addEventListener('mousedown', onDocClick);
     document.addEventListener('keydown', onKey);
     return () => {
@@ -189,7 +189,9 @@ const TooltipWrapper = styled.span`
     padding: 4px 8px;
     border-radius: 6px;
     white-space: nowrap;
-    transition: opacity 0.12s ease, visibility 0.12s ease;
+    transition:
+      opacity 0.12s ease,
+      visibility 0.12s ease;
     z-index: 60;
   }
 
@@ -205,7 +207,9 @@ export const Tooltip = ({ label, children, side = 'top', disabled = false }) => 
   return (
     <TooltipWrapper data-side={side}>
       {children}
-      <span className="vc-tooltip-bubble" role="tooltip">{label}</span>
+      <span className="vc-tooltip-bubble" role="tooltip">
+        {label}
+      </span>
     </TooltipWrapper>
   );
 };

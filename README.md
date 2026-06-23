@@ -89,6 +89,7 @@ cd client && npm start
 - Modern web browser (Chrome, Firefox, Safari, Edge)
 - Supabase account (free tier available)
 - Stack Auth account (optional, for authentication)
+
 ### Manual Installation (Alternative)
 
 **If you prefer manual setup:**
@@ -113,6 +114,7 @@ cd client && npm start     # Terminal 2
 ```
 
 **📝 Get your API keys:**
+
 - **Supabase:** https://app.supabase.com/project/_/settings/api
 - **Stack Auth:** https://app.stack-auth.com/projects
 
@@ -140,6 +142,7 @@ node scripts/secure-backup.js restore
 ```
 
 **Protected with:**
+
 - AES-256-CBC encryption
 - PBKDF2 key derivation (100,000 iterations)
 - Password protection
@@ -150,19 +153,20 @@ node scripts/secure-backup.js restore
 
 ## 📖 Documentation
 
-| Document | Description |
-|----------|-------------|
-| [START_HERE.md](START_HERE.md) | Quick start guide |
-| [BACKUP_GUIDE.md](BACKUP_GUIDE.md) | Encrypted backup system |
-| [SECURITY_GUIDE.md](SECURITY_GUIDE.md) | Security best practices |
-| [TESTING_E2E_WEBRTC.md](TESTING_E2E_WEBRTC.md) | End-to-end testing guide |
-| [SUPABASE_REALTIME_MIGRATION.md](SUPABASE_REALTIME_MIGRATION.md) | Technical architecture |
+| Document                                                         | Description              |
+| ---------------------------------------------------------------- | ------------------------ |
+| [START_HERE.md](START_HERE.md)                                   | Quick start guide        |
+| [BACKUP_GUIDE.md](BACKUP_GUIDE.md)                               | Encrypted backup system  |
+| [SECURITY_GUIDE.md](SECURITY_GUIDE.md)                           | Security best practices  |
+| [TESTING_E2E_WEBRTC.md](TESTING_E2E_WEBRTC.md)                   | End-to-end testing guide |
+| [SUPABASE_REALTIME_MIGRATION.md](SUPABASE_REALTIME_MIGRATION.md) | Technical architecture   |
 
 ---
 
 ## 🛠️ Tech Stack
 
 ### Frontend
+
 - React 18
 - Tailwind CSS
 - Framer Motion
@@ -171,18 +175,21 @@ node scripts/secure-backup.js restore
 - Supabase Client
 
 ### Backend
+
 - Node.js + Express
 - Supabase (Auth, Database, Realtime)
 - Stack Auth
 - PostgreSQL (via Supabase)
 
 ### Real-time Communication
+
 - **WebRTC** - Peer-to-peer video/audio
 - **Supabase Realtime** - WebSocket signaling
 - **Presence** - User tracking
 - **Broadcast** - Message distribution
 
 ### Backend
+
 - Node.js
 - Express
 - Socket.IO
@@ -195,6 +202,7 @@ Contributions are welcome! Please read our [Contributing Guidelines](CONTRIBUTIN
 ## 🐛 Bug Reports
 
 Found a bug? Please open an issue with:
+
 - Clear description
 - Steps to reproduce
 - Expected vs actual behavior
@@ -207,6 +215,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 👨‍💻 Author
 
 **AidoTokihisa**
+
 - GitHub: [@AidoTokihisa11](https://github.com/AidoTokihisa11)
 
 ## 🙏 Acknowledgments

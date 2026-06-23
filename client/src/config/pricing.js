@@ -7,10 +7,10 @@ export const PLANS = {
   starter: {
     id: 'starter',
     name: 'Starter',
-    priceMonthly: 0,           // €/month displayed
-    priceAnnual: 0,            // €/year displayed
-    amountMonthly: 0,          // Stripe cents/month
-    amountAnnual: 0,           // Stripe cents/year
+    priceMonthly: 0, // €/month displayed
+    priceAnnual: 0, // €/year displayed
+    amountMonthly: 0, // Stripe cents/month
+    amountAnnual: 0, // Stripe cents/year
     participants: 3,
     duration: '45 min',
     recording: false,

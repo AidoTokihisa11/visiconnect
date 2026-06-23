@@ -1,6 +1,6 @@
 /**
  * VideoEnhancementService - Amélioration visuelle côté client
- * 
+ *
  * Utilise CSS filters et Canvas pour simuler une amélioration
  * de la netteté sans GPU externe
  */
@@ -8,11 +8,11 @@
 class VideoEnhancementService {
   constructor() {
     this.settings = {
-      sharpness: 0,      // -100 à 100
-      contrast: 0,       // -100 à 100
-      brightness: 0,     // -100 à 100
-      saturation: 0,     // -100 à 100
-      warmth: 0,         // -100 à 100 (température couleur)
+      sharpness: 0, // -100 à 100
+      contrast: 0, // -100 à 100
+      brightness: 0, // -100 à 100
+      saturation: 0, // -100 à 100
+      warmth: 0, // -100 à 100 (température couleur)
     };
     this.enabled = false;
     this.presets = {
@@ -31,24 +31,24 @@ class VideoEnhancementService {
     if (!this.enabled) return 'none';
 
     const { contrast, brightness, saturation } = this.settings;
-    
+
     const filters = [];
-    
+
     // Contraste: 100 = normal, range 50-150
     if (contrast !== 0) {
       filters.push(`contrast(${100 + contrast}%)`);
     }
-    
+
     // Luminosité: 100 = normal, range 50-150
     if (brightness !== 0) {
       filters.push(`brightness(${100 + brightness}%)`);
     }
-    
+
     // Saturation: 100 = normal, range 0-200
     if (saturation !== 0) {
       filters.push(`saturate(${100 + saturation}%)`);
     }
-    
+
     // Température via sepia + hue-rotate
     if (this.settings.warmth !== 0) {
       const warmth = this.settings.warmth;
@@ -67,11 +67,11 @@ class VideoEnhancementService {
    */
   getVideoStyles() {
     const filter = this.getCSSFilter();
-    
+
     // Sharpness via CSS (subtle effect)
     const sharpness = this.settings.sharpness;
     let textShadow = 'none';
-    
+
     // Pour la netteté, on utilise un léger contour
     // Note: L'effet est subtil car CSS n'a pas de vrai filtre de netteté
     if (sharpness > 0 && this.enabled) {
@@ -166,11 +166,7 @@ class VideoEnhancementService {
     const output = new Uint8ClampedArray(data);
 
     // Kernel de sharpening simple
-    const kernel = [
-      0, -intensity, 0,
-      -intensity, 1 + 4 * intensity, -intensity,
-      0, -intensity, 0,
-    ];
+    const kernel = [0, -intensity, 0, -intensity, 1 + 4 * intensity, -intensity, 0, -intensity, 0];
 
     for (let y = 1; y < height - 1; y++) {
       for (let x = 1; x < width - 1; x++) {

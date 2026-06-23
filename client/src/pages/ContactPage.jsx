@@ -1,17 +1,10 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  Mail,
-  Building2,
-  MapPin,
-  CheckCircle2,
-  AlertCircle,
-  Briefcase,
-} from "lucide-react";
-import HeaderClean from "../components/HeaderClean";
-import FooterClean from "../components/FooterClean";
-import { useTranslation } from "../hooks/useTranslation";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Mail, Building2, MapPin, CheckCircle2, AlertCircle, Briefcase } from 'lucide-react';
+import HeaderClean from '../components/HeaderClean';
+import FooterClean from '../components/FooterClean';
+import { useTranslation } from '../hooks/useTranslation';
 
 const PageLayout = styled.div`
   min-height: 100vh;
@@ -359,29 +352,29 @@ export default function ContactPage() {
     const form = event.currentTarget;
     const formData = new FormData(form);
 
-    formData.append("access_key", "d56fc4c3-11c1-47e6-94ca-6e855cbb6872");
+    formData.append('access_key', 'd56fc4c3-11c1-47e6-94ca-6e855cbb6872');
 
-    const category = formData.get("category");
-    const company = formData.get("company") || "Particulier/Indépendant";
-    const firstName = formData.get("firstName");
-    const lastName = formData.get("lastName");
+    const category = formData.get('category');
+    const company = formData.get('company') || 'Particulier/Indépendant';
+    const firstName = formData.get('firstName');
+    const lastName = formData.get('lastName');
     const emailSubject = `[${category}] - Demande de ${firstName} ${lastName} (${company})`;
 
-    formData.append("subject", emailSubject);
-    formData.append("from_name", "Direction VisioConnect");
+    formData.append('subject', emailSubject);
+    formData.append('from_name', 'Direction VisioConnect');
 
-    let nextStatus = "error";
+    let nextStatus = 'error';
 
     try {
-      const response = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
         body: formData,
       });
 
       const data = await response.json();
-      nextStatus = data.success ? "success" : "error";
+      nextStatus = data.success ? 'success' : 'error';
 
-      if (nextStatus === "success") {
+      if (nextStatus === 'success') {
         form.reset();
       }
     } catch (error) {
@@ -390,7 +383,7 @@ export default function ContactPage() {
       setStatus(nextStatus);
       setIsSubmitting(false);
 
-      if (nextStatus === "success") {
+      if (nextStatus === 'success') {
         setTimeout(() => setStatus(null), 7000);
       }
     }
@@ -408,9 +401,7 @@ export default function ContactPage() {
           <h1>
             {t('contact.header.title_part1')} <span>{t('contact.header.title_part2')}</span>
           </h1>
-          <p>
-            {t('contact.header.subtitle')}
-          </p>
+          <p>{t('contact.header.subtitle')}</p>
         </MainHeader>
 
         <ContactContainer
@@ -430,9 +421,7 @@ export default function ContactPage() {
                 </div>
                 <div className="text-container">
                   <h4>{t('contact.info.email_title')}</h4>
-                  <a href="mailto:theo.garces.aido@gmail.com">
-                    theo.garces.aido@gmail.com
-                  </a>
+                  <a href="mailto:theo.garces.aido@gmail.com">theo.garces.aido@gmail.com</a>
                 </div>
               </InfoBlock>
 
@@ -465,7 +454,7 @@ export default function ContactPage() {
           {/* Formulaire (Proportionné et responsive) */}
           <RightPanel>
             <AnimatePresence mode="wait">
-              {status === "success" && (
+              {status === 'success' && (
                 <AlertBox
                   key="success"
                   className="success"
@@ -481,7 +470,7 @@ export default function ContactPage() {
                   </div>
                 </AlertBox>
               )}
-              {status === "error" && (
+              {status === 'error' && (
                 <AlertBox
                   key="error"
                   className="error"
@@ -538,12 +527,7 @@ export default function ContactPage() {
                   <label htmlFor="phone">
                     Téléphone <span className="sub-label">(Optionnel)</span>
                   </label>
-                  <Input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    placeholder="+33 6 00 00 00 00"
-                  />
+                  <Input type="tel" id="phone" name="phone" placeholder="+33 6 00 00 00 00" />
                 </FormGroup>
               </FormRow>
 
@@ -561,22 +545,13 @@ export default function ContactPage() {
               <FormGroup>
                 <label htmlFor="category">{t('contact.form.category')}</label>
                 <SelectWrapper>
-                  <select
-                    id="category"
-                    name="category"
-                    required
-                    defaultValue=""
-                  >
+                  <select id="category" name="category" required defaultValue="">
                     <option value="" disabled>
                       Sélectionnez un sujet...
                     </option>
                     <option value="Démo">{t('contact.form.category_options.demo')}</option>
-                    <option value="Tarifs">
-                      Question sur les tarifs (Devis)
-                    </option>
-                    <option value="Partenariat">
-                      Proposition de partenariat
-                    </option>
+                    <option value="Tarifs">Question sur les tarifs (Devis)</option>
+                    <option value="Partenariat">Proposition de partenariat</option>
                     <option value="Support">{t('contact.form.category_options.support')}</option>
                     <option value="Autre">{t('contact.form.category_options.other')}</option>
                   </select>

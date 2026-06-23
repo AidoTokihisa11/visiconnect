@@ -31,7 +31,7 @@ const Badge = styled.div`
   color: ${COLORS.muted};
   max-width: 600px;
   text-align: center;
-  
+
   strong {
     color: ${COLORS.text};
     font-weight: 600;
@@ -40,7 +40,7 @@ const Badge = styled.div`
   svg {
     flex-shrink: 0;
   }
-  
+
   @media (max-width: 640px) {
     flex-direction: column;
     border-radius: 12px;
@@ -52,7 +52,7 @@ const Divider = styled.div`
   width: 1px;
   height: 16px;
   background: ${COLORS.border};
-  
+
   @media (max-width: 640px) {
     width: 40px;
     height: 1px;
@@ -60,21 +60,25 @@ const Divider = styled.div`
 `;
 
 const IndieBadge = () => {
-    return (
-        <Wrapper>
-            <Badge>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <Code size={16} color={COLORS.primary} />
-                    <span>Développé avec passion par un <strong>ingénieur indépendant</strong>.</span>
-                </div>
-                <Divider />
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <Heart size={16} color="#ef4444" />
-                    <span>Optimisé pour la <strong>performance brute</strong>, pas pour la masse.</span>
-                </div>
-            </Badge>
-        </Wrapper>
-    );
+  return (
+    <Wrapper>
+      <Badge>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <Code size={16} color={COLORS.primary} />
+          <span>
+            Développé avec passion par un <strong>ingénieur indépendant</strong>.
+          </span>
+        </div>
+        <Divider />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <Heart size={16} color="#ef4444" />
+          <span>
+            Optimisé pour la <strong>performance brute</strong>, pas pour la masse.
+          </span>
+        </div>
+      </Badge>
+    </Wrapper>
+  );
 };
 
 export default IndieBadge;

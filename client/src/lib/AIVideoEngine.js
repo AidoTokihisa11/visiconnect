@@ -3,7 +3,7 @@ import { Track } from 'livekit-client';
 /**
  * 🎯 AIVideoEngine v3.0 (Staff Engineer Architecture)
  * Pipeline WebRTC "Full AI-Autonomous" avec optimisations anti-pixelisation.
- * 
+ *
  * OPTIMISATIONS v3.0:
  * - Sharpening BITRATE-AWARE: Réduit l'accentuation quand le flux est compressé
  * - Low-Light Boost avec courbe sigmoïde naturelle
@@ -47,15 +47,15 @@ export class AIVideoProcessor {
     // Détection mobile
     const isMobile = typeof navigator !== 'undefined' && /Mobi|Android/i.test(navigator.userAgent);
     this.isMobile = isMobile;
-    
+
     // MOBILE: Mode passthrough léger - pas de canvas processing lourd
     // Le canvas est nécessaire pour captureStream mais on minimise le traitement
     this.canvas = document.createElement('canvas');
-    this.ctx = this.canvas.getContext('2d', { 
+    this.ctx = this.canvas.getContext('2d', {
       alpha: false,
       // Optimisations mobile: désactiver les features coûteuses
       desynchronized: isMobile, // Permet le rendu sans synchronisation (plus rapide)
-      willReadFrequently: !isMobile // Uniquement desktop pour getImageData
+      willReadFrequently: !isMobile, // Uniquement desktop pour getImageData
     });
 
     const fps = isMobile ? 20 : 30; // Mobile: 20fps pour économiser CPU
@@ -72,7 +72,7 @@ export class AIVideoProcessor {
 
   processFrame = () => {
     if (this.isDestroyed || !this.videoElement) return;
-    
+
     if (this.videoElement.videoWidth === 0) {
       this.rafId = requestAnimationFrame(this.processFrame);
       return;
@@ -94,7 +94,7 @@ export class AIVideoProcessor {
     if (this.fpsDrops > thermalThreshold && !this.thermalGuardActive) {
       console.warn("[AIVideoEngine] DANGER THERMIQUE: Dégradation vers 'Low-Power Mode'...");
       this.thermalGuardActive = true;
-    } 
+    }
     if (this.fpsDrops === 0 && this.thermalGuardActive) {
       this.thermalGuardActive = false;
     }
@@ -109,7 +109,7 @@ export class AIVideoProcessor {
 
     // MOBILE en surchauffe: sauter 1 frame sur 2 pour réduire CPU
     // On ne redessine PAS (canvas garde le frame précédent) — filtre jamais modifié
-    const skipDraw = this.thermalGuardActive && this.isMobile && (this.frameCount % 2 === 0);
+    const skipDraw = this.thermalGuardActive && this.isMobile && this.frameCount % 2 === 0;
 
     // --- 2. PIPELINE DE RENDU ---
     // ctx.filter est fixé une fois dans init() — on ne le touche plus ici

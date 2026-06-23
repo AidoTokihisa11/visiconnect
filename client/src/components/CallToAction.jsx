@@ -1,8 +1,8 @@
-import React from "react";
-import styled, { keyframes } from "styled-components";
-import { ArrowRight, ArrowUpRight, Sparkles, Check, Shield, Zap, Users } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { useTranslation } from "../hooks/useTranslation";
+import React from 'react';
+import styled, { keyframes } from 'styled-components';
+import { ArrowRight, ArrowUpRight, Sparkles, Check, Shield, Zap, Users } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from '../hooks/useTranslation';
 
 // ─── Animations ──────────────────────────────────────────────────────────────
 const fadeUp = keyframes`
@@ -33,7 +33,7 @@ const Inner = styled.div`
   width: 100%;
   background:
     radial-gradient(circle at 20% 0%, rgba(96, 165, 250, 0.35) 0%, transparent 45%),
-    radial-gradient(circle at 80% 100%, rgba(167, 139, 250, 0.30) 0%, transparent 50%),
+    radial-gradient(circle at 80% 100%, rgba(167, 139, 250, 0.3) 0%, transparent 50%),
     linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 35%, #2563eb 70%, #3b82f6 100%);
   border-radius: 32px;
   padding: 80px 64px;
@@ -73,7 +73,7 @@ const OrbB = styled.div`
   bottom: -90px;
   left: -60px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.10) 0%, transparent 65%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 65%);
   animation: ${floatB} 12s ease-in-out infinite;
   pointer-events: none;
 `;
@@ -107,7 +107,7 @@ const Eyebrow = styled.div`
   color: rgba(255, 255, 255, 0.92);
   font-size: 0.75rem;
   font-weight: 600;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 5px 14px;
   border-radius: 9999px;
@@ -159,7 +159,10 @@ const PrimaryBtn = styled.button`
   gap: 8px;
   cursor: pointer;
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.16);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
 
   svg {
     transition: transform 0.2s ease;
@@ -181,9 +184,9 @@ const PrimaryBtn = styled.button`
 `;
 
 const GhostBtn = styled.button`
-  background: rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.1);
   color: rgba(255, 255, 255, 0.85);
-  border: 1.5px solid rgba(255, 255, 255, 0.30);
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
   padding: 13px 24px;
   font-size: 0.95rem;
   font-weight: 600;
@@ -197,7 +200,7 @@ const GhostBtn = styled.button`
 
   &:hover {
     background: rgba(255, 255, 255, 0.18);
-    border-color: rgba(255, 255, 255, 0.50);
+    border-color: rgba(255, 255, 255, 0.5);
     color: #ffffff;
   }
 `;
@@ -272,8 +275,12 @@ const Stat = styled.div`
   }
 
   @media (max-width: 640px) {
-    .value { font-size: 1.2rem; }
-    .label { font-size: 0.7rem; }
+    .value {
+      font-size: 1.2rem;
+    }
+    .label {
+      font-size: 0.7rem;
+    }
   }
 `;
 
@@ -282,7 +289,7 @@ const CallToAction = ({
   title,
   description,
   buttonText,
-  buttonLink = "/signup",
+  buttonLink = '/signup',
   eyebrow = null,
   secondaryText = null,
   secondaryLink = null,
@@ -295,9 +302,15 @@ const CallToAction = ({
   const { t } = useTranslation();
 
   const _title = title || t('cta.defaultTitle', 'Prêt à transformer vos communications ?');
-  const _description = description || t('cta.defaultDescription', "Rejoignez les milliers d'équipes qui font confiance à VisioConnect.");
+  const _description =
+    description ||
+    t(
+      'cta.defaultDescription',
+      "Rejoignez les milliers d'équipes qui font confiance à VisioConnect."
+    );
   const _buttonText = buttonText || t('cta.defaultButton', 'Commencer gratuitement');
-  const _eyebrow = eyebrow !== null ? eyebrow : t('cta.defaultEyebrow', "Démarrez en moins d'une minute");
+  const _eyebrow =
+    eyebrow !== null ? eyebrow : t('cta.defaultEyebrow', "Démarrez en moins d'une minute");
 
   const stats = customStats || [
     { value: '50K+', label: t('cta.stats.users', 'Utilisateurs') },
@@ -306,10 +319,19 @@ const CallToAction = ({
   ];
 
   const features = customFeatures || [
-    { icon: <Check size={16} strokeWidth={3} />, label: t('cta.features.noCard', 'Sans carte de crédit') },
+    {
+      icon: <Check size={16} strokeWidth={3} />,
+      label: t('cta.features.noCard', 'Sans carte de crédit'),
+    },
     { icon: <Zap size={16} />, label: t('cta.features.instantStart', 'Configuration instantanée') },
-    { icon: <Shield size={16} />, label: t('cta.features.security', 'Chiffrement de bout en bout') },
-    { icon: <Users size={16} />, label: t('cta.features.upToFree', "Jusqu'à 3 participants gratuits") },
+    {
+      icon: <Shield size={16} />,
+      label: t('cta.features.security', 'Chiffrement de bout en bout'),
+    },
+    {
+      icon: <Users size={16} />,
+      label: t('cta.features.upToFree', "Jusqu'à 3 participants gratuits"),
+    },
   ];
 
   const handlePrimary = () => {
@@ -371,7 +393,10 @@ const CallToAction = ({
           {showFeatures && (
             <FeaturesRow>
               {features.map((f, i) => (
-                <div key={i}>{f.icon}{f.label}</div>
+                <div key={i}>
+                  {f.icon}
+                  {f.label}
+                </div>
               ))}
             </FeaturesRow>
           )}

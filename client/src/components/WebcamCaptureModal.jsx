@@ -167,7 +167,7 @@ const WebcamCaptureModal = ({ isOpen, onClose, onCapture, title = 'Prendre une p
     try {
       // Hypothesis #4 — getUserMedia requires a secure context.
       if (!window.isSecureContext && window.location.hostname !== 'localhost') {
-        throw new Error('La caméra n\'est accessible qu\'en HTTPS. Essayez via le site déployé.');
+        throw new Error("La caméra n'est accessible qu'en HTTPS. Essayez via le site déployé.");
       }
       if (!navigator.mediaDevices?.getUserMedia) {
         throw new Error('Votre navigateur ne supporte pas la capture webcam.');
@@ -178,7 +178,9 @@ const WebcamCaptureModal = ({ isOpen, onClose, onCapture, title = 'Prendre une p
         if (navigator.permissions?.query) {
           const perm = await navigator.permissions.query({ name: 'camera' });
           if (perm.state === 'denied') {
-            throw new Error('Accès caméra bloqué dans les paramètres du navigateur. Autorisez la caméra puis réessayez.');
+            throw new Error(
+              'Accès caméra bloqué dans les paramètres du navigateur. Autorisez la caméra puis réessayez.'
+            );
           }
         }
       } catch (probeErr) {
@@ -201,7 +203,10 @@ const WebcamCaptureModal = ({ isOpen, onClose, onCapture, title = 'Prendre une p
       // Wait for metadata so videoWidth/Height are populated (hypothesis #6).
       await new Promise((resolve) => {
         if (video.readyState >= 1) return resolve();
-        const onMeta = () => { video.removeEventListener('loadedmetadata', onMeta); resolve(); };
+        const onMeta = () => {
+          video.removeEventListener('loadedmetadata', onMeta);
+          resolve();
+        };
         video.addEventListener('loadedmetadata', onMeta);
       });
       try {
@@ -217,12 +222,12 @@ const WebcamCaptureModal = ({ isOpen, onClose, onCapture, title = 'Prendre une p
         e?.name === 'NotAllowedError'
           ? 'Accès caméra refusé. Autorisez la caméra dans les paramètres de votre navigateur.'
           : e?.name === 'NotFoundError'
-          ? 'Aucune caméra détectée sur cet appareil.'
-          : e?.name === 'NotReadableError'
-          ? 'La caméra est utilisée par une autre application (Zoom, Teams, OBS…). Fermez-la puis réessayez.'
-          : e?.name === 'OverconstrainedError'
-          ? 'Aucune caméra ne correspond aux contraintes demandées.'
-          : e?.message || 'Impossible d\'accéder à la caméra.';
+            ? 'Aucune caméra détectée sur cet appareil.'
+            : e?.name === 'NotReadableError'
+              ? 'La caméra est utilisée par une autre application (Zoom, Teams, OBS…). Fermez-la puis réessayez.'
+              : e?.name === 'OverconstrainedError'
+                ? 'Aucune caméra ne correspond aux contraintes demandées.'
+                : e?.message || "Impossible d'accéder à la caméra.";
       setError(msg);
     } finally {
       setIsStarting(false);
@@ -254,7 +259,7 @@ const WebcamCaptureModal = ({ isOpen, onClose, onCapture, title = 'Prendre une p
     const video = videoRef.current;
     // Hypothesis #6 — guard against zero-sized canvas → black/empty image.
     if (!video || !video.videoWidth || !video.videoHeight) {
-      setError('La vidéo n\'est pas encore prête. Patientez une seconde puis réessayez.');
+      setError("La vidéo n'est pas encore prête. Patientez une seconde puis réessayez.");
       return;
     }
 
@@ -317,7 +322,7 @@ const WebcamCaptureModal = ({ isOpen, onClose, onCapture, title = 'Prendre une p
       onClose?.();
     } catch (e) {
       console.error('[WebcamCapture] save failed:', e);
-      setError(e?.message || 'Échec de l\'enregistrement.');
+      setError(e?.message || "Échec de l'enregistrement.");
     } finally {
       setIsSaving(false);
     }
@@ -340,8 +345,12 @@ const WebcamCaptureModal = ({ isOpen, onClose, onCapture, title = 'Prendre une p
           onClick={(e) => e.stopPropagation()}
         >
           <Header>
-            <h3><Camera size={18} /> {title}</h3>
-            <CloseBtn onClick={onClose} aria-label="Fermer"><X size={18} /></CloseBtn>
+            <h3>
+              <Camera size={18} /> {title}
+            </h3>
+            <CloseBtn onClick={onClose} aria-label="Fermer">
+              <X size={18} />
+            </CloseBtn>
           </Header>
 
           <VideoWrapper>
@@ -379,7 +388,9 @@ const WebcamCaptureModal = ({ isOpen, onClose, onCapture, title = 'Prendre une p
               </>
             ) : error ? (
               <>
-                <SecondaryBtn type="button" onClick={onClose}>Annuler</SecondaryBtn>
+                <SecondaryBtn type="button" onClick={onClose}>
+                  Annuler
+                </SecondaryBtn>
                 <SecondaryBtn type="button" onClick={startStream}>
                   <RefreshCw size={14} /> Réessayer
                 </SecondaryBtn>
@@ -389,9 +400,12 @@ const WebcamCaptureModal = ({ isOpen, onClose, onCapture, title = 'Prendre une p
               </>
             ) : (
               <>
-                <SecondaryBtn type="button" onClick={onClose}>Annuler</SecondaryBtn>
+                <SecondaryBtn type="button" onClick={onClose}>
+                  Annuler
+                </SecondaryBtn>
                 <PrimaryBtn type="button" onClick={takeShot} disabled={isStarting || !isVideoReady}>
-                  <Camera size={14} /> {isStarting ? 'Démarrage…' : !isVideoReady ? 'Préparation…' : 'Capturer'}
+                  <Camera size={14} />{' '}
+                  {isStarting ? 'Démarrage…' : !isVideoReady ? 'Préparation…' : 'Capturer'}
                 </PrimaryBtn>
               </>
             )}

@@ -1,10 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { 
-  Github, Linkedin, Twitter, 
-  Globe
-} from 'lucide-react';
+import { Github, Linkedin, Twitter, Globe } from 'lucide-react';
 import { useTranslation } from '../hooks/useTranslation';
 import { useCookieConsent } from '../contexts/CookieConsentContext';
 
@@ -14,19 +11,21 @@ const COLORS = {
   dark: 'hsl(var(--foreground))',
   text: 'hsl(var(--foreground))',
   lightText: 'hsl(var(--muted-foreground))',
-  background: 'hsl(var(--secondary))', 
+  background: 'hsl(var(--secondary))',
   white: 'hsl(var(--background))',
-  border: 'hsl(var(--border))',     
+  border: 'hsl(var(--border))',
 };
 
 const FooterContainer = styled.footer`
-  background-color: hsl(var(--card)); 
+  background-color: hsl(var(--card));
   color: ${COLORS.text};
   border-top: 1px solid ${COLORS.border};
   padding: 4rem 1.5rem;
   margin-top: auto;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+
   @media (max-width: 640px) {
     padding: 3rem 1rem;
   }
@@ -38,7 +37,7 @@ const FooterContent = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 3rem;
-  
+
   @media (max-width: 640px) {
     grid-template-columns: 1fr;
     gap: 2rem;
@@ -50,7 +49,7 @@ const FooterSection = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  
+
   @media (max-width: 640px) {
     align-items: center;
   }
@@ -78,7 +77,7 @@ const FooterLink = styled(Link)`
 
 const BrandSection = styled.div`
   max-width: 300px;
-  
+
   @media (max-width: 640px) {
     max-width: 100%;
     align-items: center;
@@ -113,7 +112,7 @@ const SocialLinks = styled.div`
 const SocialLink = styled.a`
   color: ${COLORS.secondary};
   transition: color 0.2s;
-  
+
   &:hover {
     color: ${COLORS.primary};
   }
@@ -159,9 +158,7 @@ export default function FooterClean() {
             <Globe size={20} className="text-blue-600" color={COLORS.primary} />
             VisioConnect
           </LogoLink>
-          <BrandDescription>
-            {t('hero.subtitle')}
-          </BrandDescription>
+          <BrandDescription>{t('hero.subtitle')}</BrandDescription>
           <SocialLinks>
             <SocialLink href="https://twitter.com" aria-label="Twitter">
               <Twitter size={20} />
@@ -201,11 +198,19 @@ export default function FooterClean() {
           <FooterLink to="/privacy">{t('navigation.privacy', 'Confidentialité')}</FooterLink>
           <FooterLink to="/terms">{t('navigation.terms', 'Conditions')}</FooterLink>
           <FooterLink to="/security">{t('navigation.security', 'Sécurité')}</FooterLink>
-          <button 
-            onClick={() => setShowBanner(true)} 
-            style={{ textAlign: 'left', background: 'none', border: 'none', color: COLORS.secondary, padding: 0, cursor: 'pointer', fontSize: '0.875rem' }}
-            onMouseOver={(e) => e.target.style.color = COLORS.primary}
-            onMouseOut={(e) => e.target.style.color = COLORS.secondary}
+          <button
+            onClick={() => setShowBanner(true)}
+            style={{
+              textAlign: 'left',
+              background: 'none',
+              border: 'none',
+              color: COLORS.secondary,
+              padding: 0,
+              cursor: 'pointer',
+              fontSize: '0.875rem',
+            }}
+            onMouseOver={(e) => (e.target.style.color = COLORS.primary)}
+            onMouseOut={(e) => (e.target.style.color = COLORS.secondary)}
           >
             {t('navigation.manageCookies', 'Gérer les cookies')}
           </button>
@@ -217,9 +222,7 @@ export default function FooterClean() {
           &copy; {new Date().getFullYear()} VisioConnect. {t('common.allRightsReserved')}
         </div>
         <div style={{ display: 'flex', gap: '1.5rem' }}>
-          <ExLink href="mailto:support@visiconnect.com">
-            support@visiconnect.com
-          </ExLink>
+          <ExLink href="mailto:support@visiconnect.com">support@visiconnect.com</ExLink>
         </div>
       </BottomBar>
     </FooterContainer>

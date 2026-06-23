@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  HelpCircle, X, ChevronRight, ChevronLeft,
-  Star, MessageSquare, Video, Users
+import {
+  HelpCircle,
+  X,
+  ChevronRight,
+  ChevronLeft,
+  Star,
+  MessageSquare,
+  Video,
+  Users,
 } from 'lucide-react';
 import Avatar from './Avatar';
 
@@ -20,7 +26,7 @@ const GuideContainer = styled(motion.div)`
   box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
   z-index: 999;
   overflow: hidden;
-  
+
   @media (max-width: 768px) {
     width: 280px;
     bottom: 20px;
@@ -45,11 +51,11 @@ const GuideToggle = styled(motion.button)`
   justify-content: center;
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
   z-index: 1000;
-  
+
   &:hover {
     background: #2563eb;
   }
-  
+
   @media (max-width: 768px) {
     bottom: 20px;
     left: 20px;
@@ -83,7 +89,7 @@ const CloseButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   &:hover {
     background: rgba(59, 130, 246, 0.2);
     color: #1e40af;
@@ -130,18 +136,18 @@ const NavButton = styled.button`
   padding: 8px 16px;
   border: 1px solid rgba(59, 130, 246, 0.2);
   border-radius: 8px;
-  background: ${props => props.primary ? '#3b82f6' : 'rgba(59, 130, 246, 0.1)'};
-  color: ${props => props.primary ? 'white' : '#3b82f6'};
+  background: ${(props) => (props.primary ? '#3b82f6' : 'rgba(59, 130, 246, 0.1)')};
+  color: ${(props) => (props.primary ? 'white' : '#3b82f6')};
   cursor: pointer;
   font-size: 0.8rem;
   display: flex;
   align-items: center;
   gap: 4px;
-  
+
   &:hover {
-    background: ${props => props.primary ? '#2563eb' : 'rgba(59, 130, 246, 0.2)'};
+    background: ${(props) => (props.primary ? '#2563eb' : 'rgba(59, 130, 246, 0.2)')};
   }
-  
+
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -157,7 +163,7 @@ const StepDot = styled.div`
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: ${props => props.active ? '#3b82f6' : 'rgba(59, 130, 246, 0.3)'};
+  background: ${(props) => (props.active ? '#3b82f6' : 'rgba(59, 130, 246, 0.3)')};
 `;
 
 const CompactGuide = () => {
@@ -167,25 +173,28 @@ const CompactGuide = () => {
 
   const steps = [
     {
-      title: "Bienvenue sur VisiConnect !",
-      description: "Découvrez toutes les fonctionnalités premium de notre plateforme de visioconférence professionnelle.",
-      icon: <Star size={16} />
+      title: 'Bienvenue sur VisiConnect !',
+      description:
+        'Découvrez toutes les fonctionnalités premium de notre plateforme de visioconférence professionnelle.',
+      icon: <Star size={16} />,
     },
     {
-      title: "Contrôles Vidéo",
-      description: "Gérez votre caméra, micro et partagez votre écran depuis la barre de contrôle en bas.",
-      icon: <Video size={16} />
+      title: 'Contrôles Vidéo',
+      description:
+        'Gérez votre caméra, micro et partagez votre écran depuis la barre de contrôle en bas.',
+      icon: <Video size={16} />,
     },
     {
-      title: "Chat Collaboratif",
-      description: "Communiquez via le chat intégré avec support IA et traduction automatique.",
-      icon: <MessageSquare size={16} />
+      title: 'Chat Collaboratif',
+      description: 'Communiquez via le chat intégré avec support IA et traduction automatique.',
+      icon: <MessageSquare size={16} />,
     },
     {
-      title: "Gestion des Participants",
-      description: "Voyez tous les participants, gérez les permissions et créez des salles séparées.",
-      icon: <Users size={16} />
-    }
+      title: 'Gestion des Participants',
+      description:
+        'Voyez tous les participants, gérez les permissions et créez des salles séparées.',
+      icon: <Users size={16} />,
+    },
   ];
 
   useEffect(() => {
@@ -259,17 +268,12 @@ const CompactGuide = () => {
                     {steps[currentStep].title}
                   </div>
                 </StepTitle>
-                <StepDescription>
-                  {steps[currentStep].description}
-                </StepDescription>
+                <StepDescription>{steps[currentStep].description}</StepDescription>
               </StepContainer>
             </GuideContent>
 
             <GuideNavigation>
-              <NavButton 
-                onClick={prevStep} 
-                disabled={currentStep === 0}
-              >
+              <NavButton onClick={prevStep} disabled={currentStep === 0}>
                 <ChevronLeft size={16} />
                 Précédent
               </NavButton>
@@ -280,10 +284,7 @@ const CompactGuide = () => {
                 ))}
               </StepIndicator>
 
-              <NavButton 
-                onClick={currentStep === steps.length - 1 ? closeGuide : nextStep}
-                primary
-              >
+              <NavButton onClick={currentStep === steps.length - 1 ? closeGuide : nextStep} primary>
                 {currentStep === steps.length - 1 ? 'Terminer' : 'Suivant'}
                 {currentStep !== steps.length - 1 && <ChevronRight size={16} />}
               </NavButton>

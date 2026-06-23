@@ -25,7 +25,9 @@ const NotificationContainer = styled.div`
 const NotificationCard = styled(motion.div)`
   background: white;
   border-radius: 12px;
-  box-shadow: 0 10px 40px -10px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.05);
+  box-shadow:
+    0 10px 40px -10px rgba(0, 0, 0, 0.1),
+    0 1px 3px rgba(0, 0, 0, 0.05);
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
@@ -42,13 +44,15 @@ const IconWrapper = styled.div`
   justify-content: center;
   flex-shrink: 0;
   margin-top: 0.125rem;
-  
-  color: ${props =>
-    props.$type === 'success' ? '#10b981' :
-    props.$type === 'error' ? '#ef4444' :
-    props.$type === 'warning' ? '#f59e0b' :
-    '#3b82f6'
-  };
+
+  color: ${(props) =>
+    props.$type === 'success'
+      ? '#10b981'
+      : props.$type === 'error'
+        ? '#ef4444'
+        : props.$type === 'warning'
+          ? '#f59e0b'
+          : '#3b82f6'};
 `;
 
 const Content = styled.div`
@@ -99,12 +103,14 @@ const ProgressBarWrapper = styled.div`
 
 const ProgressBar = styled(motion.div)`
   height: 100%;
-  background: ${props =>
-    props.$type === 'success' ? '#10b981' :
-    props.$type === 'error' ? '#ef4444' :
-    props.$type === 'warning' ? '#f59e0b' :
-    '#3b82f6'
-  };
+  background: ${(props) =>
+    props.$type === 'success'
+      ? '#10b981'
+      : props.$type === 'error'
+        ? '#ef4444'
+        : props.$type === 'warning'
+          ? '#f59e0b'
+          : '#3b82f6'};
 `;
 
 const getIcon = (type) => {
@@ -120,14 +126,7 @@ const getIcon = (type) => {
   }
 };
 
-const Notification = ({
-  id,
-  type = 'info',
-  title,
-  message,
-  duration = 5000,
-  onClose
-}) => {
+const Notification = ({ id, type = 'info', title, message, duration = 5000, onClose }) => {
   const [isVisible, setIsVisible] = useState(true);
 
   const handleClose = useCallback(() => {
@@ -152,12 +151,10 @@ const Notification = ({
           initial={{ opacity: 0, y: 50, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
-          transition={{ type: "spring", stiffness: 400, damping: 30 }}
+          transition={{ type: 'spring', stiffness: 400, damping: 30 }}
           layout
         >
-          <IconWrapper $type={type}>
-            {getIcon(type)}
-          </IconWrapper>
+          <IconWrapper $type={type}>{getIcon(type)}</IconWrapper>
 
           <Content>
             {title && <div className="title">{title}</div>}
@@ -174,7 +171,7 @@ const Notification = ({
                 $type={type}
                 initial={{ width: '100%' }}
                 animate={{ width: '0%' }}
-                transition={{ duration: duration / 1000, ease: "linear" }}
+                transition={{ duration: duration / 1000, ease: 'linear' }}
               />
             </ProgressBarWrapper>
           )}
@@ -190,23 +187,19 @@ export const useNotifications = () => {
 
   const addNotification = (notification) => {
     const id = Date.now() + Math.random();
-    setNotifications(prev => [...prev, { ...notification, id }]);
+    setNotifications((prev) => [...prev, { ...notification, id }]);
     return id;
   };
 
   const removeNotification = (id) => {
-    setNotifications(prev => prev.filter(notif => notif.id !== id));
+    setNotifications((prev) => prev.filter((notif) => notif.id !== id));
   };
 
   const NotificationProvider = () => (
     <NotificationContainer>
       <AnimatePresence>
-        {notifications.map(notification => (
-          <Notification
-            key={notification.id}
-            {...notification}
-            onClose={removeNotification}
-          />
+        {notifications.map((notification) => (
+          <Notification key={notification.id} {...notification} onClose={removeNotification} />
         ))}
       </AnimatePresence>
     </NotificationContainer>
@@ -215,7 +208,7 @@ export const useNotifications = () => {
   return {
     addNotification,
     removeNotification,
-    NotificationProvider
+    NotificationProvider,
   };
 };
 

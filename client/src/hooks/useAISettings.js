@@ -1,16 +1,12 @@
 /**
  * useAISettings - Hook React pour gérer les paramètres IA
- * 
+ *
  * Gère l'activation/désactivation des fonctionnalités IA
  * avec persistance localStorage
  */
 
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
-import { 
-  AISettingsStorage, 
-  DEFAULT_AI_SETTINGS, 
-  checkAICapabilities 
-} from '../services/ai';
+import { AISettingsStorage, DEFAULT_AI_SETTINGS, checkAICapabilities } from '../services/ai';
 
 const AI_SETTINGS_EVENT = 'aiSettingsChanged';
 
@@ -23,7 +19,10 @@ export const useAISettings = () => {
   // Synchronise cet instance quand une autre modifie les settings
   useEffect(() => {
     const sync = () => {
-      if (isSelfUpdate.current) { isSelfUpdate.current = false; return; }
+      if (isSelfUpdate.current) {
+        isSelfUpdate.current = false;
+        return;
+      }
       setSettings(AISettingsStorage.get());
     };
     window.addEventListener(AI_SETTINGS_EVENT, sync);
@@ -36,25 +35,31 @@ export const useAISettings = () => {
   }, []);
 
   // Met à jour un groupe de paramètres
-  const updateSettings = useCallback((key, value) => {
-    const current = AISettingsStorage.get();
-    const updated = { ...current, [key]: { ...current[key], ...value } };
-    AISettingsStorage.set(updated);
-    setSettings(updated);
-    notifyOthers();
-  }, [notifyOthers]);
+  const updateSettings = useCallback(
+    (key, value) => {
+      const current = AISettingsStorage.get();
+      const updated = { ...current, [key]: { ...current[key], ...value } };
+      AISettingsStorage.set(updated);
+      setSettings(updated);
+      notifyOthers();
+    },
+    [notifyOthers]
+  );
 
   // Toggle une fonctionnalité
-  const toggleFeature = useCallback((key) => {
-    const current = AISettingsStorage.get();
-    const updated = {
-      ...current,
-      [key]: { ...current[key], enabled: !current[key]?.enabled },
-    };
-    AISettingsStorage.set(updated);
-    setSettings(updated);
-    notifyOthers();
-  }, [notifyOthers]);
+  const toggleFeature = useCallback(
+    (key) => {
+      const current = AISettingsStorage.get();
+      const updated = {
+        ...current,
+        [key]: { ...current[key], enabled: !current[key]?.enabled },
+      };
+      AISettingsStorage.set(updated);
+      setSettings(updated);
+      notifyOthers();
+    },
+    [notifyOthers]
+  );
 
   // Réinitialise aux valeurs par défaut
   const resetToDefaults = useCallback(() => {
@@ -64,63 +69,69 @@ export const useAISettings = () => {
   }, [notifyOthers]);
 
   // Vérifie si une fonctionnalité est disponible ET activée
-  const isFeatureEnabled = useCallback((key) => {
-    return capabilities[key]?.available && settings[key]?.enabled;
-  }, [capabilities, settings]);
+  const isFeatureEnabled = useCallback(
+    (key) => {
+      return capabilities[key]?.available && settings[key]?.enabled;
+    },
+    [capabilities, settings]
+  );
 
   // Presets rapides
-  const applyPreset = useCallback((presetName) => {
-    const presets = {
-      performance: {
-        transcription: { enabled: false },
-        backgroundBlur: { enabled: false },
-        videoEnhancement: { enabled: false },
-        translation: { enabled: false },
-        noiseSuppression: { enabled: true, level: 'low' },
-      },
-      balanced: {
-        transcription: { enabled: false, autoStart: false },
-        backgroundBlur: { enabled: false },
-        videoEnhancement: { enabled: true, preset: 'natural' },
-        translation: { enabled: true, autoTranslate: false },
-        noiseSuppression: { enabled: true, level: 'moderate' },
-      },
-      full: {
-        transcription: { enabled: true, autoStart: true },
-        backgroundBlur: { enabled: true, mode: 'blur', blurAmount: 10 },
-        videoEnhancement: { enabled: false }, // Désactivé: conflit avec backgroundBlur (même videoTrack.setProcessor)
-        translation: { enabled: true, autoTranslate: true },
-        noiseSuppression: { enabled: true, level: 'high' },
-      },
-    };
+  const applyPreset = useCallback(
+    (presetName) => {
+      const presets = {
+        performance: {
+          transcription: { enabled: false },
+          backgroundBlur: { enabled: false },
+          videoEnhancement: { enabled: false },
+          translation: { enabled: false },
+          noiseSuppression: { enabled: true, level: 'low' },
+        },
+        balanced: {
+          transcription: { enabled: false, autoStart: false },
+          backgroundBlur: { enabled: false },
+          videoEnhancement: { enabled: true, preset: 'natural' },
+          translation: { enabled: true, autoTranslate: false },
+          noiseSuppression: { enabled: true, level: 'moderate' },
+        },
+        full: {
+          transcription: { enabled: true, autoStart: true },
+          backgroundBlur: { enabled: true, mode: 'blur', blurAmount: 10 },
+          videoEnhancement: { enabled: false }, // Désactivé: conflit avec backgroundBlur (même videoTrack.setProcessor)
+          translation: { enabled: true, autoTranslate: true },
+          noiseSuppression: { enabled: true, level: 'high' },
+        },
+      };
 
-    if (presets[presetName]) {
-      const updated = { ...DEFAULT_AI_SETTINGS };
-      Object.keys(presets[presetName]).forEach(key => {
-        updated[key] = { ...updated[key], ...presets[presetName][key] };
-      });
-      AISettingsStorage.set(updated);
-      setSettings(updated);
-      notifyOthers();
-    }
-  }, [notifyOthers]);
+      if (presets[presetName]) {
+        const updated = { ...DEFAULT_AI_SETTINGS };
+        Object.keys(presets[presetName]).forEach((key) => {
+          updated[key] = { ...updated[key], ...presets[presetName][key] };
+        });
+        AISettingsStorage.set(updated);
+        setSettings(updated);
+        notifyOthers();
+      }
+    },
+    [notifyOthers]
+  );
 
   // Calcule si le device est "lent" (mobile ou faible RAM)
   const isLowEndDevice = useMemo(() => {
     if (typeof navigator === 'undefined') return false;
-    
+
     // Check mobile
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
       navigator.userAgent || ''
     );
-    
+
     // Check RAM (si disponible)
     // @ts-ignore
     const lowRam = navigator.deviceMemory && navigator.deviceMemory < 4;
-    
+
     // Check cores
     const lowCores = navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4;
-    
+
     return isMobile || lowRam || lowCores;
   }, []);
 
@@ -134,8 +145,14 @@ export const useAISettings = () => {
 
     return {
       ...settings,
-      backgroundBlur: { ...settings.backgroundBlur, enabled: blurForceOff ? false : settings.backgroundBlur?.enabled },
-      videoEnhancement: { ...settings.videoEnhancement, enabled: videoForceOff ? false : settings.videoEnhancement?.enabled },
+      backgroundBlur: {
+        ...settings.backgroundBlur,
+        enabled: blurForceOff ? false : settings.backgroundBlur?.enabled,
+      },
+      videoEnhancement: {
+        ...settings.videoEnhancement,
+        enabled: videoForceOff ? false : settings.videoEnhancement?.enabled,
+      },
     };
   }, [settings, isLowEndDevice, capabilities]);
 

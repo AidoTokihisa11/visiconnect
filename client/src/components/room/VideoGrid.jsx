@@ -18,7 +18,7 @@ const GridContainer = styled.div`
   padding: 1rem;
   display: grid;
   /* Grid adaptatif basé sur le nombre de participants */
-  grid-template-columns: ${props => {
+  grid-template-columns: ${(props) => {
     const count = props.$participantCount || 1;
     if (count === 1) return '1fr';
     if (count === 2) return 'repeat(2, 1fr)';
@@ -37,11 +37,11 @@ const GridContainer = styled.div`
 
   @media (max-width: 768px) {
     /* 📱 v5.1: Zero-scroll mobile - la grille shrink, la BottomBar reste fixe */
-    display: ${props => props.$isLandscape ? 'grid' : 'flex'};
+    display: ${(props) => (props.$isLandscape ? 'grid' : 'flex')};
     flex-direction: column;
     align-items: stretch;
     justify-content: flex-start;
-    
+
     padding: 0.5rem;
     /* Padding bottom réduit - pas besoin de compenser la BottomBar car flex gère ça */
     padding-bottom: 0.5rem;
@@ -51,12 +51,12 @@ const GridContainer = styled.div`
     /* NE PAS mettre height: 100% - laisser flex: 1 + min-height: 0 gérer */
     overflow-y: auto;
     overflow-x: hidden;
-    
+
     /* Portrait: Stack vertical avec flexbox */
-    grid-template-columns: ${props => {
+    grid-template-columns: ${(props) => {
       const count = props.$participantCount || 1;
       const isLandscape = props.$isLandscape;
-      
+
       if (isLandscape) {
         // Landscape: disposition horizontale en grid
         if (count === 1) return '1fr';
@@ -67,11 +67,11 @@ const GridContainer = styled.div`
         return '1fr';
       }
     }};
-    
-    grid-auto-rows: ${props => {
+
+    grid-auto-rows: ${(props) => {
       const count = props.$participantCount || 1;
       const isLandscape = props.$isLandscape;
-      
+
       if (isLandscape) {
         return 'minmax(150px, 1fr)';
       } else {
@@ -80,7 +80,7 @@ const GridContainer = styled.div`
       }
     }};
   }
-  
+
   /* Landscape mobile: retour au grid */
   @media (max-width: 768px) and (orientation: landscape) {
     display: grid;
@@ -88,30 +88,46 @@ const GridContainer = styled.div`
     grid-auto-rows: minmax(40vh, 1fr);
   }
 
-  &::-webkit-scrollbar { width: 6px; }
-  &::-webkit-scrollbar-track { background: transparent; }
-  &::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 4px; }
-  
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 4px;
+  }
+
   /* Transition douce lors des changements de layout */
-  transition: grid-template-columns 0.3s ease, gap 0.2s ease;
+  transition:
+    grid-template-columns 0.3s ease,
+    gap 0.2s ease;
 `;
 
-export const VideoGrid = ({ localParticipant, isLocalCameraEnabled, isLocalMicEnabled, tracks, videoFit = 'cover', showParticipantLabels = true }) => {
+export const VideoGrid = ({
+  localParticipant,
+  isLocalCameraEnabled,
+  isLocalMicEnabled,
+  tracks,
+  videoFit = 'cover',
+  showParticipantLabels = true,
+}) => {
   const allParticipants = useParticipants();
-  
+
   // Détection de l'orientation pour layout adaptatif
   const [isLandscape, setIsLandscape] = useState(
     typeof window !== 'undefined' ? window.innerWidth > window.innerHeight : false
   );
-  
+
   useEffect(() => {
     const handleResize = () => {
       setIsLandscape(window.innerWidth > window.innerHeight);
     };
-    
+
     window.addEventListener('resize', handleResize);
     window.addEventListener('orientationchange', handleResize);
-    
+
     return () => {
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('orientationchange', handleResize);
@@ -126,24 +142,27 @@ export const VideoGrid = ({ localParticipant, isLocalCameraEnabled, isLocalMicEn
       source: Track.Source.Camera,
     };
   }, [localParticipant]);
-  
+
   // Find participants who are remote and have NO tracks in the tracks array
-  const activeTrackIdentities = new Set(tracks?.map(t => t.participant.identity) || []);
-  const tracklessParticipants = allParticipants.filter(p =>
-    p.identity !== localParticipant?.identity &&
-    !activeTrackIdentities.has(p.identity)
+  const activeTrackIdentities = new Set(tracks?.map((t) => t.participant.identity) || []);
+  const tracklessParticipants = allParticipants.filter(
+    (p) => p.identity !== localParticipant?.identity && !activeTrackIdentities.has(p.identity)
   );
 
-  const hasRemoteParticipants = tracks?.some(t => t.participant.identity !== localParticipant?.identity) || tracklessParticipants.length > 0;
-  
+  const hasRemoteParticipants =
+    tracks?.some((t) => t.participant.identity !== localParticipant?.identity) ||
+    tracklessParticipants.length > 0;
+
   // 📱 Détection mobile pour le calcul de grille
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
-  
+
   // Calcul du nombre de participants DANS LA GRILLE (exclut local en PIP sur mobile)
-  const remoteCount = (tracks?.filter(t => t.participant.identity !== localParticipant?.identity).length || 0) + tracklessParticipants.length;
-  
+  const remoteCount =
+    (tracks?.filter((t) => t.participant.identity !== localParticipant?.identity).length || 0) +
+    tracklessParticipants.length;
+
   // Sur mobile avec des remote participants, le local est en PIP donc ne compte pas dans la grille
-  const totalParticipants = (isMobile && hasRemoteParticipants) ? remoteCount : (1 + remoteCount);
+  const totalParticipants = isMobile && hasRemoteParticipants ? remoteCount : 1 + remoteCount;
 
   return (
     <GridContainer $participantCount={totalParticipants} $isLandscape={isLandscape}>

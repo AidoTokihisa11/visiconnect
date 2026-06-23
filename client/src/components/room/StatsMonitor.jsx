@@ -42,7 +42,7 @@ const StatsContainer = styled(motion.div)`
     align-items: center;
     gap: 0.5rem;
   }
-  
+
   .stat-row {
     display: flex;
     justify-content: space-between;
@@ -53,7 +53,7 @@ const StatsContainer = styled(motion.div)`
     &:last-child {
       border: none;
     }
-    
+
     span:first-child {
       color: ${THEME.textDim};
     }
@@ -63,7 +63,7 @@ const StatsContainer = styled(motion.div)`
 /* 📱 Mobile: Modal centrée avec backdrop */
 const MobileModalBackdrop = styled(motion.div)`
   display: none;
-  
+
   @media (max-width: 768px) {
     display: flex;
     position: fixed;
@@ -98,7 +98,7 @@ const MobileModalContent = styled(motion.div)`
     justify-content: space-between;
     font-size: 1rem;
   }
-  
+
   .stat-row {
     display: flex;
     justify-content: space-between;
@@ -106,11 +106,11 @@ const MobileModalContent = styled(motion.div)`
     padding: 0.75rem;
     background: rgba(255, 255, 255, 0.05);
     border-radius: 10px;
-    
+
     span:first-child {
       color: ${THEME.textDim};
     }
-    
+
     span:last-child {
       font-weight: 600;
       color: #4ade80;
@@ -129,7 +129,7 @@ const CloseButton = styled.button`
   align-items: center;
   justify-content: center;
   transition: all 0.2s;
-  
+
   &:active {
     transform: scale(0.95);
     background: rgba(255, 255, 255, 0.15);
@@ -148,7 +148,7 @@ export const StatsMonitor = ({ participant, showStats = false, onClose }) => {
     resolution: 'Unknown',
     codec: 'Checking...',
     bitrate: 'Dynamic',
-    packetLoss: '0%'
+    packetLoss: '0%',
   });
   const [quality, setQuality] = useState('h720');
   const [applyingQuality, setApplyingQuality] = useState(false);
@@ -156,23 +156,26 @@ export const StatsMonitor = ({ participant, showStats = false, onClose }) => {
   // Determine if the participant is local (only LocalParticipant exposes setCameraEnabled).
   const isLocal = !!participant && typeof participant.setCameraEnabled === 'function';
 
-  const handleQualityChange = useCallback(async (e) => {
-    const next = e.target.value;
-    setQuality(next);
-    if (!isLocal) return;
-    const opt = QUALITY_OPTIONS.find((o) => o.id === next);
-    if (!opt) return;
-    try {
-      setApplyingQuality(true);
-      await participant.setCameraEnabled(true, {
-        resolution: opt.preset.resolution,
-      });
-    } catch (err) {
-      console.error('[StatsMonitor] Failed to change camera quality:', err);
-    } finally {
-      setApplyingQuality(false);
-    }
-  }, [participant, isLocal]);
+  const handleQualityChange = useCallback(
+    async (e) => {
+      const next = e.target.value;
+      setQuality(next);
+      if (!isLocal) return;
+      const opt = QUALITY_OPTIONS.find((o) => o.id === next);
+      if (!opt) return;
+      try {
+        setApplyingQuality(true);
+        await participant.setCameraEnabled(true, {
+          resolution: opt.preset.resolution,
+        });
+      } catch (err) {
+        console.error('[StatsMonitor] Failed to change camera quality:', err);
+      } finally {
+        setApplyingQuality(false);
+      }
+    },
+    [participant, isLocal]
+  );
 
   useEffect(() => {
     if (!participant) return;
@@ -182,88 +185,101 @@ export const StatsMonitor = ({ participant, showStats = false, onClose }) => {
       // Find the first video track
       if (!participant.videoTrackPublications) return;
       const tracks = Array.from(participant.videoTrackPublications.values());
-      const videoTrackPub = tracks.find(pub => pub.kind === 'video' && pub.track);
+      const videoTrackPub = tracks.find((pub) => pub.kind === 'video' && pub.track);
 
       if (videoTrackPub && videoTrackPub.track && mounted) {
-         try {
-             // Use mediaStreamTrack settings to get actual dimensions sent to hardware
-             const settings = videoTrackPub.track.mediaStreamTrack.getSettings();
-             const width = settings.width || 0;
-             const height = settings.height || 0;
+        try {
+          // Use mediaStreamTrack settings to get actual dimensions sent to hardware
+          const settings = videoTrackPub.track.mediaStreamTrack.getSettings();
+          const width = settings.width || 0;
+          const height = settings.height || 0;
 
-             if (width && height) {
-                 setStats({
-                     resolution: `${width}p`, // e.g. 2160p or 1080p
-                     codec: 'VP9/H.264',
-                     bitrate: 'Dynamic',
-                 });
-             } else {
-                 setStats(prev => ({ ...prev, resolution: 'Initializing...' }));
-             }
-
-         } catch (e) {
-             console.error("Stats error", e);
-         }
+          if (width && height) {
+            setStats({
+              resolution: `${width}p`, // e.g. 2160p or 1080p
+              codec: 'VP9/H.264',
+              bitrate: 'Dynamic',
+            });
+          } else {
+            setStats((prev) => ({ ...prev, resolution: 'Initializing...' }));
+          }
+        } catch (e) {
+          console.error('Stats error', e);
+        }
       } else {
-         setStats(prev => ({ ...prev, resolution: 'Off / Unknown' }));
+        setStats((prev) => ({ ...prev, resolution: 'Off / Unknown' }));
       }
     }, 2000);
 
     return () => {
-        mounted = false;
-        clearInterval(interval);
+      mounted = false;
+      clearInterval(interval);
     };
   }, [participant]);
-  
+
   return (
     <>
       {/* 🖥️ Desktop: Overlay classique */}
       <StatsContainer initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-          <h4><Activity size={16} /> {t('room.stats.videoFlux', 'Flux Vidéo (Test)')}</h4>
-          <div className="stat-row">
-              <span>{t('room.stats.resolution', 'Résolution')}</span>
-              <span style={{ color: '#4ade80' }}>{stats.resolution}</span>
+        <h4>
+          <Activity size={16} /> {t('room.stats.videoFlux', 'Flux Vidéo (Test)')}
+        </h4>
+        <div className="stat-row">
+          <span>{t('room.stats.resolution', 'Résolution')}</span>
+          <span style={{ color: '#4ade80' }}>{stats.resolution}</span>
+        </div>
+        <div className="stat-row">
+          <span>{t('room.stats.codec', 'Codec')}</span>
+          <span>{stats.codec}</span>
+        </div>
+        <div className="stat-row">
+          <span>{t('room.stats.mode', 'Mode')}</span>
+          <span>{t('room.stats.simulcast', 'Simulcast activé')}</span>
+        </div>
+        {isLocal && (
+          <div
+            style={{
+              marginTop: '0.6rem',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.25rem',
+            }}
+          >
+            <label htmlFor="qualitySelect" style={{ fontSize: '0.7rem', color: THEME.textDim }}>
+              {t('room.stats.sendQuality', "Qualité d'envoi")}
+            </label>
+            <select
+              id="qualitySelect"
+              value={quality}
+              onChange={handleQualityChange}
+              disabled={applyingQuality}
+              style={{
+                background: 'rgba(255,255,255,0.08)',
+                color: THEME.text,
+                border: `1px solid ${THEME.border}`,
+                borderRadius: 8,
+                padding: '0.35rem 0.5rem',
+                fontSize: '0.75rem',
+                fontFamily: 'inherit',
+                cursor: applyingQuality ? 'wait' : 'pointer',
+              }}
+            >
+              {QUALITY_OPTIONS_I18N.map((o) => (
+                <option key={o.id} value={o.id}>
+                  {o.label}
+                </option>
+              ))}
+            </select>
           </div>
-          <div className="stat-row">
-              <span>{t('room.stats.codec', 'Codec')}</span>
-              <span>{stats.codec}</span>
-          </div>
-          <div className="stat-row">
-              <span>{t('room.stats.mode', 'Mode')}</span>
-              <span>{t('room.stats.simulcast', 'Simulcast activé')}</span>
-          </div>
-          {isLocal && (
-            <div style={{ marginTop: '0.6rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-              <label htmlFor="qualitySelect" style={{ fontSize: '0.7rem', color: THEME.textDim }}>
-                {t('room.stats.sendQuality', "Qualité d'envoi")}
-              </label>
-              <select
-                id="qualitySelect"
-                value={quality}
-                onChange={handleQualityChange}
-                disabled={applyingQuality}
-                style={{
-                  background: 'rgba(255,255,255,0.08)',
-                  color: THEME.text,
-                  border: `1px solid ${THEME.border}`,
-                  borderRadius: 8,
-                  padding: '0.35rem 0.5rem',
-                  fontSize: '0.75rem',
-                  fontFamily: 'inherit',
-                  cursor: applyingQuality ? 'wait' : 'pointer',
-                }}
-              >
-                {QUALITY_OPTIONS_I18N.map((o) => (
-                  <option key={o.id} value={o.id}>{o.label}</option>
-                ))}
-              </select>
-            </div>
+        )}
+        <div style={{ marginTop: '0.5rem', fontSize: '0.7rem', color: THEME.textDim }}>
+          {t(
+            'room.stats.adaptiveNote',
+            "*La résolution s'adapte à la bande passante (4K → 1080p → 540p)"
           )}
-          <div style={{ marginTop: '0.5rem', fontSize: '0.7rem', color: THEME.textDim }}>
-              {t('room.stats.adaptiveNote', "*La résolution s'adapte à la bande passante (4K → 1080p → 540p)")}
-          </div>
+        </div>
       </StatsContainer>
-      
+
       {/* 📱 Mobile: Modal centrée */}
       <AnimatePresence>
         {showStats && (
@@ -277,7 +293,7 @@ export const StatsMonitor = ({ participant, showStats = false, onClose }) => {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              onClick={e => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()}
             >
               <h4>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -288,20 +304,28 @@ export const StatsMonitor = ({ participant, showStats = false, onClose }) => {
                 </CloseButton>
               </h4>
               <div className="stat-row">
-                  <span>{t('room.stats.resolution', 'Résolution')}</span>
-                  <span>{stats.resolution}</span>
+                <span>{t('room.stats.resolution', 'Résolution')}</span>
+                <span>{stats.resolution}</span>
               </div>
               <div className="stat-row">
-                  <span>{t('room.stats.codec', 'Codec')}</span>
-                  <span>{stats.codec}</span>
+                <span>{t('room.stats.codec', 'Codec')}</span>
+                <span>{stats.codec}</span>
               </div>
               <div className="stat-row">
-                  <span>{t('room.stats.mode', 'Mode')}</span>
-                  <span>{t('room.stats.mobileOptimized', 'Optimisé Mobile')}</span>
+                <span>{t('room.stats.mode', 'Mode')}</span>
+                <span>{t('room.stats.mobileOptimized', 'Optimisé Mobile')}</span>
               </div>
               {isLocal && (
                 <div style={{ marginTop: '0.75rem' }}>
-                  <label htmlFor="qualitySelectMobile" style={{ fontSize: '0.75rem', color: THEME.textDim, display: 'block', marginBottom: '0.4rem' }}>
+                  <label
+                    htmlFor="qualitySelectMobile"
+                    style={{
+                      fontSize: '0.75rem',
+                      color: THEME.textDim,
+                      display: 'block',
+                      marginBottom: '0.4rem',
+                    }}
+                  >
                     {t('room.stats.sendQuality', "Qualité d'envoi")}
                   </label>
                   <select
@@ -321,13 +345,22 @@ export const StatsMonitor = ({ participant, showStats = false, onClose }) => {
                     }}
                   >
                     {QUALITY_OPTIONS_I18N.map((o) => (
-                      <option key={o.id} value={o.id}>{o.label}</option>
+                      <option key={o.id} value={o.id}>
+                        {o.label}
+                      </option>
                     ))}
                   </select>
                 </div>
               )}
-              <div style={{ marginTop: '1rem', fontSize: '0.75rem', color: THEME.textDim, textAlign: 'center' }}>
-                  {t('room.stats.autoAdapt', "La qualité s'adapte automatiquement à votre connexion")}
+              <div
+                style={{
+                  marginTop: '1rem',
+                  fontSize: '0.75rem',
+                  color: THEME.textDim,
+                  textAlign: 'center',
+                }}
+              >
+                {t('room.stats.autoAdapt', "La qualité s'adapte automatiquement à votre connexion")}
               </div>
             </MobileModalContent>
           </MobileModalBackdrop>

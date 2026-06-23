@@ -36,21 +36,21 @@ const DraggablePiPContainer = styled.div`
   width: 100px;
   height: 140px;
   z-index: 100;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-  border: 2px solid rgba(255,255,255,0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.15);
   border-radius: 12px;
   overflow: hidden;
   background-color: ${THEME.cardBg};
   touch-action: none;
   user-select: none;
   cursor: grab;
-  transition: ${props => props.$isDragging ? 'none' : 'box-shadow 0.2s ease'};
-  
+  transition: ${(props) => (props.$isDragging ? 'none' : 'box-shadow 0.2s ease')};
+
   &:active {
     cursor: grabbing;
-    box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
   }
-  
+
   /* Indicateur de drag */
   &::before {
     content: '';
@@ -60,12 +60,12 @@ const DraggablePiPContainer = styled.div`
     transform: translateX(-50%);
     width: 30px;
     height: 4px;
-    background: rgba(255,255,255,0.4);
+    background: rgba(255, 255, 255, 0.4);
     border-radius: 2px;
     z-index: 10;
     opacity: 0.7;
   }
-  
+
   /* Landscape mobile: plus petit */
   @media (max-width: 768px) and (orientation: landscape) {
     width: 90px;
@@ -78,13 +78,13 @@ const CardContainer = styled.div`
   border-radius: 12px;
   overflow: hidden;
   position: relative;
-  flex: 1 1 min(100%, 400px); 
+  flex: 1 1 min(100%, 400px);
   max-width: 800px;
   aspect-ratio: 16/9;
   max-height: 100%;
   width: 100%;
   height: 100%;
-  
+
   @media (max-width: 768px) {
     border-radius: 16px;
     flex-basis: 100%;
@@ -100,7 +100,8 @@ const Placeholder = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: ${THEME.cardBg}; border: 1px solid ${THEME.border};
+  background: ${THEME.cardBg};
+  border: 1px solid ${THEME.border};
   color: ${THEME.textDim};
 `;
 
@@ -156,242 +157,258 @@ const StatusIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${props => props.$active ? THEME.danger : THEME.text};
+  color: ${(props) => (props.$active ? THEME.danger : THEME.text)};
   border: 1px solid ${THEME.border};
-  
+
   svg {
-    width: 16px; 
+    width: 16px;
     height: 16px;
   }
 `;
 
+export const VideoParticipant = React.memo(
+  ({
+    trackRef,
+    participant,
+    isLocal = false,
+    isSpeaking = false,
+    videoFit = 'cover',
+    showLabel = true,
+    overrideCameraEnabled,
+    overrideMicEnabled,
+    isPiP = false,
+  }) => {
+    // 🤖 AI Video Enhancement
+    const { settings } = useAISettings();
+    const videoFilter = useMemo(() => {
+      if (settings?.videoEnhancement?.enabled) {
+        const service = getVideoEnhancementService();
+        service.setEnabled(true);
+        service.applyPreset(settings.videoEnhancement?.preset || 'natural');
+        return service.getCSSFilter();
+      }
+      return 'none';
+    }, [settings?.videoEnhancement?.enabled, settings?.videoEnhancement?.preset]);
 
-export const VideoParticipant = React.memo(({
-  trackRef,
-  participant,
-  isLocal = false,
-  isSpeaking = false,
-  videoFit = 'cover',
-  showLabel = true,
-  overrideCameraEnabled,
-  overrideMicEnabled,
-  isPiP = false,
-}) => {
-  // 🤖 AI Video Enhancement
-  const { settings } = useAISettings();
-  const videoFilter = useMemo(() => {
-    if (settings?.videoEnhancement?.enabled) {
-      const service = getVideoEnhancementService();
-      service.setEnabled(true);
-      service.applyPreset(settings.videoEnhancement?.preset || 'natural');
-      return service.getCSSFilter();
-    }
-    return 'none';
-  }, [settings?.videoEnhancement?.enabled, settings?.videoEnhancement?.preset]);
+    // Use trackRef properties directly if available, otherwise fallback to participant flags
+    const isVideoEnabled = trackRef?.publication
+      ? !trackRef.publication.isMuted
+      : overrideCameraEnabled !== undefined
+        ? overrideCameraEnabled
+        : (participant?.isCameraEnabled ?? false);
 
-  // Use trackRef properties directly if available, otherwise fallback to participant flags
-  const isVideoEnabled = trackRef?.publication 
-    ? !trackRef.publication.isMuted 
-    : (overrideCameraEnabled !== undefined ? overrideCameraEnabled : (participant?.isCameraEnabled ?? false));
-    
-  const isMicEnabled = overrideMicEnabled !== undefined ? overrideMicEnabled : (participant?.isMicrophoneEnabled ?? false);
+    const isMicEnabled =
+      overrideMicEnabled !== undefined
+        ? overrideMicEnabled
+        : (participant?.isMicrophoneEnabled ?? false);
 
-  // Niveau audio temps r\u00e9el pour l'anneau autour du micro
-  const micLevel = useParticipantAudioLevel(participant, isMicEnabled);
+    // Niveau audio temps r\u00e9el pour l'anneau autour du micro
+    const micLevel = useParticipantAudioLevel(participant, isMicEnabled);
 
-  // 📱 État pour la position du PiP déplaçable
-  const [pipPosition, setPipPosition] = useState({ x: null, y: null });
-  const [isDragging, setIsDragging] = useState(false);
-  const dragRef = useRef(null);
-  const dragStartRef = useRef({ x: 0, y: 0, posX: 0, posY: 0 });
+    // 📱 État pour la position du PiP déplaçable
+    const [pipPosition, setPipPosition] = useState({ x: null, y: null });
+    const [isDragging, setIsDragging] = useState(false);
+    const dragRef = useRef(null);
+    const dragStartRef = useRef({ x: 0, y: 0, posX: 0, posY: 0 });
 
-  // Initialiser la position par défaut (bas droite)
-  useEffect(() => {
-    if (isPiP && pipPosition.x === null) {
-      const defaultX = window.innerWidth - 112; // 100px width + 12px margin
-      const defaultY = window.innerHeight - 240; // bottom: 100px (bar) + 140px (height)
-      setPipPosition({ x: defaultX, y: defaultY });
-    }
-  }, [isPiP, pipPosition.x]);
+    // Initialiser la position par défaut (bas droite)
+    useEffect(() => {
+      if (isPiP && pipPosition.x === null) {
+        const defaultX = window.innerWidth - 112; // 100px width + 12px margin
+        const defaultY = window.innerHeight - 240; // bottom: 100px (bar) + 140px (height)
+        setPipPosition({ x: defaultX, y: defaultY });
+      }
+    }, [isPiP, pipPosition.x]);
 
-  // Gestion du touch start
-  const handleTouchStart = useCallback((e) => {
-    if (!isPiP) return;
-    e.preventDefault();
-    const touch = e.touches[0];
-    dragStartRef.current = {
-      x: touch.clientX,
-      y: touch.clientY,
-      posX: pipPosition.x,
-      posY: pipPosition.y,
-    };
-    setIsDragging(true);
-  }, [isPiP, pipPosition]);
+    // Gestion du touch start
+    const handleTouchStart = useCallback(
+      (e) => {
+        if (!isPiP) return;
+        e.preventDefault();
+        const touch = e.touches[0];
+        dragStartRef.current = {
+          x: touch.clientX,
+          y: touch.clientY,
+          posX: pipPosition.x,
+          posY: pipPosition.y,
+        };
+        setIsDragging(true);
+      },
+      [isPiP, pipPosition]
+    );
 
-  // Gestion du touch move
-  const handleTouchMove = useCallback((e) => {
-    if (!isDragging || !isPiP) return;
-    e.preventDefault();
-    const touch = e.touches[0];
-    const deltaX = touch.clientX - dragStartRef.current.x;
-    const deltaY = touch.clientY - dragStartRef.current.y;
-    
-    // Calculer les nouvelles positions avec limites
-    const pipWidth = 100;
-    const pipHeight = 140;
-    const maxX = window.innerWidth - pipWidth - 8;
-    const maxY = window.innerHeight - pipHeight - 100; // 100px pour la barre du bas
-    const minX = 8;
-    const minY = 60; // Espace pour le header
-    
-    const newX = Math.max(minX, Math.min(maxX, dragStartRef.current.posX + deltaX));
-    const newY = Math.max(minY, Math.min(maxY, dragStartRef.current.posY + deltaY));
-    
-    setPipPosition({ x: newX, y: newY });
-  }, [isDragging, isPiP]);
+    // Gestion du touch move
+    const handleTouchMove = useCallback(
+      (e) => {
+        if (!isDragging || !isPiP) return;
+        e.preventDefault();
+        const touch = e.touches[0];
+        const deltaX = touch.clientX - dragStartRef.current.x;
+        const deltaY = touch.clientY - dragStartRef.current.y;
 
-  // Gestion du touch end avec snap aux coins
-  const handleTouchEnd = useCallback(() => {
-    if (!isDragging || !isPiP) return;
-    setIsDragging(false);
-    
-    // Snap vers le coin le plus proche (optionnel - snap horizontal uniquement)
-    const pipWidth = 100;
-    const centerX = pipPosition.x + pipWidth / 2;
-    const screenCenterX = window.innerWidth / 2;
-    
-    // Snap à gauche ou à droite
-    const snapX = centerX < screenCenterX ? 8 : window.innerWidth - pipWidth - 8;
-    setPipPosition(prev => ({ ...prev, x: snapX }));
-  }, [isDragging, isPiP, pipPosition]);
+        // Calculer les nouvelles positions avec limites
+        const pipWidth = 100;
+        const pipHeight = 140;
+        const maxX = window.innerWidth - pipWidth - 8;
+        const maxY = window.innerHeight - pipHeight - 100; // 100px pour la barre du bas
+        const minX = 8;
+        const minY = 60; // Espace pour le header
 
-  // Mouse events pour desktop (optionnel mais utile pour tester)
-  const handleMouseDown = useCallback((e) => {
-    if (!isPiP) return;
-    e.preventDefault();
-    dragStartRef.current = {
-      x: e.clientX,
-      y: e.clientY,
-      posX: pipPosition.x,
-      posY: pipPosition.y,
-    };
-    setIsDragging(true);
-  }, [isPiP, pipPosition]);
+        const newX = Math.max(minX, Math.min(maxX, dragStartRef.current.posX + deltaX));
+        const newY = Math.max(minY, Math.min(maxY, dragStartRef.current.posY + deltaY));
 
-  // Écouter mousemove et mouseup globalement
-  useEffect(() => {
-    if (!isDragging) return;
+        setPipPosition({ x: newX, y: newY });
+      },
+      [isDragging, isPiP]
+    );
 
-    const handleMouseMove = (e) => {
-      const deltaX = e.clientX - dragStartRef.current.x;
-      const deltaY = e.clientY - dragStartRef.current.y;
-      
-      const pipWidth = 100;
-      const pipHeight = 140;
-      const maxX = window.innerWidth - pipWidth - 8;
-      const maxY = window.innerHeight - pipHeight - 100;
-      const minX = 8;
-      const minY = 60;
-      
-      const newX = Math.max(minX, Math.min(maxX, dragStartRef.current.posX + deltaX));
-      const newY = Math.max(minY, Math.min(maxY, dragStartRef.current.posY + deltaY));
-      
-      setPipPosition({ x: newX, y: newY });
-    };
-
-    const handleMouseUp = () => {
+    // Gestion du touch end avec snap aux coins
+    const handleTouchEnd = useCallback(() => {
+      if (!isDragging || !isPiP) return;
       setIsDragging(false);
-      // Snap horizontal
+
+      // Snap vers le coin le plus proche (optionnel - snap horizontal uniquement)
       const pipWidth = 100;
       const centerX = pipPosition.x + pipWidth / 2;
       const screenCenterX = window.innerWidth / 2;
+
+      // Snap à gauche ou à droite
       const snapX = centerX < screenCenterX ? 8 : window.innerWidth - pipWidth - 8;
-      setPipPosition(prev => ({ ...prev, x: snapX }));
-    };
+      setPipPosition((prev) => ({ ...prev, x: snapX }));
+    }, [isDragging, isPiP, pipPosition]);
 
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
-    
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [isDragging, pipPosition.x]);
+    // Mouse events pour desktop (optionnel mais utile pour tester)
+    const handleMouseDown = useCallback(
+      (e) => {
+        if (!isPiP) return;
+        e.preventDefault();
+        dragStartRef.current = {
+          x: e.clientX,
+          y: e.clientY,
+          posX: pipPosition.x,
+          posY: pipPosition.y,
+        };
+        setIsDragging(true);
+      },
+      [isPiP, pipPosition]
+    );
 
-  // Contenu vidéo commun
-  const videoContent = (
-    <>
-      {isVideoEnabled && trackRef ? (
-        <VideoTrack
-          trackRef={trackRef}
-          playsInline={true}
-          disablePictureInPicture={true}
-          style={{ 
-            width: '100%', 
-            height: '100%', 
-            objectFit: videoFit,
-            transform: 'translateZ(0)', 
-            willChange: 'transform, opacity',
-            backfaceVisibility: 'hidden',
-            filter: videoFilter, // 🤖 AI Video Enhancement
-          }} 
-        />
-      ) : (
-        <Placeholder>
-          <VideoOff size={isPiP ? 32 : 64} style={{ opacity: 0.5 }} />
-        </Placeholder>
-      )}
+    // Écouter mousemove et mouseup globalement
+    useEffect(() => {
+      if (!isDragging) return;
 
-      {!isPiP && (
-        <StatusIcons>
-          {!isMicEnabled && (
-            <StatusIcon $active>
-              <MicOff size={16} />
-            </StatusIcon>
-          )}
-        </StatusIcons>
-      )}
+      const handleMouseMove = (e) => {
+        const deltaX = e.clientX - dragStartRef.current.x;
+        const deltaY = e.clientY - dragStartRef.current.y;
 
-      {showLabel && !isPiP && (
-        <UserLabel>
-          {isMicEnabled ? (
-            <MicLevelRing $level={micLevel} $active={isMicEnabled}>
-              <Mic size={14} color="#059669" />
-            </MicLevelRing>
-          ) : (
-            <MicOff size={14} color="#dc2626" />
-          )}
-          {participant?.name || participant?.identity || 'Inconnu'} {isLocal && '(Vous)'}
-        </UserLabel>
-      )}
-    </>
-  );
+        const pipWidth = 100;
+        const pipHeight = 140;
+        const maxX = window.innerWidth - pipWidth - 8;
+        const maxY = window.innerHeight - pipHeight - 100;
+        const minX = 8;
+        const minY = 60;
 
-  // 📱 Rendu PiP déplaçable sur mobile
-  if (isPiP) {
+        const newX = Math.max(minX, Math.min(maxX, dragStartRef.current.posX + deltaX));
+        const newY = Math.max(minY, Math.min(maxY, dragStartRef.current.posY + deltaY));
+
+        setPipPosition({ x: newX, y: newY });
+      };
+
+      const handleMouseUp = () => {
+        setIsDragging(false);
+        // Snap horizontal
+        const pipWidth = 100;
+        const centerX = pipPosition.x + pipWidth / 2;
+        const screenCenterX = window.innerWidth / 2;
+        const snapX = centerX < screenCenterX ? 8 : window.innerWidth - pipWidth - 8;
+        setPipPosition((prev) => ({ ...prev, x: snapX }));
+      };
+
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+
+      return () => {
+        window.removeEventListener('mousemove', handleMouseMove);
+        window.removeEventListener('mouseup', handleMouseUp);
+      };
+    }, [isDragging, pipPosition.x]);
+
+    // Contenu vidéo commun
+    const videoContent = (
+      <>
+        {isVideoEnabled && trackRef ? (
+          <VideoTrack
+            trackRef={trackRef}
+            playsInline={true}
+            disablePictureInPicture={true}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: videoFit,
+              transform: 'translateZ(0)',
+              willChange: 'transform, opacity',
+              backfaceVisibility: 'hidden',
+              filter: videoFilter, // 🤖 AI Video Enhancement
+            }}
+          />
+        ) : (
+          <Placeholder>
+            <VideoOff size={isPiP ? 32 : 64} style={{ opacity: 0.5 }} />
+          </Placeholder>
+        )}
+
+        {!isPiP && (
+          <StatusIcons>
+            {!isMicEnabled && (
+              <StatusIcon $active>
+                <MicOff size={16} />
+              </StatusIcon>
+            )}
+          </StatusIcons>
+        )}
+
+        {showLabel && !isPiP && (
+          <UserLabel>
+            {isMicEnabled ? (
+              <MicLevelRing $level={micLevel} $active={isMicEnabled}>
+                <Mic size={14} color="#059669" />
+              </MicLevelRing>
+            ) : (
+              <MicOff size={14} color="#dc2626" />
+            )}
+            {participant?.name || participant?.identity || 'Inconnu'} {isLocal && '(Vous)'}
+          </UserLabel>
+        )}
+      </>
+    );
+
+    // 📱 Rendu PiP déplaçable sur mobile
+    if (isPiP) {
+      return (
+        <DraggablePiPContainer
+          ref={dragRef}
+          $isDragging={isDragging}
+          style={{
+            left: pipPosition.x ?? 'auto',
+            top: pipPosition.y ?? 'auto',
+            right: pipPosition.x === null ? '12px' : 'auto',
+            bottom:
+              pipPosition.y === null ? 'calc(100px + env(safe-area-inset-bottom, 0px))' : 'auto',
+          }}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          onMouseDown={handleMouseDown}
+        >
+          {videoContent}
+        </DraggablePiPContainer>
+      );
+    }
+
     return (
-      <DraggablePiPContainer
-        ref={dragRef}
-        $isDragging={isDragging}
-        style={{
-          left: pipPosition.x ?? 'auto',
-          top: pipPosition.y ?? 'auto',
-          right: pipPosition.x === null ? '12px' : 'auto',
-          bottom: pipPosition.y === null ? 'calc(100px + env(safe-area-inset-bottom, 0px))' : 'auto',
-        }}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-        onMouseDown={handleMouseDown}
-      >
+      <CardContainer $isActive={isSpeaking || isMicEnabled} $videoFit={videoFit}>
         {videoContent}
-      </DraggablePiPContainer>
+      </CardContainer>
     );
   }
-
-  return (
-    <CardContainer $isActive={isSpeaking || isMicEnabled} $videoFit={videoFit}>
-      {videoContent}
-    </CardContainer>
-  );
-});
+);

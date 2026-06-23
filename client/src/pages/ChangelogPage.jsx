@@ -18,30 +18,39 @@ import { useTranslation } from '../hooks/useTranslation';
 
 // ─── Colour palette ──────────────────────────────────────────────────────────
 const C = {
-  primary:    '#2563eb',
-  dark:       '#0f172a',
-  text:       '#374151',
-  muted:      '#6b7280',
-  bg:         '#f8fbff',
-  white:      '#ffffff',
-  border:     '#e5e7eb',
-  softBlue:   '#eff6ff',
-  blueTint:   '#dbeafe',
+  primary: '#2563eb',
+  dark: '#0f172a',
+  text: '#374151',
+  muted: '#6b7280',
+  bg: '#f8fbff',
+  white: '#ffffff',
+  border: '#e5e7eb',
+  softBlue: '#eff6ff',
+  blueTint: '#dbeafe',
 };
 
 const TAG_META = {
-  ai:            { icon: Cpu,          color: '#7c3aed', bg: '#f5f3ff' },
-  video:         { icon: Video,        color: '#2563eb', bg: '#eff6ff' },
-  security:      { icon: ShieldCheck,  color: '#16a34a', bg: '#f0fdf4' },
-  analytics:     { icon: BarChart2,    color: '#d97706', bg: '#fffbeb' },
-  design:        { icon: Paintbrush,   color: '#db2777', bg: '#fdf2f8' },
-  collaboration: { icon: Users,        color: '#0891b2', bg: '#ecfeff' },
-  performance:   { icon: Zap,          color: '#4f46e5', bg: '#eef2ff' },
-  launch:        { icon: Rocket,       color: '#6b7280', bg: '#f9fafb' },
+  ai: { icon: Cpu, color: '#7c3aed', bg: '#f5f3ff' },
+  video: { icon: Video, color: '#2563eb', bg: '#eff6ff' },
+  security: { icon: ShieldCheck, color: '#16a34a', bg: '#f0fdf4' },
+  analytics: { icon: BarChart2, color: '#d97706', bg: '#fffbeb' },
+  design: { icon: Paintbrush, color: '#db2777', bg: '#fdf2f8' },
+  collaboration: { icon: Users, color: '#0891b2', bg: '#ecfeff' },
+  performance: { icon: Zap, color: '#4f46e5', bg: '#eef2ff' },
+  launch: { icon: Rocket, color: '#6b7280', bg: '#f9fafb' },
 };
 
 const NOTE_COUNTS = [5, 5, 5, 4, 4, 5, 4, 5];
-const COLOR_KEYS  = ['ai', 'video', 'security', 'analytics', 'design', 'collaboration', 'performance', 'launch'];
+const COLOR_KEYS = [
+  'ai',
+  'video',
+  'security',
+  'analytics',
+  'design',
+  'collaboration',
+  'performance',
+  'launch',
+];
 
 // ─── Animations ──────────────────────────────────────────────────────────────
 const fadeUp = keyframes`
@@ -59,7 +68,7 @@ const pulseRing = keyframes`
 const Page = styled.div`
   min-height: 100vh;
   background:
-    radial-gradient(circle at top left, rgba(37,99,235,0.08), transparent 30%),
+    radial-gradient(circle at top left, rgba(37, 99, 235, 0.08), transparent 30%),
     linear-gradient(180deg, ${C.bg} 0%, #ffffff 25%, #ffffff 100%);
   display: flex;
   flex-direction: column;
@@ -132,12 +141,7 @@ const Rail = styled.div`
     bottom: 26px;
     width: 3px;
     border-radius: 3px;
-    background: linear-gradient(
-      180deg,
-      #2563eb 0%,
-      #60a5fa 55%,
-      #dbeafe 100%
-    );
+    background: linear-gradient(180deg, #2563eb 0%, #60a5fa 55%, #dbeafe 100%);
 
     @media (min-width: 640px) {
       left: 26px;
@@ -152,7 +156,9 @@ const Entry = styled.article`
   position: relative;
   opacity: 0;
   transform: translateX(-18px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
   transition-delay: var(--delay, 0s);
 
   &.visible {
@@ -176,7 +182,9 @@ const IconCircle = styled.div`
   border-radius: 50%;
   background: ${C.white};
   border: 2.5px solid ${({ $color }) => $color};
-  box-shadow: 0 0 0 5px ${({ $color }) => $color}22, 0 4px 12px rgba(0,0,0,0.07);
+  box-shadow:
+    0 0 0 5px ${({ $color }) => $color}22,
+    0 4px 12px rgba(0, 0, 0, 0.07);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -184,22 +192,28 @@ const IconCircle = styled.div`
   z-index: 2;
   transition: box-shadow 0.3s ease;
 
-  svg { color: ${({ $color }) => $color}; }
-
-  &:hover {
-    box-shadow: 0 0 0 8px ${({ $color }) => $color}28, 0 6px 20px rgba(0,0,0,0.12);
+  svg {
+    color: ${({ $color }) => $color};
   }
 
-  ${({ $latest }) => $latest && css`
-    &::after {
-      content: '';
-      position: absolute;
-      inset: -5px;
-      border-radius: 50%;
-      border: 2px solid rgba(37,99,235,0.45);
-      animation: ${pulseRing} 2.2s ease-out infinite;
-    }
-  `}
+  &:hover {
+    box-shadow:
+      0 0 0 8px ${({ $color }) => $color}28,
+      0 6px 20px rgba(0, 0, 0, 0.12);
+  }
+
+  ${({ $latest }) =>
+    $latest &&
+    css`
+      &::after {
+        content: '';
+        position: absolute;
+        inset: -5px;
+        border-radius: 50%;
+        border: 2px solid rgba(37, 99, 235, 0.45);
+        animation: ${pulseRing} 2.2s ease-out infinite;
+      }
+    `}
 
   @media (min-width: 640px) {
     width: 52px;
@@ -214,11 +228,13 @@ const Card = styled.div`
   border-top: 3px solid ${({ $color }) => $color};
   border-radius: 16px;
   padding: 24px 28px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.05);
-  transition: box-shadow 0.25s ease, transform 0.25s ease;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.05);
+  transition:
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
 
   &:hover {
-    box-shadow: 0 12px 40px rgba(0,0,0,0.10);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
     transform: translateY(-2px);
   }
 
@@ -321,15 +337,16 @@ const ChangelogPage = () => {
     const els = document.querySelectorAll('[data-cl-reveal]');
     if (!els.length) return;
     const io = new IntersectionObserver(
-      (entries) => entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          io.unobserve(e.target);
-        }
-      }),
+      (entries) =>
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            io.unobserve(e.target);
+          }
+        }),
       { threshold: 0.1 }
     );
-    els.forEach(el => io.observe(el));
+    els.forEach((el) => io.observe(el));
     return () => io.disconnect();
   }, []);
 
@@ -340,12 +357,12 @@ const ChangelogPage = () => {
     );
     return {
       version: t(`changelog.versions.${idx}.version`),
-      date:    t(`changelog.versions.${idx}.date`),
-      tag:     t(`changelog.versions.${idx}.tag`),
-      title:   t(`changelog.versions.${idx}.title`),
+      date: t(`changelog.versions.${idx}.date`),
+      tag: t(`changelog.versions.${idx}.tag`),
+      title: t(`changelog.versions.${idx}.title`),
       notes,
       meta,
-      latest:  idx === 0,
+      latest: idx === 0,
     };
   });
 
@@ -414,4 +431,3 @@ const ChangelogPage = () => {
 };
 
 export default ChangelogPage;
-

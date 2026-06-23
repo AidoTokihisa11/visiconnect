@@ -56,7 +56,9 @@ const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   font-family: 'Inter', sans-serif;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 `;
 
 const MainContent = styled.main`
@@ -96,7 +98,9 @@ const SearchBar = styled.input`
   outline: none;
   background-color: ${COLORS.white};
   color: ${COLORS.text};
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 
   &::placeholder {
     color: #94a3b8;
@@ -120,11 +124,15 @@ const Card = styled.div`
   border-radius: 12px;
   border: 1px solid ${COLORS.border};
   padding: 24px;
-  transition: transform 0.2s, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.2s;
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 10px 25px -10px rgba(0,0,0,0.15);
+    box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.15);
   }
 `;
 
@@ -162,8 +170,10 @@ const GuideLink = styled(Link)`
   justify-content: space-between;
   align-items: center;
   text-decoration: none;
-  transition: color 0.2s, padding-left 0.2s;
-  
+  transition:
+    color 0.2s,
+    padding-left 0.2s;
+
   &:last-child {
     border-bottom: none;
   }
@@ -176,7 +186,9 @@ const GuideLink = styled(Link)`
   &::after {
     content: '→';
     opacity: 0.3;
-    transition: opacity 0.2s, transform 0.2s;
+    transition:
+      opacity 0.2s,
+      transform 0.2s;
   }
 
   &:hover::after {
@@ -204,7 +216,9 @@ const UserGuidePageNew = () => {
           <Grid>
             {SECTION_ICONS.map((Icon, idx) => (
               <Card key={idx}>
-                <CategoryIcon><Icon size={22} strokeWidth={2} /></CategoryIcon>
+                <CategoryIcon>
+                  <Icon size={22} strokeWidth={2} />
+                </CategoryIcon>
                 <CategoryTitle>{t(`userGuide.sections.${idx}.title`)}</CategoryTitle>
                 <GuideList>
                   {Array.from({ length: itemCounts[idx] }).map((_, i) => {

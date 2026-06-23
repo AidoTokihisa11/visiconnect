@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
-import { motion } from 'framer-motion'
-import { Mail, AlertCircle, CheckCircle2, ArrowLeft } from 'lucide-react'
-import { useAuth } from '../contexts/AuthContext'
-import { useTranslation } from '../hooks/useTranslation'
-import AuthRightPanel from '../components/AuthRightPanel'
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import { motion } from 'framer-motion';
+import { Mail, AlertCircle, CheckCircle2, ArrowLeft } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { useTranslation } from '../hooks/useTranslation';
+import AuthRightPanel from '../components/AuthRightPanel';
 
 const PageWrapper = styled.div`
   display: flex;
@@ -16,7 +16,7 @@ const PageWrapper = styled.div`
   @media (min-width: 1024px) {
     flex-direction: row;
   }
-`
+`;
 
 const LeftPanel = styled.div`
   flex: 1;
@@ -25,14 +25,16 @@ const LeftPanel = styled.div`
   padding: 2rem;
   overflow-y: auto;
 
-  &::-webkit-scrollbar { display: none; }
+  &::-webkit-scrollbar {
+    display: none;
+  }
   -ms-overflow-style: none;
   scrollbar-width: none;
 
   @media (min-width: 1024px) {
     padding: 2rem 4rem;
   }
-`
+`;
 
 const BackLink = styled(Link)`
   display: inline-flex;
@@ -45,8 +47,10 @@ const BackLink = styled(Link)`
   transition: color 0.2s;
   margin-bottom: 2rem;
 
-  &:hover { color: #0f172a; }
-`
+  &:hover {
+    color: #0f172a;
+  }
+`;
 
 const FormContainer = styled(motion.div)`
   width: 100%;
@@ -55,61 +59,61 @@ const FormContainer = styled(motion.div)`
   display: flex;
   flex-direction: column;
   justify-content: center;
-`
+`;
 
 const Header = styled.div`
   margin-bottom: 2.5rem;
-`
+`;
 
 const Logo = styled.div`
   font-size: 1.5rem;
   font-weight: 800;
   color: #2563eb;
   margin-bottom: 1.5rem;
-`
+`;
 
 const Title = styled.h2`
   font-size: 2rem;
   font-weight: 700;
   color: #0f172a;
   margin-bottom: 0.5rem;
-`
+`;
 
 const Subtitle = styled.p`
   font-size: 1rem;
   color: #64748b;
-`
+`;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-`
+`;
 
 const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-`
+`;
 
 const Label = styled.label`
   font-size: 0.9rem;
   font-weight: 600;
   color: #334155;
-`
+`;
 
 const InputWrapper = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-`
+`;
 
 const IconWrapper = styled.div`
   position: absolute;
   left: 1rem;
   color: #94a3b8;
   display: flex;
-`
+`;
 
 const Input = styled.input`
   width: 100%;
@@ -128,8 +132,10 @@ const Input = styled.input`
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
   }
 
-  &::placeholder { color: #94a3b8; }
-`
+  &::placeholder {
+    color: #94a3b8;
+  }
+`;
 
 const SubmitButton = styled(motion.button)`
   width: 100%;
@@ -153,7 +159,7 @@ const SubmitButton = styled(motion.button)`
     opacity: 0.6;
     cursor: not-allowed;
   }
-`
+`;
 
 const ErrorMessage = styled(motion.div)`
   display: flex;
@@ -166,7 +172,7 @@ const ErrorMessage = styled(motion.div)`
   border-radius: 0.5rem;
   font-size: 0.9rem;
   line-height: 1.4;
-`
+`;
 
 const SuccessMessage = styled(motion.div)`
   display: flex;
@@ -179,7 +185,7 @@ const SuccessMessage = styled(motion.div)`
   border-radius: 0.5rem;
   font-size: 0.9rem;
   line-height: 1.5;
-`
+`;
 
 const FooterLink = styled.div`
   text-align: center;
@@ -193,40 +199,42 @@ const FooterLink = styled.div`
     font-weight: 600;
     margin-left: 0.25rem;
 
-    &:hover { text-decoration: underline; }
+    &:hover {
+      text-decoration: underline;
+    }
   }
-`
+`;
 
 export default function ForgotPasswordPage() {
-  const { t } = useTranslation()
-  const { requestPasswordReset } = useAuth()
-  const navigate = useNavigate()
+  const { t } = useTranslation();
+  const { requestPasswordReset } = useAuth();
+  const navigate = useNavigate();
 
-  const [email, setEmail] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [sent, setSent] = useState(false)
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [sent, setSent] = useState(false);
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
+    e.preventDefault();
+    setLoading(true);
+    setError('');
 
-    const { error: resetError } = await requestPasswordReset(email)
+    const { error: resetError } = await requestPasswordReset(email);
 
     if (resetError) {
-      setError(resetError.message)
-      setLoading(false)
-      return
+      setError(resetError.message);
+      setLoading(false);
+      return;
     }
 
-    setSent(true)
-    setLoading(false)
+    setSent(true);
+    setLoading(false);
     // Redirige vers la page de réinitialisation en passant l'email
     setTimeout(() => {
-      navigate('/reset-password', { state: { email } })
-    }, 2000)
-  }
+      navigate('/reset-password', { state: { email } });
+    }, 2000);
+  };
 
   return (
     <PageWrapper>
@@ -243,7 +251,12 @@ export default function ForgotPasswordPage() {
           <Header>
             <Logo>VisioConnect</Logo>
             <Title>{t('auth.forgotPassword.title', 'Mot de passe oublié')}</Title>
-            <Subtitle>{t('auth.forgotPassword.subtitle', 'Entrez votre email pour recevoir un code de réinitialisation.')}</Subtitle>
+            <Subtitle>
+              {t(
+                'auth.forgotPassword.subtitle',
+                'Entrez votre email pour recevoir un code de réinitialisation.'
+              )}
+            </Subtitle>
           </Header>
 
           {error && (
@@ -258,29 +271,37 @@ export default function ForgotPasswordPage() {
           )}
 
           {sent ? (
-            <SuccessMessage
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
+            <SuccessMessage initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
               <CheckCircle2 size={20} style={{ flexShrink: 0, marginTop: '2px' }} />
               <div>
                 <strong>{t('auth.forgotPassword.emailSentTitle', 'Email envoyé !')}</strong>
                 <br />
-                {t('auth.forgotPassword.emailSentText', 'Un code de réinitialisation a été envoyé à')} <strong>{email}</strong>.{' '}
+                {t(
+                  'auth.forgotPassword.emailSentText',
+                  'Un code de réinitialisation a été envoyé à'
+                )}{' '}
+                <strong>{email}</strong>.{' '}
                 {t('auth.forgotPassword.redirecting', 'Redirection en cours...')}
               </div>
             </SuccessMessage>
           ) : (
             <Form onSubmit={handleSubmit}>
               <FormGroup>
-                <Label htmlFor="email">{t('auth.forgotPassword.emailLabel', 'Adresse email')}</Label>
+                <Label htmlFor="email">
+                  {t('auth.forgotPassword.emailLabel', 'Adresse email')}
+                </Label>
                 <InputWrapper>
-                  <IconWrapper><Mail size={18} /></IconWrapper>
+                  <IconWrapper>
+                    <Mail size={18} />
+                  </IconWrapper>
                   <Input
                     type="email"
                     id="email"
                     value={email}
-                    onChange={(e) => { setEmail(e.target.value); setError('') }}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      setError('');
+                    }}
                     placeholder={t('auth.forgotPassword.emailPlaceholder', 'votre@email.com')}
                     required
                     autoComplete="email"
@@ -289,11 +310,7 @@ export default function ForgotPasswordPage() {
                 </InputWrapper>
               </FormGroup>
 
-              <SubmitButton
-                type="submit"
-                disabled={loading}
-                whileTap={{ scale: 0.98 }}
-              >
+              <SubmitButton type="submit" disabled={loading} whileTap={{ scale: 0.98 }}>
                 {loading
                   ? t('auth.forgotPassword.sending', 'Envoi en cours...')
                   : t('auth.forgotPassword.sendCode', 'Envoyer le code')}
@@ -302,12 +319,15 @@ export default function ForgotPasswordPage() {
           )}
 
           <FooterLink>
-            {t('auth.forgotPassword.rememberedPassword', 'Vous vous souvenez de votre mot de passe ?')}
+            {t(
+              'auth.forgotPassword.rememberedPassword',
+              'Vous vous souvenez de votre mot de passe ?'
+            )}
             <Link to="/login">{t('auth.forgotPassword.backToLogin', 'Se connecter')}</Link>
           </FooterLink>
         </FormContainer>
       </LeftPanel>
       <AuthRightPanel />
     </PageWrapper>
-  )
+  );
 }

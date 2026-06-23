@@ -36,7 +36,9 @@ const Trigger = styled.button`
   font-size: 0.95rem;
   color: #0f172a;
   cursor: pointer;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
 
   &:hover:not(:disabled) {
     border-color: #94a3b8;
@@ -54,7 +56,9 @@ const Trigger = styled.button`
     background: #f8fafc;
   }
 
-  .placeholder { color: #94a3b8; }
+  .placeholder {
+    color: #94a3b8;
+  }
 `;
 
 const Dropdown = styled.div`
@@ -119,7 +123,7 @@ const Empty = styled.div`
   text-align: center;
 `;
 
-const defaultGetValue = (i) => (i?.code ?? i?.id ?? i?.value ?? '');
+const defaultGetValue = (i) => i?.code ?? i?.id ?? i?.value ?? '';
 const defaultGetLabel = (i) => i?.name ?? i?.label ?? '';
 const defaultGetSearch = (i) =>
   [i?.name, i?.code, i?.dial, i?.label].filter(Boolean).join(' ').toLowerCase();
@@ -195,11 +199,24 @@ const Combobox = ({
         aria-expanded={open}
       >
         <span>
-          {selectedItem ? (renderTrigger ? renderTrigger(selectedItem) : getLabel(selectedItem)) : (
+          {selectedItem ? (
+            renderTrigger ? (
+              renderTrigger(selectedItem)
+            ) : (
+              getLabel(selectedItem)
+            )
+          ) : (
             <span className="placeholder">{placeholder}</span>
           )}
         </span>
-        <ChevronDown size={16} style={{ opacity: 0.6, transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+        <ChevronDown
+          size={16}
+          style={{
+            opacity: 0.6,
+            transform: open ? 'rotate(180deg)' : 'none',
+            transition: 'transform 0.2s',
+          }}
+        />
       </Trigger>
 
       {open && (

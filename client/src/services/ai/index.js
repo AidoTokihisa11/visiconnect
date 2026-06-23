@@ -1,6 +1,6 @@
 /**
  * Services IA VisiConnect - Export Principal
- * 
+ *
  * Pipeline d'intelligence gratuit:
  * - Transcription: Web Speech API (100% client)
  * - Smart Notes: OpenRouter (modèles gratuits)
@@ -10,10 +10,24 @@
  */
 
 export { default as TranscriptionService, getTranscriptionService } from './TranscriptionService';
-export { default as SmartNotesService, getSmartNotesService, FREE_MODELS } from './SmartNotesService';
-export { default as TranslationService, getTranslationService, SUPPORTED_LANGUAGES } from './TranslationService';
-export { default as BackgroundBlurService, getBackgroundBlurService } from './BackgroundBlurService';
-export { default as VideoEnhancementService, getVideoEnhancementService } from './VideoEnhancementService';
+export {
+  default as SmartNotesService,
+  getSmartNotesService,
+  FREE_MODELS,
+} from './SmartNotesService';
+export {
+  default as TranslationService,
+  getTranslationService,
+  SUPPORTED_LANGUAGES,
+} from './TranslationService';
+export {
+  default as BackgroundBlurService,
+  getBackgroundBlurService,
+} from './BackgroundBlurService';
+export {
+  default as VideoEnhancementService,
+  getVideoEnhancementService,
+} from './VideoEnhancementService';
 
 /**
  * Vérifie la disponibilité des fonctionnalités IA

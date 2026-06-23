@@ -1,9 +1,21 @@
 import React, { useState, useCallback, useMemo, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  LayoutDashboard, MonitorPlay, Activity, Mic, MicOff,
-  Video, Monitor, Users, Phone, MessageSquare,
-  Shield, TrendingUp, Eye, Wifi, Clock,
+  LayoutDashboard,
+  MonitorPlay,
+  Activity,
+  Mic,
+  MicOff,
+  Video,
+  Monitor,
+  Users,
+  Phone,
+  MessageSquare,
+  Shield,
+  TrendingUp,
+  Eye,
+  Wifi,
+  Clock,
 } from 'lucide-react';
 
 /* ════════════════════════════════════════════════════════════════
@@ -53,9 +65,11 @@ const GlassFrame = memo(function GlassFrame({ children, accent }) {
         transition={{ duration: 0.6, ease: 'easeOut' }}
       />
       {/* Decorative noise / grid */}
-      <div className="absolute inset-0 opacity-[0.04] pointer-events-none"
+      <div
+        className="absolute inset-0 opacity-[0.04] pointer-events-none"
         style={{
-          backgroundImage: 'linear-gradient(rgba(255,255,255,.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.6) 1px, transparent 1px)',
+          backgroundImage:
+            'linear-gradient(rgba(255,255,255,.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.6) 1px, transparent 1px)',
           backgroundSize: '24px 24px',
         }}
       />
@@ -82,9 +96,11 @@ const ToolbarButton = memo(function ToolbarButton({ icon: Icon, danger = false, 
         w-8 h-8 rounded-lg flex items-center justify-center
         border border-white/10 ring-0
         transition-[background-color,box-shadow,color] duration-200
-        ${danger
-          ? 'bg-red-500/90 text-white hover:bg-red-500 hover:shadow-[0_0_0_4px_rgba(239,68,68,0.18)]'
-          : 'bg-white/10 text-white/85 hover:bg-white/20 hover:text-white hover:shadow-[0_0_0_4px_rgba(255,255,255,0.08)]'}
+        ${
+          danger
+            ? 'bg-red-500/90 text-white hover:bg-red-500 hover:shadow-[0_0_0_4px_rgba(239,68,68,0.18)]'
+            : 'bg-white/10 text-white/85 hover:bg-white/20 hover:text-white hover:shadow-[0_0_0_4px_rgba(255,255,255,0.08)]'
+        }
       `}
     >
       <Icon size={14} strokeWidth={2.2} />
@@ -111,9 +127,24 @@ const StudioToolbar = memo(function StudioToolbar({ labels }) {
    ════════════════════════════════════════════════════════════════ */
 const DashboardPreview = memo(function DashboardPreview({ t }) {
   const stats = [
-    { label: t('slider.dashboard.meetings', 'Réunions'), value: '24', icon: Video, tint: 'from-sky-400 to-blue-500' },
-    { label: t('slider.dashboard.participants', 'Participants'), value: '128', icon: Users, tint: 'from-violet-400 to-fuchsia-500' },
-    { label: t('slider.dashboard.avgDuration', 'Durée moy.'), value: '42 min', icon: Clock, tint: 'from-emerald-400 to-teal-500' },
+    {
+      label: t('slider.dashboard.meetings', 'Réunions'),
+      value: '24',
+      icon: Video,
+      tint: 'from-sky-400 to-blue-500',
+    },
+    {
+      label: t('slider.dashboard.participants', 'Participants'),
+      value: '128',
+      icon: Users,
+      tint: 'from-violet-400 to-fuchsia-500',
+    },
+    {
+      label: t('slider.dashboard.avgDuration', 'Durée moy.'),
+      value: '42 min',
+      icon: Clock,
+      tint: 'from-emerald-400 to-teal-500',
+    },
   ];
   const bars = [40, 65, 45, 80, 55, 70, 90, 60, 75, 85, 62, 78];
   const filters = [
@@ -133,10 +164,14 @@ const DashboardPreview = memo(function DashboardPreview({ t }) {
             transition={{ delay: 0.05 + i * 0.06, duration: 0.35 }}
             className="rounded-xl border border-white/10 bg-white/[0.05] p-3 backdrop-blur-md"
           >
-            <div className={`w-7 h-7 rounded-lg bg-gradient-to-br ${s.tint} flex items-center justify-center text-white shadow-md mb-2`}>
+            <div
+              className={`w-7 h-7 rounded-lg bg-gradient-to-br ${s.tint} flex items-center justify-center text-white shadow-md mb-2`}
+            >
               <s.icon size={13} strokeWidth={2.4} />
             </div>
-            <p className="text-[0.62rem] uppercase tracking-wide text-white/50 leading-none mb-1.5">{s.label}</p>
+            <p className="text-[0.62rem] uppercase tracking-wide text-white/50 leading-none mb-1.5">
+              {s.label}
+            </p>
             <p className="text-base font-bold text-white leading-none">{s.value}</p>
           </motion.div>
         ))}
@@ -188,7 +223,9 @@ const StudioTile = memo(function StudioTile({ person, isLive }) {
         alt={person.name}
         loading="lazy"
         className="w-full h-full object-cover"
-        onError={(e) => { e.currentTarget.style.display = 'none'; }}
+        onError={(e) => {
+          e.currentTarget.style.display = 'none';
+        }}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/10 pointer-events-none" />
 
@@ -218,14 +255,17 @@ const StudioTile = memo(function StudioTile({ person, isLive }) {
 });
 
 const StudioPreview = memo(function StudioPreview({ t }) {
-  const labels = useMemo(() => ({
-    mic: t('slider.studio.mic', 'Micro'),
-    video: t('slider.studio.video', 'Caméra'),
-    screen: t('slider.studio.screen', 'Partage d\'écran'),
-    chat: t('slider.studio.chat', 'Chat'),
-    people: t('slider.studio.participants', 'Participants'),
-    leave: t('slider.studio.leave', 'Quitter'),
-  }), [t]);
+  const labels = useMemo(
+    () => ({
+      mic: t('slider.studio.mic', 'Micro'),
+      video: t('slider.studio.video', 'Caméra'),
+      screen: t('slider.studio.screen', "Partage d'écran"),
+      chat: t('slider.studio.chat', 'Chat'),
+      people: t('slider.studio.participants', 'Participants'),
+      leave: t('slider.studio.leave', 'Quitter'),
+    }),
+    [t]
+  );
 
   return (
     <>
@@ -255,13 +295,19 @@ const StudioPreview = memo(function StudioPreview({ t }) {
    ════════════════════════════════════════════════════════════════ */
 const AnalyticsPreview = memo(function AnalyticsPreview({ t }) {
   const metrics = [
-    { label: t('slider.analytics.engagement', 'Engagement'), value: '94%', delta: '+12%', icon: TrendingUp },
+    {
+      label: t('slider.analytics.engagement', 'Engagement'),
+      value: '94%',
+      delta: '+12%',
+      icon: TrendingUp,
+    },
     { label: t('slider.analytics.retention', 'Rétention'), value: '87%', delta: '+5%', icon: Eye },
     { label: t('slider.analytics.quality', 'Qualité'), value: '99.2%', delta: '+0.3%', icon: Wifi },
   ];
 
   // Two series: engagement (primary) + participants (secondary)
-  const engagement = 'M0,52 Q12,40 24,36 T48,28 T72,32 T96,18 T120,22 T144,12 T168,18 T192,8 T216,14';
+  const engagement =
+    'M0,52 Q12,40 24,36 T48,28 T72,32 T96,18 T120,22 T144,12 T168,18 T192,8 T216,14';
   const participants = 'M0,46 Q14,44 28,42 T56,40 T84,38 T112,36 T140,32 T168,30 T196,28 T216,26';
 
   return (
@@ -395,7 +441,7 @@ const buildFeatures = (t) => [
     id: 'dashboard',
     icon: LayoutDashboard,
     title: t('slider.title1', 'Dashboard Intuitif'),
-    description: t('slider.desc1', 'Contrôlez vos réunions d\'un clic.'),
+    description: t('slider.desc1', "Contrôlez vos réunions d'un clic."),
     color: '#3b82f6',
   },
   {
@@ -410,7 +456,7 @@ const buildFeatures = (t) => [
     id: 'analytics',
     icon: Activity,
     title: t('slider.title3', 'Analytiques'),
-    description: t('slider.desc3', 'Suivez l\'engagement en temps réel.'),
+    description: t('slider.desc3', "Suivez l'engagement en temps réel."),
     color: '#10b981',
   },
 ];
@@ -448,7 +494,9 @@ const FeatureTab = memo(function FeatureTab({ feature, isActive, onSelect }) {
           transition-[background-color,color,box-shadow] duration-300
           ${isActive ? 'text-white shadow-lg' : 'bg-slate-100 text-slate-400'}
         `}
-        style={isActive ? { background: color, boxShadow: `0 8px 24px -8px ${color}80` } : undefined}
+        style={
+          isActive ? { background: color, boxShadow: `0 8px 24px -8px ${color}80` } : undefined
+        }
       >
         <Icon size={22} strokeWidth={2.2} />
       </span>
@@ -484,7 +532,10 @@ export default function FeaturesTabs({ t }) {
     <section className="w-full max-w-[1200px] mx-auto py-16 sm:py-24 px-4">
       <div className="bg-white rounded-3xl border border-slate-200/80 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] p-5 sm:p-8 grid grid-cols-1 lg:grid-cols-[1fr_1.6fr] gap-6 lg:gap-10">
         {/* Left tabs */}
-        <nav className="flex flex-col justify-center gap-2" aria-label={t('slider.ariaTabs', 'Sections de fonctionnalités')}>
+        <nav
+          className="flex flex-col justify-center gap-2"
+          aria-label={t('slider.ariaTabs', 'Sections de fonctionnalités')}
+        >
           {features.map((f) => (
             <FeatureTab
               key={f.id}

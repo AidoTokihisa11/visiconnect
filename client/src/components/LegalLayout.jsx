@@ -6,20 +6,20 @@ import FooterClean from './FooterClean';
 import { useTranslation } from '../hooks/useTranslation';
 
 const COLORS = {
-  primary:   '#2563eb',
-  dark:      '#0f172a',
+  primary: '#2563eb',
+  dark: '#0f172a',
   secondary: '#6b7280',
-  text:      '#374151',
-  border:    '#e5e7eb',
-  background:'#ffffff',
-  bg:        '#f8fbff',
-  active:    '#eff6ff',
+  text: '#374151',
+  border: '#e5e7eb',
+  background: '#ffffff',
+  bg: '#f8fbff',
+  active: '#eff6ff',
 };
 
 const PageContainer = styled.div`
   min-height: 100vh;
   background:
-    radial-gradient(circle at top left, rgba(37,99,235,0.06), transparent 28%),
+    radial-gradient(circle at top left, rgba(37, 99, 235, 0.06), transparent 28%),
     linear-gradient(180deg, ${COLORS.bg} 0%, #ffffff 20%, #ffffff 100%);
   color: ${COLORS.dark};
   display: flex;
@@ -107,7 +107,7 @@ const ContentArea = styled.main`
     color: ${COLORS.dark};
     margin-bottom: 1rem;
   }
-  
+
   h2 {
     font-size: 1.75rem;
     font-weight: 700;
@@ -126,7 +126,7 @@ const ContentArea = styled.main`
     list-style: disc;
     padding-left: 1.5rem;
     margin-bottom: 1.5rem;
-    
+
     li {
       margin-bottom: 0.5rem;
       color: ${COLORS.text};
@@ -160,9 +160,7 @@ const LegalLayout = ({ children, title, lastUpdated }) => {
           {title && <h1>{title}</h1>}
           {children}
           {lastUpdated && (
-            <LastUpdated>
-              {t('common.lastUpdated', { date: lastUpdated })}
-            </LastUpdated>
+            <LastUpdated>{t('common.lastUpdated', { date: lastUpdated })}</LastUpdated>
           )}
         </ContentArea>
       </MainContent>

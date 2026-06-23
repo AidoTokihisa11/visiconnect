@@ -128,6 +128,6 @@ export const useUserProfile = () => {
     updateNotifications,
     updatePrivacy,
     updateTwoFactor,
-    refreshProfile
+    refreshProfile,
   };
 };

@@ -40,7 +40,7 @@ export const Logo = styled(Link)`
   font-weight: 800;
   text-decoration: none;
   color: #1e40af;
-  
+
   .logo-icon {
     width: 40px;
     height: 40px;
@@ -57,7 +57,7 @@ export const NavLinks = styled.div`
   display: flex;
   align-items: center;
   gap: 2rem;
-  
+
   @media (max-width: 768px) {
     display: none;
   }
@@ -70,15 +70,15 @@ export const NavLink = styled(Link)`
   padding: 0.5rem 0;
   position: relative;
   transition: color 0.3s ease;
-  
+
   &:hover {
     color: #3b82f6;
   }
-  
+
   &.active {
     color: #1e40af;
     font-weight: 600;
-    
+
     &::after {
       content: '';
       position: absolute;
@@ -105,7 +105,7 @@ export const BackButton = styled(motion.button)`
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
-  
+
   &:hover {
     background: #f1f5f9;
     border-color: #3b82f6;
@@ -131,7 +131,7 @@ export const HeroContent = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  
+
   @media (max-width: 768px) {
     flex-direction: column;
     gap: 1.5rem;
@@ -149,7 +149,7 @@ export const Title = styled.h1`
   color: #1e40af;
   margin-bottom: 1rem;
   line-height: 1.1;
-  
+
   @media (max-width: 768px) {
     font-size: 2rem;
   }
@@ -172,18 +172,21 @@ export const ActionButton = styled(motion.button)`
   align-items: center;
   gap: 0.5rem;
   padding: 0.875rem 1.5rem;
-  background: ${props => props.primary ? '#3b82f6' : 'white'};
-  color: ${props => props.primary ? 'white' : '#475569'};
-  border: 1px solid ${props => props.primary ? '#3b82f6' : '#e2e8f0'};
+  background: ${(props) => (props.primary ? '#3b82f6' : 'white')};
+  color: ${(props) => (props.primary ? 'white' : '#475569')};
+  border: 1px solid ${(props) => (props.primary ? '#3b82f6' : '#e2e8f0')};
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  
+
   &:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px ${props => props.primary ? 'rgba(59, 130, 246, 0.3)' : 'rgba(0, 0, 0, 0.1)'};
-    ${props => !props.primary && `
+    box-shadow: 0 4px 12px
+      ${(props) => (props.primary ? 'rgba(59, 130, 246, 0.3)' : 'rgba(0, 0, 0, 0.1)')};
+    ${(props) =>
+      !props.primary &&
+      `
       border-color: #3b82f6;
       color: #1e40af;
     `}
@@ -236,7 +239,7 @@ export const NavButton = styled(motion.button)`
   color: #475569;
   cursor: pointer;
   transition: all 0.3s ease;
-  
+
   &:hover {
     border-color: #3b82f6;
     color: #1e40af;
@@ -261,14 +264,16 @@ export const ViewSelector = styled.div`
 export const ViewButton = styled.button`
   padding: 0.5rem 1rem;
   border: none;
-  background: ${props => props.active ? '#3b82f6' : 'white'};
-  color: ${props => props.active ? 'white' : '#64748b'};
+  background: ${(props) => (props.active ? '#3b82f6' : 'white')};
+  color: ${(props) => (props.active ? 'white' : '#64748b')};
   cursor: pointer;
   font-weight: 500;
   transition: all 0.3s ease;
-  
+
   &:hover {
-    ${props => !props.active && `
+    ${(props) =>
+      !props.active &&
+      `
       background: #f8fafc;
       color: #1e40af;
     `}
@@ -311,21 +316,21 @@ export const CalendarDay = styled(motion.div)`
   padding: 0.75rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  
+
   &:nth-child(7n) {
     border-right: none;
   }
-  
+
   &.other-month {
     background: #f8fafc;
     color: #94a3b8;
   }
-  
+
   &.today {
     background: linear-gradient(135deg, #eff6ff, #dbeafe);
     border-left: 3px solid #3b82f6;
   }
-  
+
   &:hover {
     background: #f1f5f9;
   }
@@ -344,20 +349,28 @@ export const EventsList = styled.div`
 `;
 
 export const EventItem = styled.div`
-  background: ${props => {
+  background: ${(props) => {
     switch (props.type) {
-      case 'meeting': return '#dbeafe';
-      case 'call': return '#dcfce7';
-      case 'presentation': return '#fef3c7';
-      default: return '#f1f5f9';
+      case 'meeting':
+        return '#dbeafe';
+      case 'call':
+        return '#dcfce7';
+      case 'presentation':
+        return '#fef3c7';
+      default:
+        return '#f1f5f9';
     }
   }};
-  color: ${props => {
+  color: ${(props) => {
     switch (props.type) {
-      case 'meeting': return '#1e40af';
-      case 'call': return '#166534';
-      case 'presentation': return '#92400e';
-      default: return '#475569';
+      case 'meeting':
+        return '#1e40af';
+      case 'call':
+        return '#166534';
+      case 'presentation':
+        return '#92400e';
+      default:
+        return '#475569';
     }
   }};
   padding: 0.25rem 0.5rem;
@@ -366,7 +379,7 @@ export const EventItem = styled.div`
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-  
+
   &:hover {
     transform: scale(1.02);
     opacity: 0.8;
@@ -386,7 +399,7 @@ export const Sidebar = styled.aside`
   border: 1px solid rgba(59, 130, 246, 0.1);
   padding: 1.5rem;
   z-index: 100;
-  
+
   @media (max-width: 1400px) {
     position: static;
     transform: none;
@@ -413,7 +426,7 @@ export const UpcomingEvent = styled(motion.div)`
   margin-bottom: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  
+
   &:hover {
     border-color: #3b82f6;
     transform: translateY(-1px);
@@ -489,7 +502,7 @@ export const CloseButton = styled.button`
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  
+
   &:hover {
     background: #f1f5f9;
     color: #1e40af;
@@ -518,7 +531,7 @@ export const Input = styled.input`
   border-radius: 8px;
   font-size: 1rem;
   transition: all 0.3s ease;
-  
+
   &:focus {
     outline: none;
     border-color: #3b82f6;
@@ -534,7 +547,7 @@ export const Select = styled.select`
   font-size: 1rem;
   background: white;
   transition: all 0.3s ease;
-  
+
   &:focus {
     outline: none;
     border-color: #3b82f6;
@@ -551,7 +564,7 @@ export const TextArea = styled.textarea`
   resize: vertical;
   min-height: 100px;
   transition: all 0.3s ease;
-  
+
   &:focus {
     outline: none;
     border-color: #3b82f6;

@@ -16,14 +16,14 @@ const SectionWrapper = styled.div`
 const HeaderContainer = styled.div`
   text-align: center;
   margin-bottom: 3rem;
-  
+
   h2 {
     font-size: 2.5rem;
     font-weight: 700;
     color: hsl(var(--foreground));
     margin-bottom: 1rem;
   }
-  
+
   p {
     font-size: 1.125rem;
     color: hsl(var(--muted-foreground));
@@ -62,13 +62,13 @@ const TabItem = styled.div`
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
-  background: ${props => props.$active ? 'rgba(59, 130, 246, 0.05)' : 'transparent'};
-  border: 1px solid ${props => props.$active ? 'rgba(59, 130, 246, 0.2)' : 'transparent'};
-  
+  background: ${(props) => (props.$active ? 'rgba(59, 130, 246, 0.05)' : 'transparent')};
+  border: 1px solid ${(props) => (props.$active ? 'rgba(59, 130, 246, 0.2)' : 'transparent')};
+
   &:hover {
-    background: ${props => props.$active ? 'rgba(59, 130, 246, 0.05)' : 'rgba(0, 0, 0, 0.02)'};
+    background: ${(props) => (props.$active ? 'rgba(59, 130, 246, 0.05)' : 'rgba(0, 0, 0, 0.02)')};
   }
-  
+
   .icon-wrapper {
     width: 48px;
     height: 48px;
@@ -77,15 +77,16 @@ const TabItem = styled.div`
     align-items: center;
     justify-content: center;
     margin-bottom: 1rem;
-    background: ${props => props.$active ? props.$color : 'hsl(var(--muted))'};
-    color: ${props => props.$active ? '#fff' : 'hsl(var(--muted-foreground))'};
+    background: ${(props) => (props.$active ? props.$color : 'hsl(var(--muted))')};
+    color: ${(props) => (props.$active ? '#fff' : 'hsl(var(--muted-foreground))')};
     transition: all 0.3s ease;
   }
 
   h3 {
     font-size: 1.25rem;
     font-weight: 600;
-    color: ${props => props.$active ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground))'};
+    color: ${(props) =>
+      props.$active ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground))'};
     margin-bottom: 0.5rem;
     transition: color 0.3s ease;
   }
@@ -103,11 +104,13 @@ const TabItem = styled.div`
     transform: translateY(-50%);
     width: 4px;
     height: 0;
-    background: ${props => props.$color};
+    background: ${(props) => props.$color};
     border-radius: 0 4px 4px 0;
     transition: height 0.3s ease;
-    
-    ${props => props.$active && `
+
+    ${(props) =>
+      props.$active &&
+      `
       height: 60%;
     `}
   }
@@ -123,7 +126,7 @@ const VisualizerPane = styled.div`
   justify-content: center;
   min-height: 400px;
   border: 1px solid hsl(var(--border));
-  box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.02);
 `;
 
 const BrowserMockup = styled(motion.div)`
@@ -150,9 +153,15 @@ const BrowserMockup = styled(motion.div)`
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      &.red { background: #ef4444; }
-      &.yellow { background: #f59e0b; }
-      &.green { background: #22c55e; }
+      &.red {
+        background: #ef4444;
+      }
+      &.yellow {
+        background: #f59e0b;
+      }
+      &.green {
+        background: #22c55e;
+      }
     }
   }
 
@@ -164,7 +173,7 @@ const BrowserMockup = styled(motion.div)`
     padding: 2rem;
     background: radial-gradient(circle at center, #ffffff 0%, #f8fafc 100%);
     position: relative;
-    
+
     .illustration-wrapper {
       text-align: center;
       display: flex;
@@ -172,37 +181,50 @@ const BrowserMockup = styled(motion.div)`
       align-items: center;
       gap: 1.5rem;
     }
-    
+
     h4 {
       font-size: 1.5rem;
       font-weight: 600;
       color: hsl(var(--foreground));
     }
-    
+
     .pulsing-circle {
       width: 80px;
       height: 80px;
       border-radius: 50%;
-      background: ${props => props.$themeColor || '#3b82f6'};
+      background: ${(props) => props.$themeColor || '#3b82f6'};
       opacity: 0.2;
       animation: pulse 2s infinite;
       position: absolute;
     }
 
     @keyframes pulse {
-      0% { transform: scale(1); opacity: 0.5; }
-      50% { transform: scale(1.5); opacity: 0; }
-      100% { transform: scale(1); opacity: 0; }
+      0% {
+        transform: scale(1);
+        opacity: 0.5;
+      }
+      50% {
+        transform: scale(1.5);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 0;
+      }
     }
   }
 `;
 
 const getIconForIndex = (index) => {
   switch (index) {
-    case 0: return <LayoutDashboard size={24} />;
-    case 1: return <MonitorPlay size={24} />;
-    case 2: return <Activity size={24} />;
-    default: return <ArrowRight size={24} />;
+    case 0:
+      return <LayoutDashboard size={24} />;
+    case 1:
+      return <MonitorPlay size={24} />;
+    case 2:
+      return <Activity size={24} />;
+    default:
+      return <ArrowRight size={24} />;
   }
 };
 
@@ -239,9 +261,7 @@ const BannerSlider = ({ slides = [] }) => {
               onClick={() => setCurrent(idx)}
             >
               <div className="active-indicator" />
-              <div className="icon-wrapper">
-                {getIconForIndex(idx)}
-              </div>
+              <div className="icon-wrapper">{getIconForIndex(idx)}</div>
               <h3>{slide.title}</h3>
               <p>{slide.description}</p>
             </TabItem>
@@ -256,7 +276,7 @@ const BannerSlider = ({ slides = [] }) => {
               initial={{ opacity: 0, y: 20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.95 }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
+              transition={{ duration: 0.4, ease: 'easeOut' }}
             >
               <div className="browser-header">
                 <div className="dot red"></div>

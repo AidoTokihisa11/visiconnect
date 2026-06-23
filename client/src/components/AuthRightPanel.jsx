@@ -25,8 +25,9 @@ const DecorativeGradient = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at 100% 0%, rgba(37, 99, 235, 0.15) 0%, transparent 50%),
-              radial-gradient(circle at 0% 100%, rgba(56, 189, 248, 0.05) 0%, transparent 50%);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(37, 99, 235, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 0% 100%, rgba(56, 189, 248, 0.05) 0%, transparent 50%);
   z-index: 1;
 `;
 
@@ -72,7 +73,7 @@ const AuthRightPanel = ({ title, description }) => {
       <ContentText
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
       >
         <Title>{title}</Title>
         <Description>{description}</Description>

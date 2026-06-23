@@ -53,8 +53,8 @@ const Badge = styled.span`
   font-weight: 600;
   padding: 2px 7px;
   border-radius: 20px;
-  background: ${props => props.$color || 'rgba(255,255,255,0.12)'};
-  color: ${props => props.$textColor || 'rgba(255,255,255,0.7)'};
+  background: ${(props) => props.$color || 'rgba(255,255,255,0.12)'};
+  color: ${(props) => props.$textColor || 'rgba(255,255,255,0.7)'};
   letter-spacing: 0.04em;
   text-transform: uppercase;
   display: flex;
@@ -63,14 +63,13 @@ const Badge = styled.span`
 `;
 
 const OptionBtn = styled.button`
-  background: ${props => props.$selected
-    ? THEME.primary
-    : props.$voted
-      ? 'rgba(59, 130, 246, 0.18)'
-      : 'rgba(255, 255, 255, 0.1)'};
-  border: 2px solid ${props => props.$selected
-    ? THEME.primary
-    : 'transparent'};
+  background: ${(props) =>
+    props.$selected
+      ? THEME.primary
+      : props.$voted
+        ? 'rgba(59, 130, 246, 0.18)'
+        : 'rgba(255, 255, 255, 0.1)'};
+  border: 2px solid ${(props) => (props.$selected ? THEME.primary : 'transparent')};
   width: 100%;
   text-align: left;
   padding: 10px 12px;
@@ -83,12 +82,12 @@ const OptionBtn = styled.button`
   align-items: center;
   gap: 10px;
   transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
-  font-weight: ${props => props.$selected ? 600 : 400};
-  transform: ${props => props.$selected ? 'scale(1.02)' : 'scale(1)'};
-  box-shadow: ${props => props.$selected ? `0 4px 12px ${THEME.primary}55` : 'none'};
+  font-weight: ${(props) => (props.$selected ? 600 : 400)};
+  transform: ${(props) => (props.$selected ? 'scale(1.02)' : 'scale(1)')};
+  box-shadow: ${(props) => (props.$selected ? `0 4px 12px ${THEME.primary}55` : 'none')};
 
   &:hover:not(:disabled) {
-    background: ${props => props.$voted ? THEME.primaryHover : 'rgba(255, 255, 255, 0.2)'};
+    background: ${(props) => (props.$voted ? THEME.primaryHover : 'rgba(255, 255, 255, 0.2)')};
     transform: translateY(-1px);
   }
 
@@ -100,7 +99,7 @@ const OptionBtn = styled.button`
 const ProgressBar = styled.div`
   height: 3px;
   border-radius: 2px;
-  background: rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.08);
   margin-top: 4px;
   margin-left: 0;
   overflow: hidden;
@@ -109,7 +108,7 @@ const ProgressBar = styled.div`
     content: '';
     display: block;
     height: 100%;
-    width: ${props => props.$pct}%;
+    width: ${(props) => props.$pct}%;
     background: ${THEME.primary};
     border-radius: 2px;
     transition: width 0.3s ease;
@@ -125,7 +124,7 @@ const Input = styled.input`
   width: 100%;
   margin-bottom: 8px;
   outline: none;
-  
+
   &:focus {
     border-color: ${THEME.primary};
   }
@@ -146,7 +145,7 @@ const Button = styled.button`
   font-weight: 500;
   margin-top: 8px;
   transition: background 0.15s;
-  
+
   &:hover {
     background: ${THEME.primaryHover};
   }
@@ -161,11 +160,13 @@ const IconButton = styled.button`
   align-items: center;
   padding: 4px;
   border-radius: 4px;
-  transition: color 0.15s, background 0.15s;
-  
+  transition:
+    color 0.15s,
+    background 0.15s;
+
   &:hover {
     color: white;
-    background: rgba(255,255,255,0.08);
+    background: rgba(255, 255, 255, 0.08);
   }
 `;
 
@@ -175,9 +176,9 @@ const ToggleRow = styled.label`
   justify-content: space-between;
   padding: 8px 0;
   cursor: pointer;
-  color: rgba(255,255,255,0.75);
+  color: rgba(255, 255, 255, 0.75);
   font-size: 13px;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 
   &:last-of-type {
     border-bottom: none;
@@ -195,10 +196,12 @@ const Toggle = styled.input.attrs({ type: 'checkbox' })`
   width: 32px;
   height: 18px;
   border-radius: 9px;
-  background: rgba(255,255,255,0.15);
+  background: rgba(255, 255, 255, 0.15);
   position: relative;
   cursor: pointer;
-  transition: background 0.2s, box-shadow 0.2s;
+  transition:
+    background 0.2s,
+    box-shadow 0.2s;
   flex-shrink: 0;
 
   &:checked {
@@ -224,7 +227,7 @@ const Toggle = styled.input.attrs({ type: 'checkbox' })`
 `;
 
 const OptionsSection = styled.div`
-  background: rgba(0,0,0,0.15);
+  background: rgba(0, 0, 0, 0.15);
   border-radius: 6px;
   padding: 4px 10px 8px;
   margin: 10px 0 6px;
@@ -235,7 +238,7 @@ const CreatorActions = styled.div`
   gap: 6px;
   margin-top: 12px;
   padding-top: 10px;
-  border-top: 1px solid rgba(255,255,255,0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 `;
 
 const SmallButton = styled.button`
@@ -248,18 +251,22 @@ const SmallButton = styled.button`
   font-weight: 600;
   padding: 6px 8px;
   border-radius: 5px;
-  border: 1px solid ${props => props.$variant === 'danger' ? 'rgba(239,68,68,0.4)' : 'rgba(255,255,255,0.12)'};
-  background: ${props => props.$variant === 'danger' ? 'rgba(239,68,68,0.08)' : 'rgba(255,255,255,0.05)'};
-  color: ${props => props.$variant === 'danger' ? '#f87171' : 'rgba(255,255,255,0.7)'};
+  border: 1px solid
+    ${(props) => (props.$variant === 'danger' ? 'rgba(239,68,68,0.4)' : 'rgba(255,255,255,0.12)')};
+  background: ${(props) =>
+    props.$variant === 'danger' ? 'rgba(239,68,68,0.08)' : 'rgba(255,255,255,0.05)'};
+  color: ${(props) => (props.$variant === 'danger' ? '#f87171' : 'rgba(255,255,255,0.7)')};
   cursor: pointer;
   transition: all 0.15s;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 
   &:hover {
-    background: ${props => props.$variant === 'danger' ? 'rgba(239,68,68,0.18)' : 'rgba(255,255,255,0.12)'};
-    color: ${props => props.$variant === 'danger' ? '#fca5a5' : 'white'};
-    border-color: ${props => props.$variant === 'danger' ? 'rgba(239,68,68,0.6)' : 'rgba(255,255,255,0.25)'};
+    background: ${(props) =>
+      props.$variant === 'danger' ? 'rgba(239,68,68,0.18)' : 'rgba(255,255,255,0.12)'};
+    color: ${(props) => (props.$variant === 'danger' ? '#fca5a5' : 'white')};
+    border-color: ${(props) =>
+      props.$variant === 'danger' ? 'rgba(239,68,68,0.6)' : 'rgba(255,255,255,0.25)'};
   }
 `;
 
@@ -272,33 +279,35 @@ export default function PollsPanel({ meetingId, currentUser, onClose, onPollCrea
   const toggleShowResults = useMutation(api.polls.toggleShowResults);
 
   const [isCreating, setIsCreating] = useState(false);
-  const [question, setQuestion] = useState("");
-  const [options, setOptions] = useState(["", ""]);
+  const [question, setQuestion] = useState('');
+  const [options, setOptions] = useState(['', '']);
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [showResultsOnCreate, setShowResultsOnCreate] = useState(true);
-  const [createError, setCreateError] = useState("");
+  const [createError, setCreateError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   // Stocke l'option votée par poll, côté client (le backend ne le stocke pas)
   const [myVotes, setMyVotes] = useState(() => {
     try {
       const raw = localStorage.getItem('visiconnect_my_poll_votes');
       return raw ? JSON.parse(raw) : {};
-    } catch { return {}; }
+    } catch {
+      return {};
+    }
   });
 
   const resetForm = () => {
     setIsCreating(false);
-    setQuestion("");
-    setOptions(["", ""]);
+    setQuestion('');
+    setOptions(['', '']);
     setIsAnonymous(false);
     setShowResultsOnCreate(true);
-    setCreateError("");
+    setCreateError('');
   };
 
   const handleCreate = async () => {
-    setCreateError("");
-    const validOptions = options.filter(o => o.trim() !== "");
-    if (question.trim() === "") {
+    setCreateError('');
+    const validOptions = options.filter((o) => o.trim() !== '');
+    if (question.trim() === '') {
       setCreateError(t('room.polls.errEmptyQuestion', 'Veuillez saisir une question.'));
       return;
     }
@@ -310,7 +319,12 @@ export default function PollsPanel({ meetingId, currentUser, onClose, onPollCrea
       // Defensive guard: in demo flows the meetingId might be missing if the
       // user landed directly on /meeting without a route param. Surface a
       // clear message rather than the opaque Convex 400.
-      setCreateError(t('room.polls.errNoMeeting', "Salle introuvable \u2014 rejoignez une r\u00e9union avant de cr\u00e9er un sondage."));
+      setCreateError(
+        t(
+          'room.polls.errNoMeeting',
+          'Salle introuvable \u2014 rejoignez une r\u00e9union avant de cr\u00e9er un sondage.'
+        )
+      );
       return;
     }
     setIsLoading(true);
@@ -338,7 +352,9 @@ export default function PollsPanel({ meetingId, currentUser, onClose, onPollCrea
         : /network|failed to fetch/i.test(detail)
           ? t('room.polls.errNetwork', 'Erreur r\u00e9seau \u2014 v\u00e9rifiez votre connexion.')
           : detail;
-      setCreateError(`${t('room.polls.errCreate', 'Erreur lors de la cr\u00e9ation')} : ${friendly}`);
+      setCreateError(
+        `${t('room.polls.errCreate', 'Erreur lors de la cr\u00e9ation')} : ${friendly}`
+      );
     } finally {
       setIsLoading(false);
     }
@@ -351,81 +367,126 @@ export default function PollsPanel({ meetingId, currentUser, onClose, onPollCrea
     <PanelContainer>
       <Header>
         <span>{t('room.polls.title', 'Sondages')}</span>
-        <IconButton onClick={onClose}><X size={20} /></IconButton>
+        <IconButton onClick={onClose}>
+          <X size={20} />
+        </IconButton>
       </Header>
-      
+
       <Content>
         {!isCreating ? (
           <>
             <Button onClick={() => setIsCreating(true)}>
               <Plus size={18} /> {t('room.polls.create', 'Créer un sondage')}
             </Button>
-            
+
             {polls.length === 0 && (
-              <div style={{ textAlign: 'center', color: 'rgba(255,255,255,0.3)', fontSize: '13px', marginTop: '24px' }}>
+              <div
+                style={{
+                  textAlign: 'center',
+                  color: 'rgba(255,255,255,0.3)',
+                  fontSize: '13px',
+                  marginTop: '24px',
+                }}
+              >
                 {t('room.polls.empty', "Aucun sondage pour l'instant")}
               </div>
             )}
 
-            {polls.map(poll => {
+            {polls.map((poll) => {
               const hasVoted = poll.votedUsers?.includes(currentUser.identity);
               const total = totalVotes(poll);
-              const canSeeResults = (poll.showResults ?? true) || !poll.isActive || hasVoted || isCreator(poll);
-              
+              const canSeeResults =
+                (poll.showResults ?? true) || !poll.isActive || hasVoted || isCreator(poll);
+
               return (
                 <PollCard key={poll._id}>
                   {/* Title row */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', gap: '8px' }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      marginBottom: '6px',
+                      gap: '8px',
+                    }}
+                  >
                     <h4 style={{ margin: 0, fontSize: '14px', flex: 1 }}>{poll.question}</h4>
                   </div>
 
                   {/* Badges */}
                   <PollMeta>
                     {!poll.isActive && (
-                      <Badge $color="rgba(239,68,68,0.15)" $textColor="#f87171">{t('room.polls.ended', 'Terminé')}</Badge>
+                      <Badge $color="rgba(239,68,68,0.15)" $textColor="#f87171">
+                        {t('room.polls.ended', 'Terminé')}
+                      </Badge>
                     )}
                     {poll.isActive && (
-                      <Badge $color="rgba(34,197,94,0.12)" $textColor="#4ade80">{t('room.polls.active', 'En cours')}</Badge>
+                      <Badge $color="rgba(34,197,94,0.12)" $textColor="#4ade80">
+                        {t('room.polls.active', 'En cours')}
+                      </Badge>
                     )}
                     {poll.isAnonymous && (
-                      <Badge><Lock size={9} /> {t('room.polls.anon', 'Anonyme')}</Badge>
+                      <Badge>
+                        <Lock size={9} /> {t('room.polls.anon', 'Anonyme')}
+                      </Badge>
                     )}
-                    {!(poll.showResults ?? true) && poll.isActive && !hasVoted && !isCreator(poll) && (
-                      <Badge><EyeOff size={9} /> {t('room.polls.hidden', 'Résultats masqués')}</Badge>
-                    )}
+                    {!(poll.showResults ?? true) &&
+                      poll.isActive &&
+                      !hasVoted &&
+                      !isCreator(poll) && (
+                        <Badge>
+                          <EyeOff size={9} /> {t('room.polls.hidden', 'Résultats masqués')}
+                        </Badge>
+                      )}
                     <Badge $color="rgba(255,255,255,0.06)" $textColor="rgba(255,255,255,0.45)">
-                      {total} {t(total !== 1 ? 'room.polls.votes' : 'room.polls.vote', total !== 1 ? 'votes' : 'vote')}
+                      {total}{' '}
+                      {t(
+                        total !== 1 ? 'room.polls.votes' : 'room.polls.vote',
+                        total !== 1 ? 'votes' : 'vote'
+                      )}
                     </Badge>
                   </PollMeta>
 
                   {/* Options */}
-                  {poll.options.map(opt => {
+                  {poll.options.map((opt) => {
                     const pct = total > 0 ? Math.round((opt.votes / total) * 100) : 0;
                     const showPct = canSeeResults;
                     return (
                       <div key={opt.id}>
-                        <OptionBtn 
+                        <OptionBtn
                           $voted={hasVoted}
                           $selected={hasVoted && myVotes[poll._id] === opt.id}
                           disabled={hasVoted || !poll.isActive}
                           onClick={async () => {
                             try {
-                              await votePoll({ pollId: poll._id, optionId: opt.id, userId: currentUser.identity });
+                              await votePoll({
+                                pollId: poll._id,
+                                optionId: opt.id,
+                                userId: currentUser.identity,
+                              });
                               const next = { ...myVotes, [poll._id]: opt.id };
                               setMyVotes(next);
-                              try { localStorage.setItem('visiconnect_my_poll_votes', JSON.stringify(next)); } catch {}
+                              try {
+                                localStorage.setItem(
+                                  'visiconnect_my_poll_votes',
+                                  JSON.stringify(next)
+                                );
+                              } catch {}
                             } catch (e) {
                               console.error('votePoll error:', e);
                             }
                           }}
                         >
-                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                          <span
+                            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+                          >
                             {hasVoted && myVotes[poll._id] === opt.id && (
                               <CheckCircle size={16} style={{ flexShrink: 0 }} />
                             )}
                             {opt.text}
                           </span>
-                          {showPct && <span style={{ fontSize: '12px', opacity: 0.85 }}>{pct}%</span>}
+                          {showPct && (
+                            <span style={{ fontSize: '12px', opacity: 0.85 }}>{pct}%</span>
+                          )}
                         </OptionBtn>
                         {showPct && <ProgressBar $pct={pct} />}
                       </div>
@@ -434,7 +495,14 @@ export default function PollsPanel({ meetingId, currentUser, onClose, onPollCrea
 
                   {/* Message si résultats masqués */}
                   {!canSeeResults && (
-                    <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)', marginTop: '8px', textAlign: 'center' }}>
+                    <div
+                      style={{
+                        fontSize: '11px',
+                        color: 'rgba(255,255,255,0.35)',
+                        marginTop: '8px',
+                        textAlign: 'center',
+                      }}
+                    >
                       {t('room.polls.afterVote', 'Les résultats seront visibles après votre vote')}
                     </div>
                   )}
@@ -445,21 +513,56 @@ export default function PollsPanel({ meetingId, currentUser, onClose, onPollCrea
                       {poll.isActive && (
                         <>
                           <SmallButton
-                            title={(poll.showResults ?? true) ? t('room.polls.hideResults', 'Masquer les résultats') : t('room.polls.showResults', 'Afficher les résultats')}
-                            onClick={() => toggleShowResults({ pollId: poll._id, show: !(poll.showResults ?? true) })}
+                            title={
+                              (poll.showResults ?? true)
+                                ? t('room.polls.hideResults', 'Masquer les résultats')
+                                : t('room.polls.showResults', 'Afficher les résultats')
+                            }
+                            onClick={() =>
+                              toggleShowResults({
+                                pollId: poll._id,
+                                show: !(poll.showResults ?? true),
+                              })
+                            }
                           >
-                            {(poll.showResults ?? true) ? <><EyeOff size={11} /> {t('room.polls.hideShort', 'Masquer résultats')}</> : <><Eye size={11} /> {t('room.polls.showShort', 'Afficher résultats')}</>}
+                            {(poll.showResults ?? true) ? (
+                              <>
+                                <EyeOff size={11} />{' '}
+                                {t('room.polls.hideShort', 'Masquer résultats')}
+                              </>
+                            ) : (
+                              <>
+                                <Eye size={11} /> {t('room.polls.showShort', 'Afficher résultats')}
+                              </>
+                            )}
                           </SmallButton>
-                          <SmallButton $variant="danger" onClick={() => endPoll({ pollId: poll._id })} title={t('room.polls.close', 'Clôturer le sondage')}>
+                          <SmallButton
+                            $variant="danger"
+                            onClick={() => endPoll({ pollId: poll._id })}
+                            title={t('room.polls.close', 'Clôturer le sondage')}
+                          >
                             <CheckCircle size={11} /> {t('room.polls.closeShort', 'Clôturer')}
                           </SmallButton>
                         </>
                       )}
                       {!poll.isActive && (
                         <SmallButton
-                          onClick={() => toggleShowResults({ pollId: poll._id, show: !(poll.showResults ?? true) })}
+                          onClick={() =>
+                            toggleShowResults({
+                              pollId: poll._id,
+                              show: !(poll.showResults ?? true),
+                            })
+                          }
                         >
-                          {(poll.showResults ?? true) ? <><EyeOff size={11} /> {t('room.polls.hideShort', 'Masquer résultats')}</> : <><Eye size={11} /> {t('room.polls.showShort', 'Afficher résultats')}</>}
+                          {(poll.showResults ?? true) ? (
+                            <>
+                              <EyeOff size={11} /> {t('room.polls.hideShort', 'Masquer résultats')}
+                            </>
+                          ) : (
+                            <>
+                              <Eye size={11} /> {t('room.polls.showShort', 'Afficher résultats')}
+                            </>
+                          )}
                         </SmallButton>
                       )}
                     </CreatorActions>
@@ -471,57 +574,107 @@ export default function PollsPanel({ meetingId, currentUser, onClose, onPollCrea
         ) : (
           <PollCard>
             <h4 style={{ margin: '0 0 14px 0' }}>{t('room.polls.newPoll', 'Nouveau sondage')}</h4>
-            <Input 
+            <Input
               placeholder={t('room.polls.questionPlaceholder', 'Votre question...')}
-              value={question} 
-              onChange={e => setQuestion(e.target.value)} 
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
             />
-            
+
             {options.map((opt, i) => (
               <div key={i} style={{ display: 'flex', gap: '8px' }}>
-                <Input 
+                <Input
                   placeholder={t('room.polls.optionPlaceholder', 'Option {{n}}', { n: i + 1 })}
-                  value={opt} 
-                  onChange={e => {
+                  value={opt}
+                  onChange={(e) => {
                     const newOpts = [...options];
                     newOpts[i] = e.target.value;
                     setOptions(newOpts);
-                  }} 
+                  }}
                 />
                 {options.length > 2 && (
-                  <IconButton onClick={() => setOptions(options.filter((_, idx) => idx !== i))} style={{ marginBottom: '8px' }}>
+                  <IconButton
+                    onClick={() => setOptions(options.filter((_, idx) => idx !== i))}
+                    style={{ marginBottom: '8px' }}
+                  >
                     <Trash2 size={16} />
                   </IconButton>
                 )}
               </div>
             ))}
-            
-            <Button style={{ background: 'transparent', border: `1px dashed ${THEME.primary}`, marginBottom: '12px' }} onClick={() => setOptions([...options, ""])}>
+
+            <Button
+              style={{
+                background: 'transparent',
+                border: `1px dashed ${THEME.primary}`,
+                marginBottom: '12px',
+              }}
+              onClick={() => setOptions([...options, ''])}
+            >
               <Plus size={16} /> {t('room.polls.addOption', 'Ajouter une option')}
             </Button>
 
             {/* Options avancées */}
             <OptionsSection>
-              <div style={{ fontSize: '10px', fontWeight: 700, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '4px' }}>{t('room.polls.options', 'Options')}</div>
+              <div
+                style={{
+                  fontSize: '10px',
+                  fontWeight: 700,
+                  color: 'rgba(255,255,255,0.35)',
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  marginBottom: '4px',
+                }}
+              >
+                {t('room.polls.options', 'Options')}
+              </div>
               <ToggleRow>
-                <ToggleLabel><Lock size={13} /> {t('room.polls.anonymousVote', 'Vote anonyme')}</ToggleLabel>
-                <Toggle checked={isAnonymous} onChange={e => setIsAnonymous(e.target.checked)} />
+                <ToggleLabel>
+                  <Lock size={13} /> {t('room.polls.anonymousVote', 'Vote anonyme')}
+                </ToggleLabel>
+                <Toggle checked={isAnonymous} onChange={(e) => setIsAnonymous(e.target.checked)} />
               </ToggleRow>
               <ToggleRow>
-                <ToggleLabel><Eye size={13} /> {t('room.polls.showResultsOpt', 'Afficher les résultats')}</ToggleLabel>
-                <Toggle checked={showResultsOnCreate} onChange={e => setShowResultsOnCreate(e.target.checked)} />
+                <ToggleLabel>
+                  <Eye size={13} /> {t('room.polls.showResultsOpt', 'Afficher les résultats')}
+                </ToggleLabel>
+                <Toggle
+                  checked={showResultsOnCreate}
+                  onChange={(e) => setShowResultsOnCreate(e.target.checked)}
+                />
               </ToggleRow>
             </OptionsSection>
 
             {createError && (
-              <div style={{ color: '#f87171', fontSize: '12px', marginTop: '8px', padding: '6px 10px', background: 'rgba(239,68,68,0.08)', borderRadius: '6px', border: '1px solid rgba(239,68,68,0.25)' }}>
+              <div
+                style={{
+                  color: '#f87171',
+                  fontSize: '12px',
+                  marginTop: '8px',
+                  padding: '6px 10px',
+                  background: 'rgba(239,68,68,0.08)',
+                  borderRadius: '6px',
+                  border: '1px solid rgba(239,68,68,0.25)',
+                }}
+              >
                 {createError}
               </div>
             )}
             <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
-              <Button style={{ background: THEME.surface }} onClick={resetForm} disabled={isLoading}>{t('room.polls.cancel', 'Annuler')}</Button>
-              <Button onClick={handleCreate} disabled={isLoading} style={{ opacity: isLoading ? 0.6 : 1 }}>
-                {isLoading ? t('room.polls.creating', 'Création...') : t('room.polls.submit', 'Créer')}
+              <Button
+                style={{ background: THEME.surface }}
+                onClick={resetForm}
+                disabled={isLoading}
+              >
+                {t('room.polls.cancel', 'Annuler')}
+              </Button>
+              <Button
+                onClick={handleCreate}
+                disabled={isLoading}
+                style={{ opacity: isLoading ? 0.6 : 1 }}
+              >
+                {isLoading
+                  ? t('room.polls.creating', 'Création...')
+                  : t('room.polls.submit', 'Créer')}
               </Button>
             </div>
           </PollCard>
@@ -530,5 +683,3 @@ export default function PollsPanel({ meetingId, currentUser, onClose, onPollCrea
     </PanelContainer>
   );
 }
-
-

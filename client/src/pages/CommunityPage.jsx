@@ -26,7 +26,9 @@ const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   font-family: 'Inter', sans-serif;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 `;
 
 const MainContent = styled.main`
@@ -39,7 +41,9 @@ const Hero = styled.section`
   padding: 80px 24px;
   text-align: center;
   border-bottom: 1px solid ${COLORS.border};
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 `;
 
 const Title = styled.h1`
@@ -71,7 +75,10 @@ const CommunityCard = styled.div`
   border-radius: 16px;
   padding: 32px;
   text-align: center;
-  transition: transform 0.2s, background-color 0.3s ease, border-color 0.3s ease;
+  transition:
+    transform 0.2s,
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 
   &:hover {
     transform: translateY(-4px);
@@ -82,7 +89,7 @@ const IconWrapper = styled.div`
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background-color: ${props => props.bgColor || '#f1f5f9'};
+  background-color: ${(props) => props.bgColor || '#f1f5f9'};
   color: ${COLORS.white};
   display: flex;
   align-items: center;
@@ -106,7 +113,7 @@ const CardText = styled.p`
 
 const ActionButton = styled.a`
   display: inline-block;
-  background-color: ${props => props.color || COLORS.primary};
+  background-color: ${(props) => props.color || COLORS.primary};
   color: ${COLORS.white};
   padding: 10px 24px;
   border-radius: 8px;
@@ -150,7 +157,7 @@ const TopicItem = styled.div`
   padding: 16px;
   background-color: #f8fafc;
   border-radius: 8px;
-  
+
   &:hover {
     background-color: #f1f5f9;
   }
@@ -184,28 +191,36 @@ const CommunityPage = () => {
             <IconWrapper bgColor={COLORS.discord}>💬</IconWrapper>
             <CardTitle>{t('community.social.discord.title')}</CardTitle>
             <CardText>{t('community.social.discord.desc')}</CardText>
-            <ActionButton href="#" color={COLORS.discord}>{t('community.social.discord.button')}</ActionButton>
+            <ActionButton href="#" color={COLORS.discord}>
+              {t('community.social.discord.button')}
+            </ActionButton>
           </CommunityCard>
 
           <CommunityCard>
             <IconWrapper bgColor={COLORS.twitter}>🐦</IconWrapper>
             <CardTitle>{t('community.social.twitter.title')}</CardTitle>
             <CardText>{t('community.social.twitter.desc')}</CardText>
-            <ActionButton href="#" color={COLORS.twitter}>{t('community.social.twitter.button')}</ActionButton>
+            <ActionButton href="#" color={COLORS.twitter}>
+              {t('community.social.twitter.button')}
+            </ActionButton>
           </CommunityCard>
 
           <CommunityCard>
             <IconWrapper bgColor={COLORS.linkedin}>💼</IconWrapper>
             <CardTitle>{t('community.social.linkedin.title')}</CardTitle>
             <CardText>{t('community.social.linkedin.desc')}</CardText>
-            <ActionButton href="#" color={COLORS.linkedin}>{t('community.social.linkedin.button')}</ActionButton>
+            <ActionButton href="#" color={COLORS.linkedin}>
+              {t('community.social.linkedin.button')}
+            </ActionButton>
           </CommunityCard>
         </CommunityGrid>
 
         <ForumSection>
           <ForumHeader>
             <CardTitle style={{ marginBottom: 0 }}>{t('community.forum.title')}</CardTitle>
-            <ActionButton href="#" style={{ fontSize: '0.9rem', padding: '8px 16px' }}>{t('community.forum.viewAll')}</ActionButton>
+            <ActionButton href="#" style={{ fontSize: '0.9rem', padding: '8px 16px' }}>
+              {t('community.forum.viewAll')}
+            </ActionButton>
           </ForumHeader>
           <TopicList>
             <TopicItem>

@@ -10,7 +10,9 @@ const Card = styled(motion.div)`
   border-radius: 20px;
   padding: 2rem;
   border: 1px solid rgba(226, 232, 240, 0.8);
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), inset 0 0 0 1px rgba(255,255,255,0.5);
+  box-shadow:
+    0 4px 6px -1px rgb(0 0 0 / 0.1),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.5);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   position: relative;
   overflow: hidden;
@@ -20,7 +22,9 @@ const Card = styled(motion.div)`
 
   &:hover {
     transform: translateY(-8px);
-    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 0 20px rgba(37, 99, 235, 0.15);
+    box-shadow:
+      0 20px 25px -5px rgb(0 0 0 / 0.1),
+      0 0 20px rgba(37, 99, 235, 0.15);
     border-color: hsl(var(--primary));
   }
 
@@ -45,8 +49,8 @@ const IconWrapper = styled.div`
   width: 56px;
   height: 56px;
   border-radius: 14px;
-  background: ${props => props.$bg || 'rgba(37, 99, 235, 0.1)'};
-  color: ${props => props.$color || 'hsl(var(--primary))'};
+  background: ${(props) => props.$bg || 'rgba(37, 99, 235, 0.1)'};
+  color: ${(props) => props.$color || 'hsl(var(--primary))'};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -85,7 +89,7 @@ const ListItem = styled.li`
   gap: 0.75rem;
   font-size: 0.9rem;
   color: hsl(var(--muted-foreground));
-  
+
   svg {
     flex-shrink: 0;
     width: 16px;
@@ -97,15 +101,15 @@ const ListItem = styled.li`
 
 // ========== COMPONENT ==========
 
-const FeatureCard = ({ 
-  icon: Icon, 
-  title, 
-  description, 
-  items = [], 
-  iconBg, 
+const FeatureCard = ({
+  icon: Icon,
+  title,
+  description,
+  items = [],
+  iconBg,
   iconColor,
   delay = 0,
-  ...props 
+  ...props
 }) => {
   return (
     <Card
@@ -120,10 +124,10 @@ const FeatureCard = ({
           <Icon size={28} />
         </IconWrapper>
       )}
-      
+
       <Title>{title}</Title>
       <Description>{description}</Description>
-      
+
       {Array.isArray(items) && items.length > 0 && (
         <ItemsList>
           {items.map((item, idx) => (

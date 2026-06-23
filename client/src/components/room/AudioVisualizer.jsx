@@ -24,10 +24,8 @@ export const useAudioLevel = ({ isMicEnabled, localParticipant }) => {
       try {
         let stream;
         if (localParticipant) {
-          const audioPubs = Array.from(
-            localParticipant.audioTrackPublications?.values?.() || []
-          );
-          const pub = audioPubs.find(p => p.track?.mediaStreamTrack);
+          const audioPubs = Array.from(localParticipant.audioTrackPublications?.values?.() || []);
+          const pub = audioPubs.find((p) => p.track?.mediaStreamTrack);
           if (pub) stream = new MediaStream([pub.track.mediaStreamTrack]);
         }
         if (!stream) {
@@ -53,9 +51,7 @@ export const useAudioLevel = ({ isMicEnabled, localParticipant }) => {
           if (cancelled) return;
           analyser.getByteFrequencyData(data);
           // RMS over all bins → single 0-1 value
-          const rms = Math.sqrt(
-            data.reduce((sum, v) => sum + v * v, 0) / data.length
-          ) / 128;
+          const rms = Math.sqrt(data.reduce((sum, v) => sum + v * v, 0) / data.length) / 128;
           setLevel(Math.min(1, rms));
           animRef.current = requestAnimationFrame(tick);
         };
@@ -71,8 +67,12 @@ export const useAudioLevel = ({ isMicEnabled, localParticipant }) => {
     return () => {
       cancelled = true;
       if (animRef.current) cancelAnimationFrame(animRef.current);
-      try { sourceRef.current?.disconnect(); } catch {}
-      try { ctxRef.current?.close(); } catch {}
+      try {
+        sourceRef.current?.disconnect();
+      } catch {}
+      try {
+        ctxRef.current?.close();
+      } catch {}
       analyserRef.current = null;
       ctxRef.current = null;
       sourceRef.current = null;

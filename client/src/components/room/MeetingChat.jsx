@@ -22,9 +22,16 @@ const MessagesArea = styled.div`
   flex-direction: column;
   gap: 1.25rem;
 
-  &::-webkit-scrollbar { width: 6px; }
-  &::-webkit-scrollbar-track { background: transparent; }
-  &::-webkit-scrollbar-thumb { background-color: ${THEME.border}; border-radius: 4px; }
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: ${THEME.border};
+    border-radius: 4px;
+  }
 `;
 
 const MessageBubbleWrapper = styled.div`
@@ -36,8 +43,14 @@ const MessageBubbleWrapper = styled.div`
   animation: fadeIn 0.3s ease;
 
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 `;
 
@@ -60,13 +73,15 @@ const MessageBubble = styled.div`
   line-height: 1.5;
   /* MES messages (GAUCHE): bleu, AUTRES (DROITE): gris clair */
   color: ${(props) => (props.$isMe ? '#ffffff' : THEME.text)};
-  background: ${(props) => (props.$isMe ? 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)' : THEME.cardBg)};
+  background: ${(props) =>
+    props.$isMe ? 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)' : THEME.cardBg};
   border: 1px solid ${(props) => (props.$isMe ? 'transparent' : '#e2e8f0')};
   border-radius: 16px;
   /* Coins arrondis style iMessage - inversés pour MES messages à gauche */
   border-bottom-left-radius: ${(props) => (props.$isMe ? '4px' : '16px')};
   border-bottom-right-radius: ${(props) => (props.$isMe ? '16px' : '4px')};
-  box-shadow: ${(props) => (props.$isMe ? '0 4px 12px rgba(59, 130, 246, 0.3)' : '0 2px 6px rgba(0,0,0,0.04)')};
+  box-shadow: ${(props) =>
+    props.$isMe ? '0 4px 12px rgba(59, 130, 246, 0.3)' : '0 2px 6px rgba(0,0,0,0.04)'};
   word-break: break-word;
 `;
 
@@ -75,13 +90,14 @@ const ChatInputContainer = styled.div`
   background-color: ${THEME.panelBg};
   border-top: 1px solid ${THEME.border};
   flex-shrink: 0; /* Ne jamais shrink le container d'input */
-  
+
   @media (max-width: 768px) {
     padding: 0.75rem 1rem calc(env(safe-area-inset-bottom, 8px) + 0.5rem);
     /* Ajustement dynamique pour clavier mobile via prop */
-    padding-bottom: ${props => props.$keyboardHeight > 0 
-      ? `${props.$keyboardHeight + 8}px` 
-      : 'calc(env(safe-area-inset-bottom, 8px) + 0.5rem)'};
+    padding-bottom: ${(props) =>
+      props.$keyboardHeight > 0
+        ? `${props.$keyboardHeight + 8}px`
+        : 'calc(env(safe-area-inset-bottom, 8px) + 0.5rem)'};
     transition: padding-bottom 0.15s ease-out;
   }
 `;
@@ -148,7 +164,13 @@ const SendButton = styled.button`
   }
 `;
 
-export const MeetingChat = ({ messages, messageText, setMessageText, onSendMessage, currentUserId }) => {
+export const MeetingChat = ({
+  messages,
+  messageText,
+  setMessageText,
+  onSendMessage,
+  currentUserId,
+}) => {
   const { t } = useTranslation();
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
@@ -167,12 +189,12 @@ export const MeetingChat = ({ messages, messageText, setMessageText, onSendMessa
     if (typeof window === 'undefined' || !window.visualViewport) return;
 
     const viewport = window.visualViewport;
-    
+
     const handleResize = () => {
       // Calcule la hauteur du clavier
       const currentKeyboardHeight = window.innerHeight - viewport.height;
       setKeyboardHeight(Math.max(0, currentKeyboardHeight));
-      
+
       // Scroll le container pour garder l'input visible
       if (inputRef.current && currentKeyboardHeight > 0) {
         setTimeout(() => {
@@ -209,10 +231,10 @@ export const MeetingChat = ({ messages, messageText, setMessageText, onSendMessa
   const formatTime = (dateObj) => {
     if (!dateObj) return '';
     try {
-        const d = new Date(dateObj);
-        return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const d = new Date(dateObj);
+      return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     } catch {
-        return '';
+      return '';
     }
   };
 
@@ -220,7 +242,15 @@ export const MeetingChat = ({ messages, messageText, setMessageText, onSendMessa
     <ChatContainer>
       <MessagesArea ref={scrollRef}>
         {messages.length === 0 ? (
-          <div style={{ textAlign: 'center', opacity: 0.7, marginTop: '2rem', fontSize: '0.9rem', color: THEME.textDim }}>
+          <div
+            style={{
+              textAlign: 'center',
+              opacity: 0.7,
+              marginTop: '2rem',
+              fontSize: '0.9rem',
+              color: THEME.textDim,
+            }}
+          >
             {t('room.chat.empty', 'Aucun message. Soyez le premier à écrire !')}
           </div>
         ) : (
@@ -229,18 +259,28 @@ export const MeetingChat = ({ messages, messageText, setMessageText, onSendMessa
             const isMe = msg.senderId === currentUserId || msg.sender === 'me';
             let displayName = msg.sender;
             if (isMe) displayName = t('room.chat.you', 'Vous');
-            else if (displayName && displayName.includes('@')) displayName = displayName.split('@')[0];
+            else if (displayName && displayName.includes('@'))
+              displayName = displayName.split('@')[0];
 
             return (
               <MessageBubbleWrapper key={idx} $isMe={isMe}>
                 <MessageSender>
                   {!isMe && <UserIcon size={12} />}
                   {displayName || t('room.chat.anonymous', 'Anonyme')}
-                  {msg.timestamp && <span style={{ opacity: 0.6, marginLeft: '6px', fontSize: '0.65rem', fontWeight: 'normal' }}>• {formatTime(msg.timestamp)}</span>}
+                  {msg.timestamp && (
+                    <span
+                      style={{
+                        opacity: 0.6,
+                        marginLeft: '6px',
+                        fontSize: '0.65rem',
+                        fontWeight: 'normal',
+                      }}
+                    >
+                      • {formatTime(msg.timestamp)}
+                    </span>
+                  )}
                 </MessageSender>
-                <MessageBubble $isMe={isMe}>
-                  {msg.text}
-                </MessageBubble>
+                <MessageBubble $isMe={isMe}>{msg.text}</MessageBubble>
               </MessageBubbleWrapper>
             );
           })
@@ -257,8 +297,8 @@ export const MeetingChat = ({ messages, messageText, setMessageText, onSendMessa
             placeholder={t('room.chat.placeholder', 'Écrivez un message...')}
             rows={1}
           />
-          <SendButton 
-            $active={messageText.trim().length > 0} 
+          <SendButton
+            $active={messageText.trim().length > 0}
             onClick={() => {
               if (messageText.trim()) {
                 onSendMessage();
@@ -269,7 +309,15 @@ export const MeetingChat = ({ messages, messageText, setMessageText, onSendMessa
             <Send />
           </SendButton>
         </InputWrapper>
-        <div style={{ width: '100%', textAlign: 'center', marginTop: '10px', fontSize: '11px', color: THEME.textDim }}>
+        <div
+          style={{
+            width: '100%',
+            textAlign: 'center',
+            marginTop: '10px',
+            fontSize: '11px',
+            color: THEME.textDim,
+          }}
+        >
           {t('room.chat.enterToSend', 'Appuyez sur Entrée pour envoyer')}
         </div>
       </ChatInputContainer>

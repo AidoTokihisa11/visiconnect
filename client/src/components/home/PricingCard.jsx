@@ -10,23 +10,30 @@ const Card = styled(motion.div)`
   background: #ffffff;
   border-radius: 16px;
   padding: 2.5rem 2rem;
-  border: ${props => props.$popular ? '2px solid #2563eb' : '1px solid #e2e8f0'};
+  border: ${(props) => (props.$popular ? '2px solid #2563eb' : '1px solid #e2e8f0')};
   display: flex;
   flex-direction: column;
   position: relative;
   height: 100%;
   color: #0f172a;
-  box-shadow: ${props => props.$popular ? '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)' : '0 4px 6px -1px rgb(0 0 0 / 0.05)'};
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  
-  ${props => props.$popular && css`
-    transform: scale(1.02);
-    z-index: 10;
+  box-shadow: ${(props) =>
+    props.$popular
+      ? '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)'
+      : '0 4px 6px -1px rgb(0 0 0 / 0.05)'};
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 
-    @media (max-width: 768px) {
-      transform: scale(1);
-    }
-  `}
+  ${(props) =>
+    props.$popular &&
+    css`
+      transform: scale(1.02);
+      z-index: 10;
+
+      @media (max-width: 768px) {
+        transform: scale(1);
+      }
+    `}
 `;
 
 const Badge = styled.div`
@@ -69,7 +76,7 @@ const Price = styled.div`
   align-items: baseline;
   gap: 0.25rem;
   margin-bottom: 2.5rem;
-  
+
   span.currency {
     font-size: 1.75rem;
     font-weight: 700;
@@ -128,24 +135,27 @@ const CTAButton = styled(Link)`
   display: block;
   width: 100%;
 
-  ${props => props.$variant === 'primary' ? css`
-    background-color: #2563eb;
-    color: white;
-    border: 2px solid #2563eb;
+  ${(props) =>
+    props.$variant === 'primary'
+      ? css`
+          background-color: #2563eb;
+          color: white;
+          border: 2px solid #2563eb;
 
-    &:hover {
-      background-color: #1d4ed8;
-      border-color: #1d4ed8;
-    }
-  ` : css`
-    background-color: transparent;
-    color: #0f172a;
-    border: 2px solid #0f172a;
+          &:hover {
+            background-color: #1d4ed8;
+            border-color: #1d4ed8;
+          }
+        `
+      : css`
+          background-color: transparent;
+          color: #0f172a;
+          border: 2px solid #0f172a;
 
-    &:hover {
-      background-color: #f8fafc;
-    }
-  `}
+          &:hover {
+            background-color: #f8fafc;
+          }
+        `}
 `;
 
 // ========== COMPONENT ==========
@@ -171,7 +181,7 @@ const PricingCard = ({
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
-      viewport={{ once: true, margin: "-50px" }}
+      viewport={{ once: true, margin: '-50px' }}
       {...props}
     >
       {isPopular && <Badge>Recommandé</Badge>}
@@ -188,18 +198,16 @@ const PricingCard = ({
       </Price>
 
       <FeatureList>
-        {Array.isArray(features) && features.map((feature, idx) => (
-          <FeatureItem key={idx}>
-            <Check />
-            <span>{feature}</span>
-          </FeatureItem>
-        ))}
+        {Array.isArray(features) &&
+          features.map((feature, idx) => (
+            <FeatureItem key={idx}>
+              <Check />
+              <span>{feature}</span>
+            </FeatureItem>
+          ))}
       </FeatureList>
 
-      <CTAButton
-        to={ctaLink}
-        $variant={isPopular ? 'primary' : 'outline'}
-      >
+      <CTAButton to={ctaLink} $variant={isPopular ? 'primary' : 'outline'}>
         {ctaText}
       </CTAButton>
     </Card>

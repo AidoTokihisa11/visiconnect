@@ -1,6 +1,15 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { SlidersHorizontal, Sparkles, Camera, Palette, Mic, Volume2, RefreshCw, PlayCircle } from 'lucide-react';
+import {
+  SlidersHorizontal,
+  Sparkles,
+  Camera,
+  Palette,
+  Mic,
+  Volume2,
+  RefreshCw,
+  PlayCircle,
+} from 'lucide-react';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 import { useTranslation } from '../../hooks/useTranslation';
 
@@ -120,7 +129,13 @@ const ActionButton = styled.button`
   }
 `;
 
-export const RoomSettingsPanel = ({ settings, updateSetting, devices, selectedDevices, controls }) => {
+export const RoomSettingsPanel = ({
+  settings,
+  updateSetting,
+  devices,
+  selectedDevices,
+  controls,
+}) => {
   const { t } = useTranslation();
   const [isTesting, setIsTesting] = useState(false);
 
@@ -164,55 +179,75 @@ export const RoomSettingsPanel = ({ settings, updateSetting, devices, selectedDe
         </SectionTitle>
 
         <Row>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}><Camera size={14} /> {t('room.settings.camera', 'Caméra')}</span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+            <Camera size={14} /> {t('room.settings.camera', 'Caméra')}
+          </span>
           <Select
             value={selectedDevices?.cameraId || ''}
             onChange={(e) => controls?.setCameraDevice?.(e.target.value)}
           >
             <option value="">{t('room.settings.default', 'Par défaut')}</option>
             {(devices?.cameras || []).map((d) => (
-              <option key={d.deviceId} value={d.deviceId}>{d.label || t('room.settings.camera', 'Caméra')}</option>
+              <option key={d.deviceId} value={d.deviceId}>
+                {d.label || t('room.settings.camera', 'Caméra')}
+              </option>
             ))}
           </Select>
         </Row>
 
         <Row>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}><Mic size={14} /> {t('room.settings.microphone', 'Microphone')}</span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+            <Mic size={14} /> {t('room.settings.microphone', 'Microphone')}
+          </span>
           <Select
             value={selectedDevices?.microphoneId || ''}
             onChange={(e) => controls?.setMicrophoneDevice?.(e.target.value)}
           >
             <option value="">{t('room.settings.default', 'Par défaut')}</option>
             {(devices?.microphones || []).map((d) => (
-              <option key={d.deviceId} value={d.deviceId}>{d.label || t('room.settings.microphone', 'Microphone')}</option>
+              <option key={d.deviceId} value={d.deviceId}>
+                {d.label || t('room.settings.microphone', 'Microphone')}
+              </option>
             ))}
           </Select>
         </Row>
 
         <Row>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}><Volume2 size={14} /> {t('room.settings.audioOutput', 'Sortie audio')}</span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+            <Volume2 size={14} /> {t('room.settings.audioOutput', 'Sortie audio')}
+          </span>
           <Select
             value={selectedDevices?.speakerId || ''}
             onChange={(e) => controls?.setSpeakerDevice?.(e.target.value)}
           >
             <option value="">{t('room.settings.default', 'Par défaut')}</option>
             {(devices?.speakers || []).map((d) => (
-              <option key={d.deviceId} value={d.deviceId}>{d.label || t('room.settings.speaker', 'Haut-parleur')}</option>
+              <option key={d.deviceId} value={d.deviceId}>
+                {d.label || t('room.settings.speaker', 'Haut-parleur')}
+              </option>
             ))}
           </Select>
         </Row>
 
         <ActionButton type="button" onClick={() => controls?.refreshDevices?.()}>
-          <RefreshCw size={14} /> {t('room.settings.refreshDevices', 'Rafraîchir les périphériques')}
+          <RefreshCw size={14} />{' '}
+          {t('room.settings.refreshDevices', 'Rafraîchir les périphériques')}
         </ActionButton>
 
         <ActionButton
           type="button"
           onClick={playSpeakerTest}
           disabled={isTesting}
-          style={{ marginTop: '0.5rem', opacity: isTesting ? 0.6 : 1, cursor: isTesting ? 'wait' : 'pointer' }}
+          style={{
+            marginTop: '0.5rem',
+            opacity: isTesting ? 0.6 : 1,
+            cursor: isTesting ? 'wait' : 'pointer',
+          }}
         >
-          <PlayCircle size={14} /> {isTesting ? t('room.settings.playing', 'Lecture...') : t('room.settings.testSpeakers', 'Tester les haut-parleurs')}
+          <PlayCircle size={14} />{' '}
+          {isTesting
+            ? t('room.settings.playing', 'Lecture...')
+            : t('room.settings.testSpeakers', 'Tester les haut-parleurs')}
         </ActionButton>
       </Section>
 
@@ -227,7 +262,10 @@ export const RoomSettingsPanel = ({ settings, updateSetting, devices, selectedDe
             type="button"
             $on={settings.maxQualityLock}
             onClick={() => updateSetting('maxQualityLock', !settings.maxQualityLock)}
-            aria-label={t('room.settings.toggleMaxQuality', 'Activer/désactiver la qualité maximale')}
+            aria-label={t(
+              'room.settings.toggleMaxQuality',
+              'Activer/désactiver la qualité maximale'
+            )}
           />
         </Row>
 
@@ -248,7 +286,10 @@ export const RoomSettingsPanel = ({ settings, updateSetting, devices, selectedDe
             type="button"
             $on={settings.showParticipantLabels}
             onClick={() => updateSetting('showParticipantLabels', !settings.showParticipantLabels)}
-            aria-label={t('room.settings.toggleLabels', 'Activer/désactiver les libellés participants')}
+            aria-label={t(
+              'room.settings.toggleLabels',
+              'Activer/désactiver les libellés participants'
+            )}
           />
         </Row>
       </Section>
@@ -271,7 +312,10 @@ export const RoomSettingsPanel = ({ settings, updateSetting, devices, selectedDe
         </Row>
 
         <Hint>
-          {t('room.settings.aiHint', "Si une clé API LLM est configurée, l'assistant répond avec un moteur externe. Sinon, il utilise un fallback local enrichi.")}
+          {t(
+            'room.settings.aiHint',
+            "Si une clé API LLM est configurée, l'assistant répond avec un moteur externe. Sinon, il utilise un fallback local enrichi."
+          )}
         </Hint>
       </Section>
 
@@ -296,7 +340,10 @@ export const RoomSettingsPanel = ({ settings, updateSetting, devices, selectedDe
             type="button"
             $on={settings.showStatsDefault}
             onClick={() => updateSetting('showStatsDefault', !settings.showStatsDefault)}
-            aria-label={t('room.settings.toggleStats', 'Activer/désactiver le moniteur de statistiques')}
+            aria-label={t(
+              'room.settings.toggleStats',
+              'Activer/désactiver le moniteur de statistiques'
+            )}
           />
         </Row>
       </Section>
@@ -306,7 +353,10 @@ export const RoomSettingsPanel = ({ settings, updateSetting, devices, selectedDe
           <SlidersHorizontal size={16} /> {t('room.settings.notes', 'Notes')}
         </SectionTitle>
         <Hint>
-          {t('room.settings.notesHint', 'Tous ces réglages sont appliqués en temps réel et conservés localement dans le navigateur.')}
+          {t(
+            'room.settings.notesHint',
+            'Tous ces réglages sont appliqués en temps réel et conservés localement dans le navigateur.'
+          )}
         </Hint>
       </Section>
     </Wrapper>

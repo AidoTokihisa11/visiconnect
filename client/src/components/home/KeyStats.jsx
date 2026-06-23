@@ -5,11 +5,11 @@ import { Users, MonitorPlay, Zap, Activity } from 'lucide-react';
 import { useTranslation } from '../../hooks/useTranslation';
 
 const COLORS = {
-  primary: '#2563eb',    // Blue-600
-  lightText: '#64748b',  // Slate-500
-  dark: '#0f172a',       // Slate-900
-  white: '#ffffff',      // White
-  border: '#e2e8f0',     // Slate-200
+  primary: '#2563eb', // Blue-600
+  lightText: '#64748b', // Slate-500
+  dark: '#0f172a', // Slate-900
+  white: '#ffffff', // White
+  border: '#e2e8f0', // Slate-200
   background: '#ffffff', // White
 };
 
@@ -37,7 +37,9 @@ const StatCard = styled(motion.div)`
   display: flex;
   align-items: center;
   gap: 1rem;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 
   &:hover {
     transform: translateY(-2px);
@@ -78,10 +80,10 @@ const StatLabel = styled.span`
 export default function KeyStats() {
   const { t } = useTranslation();
   const stats = [
-    { icon: Users, value: "3+", label: t('keyStats.teams') },
-    { icon: MonitorPlay, value: "4K", label: t('keyStats.native') },
-    { icon: Zap, value: "< 50ms", label: t('keyStats.latency') },
-    { icon: Activity, value: "99.9%", label: t('keyStats.uptime') },
+    { icon: Users, value: '3+', label: t('keyStats.teams') },
+    { icon: MonitorPlay, value: '4K', label: t('keyStats.native') },
+    { icon: Zap, value: '< 50ms', label: t('keyStats.latency') },
+    { icon: Activity, value: '99.9%', label: t('keyStats.uptime') },
   ];
 
   return (
@@ -92,7 +94,7 @@ export default function KeyStats() {
             key={index}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1, type: "spring", stiffness: 100 }}
+            transition={{ delay: index * 0.1, type: 'spring', stiffness: 100 }}
             viewport={{ once: true }}
           >
             <IconBox>

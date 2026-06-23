@@ -19,18 +19,18 @@ const detectBrowser = () => {
 
 const INSTRUCTIONS = {
   chrome: [
-    'Cliquez sur l\'icône 🔒 ou 📷 dans la barre d\'adresse (à gauche de l\'URL).',
+    "Cliquez sur l'icône 🔒 ou 📷 dans la barre d'adresse (à gauche de l'URL).",
     'Sélectionnez "Toujours autoriser" pour la caméra et le microphone.',
     'Rechargez la page avec F5.',
   ],
   edge: [
-    'Cliquez sur l\'icône 🔒 dans la barre d\'adresse.',
+    "Cliquez sur l'icône 🔒 dans la barre d'adresse.",
     'Cliquez sur "Autorisations pour ce site".',
     'Réglez la Caméra et le Microphone sur "Autoriser".',
     'Rechargez la page.',
   ],
   firefox: [
-    'Cliquez sur l\'icône 🔒 dans la barre d\'adresse.',
+    "Cliquez sur l'icône 🔒 dans la barre d'adresse.",
     'Cliquez sur la flèche (→) à côté de "Connexion sécurisée".',
     'Cliquez sur "Plus d\'informations" → onglet "Permissions".',
     'Changez Caméra et Microphone sur "Autoriser".',
@@ -88,7 +88,10 @@ const CloseBtn = styled.button`
   border-radius: 6px;
   display: flex;
   align-items: center;
-  &:hover { color: #e2e8f0; background: rgba(255,255,255,0.08); }
+  &:hover {
+    color: #e2e8f0;
+    background: rgba(255, 255, 255, 0.08);
+  }
 `;
 
 const Header = styled.div`
@@ -164,7 +167,9 @@ const ReloadBtn = styled.button`
   color: white;
   border: none;
   transition: background 0.2s;
-  &:hover { background: #2563eb; }
+  &:hover {
+    background: #2563eb;
+  }
 `;
 
 const DismissBtn = styled.button`
@@ -176,9 +181,12 @@ const DismissBtn = styled.button`
   cursor: pointer;
   background: transparent;
   color: #94a3b8;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.2s;
-  &:hover { background: rgba(255,255,255,0.06); color: #e2e8f0; }
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: #e2e8f0;
+  }
 `;
 
 const HelpLink = styled.a`
@@ -189,7 +197,9 @@ const HelpLink = styled.a`
   color: #60a5fa;
   text-decoration: none;
   margin-top: 0.75rem;
-  &:hover { text-decoration: underline; }
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -219,7 +229,9 @@ export const PermissionDeniedModal = ({ type, onClose }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) onClose();
+          }}
         >
           <Modal
             initial={{ scale: 0.9, opacity: 0 }}
@@ -237,17 +249,32 @@ export const PermissionDeniedModal = ({ type, onClose }) => {
               </IconWrap>
               <div>
                 <Title>
-                  {isCamera ? t('room.permissionDenied.titleCamera', 'Accès caméra bloqué') : t('room.permissionDenied.titleMic', 'Accès microphone bloqué')}
+                  {isCamera
+                    ? t('room.permissionDenied.titleCamera', 'Accès caméra bloqué')
+                    : t('room.permissionDenied.titleMic', 'Accès microphone bloqué')}
                 </Title>
                 <Subtitle>
-                  {isCamera ? t('room.permissionDenied.subtitleCamera', "Le navigateur a refusé l'accès à votre caméra.") : t('room.permissionDenied.subtitleMic', "Le navigateur a refusé l'accès à votre microphone.")}
+                  {isCamera
+                    ? t(
+                        'room.permissionDenied.subtitleCamera',
+                        "Le navigateur a refusé l'accès à votre caméra."
+                      )
+                    : t(
+                        'room.permissionDenied.subtitleMic',
+                        "Le navigateur a refusé l'accès à votre microphone."
+                      )}
                 </Subtitle>
               </div>
             </Header>
 
             <BrowserTag>
-              {isCamera ? <Camera size={12} style={{ marginRight: 4 }} /> : <Mic size={12} style={{ marginRight: 4 }} />}
-              {t('room.permissionDenied.instructionsFor', 'Instructions pour')} {BROWSER_LABELS[browser]}
+              {isCamera ? (
+                <Camera size={12} style={{ marginRight: 4 }} />
+              ) : (
+                <Mic size={12} style={{ marginRight: 4 }} />
+              )}
+              {t('room.permissionDenied.instructionsFor', 'Instructions pour')}{' '}
+              {BROWSER_LABELS[browser]}
             </BrowserTag>
 
             <Steps>
@@ -267,7 +294,8 @@ export const PermissionDeniedModal = ({ type, onClose }) => {
 
             <HelpLink href={HELP_URLS[browser]} target="_blank" rel="noopener noreferrer">
               <ExternalLink size={12} />
-              {t('room.permissionDenied.learnMore', 'En savoir plus sur les permissions')} {BROWSER_LABELS[browser]}
+              {t('room.permissionDenied.learnMore', 'En savoir plus sur les permissions')}{' '}
+              {BROWSER_LABELS[browser]}
             </HelpLink>
           </Modal>
         </Backdrop>

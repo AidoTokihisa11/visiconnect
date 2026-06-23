@@ -117,7 +117,7 @@ export const NavMenu = styled(motion.nav)`
   display: none;
 
   @media (max-width: 1024px) {
-    display: ${props => props.$isOpen ? 'flex' : 'none'};
+    display: ${(props) => (props.$isOpen ? 'flex' : 'none')};
     flex-direction: column;
     gap: 0.5rem;
     margin-bottom: 2rem;
@@ -132,8 +132,8 @@ export const NavMenu = styled(motion.nav)`
 
 export const NavItem = styled.button`
   padding: 0.75rem 1rem;
-  background: ${props => props.$active ? '#2563eb' : 'transparent'};
-  color: ${props => props.$active ? '#ffffff' : '#64748b'};
+  background: ${(props) => (props.$active ? '#2563eb' : 'transparent')};
+  color: ${(props) => (props.$active ? '#ffffff' : '#64748b')};
   border: none;
   border-radius: 0.5rem;
   cursor: pointer;
@@ -167,7 +167,7 @@ export const InputWrapper = styled.div`
 
 export const Input = styled.input`
   width: 100%;
-  padding: ${props => props.$hasIcon ? '0.75rem 0.75rem 0.75rem 2.75rem' : '0.75rem'};
+  padding: ${(props) => (props.$hasIcon ? '0.75rem 0.75rem 0.75rem 2.75rem' : '0.75rem')};
   border: 1px solid #e2e8f0;
   border-radius: 0.5rem;
   background: #ffffff;
@@ -250,17 +250,22 @@ export const Button = styled(motion.button)`
   justify-content: center;
   gap: 0.5rem;
 
-  ${props => props.$variant === 'primary' ? `
+  ${(props) =>
+    props.$variant === 'primary'
+      ? `
     background: #2563eb;
     color: #ffffff;
     &:hover { background: #1d4ed8; }
     &:disabled { background: #cbd5e1; }
-  ` : props.$variant === 'danger' ? `
+  `
+      : props.$variant === 'danger'
+        ? `
     background: #ef4444;
     color: #ffffff;
     &:hover { background: #dc2626; }
     &:disabled { background: #cbd5e1; }
-  ` : `
+  `
+        : `
     background: #e2e8f0;
     color: #0f172a;
     &:hover { background: #cbd5e1; }
@@ -352,7 +357,7 @@ export const Notification = styled(motion.div)`
   left: 1rem;
   padding: 1rem 1.5rem;
   border-radius: 0.5rem;
-  background: ${props => props.type === 'error' ? '#ef4444' : '#10b981'};
+  background: ${(props) => (props.type === 'error' ? '#ef4444' : '#10b981')};
   color: white;
   font-weight: 500;
   display: flex;
