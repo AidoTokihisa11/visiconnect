@@ -19,929 +19,572 @@
 | **Statut**                 | `[Alternance / Continue / Candidat libre — À PRÉCISER]` |
 | **Entreprise d'accueil**   | `[À COMPLÉTER si alternance]`                           |
 
-**Atteste sur l'honneur que les informations contenues dans ce dossier
-sont sincères.**
+---
+
+# Sommaire
+
+**Exemples de pratique professionnelle**
+
+**Développer une application sécurisée**
+▸ Configuration de l'environnement et développement de la landing-page multilingue de VisiConnect
+▸ Développement des composants UI réutilisables et de la modale de création de réunion
+
+**Concevoir et développer une application sécurisée organisée en couches**
+▸ Audit de sécurité OWASP et refactorisation du backend Express en couches
+▸ Modélisation du schéma de données Convex et développement du module visioconférence
+
+**Préparer le déploiement d'une application sécurisée**
+▸ Mise en place des tests automatisés et de la pipeline CI/CD GitHub Actions
+▸ Conteneurisation Docker et déploiement VPS DigitalOcean
+
+Déclaration sur l'honneur
+
+---
+
+# EXEMPLES DE PRATIQUE PROFESSIONNELLE
+
+---
+
+## Activité-type 1 — Développer une application sécurisée
+
+### Exemple n°1 ▸ Configuration de l'environnement et développement de la landing-page multilingue de VisiConnect
+
+**1. Décrivez les tâches ou opérations que vous avez effectuées, et dans quelles conditions :**
+
+**Contexte de l'exemple**
+
+VisiConnect est une plateforme SaaS de visioconférence professionnelle que j'ai conçue, développée et mise en ligne seul dans le cadre de ma formation CDA. Elle cible les TPE/PME francophones et propose des salles vidéo HD/4K à 200 participants, un chat temps réel, un tableau blanc collaboratif, des sondages, des sous-groupes et un assistant IA.
+
+Pour valider l'intérêt du produit avant d'investir dans le backend, j'ai commencé par développer une vitrine commerciale complète disponible en 6 langues (français, anglais, espagnol, italien, portugais, catalan).
+
+**Mise en place de l'environnement de travail**
+
+Avant tout développement, j'ai configuré l'environnement complet. J'ai initialisé le projet avec **Vite 5** comme bundler, choisi pour sa vitesse de démarrage et sa configuration minimale. J'ai créé deux contextes d'environnement distincts : `.env.development` pour le développement local et `.env.production` pour Vercel.
+
+J'ai mis en place l'outillage qualité :
+
+- **ESLint 9** (flat config) avec les règles `react/hooks` et `no-unused-vars` pour la détection statique d'erreurs
+- **Prettier 3** pour l'uniformité du formatage
+- **Husky + lint-staged** : hook pre-commit qui exécute lint et formatage automatiquement à chaque commit
+- **Git** avec branches courtes (`feat/*`, `fix/*`, `chore/*`) et convention **Conventional Commits**
+
+J'ai également configuré **Tailwind CSS 3** avec un fichier `tailwind.config.js` intégrant la palette VisiConnect, les breakpoints responsive et les animations personnalisées.
+
+**Réalisation des interfaces utilisateur**
+
+J'ai d'abord produit des wireframes basse fidélité sur papier puis des **maquettes Figma** pour les pages principales (`/`, `/pricing`, `/features`, `/contact`). J'ai validé les parcours sur trois personas fictifs : « Caroline, RH d'une PME de 30 personnes », « Marc, freelance formateur » et « Lina, étudiante en visio-cours ».
+
+La landing-page couvre plusieurs sections : Hero animé, grille de fonctionnalités, carrousel 3D, slider d'interfaces produit, preuves sociales, grille tarifaire, FAQ et footer. J'ai adopté une approche **atomique** pour les composants, avec Tailwind pour les styles et styled-components pour les états complexes. Les principaux composants développés sont :
+
+- `HeroConferenceDemo.jsx` : démo animée du produit (Framer Motion)
+- `FeaturesCarousel3D.jsx` : carrousel 3D (Framer Motion + transforms CSS)
+- `InterfaceSlider.jsx` : slider de captures d'écrans du produit
+- `ProofArea.jsx` : bandeau de logos clients et témoignages
+
+Chaque composant respecte le principe de responsabilité unique et expose une API de `props` documentée. J'ai rendu toutes les pages **responsives** avec les breakpoints Tailwind et validé l'affichage sur Chrome, Firefox, Safari et Edge, sur desktop, tablette et mobile.
+
+**Composants métier et dynamisme**
+
+J'ai intégré **Framer Motion 11** pour les transitions et micro-interactions : parallaxe au scroll, fade-in au viewport, animations de hover sur les cartes tarifaires. Pour maintenir les performances, j'ai mis en place le **code-splitting de routes** avec `React.lazy` et `Suspense` ainsi que le lazy-loading des images. Le bundle JavaScript initial a été réduit de ~800 ko à ~280 ko gzip, maintenant le LCP sous 2,5 s en 4G simulée (vérifié avec Lighthouse, score ≥ 90).
+
+**Internationalisation**
+
+J'ai mis en place **i18next + react-i18next** pour charger les bundles de traduction à la demande depuis `client/src/i18n/locales/{fr,en,es,it,pt,ca}/translation.json`. La détection automatique de la langue du navigateur est gérée par `i18next-browser-languagedetector` avec un fallback sur le français.
+
+J'ai développé des scripts Node.js de traduction automatisée (`client/scripts/translate_*.js`) via l'API Bing Translate pour produire les premières versions, puis j'ai relu manuellement les chaînes commerciales clés. Environ 850 clés par langue ont été intégrées.
+
+Difficulté rencontrée : les traductions catalan présentaient des incohérences typographiques. J'ai créé un script dédié `fix_catalan_mixed.js` pour homogénéiser les majuscules et la ponctuation.
+
+**Compétences mobilisées**
+
+- Installer et configurer son environnement de travail en fonction du projet
+- Développer des interfaces utilisateur
+- Développer des composants métier
+
+---
+
+**2. Précisez les moyens utilisés :**
+
+- Outils : VS Code, GitHub, Figma, Lighthouse
+- Technologies : React 18, Vite 5, Tailwind CSS 3, Framer Motion 11, i18next 25, ESLint 9, Prettier 3, Husky, lint-staged
+- Méthodologies : Conventional Commits, Git flow simplifié
+
+---
+
+**3. Avec qui avez-vous travaillé ?**
+
+Travail réalisé en autonomie.
+
+---
+
+**4. Contexte**
+
+|                                               |                                  |
+| --------------------------------------------- | -------------------------------- |
+| Nom de l'entreprise, organisme ou association | Projet personnel — VisiConnect   |
+| Chantier, atelier, service                    | Landing-page multilingue         |
+| Période d'exercice                            | Du : janvier 2024 au : juin 2024 |
+
+---
+
+**5. Informations complémentaires (facultatif)**
+
+URL de production : <https://visioconnect.pro> — Code source : <https://github.com/AidoTokihisa11/visiconnect> (branche `chore/exam-hardening`)
+
+---
+
+### Exemple n°2 ▸ Développement des composants UI réutilisables et de la modale de création de réunion
+
+**1. Décrivez les tâches ou opérations que vous avez effectuées, et dans quelles conditions :**
+
+**Contexte de l'exemple**
+
+La modale « Créer une réunion » est le point d'entrée critique du parcours utilisateur authentifié sur VisiConnect : c'est là qu'il choisit le titre, la date, le mode (instantané ou planifié), le mot de passe et les invités. En parallèle, j'ai développé une bibliothèque de composants UI partagés, utilisée dans l'ensemble du produit. Ces deux travaux ont aussi nécessité d'implémenter la connexion à la couche de données Convex.
+
+**Développement de la bibliothèque de composants UI**
+
+J'ai constitué une bibliothèque maison dans `client/src/components/ui/` comprenant : `Button`, `Input`, `Select`, `Modal`, `Toast`, `Tooltip` et `DropdownMenu`. Chaque composant accepte un thème `light/dark` via `next-themes`, est accessible (ARIA labels, focus trap, navigation clavier) et expose une API de props typée. Cette bibliothèque est aujourd'hui consommée par 27 pages et composants du produit.
+
+**Développement de la modale multi-étapes**
+
+Le composant `CreateMeetingModal.jsx` gère 4 étapes (« Titre & objet », « Date & heure », « Participants », « Récapitulatif ») avec un wizard d'état local géré par `useReducer`. J'ai fait le choix de ne pas utiliser de bibliothèque de formulaire externe pour rester maître du DOM.
+
+La validation en temps réel fournit un feedback visuel en moins de 100 ms sur le focus perdu (regex e-mail, longueur min/max, format ISO date). Difficulté rencontrée : sur Safari iOS, le composant natif `<input type="datetime-local">` ne respectait pas le format ISO attendu côté serveur. J'ai créé un composant `DateTimePicker` maison basé sur deux `<input>` séparés avec normalisation en `new Date(...).toISOString()`.
+
+Les animations entre étapes utilisent `<AnimatePresence mode="wait">` de Framer Motion. Pour éviter les layout-shifts, j'ai fixé la hauteur minimale de la modale et utilisé `position: absolute` pendant les transitions.
+
+**Persistance locale**
+
+J'ai développé un hook personnalisé `useFormPersistence.js` qui sauvegarde le brouillon de formulaire dans `localStorage` toutes les 2 secondes, permettant de récupérer le contenu en cas de fermeture accidentelle.
+
+**Intégration avec la couche de données**
+
+La création d'une réunion appelle deux services :
+
+- **Convex** pour stocker les métadonnées (`mutations.meetings.create`) — relation 1-N avec les participants, schéma typé dans `convex/schema.ts`
+- La **Vercel Function** `/api/livekit-token` pour obtenir le jeton d'accès à la salle vidéo, via `apiClient.js` qui injecte automatiquement le JWT Clerk
+
+Pour la validation des e-mails des invités, j'ai adopté une regex inspirée du RFC 5322, complétée par une double validation côté serveur avec Zod.
+
+**Gestion de projet**
+
+Pour piloter l'ensemble du développement en solo, j'ai utilisé un **tableau Kanban GitHub Projects** (colonnes : Backlog, À faire, En cours, Terminé). Chaque fonctionnalité est une issue avec un label sémantique (`feat:`, `fix:`, `chore:`, `security:`). Une revue hebdomadaire des commits me permet d'identifier la dette technique.
+
+**Compétences mobilisées**
+
+- Développer des interfaces utilisateur
+- Développer des composants métier
+- Contribuer à la gestion d'un projet informatique
+
+---
+
+**2. Précisez les moyens utilisés :**
+
+- Outils : VS Code, GitHub, GitHub Projects
+- Technologies : React 18, Framer Motion 11, Tailwind CSS, styled-components, Convex, Zod, @clerk/react
+
+---
+
+**3. Avec qui avez-vous travaillé ?**
+
+Travail réalisé en autonomie. Retours fonctionnels recueillis auprès de 12 bêta-testeurs lors de la campagne bêta (mars 2025).
+
+---
+
+**4. Contexte**
+
+|                                               |                                      |
+| --------------------------------------------- | ------------------------------------ |
+| Nom de l'entreprise, organisme ou association | Projet personnel — VisiConnect       |
+| Chantier, atelier, service                    | Bibliothèque UI et modale de réunion |
+| Période d'exercice                            | Du : mars 2024 au : mai 2024         |
+
+---
+
+**5. Informations complémentaires (facultatif)**
+
+Taux de complétion de la modale mesuré lors de la bêta : 91 % une fois la première étape démarrée.
+
+---
+
+## Activité-type 2 — Concevoir et développer une application sécurisée organisée en couches
+
+### Exemple n°1 ▸ Audit de sécurité OWASP et refactorisation du backend Express en couches
+
+**1. Décrivez les tâches ou opérations que vous avez effectuées, et dans quelles conditions :**
+
+**Contexte de l'exemple**
+
+En préparation de l'examen CDA, j'ai conduit un audit complet du serveur Express de VisiConnect. Ce serveur tenait jusqu'alors dans un unique fichier `simple-server-no-db.js` de 614 lignes et cumulait des vulnérabilités critiques : clé API Resend en dur dans le code, authentification contournable par un simple header `x-user-email`, absence de validation des entrées, CORS wildcard et webhook Stripe non vérifié.
+
+J'ai produit un rapport de 14 findings mappés sur l'OWASP Top 10 et les compétences CDA, puis refactorisé l'intégralité du backend en une architecture sécurisée organisée en couches.
+
+**Analyse des besoins et audit de sécurité**
+
+L'audit a été conduit en appliquant le principe de threat modeling : pour chaque endpoint, j'ai identifié ce qu'un attaquant pourrait faire de chaque input. Les 9 findings les plus graves sont les suivants :
+
+| ID   | Finding                                            | Sévérité    | Mapping OWASP              |
+| ---- | -------------------------------------------------- | ----------- | -------------------------- |
+| F-01 | Jetons LiveKit émis sans authentification          | 🔴 Critique | A01 Broken Access Control  |
+| F-04 | Clé API Resend hardcodée dans 4 fichiers commités  | 🔴 Critique | A02 Cryptographic Failures |
+| F-05 | Spoofing d'identité via header `x-user-email`      | 🔴 Critique | A07 Auth Failures          |
+| F-06 | Absence totale de validation des corps de requêtes | 🔴 Critique | A03 Injection              |
+| F-02 | CORS wildcard `*`                                  | 🟠 Élevée   | A05 Misconfiguration       |
+| F-03 | Absence de rate-limit                              | 🟠 Élevée   | A04 Insecure Design        |
+| F-07 | Stack traces exposées en production                | 🟠 Élevée   | A05 Misconfiguration       |
+| F-08 | Webhook Stripe sans vérification de signature      | 🟠 Élevée   | A08 Software Integrity     |
+| F-09 | Logs contenant des données personnelles en clair   | 🟠 Élevée   | RGPD art. 32               |
+
+Le rapport complet est consultable dans `dossiers/00_AUDIT_INITIAL.md`.
+
+**Définition de l'architecture logicielle**
+
+Suite à l'audit, j'ai défini une architecture en 5 couches pour le serveur Express :
+
+```
+server/src/
+├── config/env.js       ← Infrastructure : validation Zod fail-fast au démarrage
+├── lib/logger.js       ← Infrastructure : Pino + redact PII (RGPD art. 32)
+├── middleware/         ← Transport : CORS allowlist, requireAuth, rateLimit, validate, errorHandler
+├── schemas/index.js    ← Schémas Zod centralisés
+├── controllers/        ← Présentation : HTTP uniquement (pas de logique métier)
+├── services/           ← Métier : logique pure, sans req/res, testable en isolation
+├── routes/index.js     ← Routage : agrégation des routeurs par domaine
+└── socket/index.js     ← Module Socket.IO (auth handshake obligatoire)
+```
+
+Cette séparation des responsabilités rend chaque couche testable en isolation et remplaçable sans impacter les autres : passer de LiveKit à un autre SFU ne nécessite par exemple de toucher qu'au fichier `services/livekitService.js`.
+
+**Mise en œuvre des corrections de sécurité**
+
+- **Authentification JWT Clerk** sur chaque route protégée via `@clerk/backend` : le `userId` est extrait du token, jamais fourni par le client (corrige F-01, F-05)
+- **Validation Zod centralisée** dans `schemas/index.js` avec un helper générique `validate(req, schema)` (corrige F-06). Exemple concret : la regex `^[a-zA-Z0-9_\-:.]+$` sur `roomName` bloque toute injection de caractères de contrôle dans les jetons LiveKit
+- **Rate-limit différencié** : 300 req/15 min global, 10 req/min pour les jetons LiveKit, 5 req/h pour les emails (corrige F-03)
+- **CORS allowlist** : seules les origines listées dans `ALLOWED_ORIGINS` sont autorisées (corrige F-02)
+- **Redact PII** dans Pino : les champs `authorization`, `password`, `email` sont remplacés par `[Redacted]` dans tous les logs (corrige F-09)
+- **Webhook Stripe signé** : `stripe.webhooks.constructEvent(rawBody, sig, secret)` vérifie la signature avant tout traitement. Le body doit être lu brut, avant tout parsing JSON. J'ai résolu cette contrainte en montant `express.raw({ type: 'application/json' })` exclusivement sur la route `/api/stripe/webhook` (corrige F-08)
+
+**Résultats**
+
+- 14 findings traités : 4 critiques, 5 élevés, 5 modérés — tous corrigés à 100 %
+- Clé API Resend supprimée du code, révocable via le runbook
+- 614 lignes monolithiques → ~15 modules dédiés, 0 erreur ESLint
+- Diff Git : 78 fichiers, +11 269 / −9 888 lignes (commit `3cdc4ed`)
+
+**Compétences mobilisées**
+
+- Analyser les besoins et maquetter une application
+- Définir l'architecture logicielle d'une application
+- Développer des composants d'accès aux données SQL et NoSQL
+
+---
+
+**2. Précisez les moyens utilisés :**
+
+- Outils : VS Code, GitHub, OWASP Top 10
+- Technologies : Node.js 20, Express 4.21, Helmet 8, Zod, Pino 9, express-rate-limit 7, @clerk/backend, Stripe 20, Resend 6
+
+---
+
+**3. Avec qui avez-vous travaillé ?**
+
+Travail réalisé en autonomie.
+
+---
+
+**4. Contexte**
+
+|                                               |                                                 |
+| --------------------------------------------- | ----------------------------------------------- |
+| Nom de l'entreprise, organisme ou association | Projet personnel — VisiConnect                  |
+| Chantier, atelier, service                    | Audit sécurité OWASP et refactorisation backend |
+| Période d'exercice                            | Du : mars 2026 au : juin 2026                   |
+
+---
+
+**5. Informations complémentaires (facultatif)**
+
+Rapport d'audit : `dossiers/00_AUDIT_INITIAL.md` — Bilan de mise à niveau : `dossiers/01_MISE_A_NIVEAU.md`
+
+---
+
+### Exemple n°2 ▸ Modélisation du schéma de données Convex et développement du module visioconférence
+
+**1. Décrivez les tâches ou opérations que vous avez effectuées, et dans quelles conditions :**
+
+**Contexte de l'exemple**
+
+Le module visioconférence est le cœur fonctionnel de VisiConnect. Il repose sur trois canaux : LiveKit Cloud pour les médias WebRTC, Convex pour l'état partagé persistant (chat, tableau blanc, sondages, sous-groupes) et Socket.IO pour les signaux éphémères (présence, curseurs, typing). Avant de développer ce module, j'ai conçu et mis en place l'intégralité du schéma de données de l'application.
+
+**Conception et mise en place du schéma de données**
+
+Convex est un datastore document avec schéma TypeScript typé, mutations transactionnelles et requêtes réactives temps réel. J'ai conçu le schéma dans `client/convex/schema.ts` en appliquant les principes de la modélisation relationnelle adaptés au contexte NoSQL : identification des entités, définition des relations par référence d'`_id`, indexation des champs fréquemment requêtés.
+
+Le schéma comprend 9 tables :
+
+| Table            | Rôle                                    | Index principaux                    |
+| ---------------- | --------------------------------------- | ----------------------------------- |
+| `users`          | Profil utilisateur et plan d'abonnement | `by_email`                          |
+| `meetings`       | Métadonnées d'une réunion               | `by_host`, `by_status`              |
+| `messages`       | Messages de chat par réunion            | `by_meeting`                        |
+| `whiteboards`    | État du tableau blanc collaboratif      | `by_meeting`                        |
+| `polls`          | Sondages dans une réunion               | `by_meeting`                        |
+| `breakoutRooms`  | Sous-groupes d'une réunion              | `by_meeting` (composite + `status`) |
+| `cursors`        | Positions des curseurs collaboratifs    | `by_meeting`, `by_meeting_and_user` |
+| `notifications`  | Notifications utilisateur               | `by_user`                           |
+| `cookieConsents` | Traces de consentement RGPD             | `by_session`, `by_user`             |
+
+J'ai défini les contraintes de typage strict (unions littérales pour les statuts, champs optionnels explicites) et les index composites pour éviter les scans complets de tables. La pagination est implémentée via `paginate({ numItems: 20 })` sur les listes de réunions et les historiques de messages.
+
+**Développement des composants d'accès aux données**
+
+Les mutations et queries Convex sont définies dans des fichiers TypeScript dédiés par domaine (`convex/messages.ts`, `convex/breakout.ts`, `convex/polls.ts`, `convex/whiteboard.ts`). Côté backend Express, les accès aux services tiers sont encapsulés dans des modules de services dédiés (`services/livekitService.js`, `services/stripeService.js`, `services/aiService.js`).
+
+**Développement du module visioconférence**
+
+L'accès à une salle suit le flux suivant :
+
+1. L'utilisateur appelle `POST /api/livekit/token` avec le `roomName`
+2. Le middleware `requireAuth` vérifie le JWT Clerk et extrait le `userId` (jamais fourni par le client)
+3. Le middleware `validate` contrôle le `roomName` avec une regex stricte
+4. `livekitService.js` génère un `AccessToken` LiveKit avec `identity = userId`, TTL de 4 h, et `roomAdmin = role === 'host'`
+5. Le client se connecte au SFU LiveKit via WebRTC avec ce token
+
+La difficulté principale a été une faille d'identité initiale : le champ `identity` était basé sur `guest_${Date.now()}`, permettant à plusieurs onglets d'un même utilisateur d'apparaître comme des inconnus distincts. La bascule sur le `userId` Clerk stable a résolu ce problème et éliminé tout risque d'usurpation d'identité.
+
+Pour Socket.IO, l'authentification au handshake est obligatoire : le `userId` est extrait du JWT dans le middleware, jamais fourni par le client dans l'événement `join-room`.
+
+**Résultats**
+
+- Réunions à 200 participants supportées (test LiveKit Cloud)
+- Latence média < 200 ms sur l'Europe (mesurée avec les outils de diagnostic LiveKit)
+- Aucun jeton LiveKit émis sans authentification valide depuis la mise en production
+- 5 tests unitaires sur `livekitService.js` (identity, TTL, permissions admin)
+
+**Compétences mobilisées**
+
+- Concevoir et mettre en place une base de données relationnelle
+- Développer des composants d'accès aux données SQL et NoSQL
+- Définir l'architecture logicielle d'une application
+
+---
+
+**2. Précisez les moyens utilisés :**
+
+- Technologies : Convex (NoSQL temps réel), TypeScript, Socket.IO 4.8, LiveKit Cloud (SFU WebRTC), livekit-server-sdk 2, @clerk/backend, Zod
+- Outils : VS Code, GitHub, LiveKit Dashboard
+
+---
+
+**3. Avec qui avez-vous travaillé ?**
+
+Travail réalisé en autonomie.
+
+---
+
+**4. Contexte**
+
+|                                               |                                             |
+| --------------------------------------------- | ------------------------------------------- |
+| Nom de l'entreprise, organisme ou association | Projet personnel — VisiConnect              |
+| Chantier, atelier, service                    | Schéma de données et module visioconférence |
+| Période d'exercice                            | Du : mai 2024 au : septembre 2024           |
+
+---
+
+**5. Informations complémentaires (facultatif)**
+
+---
+
+## Activité-type 3 — Préparer le déploiement d'une application sécurisée
+
+### Exemple n°1 ▸ Mise en place des tests automatisés et de la pipeline CI/CD GitHub Actions
+
+**1. Décrivez les tâches ou opérations que vous avez effectuées, et dans quelles conditions :**
+
+**Contexte de l'exemple**
+
+VisiConnect ne disposait d'aucun test automatisé ni pipeline d'intégration continue avant la phase de préparation à l'examen. Toute régression était détectée manuellement, souvent après déploiement en production. J'ai défini un plan de tests, développé une suite de 26 tests automatisés avec Vitest et Supertest, puis mis en place une pipeline GitHub Actions à 5 jobs.
+
+**Définition du plan de tests**
+
+J'ai adopté une pyramide de tests adaptée au contexte solo :
+
+| Niveau                   | Outil              | Quantité | Couverture ciblée                         |
+| ------------------------ | ------------------ | -------- | ----------------------------------------- |
+| Tests unitaires          | Vitest             | 16 tests | Services et schémas Zod en isolation      |
+| Tests d'intégration HTTP | Vitest + Supertest | 10 tests | Pipeline Express (auth, CORS, validation) |
+
+J'ai priorisé les invariants critiques de sécurité plutôt qu'une métrique de couverture : un test qui prouve qu'une faille ne peut plus se reproduire a plus de valeur qu'un test de chemin nominal. Le fichier `server/tests/setup.js` mocke les variables d'environnement pour ne jamais appeler les services tiers pendant les tests.
+
+**Développement des tests**
+
+- `auth.test.js` (4 tests) : vérifie que les routes protégées rejettent les requêtes sans token, avec Bearer mal formé ou token invalide. Un test spécifique vérifie que l'envoi de `x-user-email` reçoit un 401 (non-régression de la faille F-05)
+- `cors.test.js` (3 tests) : seules les origines de l'allowlist obtiennent un header `Access-Control-Allow-Origin`
+- `health.test.js` (3 tests) : `/health` 200, `/api/health`, 404 sur route inconnue
+- `schemas.test.js` (11 tests) : regex `roomName`, longueur, anti-DoS sur l'IA, enums Stripe
+- `livekitService.test.js` (5 tests) : `userId` requis, JWT à 3 segments, `identity = sub = userId`, `roomAdmin` réservé à l'hôte, TTL ±5 s
+
+Difficulté rencontrée : le test du middleware d'authentification ne pouvait pas mocker `verifyClerkToken` à cause d'une incompatibilité ESM/CJS dans Vitest. J'ai reformulé le test pour vérifier directement le rejet HTTP 401 avec un token invalide, ce qui est suffisant pour prouver la protection.
+
+**Mise en place de la pipeline CI/CD**
+
+J'ai configuré `.github/workflows/ci.yml` avec 5 jobs exécutés en parallèle à chaque push :
+
+```yaml
+jobs:
+  lint: # ESLint sur tout le repo
+  format: # Prettier --check
+  test-server: # cd server && npm test
+  build-client: # cd client && npm run build (Vite)
+  audit: # npm audit --audit-level=high
+```
+
+Le cache npm est activé sur les trois lockfiles (root, client, server) pour maintenir les runs sous 3 minutes. Les déclencheurs couvrent les branches `main`, `chore/**`, `feat/**`, `fix/**` et toutes les PR vers `main`.
+
+**Résultats**
+
+- 26 tests verts, 5 fichiers de tests, durée d'exécution : 613 ms
+- CI déclenchée automatiquement sur chaque commit, retour en < 3 minutes
+- 0 erreur ESLint dans le code refactorisé
+- Pre-commit hook : impossible de committer un fichier non formaté
+
+**Compétences mobilisées**
+
+- Préparer et exécuter les plans de tests d'une application
+- Contribuer à la mise en production dans une démarche DevOps
+
+---
+
+**2. Précisez les moyens utilisés :**
+
+- Outils : GitHub Actions, VS Code
+- Technologies : Vitest 2, Supertest 7, ESLint 9 (flat config), Prettier 3, Husky, lint-staged
+
+---
+
+**3. Avec qui avez-vous travaillé ?**
+
+Travail réalisé en autonomie.
+
+---
+
+**4. Contexte**
+
+|                                               |                                     |
+| --------------------------------------------- | ----------------------------------- |
+| Nom de l'entreprise, organisme ou association | Projet personnel — VisiConnect      |
+| Chantier, atelier, service                    | Tests automatisés et pipeline CI/CD |
+| Période d'exercice                            | Du : mai 2026 au : juin 2026        |
+
+---
+
+**5. Informations complémentaires (facultatif)**
+
+Sortie complète de la suite de tests disponible dans le Dossier Projet (Annexe C).
+
+---
+
+### Exemple n°2 ▸ Conteneurisation Docker et déploiement VPS DigitalOcean
+
+**1. Décrivez les tâches ou opérations que vous avez effectuées, et dans quelles conditions :**
+
+**Contexte de l'exemple**
+
+Avant cette mise à niveau, le backend VisiConnect n'avait pas d'environnement de production pérenne : il tournait en local ou en fonctions serverless Vercel. Il n'existait aucune procédure de déploiement reproductible. J'ai dockerisé le backend, mis en place un reverse-proxy Nginx avec HTTPS, déployé l'ensemble sur un VPS DigitalOcean FRA1 et rédigé un runbook documentant chaque étape.
+
+**Préparation et documentation du déploiement**
+
+Avant de déployer, j'ai rédigé un **runbook complet** dans `infra/deploy/runbook.md` couvrant :
+
+- Provisionnement du Droplet DigitalOcean FRA1 (Ubuntu 24.04 LTS)
+- Durcissement OS : création de l'utilisateur `deploy`, désactivation du login root SSH, désactivation de l'authentification par mot de passe SSH
+- Configuration du pare-feu **UFW** : seuls les ports 22, 80 et 443 sont ouverts
+- Installation de **fail2ban** pour bannir les tentatives de bruteforce SSH
+- Installation de Docker et Docker Compose
+- Obtention du certificat **Let's Encrypt** pour `api.visioconnect.pro` via certbot, avec renouvellement automatique par timer systemd
+- Procédure de premier déploiement, de mise à jour régulière et de rollback
+
+**Conteneurisation avec Dockerfile multi-stage**
+
+J'ai rédigé un `Dockerfile` multi-stage `node:20-alpine` en deux stages :
+
+- **Stage `deps`** : installe uniquement les dépendances de production (`--omit=dev`), ce qui réduit la taille finale de ~900 Mo à ~257 Mo
+- **Stage `runtime`** : image minimale avec un utilisateur non-root `app` (défense en profondeur), un `HEALTHCHECK` sur `/health` toutes les 30 s, et les variables d'environnement injectées au runtime via le `.env` du VPS (jamais commité dans Git)
+
+J'ai configuré un `.dockerignore` exhaustif pour exclure les fichiers sensibles (`.env`, `node_modules` source, dossiers de documentation).
+
+**Orchestration et reverse-proxy**
+
+Le `docker-compose.yml` orchestre deux services :
+
+- `api` : le conteneur Node lié au `.env` du VPS via `env_file`
+- `nginx` : reverse-proxy HTTPS sur les ports 80 et 443
+
+La configuration Nginx gère la redirection 301 HTTP → HTTPS, la terminaison TLS avec les certificats Let's Encrypt (TLS 1.2/1.3), l'upgrade WebSocket pour Socket.IO, et les headers de sécurité (HSTS `max-age=63072000 includeSubDomains preload`, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`).
+
+**Mise en production DevOps**
+
+La procédure de mise à jour est reproductible en une seule commande :
+
+```bash
+git pull origin main && docker compose build api && docker compose up -d --no-deps api
+```
+
+Le rollback consiste à pointer sur le SHA précédent et reconstruire. Le RTO estimé est de 30 minutes en suivant le runbook.
+
+Difficulté rencontrée : un conflit de port entre le Dockerfile (valeur par défaut `PORT=5000`) et le `.env` de production (`PORT=5099`) provoquait un healthcheck Docker en échec permanent. J'ai corrigé l'ensemble des fichiers (`Dockerfile`, `docker-compose.yml`, `env.js`) pour utiliser 5099 partout.
+
+**Résultats**
+
+- Image Docker buildable en CI et en local
+- API disponible sur `https://api.visioconnect.pro/health` → `{"status":"OK"}`
+- Conteneur marqué `healthy` par Docker
+- Runbook validé : un repreneur peut redéployer VisiConnect en ~45 minutes
+
+**Compétences mobilisées**
+
+- Préparer et documenter le déploiement d'une application
+- Contribuer à la mise en production dans une démarche DevOps
+
+---
+
+**2. Précisez les moyens utilisés :**
+
+- Infrastructure : DigitalOcean Droplet FRA1, Ubuntu 24.04 LTS, 2 vCPU, 2 Go RAM, 60 Go SSD
+- Outils : VS Code, GitHub, certbot, SSH
+- Technologies : Docker, Docker Compose, Nginx 1.27 Alpine, Let's Encrypt, UFW, fail2ban, Node.js 20 Alpine
+
+---
+
+**3. Avec qui avez-vous travaillé ?**
+
+Travail réalisé en autonomie.
+
+---
+
+**4. Contexte**
+
+|                                               |                                |
+| --------------------------------------------- | ------------------------------ |
+| Nom de l'entreprise, organisme ou association | Projet personnel — VisiConnect |
+| Chantier, atelier, service                    | Déploiement VPS DigitalOcean   |
+| Période d'exercice                            | Du : juin 2026 au : juin 2026  |
+
+---
+
+**5. Informations complémentaires (facultatif)**
+
+Runbook complet : `infra/deploy/runbook.md` — API publique : <https://api.visioconnect.pro>
+
+---
+
+# Déclaration sur l'honneur
+
+Je soussigné(e) **GARCES Théo**, certifie sur l'honneur que les informations contenues dans ce dossier sont exactes et sincères, et que les réalisations présentées sont le fruit de mon travail personnel.
 
 Fait à `[ville]`, le `[date]`. Signature :
 
 ---
 
-# Sommaire
-
-1. [Présentation du candidat](#1-présentation-du-candidat)
-2. [Présentation du projet support : VisiConnect](#2-présentation-du-projet-support--visiconnect)
-3. [Activité-Type 1 — Développer une application sécurisée](#at1)
-   - 3.1 [Réalisation 1.1 — Landing-page multilingue (i18n 6 langues)](#r11)
-   - 3.2 [Réalisation 1.2 — Composants UI réutilisables et modale de création de réunion](#r12)
-4. [Activité-Type 2 — Concevoir et développer une application sécurisée organisée en couches](#at2)
-   - 4.1 [Réalisation 2.1 — Module visioconférence (LiveKit + Convex + Socket.IO)](#r21)
-   - 4.2 [Réalisation 2.2 — Module paiements Stripe et refactor serveur en couches (audit OWASP)](#r22)
-5. [Activité-Type 3 — Préparer le déploiement d'une application sécurisée](#at3)
-   - 5.1 [Réalisation 3.1 — Pipeline CI/CD GitHub Actions et tests automatisés](#r31)
-   - 5.2 [Réalisation 3.2 — Conteneurisation Docker et déploiement VPS DigitalOcean](#r32)
-6. [Annexes](#6-annexes)
-
----
-
-# 1. Présentation du candidat
-
-Je m'appelle **Théo GARCES**, je suis en formation **Concepteur
-Développeur d'Applications** au CODA d'Orléans depuis septembre 2023,
-pour une session d'examen prévue le **3 juillet 2026**.
-
-Mon parcours combine :
-
-- une passion pour le **développement web** depuis le lycée (premiers
-  sites HTML/CSS, puis JavaScript, puis React) ;
-- la volonté de **concevoir un produit complet** plutôt que d'enchaîner
-  les exercices pédagogiques. C'est cette volonté qui a donné naissance
-  à **VisiConnect**, une plateforme de visioconférence professionnelle
-  que j'ai conçue, développée, sécurisée et mise en ligne seul ;
-- une **rigueur méthodologique** acquise pendant la formation : Git/
-  GitHub, intégration continue, tests automatisés, revue de code,
-  conformité RGPD.
-
-Je présente **VisiConnect** comme projet support unique pour
-l'intégralité de ce DP. Le périmètre fonctionnel (visio, chat,
-paiements, IA, internationalisation, déploiement) m'a permis de couvrir
-les 11 compétences professionnelles du référentiel CDA en variant les
-modules attaqués pour chaque réalisation.
-
----
-
-# 2. Présentation du projet support : VisiConnect
-
-> **URL de production** : <https://visioconnect.pro>
-> **Code source** : <https://github.com/AidoTokihisa11/visiconnect> (privé, accès jury sur demande)
-
-## 2.1 Objectif produit
-
-VisiConnect est une **plateforme SaaS de visioconférence
-professionnelle** ciblant les TPE/PME francophones. Elle propose :
-
-- des **salles vidéo HD/4K** à 200 participants (LiveKit Cloud + WebRTC) ;
-- un **tableau blanc collaboratif temps réel** (tldraw + Excalidraw) ;
-- un **chat de réunion** avec messages structurés (Convex temps réel) ;
-- des **sous-groupes (breakout rooms)** et **sondages** pendant les
-  réunions ;
-- un **assistant IA** pour les résumés et notes de réunion (Groq +
-  OpenRouter en repli) ;
-- des **abonnements Stripe** (Starter gratuit, Pro 15 €/mois, Business
-  35 €/mois) ;
-- une interface **disponible en 6 langues** (français, anglais,
-  espagnol, italien, portugais, catalan) gérée via i18next.
-
-## 2.2 Architecture technique (vue 10 000 m)
-
-```
-┌──────────────────────┐    HTTPS     ┌─────────────────────────┐
-│  Client React 18     │ ───────────► │  Vercel Functions       │
-│  Vite 5 + Tailwind   │              │  (Node.js serverless)   │
-│  Framer Motion       │              │  CORS allowlist + JWT   │
-│  Clerk (auth UI)     │ ───────────► │  Rate-limit + Zod       │
-└─────────┬────────────┘              └─────────┬───────────────┘
-          │                                     │
-          │  WSS                                ▼
-          │              ┌──────────────────────────────────────┐
-          │              │ Serveur Express 4 (Node 20)          │
-          │              │ Helmet · Pino · Express-rate-limit   │
-          │              │ Couches : routes → controllers →     │
-          │              │           services → SDK externes    │
-          │              └─────────┬────────────────────────────┘
-          │                        │
-          ▼                        ▼
-┌────────────────┐    ┌──────────────┐  ┌──────────┐  ┌─────────┐
-│  LiveKit Cloud │    │  Convex      │  │  Stripe  │  │  Resend │
-│  (médias WebRTC│    │  (DB temps   │  │ (paiement│  │ (emails)│
-│   + signaling) │    │   réel)      │  │  + abon.)│  │         │
-└────────────────┘    └──────────────┘  └──────────┘  └─────────┘
-```
-
-## 2.3 Stack technique synthétique
-
-| Couche          | Technologies                                                                                                                                               |
-| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Front**       | React 18.3, Vite 5.2, Tailwind 3, Framer Motion 11, styled-components, i18next 25 (6 langues), Clerk @clerk/react v6, livekit-client 2, socket.io-client 4 |
-| **API edge**    | Vercel Functions (Node 20) + Netlify Functions (fallback), @clerk/backend, Zod, in-memory rate-limit                                                       |
-| **Backend**     | Node 20, Express 4.21, Socket.IO 4.8, helmet 8, express-rate-limit 7, pino 9, livekit-server-sdk 2, stripe 20, resend 6                                    |
-| **Données**     | Convex (NoSQL temps réel) — schémas typés, mutations, queries réactives                                                                                    |
-| **Auth**        | Clerk (OAuth Google/GitHub + email/password + JWT vérifié côté serveur)                                                                                    |
-| **Médias**      | LiveKit Cloud (WebRTC, SFU, recording)                                                                                                                     |
-| **Paiements**   | Stripe Checkout + webhook signé                                                                                                                            |
-| **Emails**      | Resend + React-Email (templates JSX)                                                                                                                       |
-| **Tests**       | Vitest 2 + Supertest 7                                                                                                                                     |
-| **Qualité**     | ESLint 9 (flat config), Prettier 3, Husky + lint-staged                                                                                                    |
-| **CI/CD**       | GitHub Actions (lint, tests, build, audit npm)                                                                                                             |
-| **Déploiement** | Vercel (front + edge), DigitalOcean Droplet FRA1 (backend Express via Docker + Nginx + Let's Encrypt)                                                      |
-
-## 2.4 Mon rôle
-
-**Concepteur, développeur, intégrateur, mainteneur** — j'ai porté
-l'intégralité du cycle de vie du logiciel :
-
-1. **Conception** : étude des besoins, maquettes Figma, modélisation
-   des données Convex, choix techniques argumentés.
-2. **Développement** : front-end React, back-end Express, fonctions
-   serverless, intégrations LiveKit / Stripe / Resend / Clerk.
-3. **Qualité** : tests unitaires et d'intégration, lint, audit OWASP
-   complet sur 14 findings, refactor en couches.
-4. **Déploiement** : pipeline CI GitHub Actions, conteneurisation
-   Docker, déploiement DigitalOcean Droplet FRA1, certificat TLS Let's Encrypt,
-   pare-feu UFW, fail2ban.
-5. **Maintenance** : suivi des retours bêta-testeurs (cf. document
-   `BILAN_RETOURS_BETA.md` du dépôt), itérations correctives.
-
----
-
-<a id="at1"></a>
-
-# 3. Activité-Type 1 — Développer une application sécurisée
-
-> **Compétences couvertes** : CP1 (maquetter une application), CP2
-> (développer une interface utilisateur web statique et adaptable),
-> CP3 (développer une interface utilisateur web dynamique), CP4
-> (développer la partie front-end d'une application web).
-
-<a id="r11"></a>
-
-## 3.1 Réalisation 1.1 — Landing-page multilingue (i18n 6 langues)
-
-### Intitulé
-
-Conception et développement de la landing-page commerciale de
-VisiConnect (Hero, sections fonctionnalités, démonstration vidéo,
-preuves sociales, tarifs, FAQ) avec internationalisation complète en
-6 langues.
-
-### Période
-
-Janvier 2024 → Juin 2024 (~5 mois en parallèle d'autres modules).
-
-### Contexte
-
-Pour valider l'intérêt commercial du produit avant de lourdement
-investir dans le backend, j'avais besoin d'une **vitrine
-professionnelle** capable de :
-
-- présenter clairement la valeur du produit aux visiteurs hors-cible
-  technique ;
-- convertir les visiteurs en utilisateurs (CTA « Essayer
-  gratuitement ») ;
-- adresser les marchés FR, EN, ES, IT, PT, CA (catalan) — décision
-  prise après une étude rapide des bassins francophones et latins
-  où la concurrence Zoom/Meet est moins dominante.
-
-### Démarche et compétences mises en œuvre
-
-**Étape 1 — Maquettage (CP1)**
-
-J'ai d'abord produit des **wireframes basse fidélité** sur papier puis
-des **maquettes Figma** pour les pages clés (`/`, `/pricing`,
-`/features`, `/contact`). J'ai validé les parcours sur 3 personas
-fictifs : « Caroline, RH d'une PME 30 personnes », « Marc, freelance
-formateur », « Lina, étudiante en visio-cours ».
-
-**Étape 2 — Découpage en composants React réutilisables (CP2)**
-
-J'ai conçu une bibliothèque de composants atomiques avec
-**TailwindCSS** et **styled-components** pour les états complexes.
-Exemples concrets dans le dépôt :
-
-- [client/src/components/home/HeroConferenceDemo.jsx](client/src/components/home/HeroConferenceDemo.jsx) :
-  démo animée du produit ;
-- [client/src/components/home/FeaturesCarousel3D.jsx](client/src/components/home/FeaturesCarousel3D.jsx) :
-  carrousel 3D des fonctionnalités (Framer Motion + transforms CSS) ;
-- [client/src/components/home/InterfaceSlider.jsx](client/src/components/home/InterfaceSlider.jsx) ;
-- [client/src/components/home/ProofArea.jsx](client/src/components/home/ProofArea.jsx) :
-  bandeau de logos clients + témoignages.
-
-Chaque composant respecte le **principe de responsabilité unique** et
-expose une API de `props` documentée par défaut.
-
-**Étape 3 — Interface dynamique (CP3)**
-
-J'ai intégré **Framer Motion** pour les transitions et les
-micro-interactions (parallaxe au scroll, fade-in au viewport,
-animations de hover sur les cartes tarifs). Le **lazy-loading** des
-images et le **code-splitting de routes** (React.lazy + Suspense)
-maintiennent le LCP sous 2,5 s en 4G simulée (vérifié avec
-Lighthouse).
-
-**Étape 4 — Internationalisation (i18n)**
-
-J'ai mis en place **i18next + react-i18next + i18next-http-backend**
-pour charger les bundles de traduction à la demande. Architecture :
-
-```
-client/src/i18n/
-  ├── locales/
-  │   ├── fr/common.json
-  │   ├── en/common.json
-  │   ├── es/common.json
-  │   ├── it/common.json
-  │   ├── pt/common.json
-  │   └── ca/common.json
-  └── index.js   // configuration + détecteur de langue
-```
-
-J'ai écrit des **scripts Node.js de traduction automatisée**
-(`client/scripts/translate_*.js`) qui passent par l'API Bing Translate
-pour produire les premières versions, puis j'ai relu manuellement
-les chaînes commerciales clés. Cela m'a fait gagner plusieurs jours.
-
-### Résultats
-
-- **6 langues** intégrées, **environ 850 clés** de traduction par
-  langue.
-- **Score Lighthouse Performance ≥ 90** sur la home (mesure prod).
-- **Conversion bêta-testeurs** : 38 inscriptions sur les 3 premières
-  semaines de campagne (cf. `BILAN_RETOURS_BETA.md`).
-- Site **responsive** mobile/tablette/desktop, validé sur Chrome,
-  Firefox, Safari, Edge.
-
-### Difficultés rencontrées et solutions
-
-| Difficulté                                                                                           | Solution apportée                                                                                                                                                                  |
-| ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Bundle JavaScript trop volumineux au premier rendu (> 800 ko)                                        | Mise en place de **React.lazy** pour `PricingPage`, `FeaturesPage`, `ContactPage`, **dynamic import** des composants 3D lourds (Framer + Embla). Bundle initial ramené à ≈ 280 ko. |
-| Traductions générées par IA parfois maladroites en catalan                                           | Relecture manuelle des chaînes marketing (Hero, CTA, prix), script `fix_catalan_mixed.js` pour homogénéiser les majuscules / ponctuation typique CA.                               |
-| Détecteur de langue par défaut renvoyait `en` pour les utilisateurs `fr-FR` sur certains navigateurs | Ajout d'un **fallback explicite** dans `i18next-browser-languagedetector` (order: `localStorage → navigator → fallback fr`).                                                       |
-
-### Apports personnels / bilan
-
-J'ai appris à **équilibrer "wow effect" et performance** : il est très
-facile d'empiler les animations qui semblent élégantes en local mais
-détruisent le LCP en mobile. La discipline du code-splitting + audit
-Lighthouse régulier a été décisive.
-
----
-
-<a id="r12"></a>
-
-## 3.2 Réalisation 1.2 — Composants UI réutilisables et modale de création de réunion
-
-### Intitulé
-
-Conception et développement de la **modale "Créer une réunion"**
-multi-étapes, et de la bibliothèque de composants UI partagés (boutons,
-inputs, modales, dropdown, toasts) utilisée dans tout le produit.
-
-### Période
-
-Mars 2024 → Mai 2024.
-
-### Contexte
-
-La modale "Créer une réunion" est le **point d'entrée critique** du
-parcours utilisateur authentifié : c'est là qu'on choisit le titre, la
-date/heure, le mode (instantané ou planifié), le mot de passe, les
-invités, et qu'on lance la salle. Le mauvais design ici tue
-l'adoption.
-
-### Démarche et compétences mises en œuvre
-
-**Composant principal** :
-[client/src/components/CreateMeetingModal.jsx](client/src/components/CreateMeetingModal.jsx)
-(+ son styles-module
-[client/src/components/CreateMeetingModal.styles.js](client/src/components/CreateMeetingModal.styles.js)).
-
-**1. Conception d'un composant complexe (CP2)**
-
-La modale gère 4 étapes (« Titre & objet », « Date & heure »,
-« Participants », « Récapitulatif »), un **wizard d'état local**
-géré par `useReducer`, et un **système de validation côté client**
-sur chaque champ. Pas de bibliothèque externe pour le formulaire :
-choix volontaire pour rester maître du DOM et limiter la dette.
-
-**2. UI dynamique réactive (CP3)**
-
-- **Validation en temps réel** : feedback visuel < 100 ms sur le focus
-  perdu (regex e-mail, longueur min/max, format ISO date).
-- **Animations Framer Motion** entre les étapes (slide + fade).
-- **Persistance locale** via le hook personnalisé
-  [client/src/hooks/useFormPersistence.js](client/src/hooks/useFormPersistence.js)
-  qui sauvegarde un brouillon dans `localStorage` toutes les 2 s
-  (recouvrement après fermeture accidentelle).
-
-**3. Couche de données (CP4)**
-
-La création de la réunion appelle deux services :
-
-- **Convex** pour stocker les métadonnées (`mutations.meetings.create`)
-  — relation 1-N avec les invités, schéma typé dans
-  [convex/schema.ts](convex/schema.ts).
-- **Vercel function** `/api/livekit-token` (helper apiClient
-  authentifié, voir réalisation 2.1) pour obtenir le jeton de la
-  salle vidéo.
-
-**4. Bibliothèque de composants partagés (CP2)**
-
-Cette modale s'appuie sur la **lib UI maison** que j'ai construite en
-parallèle, dossier
-[client/src/components/ui/](client/src/components/ui/) :
-`Button`, `Input`, `Select`, `Modal`, `Toast`, `Tooltip`,
-`DropdownMenu`. Chacun :
-
-- accepte un thème (light/dark via `next-themes`) ;
-- est **accessible** (ARIA labels, focus trap dans les modales,
-  navigation clavier).
-
-### Résultats
-
-- **Taux de complétion** de la modale (bêta) : 91 % une fois la
-  première étape démarrée (mesuré via un événement Convex
-  `meeting_created`).
-- **Réutilisation** : la lib UI est consommée par 27 pages /
-  composants distincts du produit.
-
-### Difficultés rencontrées et solutions
-
-| Difficulté                                                                                              | Solution apportée                                                                                                                        |
-| ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| Sur Safari iOS, le `<input type="datetime-local">` ne respectait pas le format ISO attendu côté serveur | Création d'un composant `DateTimePicker` maison basé sur deux `<input>` séparés + normalisation client en `new Date(...).toISOString()`. |
-| Les animations Framer Motion entre étapes provoquaient des layout-shifts                                | Hauteur min figée + `<AnimatePresence mode="wait">` + `position: absolute` pendant la transition.                                        |
-| Validation d'e-mails saisis pour les invités : regex trop laxiste laissait passer `bob@bob`             | Adoption d'une regex inspirée du RFC 5322 simplifié + double validation côté serveur Zod (cf. `client/api/_lib/schemas.js`).             |
-
-### Apports personnels / bilan
-
-J'ai compris la valeur d'une **bibliothèque UI interne** plutôt que de
-piocher des composants tiers à chaque besoin. La cohérence visuelle et
-la maîtrise du a11y deviennent immédiates.
-
----
-
-<a id="at2"></a>
-
-# 4. Activité-Type 2 — Concevoir et développer une application sécurisée organisée en couches
-
-> **Compétences couvertes** : CP5 (développer la partie back-end
-> d'une application web), CP6 (concevoir une base de données),
-> CP7 (mettre en place une base de données), CP8 (développer des
-> composants d'accès aux données).
-
-<a id="r21"></a>
-
-## 4.1 Réalisation 2.1 — Module visioconférence (LiveKit + Convex + Socket.IO)
-
-### Intitulé
-
-Conception et développement du **module visio temps réel** :
-authentification dans la salle, négociation WebRTC via LiveKit, chat
-en parallèle (Socket.IO + Convex pour la persistance), signalisation
-des présences, modération (mute, kick).
-
-### Période
-
-Mai 2024 → Septembre 2024.
-
-### Contexte
-
-C'est le **cœur fonctionnel** du produit. Il faut être capable de
-faire entrer un utilisateur authentifié dans une salle, lui faire
-émettre/recevoir des flux audio/vidéo de qualité, sans rien révéler
-des autres salles, et en respectant la vie privée (RGPD).
-
-### Démarche et compétences mises en œuvre
-
-**1. Architecture serveur en couches (CP6)**
-
-Côté backend, j'ai conçu une **séparation stricte des
-responsabilités** :
-
-```
-server/src/
-  routes/index.js          ← URL → middleware → controller
-  controllers/livekitController.js   ← HTTP only (validation, status codes)
-  services/livekitService.js         ← logique métier pure (issueAccessToken)
-  middleware/requireAuth.js          ← vérif JWT Clerk
-  middleware/rateLimit.js            ← express-rate-limit
-  schemas/index.js                   ← validation Zod
-```
-
-Cette structure rend chaque couche **testable en isolation**
-(cf. réalisation 3.1) et **remplaçable** sans casser le reste (par
-exemple, on pourrait passer de LiveKit à Daily.co en ne touchant
-qu'au service).
-
-**2. Sécurité applicative (CP8)**
-
-J'ai appliqué les contrôles suivants sur chaque appel
-`POST /api/livekit/token` :
-
-- **Authentification** par JWT Clerk vérifié via `@clerk/backend`
-  ([server/src/middleware/requireAuth.js](server/src/middleware/requireAuth.js))
-  — le `userId` est _extrait du token_, jamais d'un header confiance ;
-- **Rate-limit** : 10 demandes par minute et par IP
-  ([server/src/middleware/rateLimit.js](server/src/middleware/rateLimit.js))
-  pour empêcher l'extraction massive de jetons ;
-- **Validation Zod** du `roomName` (regex `[a-zA-Z0-9_\-:.]+`, 3 à
-  64 caractères) pour bloquer toute tentative d'injection
-  ([server/src/schemas/index.js](server/src/schemas/index.js)) ;
-- **TTL court** de 4 h sur le jeton LiveKit (limite la fenêtre
-  d'usage si interception) ;
-- **`identity` = `userId` Clerk** dans le JWT LiveKit — un utilisateur
-  ne peut pas usurper l'identité d'un autre.
-
-**3. Composants métier serveur (CP7)**
-
-Le service
-[server/src/services/livekitService.js](server/src/services/livekitService.js)
-expose une fonction pure :
-
-```js
-async function issueAccessToken({ userId, roomName, displayName, role }) {
-  const at = new AccessToken(env.LIVEKIT_API_KEY, env.LIVEKIT_API_SECRET, {
-    identity: userId,
-    name: displayName || 'Participant',
-    ttl: 4 * 60 * 60,
-    metadata: JSON.stringify({ role }),
-  });
-  at.addGrant({ roomJoin: true, room: roomName /* ... */, roomAdmin: role === 'host' });
-  return { token: await at.toJwt(), ttl: 14400 };
-}
-```
-
-Côté front-end, le hook
-[client/src/hooks/useMeeting.js](client/src/hooks/useMeeting.js)
-appelle `apiPostJson('/api/livekit/token', { roomName })` (auto-Bearer
-via `window.Clerk?.session?.getToken()`) puis se connecte à la salle.
-
-**4. Accès aux données temps réel (CP5)**
-
-- **Convex** stocke la définition des réunions, les participants
-  actifs, les messages de chat ([convex/messages.ts](convex/messages.ts),
-  [convex/breakout.ts](convex/breakout.ts),
-  [convex/polls.ts](convex/polls.ts)). J'ai défini les schémas typés
-  dans [convex/schema.ts](convex/schema.ts) avec des index sur les
-  champs `roomId` et `userId` pour les requêtes fréquentes.
-- **Socket.IO** assure la signalisation temps réel (curseurs,
-  whiteboard, présence). L'auth handshake est obligatoire
-  ([server/src/socket/index.js](server/src/socket/index.js)) — le
-  `userId` n'est jamais fourni par le client, il est extrait du JWT.
-
-### Résultats
-
-- **Réunions à 200 participants** simultanés supportées (test charge
-  LiveKit Cloud).
-- **Latence média < 200 ms** sur l'Europe (mesurée avec les outils de
-  diagnostic LiveKit).
-- **Aucun jeton LiveKit obtenu sans authentification valide** depuis
-  la mise en production de la branche `chore/exam-hardening`.
-- **Tests unitaires** du service LiveKit dans
-  [server/tests/livekitService.test.js](server/tests/livekitService.test.js)
-  (5 cas, dont vérification du `sub`, du TTL, des permissions admin).
-
-### Difficultés rencontrées et solutions
-
-| Difficulté                                                                                                                                                                                                 | Solution apportée                                                                                                                      |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| **Faille initiale critique (F-01 de l'audit)** : la route `/api/livekit/token` était publique et générait un jeton pour n'importe quel `roomName` — un attaquant pouvait rejoindre n'importe quelle salle. | Refonte complète avec `requireAuth` + identity côté serveur. Voir `dossiers/00_AUDIT_INITIAL.md` finding F-01.                         |
-| Sur Firefox, certaines caméras déclenchaient un `getUserMedia` qui freezait pendant 30 s.                                                                                                                  | Ajout d'un timeout de 8 s dans [client/src/hooks/useLiveKit4K.js](client/src/hooks/useLiveKit4K.js) avec fallback sur la qualité 720p. |
-| Le `identity` initialement basé sur `guest_${Date.now()}` permettait à plusieurs onglets du même user d'apparaître comme des inconnus.                                                                     | Bascule sur le `userId` Clerk stable.                                                                                                  |
-
-### Apports personnels / bilan
-
-J'ai pris la mesure de la **différence fondamentale entre
-authentification et autorisation**. Un JWT valide ne suffit pas : il
-faut aussi vérifier que l'utilisateur a le **droit** de rejoindre cette
-salle (à venir : croisement avec la table `meetings` Convex).
-
----
-
-<a id="r22"></a>
-
-## 4.2 Réalisation 2.2 — Module paiements Stripe et refactor serveur en couches (audit OWASP)
-
-### Intitulé
-
-Mise en place du **système d'abonnements payants** (Stripe Checkout +
-webhook), refactor complet du serveur Express **en couches** (614
-lignes monolithiques → ~15 modules dédiés), et **audit de sécurité
-OWASP Top 10** avec 14 findings corrigés.
-
-### Période
-
-Mars 2026 → Juin 2026 (sprint de mise à niveau pour l'examen,
-documenté dans [dossiers/01_MISE_A_NIVEAU.md](dossiers/01_MISE_A_NIVEAU.md)).
-
-### Contexte
-
-Le serveur initial `simple-server-no-db.js` cumulait :
-
-- une **clé API Resend en dur** dans le code
-  (`re_f7CXkPZ1_FouifSQZycKkbcStAoZkGgW8`) — exposée dans
-  l'historique Git ;
-- une **authentification basée sur un header `x-user-email`** que le
-  client peut forger librement (CVE équivalent : OWASP A07
-  Identification and Authentication Failures) ;
-- une **absence totale de validation** des bodies (OWASP A03
-  Injection) ;
-- une **CORS wildcard** (OWASP A05 Security Misconfiguration) ;
-- un **webhook Stripe non vérifié** sur la signature.
-
-C'est inacceptable pour un projet présenté à un titre RNCP niveau 6.
-
-### Démarche et compétences mises en œuvre
-
-**1. Audit complet (livrable consultable :
-[dossiers/00_AUDIT_INITIAL.md](dossiers/00_AUDIT_INITIAL.md))**
-
-J'ai produit un rapport de **14 findings** mappés sur OWASP Top 10 et
-sur les compétences CDA, classés par sévérité (4 critiques, 5 élevés,
-5 moyens). Chaque finding contient : description, impact, preuve de
-concept (PoC), correction proposée, statut.
-
-**2. Refactor en couches (CP6)** — détaillé dans la réalisation 2.1
-ci-dessus, à laquelle s'ajoutent :
-
-- [server/src/config/env.js](server/src/config/env.js) : validation
-  Zod _fail-fast_ des variables d'environnement (le serveur refuse de
-  démarrer si une variable critique manque) ;
-- [server/src/lib/logger.js](server/src/lib/logger.js) : logger Pino
-  avec **redact PII** (e-mails masqués, tokens redactés) — conformité
-  RGPD article 32 ;
-- [server/src/middleware/errorHandler.js](server/src/middleware/errorHandler.js) :
-  jamais de stack-trace en production (corrige F-07).
-
-**3. Composants métier serveur (CP7)**
-
-- [server/src/services/stripeService.js](server/src/services/stripeService.js) :
-  création de Checkout Sessions (Pro, Business — mensuel ou annuel) +
-  fonction `verifyWebhook()` qui valide la signature avant tout
-  traitement (corrige F-08).
-- [server/src/controllers/stripeController.js](server/src/controllers/stripeController.js) :
-  endpoint `/api/create-checkout-session` (auth + Zod + rate-limit) +
-  `/api/stripe/webhook` monté avec `express.raw()` (sinon la
-  signature ne peut pas être calculée).
-- Bonus produit : `client/api/downgrade-subscription.js` vérifie
-  l'**ownership** : si le `userId` du document Convex ne correspond
-  pas au `userId` du JWT → **403 Forbidden** (corrige A01 Broken
-  Access Control).
-
-**4. Helpers partagés pour les Vercel Functions
-([client/api/\_lib/](client/api/_lib/))**
-
-- `cors.js` : allowlist d'origines (plus de wildcard) ;
-- `auth.js` : vérification Clerk côté serverless via
-  `authenticateRequest` ;
-- `rateLimit.js` : limiteur in-memory par IP avec garbage collection ;
-- `schemas.js` : schémas Zod centralisés pour les 8 endpoints
-  serverless.
-
-**5. Migration du client (CP3 + CP4)**
-
-J'ai introduit
-[client/src/lib/apiClient.js](client/src/lib/apiClient.js) qui injecte
-automatiquement le `Authorization: Bearer <token>` Clerk dans toutes
-les requêtes (récupéré via `window.Clerk?.session?.getToken()`).
-**11 call-sites migrés** (hooks, services IA, pages).
-
-### Résultats
-
-- **14 findings traités** : 4 critiques résolus à 100 %, 5 élevés à
-  100 %, 5 moyens à 100 %. Détail dans
-  [dossiers/01_MISE_A_NIVEAU.md](dossiers/01_MISE_A_NIVEAU.md).
-- **Clé Resend supprimée** du code + ajout d'une consigne de
-  révocation dans le runbook.
-- **Couverture de tests** : 26 tests verts (cf. réalisation 3.1).
-- **0 erreur ESLint** dans le code refactoré.
-- **Diff Git** : 78 fichiers, +11 269 / −9 888 lignes (commit
-  `3cdc4ed` sur `chore/exam-hardening`).
-
-### Difficultés rencontrées et solutions
-
-| Difficulté                                                                                                                               | Solution apportée                                                                                                                                                                                  |
-| ---------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Le webhook Stripe doit lire le body brut, mais Express applique `express.json()` globalement.                                            | Montage de `/api/stripe/webhook` **avant** le `express.json()` global, avec un middleware `express.raw({ type: 'application/json' })` dédié.                                                       |
-| Le test `auth.test.js` initial essayait de mocker `verifyClerkToken` mais Vitest ESM + `require()` CJS posaient un problème de hoisting. | Refonte : tests d'intégration HTTP qui vérifient le **rejet 401** seul (suffisant pour prouver la protection), et **tests unitaires** isolés du service LiveKit en injectant des secrets factices. |
-| Migration des 11 call-sites client : risque de régression.                                                                               | Adoption d'`apiFetch` comme fonction _drop-in replacement_ de `fetch`, validation manuelle en local de chaque flux (create meeting, ai chat, checkout, account).                                   |
-
-### Apports personnels / bilan
-
-Cet audit a été une **leçon d'humilité** : le code initial me semblait
-correct alors qu'il accumulait des failles classiques évitables.
-J'ai désormais le réflexe **« threat-model » avant `await`** :
-qu'est-ce qu'un attaquant pourrait faire de cet input ?
-
----
-
-<a id="at3"></a>
-
-# 5. Activité-Type 3 — Préparer le déploiement d'une application sécurisée
-
-> **Compétences couvertes** : CP9 (préparer et exécuter les plans
-> de tests d'une application), CP10 (préparer et documenter le
-> déploiement), CP11 (contribuer à la mise en production dans une
-> démarche DevOps).
-
-<a id="r31"></a>
-
-## 5.1 Réalisation 3.1 — Pipeline CI/CD GitHub Actions et tests automatisés
-
-### Intitulé
-
-Mise en place de la **suite de tests automatisés** (Vitest + Supertest)
-et du **pipeline d'intégration continue** GitHub Actions
-(lint + format + tests + build + audit npm).
-
-### Période
-
-Mai 2026 → Juin 2026.
-
-### Contexte
-
-Le projet n'avait **aucun test automatisé** avant cette mise à niveau
-et **aucune CI**. Toute régression était détectée manuellement,
-souvent en production. Inacceptable pour un produit qui facture des
-clients.
-
-### Démarche et compétences mises en œuvre
-
-**1. Stratégie de tests (CP9)**
-
-J'ai privilégié une **pyramide de tests** :
-
-| Niveau           | Outil     | Quantité | Rôle                                                          |
-| ---------------- | --------- | -------- | ------------------------------------------------------------- |
-| Unitaire         | Vitest    | 16 tests | Couvrir les services et schémas en isolation                  |
-| Intégration HTTP | Supertest | 10 tests | Vérifier le pipeline complet Express (CORS, auth, validation) |
-
-**Fichiers de tests créés** (`server/tests/`) :
-
-- [auth.test.js](server/tests/auth.test.js) : 4 tests vérifiant que
-  les routes protégées rejettent les requêtes non authentifiées
-  (couvre F-05 : un client envoyant `x-user-email` reçoit désormais
-  401, là où l'ancien code retournait 200).
-- [cors.test.js](server/tests/cors.test.js) : 3 tests vérifiant que
-  seules les origines de l'allowlist obtiennent un header
-  `Access-Control-Allow-Origin`.
-- [health.test.js](server/tests/health.test.js) : 3 tests sur
-  `/health`, `/api/health` et le 404 générique.
-- [schemas.test.js](server/tests/schemas.test.js) : 11 tests sur les
-  schémas Zod (regex roomName, longueur max, anti-DoS sur l'IA,
-  enums Stripe).
-- [livekitService.test.js](server/tests/livekitService.test.js) :
-  5 tests sur la génération de jetons LiveKit (identity = userId,
-  TTL de 4 h, permissions admin réservées au rôle host).
-
-**Configuration** : [server/vitest.config.js](server/vitest.config.js)
-
-- [server/tests/setup.js](server/tests/setup.js) qui mocke les
-  variables d'environnement pour ne jamais appeler Clerk / Stripe /
-  LiveKit pendant les tests.
-
-**2. Outillage qualité racine**
-
-- [eslint.config.js](eslint.config.js) : flat config ESLint 9 avec
-  scope strict sur le serveur et permissif sur le legacy client
-  (pour ne pas bloquer la CI sur la dette technique hors périmètre).
-- [.prettierrc.json](.prettierrc.json) + [.prettierignore](.prettierignore).
-- [.husky/pre-commit](.husky/pre-commit) + `lint-staged` qui
-  re-formatent automatiquement les fichiers stagés avant chaque
-  commit.
-
-**3. Pipeline CI** ([.github/workflows/ci.yml](.github/workflows/ci.yml))
-
-5 jobs en parallèle :
-
-```yaml
-jobs:
-  lint:        # ESLint sur tout le repo
-  format:      # Prettier --check
-  test-server: # cd server && npm test
-  build-client:# cd client && npm run build (Vite)
-  audit:       # npm audit --audit-level=high (non bloquant)
-```
-
-Déclencheurs : push sur `main` / `chore/**` / `feat/**` / `fix/**`,
-et toutes les PR vers `main`. **Cache npm** activé sur les trois
-lockfiles (root, client, server) pour des runs < 2 minutes.
-
-### Résultats
-
-- **26 tests verts** : `Tests 26 passed (26)` — sortie complète
-  archivée en annexe.
-- **0 erreur ESLint** dans le code refactoré.
-- **CI déclenchée automatiquement** sur chaque commit, fournissant un
-  retour < 3 minutes.
-- **Pre-commit hook** : impossible de committer un fichier non
-  formaté.
-
-### Difficultés rencontrées et solutions
-
-| Difficulté                                                                                                 | Solution apportée                                                                                       |
-| ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| Vitest ne reconnaissait pas `process.env.LOG_LEVEL='silent'` (Pino accepte mais pas mon schéma Zod).       | Bascule sur `LOG_LEVEL='fatal'` dans `setup.js` (le minimum supporté par la valeur enum).               |
-| Un premier test essayait de mocker `verifyClerkToken` mais le mock ESM ne couvrait pas le `require()` CJS. | Restructuration : test d'intégration _rejet 401_ (sans mock) + tests unitaires du service en isolation. |
-| ESLint flat config refusait les fichiers de tests en `import/export` (parsing error).                      | Ajout d'un bloc `files: ['**/*.test.js', ...]` avec `sourceType: 'module'`.                             |
-
-### Apports personnels / bilan
-
-J'ai compris qu'un **test qui prouve une non-régression de sécurité**
-(ex : "x-user-email n'est plus accepté") a infiniment plus de valeur
-qu'un test qui couvre une métrique de coverage. Je teste maintenant
-ce qui m'a fait peur, pas seulement ce qui est facile.
-
----
-
-<a id="r32"></a>
-
-## 5.2 Réalisation 3.2 — Conteneurisation Docker et déploiement VPS DigitalOcean
-
-### Intitulé
-
-**Dockerisation** du backend Node.js, mise en place d'un
-**`docker-compose`** avec reverse-proxy Nginx, et rédaction d'un
-**runbook complet de déploiement** sur VPS DigitalOcean Droplet FRA1
-(Ubuntu 24.04, TLS Let's Encrypt, UFW, fail2ban).
-
-### Période
-
-Juin 2026.
-
-### Contexte
-
-Avant cette mise à niveau, le backend tournait en `node simple-server-no-db.js`
-sur ma machine de dev, ou en cloud Vercel pour les fonctions
-serverless. Aucun environnement de production pérenne, aucune
-procédure reproductible.
-
-### Démarche et compétences mises en œuvre
-
-**1. Choix d'hébergeur argumenté (CP10)**
-
-| Critère        | DigitalOcean Droplet        | Pourquoi                                              |
-| -------------- | --------------------------- | ----------------------------------------------------- |
-| Coût           | ~12 $/mois (≈ 11 € HT)      | Hébergement professionnel EU à budget maîtrisé        |
-| Localisation   | Frankfurt, Allemagne (FRA1) | **Conformité RGPD** (article 44, transferts intra-UE) |
-| Certifications | ISO 27001, SOC 2 Type II    | Sérieux infrastructure                                |
-| Ressources     | 2 vCPU, 2 Go RAM, 60 Go SSD | Dimensionné pour la charge actuelle                   |
-
-**2. Dockerfile multi-stage** ([Dockerfile](Dockerfile))
-
-```dockerfile
-FROM node:20-alpine AS deps
-WORKDIR /app
-COPY server/package.json server/package-lock.json* ./
-RUN npm install --omit=dev --no-audit --no-fund
-
-FROM node:20-alpine AS runtime
-WORKDIR /app
-RUN addgroup -S app && adduser -S app -G app   # ← user non-root
-ENV NODE_ENV=production PORT=5000
-COPY --from=deps /app/node_modules ./node_modules
-COPY server/src ./src
-COPY server/package.json ./
-USER app
-EXPOSE 5000
-HEALTHCHECK CMD wget -qO- http://127.0.0.1:5000/health || exit 1
-CMD ["node", "src/server.js"]
-```
-
-Points de sécurité :
-
-- Image **alpine** (taille finale ~ 180 Mo) ;
-- Utilisateur **non-root** (`app`) — défense en profondeur ;
-- **HEALTHCHECK** Docker pour redémarrage auto si l'API freeze ;
-- `.dockerignore` exhaustif (pas de `.env`, pas de `node_modules` du
-  host, pas de `dossiers/`).
-
-**3. docker-compose** ([docker-compose.yml](docker-compose.yml))
-
-Deux services :
-
-- `api` : le conteneur Node (lié au `.env` du VPS, jamais commité) ;
-- `nginx` : reverse-proxy HTTPS (ports 80/443), lit
-  [infra/deploy/nginx.conf](infra/deploy/nginx.conf).
-
-**4. Nginx HTTPS + WebSocket** ([infra/deploy/nginx.conf](infra/deploy/nginx.conf))
-
-```nginx
-# Redirection 301 HTTP → HTTPS
-# Termination TLS avec certs Let's Encrypt
-# Upgrade WebSocket pour Socket.IO et LiveKit
-# Headers HSTS, X-Content-Type-Options, X-Frame-Options, Referrer-Policy
-```
-
-**5. Runbook complet** ([infra/deploy/runbook.md](infra/deploy/runbook.md))
-
-Document qui décrit pas-à-pas :
-
-- création du Droplet DigitalOcean FRA1 ;
-- durcissement OS (création d'un utilisateur `deploy`, désactivation
-  du login root, désactivation de l'auth par mot de passe SSH) ;
-- pare-feu **UFW** (seuls 22/80/443 ouverts) ;
-- **fail2ban** pour bannir les bruteforces SSH ;
-- installation Docker + Compose ;
-- émission du certificat **Let's Encrypt** via certbot
-  (renouvellement auto par timer systemd) ;
-- premier déploiement (`git pull && docker compose up -d`) ;
-- procédure de **mise à jour** régulière ;
-- politique de **sauvegarde** (Convex géré + logs + `.env` dans
-  Bitwarden chiffré) ;
-- surveillance (healthcheck Docker + UptimeRobot) ;
-- procédure de **rollback** (`git checkout <SHA> && rebuild`).
-
-**6. Maintenance (CP11)**
-
-Le runbook + la CI assurent :
-
-- mise à jour reproductible (1 commande) ;
-- **traçabilité** complète (git log + CI run + logs Pino) ;
-- **recovery** documenté (rollback, restore `.env`).
-
-### Résultats
-
-- **Image Docker** buildable en local et en CI.
-- **Runbook validé** : un junior pourrait redéployer VisiConnect en
-  ~ 45 minutes en suivant le document.
-- **Empreinte mémoire** du conteneur : ~ 90 Mo en idle (mesuré
-  localement).
-
-### Difficultés rencontrées et solutions
-
-| Difficulté                                                               | Solution apportée                                                                                                                                                                         |
-| ------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Le webhook Stripe nécessite une URL publique HTTPS, impossible en local. | Documentation dans le runbook : utiliser `stripe listen --forward-to localhost:5000` pendant le dev, puis bascule directe vers `https://api.visioconnect.pro/api/stripe/webhook` en prod. |
-| Premier `docker build` faisait ~ 900 Mo (image avec devDependencies).    | Multi-stage `deps` → `runtime` + `npm install --omit=dev` → image finale ~ 180 Mo.                                                                                                        |
-| Le user non-root cassait l'écriture des logs dans `/app/logs`.           | Suppression de l'écriture fichier (Pino sortie stdout uniquement, capturée par `docker logs`).                                                                                            |
-
-### Apports personnels / bilan
-
-J'ai mesuré la **valeur d'un runbook écrit en clair** : il m'est arrivé
-de devoir redéployer après un mois sans toucher au serveur, et le
-document a remplacé toute mémoire perdue. Le réflexe « ce que je sais
-faire aujourd'hui, je l'écris dans le runbook tout de suite » est
-acquis.
-
----
-
-# 6. Annexes
-
-## A.1 — Lien vers le code source
-
-- **GitHub** : <https://github.com/AidoTokihisa11/visiconnect>
-- **Branche démontrant la conformité examen** : `chore/exam-hardening`
-- **Site en production** : <https://visioconnect.pro>
-
-## A.2 — Documents joints (consultables dans `dossiers/`)
-
-- [dossiers/00_AUDIT_INITIAL.md](dossiers/00_AUDIT_INITIAL.md) :
-  audit OWASP Top 10 — 14 findings détaillés.
-- [dossiers/01_MISE_A_NIVEAU.md](dossiers/01_MISE_A_NIVEAU.md) :
-  bilan technique de la mise à niveau (Stages A à H).
-- [infra/deploy/runbook.md](infra/deploy/runbook.md) : procédure
-  complète de déploiement et de maintenance.
-
-## A.3 — Sortie de la suite de tests
-
-```
-> visiconnect-server@2.0.0 test
-> vitest run
-
- ✓ tests/schemas.test.js          (11 tests)  6ms
- ✓ tests/livekitService.test.js   ( 5 tests) 10ms
- ✓ tests/health.test.js           ( 3 tests) 29ms
- ✓ tests/cors.test.js             ( 3 tests) 34ms
- ✓ tests/auth.test.js             ( 4 tests) 81ms
-
- Test Files  5 passed (5)
-      Tests  26 passed (26)
-```
-
-## A.4 — Matrice de couverture compétences ↔ réalisations
-
-| Compétence                                          | Réalisation principale | Réalisations secondaires |
-| --------------------------------------------------- | ---------------------- | ------------------------ |
-| CP1 — Maquetter une application                     | 1.1                    | 1.2                      |
-| CP2 — Composants front réutilisables                | 1.2                    | 1.1, 2.1                 |
-| CP3 — Interface utilisateur dynamique               | 1.1                    | 1.2                      |
-| CP4 — Composants métier en interaction avec données | 1.2                    | 2.1, 2.2                 |
-| CP5 — Composants d'accès aux données                | 2.1                    | 2.2                      |
-| CP6 — Organisation du code en couches               | 2.2                    | 2.1, 3.1                 |
-| CP7 — Composants métier serveur                     | 2.1                    | 2.2                      |
-| CP8 — Sécurité applicative                          | 2.2                    | 2.1, 3.1                 |
-| CP9 — Préparer les tests et le déploiement          | 3.1                    | 3.2                      |
-| CP10 — Déployer                                     | 3.2                    | —                        |
-| CP11 — Maintenir                                    | 3.2                    | 3.1                      |
-
-## A.5 — Glossaire
-
-| Terme     | Définition                                                                          |
-| --------- | ----------------------------------------------------------------------------------- |
-| **CDA**   | Concepteur Développeur d'Applications (titre RNCP niveau 6)                         |
-| **CP**    | Compétence Professionnelle (du référentiel REAC)                                    |
-| **AT**    | Activité-Type (regroupement de CP)                                                  |
-| **JWT**   | JSON Web Token — jeton signé porteur de l'identité                                  |
-| **OWASP** | Open Web Application Security Project — référentiel mondial de sécurité applicative |
-| **SFU**   | Selective Forwarding Unit — relais média (architecture LiveKit)                     |
-| **TLS**   | Transport Layer Security — chiffrement des connexions HTTPS                         |
-| **RGPD**  | Règlement Général sur la Protection des Données                                     |
-| **PII**   | Personally Identifiable Information (données personnelles)                          |
-
----
-
-**Fin du Dossier Professionnel.**
-
-_Document rédigé par Théo GARCES — version 1.0 du `[date]` —
-session jury du 3 juillet 2026._
+_Document rédigé par Théo GARCES — version 2.0 du `[date]` — session jury du 3 juillet 2026._
