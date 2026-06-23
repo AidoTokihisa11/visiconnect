@@ -52,7 +52,7 @@ Toutes les fonctions Vercel (`client/api/*.js`) et Netlify
 6. Réponses 503 propres si une variable d'env manque (plus de `500 internal`)
 
 Endpoints concernés :
-`livekit-token`, `send-meeting-invite`, `send-beta-code`, `beta-apply`,
+`livekit-token`, `send-meeting-invite`,
 `create-checkout-session`, `downgrade-subscription`, `confirm-subscription`,
 `ai/chat`.
 

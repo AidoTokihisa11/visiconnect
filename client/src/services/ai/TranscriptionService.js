@@ -1,6 +1,6 @@
 /**
  * TranscriptionService - Transcription Live via Web Speech API
- * 
+ *
  * 100% gratuit, côté client uniquement (Chrome/Edge/Safari)
  * Pas de serveur, pas de latence réseau
  */
@@ -82,13 +82,13 @@ class TranscriptionService {
 
     this.recognition.onerror = (event) => {
       console.error('[Transcription] Erreur:', event.error);
-      
+
       // Redémarrer automatiquement sur certaines erreurs
       if (['no-speech', 'aborted'].includes(event.error) && this.isListening) {
         setTimeout(() => this.start(), 100);
         return;
       }
-      
+
       this.callbacks.onError?.(event.error);
     };
 
@@ -107,7 +107,6 @@ class TranscriptionService {
       }
     };
 
-    console.log('[Transcription] Service initialisé avec succès');
     return true;
   }
 
@@ -137,7 +136,6 @@ class TranscriptionService {
     try {
       this.isListening = true;
       this.recognition.start();
-      console.log('[Transcription] Écoute démarrée');
       return true;
     } catch (error) {
       console.error('[Transcription] Erreur au démarrage:', error);
@@ -156,14 +154,12 @@ class TranscriptionService {
 
     this.isListening = false;
     this.continuous = false;
-    
+
     try {
       this.recognition.stop();
     } catch (e) {
       // Ignorer silencieusement
     }
-    
-    console.log('[Transcription] Écoute arrêtée');
   }
 
   /**

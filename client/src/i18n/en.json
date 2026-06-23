@@ -84,38 +84,22 @@
     "security": {
       "title": "Enterprise-grade security",
       "text": "Your communications are protected by end-to-end DTLS-SRTP encryption. GDPR compliant, no data is stored or exploited.",
-      "items": [
-        "DTLS-SRTP encryption",
-        "100% GDPR compliant",
-        "Zero data storage"
-      ]
+      "items": ["DTLS-SRTP encryption", "100% GDPR compliant", "Zero data storage"]
     },
     "instant": {
       "title": "Instant launch",
       "text": "Create a meeting in 3 seconds. Share the link, participants join immediately — no download, no account required.",
-      "items": [
-        "Secure unique link",
-        "No installation needed",
-        "All devices compatible"
-      ]
+      "items": ["Secure unique link", "No installation needed", "All devices compatible"]
     },
     "collaboration": {
       "title": "Real-time collaboration",
       "text": "Instant screen sharing, interactive whiteboard, and built-in chat. All your productivity tools unified in one interface.",
-      "items": [
-        "HD screen sharing",
-        "Collaborative whiteboard",
-        "Real-time chat"
-      ]
+      "items": ["HD screen sharing", "Collaborative whiteboard", "Real-time chat"]
     },
     "meetings": {
       "title": "Instant Meetings",
       "text": "Start in seconds with a link. Guests don't need to download or install anything.",
-      "items": [
-        "1-click links",
-        "No account required",
-        "Mobile compatible"
-      ]
+      "items": ["1-click links", "No account required", "Mobile compatible"]
     }
   },
   "features": {
@@ -450,7 +434,7 @@
   "statValue4": "♥",
   "statLabel4": "Made with passion",
   "copyrightText": "© 2024 VisioConnect. Developed with ♥ by Théo Garcès.",
-  "developmentStatus": "Platform in development - Beta version",
+  "developmentStatus": "Platform in development - production",
   "heroTitle": "Video Conferencing",
   "heroSubtitle": "Simple & Effective",
   "heroDescription": "VisioConnect - Video conferencing platform developed by Théo Garcès. Simple and effective solution for your online meetings, currently tested by a small team of 3 people. Modern interface, reliable technology.",
@@ -865,7 +849,7 @@
   "subscribe": "Subscribe",
   "comingSoonFeature": "Coming soon",
   "inDevelopment": "In development",
-  "betaVersion": "Beta version",
+  "releaseVersion": "v1.0",
   "underConstruction": "Under construction",
   "cookiesPageTitle": "Cookie Policy",
   "whatAreCookies": "What is a cookie?",
@@ -893,9 +877,9 @@
   "advancedFeatures": "Advanced features",
   "troubleshooting": "Troubleshooting",
   "tips": "Tips and tricks",
-  "personalDescription": "Hi! I'm Théo, I'm 25 and I've been developing VisioConnect since July 2023. It's my video conferencing platform made with React and Node.js. Still in closed beta but it's progressing well thanks to feedback from my testers!",
+  "personalDescription": "Hi! I'm Théo, I'm 25 and I've been developing VisioConnect since July 2023. It's my video conferencing platform made with React and Node.js. The project has been live since 2024.",
   "keyStats": {
-    "teams": "Beta Teams",
+    "teams": "Pro Teams",
     "native": "Native App",
     "latency": "Avg Latency",
     "uptime": "Uptime"
@@ -949,7 +933,7 @@
       "p3": "Today, VisioConnect helps thousands of businesses, schools, and families stay close, no matter the distance.",
       "paragraph1": "VisioConnect was born from a simple observation: video communication has become essential, but existing tools were either too complex, unsecure, or too expensive.",
       "paragraph2": "We gathered a team of passionate engineers and designers to build a platform that puts the user first. After months of intensive development, we launched a solution that combines the highest video quality with a dead-simple interface.",
-      "paragraph3": "Today, VisioConnect is available in beta across 6 countries, welcoming its first early adopters. We are building the communication tool of tomorrow, together, one step at a time."
+      "paragraph3": "Today, VisioConnect is available in 6 countries, welcoming its first early adopters. We are building the communication tool of tomorrow, together, one step at a time."
     },
     "values": {
       "title": "Our Values",
@@ -1915,7 +1899,7 @@
     "actions": {
       "createMeeting": "Create a meeting",
       "join": "Join",
-      "joinPlaceholder": "Room ID or beta code (VC-XXXX-XXXX)"
+      "joinPlaceholder": "Room ID (VC-XXXX-XXXX)"
     },
     "tabs": {
       "profile": "My Profile",
@@ -2314,303 +2298,6 @@
     "backHome": "Return to home",
     "accessDenied": "Access denied",
     "accessDeniedDesc": "You must be signed in or invited to join this private room.",
-    "beta": {
-      "title": "Private Beta Access",
-      "subtitle": "Welcome to VisioConnect. Please enter your unique code.",
-      "keyLabel": "Authorization key",
-      "keyPlaceholder": "Enter the code...",
-      "invalidKey": "This access code is invalid.",
-      "pseudoLabel": "Your nickname",
-      "pseudoPlaceholder": "Ex: John Doe",
-      "submit": "Unlock and Join",
-      "e2ee": "Protected by end-to-end encryption (E2EE)"
-    },
-    "betaPage": {
-      "nav": {
-        "testers": "Testers",
-        "changelog": "Changelog",
-        "wave2": "Wave 2",
-        "criteria": "Criteria",
-        "apply": "Apply",
-        "openSpots": "15 spots open"
-      },
-      "hero": {
-        "eyebrow": "Honest report · Beta Wave 1 — Wave 2 open",
-        "h1Line1": "9 testers.",
-        "h1Line2": "Nothing hidden.",
-        "h1Line3": "All documented.",
-        "bullet1Bold": "3 critical bugs fixed",
-        "bullet1Rest": " — auth, icons, onboarding",
-        "bullet2Bold": "4 fixes in progress",
-        "bullet2Rest": " — chat, bg blur, whiteboard, AI full mode",
-        "bullet3Bold": "10+ improvements planned",
-        "bullet3Rest": " for Wave 2 — all from tester feedback",
-        "p": "Every piece of feedback is here, word for word, with what we did or what we're building. Wave 2 opens 15 spots to go even further.",
-        "ctaPrimary": "Join Wave 2",
-        "ctaSecondary": "View full changelog"
-      },
-      "panel": {
-        "title": "Beta Report · Wave 1",
-        "badge": "Closed",
-        "bar1Label": "Active testers",
-        "bar1Value": "9 / 10",
-        "bar2Label": "Critical bugs fixed",
-        "bar2Value": "3 / 3",
-        "bar3Label": "Satisfaction",
-        "bar3Value": "4 / 5",
-        "bar4Label": "Detailed reports",
-        "bar4Value": "3 reports",
-        "cell1n": "9",
-        "cell1l": "testers",
-        "cell2n": "3",
-        "cell2l": "fixed",
-        "cell3n": "15",
-        "cell3l": "W2 spots",
-        "cell4n": "4★",
-        "cell4l": "satisfaction"
-      },
-      "stats": {
-        "s1l": "Wave 1 testers",
-        "s2l": "detailed reports received",
-        "s3l": "Wave 2 spots",
-        "s4l": "total issues reported"
-      },
-      "testers": {
-        "sectionTitle": "The 3 profiles who tested everything",
-        "tA": {
-          "role": "Designer / Developer",
-          "env": "macOS · Chrome",
-          "positive": "Visually consistent UI, fast loading",
-          "finds": [
-            "Auth: random disconnections every 20–30 min",
-            "\"Join meeting\" button misunderstood",
-            "Screen sharing: no visual feedback",
-            "Whiteboard: 100% zoom greyed out, transparent SVG",
-            "AI wording too vague (\"Ask me your questions\")",
-            "Poll: anonymous vote, results, close button missing"
-          ]
-        },
-        "tB": {
-          "role": "Business user",
-          "env": "Windows 10 · Chrome 147",
-          "positive": "\"Navigation is fluid and pleasant, loads fast, looks professional\"",
-          "finds": [
-            "Identical icons: AI video ≠ AI features",
-            "Camera & mic cut when switching windows",
-            "Background blur: gauge inert, won't deactivate",
-            "Join/create button missing from dashboard",
-            "Recording captures voice even with mic off"
-          ]
-        },
-        "tC": {
-          "role": "Technical profile",
-          "env": "Windows 10 · Old webcam",
-          "positive": "\"It's readable, pleasant, looks professional. Good font choice\"",
-          "finds": [
-            "Whiteboard disappears after a few seconds",
-            "AI transcription: not working",
-            "AI crashes in \"Full\" mode",
-            "Chat hidden behind tab bar + closes after send",
-            "Subscription status not found after payment"
-          ]
-        }
-      },
-      "founder": {
-        "label": "What this beta taught me",
-        "text": "3 testers with very different profiles uncovered problems I no longer saw — the disconnections I hadn't reproduced, the icons I no longer questioned, the hidden chat I always tested on a large screen. Every piece of feedback forced me to look at the product as a real user. That's exactly why the beta exists, and that's why Wave 2 will be better.",
-        "by": "Théo G. · Founder VisiConnect · May 2026"
-      },
-      "changelog": {
-        "sideTitle": "Log · Wave 1",
-        "eyebrow": "Honest changelog · Beta Wave 1",
-        "titleLine1": "Your exact words.",
-        "titleLine2": "Our concrete actions.",
-        "sub": "10 issues reported. 3 fixed. 4 in progress. 3 planned for Wave 2. No paraphrasing — quotes are verbatim.",
-        "g1Status": "Fixed",
-        "g2Status": "In progress",
-        "g3Status": "Planned · Wave 2",
-        "badgeFixed": "Fixed ✓",
-        "badgeInProg": "In progress",
-        "badgePrio1": "Priority 1",
-        "badgePrio2": "Priority 2",
-        "badgePlanned": "Planned",
-        "e1Date": "May 2026 · Tester A — macOS, Chrome",
-        "e1Title": "Unstable auth — random disconnections mid-meeting",
-        "e1Desc": "Clerk v2 token silently expiring every 20–30 min. Root cause identified in 12h, Clerk Core 3 migration deployed in 48h. Zero unsolicited disconnections since deployment.",
-        "e1Quote": "I was getting disconnected for no reason mid-meeting — not usable in that state.",
-        "e2Date": "May 2026 · Testers B & C — Windows 10, Chrome",
-        "e2Title": "Identical icons for two different actions — control bar redesigned",
-        "e2Desc": "\"Enable AI video\" and \"AI features\" shared the same icon. Icons differentiated, hover labels added, visual hierarchy clarified across the entire bar.",
-        "e2Quote": "The \"Enable AI video\" and \"AI features\" buttons have the same icon even though they do different things. That's confusing.",
-        "e3Date": "May 2026 · Tester A — macOS, Chrome",
-        "e3Title": "Confusing onboarding — CTA and invitation emails redesigned",
-        "e3Desc": "\"Join meeting\" didn't reflect the actual action (account creation required). Renamed with explanatory text. Button duplicated mid and bottom of emails to maximise click-through.",
-        "e3Quote": "Connection issues — I didn't understand the entry flow. The button didn't match what I expected.",
-        "e4Date": "In progress · Testers B & C",
-        "e4Title": "Chat & AI assistant hidden by tab bar — closes after each send",
-        "e4Desc": "Input area partially hidden by browser bar. Chat closing and deactivating automatically after each message sent. Dynamic height fix + state persistence in progress.",
-        "e4Quote": "The input window is partially hidden. Once the message is sent, the chat closes by itself — you have to reopen it every time.",
-        "e5Date": "In progress · Testers B & C",
-        "e5Title": "Background blur: gauge has no effect, won't deactivate",
-        "e5Desc": "Intensity gauge visually present but no actual effect. Blur remaining active even after deactivating from the panel. Video pipeline and state logic fix in progress.",
-        "e5Quote": "The background blur intensity gauge does nothing. It doesn't deactivate even when the feature is turned off in the dashboard.",
-        "e6Date": "In progress · Tester C",
-        "e6Title": "Whiteboard disappears after a few seconds",
-        "e6Desc": "Whiteboard displaying correctly then closing automatically after a few seconds. State management bug linked to component lifecycle identified. Fix in progress, stable reproduction.",
-        "e6Quote": "The whiteboard shows up fine but disappears after a few seconds. I didn't get to use it.",
-        "e7Date": "In progress · Tester C",
-        "e7Title": "AI \"Full\" mode crashes — Performance and Balanced modes stable",
-        "e7Desc": "First two modes activate normally. Full mode causes AI worker crash (WebWorker memory overflow identified). Memory management patch in progress, shipping with Wave 2.",
-        "e7Quote": "Performance and balanced modes work fine but it crashes when I switch to full mode.",
-        "e8Date": "Priority 1 · Wave 2 · Requested by all 3 testers",
-        "e8Title": "AI transcription missing — full meeting copilot",
-        "e8Desc": "Reported by all 3 testers as a blocker for adoption. Transcription wasn't working. AI assistant upgraded from \"Ask me your questions…\" (too vague) to a real copilot: summarise the meeting, generate structured minutes, answer context questions, translate live.",
-        "e8Quote": "No summary, no notes — hard to convince my team to adopt it. And \"Ask me your questions\" is too vague, I don't know what to ask.",
-        "e9Date": "Priority 2 · Wave 2 · 3 cumulative reports",
-        "e9Title": "Whiteboard v2 — floating camera, PDF export, zoom & opacity bugs",
-        "e9Desc": "100% zoom greyed out, exported SVG transparent, host invisible during whiteboard. Wave 2: draggable floating camera (drag & drop, 4 presets), PDF export, zoom reset, opacity gauge repositioned.",
-        "e9Quote": "When the whiteboard is open you can't see the host anymore. Zoom greyed, SVG unusable. The opacity gauge is confused with brush size.",
-        "e10Date": "Planned · Wave 2 · Tester A",
-        "e10Title": "Poll: anonymous voting + results control + close button",
-        "e10Desc": "\"Interesting feature but incomplete.\" Three missing options flagged as key differentiators between amateur and professional tool.",
-        "e10Quote": "Anonymous vote ON/OFF, show results ON/OFF, close the poll — that's baseline expected, otherwise it feels like an amateur tool."
-      },
-      "compare": {
-        "eyebrow": "Before / After",
-        "title": "What existed. What's coming.",
-        "sub": "Every row in this table comes from a tester report.",
-        "colFeat": "Feature",
-        "colV1": "Wave 1",
-        "colV2": "Wave 2",
-        "feat1": "Stable auth (zero disconnections)",
-        "feat2": "Unique icons per action",
-        "feat3": "Clear onboarding (CTA + emails)",
-        "feat4": "Mic / camera / screen share",
-        "feat5": "Visual screen share preview",
-        "feat6": "Stable chat (no longer closes)",
-        "feat7": "Breakout rooms",
-        "feat8": "Whiteboard",
-        "feat9": "Floating whiteboard camera",
-        "feat10": "Whiteboard PDF export",
-        "feat11": "Real-time AI transcription",
-        "feat12": "Copilot: auto summary & minutes",
-        "feat13": "Audio test + mic VU-meter",
-        "feat14": "Full poll (anonymous, results)",
-        "feat15": "Subscription status in profile"
-      },
-      "features": {
-        "eyebrow": "Wave 2",
-        "title": "Built from your feedback",
-        "sub": "Every feature below has a direct origin in Wave 1 reports. No invented roadmap — real problems, real solutions.",
-        "f1Tag": "Priority 1 · AI",
-        "f1Title": "Meeting copilot — transcription, summary, translation",
-        "f1Desc": "Requested by all 3 testers. The assistant goes from \"Ask me your questions…\" to a real contextual copilot: summarise the meeting, generate exportable minutes, translate live, answer questions about the session content.",
-        "f1Item1": "Real-time transcription",
-        "f1Item2": "Exportable structured minutes",
-        "f1Item3": "Live translation",
-        "f1Item4": "Export to Notion / Markdown / PDF",
-        "f1Origin": "Missing transcription + vague AI wording",
-        "f2Tag": "Whiteboard",
-        "f2Title": "Floating camera during whiteboard",
-        "f2Desc": "The host disappears as soon as the whiteboard opens. A drag & drop video bubble maintains the human connection without obscuring the content.",
-        "f2Item1": "Repositionable video bubble",
-        "f2Item2": "4 preset positions",
-        "f2Item3": "Adjustable size",
-        "f2Origin": "Tester A — \"you can't see the host anymore\"",
-        "f3Tag": "Screen share",
-        "f3Title": "Preview + confirmation badge for screen share",
-        "f3Desc": "No visual feedback confirmed the screen was being shared. Animated thumbnail preview + \"You are sharing your screen\" badge visible on both sides.",
-        "f3Item1": "Real-time thumbnail preview",
-        "f3Item2": "Sharer confirmation badge",
-        "f3Item3": "Participant-side indicator",
-        "f3Origin": "Tester A — Mac, Chrome (screen share with no feedback)",
-        "f4Tag": "Audio",
-        "f4Title": "Audio test + real-time mic VU-meter",
-        "f4Desc": "Exact quote: \"nothing to make sure my mic is sending a signal\". Animated VU-meter + output test (played phrase) to validate mic and speakers before each meeting.",
-        "f4Item1": "Animated mic level VU-meter",
-        "f4Item2": "Speaker / headset test",
-        "f4Item3": "Validation before joining",
-        "f4Origin": "Tester C — \"I have nothing to check it's working\"",
-        "f5Tag": "Poll",
-        "f5Title": "Full poll — anonymous, results, close",
-        "f5Desc": "\"Interesting feature but incomplete.\" The 3 missing options that make the difference between an amateur and professional tool.",
-        "f5Item1": "Anonymous vote ON/OFF",
-        "f5Item2": "Show/hide results",
-        "f5Item3": "Close poll button",
-        "f5Origin": "Tester A — \"otherwise it feels amateur\"",
-        "f6Tag": "Profile",
-        "f6Title": "Visible subscription dashboard",
-        "f6Desc": "After payment, impossible to confirm whether the subscription was active. A dedicated tab in the profile clearly shows the plan, renewal date and history.",
-        "f6Item1": "Plan status visible (Free / Pro)",
-        "f6Item2": "Renewal date",
-        "f6Item3": "Payment history",
-        "f6Origin": "Tester C — \"I'm left in doubt about my subscription\""
-      },
-      "criteria": {
-        "eyebrow": "Selection",
-        "titleLine1": "What I'm looking for",
-        "titleLine2": "in Wave 2",
-        "sub": "15 spots. Honest criteria, not a lottery. If you tick these three boxes, your application has every chance.",
-        "duration": "Estimated duration: 4 to 6 weeks",
-        "c1n": "01",
-        "c1Title": "Regular commitment",
-        "c1Desc": "Coming back week after week. Using the product even when imperfect. Wave 1 showed that the most useful feedback came from testers who genuinely used the tool, not those who opened it once.",
-        "c2n": "02",
-        "c2Title": "Structured feedback",
-        "c2Desc": "No need to be a developer. But reproducing the bug, describing the context, giving your environment (OS, browser, version) — that's what Wave 1 testers did, and it's what allowed bugs to be fixed in 48h.",
-        "c3n": "03",
-        "c3Title": "Real use case",
-        "c3Desc": "Startup, agency, freelancer, teacher — a concrete context. The 3 Wave 1 testers had very different profiles: that's exactly what made their feedback complementary and valuable."
-      },
-      "form": {
-        "eyebrow": "Application open",
-        "title": "Join Wave 2",
-        "sub": "Personally reviewed · Response within 72h · 15 spots",
-        "formTitle": "Application form",
-        "formSub": "Wave 2 · selection in progress",
-        "slotLabel": "spots",
-        "firstNameLbl": "First name",
-        "firstNamePh": "Your first name",
-        "lastNameLbl": "Last name",
-        "lastNamePh": "Your last name",
-        "emailLbl": "Email",
-        "profileLbl": "Profile",
-        "profilePh": "Select…",
-        "profileDev": "Developer",
-        "profileDesigner": "UX/UI Designer",
-        "profilePM": "Product Manager",
-        "profileFounder": "Founder",
-        "profileOther": "Other",
-        "usageLbl": "Main use case",
-        "usagePh": "Select…",
-        "usageTeam": "Team meetings",
-        "usageClient": "Client calls",
-        "usageEdu": "Teaching / training",
-        "usageDev": "Dev collaboration",
-        "usageOther": "Other",
-        "toolsLbl": "Tools used daily",
-        "motivationLbl": "Why join Wave 2?",
-        "motivationPh": "Describe your context, your use case and what you would bring as a tester. Be specific — OS, browser, real use case…",
-        "motivationHint": "Minimum 40 characters. Concrete context appreciated.",
-        "privacy": "Confidential data — never sold.",
-        "submit": "Send my application",
-        "sending": "Sending…",
-        "required": "Required",
-        "emailInvalid": "Invalid email",
-        "minChars": "Minimum 40 characters",
-        "successTitle": "Application sent!",
-        "successP": "Thank you. I personally read every application\nand will get back to you within 72h.",
-        "backHome": "Back to home",
-        "serverError": "Server error",
-        "genericError": "An error occurred.",
-        "otherPh": "Please specify…"
-      },
-      "footer": {
-        "privacy": "Privacy",
-        "terms": "Terms",
-        "contact": "Contact"
-      }
-    },
     "controls": {
       "leave": "Leave",
       "leaveAria": "Leave the meeting",

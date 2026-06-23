@@ -83,8 +83,6 @@ const AccountPageSimple = () => {
   const [showWebcamModal, setShowWebcamModal] = useState(false);
 
   const handleQuickCreate = () => {
-    // Generate a short room id and route to the actual meeting room.
-    // ("/room/:id" is the beta-promo page — "/meeting/:id" is the live room.)
     const id = Math.random().toString(36).substring(2, 9);
     navigate(`/meeting/${id}`);
   };
@@ -103,8 +101,6 @@ const AccountPageSimple = () => {
 
   // ----------------------------------------------------------------------
   // B4 / US-PROF-01 — Editable email via Clerk's emailAddresses API.
-  // Beta-tester reported the field was unclickable; root cause was the
-  // `disabled` attribute. We now allow add-and-verify flow.
   // ----------------------------------------------------------------------
   const [emailDraft, setEmailDraft] = useState('');
   const [emailVerificationId, setEmailVerificationId] = useState(null);

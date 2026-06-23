@@ -85,7 +85,7 @@ Chaque composant respecte le principe de responsabilité unique et expose une AP
 
 **Composants métier et dynamisme**
 
-J'ai intégré **Framer Motion 11** pour les transitions et micro-interactions : parallaxe au scroll, fade-in au viewport, animations de hover sur les cartes tarifaires. Pour maintenir les performances, j'ai mis en place le **code-splitting de routes** avec `React.lazy` et `Suspense` ainsi que le lazy-loading des images. Le bundle JavaScript initial a été réduit de ~800 ko à ~280 ko gzip, maintenant le LCP sous 2,5 s en 4G simulée (vérifié avec Lighthouse, score ≥ 90).
+J'ai intégré **Framer Motion 10** pour les transitions et micro-interactions : parallaxe au scroll, fade-in au viewport, animations de hover sur les cartes tarifaires. Pour maintenir les performances, j'ai mis en place le **code-splitting de routes** avec `React.lazy` et `Suspense` ainsi que le lazy-loading des images. Le bundle JavaScript initial a été réduit de ~800 ko à ~280 ko gzip, maintenant le LCP sous 2,5 s en 4G simulée (vérifié avec Lighthouse, score ≥ 90).
 
 **Internationalisation**
 
@@ -106,7 +106,7 @@ Difficulté rencontrée : les traductions catalan présentaient des incohérence
 **2. Précisez les moyens utilisés :**
 
 - Outils : VS Code, GitHub, Figma, Lighthouse
-- Technologies : React 18, Vite 5, Tailwind CSS 3, Framer Motion 11, i18next 25, ESLint 9, Prettier 3, Husky, lint-staged
+- Technologies : React 18, Vite 5, Tailwind CSS 3, Framer Motion 10, i18next 25, ESLint 9, Prettier 3, Husky, lint-staged
 - Méthodologies : Conventional Commits, Git flow simplifié
 
 ---
@@ -181,13 +181,13 @@ Pour piloter l'ensemble du développement en solo, j'ai utilisé un **tableau Ka
 **2. Précisez les moyens utilisés :**
 
 - Outils : VS Code, GitHub, GitHub Projects
-- Technologies : React 18, Framer Motion 11, Tailwind CSS, styled-components, Convex, Zod, @clerk/react
+- Technologies : React 18, Framer Motion 10, Tailwind CSS, styled-components, Convex, Zod, @clerk/react
 
 ---
 
 **3. Avec qui avez-vous travaillé ?**
 
-Travail réalisé en autonomie. Retours fonctionnels recueillis auprès de 12 bêta-testeurs lors de la campagne bêta (mars 2025).
+Travail réalisé en autonomie.
 
 ---
 
@@ -202,8 +202,6 @@ Travail réalisé en autonomie. Retours fonctionnels recueillis auprès de 12 b�
 ---
 
 **5. Informations complémentaires (facultatif)**
-
-Taux de complétion de la modale mesuré lors de la bêta : 91 % une fois la première étape démarrée.
 
 ---
 

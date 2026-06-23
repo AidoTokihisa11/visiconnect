@@ -1,8 +1,7 @@
-
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import { useTranslation } from '../hooks/useTranslation';
@@ -19,25 +18,43 @@ import TestimonialCard from '../components/home/TestimonialCard';
 import PricingCard from '../components/home/PricingCard';
 import HeroConferenceDemo from '../components/home/HeroConferenceDemo';
 
-import { 
-  Video, Users, Shield, Zap, Globe, Check, 
-  Menu, X, Play, Code, Heart, Calendar, 
-  Mail, Github, Linkedin, Eye, Server,
-  ChevronLeft, ChevronRight, BarChart, Smartphone, Laptop
+import {
+  Video,
+  Users,
+  Shield,
+  Zap,
+  Globe,
+  Check,
+  Menu,
+  X,
+  Play,
+  Code,
+  Heart,
+  Calendar,
+  Mail,
+  Github,
+  Linkedin,
+  Eye,
+  Server,
+  ChevronLeft,
+  ChevronRight,
+  BarChart,
+  Smartphone,
+  Laptop,
 } from 'lucide-react';
 
 /* --- DESIGN SYSTEM CONSTANTS --- */
 const COLORS = {
-  primary: 'hsl(var(--primary))',    
+  primary: 'hsl(var(--primary))',
   secondary: 'hsl(var(--muted-foreground))',
-  dark: 'hsl(var(--foreground))',       
-  text: 'hsl(var(--foreground))',       
+  dark: 'hsl(var(--foreground))',
+  text: 'hsl(var(--foreground))',
   lightText: 'hsl(var(--muted-foreground))',
-  background: 'hsl(var(--background))', 
+  background: 'hsl(var(--background))',
   white: 'hsl(var(--card))',
-  altBackground: 'hsl(var(--muted))',  // visually distinct from background
-  border: 'hsl(var(--border))',     
-  success: 'hsl(var(--primary))',    
+  altBackground: 'hsl(var(--muted))', // visually distinct from background
+  border: 'hsl(var(--border))',
+  success: 'hsl(var(--primary))',
 };
 
 const SHADOWS = {
@@ -53,11 +70,17 @@ const SHADOWS = {
 const PageContainer = styled.div`
   background-color: ${COLORS.background};
   color: ${COLORS.text};
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family:
+    'Inter',
+    system-ui,
+    -apple-system,
+    sans-serif;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 `;
 
 // --- HEADER ---
@@ -153,7 +176,9 @@ const Button = styled(Link)`
   gap: 0.5rem;
   cursor: pointer;
 
-  ${props => props.$variant === 'primary' ? `
+  ${(props) =>
+    props.$variant === 'primary'
+      ? `
     background-color: ${COLORS.primary};
     color: ${COLORS.white};
     border: 1px solid ${COLORS.primary};
@@ -161,7 +186,9 @@ const Button = styled(Link)`
       background-color: #1d4ed8; 
       border-color: #1d4ed8;
     }
-  ` : props.$variant === 'ghost' ? `
+  `
+      : props.$variant === 'ghost'
+        ? `
     background-color: ${COLORS.white};
     color: ${COLORS.secondary};
     border: 1px solid ${COLORS.border};
@@ -170,7 +197,8 @@ const Button = styled(Link)`
       border-color: #cbd5e1;
       color: ${COLORS.dark};
     }
-  ` : `
+  `
+        : `
     background-color: transparent;
     color: ${COLORS.secondary};
     &:hover {
@@ -185,7 +213,7 @@ const MobileMenuButton = styled.button`
   border: none;
   cursor: pointer;
   color: ${COLORS.secondary};
-  
+
   @media (max-width: 768px) {
     display: flex;
   }
@@ -196,7 +224,7 @@ const HeroSection = styled.section`
   background-color: ${COLORS.white};
   padding: 5rem 1.5rem;
   border-bottom: 1px solid ${COLORS.border};
-  
+
   @media (max-width: 640px) {
     padding: 3rem 1rem;
   }
@@ -215,7 +243,7 @@ const HeroContainer = styled.div`
     text-align: center;
     gap: 3rem;
   }
-  
+
   @media (max-width: 640px) {
     gap: 2rem;
   }
@@ -225,7 +253,7 @@ const HeroContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  
+
   @media (max-width: 900px) {
     align-items: center;
   }
@@ -251,7 +279,7 @@ const HeroHeadline = styled.h1`
     font-size: 2.5rem;
     white-space: normal;
   }
-  
+
   @media (max-width: 480px) {
     font-size: 2rem;
     white-space: normal;
@@ -304,13 +332,13 @@ const LogosGrid = styled.div`
   gap: 3rem;
   flex-wrap: wrap;
   opacity: 0.6;
-  
+
   svg {
     height: 32px;
     width: auto;
     filter: grayscale(100%);
     transition: all 0.2s;
-    
+
     &:hover {
       filter: grayscale(0%);
       opacity: 1;
@@ -343,7 +371,7 @@ const CounterBadge = styled(motion.div)`
   border-radius: 8px;
   text-align: center;
   white-space: nowrap;
-  
+
   .highlight {
     font-weight: 700;
     font-size: 1.25rem;
@@ -355,15 +383,22 @@ const StatItemPill = ({ icon: Icon, value, label }) => (
   <CounterBadge
     initial={{ opacity: 0, scale: 0.9 }}
     whileInView={{ opacity: 1, scale: 1 }}
-    transition={{ type: "spring", stiffness: 100 }}
+    transition={{ type: 'spring', stiffness: 100 }}
     viewport={{ once: true }}
   >
     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-      <div style={{ 
-        width: 32, height: 32, borderRadius: '50%', 
-        background: 'rgba(37, 99, 235, 0.1)', color: COLORS.primary,
-        display: 'flex', alignItems: 'center', justifyContent: 'center'
-      }}>
+      <div
+        style={{
+          width: 32,
+          height: 32,
+          borderRadius: '50%',
+          background: 'rgba(37, 99, 235, 0.1)',
+          color: COLORS.primary,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
         <Icon size={16} />
       </div>
       <div>
@@ -405,7 +440,7 @@ const FeaturesGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
-  
+
   @media (max-width: 640px) {
     grid-template-columns: 1fr;
     gap: 1.5rem;
@@ -417,7 +452,7 @@ const TestimonialsSection = styled.section`
   padding: 5rem 1.5rem;
   background-color: ${COLORS.white};
   border-bottom: 1px solid ${COLORS.border};
-  
+
   @media (max-width: 640px) {
     padding: 3rem 1rem;
   }
@@ -429,7 +464,7 @@ const TestimonialsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
-  
+
   @media (max-width: 640px) {
     grid-template-columns: 1fr;
     gap: 1.5rem;
@@ -510,7 +545,7 @@ const AboutStatsGrid = styled.div`
   grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
   margin-top: 2rem;
-  
+
   @media (max-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -582,21 +617,50 @@ export default function HomePageClean() {
         <HeroContainer>
           <HeroContent>
             <HeroHeadline>
-              <EditableText translationKey="hero.titleLine1" defaultValue={t('hero.titleLine1')} /><br />
-              <span><EditableText translationKey="hero.titleLine2" defaultValue={t('hero.titleLine2')} /></span>
+              <EditableText translationKey="hero.titleLine1" defaultValue={t('hero.titleLine1')} />
+              <br />
+              <span>
+                <EditableText
+                  translationKey="hero.titleLine2"
+                  defaultValue={t('hero.titleLine2')}
+                />
+              </span>
             </HeroHeadline>
             <HeroSubhead>
-              <EditableText translationKey="hero.subtitle" defaultValue={t('hero.subtitle')} type="textarea" />
+              <EditableText
+                translationKey="hero.subtitle"
+                defaultValue={t('hero.subtitle')}
+                type="textarea"
+              />
             </HeroSubhead>
             <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-              <Button to="/signup" $variant="primary" style={{ padding: '0.875rem 1.5rem', fontSize: '1.125rem' }}>
+              <Button
+                to="/signup"
+                $variant="primary"
+                style={{ padding: '0.875rem 1.5rem', fontSize: '1.125rem' }}
+              >
                 {t('hero.startFree')}
               </Button>
-              <Button to="/demo?join=1" style={{ padding: '0.875rem 1.5rem', fontSize: '1.125rem', backgroundColor: '#0f172a', color: 'white', border: '1px solid #0f172a', display: 'flex', alignItems: 'center' }}>
+              <Button
+                to="/demo?join=1"
+                style={{
+                  padding: '0.875rem 1.5rem',
+                  fontSize: '1.125rem',
+                  backgroundColor: '#0f172a',
+                  color: 'white',
+                  border: '1px solid #0f172a',
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
                 <Zap size={18} style={{ marginRight: '8px' }} />
                 {t('hero.testRoom')}
               </Button>
-              <Button to="/demo" $variant="ghost" style={{ padding: '0.875rem 1.5rem', fontSize: '1.125rem' }}>
+              <Button
+                to="/demo"
+                $variant="ghost"
+                style={{ padding: '0.875rem 1.5rem', fontSize: '1.125rem' }}
+              >
                 <Play size={18} style={{ marginRight: '8px' }} fill={COLORS.secondary} />
                 {t('hero.watchDemo')}
               </Button>
@@ -628,25 +692,23 @@ export default function HomePageClean() {
             viewport={{ once: true }}
           >
             <SectionTitle>{t('homeFeatures.title')}</SectionTitle>
-            <SectionSubtitle>
-                {t('homeFeatures.subtitle')}
-            </SectionSubtitle>
+            <SectionSubtitle>{t('homeFeatures.subtitle')}</SectionSubtitle>
           </motion.div>
         </SectionHeader>
 
         <FeaturesGrid>
-            {featuresData?.map((feature, index) => (
-                <FeatureCard
-                    key={index}
-                    icon={feature.icon}
-                    title={feature.title}
-                    description={feature.description}
-                    items={Array.isArray(feature.items) ? feature.items : []}
-                    iconBg={feature.iconBg}
-                    iconColor={feature.iconColor}
-                    delay={index * 0.1}
-                />
-            ))}
+          {featuresData?.map((feature, index) => (
+            <FeatureCard
+              key={index}
+              icon={feature.icon}
+              title={feature.title}
+              description={feature.description}
+              items={Array.isArray(feature.items) ? feature.items : []}
+              iconBg={feature.iconBg}
+              iconColor={feature.iconColor}
+              delay={index * 0.1}
+            />
+          ))}
         </FeaturesGrid>
       </FeaturesSection>
 
@@ -655,47 +717,43 @@ export default function HomePageClean() {
       {/* TESTIMONIALS SECTION */}
       <TestimonialsSection>
         <SectionHeader>
-            <SectionTitle>{t('testimonials.title')}</SectionTitle>
-            <SectionSubtitle>
-                {t('testimonials.subtitle')}
-            </SectionSubtitle>
+          <SectionTitle>{t('testimonials.title')}</SectionTitle>
+          <SectionSubtitle>{t('testimonials.subtitle')}</SectionSubtitle>
         </SectionHeader>
 
         <TestimonialsGrid>
-            {testimonialsData?.map((testimonial, index) => (
-                <TestimonialCard
-                    key={index}
-                    quote={testimonial.quote}
-                    author={testimonial.author}
-                    title={testimonial.title}
-                    avatar={testimonial.avatar}
-                />
-            ))}
+          {testimonialsData?.map((testimonial, index) => (
+            <TestimonialCard
+              key={index}
+              quote={testimonial.quote}
+              author={testimonial.author}
+              title={testimonial.title}
+              avatar={testimonial.avatar}
+            />
+          ))}
         </TestimonialsGrid>
       </TestimonialsSection>
 
       {/* PRICING SECTION */}
       <PricingSectionWrapper id="pricing">
         <SectionHeader>
-            <SectionTitle>{t('pricing.title')}</SectionTitle>
-            <SectionSubtitle>
-                {t('pricing.subtitle')}
-            </SectionSubtitle>
+          <SectionTitle>{t('pricing.title')}</SectionTitle>
+          <SectionSubtitle>{t('pricing.subtitle')}</SectionSubtitle>
         </SectionHeader>
 
         <PricingGrid>
-            {pricingData?.map((plan, index) => (
-                <PricingCard
-                    key={index}
-                    planName={plan.planName}
-                    price={plan.price}
-                    description={plan.description}
-                    features={Array.isArray(plan.features) ? plan.features : []}
-                    ctaText={plan.ctaText}
-                    ctaLink={plan.ctaLink}
-                    isPopular={plan.isPopular}
-                />
-            ))}
+          {pricingData?.map((plan, index) => (
+            <PricingCard
+              key={index}
+              planName={plan.planName}
+              price={plan.price}
+              description={plan.description}
+              features={Array.isArray(plan.features) ? plan.features : []}
+              ctaText={plan.ctaText}
+              ctaLink={plan.ctaLink}
+              isPopular={plan.isPopular}
+            />
+          ))}
         </PricingGrid>
       </PricingSectionWrapper>
 
@@ -703,9 +761,7 @@ export default function HomePageClean() {
       <AboutSection id="about">
         <SectionHeader>
           <SectionTitle>{t('aboutProject')}</SectionTitle>
-          <AboutText>
-            {t('projectDescription')}
-          </AboutText>
+          <AboutText>{t('projectDescription')}</AboutText>
         </SectionHeader>
 
         <AboutContent>
@@ -715,18 +771,14 @@ export default function HomePageClean() {
                 <Eye size={24} color={COLORS.primary} />
                 {t('myVision')}
               </AboutCardTitle>
-              <p style={{ color: COLORS.lightText, lineHeight: '1.6' }}>
-                {t('visionDescription')}
-              </p>
+              <p style={{ color: COLORS.lightText, lineHeight: '1.6' }}>{t('visionDescription')}</p>
             </AboutCard>
             <AboutCard>
               <AboutCardTitle>
                 <Server size={24} color={COLORS.primary} />
                 {t('technologiesUsed')}
               </AboutCardTitle>
-              <p style={{ color: COLORS.lightText, lineHeight: '1.6' }}>
-                {t('techDescription')}
-              </p>
+              <p style={{ color: COLORS.lightText, lineHeight: '1.6' }}>{t('techDescription')}</p>
             </AboutCard>
           </AboutGrid>
 
@@ -734,21 +786,29 @@ export default function HomePageClean() {
             <AboutStat>
               <Calendar size={28} color={COLORS.primary} style={{ marginBottom: '0.5rem' }} />
               <div style={{ fontWeight: '700', fontSize: '1.25rem', color: COLORS.dark }}>2024</div>
-              <div style={{ fontSize: '0.875rem', color: COLORS.lightText }}>{t('creationYear')}</div>
+              <div style={{ fontSize: '0.875rem', color: COLORS.lightText }}>
+                {t('creationYear')}
+              </div>
             </AboutStat>
             <AboutStat>
               <Code size={28} color={COLORS.primary} style={{ marginBottom: '0.5rem' }} />
-              <div style={{ fontWeight: '700', fontSize: '1.25rem', color: COLORS.dark }}>{t('philosophyValue')}</div>
+              <div style={{ fontWeight: '700', fontSize: '1.25rem', color: COLORS.dark }}>
+                {t('philosophyValue')}
+              </div>
               <div style={{ fontSize: '0.875rem', color: COLORS.lightText }}>{t('philosophy')}</div>
             </AboutStat>
             <AboutStat>
               <Heart size={28} color={COLORS.primary} style={{ marginBottom: '0.5rem' }} />
               <div style={{ fontWeight: '700', fontSize: '1.25rem', color: COLORS.dark }}>100%</div>
-              <div style={{ fontSize: '0.875rem', color: COLORS.lightText }}>{t('passionLabel')}</div>
+              <div style={{ fontSize: '0.875rem', color: COLORS.lightText }}>
+                {t('passionLabel')}
+              </div>
             </AboutStat>
             <AboutStat>
               <Globe size={28} color={COLORS.primary} style={{ marginBottom: '0.5rem' }} />
-              <div style={{ fontWeight: '700', fontSize: '1.25rem', color: COLORS.dark }}>{t('globalValue')}</div>
+              <div style={{ fontWeight: '700', fontSize: '1.25rem', color: COLORS.dark }}>
+                {t('globalValue')}
+              </div>
               <div style={{ fontSize: '0.875rem', color: COLORS.lightText }}>{t('scopeLabel')}</div>
             </AboutStat>
           </AboutStatsGrid>
@@ -759,16 +819,14 @@ export default function HomePageClean() {
       <ContactSection id="contact">
         <ContactContainer>
           <SectionTitle>{t('contactTitle')}</SectionTitle>
-          <SectionSubtitle>
-             {t('contactDescription')}
-          </SectionSubtitle>
-          
-         <ContactActions>
+          <SectionSubtitle>{t('contactDescription')}</SectionSubtitle>
+
+          <ContactActions>
             {contactLinks?.map((link, index) => (
-                <ContactLink key={index} href={link.href} target={link.target} rel={link.rel}>
-                  {link.icon && <link.icon size={24} />}
-                  <span>{link.label}</span>
-                </ContactLink>
+              <ContactLink key={index} href={link.href} target={link.target} rel={link.rel}>
+                {link.icon && <link.icon size={24} />}
+                <span>{link.label}</span>
+              </ContactLink>
             ))}
           </ContactActions>
         </ContactContainer>

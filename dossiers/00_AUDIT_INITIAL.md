@@ -61,7 +61,6 @@ Outils mobilisés : revue de code statique, recherche par expression rationnelle
 | [server/simple-server-no-db.js](server/simple-server-no-db.js#L83)         |    83 | `new Resend('re_f7CXkPZ1_FouifSQZycKkbcStAoZkGgW8')` |
 | [scripts/send-invites.tsx](scripts/send-invites.tsx#L9)                    |     9 | `new Resend('re_f7CXkPZ1_FouifSQZycKkbcStAoZkGgW8')` |
 | [client/api/send-meeting-invite.js](client/api/send-meeting-invite.js#L20) |    20 | `process.env.RESEND_API_KEY \|\| 're_f7CXkPZ1…'`     |
-| [client/api/send-beta-code.js](client/api/send-beta-code.js#L61)           |    61 | `process.env.RESEND_API_KEY \|\| 're_f7CXkPZ1…'`     |
 
 **Risque :** la clé est par construction présente dans l'historique Git public. Un attaquant peut envoyer des emails depuis `contact@visioconnect.pro` (phishing, usurpation), épuiser le quota Resend, ou consulter les logs d'envoi.
 

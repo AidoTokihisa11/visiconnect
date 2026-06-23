@@ -4,7 +4,6 @@
   "description": "Plateforme de visioconférence moderne avec authentification sécurisée",
   "main": "server/index.js",
   "scripts": {
-    "emails": "email dev --dir emails --port 3001",
     "dev:client": "cd client && npm run dev",
     "dev:server": "cd server && npm run dev",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
@@ -14,7 +13,6 @@
     "env:encrypt": "node scripts/env-crypto.js encrypt",
     "env:decrypt": "node scripts/env-crypto.js decrypt",
     "start": "npm run dev",
-    "send-invites": "tsx scripts/send-invites.tsx",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"**/*.{js,jsx,json,md}\"",

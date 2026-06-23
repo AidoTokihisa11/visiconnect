@@ -40,22 +40,6 @@ const confirmSubscriptionSchema = z.object({
   sessionId: z.string().min(1).max(120),
 });
 
-const betaApplySchema = z.object({
-  firstName: z.string().min(1).max(60),
-  lastName: z.string().min(1).max(60),
-  email: z.string().email(),
-  profile: z.enum(['developer', 'designer', 'pm', 'founder', 'other']),
-  profileCustom: z.string().max(120).optional(),
-  usage: z.enum(['team-meetings', 'client-calls', 'education', 'dev-collab', 'other']),
-  usageCustom: z.string().max(120).optional(),
-  tools: z.array(z.string()).max(20).optional(),
-  motivation: z.string().min(40).max(2000),
-});
-
-const sendBetaCodeSchema = z.object({
-  email: z.string().email(),
-});
-
 const aiChatSchema = z.object({
   messages: z
     .array(
@@ -106,8 +90,6 @@ module.exports = {
     checkout: checkoutSchema,
     downgrade: downgradeSchema,
     confirmSubscription: confirmSubscriptionSchema,
-    betaApply: betaApplySchema,
-    sendBetaCode: sendBetaCodeSchema,
     aiChat: aiChatSchema,
   },
 };

@@ -2,11 +2,11 @@ import { useCallback, useMemo } from 'react';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 
-export const useChat = (roomId, user, _socket) => {
+export const useChat = (roomId, user) => {
   // useQuery suspends on loading — no try/catch wrapper needed
   const rawMessages = useQuery(
     api.messages.getByMeetingId,
-    roomId ? { meetingId: roomId } : 'skip',
+    roomId ? { meetingId: roomId } : 'skip'
   );
   const sendMessageMutation = useMutation(api.messages.send);
 
@@ -15,7 +15,7 @@ export const useChat = (roomId, user, _socket) => {
 
   const messages = useMemo(() => {
     if (!Array.isArray(rawMessages)) return [];
-    return rawMessages.map(msg => ({
+    return rawMessages.map((msg) => ({
       _id: msg._id,
       roomId: msg.meetingId,
       sender: msg.senderName,
@@ -25,15 +25,18 @@ export const useChat = (roomId, user, _socket) => {
     }));
   }, [rawMessages]);
 
-  const sendMessage = useCallback(async (text) => {
-    if (!text.trim() || !user || !roomId) return;
-    await sendMessageMutation({
-      meetingId: roomId,
-      userId,
-      senderName: userName,
-      text: text.trim(),
-    });
-  }, [roomId, user, userId, userName, sendMessageMutation]);
+  const sendMessage = useCallback(
+    async (text) => {
+      if (!text.trim() || !user || !roomId) return;
+      await sendMessageMutation({
+        meetingId: roomId,
+        userId,
+        senderName: userName,
+        text: text.trim(),
+      });
+    },
+    [roomId, user, userId, userName, sendMessageMutation]
+  );
 
   return { messages, sendMessage };
 };

@@ -124,8 +124,7 @@ export const useMeeting = (maxQualityLock = true) => {
 
     const handleVisibilityChange = async () => {
       if (document.visibilityState === 'hidden') {
-        // === ONGLET CACHÉ: Stopper immédiatement caméra & micro (RGPD / vie privée) ===
-        console.log('[Privacy Guard] Onglet caché — arrêt des flux média');
+        // Onglet caché : couper immédiatement les flux (RGPD / vie privée).
 
         // Sauvegarder l'état actuel AVANT de couper
         wasEnabledBeforeHide.current = {
@@ -159,14 +158,12 @@ export const useMeeting = (maxQualityLock = true) => {
           console.warn('[Privacy Guard] Fallback track.stop() erreur:', e);
         }
       } else if (document.visibilityState === 'visible') {
-        // === ONGLET VISIBLE: Restaurer les flux si l'utilisateur ne les avait pas coupés manuellement ===
-        console.log('[Privacy Guard] Onglet visible — restauration des flux');
+        // Onglet visible : restaurer les flux si l'utilisateur ne les avait pas coupés manuellement.
         await new Promise((resolve) => setTimeout(resolve, 300));
 
         if (wasEnabledBeforeHide.current.camera && !isCameraManualMute) {
           try {
             await localParticipant.setCameraEnabled(true);
-            console.log('[Privacy Guard] Caméra restaurée');
           } catch (e) {
             console.warn('[Privacy Guard] Impossible de restaurer la caméra:', e);
           }
@@ -175,7 +172,6 @@ export const useMeeting = (maxQualityLock = true) => {
         if (wasEnabledBeforeHide.current.mic && !isMicManualMute) {
           try {
             await localParticipant.setMicrophoneEnabled(true);
-            console.log('[Privacy Guard] Micro restauré');
           } catch (e) {
             console.warn('[Privacy Guard] Impossible de restaurer le micro:', e);
           }
@@ -208,8 +204,6 @@ export const useMeeting = (maxQualityLock = true) => {
     if (!localParticipant) return;
 
     const forceStopAllMedia = () => {
-      console.log('[Privacy] Page unload - Arrêt immédiat de tous les flux média');
-
       // Méthode 1: LiveKit API
       try {
         localParticipant.setCameraEnabled(false);
@@ -272,8 +266,6 @@ export const useMeeting = (maxQualityLock = true) => {
   // Sur desktop: pré-chargement 2s après le join
   useEffect(() => {
     if (isMobile) {
-      console.log('[useMeeting] Mobile détecté: IA DÉSACTIVÉE pour éviter les freezes');
-      // L'IA est désactivée sur mobile car elle cause des freezes
       setIsAiReady(false);
       return;
     }
@@ -466,7 +458,6 @@ export const useMeeting = (maxQualityLock = true) => {
 
         let processor = activeAiProcessor;
         if (!processor) {
-          console.log('[useMeeting] Création du processeur IA...');
           processor = new AIVideoProcessor();
           setActiveAiProcessor(processor);
         }

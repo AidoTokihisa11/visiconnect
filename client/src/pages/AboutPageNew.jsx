@@ -1,24 +1,24 @@
 import React, { useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { Target, Users, Heart, Globe, Award, Shield, Building2 } from 'lucide-react';
+import { Target, Heart, Shield, Building2 } from 'lucide-react';
 import { useTranslation } from '../hooks/useTranslation';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import CallToAction from '../components/CallToAction';
 
 const COLORS = {
-  primary:    '#2563eb',
-  dark:       '#0f172a',
-  text:       '#374151',
-  secondary:  '#6b7280',
-  lightText:  '#6b7280',
+  primary: '#2563eb',
+  dark: '#0f172a',
+  text: '#374151',
+  secondary: '#6b7280',
+  lightText: '#6b7280',
   background: '#ffffff',
-  bg:         '#f8fbff',
-  white:      '#ffffff',
-  border:     '#e5e7eb',
-  softBlue:   '#eff6ff',
-  blueTint:   '#dbeafe',
-  success:    '#2563eb',
+  bg: '#f8fbff',
+  white: '#ffffff',
+  border: '#e5e7eb',
+  softBlue: '#eff6ff',
+  blueTint: '#dbeafe',
+  success: '#2563eb',
 };
 
 const floatIn = keyframes`
@@ -29,7 +29,7 @@ const floatIn = keyframes`
 const PageContainer = styled.div`
   min-height: 100vh;
   background:
-    radial-gradient(circle at top left, rgba(37,99,235,0.08), transparent 30%),
+    radial-gradient(circle at top left, rgba(37, 99, 235, 0.08), transparent 30%),
     linear-gradient(180deg, ${COLORS.bg} 0%, #ffffff 25%, #ffffff 100%);
   color: ${COLORS.dark};
   display: flex;
@@ -50,41 +50,67 @@ const HeroInner = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: minmax(0,1.2fr) minmax(280px,.8fr);
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
   gap: 3rem;
   align-items: center;
-  @media(max-width:900px){ grid-template-columns: 1fr; }
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
 `;
 const HeroContent = styled.div`
-  animation: ${floatIn} .75s cubic-bezier(.22,1,.36,1) both;
+  animation: ${floatIn} 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
 `;
 const HeroEyebrow = styled.div`
-  display: inline-flex; align-items: center; gap: .5rem;
-  padding: .45rem .85rem; border-radius: 9999px;
-  background: ${COLORS.softBlue}; border: 1px solid ${COLORS.blueTint};
-  color: ${COLORS.primary}; font-weight: 700; font-size: .82rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 9999px;
+  background: ${COLORS.softBlue};
+  border: 1px solid ${COLORS.blueTint};
+  color: ${COLORS.primary};
+  font-weight: 700;
+  font-size: 0.82rem;
   margin-bottom: 1.25rem;
 `;
 const HeroPanel = styled.div`
-  background: linear-gradient(180deg,#fff 0%,${COLORS.bg} 100%);
-  border: 1px solid ${COLORS.border}; border-radius: 20px; padding: 1.75rem;
-  box-shadow: 0 20px 50px rgba(15,23,42,.08);
-  animation: ${floatIn} .9s .15s cubic-bezier(.22,1,.36,1) both;
+  background: linear-gradient(180deg, #fff 0%, ${COLORS.bg} 100%);
+  border: 1px solid ${COLORS.border};
+  border-radius: 20px;
+  padding: 1.75rem;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
+  animation: ${floatIn} 0.9s 0.15s cubic-bezier(0.22, 1, 0.36, 1) both;
 `;
 const HeroPanelLabel = styled.div`
-  font-size: .75rem; font-weight: 800; text-transform: uppercase;
-  letter-spacing: .1em; color: ${COLORS.lightText}; margin-bottom: 1.25rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: ${COLORS.lightText};
+  margin-bottom: 1.25rem;
 `;
-const StatGrid = styled.div`display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;`;
+const StatGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+`;
 const HeroStatItem = styled.div`
-  background: #fff; border: 1px solid ${COLORS.border}; border-radius: 12px;
-  padding: 1.1rem; text-align: center;
+  background: #fff;
+  border: 1px solid ${COLORS.border};
+  border-radius: 12px;
+  padding: 1.1rem;
+  text-align: center;
 `;
 const HeroStatValue = styled.div`
-  font-size: 1.6rem; font-weight: 800; color: ${COLORS.primary}; line-height: 1;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: ${COLORS.primary};
+  line-height: 1;
 `;
 const HeroStatLabel = styled.div`
-  font-size: .76rem; color: ${COLORS.lightText}; margin-top: 4px;
+  font-size: 0.76rem;
+  color: ${COLORS.lightText};
+  margin-top: 4px;
 `;
 
 const HeroTitle = styled.h1`
@@ -199,7 +225,7 @@ const StatsGrid = styled.div`
     grid-template-columns: repeat(2, 1fr);
     gap: 3rem;
   }
-  
+
   @media (max-width: 480px) {
     grid-template-columns: 1fr;
     gap: 2.5rem;
@@ -238,68 +264,76 @@ const AboutPageNew = () => {
         <HeroSection>
           <HeroInner>
             <HeroContent>
-              <HeroEyebrow><Building2 size={14} />{t('about.eyebrow') || 'Notre histoire'}</HeroEyebrow>
+              <HeroEyebrow>
+                <Building2 size={14} />
+                {t('about.eyebrow') || 'Notre histoire'}
+              </HeroEyebrow>
               <HeroTitle>
                 {t('about.hero.title_part1')}{' '}
-                <span style={{color:COLORS.primary}}>{t('about.hero.title_part2')}</span>
+                <span style={{ color: COLORS.primary }}>{t('about.hero.title_part2')}</span>
               </HeroTitle>
               <HeroSubtitle>{t('about.hero.subtitle')}</HeroSubtitle>
             </HeroContent>
             <HeroPanel>
               <HeroPanelLabel>VisioConnect en chiffres</HeroPanelLabel>
               <StatGrid>
-                {[['30','Utilisateurs actifs'],['20','Réunions actives'],['6','Pays disponibles'],['99.5%','Disponibilité'],].map(([v,l])=>(
-                  <HeroStatItem key={l}><HeroStatValue>{v}</HeroStatValue><HeroStatLabel>{l}</HeroStatLabel></HeroStatItem>
+                {[
+                  ['30', 'Utilisateurs actifs'],
+                  ['20', 'Réunions actives'],
+                  ['6', 'Pays disponibles'],
+                  ['99.5%', 'Disponibilité'],
+                ].map(([v, l]) => (
+                  <HeroStatItem key={l}>
+                    <HeroStatValue>{v}</HeroStatValue>
+                    <HeroStatLabel>{l}</HeroStatLabel>
+                  </HeroStatItem>
                 ))}
               </StatGrid>
             </HeroPanel>
           </HeroInner>
         </HeroSection>
-
         <Section>
           <SectionTitle>{t('about.story.title')}</SectionTitle>
           <StoryContainer>
-            <TextBlock>
-              {t('about.story.paragraph1')}
-            </TextBlock>
-            <TextBlock>
-              {t('about.story.paragraph2')}
-            </TextBlock>
-            <TextBlock>
-              {t('about.story.paragraph3')}
-            </TextBlock>
+            <TextBlock>{t('about.story.paragraph1')}</TextBlock>
+            <TextBlock>{t('about.story.paragraph2')}</TextBlock>
+            <TextBlock>{t('about.story.paragraph3')}</TextBlock>
           </StoryContainer>
         </Section>
-
-        <Section style={{ backgroundColor: '#fff', borderTop: `1px solid ${COLORS.border}`, borderBottom: `1px solid ${COLORS.border}` }}>
+        <Section
+          style={{
+            backgroundColor: '#fff',
+            borderTop: `1px solid ${COLORS.border}`,
+            borderBottom: `1px solid ${COLORS.border}`,
+          }}
+        >
           <SectionTitle>{t('about.values.title')}</SectionTitle>
           <ValuesGrid>
             <ValueCard>
-              <IconBox><Target size={24} /></IconBox>
+              <IconBox>
+                <Target size={24} />
+              </IconBox>
               <ValueTitle>{t('about.values.simplicity.title')}</ValueTitle>
-              <ValueText>
-                {t('about.values.simplicity.description')}
-              </ValueText>
+              <ValueText>{t('about.values.simplicity.description')}</ValueText>
             </ValueCard>
 
             <ValueCard>
-              <IconBox><Shield size={24} /></IconBox>
+              <IconBox>
+                <Shield size={24} />
+              </IconBox>
               <ValueTitle>{t('about.values.privacy.title')}</ValueTitle>
-              <ValueText>
-                {t('about.values.privacy.description')}
-              </ValueText>
+              <ValueText>{t('about.values.privacy.description')}</ValueText>
             </ValueCard>
 
             <ValueCard>
-              <IconBox><Heart size={24} /></IconBox>
+              <IconBox>
+                <Heart size={24} />
+              </IconBox>
               <ValueTitle>{t('about.values.accessibility.title')}</ValueTitle>
-              <ValueText>
-                {t('about.values.accessibility.description')}
-              </ValueText>
+              <ValueText>{t('about.values.accessibility.description')}</ValueText>
             </ValueCard>
           </ValuesGrid>
         </Section>
-
         <StatsSection>
           <StatsGrid>
             <StatItem>
@@ -320,11 +354,12 @@ const AboutPageNew = () => {
             </StatItem>
           </StatsGrid>
         </StatsSection>
-
         <CallToAction
-            title={t('about.cta.title')}
-            description={t('about.cta.description')}
-            buttonText={t('about.cta.button')}          />      </MainContent>
+          title={t('about.cta.title')}
+          description={t('about.cta.description')}
+          buttonText={t('about.cta.button')}
+        />{' '}
+      </MainContent>
       <FooterClean />
     </PageContainer>
   );

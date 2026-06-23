@@ -29,9 +29,9 @@ export const useSafeLayout = () => {
       if ('wakeLock' in navigator) {
         try {
           wakeLock = await navigator.wakeLock.request('screen');
-          
+
           wakeLock.addEventListener('release', () => {
-            console.log('✅ Screen Wake Lock relâché');
+            // WakeLock released by the browser (e.g. tab hidden).
           });
         } catch (err) {
           console.warn(`[SafeLayout] Impossible d'activer WakeLock: ${err.message}`);

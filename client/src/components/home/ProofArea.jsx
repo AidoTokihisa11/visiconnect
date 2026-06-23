@@ -35,7 +35,8 @@ const Label = styled.div`
   justify-content: center;
   gap: 1rem;
 
-  &::before, &::after {
+  &::before,
+  &::after {
     content: '';
     height: 1px;
     width: 32px;
@@ -62,39 +63,47 @@ const LogoPlaceholder = styled.div`
   padding: 0.5rem 1rem;
   border-radius: 8px;
   transition: all 0.2s;
-  
+
   &:hover {
-    background: rgba(0,0,0,0.05);
+    background: rgba(0, 0, 0, 0.05);
   }
 `;
 
 const ProofArea = () => {
-    const { t } = useTranslation();
-    return (
-        <Section>
-            <Container>
-                <Label>{t('proofArea.label')}</Label>
-                <LogoGrid>
-                    <LogoPlaceholder>
-                        <div style={{ width: 24, height: 24, background: '#3b82f6', borderRadius: 4 }} />
-                        Beta Tester A
-                    </LogoPlaceholder>
-                    <LogoPlaceholder>
-                        <div style={{ width: 24, height: 24, background: '#ef4444', borderRadius: '50%' }} />
-                        Design Partner
-                    </LogoPlaceholder>
-                    <LogoPlaceholder>
-                        <div style={{ width: 24, height: 24, background: '#10b981', transform: 'rotate(45deg)', borderRadius: 4 }} />
-                        Early Access Corp
-                    </LogoPlaceholder>
-                    <LogoPlaceholder>
-                        <div style={{ width: 24, height: 24, background: '#f59e0b', borderRadius: 12 }} />
-                        Tech Studio
-                    </LogoPlaceholder>
-                </LogoGrid>
-            </Container>
-        </Section>
-    );
+  const { t } = useTranslation();
+  return (
+    <Section>
+      <Container>
+        <Label>{t('proofArea.label')}</Label>
+        <LogoGrid>
+          <LogoPlaceholder>
+            <div style={{ width: 24, height: 24, background: '#3b82f6', borderRadius: 4 }} />
+            Premium Client A
+          </LogoPlaceholder>
+          <LogoPlaceholder>
+            <div style={{ width: 24, height: 24, background: '#ef4444', borderRadius: '50%' }} />
+            Design Partner
+          </LogoPlaceholder>
+          <LogoPlaceholder>
+            <div
+              style={{
+                width: 24,
+                height: 24,
+                background: '#10b981',
+                transform: 'rotate(45deg)',
+                borderRadius: 4,
+              }}
+            />
+            Early Access Corp
+          </LogoPlaceholder>
+          <LogoPlaceholder>
+            <div style={{ width: 24, height: 24, background: '#f59e0b', borderRadius: 12 }} />
+            Tech Studio
+          </LogoPlaceholder>
+        </LogoGrid>
+      </Container>
+    </Section>
+  );
 };
 
 export default ProofArea;

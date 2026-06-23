@@ -39,62 +39,61 @@ let selfieSegmentation = null;
 let isReady = false;
 
 self.onmessage = async (e) => {
-    const { type, payload } = e.data;
+  const { type, payload } = e.data;
 
-    switch (type) {
-        case 'INIT':
-            await initializeAIModels();
-            break;
-        case 'REQUEST_INFERENCE':
-            // Logique future pour traiter les frames vidéo via OffscreenCanvas
-            break;
-    }
+  switch (type) {
+    case 'INIT':
+      await initializeAIModels();
+      break;
+    case 'REQUEST_INFERENCE':
+      // Logique future pour traiter les frames vidéo via OffscreenCanvas
+      break;
+  }
 };
 
 async function initializeAIModels() {
-    if (isReady) {
-        self.postMessage({ type: 'READY' });
-        return;
-    }
+  if (isReady) {
+    self.postMessage({ type: 'READY' });
+    return;
+  }
 
-    try {
-        console.log("[Worker] Démarrage du chargement et compilation WASM/WebGL...");
-        
-        // 1. Import dynamique des CDN MediaPipe (Vite Module compatible)
-        const vision = await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/vision_bundle.mjs');
-        
-        const { FaceDetector, ImageSegmenter, FilesetResolver } = vision;
+  try {
+    // 1. Import dynamique des CDN MediaPipe (Vite Module compatible)
+    const vision =
+      await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/vision_bundle.mjs');
 
-        // 2. Compilation des Wasm Resolvers
-        const visionFileset = await FilesetResolver.forVisionTasks(
-            "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm"
-        );
+    const { FaceDetector, ImageSegmenter, FilesetResolver } = vision;
 
-        // 3. Pré-chargement du Face Detector (AIVideoEngine)
-        faceDetector = await FaceDetector.createFromOptions(visionFileset, {
-            baseOptions: {
-                modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/latest/blaze_face_short_range.tflite",
-                delegate: "GPU" 
-            },
-            runningMode: "VIDEO",
-            minDetectionConfidence: 0.5
-        });
+    // 2. Compilation des Wasm Resolvers
+    const visionFileset = await FilesetResolver.forVisionTasks(
+      'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm'
+    );
 
-        // 4. Pré-chargement de la Segmentation (BackgroundBlur)
-        selfieSegmentation = await ImageSegmenter.createFromOptions(visionFileset, {
-            baseOptions: {
-                modelAssetPath: "https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_segmenter/float16/latest/selfie_segmenter.tflite",
-                delegate: "GPU"
-            },
-            runningMode: "VIDEO"
-        });
+    // 3. Pré-chargement du Face Detector (AIVideoEngine)
+    faceDetector = await FaceDetector.createFromOptions(visionFileset, {
+      baseOptions: {
+        modelAssetPath:
+          'https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/latest/blaze_face_short_range.tflite',
+        delegate: 'GPU',
+      },
+      runningMode: 'VIDEO',
+      minDetectionConfidence: 0.5,
+    });
 
-        isReady = true;
-        console.log("[Worker] Modèles compilés en VRAM avec succès !");
-        self.postMessage({ type: 'READY' });
+    // 4. Pré-chargement de la Segmentation (BackgroundBlur)
+    selfieSegmentation = await ImageSegmenter.createFromOptions(visionFileset, {
+      baseOptions: {
+        modelAssetPath:
+          'https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_segmenter/float16/latest/selfie_segmenter.tflite',
+        delegate: 'GPU',
+      },
+      runningMode: 'VIDEO',
+    });
 
-    } catch (error) {
-        console.error("[Worker] Erreur lors de l'initialisation", error);
-        self.postMessage({ type: 'ERROR', error: error.message });
-    }
+    isReady = true;
+    self.postMessage({ type: 'READY' });
+  } catch (error) {
+    console.error("[Worker] Erreur lors de l'initialisation", error);
+    self.postMessage({ type: 'ERROR', error: error.message });
+  }
 }

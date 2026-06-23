@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
-import { Check, X, ChevronDown, ChevronUp, Star, Shield, Zap } from 'lucide-react';
+import { Check, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
 import { apiFetch } from '../lib/apiClient';

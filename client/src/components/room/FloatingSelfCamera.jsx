@@ -4,14 +4,11 @@
 // Affiche une bulle vidéo (cercle) du participant local au-dessus
 // du tableau blanc afin de conserver le lien humain pendant
 // l'utilisation. Drag & drop libre, redimensionnable, masquable.
-//
-// Feedback bêta : « Lorsque le tableau blanc est utilisé, on ne
-// voit plus l'animateur — perte de lien humain. »
 // ============================================================
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import styled from 'styled-components';
 import { Track } from 'livekit-client';
-import { Eye, EyeOff, GripVertical, Maximize2, Minimize2 } from 'lucide-react';
+import { Eye, EyeOff, Maximize2, Minimize2 } from 'lucide-react';
 
 const Bubble = styled.div`
   position: absolute;
@@ -170,7 +167,9 @@ export const FloatingSelfCamera = ({
       console.warn('[FloatingSelfCamera] attach failed:', e);
     }
     return () => {
-      try { track.detach(videoEl); } catch {}
+      try {
+        track.detach(videoEl);
+      } catch {}
     };
   }, [localParticipant, isCameraEnabled, visible]);
 
@@ -185,18 +184,21 @@ export const FloatingSelfCamera = ({
     e.currentTarget.setPointerCapture?.(e.pointerId);
   }, []);
 
-  const onPointerMove = useCallback((e) => {
-    if (!dragging) return;
-    const parent = containerRef.current?.parentElement;
-    if (!parent) return;
-    const parentRect = parent.getBoundingClientRect();
-    let x = e.clientX - parentRect.left - dragState.current.offsetX;
-    let y = e.clientY - parentRect.top - dragState.current.offsetY;
-    // clamp dans la zone
-    x = Math.max(0, Math.min(parentRect.width - size, x));
-    y = Math.max(0, Math.min(parentRect.height - size, y));
-    setPos({ x, y });
-  }, [dragging, size]);
+  const onPointerMove = useCallback(
+    (e) => {
+      if (!dragging) return;
+      const parent = containerRef.current?.parentElement;
+      if (!parent) return;
+      const parentRect = parent.getBoundingClientRect();
+      let x = e.clientX - parentRect.left - dragState.current.offsetX;
+      let y = e.clientY - parentRect.top - dragState.current.offsetY;
+      // clamp dans la zone
+      x = Math.max(0, Math.min(parentRect.width - size, x));
+      y = Math.max(0, Math.min(parentRect.height - size, y));
+      setPos({ x, y });
+    },
+    [dragging, size]
+  );
 
   const onPointerUp = useCallback(() => setDragging(false), []);
 
@@ -226,7 +228,11 @@ export const FloatingSelfCamera = ({
       {isCameraEnabled ? (
         <video ref={videoRef} autoPlay playsInline muted />
       ) : (
-        <Placeholder>{label}<br/>(caméra off)</Placeholder>
+        <Placeholder>
+          {label}
+          <br />
+          (caméra off)
+        </Placeholder>
       )}
 
       <Controls onPointerDown={(e) => e.stopPropagation()}>
@@ -237,11 +243,7 @@ export const FloatingSelfCamera = ({
         >
           {size === SIZES[SIZES.length - 1] ? <Minimize2 size={12} /> : <Maximize2 size={12} />}
         </button>
-        <button
-          type="button"
-          title="Masquer la mini caméra"
-          onClick={() => setVisible(false)}
-        >
+        <button type="button" title="Masquer la mini caméra" onClick={() => setVisible(false)}>
           <EyeOff size={12} />
         </button>
       </Controls>

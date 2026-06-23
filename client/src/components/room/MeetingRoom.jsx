@@ -1,4 +1,3 @@
-// This component orchestrates the Room Logic
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -45,7 +44,7 @@ const MainContent = styled.div`
   background-color: ${THEME.bg};
   color: ${THEME.text};
   overflow: hidden;
-  
+
   @media (max-width: 768px) {
     height: 100%;
     min-height: 0;
@@ -59,7 +58,10 @@ const ToastNotification = styled(motion.div)`
   top: 90px;
   left: 50%;
   transform: translateX(-50%);
-  background: ${props => props.$type === 'poll' ? 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)' : 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)'};
+  background: ${(props) =>
+    props.$type === 'poll'
+      ? 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)'
+      : 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)'};
   color: white;
   padding: 12px 24px;
   border-radius: 12px;
@@ -70,7 +72,7 @@ const ToastNotification = styled(motion.div)`
   display: flex;
   align-items: center;
   gap: 10px;
-  
+
   @media (max-width: 768px) {
     top: 70px;
     padding: 10px 18px;
@@ -104,7 +106,7 @@ const PollPopupCard = styled(motion.div)`
   color: white;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  
+
   h3 {
     margin: 0 0 8px;
     font-size: 18px;
@@ -112,13 +114,13 @@ const PollPopupCard = styled(motion.div)`
     align-items: center;
     gap: 10px;
   }
-  
+
   p {
     margin: 0 0 20px;
     font-size: 16px;
     color: rgba(255, 255, 255, 0.9);
   }
-  
+
   .poll-meta {
     font-size: 12px;
     color: rgba(255, 255, 255, 0.6);
@@ -132,24 +134,24 @@ const PollPopupButton = styled.button`
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
-  
+
   &.primary {
     background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
     border: none;
     color: white;
     flex: 1;
-    
+
     &:hover {
       transform: translateY(-2px);
       box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
     }
   }
-  
+
   &.secondary {
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
     color: white;
-    
+
     &:hover {
       background: rgba(255, 255, 255, 0.2);
     }
@@ -158,7 +160,7 @@ const PollPopupButton = styled.button`
 
 // Side Panel Styles — Premium GPU-accelerated transitions
 const SidePanel = styled(motion.div)`
-  width: ${props => props.wide ? 'min(600px, 45vw)' : 'min(400px, 38vw)'};
+  width: ${(props) => (props.wide ? 'min(600px, 45vw)' : 'min(400px, 38vw)')};
   min-width: 280px;
   background-color: ${THEME.panelBg};
   border-left: 1px solid #cbd5e1;
@@ -172,10 +174,12 @@ const SidePanel = styled(motion.div)`
   top: 0;
   bottom: 0;
   will-change: transform, opacity;
-  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), filter 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  opacity: ${props => props.$fading ? 0.35 : 1};
-  filter: ${props => props.$fading ? 'blur(2px)' : 'none'};
-  pointer-events: ${props => props.$fading ? 'none' : 'auto'};
+  transition:
+    opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    filter 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: ${(props) => (props.$fading ? 0.35 : 1)};
+  filter: ${(props) => (props.$fading ? 'blur(2px)' : 'none')};
+  pointer-events: ${(props) => (props.$fading ? 'none' : 'auto')};
 
   @media (max-width: 768px) {
     width: 100%;
@@ -201,7 +205,7 @@ const PanelHeader = styled.div`
   align-items: center;
   justify-content: space-between;
   background-color: ${THEME.cardBg};
-  
+
   h3 {
     margin: 0;
     font-size: 1.125rem;
@@ -262,8 +266,7 @@ const WhiteboardOverlay = styled(motion.div)`
   }
 `;
 
-// Badge d'indicateur de partage d'écran — feedback bêta :
-// « Afficher un retour visuel clair quand l'utilisateur partage son écran. »
+// Badge d'indicateur de partage d'écran.
 const ScreenShareBadge = styled(motion.div)`
   position: fixed;
   top: 84px;
@@ -292,8 +295,15 @@ const ScreenShareBadge = styled(motion.div)`
   }
 
   @keyframes ssPulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.55; transform: scale(0.85); }
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.55;
+      transform: scale(0.85);
+    }
   }
 
   @media (max-width: 768px) {
@@ -311,15 +321,15 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
 
   useEffect(() => {
     if (!activeBreakout || !user?.identity) return;
-    
-    const assignedRoom = activeBreakout.rooms.find(r => 
-      r.participants.includes(user.identity) || r.participants.includes(user.email)
+
+    const assignedRoom = activeBreakout.rooms.find(
+      (r) => r.participants.includes(user.identity) || r.participants.includes(user.email)
     );
-    
+
     if (assignedRoom && roomId === originalRoomId) {
       window.location.href = `/room/${originalRoomId}-${assignedRoom.id}?parent=${originalRoomId}`;
     } else if (!assignedRoom && roomId !== originalRoomId) {
-      window.location.href = `/room/${originalRoomId}`; 
+      window.location.href = `/room/${originalRoomId}`;
     }
   }, [activeBreakout, roomId, originalRoomId, user]);
 
@@ -338,9 +348,9 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
     };
   });
 
-  const { 
-    room, 
-    localParticipant, 
+  const {
+    room,
+    localParticipant,
     isCameraEnabled,
     isMicrophoneEnabled,
     isScreenShareEnabled,
@@ -359,7 +369,7 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
     clearDeviceError,
   } = useMeeting(roomSettings.maxQualityLock);
 
-  const { messages, sendMessage } = useChat(roomId, user, null);
+  const { messages, sendMessage } = useChat(roomId, user);
 
   // Wrap onLeave: explicitly disconnect from LiveKit before navigating, otherwise the
   // room can stay alive in the background and the user feels stuck on the page.
@@ -384,7 +394,7 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
   const [messageText, setMessageText] = useState('');
   const [panelFading, setPanelFading] = useState(false);
   const fadeTimerRef = React.useRef(null);
-  
+
   // -- Notification Sound --
   const playNotifSound = React.useCallback(() => {
     try {
@@ -402,7 +412,7 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
       osc.stop(ctx.currentTime + 0.25);
     } catch {}
   }, []);
-  
+
   // -- Notifications State --
   const [unreadChat, setUnreadChat] = useState(0);
   const [unreadPolls, setUnreadPolls] = useState(0);
@@ -411,43 +421,64 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
   const lastMessageCountRef = React.useRef(0);
   const lastPollCountRef = React.useRef(0);
   const currentUserId = user?.id || localParticipant?.identity;
-  
+
   // -- Raise Hand State --
   const [isHandRaised, setIsHandRaised] = useState(false);
-  // Map<participantIdentity, boolean> — tracks other participants' raised hands
-  const [raisedHands, setRaisedHands] = useState(new Map());
-  
+
   // 🤖 AI Features State
   const { settings: aiSettings } = useAISettings();
   const [showTranscription, setShowTranscription] = useState(false);
 
   // Query des sondages pour les notifications
-  const polls = useQuery(api.polls.getPolls, originalRoomId ? { meetingId: originalRoomId } : "skip") || [];
+  const polls =
+    useQuery(api.polls.getPolls, originalRoomId ? { meetingId: originalRoomId } : 'skip') || [];
 
   const { isRecording, toggleRecording, recordingError, clearRecordingError } = useRecording();
 
   // Show a toast when recording permission is denied
   useEffect(() => {
     if (!deviceError) return;
-    const msg = deviceError === 'mic_denied'
-      ? t('room.toasts.micBlocked', "Micro bloqué — cliquez sur 🔒 dans la barre d'adresse pour autoriser l'accès.")
-      : deviceError === 'mic_error'
-      ? t('room.toasts.micError', 'Erreur micro — rechargez la page ou vérifiez votre périphérique audio.')
-      : t('room.toasts.cameraBlocked', "Caméra bloquée — cliquez sur 🔒 dans la barre d'adresse pour autoriser l'accès.");
+    const msg =
+      deviceError === 'mic_denied'
+        ? t(
+            'room.toasts.micBlocked',
+            "Micro bloqué — cliquez sur 🔒 dans la barre d'adresse pour autoriser l'accès."
+          )
+        : deviceError === 'mic_error'
+          ? t(
+              'room.toasts.micError',
+              'Erreur micro — rechargez la page ou vérifiez votre périphérique audio.'
+            )
+          : t(
+              'room.toasts.cameraBlocked',
+              "Caméra bloquée — cliquez sur 🔒 dans la barre d'adresse pour autoriser l'accès."
+            );
     setToast({ message: msg, type: 'poll' });
-    const t = setTimeout(() => { setToast(null); clearDeviceError(); }, 5000);
+    const t = setTimeout(() => {
+      setToast(null);
+      clearDeviceError();
+    }, 5000);
     return () => clearTimeout(t);
   }, [deviceError, clearDeviceError]);
 
   useEffect(() => {
     if (!recordingError) return;
     const messages = {
-      permission_denied: t('room.toasts.recordPermissionDenied', 'Partage d’écran refusé. Vérifiez les permissions du navigateur.'),
-      no_device: t('room.toasts.recordNoDevice', 'Aucun périphérique trouvé pour l’enregistrement.'),
+      permission_denied: t(
+        'room.toasts.recordPermissionDenied',
+        'Partage d’écran refusé. Vérifiez les permissions du navigateur.'
+      ),
+      no_device: t(
+        'room.toasts.recordNoDevice',
+        'Aucun périphérique trouvé pour l’enregistrement.'
+      ),
       unknown: t('room.toasts.recordUnknown', 'Erreur lors du démarrage de l’enregistrement.'),
     };
     setToast({ message: messages[recordingError] || messages.unknown, type: 'poll' });
-    setTimeout(() => { setToast(null); clearRecordingError(); }, 4000);
+    setTimeout(() => {
+      setToast(null);
+      clearRecordingError();
+    }, 4000);
   }, [recordingError, clearRecordingError]);
 
   useEffect(() => {
@@ -460,30 +491,33 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
   // -- Track new messages for notifications --
   useEffect(() => {
     if (!messages || messages.length === 0) return;
-    
+
     const newCount = messages.length;
     const previousCount = lastMessageCountRef.current;
-    
+
     if (newCount > previousCount && previousCount > 0) {
       const newMessages = messages.slice(previousCount);
-      const otherMessages = newMessages.filter(m => m.senderId !== currentUserId);
-      
+      const otherMessages = newMessages.filter((m) => m.senderId !== currentUserId);
+
       if (otherMessages.length > 0) {
         // Chat is closed or not active - show notification
         const isChatOpen = sidePanelOpen && activePanel === 'chat';
         if (!isChatOpen) {
-          setUnreadChat(prev => prev + otherMessages.length);
+          setUnreadChat((prev) => prev + otherMessages.length);
         }
-        
+
         // Show toast + sound for the last new message
         const lastMsg = otherMessages[otherMessages.length - 1];
         const senderName = lastMsg.sender?.split('@')[0] || t('room.toasts.someone', "Quelqu'un");
-        setToast({ message: t('room.toasts.newMessage', 'Nouveau message de {{name}}', { name: senderName }), type: 'chat' });
+        setToast({
+          message: t('room.toasts.newMessage', 'Nouveau message de {{name}}', { name: senderName }),
+          type: 'chat',
+        });
         setTimeout(() => setToast(null), 3000);
         playNotifSound();
       }
     }
-    
+
     lastMessageCountRef.current = newCount;
   }, [messages, sidePanelOpen, activePanel, currentUserId]);
 
@@ -510,7 +544,10 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
   // 🤖 Bridge: AI Features Panel → Background Blur (via useMeeting)
   const blurBridgeInit = React.useRef(true);
   useEffect(() => {
-    if (blurBridgeInit.current) { blurBridgeInit.current = false; return; }
+    if (blurBridgeInit.current) {
+      blurBridgeInit.current = false;
+      return;
+    }
     const wantBlur = !!aiSettings?.backgroundBlur?.enabled;
     if (wantBlur && !isBlurEnabled) {
       toggleBlur(aiSettings?.backgroundBlur?.blurAmount || 10);
@@ -537,7 +574,10 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
   // 🤖 Bridge: AI Features Panel → Video Enhancement (via useMeeting)
   const aiBridgeInit = React.useRef(true);
   useEffect(() => {
-    if (aiBridgeInit.current) { aiBridgeInit.current = false; return; }
+    if (aiBridgeInit.current) {
+      aiBridgeInit.current = false;
+      return;
+    }
     const wantAI = !!aiSettings?.videoEnhancement?.enabled;
     if (wantAI !== isAIEnhanced) {
       toggleAIVideoEngine();
@@ -547,36 +587,39 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
   // -- Track new polls for notifications and auto-popup --
   useEffect(() => {
     if (!polls || polls.length === 0) return;
-    
+
     const newCount = polls.length;
     const previousCount = lastPollCountRef.current;
-    
+
     if (newCount > previousCount && previousCount > 0) {
       // Nouveau sondage créé
-      const activePolls = polls.filter(p => p.isActive);
+      const activePolls = polls.filter((p) => p.isActive);
       const newestPoll = activePolls[activePolls.length - 1];
-      
+
       if (newestPoll && newestPoll.createdBy !== currentUserId) {
         // Ce n'est pas mon sondage - afficher notification
         const isPollsOpen = sidePanelOpen && activePanel === 'polls';
-        
+
         if (!isPollsOpen) {
-          setUnreadPolls(prev => prev + 1);
+          setUnreadPolls((prev) => prev + 1);
           // Afficher le popup de sondage
           setPollPopup({
             id: newestPoll._id,
             question: newestPoll.question,
-            createdBy: newestPoll.createdBy
+            createdBy: newestPoll.createdBy,
           });
         }
-        
+
         // Toast notification + sound
-        setToast({ message: `Nouveau sondage: "${newestPoll.question.slice(0, 30)}${newestPoll.question.length > 30 ? '...' : ''}"`, type: 'poll' });
+        setToast({
+          message: `Nouveau sondage: "${newestPoll.question.slice(0, 30)}${newestPoll.question.length > 30 ? '...' : ''}"`,
+          type: 'poll',
+        });
         setTimeout(() => setToast(null), 4000);
         playNotifSound();
       }
     }
-    
+
     lastPollCountRef.current = newCount;
   }, [polls, sidePanelOpen, activePanel, currentUserId]);
 
@@ -595,7 +638,7 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
       setSidePanelOpen(true);
     }
   };
-  
+
   const toggleWhiteboard = () => {
     setWhiteboardOpen(!whiteboardOpen);
     if (!whiteboardOpen) setSidePanelOpen(false); // Close panel when opening whiteboard
@@ -637,17 +680,11 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
       try {
         const data = JSON.parse(new TextDecoder().decode(payload));
         if (data.type === 'raise-hand') {
-          setRaisedHands(prev => {
-            const next = new Map(prev);
-            if (data.value) {
-              next.set(participant.identity, true);
-            } else {
-              next.delete(participant.identity);
-            }
-            return next;
-          });
           if (data.value) {
-            setToast({ message: `🖐️ ${participant.name || participant.identity} lève la main`, type: 'hand' });
+            setToast({
+              message: `🖐️ ${participant.name || participant.identity} lève la main`,
+              type: 'hand',
+            });
             setTimeout(() => setToast(null), 3000);
           }
         }
@@ -659,7 +696,7 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
 
   // Toggle main levée + notification + broadcast aux autres participants.
   const handleRaiseHand = useCallback(() => {
-    setIsHandRaised(prev => {
+    setIsHandRaised((prev) => {
       const newState = !prev;
       if (newState) {
         setToast({ message: t('room.toasts.handRaised', 'Main levée !'), type: 'hand' });
@@ -682,72 +719,75 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
 
   return (
     <MainContent>
-       {/* Toast Notifications */}
-       <AnimatePresence>
-         {toast && (
-           <ToastNotification
-             $type={toast.type}
-             initial={{ opacity: 0, y: -20, x: '-50%' }}
-             animate={{ opacity: 1, y: 0, x: '-50%' }}
-             exit={{ opacity: 0, y: -20, x: '-50%' }}
-           >
-             {toast.type === 'chat' ? <MessageSquare size={18} /> : <PieChart size={18} />}
-             {toast.message}
-           </ToastNotification>
-         )}
-       </AnimatePresence>
+      {/* Toast Notifications */}
+      <AnimatePresence>
+        {toast && (
+          <ToastNotification
+            $type={toast.type}
+            initial={{ opacity: 0, y: -20, x: '-50%' }}
+            animate={{ opacity: 1, y: 0, x: '-50%' }}
+            exit={{ opacity: 0, y: -20, x: '-50%' }}
+          >
+            {toast.type === 'chat' ? <MessageSquare size={18} /> : <PieChart size={18} />}
+            {toast.message}
+          </ToastNotification>
+        )}
+      </AnimatePresence>
 
-       {/* Poll Popup - Affichage automatique d'un nouveau sondage */}
-       <AnimatePresence>
-         {pollPopup && (
-           <PollPopupOverlay
-             initial={{ opacity: 0 }}
-             animate={{ opacity: 1 }}
-             exit={{ opacity: 0 }}
-             onClick={() => setPollPopup(null)}
-           >
-             <PollPopupCard
-               initial={{ scale: 0.9, y: 20 }}
-               animate={{ scale: 1, y: 0 }}
-               exit={{ scale: 0.9, y: 20 }}
-               onClick={e => e.stopPropagation()}
-             >
-               <h3><PieChart size={22} /> {t('room.pollPopup.title', 'Nouveau Sondage!')}</h3>
-               <p className="poll-meta">{t('room.pollPopup.createdBy', 'Créé par {{name}}', { name: pollPopup.createdBy?.split('@')[0] || t('room.toasts.someone', "Quelqu'un") })}</p>
-               <p>{pollPopup.question}</p>
-               <div style={{ display: 'flex', gap: '12px' }}>
-                 <PollPopupButton 
-                   className="primary"
-                   onClick={() => {
-                     togglePanel('polls');
-                     setPollPopup(null);
-                   }}
-                 >
-                   Voter maintenant
-                 </PollPopupButton>
-                 <PollPopupButton 
-                   className="secondary"
-                   onClick={() => setPollPopup(null)}
-                 >
-                   Plus tard
-                 </PollPopupButton>
-               </div>
-             </PollPopupCard>
-           </PollPopupOverlay>
-         )}
-       </AnimatePresence>
+      {/* Poll Popup - Affichage automatique d'un nouveau sondage */}
+      <AnimatePresence>
+        {pollPopup && (
+          <PollPopupOverlay
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setPollPopup(null)}
+          >
+            <PollPopupCard
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3>
+                <PieChart size={22} /> {t('room.pollPopup.title', 'Nouveau Sondage!')}
+              </h3>
+              <p className="poll-meta">
+                {t('room.pollPopup.createdBy', 'Créé par {{name}}', {
+                  name: pollPopup.createdBy?.split('@')[0] || t('room.toasts.someone', "Quelqu'un"),
+                })}
+              </p>
+              <p>{pollPopup.question}</p>
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <PollPopupButton
+                  className="primary"
+                  onClick={() => {
+                    togglePanel('polls');
+                    setPollPopup(null);
+                  }}
+                >
+                  Voter maintenant
+                </PollPopupButton>
+                <PollPopupButton className="secondary" onClick={() => setPollPopup(null)}>
+                  Plus tard
+                </PollPopupButton>
+              </div>
+            </PollPopupCard>
+          </PollPopupOverlay>
+        )}
+      </AnimatePresence>
 
-       {/* 1. Header */}
-       <RoomHeader 
-         roomName={room?.name} 
-         participantCount={tracks?.length ? tracks.length + 1 : 1} 
-         connectionStatus="connected" 
-         isSecure={true}
-         quality="excellent"
-       />
+      {/* 1. Header */}
+      <RoomHeader
+        roomName={room?.name}
+        participantCount={tracks?.length ? tracks.length + 1 : 1}
+        connectionStatus="connected"
+        isSecure={true}
+        quality="excellent"
+      />
 
-       {/* 2. Overlays */}
-       <AnimatePresence>
+      {/* 2. Overlays */}
+      <AnimatePresence>
         {isScreenShareEnabled && (
           <ScreenShareBadge
             key="screen-share-badge"
@@ -762,67 +802,69 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
             {t('room.screenShareBadge', 'Vous partagez votre écran')}
           </ScreenShareBadge>
         )}
-       </AnimatePresence>
+      </AnimatePresence>
 
-       <AnimatePresence>
+      <AnimatePresence>
         {whiteboardOpen && (
-           <WhiteboardOverlay
-             initial={{ opacity: 0, scale: 0.95 }}
-             animate={{ opacity: 1, scale: 1 }}
-             exit={{ opacity: 0, scale: 0.95 }}
-           >
-             <WhiteboardWrapper roomId={roomId} userName={user?.name || 'Guest'} />
-             {/* Mini caméra flottante de l'animateur — préserve le lien humain */}
-             <FloatingSelfCamera
-               localParticipant={localParticipant}
-               isCameraEnabled={isCameraEnabled}
-               label={user?.name || 'Vous'}
-               initialCorner="bottom-right"
-             />
-             <div style={{
-               position: 'absolute',
-               bottom: 16,
-               left: '50%',
-               transform: 'translateX(-50%)',
-               zIndex: 1000,
-             }}>
-                <button 
-                  onClick={toggleWhiteboard}
-                  style={{
-                    background: 'rgba(15, 23, 42, 0.85)',
-                    backdropFilter: 'blur(8px)',
-                    color: 'white',
-                    border: '1px solid rgba(255,255,255,0.15)',
-                    padding: '6px 20px',
-                    borderRadius: '20px',
-                    cursor: 'pointer',
-                    fontWeight: '600',
-                    fontSize: '0.85rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-                  }}
-                >
-                  ✕ Fermer le tableau
-                </button>
-             </div>
-           </WhiteboardOverlay>
+          <WhiteboardOverlay
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+          >
+            <WhiteboardWrapper roomId={roomId} userName={user?.name || 'Guest'} />
+            {/* Mini caméra flottante de l'animateur — préserve le lien humain */}
+            <FloatingSelfCamera
+              localParticipant={localParticipant}
+              isCameraEnabled={isCameraEnabled}
+              label={user?.name || 'Vous'}
+              initialCorner="bottom-right"
+            />
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 16,
+                left: '50%',
+                transform: 'translateX(-50%)',
+                zIndex: 1000,
+              }}
+            >
+              <button
+                onClick={toggleWhiteboard}
+                style={{
+                  background: 'rgba(15, 23, 42, 0.85)',
+                  backdropFilter: 'blur(8px)',
+                  color: 'white',
+                  border: '1px solid rgba(255,255,255,0.15)',
+                  padding: '6px 20px',
+                  borderRadius: '20px',
+                  cursor: 'pointer',
+                  fontWeight: '600',
+                  fontSize: '0.85rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                }}
+              >
+                ✕ Fermer le tableau
+              </button>
+            </div>
+          </WhiteboardOverlay>
         )}
       </AnimatePresence>
 
       <AnimatePresence>
         {showStats && localParticipant && (
-            <StatsMonitor 
-              participant={localParticipant} 
-              showStats={showStats}
-              onClose={() => setShowStats(false)}
-            />
+          <StatsMonitor
+            participant={localParticipant}
+            showStats={showStats}
+            onClose={() => setShowStats(false)}
+          />
         )}
       </AnimatePresence>
 
       {/* 3. Main Grid */}
-      <VideoGrid 
+      <VideoGrid
         localParticipant={localParticipant}
         isLocalCameraEnabled={isCameraEnabled}
         isLocalMicEnabled={isMicrophoneEnabled}
@@ -832,33 +874,35 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
       />
 
       {/* 4. Controls */}
-      <ControlBar 
-         localParticipant={localParticipant}
-         isCameraEnabled={isCameraEnabled}
-         isMicrophoneEnabled={isMicrophoneEnabled}
-         isScreenShareEnabled={isScreenShareEnabled}
-         controls={controls}
-         whiteboardOpen={whiteboardOpen}
-         toggleWhiteboard={toggleWhiteboard}
-         showStats={showStats}
-         setShowStats={(val) => { setShowStats(val); }}
-         sidePanelOpen={sidePanelOpen}
-         activePanel={activePanel}
-         togglePanel={togglePanel}
-         isRecording={isRecording}
-         toggleRecording={() => toggleRecording({ includeMic: isMicrophoneEnabled })}
-         isBlurEnabled={isBlurEnabled}
-         blurRadius={blurRadius}
-         toggleBlur={toggleBlur}
-         isAiReady={isAiReady}
-         isAIEnhanced={isAIEnhanced}
-         isProcessingAI={isProcessingAI}
-         toggleAIVideoEngine={toggleAIVideoEngine}
-         onLeave={handleLeave}
-         unreadChat={unreadChat}
-         unreadPolls={unreadPolls}
-         isHandRaised={isHandRaised}
-         onRaiseHand={handleRaiseHand}
+      <ControlBar
+        localParticipant={localParticipant}
+        isCameraEnabled={isCameraEnabled}
+        isMicrophoneEnabled={isMicrophoneEnabled}
+        isScreenShareEnabled={isScreenShareEnabled}
+        controls={controls}
+        whiteboardOpen={whiteboardOpen}
+        toggleWhiteboard={toggleWhiteboard}
+        showStats={showStats}
+        setShowStats={(val) => {
+          setShowStats(val);
+        }}
+        sidePanelOpen={sidePanelOpen}
+        activePanel={activePanel}
+        togglePanel={togglePanel}
+        isRecording={isRecording}
+        toggleRecording={() => toggleRecording({ includeMic: isMicrophoneEnabled })}
+        isBlurEnabled={isBlurEnabled}
+        blurRadius={blurRadius}
+        toggleBlur={toggleBlur}
+        isAiReady={isAiReady}
+        isAIEnhanced={isAIEnhanced}
+        isProcessingAI={isProcessingAI}
+        toggleAIVideoEngine={toggleAIVideoEngine}
+        onLeave={handleLeave}
+        unreadChat={unreadChat}
+        unreadPolls={unreadPolls}
+        isHandRaised={isHandRaised}
+        onRaiseHand={handleRaiseHand}
       />
 
       {/* 5. Side Panel (Chat / AI) */}
@@ -868,14 +912,14 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
             wide={roomSettings.widePanel}
             $fading={panelFading}
             initial={{ x: '100%', opacity: 0, scale: 0.95 }}
-            animate={{ 
-              x: 0, 
-              opacity: panelFading ? 0.35 : 1, 
+            animate={{
+              x: 0,
+              opacity: panelFading ? 0.35 : 1,
               scale: 1,
             }}
             exit={{ x: '100%', opacity: 0, scale: 0.95 }}
-            transition={{ 
-              type: "tween",
+            transition={{
+              type: 'tween',
               duration: 0.35,
               ease: [0.4, 0, 0.2, 1],
             }}
@@ -884,70 +928,119 @@ export const MeetingRoom = ({ onLeave, roomId, user }) => {
           >
             <PanelHeader>
               <h3>
-                {activePanel === 'chat' && <><ChevronRight size={20} /> Discussion</>}
-                {activePanel === 'polls' && <><PieChart size={20} /> Sondages</>}
-                {activePanel === 'breakout' && <><Users size={20} /> Salles de sous-commission</>}
-                {activePanel === 'ai' && <><Bot size={20} /> Assistant IA</>}
-                {activePanel === 'aiFeatures' && <><Sparkles size={20} /> Fonctionnalités IA</>}
-                {activePanel === 'settings' && <><ChevronRight size={20} /> Parametres</>}
+                {activePanel === 'chat' && (
+                  <>
+                    <ChevronRight size={20} /> Discussion
+                  </>
+                )}
+                {activePanel === 'polls' && (
+                  <>
+                    <PieChart size={20} /> Sondages
+                  </>
+                )}
+                {activePanel === 'breakout' && (
+                  <>
+                    <Users size={20} /> Salles de sous-commission
+                  </>
+                )}
+                {activePanel === 'ai' && (
+                  <>
+                    <Bot size={20} /> Assistant IA
+                  </>
+                )}
+                {activePanel === 'aiFeatures' && (
+                  <>
+                    <Sparkles size={20} /> Fonctionnalités IA
+                  </>
+                )}
+                {activePanel === 'settings' && (
+                  <>
+                    <ChevronRight size={20} /> Parametres
+                  </>
+                )}
               </h3>
-              <button 
-                onClick={() => setSidePanelOpen(false)} 
-                style={{ background: 'none', border: 'none', color: THEME.textDim, cursor: 'pointer', padding: '4px', borderRadius: '4px', display: 'flex' }}
+              <button
+                onClick={() => setSidePanelOpen(false)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: THEME.textDim,
+                  cursor: 'pointer',
+                  padding: '4px',
+                  borderRadius: '4px',
+                  display: 'flex',
+                }}
               >
                 <X size={20} />
               </button>
             </PanelHeader>
 
             <PanelContent>
-               {activePanel === 'chat' && (
-                 <MeetingChat
-                   messages={messages}
-                   messageText={messageText}
-                   setMessageText={setMessageText}
-                   onSendMessage={handleSendMessage}
-                   currentUserId={user?.id || localParticipant?.identity}
-                 />
-               )}
-               {activePanel === 'polls' && <PollsPanel meetingId={originalRoomId} currentUser={{ identity: localParticipant?.identity }} onClose={() => togglePanel('polls')} onPollCreated={startPanelFadeOut} />}
-               {activePanel === 'breakout' && <BreakoutRoomsPanel meetingId={originalRoomId} activeParticipants={remoteParticipants.concat(localParticipant ? [localParticipant] : [])} onClose={() => togglePanel('breakout')} />}
+              {activePanel === 'chat' && (
+                <MeetingChat
+                  messages={messages}
+                  messageText={messageText}
+                  setMessageText={setMessageText}
+                  onSendMessage={handleSendMessage}
+                  currentUserId={user?.id || localParticipant?.identity}
+                />
+              )}
+              {activePanel === 'polls' && (
+                <PollsPanel
+                  meetingId={originalRoomId}
+                  currentUser={{ identity: localParticipant?.identity }}
+                  onClose={() => togglePanel('polls')}
+                  onPollCreated={startPanelFadeOut}
+                />
+              )}
+              {activePanel === 'breakout' && (
+                <BreakoutRoomsPanel
+                  meetingId={originalRoomId}
+                  activeParticipants={remoteParticipants.concat(
+                    localParticipant ? [localParticipant] : []
+                  )}
+                  onClose={() => togglePanel('breakout')}
+                />
+              )}
 
-               {activePanel === 'ai' && <AIChatPanel responseStyle={roomSettings.aiResponseStyle} roomMessages={messages} roomId={roomId} />}
-               {activePanel === 'aiFeatures' && <AIFeaturesPanel chatMessages={messages} meetingTitle={`Réunion ${roomId}`} />}
-               {activePanel === 'settings' && (
-                 <RoomSettingsPanel
-                   settings={{ ...roomSettings, showStatsDefault: showStats }}
-                   updateSetting={(key, val) => {
-                     updateSetting(key, val);
-                     if (key === 'showStatsDefault') setShowStats(val);
-                   }}
-                   devices={devices}
-                   selectedDevices={selectedDevices}
-                   controls={controls}
-                 />
-               )}
-
+              {activePanel === 'ai' && (
+                <AIChatPanel
+                  responseStyle={roomSettings.aiResponseStyle}
+                  roomMessages={messages}
+                  roomId={roomId}
+                />
+              )}
+              {activePanel === 'aiFeatures' && (
+                <AIFeaturesPanel chatMessages={messages} meetingTitle={`Réunion ${roomId}`} />
+              )}
+              {activePanel === 'settings' && (
+                <RoomSettingsPanel
+                  settings={{ ...roomSettings, showStatsDefault: showStats }}
+                  updateSetting={(key, val) => {
+                    updateSetting(key, val);
+                    if (key === 'showStatsDefault') setShowStats(val);
+                  }}
+                  devices={devices}
+                  selectedDevices={selectedDevices}
+                  controls={controls}
+                />
+              )}
             </PanelContent>
           </SidePanel>
         )}
       </AnimatePresence>
 
       {/* 🤖 Transcription Widget - Affiche les sous-titres en temps réel */}
-      {showTranscription && (
-        <TranscriptionWidget 
-          onClose={() => setShowTranscription(false)} 
-        />
-      )}
+      {showTranscription && <TranscriptionWidget onClose={() => setShowTranscription(false)} />}
 
       {/* Audio Rendering & Safari iOS Low Power Mode Fallback */}
       <RoomAudioRenderer />
-      
-      {/* Apparaît uniquement si Safari IOS / Chrome bloque l'autoplay audio en arrière-plan */}
-      <StartAudio 
-        label="Démarrer l'audio" 
-        className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white font-medium py-3 px-6 rounded-full shadow-2xl z-[999] animate-bounce hover:bg-blue-700 transition" 
-      />
 
+      {/* Apparaît uniquement si Safari IOS / Chrome bloque l'autoplay audio en arrière-plan */}
+      <StartAudio
+        label="Démarrer l'audio"
+        className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white font-medium py-3 px-6 rounded-full shadow-2xl z-[999] animate-bounce hover:bg-blue-700 transition"
+      />
     </MainContent>
   );
 };

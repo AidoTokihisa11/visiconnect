@@ -401,7 +401,7 @@
   "statValue4": "♥",
   "statLabel4": "Mit Leidenschaft gemacht",
   "copyrightText": "© 2024 VisioConnect. Entwickelt mit ♥ von Théo Garcès.",
-  "developmentStatus": "Plattform in Entwicklung - Beta-Version",
+  "developmentStatus": "Plattform in Entwicklung - production",
   "heroTitle": "Videokonferenz",
   "heroSubtitle": "Einfach & Effektiv",
   "heroDescription": "VisioConnect - Videokonferenz-Plattform entwickelt von Théo Garcès. Einfache und effektive Lösung für Ihre Online-Meetings, derzeit getestet von einem kleinen Team von 3 Personen. Moderne Benutzeroberfläche, zuverlässige Technologie.",
@@ -471,7 +471,7 @@
   "subscribe": "Abonnieren",
   "comingSoonFeature": "Demnächst verfügbar",
   "inDevelopment": "In Entwicklung",
-  "betaVersion": "Beta-Version",
+  "releaseVersion": "v1.0",
   "underConstruction": "Im Aufbau",
   "cookiesPageTitle": "Cookie-Richtlinie",
   "whatAreCookies": "Was ist ein Cookie?",
@@ -566,38 +566,22 @@
     "security": {
       "title": "Sicherheit auf Unternehmensebene",
       "text": "Ihre Kommunikation ist durch End-to-End DTLS-SRTP-Verschlüsselung geschützt. DSGVO-konform, keine Daten werden gespeichert.",
-      "items": [
-        "DTLS-SRTP Verschlüsselung",
-        "100% DSGVO-konform",
-        "Keine Datenspeicherung"
-      ]
+      "items": ["DTLS-SRTP Verschlüsselung", "100% DSGVO-konform", "Keine Datenspeicherung"]
     },
     "instant": {
       "title": "Sofortiger Start",
       "text": "Erstellen Sie ein Meeting in 3 Sekunden. Teilen Sie den Link, Teilnehmer treten sofort bei — kein Download, kein Konto erforderlich.",
-      "items": [
-        "Sicherer einzigartiger Link",
-        "Keine Installation nötig",
-        "Alle Geräte kompatibel"
-      ]
+      "items": ["Sicherer einzigartiger Link", "Keine Installation nötig", "Alle Geräte kompatibel"]
     },
     "collaboration": {
       "title": "Echtzeit-Zusammenarbeit",
       "text": "Sofortige Bildschirmfreigabe, interaktives Whiteboard und integrierter Chat. Alle Ihre Produktivitätstools in einer Oberfläche vereint.",
-      "items": [
-        "HD Bildschirmfreigabe",
-        "Kollaboratives Whiteboard",
-        "Echtzeit-Chat"
-      ]
+      "items": ["HD Bildschirmfreigabe", "Kollaboratives Whiteboard", "Echtzeit-Chat"]
     },
     "meetings": {
       "title": "Sofortige Meetings",
       "text": "Starten Sie in Sekunden mit einem Link. Gäste müssen nichts herunterladen.",
-      "items": [
-        "1-Klick-Links",
-        "Kein Konto erforderlich",
-        "Mobile-kompatibel"
-      ]
+      "items": ["1-Klick-Links", "Kein Konto erforderlich", "Mobile-kompatibel"]
     }
   },
   "architecture": {
@@ -625,7 +609,7 @@
     "label": "Early-Access-Phase für HD-Pioniere"
   },
   "keyStats": {
-    "teams": "Beta-Teams",
+    "teams": "Pro-Teams",
     "native": "Native App",
     "latency": "Durchschn. Latenz",
     "uptime": "Uptime"
@@ -1913,7 +1897,7 @@
     "actions": {
       "createMeeting": "Meeting erstellen",
       "join": "Beitreten",
-      "joinPlaceholder": "Raum-ID oder Beta-Code (VC-XXXX-XXXX)"
+      "joinPlaceholder": "Raum-ID (VC-XXXX-XXXX)"
     },
     "tabs": {
       "profile": "Mein Profil",
@@ -2312,303 +2296,6 @@
     "backHome": "Zur Startseite",
     "accessDenied": "Zugang verweigert",
     "accessDeniedDesc": "Sie müssen angemeldet sein.",
-    "beta": {
-      "title": "Privater Beta-Zugang",
-      "subtitle": "Willkommen bei VisioConnect. Bitte geben Sie Ihren Code ein.",
-      "keyLabel": "Autorisierungsschlüssel",
-      "keyPlaceholder": "Code eingeben...",
-      "invalidKey": "Ungültiger Zugangscode.",
-      "pseudoLabel": "Ihr Spitzname",
-      "pseudoPlaceholder": "z.B. Max Mustermann",
-      "submit": "Freischalten und beitreten",
-      "e2ee": "Geschützt durch Ende-zu-Ende-Verschlüsselung (E2EE)"
-    },
-    "betaPage": {
-      "nav": {
-        "testers": "Tester",
-        "changelog": "Changelog",
-        "wave2": "Welle 2",
-        "criteria": "Kriterien",
-        "apply": "Bewerben",
-        "openSpots": "15 Plätze frei"
-      },
-      "hero": {
-        "eyebrow": "Ehrlicher Bericht · Beta Welle 1 — Welle 2 offen",
-        "h1Line1": "9 Tester.",
-        "h1Line2": "Nichts versteckt.",
-        "h1Line3": "Alles dokumentiert.",
-        "bullet1Bold": "3 kritische Bugs behoben",
-        "bullet1Rest": " — Auth, Icons, Onboarding",
-        "bullet2Bold": "4 Fixes in Arbeit",
-        "bullet2Rest": " — Chat, Hintergrundunschärfe, Whiteboard, KI-Vollmodus",
-        "bullet3Bold": "10+ Verbesserungen geplant",
-        "bullet3Rest": " für Welle 2 — alle aus Tester-Feedback",
-        "p": "Jedes Feedback ist hier, Wort für Wort, mit dem was wir getan haben oder bauen. Welle 2 öffnet 15 Plätze um noch weiter zu gehen.",
-        "ctaPrimary": "Welle 2 beitreten",
-        "ctaSecondary": "Vollständigen Changelog anzeigen"
-      },
-      "panel": {
-        "title": "Beta-Bericht · Welle 1",
-        "badge": "Geschlossen",
-        "bar1Label": "Aktive Tester",
-        "bar1Value": "9 / 10",
-        "bar2Label": "Kritische Bugs behoben",
-        "bar2Value": "3 / 3",
-        "bar3Label": "Zufriedenheit",
-        "bar3Value": "4 / 5",
-        "bar4Label": "Detaillierte Berichte",
-        "bar4Value": "3 Berichte",
-        "cell1n": "9",
-        "cell1l": "Tester",
-        "cell2n": "3",
-        "cell2l": "behoben",
-        "cell3n": "15",
-        "cell3l": "W2-Plätze",
-        "cell4n": "4★",
-        "cell4l": "Zufriedenheit"
-      },
-      "stats": {
-        "s1l": "Tester Welle 1",
-        "s2l": "detaillierte Berichte erhalten",
-        "s3l": "Plätze Welle 2",
-        "s4l": "gemeldete Probleme gesamt"
-      },
-      "testers": {
-        "sectionTitle": "Die 3 Profile, die alles getestet haben",
-        "tA": {
-          "role": "Designer / Entwickler",
-          "env": "macOS · Chrome",
-          "positive": "Visuell konsistente Benutzeroberfläche, schnelles Laden",
-          "finds": [
-            "Auth: zufällige Trennungen alle 20–30 Min.",
-            "Schaltfläche \"Meeting beitreten\" missverstanden",
-            "Bildschirmfreigabe: kein visuelles Feedback",
-            "Whiteboard: 100% Zoom ausgegraut, SVG transparent",
-            "KI-Formulierung zu vage",
-            "Umfrage: anonyme Abstimmung, Ergebnisse, Schließen fehlen"
-          ]
-        },
-        "tB": {
-          "role": "Geschäftsanwender",
-          "env": "Windows 10 · Chrome 147",
-          "positive": "\"Navigation ist flüssig und angenehm, lädt schnell, wirkt professionell\"",
-          "finds": [
-            "Identische Icons: KI-Video ≠ KI-Funktionen",
-            "Kamera & Mikrofon werden beim Fensterwechsel getrennt",
-            "Hintergrundunschärfe: Regler inaktiv, deaktiviert sich nicht",
-            "Join/Erstellen-Schaltfläche fehlt im Dashboard",
-            "Aufnahme erfasst Stimme auch bei ausgeschaltetem Mikrofon"
-          ]
-        },
-        "tC": {
-          "role": "Technisches Profil",
-          "env": "Windows 10 · Alte Webcam",
-          "positive": "\"Lesbar, angenehm, wirkt professionell. Gute Schriftauswahl\"",
-          "finds": [
-            "Whiteboard verschwindet nach wenigen Sekunden",
-            "KI-Transkription: funktioniert nicht",
-            "KI stürzt im \"Voll\"-Modus ab",
-            "Chat hinter Tab-Leiste verborgen + schließt sich nach dem Senden",
-            "Abonnementstatus nach Zahlung nicht auffindbar"
-          ]
-        }
-      },
-      "founder": {
-        "label": "Was mir diese Beta beigebracht hat",
-        "text": "3 Tester mit sehr unterschiedlichen Profilen haben Probleme aufgedeckt, die ich nicht mehr sah. Jedes Feedback zwang mich, das Produkt wie ein echter Nutzer zu betrachten. Genau dafür existiert die Beta, und deshalb wird Welle 2 besser.",
-        "by": "Théo G. · Gründer VisiConnect · Mai 2026"
-      },
-      "changelog": {
-        "sideTitle": "Journal · Welle 1",
-        "eyebrow": "Ehrlicher Changelog · Beta Welle 1",
-        "titleLine1": "Ihre genauen Worte.",
-        "titleLine2": "Unsere konkreten Maßnahmen.",
-        "sub": "10 gemeldete Punkte. 3 behoben. 4 in Bearbeitung. 3 für Welle 2 geplant.",
-        "g1Status": "Behoben",
-        "g2Status": "In Bearbeitung",
-        "g3Status": "Geplant · Welle 2",
-        "badgeFixed": "Behoben ✓",
-        "badgeInProg": "In Bearbeitung",
-        "badgePrio1": "Priorität 1",
-        "badgePrio2": "Priorität 2",
-        "badgePlanned": "Geplant",
-        "e1Date": "Mai 2026 · Tester A",
-        "e1Title": "Instabile Auth — zufällige Trennungen",
-        "e1Desc": "Clerk v2 Token lief still alle 20–30 min ab. Ursache in 12h identifiziert, Clerk Core 3 in 48h migriert.",
-        "e1Quote": "Ich wurde ohne Grund mitten im Meeting getrennt.",
-        "e2Date": "Mai 2026 · Tester B & C",
-        "e2Title": "Identische Icons für zwei verschiedene Aktionen",
-        "e2Desc": "Icons differenziert, Hover-Labels hinzugefügt, visuelle Hierarchie geklärt.",
-        "e2Quote": "Die Schaltflächen haben dasselbe Symbol obwohl sie verschiedene Aktionen ausführen.",
-        "e3Date": "Mai 2026 · Tester A",
-        "e3Title": "Unklares Onboarding — CTA und E-Mails überarbeitet",
-        "e3Desc": "\"Meeting beitreten\" spiegelte die tatsächliche Aktion nicht wider. Umbenannt mit erklärendem Text.",
-        "e3Quote": "Verbindungsprobleme — ich verstand den Einstiegsweg nicht.",
-        "e4Date": "In Bearbeitung · Tester B & C",
-        "e4Title": "Chat & KI-Assistent hinter Tab-Leiste verborgen",
-        "e4Desc": "Eingabefeld teilweise durch Browser-Leiste verdeckt. Chat schließt sich nach jedem Senden.",
-        "e4Quote": "Das Eingabefenster ist teilweise verdeckt. Nach dem Senden schließt sich der Chat von selbst.",
-        "e5Date": "In Bearbeitung · Tester B & C",
-        "e5Title": "Hintergrundunschärfe: Regler wirkungslos",
-        "e5Desc": "Intensitätsregler visuell vorhanden aber ohne Wirkung. Unschärfe bleibt aktiv nach Deaktivierung.",
-        "e5Quote": "Der Intensitätsregler ändert nichts. Er deaktiviert sich nicht.",
-        "e6Date": "In Bearbeitung · Tester C",
-        "e6Title": "Whiteboard verschwindet nach wenigen Sekunden",
-        "e6Desc": "Whiteboard zeigt sich korrekt, schließt sich dann automatisch.",
-        "e6Quote": "Das Whiteboard erscheint gut, verschwindet aber nach wenigen Sekunden.",
-        "e7Date": "In Bearbeitung · Tester C",
-        "e7Title": "KI \"Voll\"-Modus stürzt ab",
-        "e7Desc": "Erste zwei Modi funktionieren normal. Vollmodus verursacht Worker-Crash.",
-        "e7Quote": "Performance- und Ausgeglichener-Modus funktionieren, aber es stürzt im Vollmodus ab.",
-        "e8Date": "Priorität 1 · Welle 2",
-        "e8Title": "KI-Transkription fehlend — vollständiger Meeting-Copilot",
-        "e8Desc": "Von allen 3 Testern als Adoptionsblockade gemeldet. KI wird zum echten Copiloten.",
-        "e8Quote": "Keine Zusammenfassung, keine Notizen — schwer mein Team zu überzeugen.",
-        "e9Date": "Priorität 2 · Welle 2",
-        "e9Title": "Whiteboard v2 — schwebende Kamera, PDF-Export",
-        "e9Desc": "Zoom ausgegraut, SVG transparent, Moderator unsichtbar. Welle 2: schwebende Kamera, PDF-Export, Zoom-Reset.",
-        "e9Quote": "Man kann den Moderator nicht mehr sehen. Zoom ausgegraut, SVG unbrauchbar.",
-        "e10Date": "Geplant · Welle 2",
-        "e10Title": "Umfrage: anonyme Abstimmung + Ergebnisse + Schließen",
-        "e10Desc": "Drei fehlende Optionen als Schlüsseldifferenziatoren gemeldet.",
-        "e10Quote": "Anonyme Abstimmung, Ergebnisse anzeigen, Umfrage schließen — das ist Standard."
-      },
-      "compare": {
-        "eyebrow": "Vorher / Nachher",
-        "title": "Was existierte. Was kommt.",
-        "sub": "Jede Zeile dieser Tabelle stammt aus einem Tester-Bericht.",
-        "colFeat": "Funktion",
-        "colV1": "Welle 1",
-        "colV2": "Welle 2",
-        "feat1": "Stabile Auth",
-        "feat2": "Eindeutige Icons",
-        "feat3": "Klares Onboarding",
-        "feat4": "Mikro / Kamera / Bildschirmfreigabe",
-        "feat5": "Visuelle Vorschau Bildschirmfreigabe",
-        "feat6": "Stabiler Chat",
-        "feat7": "Breakout-Räume",
-        "feat8": "Whiteboard",
-        "feat9": "Schwebende Whiteboard-Kamera",
-        "feat10": "Whiteboard PDF-Export",
-        "feat11": "KI-Echtzeit-Transkription",
-        "feat12": "Copilot: automatische Zusammenfassung",
-        "feat13": "Audio-Test + VU-Meter",
-        "feat14": "Vollständige Umfrage",
-        "feat15": "Abonnementstatus im Profil"
-      },
-      "features": {
-        "eyebrow": "Welle 2",
-        "title": "Aus Ihrem Feedback gebaut",
-        "sub": "Jede Funktion hat einen direkten Ursprung in den Welle-1-Berichten.",
-        "f1Tag": "Priorität 1 · KI",
-        "f1Title": "Meeting-Copilot — Transkription, Zusammenfassung, Übersetzung",
-        "f1Desc": "Von allen 3 Testern gewünscht. KI wird zum echten Copiloten.",
-        "f1Item1": "Echtzeit-Transkription",
-        "f1Item2": "Exportierbare strukturierte Notizen",
-        "f1Item3": "Live-Übersetzung",
-        "f1Item4": "Export Notion / Markdown / PDF",
-        "f1Origin": "Fehlende Transkription + vage KI-Formulierung",
-        "f2Tag": "Whiteboard",
-        "f2Title": "Schwebende Kamera während des Whiteboards",
-        "f2Desc": "Der Moderator verschwindet sobald das Whiteboard geöffnet wird. Eine Drag & Drop Videoblase löst das Problem.",
-        "f2Item1": "Repositionierbare Videoblase",
-        "f2Item2": "4 vordefinierte Positionen",
-        "f2Item3": "Einstellbare Größe",
-        "f2Origin": "Tester A — \"man sieht den Moderator nicht mehr\"",
-        "f3Tag": "Bildschirmfreigabe",
-        "f3Title": "Vorschau + Bestätigungs-Badge für Bildschirmfreigabe",
-        "f3Desc": "Kein visuelles Feedback bestätigte die Freigabe. Animierte Miniaturvorschau + Badge sichtbar auf beiden Seiten.",
-        "f3Item1": "Echtzeit-Miniaturvorschau",
-        "f3Item2": "Bestätigungs-Badge",
-        "f3Item3": "Teilnehmerseiten-Indikator",
-        "f3Origin": "Tester A — Mac, Chrome",
-        "f4Tag": "Audio",
-        "f4Title": "Audio-Test + Echtzeit-VU-Meter",
-        "f4Desc": "Kein Element zur Überprüfung des Mikrofonsignals. Animiertes VU-Meter + Ausgangstest.",
-        "f4Item1": "Animiertes Mikrofon-VU-Meter",
-        "f4Item2": "Lautsprecher / Kopfhörer-Test",
-        "f4Item3": "Validierung vor dem Beitreten",
-        "f4Origin": "Tester C — \"ich habe nichts zur Überprüfung\"",
-        "f5Tag": "Umfrage",
-        "f5Title": "Vollständige Umfrage — Anonymität, Ergebnisse, Schließen",
-        "f5Desc": "3 fehlende Optionen die den Unterschied ausmachen.",
-        "f5Item1": "Anonyme Abstimmung EIN/AUS",
-        "f5Item2": "Ergebnisse anzeigen/verbergen",
-        "f5Item3": "Umfrage schließen",
-        "f5Origin": "Tester A — \"sonst wirkt es amateurhaft\"",
-        "f6Tag": "Profil",
-        "f6Title": "Sichtbares Abonnement-Dashboard",
-        "f6Desc": "Nach der Zahlung war der Abonnementstatus unklar. Ein dedizierter Tab zeigt Plan, Verlängerungsdatum und Verlauf.",
-        "f6Item1": "Planstatus sichtbar (Kostenlos / Pro)",
-        "f6Item2": "Verlängerungsdatum",
-        "f6Item3": "Zahlungsverlauf",
-        "f6Origin": "Tester C — \"ich bin unsicher über mein Abonnement\""
-      },
-      "criteria": {
-        "eyebrow": "Auswahl",
-        "titleLine1": "Was ich suche",
-        "titleLine2": "in Welle 2",
-        "sub": "15 Plätze. Ehrliche Kriterien, keine Lotterie.",
-        "duration": "Geschätzte Dauer: 4 bis 6 Wochen",
-        "c1n": "01",
-        "c1Title": "Regelmäßiges Engagement",
-        "c1Desc": "Woche für Woche zurückkommen. Das Produkt auch unvollkommen nutzen.",
-        "c2n": "02",
-        "c2Title": "Strukturiertes Feedback",
-        "c2Desc": "Kein Entwickler nötig. Den Bug reproduzieren, Kontext beschreiben, Umgebung angeben.",
-        "c3n": "03",
-        "c3Title": "Echter Anwendungsfall",
-        "c3Desc": "Startup, Agentur, Freelancer, Lehrer — ein konkreter Kontext."
-      },
-      "form": {
-        "eyebrow": "Bewerbung offen",
-        "title": "Welle 2 beitreten",
-        "sub": "Persönlich geprüft · Antwort innerhalb 72h · 15 Plätze",
-        "formTitle": "Bewerbungsformular",
-        "formSub": "Welle 2 · Auswahl läuft",
-        "slotLabel": "Plätze",
-        "firstNameLbl": "Vorname",
-        "firstNamePh": "Ihr Vorname",
-        "lastNameLbl": "Nachname",
-        "lastNamePh": "Ihr Nachname",
-        "emailLbl": "E-Mail",
-        "profileLbl": "Profil",
-        "profilePh": "Auswählen…",
-        "profileDev": "Entwickler·in",
-        "profileDesigner": "UX/UI Designer",
-        "profilePM": "Product Manager",
-        "profileFounder": "Gründer·in",
-        "profileOther": "Sonstiges",
-        "usageLbl": "Hauptanwendung",
-        "usagePh": "Auswählen…",
-        "usageTeam": "Team-Meetings",
-        "usageClient": "Kundengespräche",
-        "usageEdu": "Lehre / Training",
-        "usageDev": "Dev-Zusammenarbeit",
-        "usageOther": "Sonstiges",
-        "toolsLbl": "Täglich genutzte Tools",
-        "motivationLbl": "Warum Welle 2 beitreten?",
-        "motivationPh": "Beschreiben Sie Ihren Kontext, Ihren Anwendungsfall und was Sie als Tester einbringen würden.",
-        "motivationHint": "Mindestens 40 Zeichen.",
-        "privacy": "Vertrauliche Daten — nie verkauft.",
-        "submit": "Bewerbung absenden",
-        "sending": "Wird gesendet…",
-        "required": "Pflichtfeld",
-        "emailInvalid": "Ungültige E-Mail",
-        "minChars": "Mindestens 40 Zeichen",
-        "successTitle": "Bewerbung gesendet!",
-        "successP": "Danke. Ich lese jede Bewerbung persönlich\nund melde mich innerhalb von 72h.",
-        "backHome": "Zurück zur Startseite",
-        "serverError": "Serverfehler",
-        "genericError": "Ein Fehler ist aufgetreten.",
-        "otherPh": "Bitte angeben…"
-      },
-      "footer": {
-        "privacy": "Datenschutz",
-        "terms": "AGB",
-        "contact": "Kontakt"
-      }
-    },
     "controls": {
       "leave": "Verlassen",
       "leaveAria": "Meeting verlassen",

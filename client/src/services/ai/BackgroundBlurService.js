@@ -1,6 +1,6 @@
 /**
  * BackgroundBlurService - Floutage arrière-plan via MediaPipe
- * 
+ *
  * Utilise @mediapipe/selfie_segmentation pour un traitement 100% côté client
  * Alternative gratuite à @livekit/track-processors
  */
@@ -29,9 +29,9 @@ class BackgroundBlurService {
    * Vérifie si MediaPipe est supporté
    */
   static isSupported() {
-    return typeof window !== 'undefined' && 
-           'OffscreenCanvas' in window &&
-           'createImageBitmap' in window;
+    return (
+      typeof window !== 'undefined' && 'OffscreenCanvas' in window && 'createImageBitmap' in window
+    );
   }
 
   /**
@@ -65,10 +65,9 @@ class BackgroundBlurService {
       this.offscreenCtx = this.offscreenCanvas.getContext('2d');
 
       this.isReady = true;
-      console.log('[BackgroundBlur] MediaPipe initialisé avec succès');
       return true;
     } catch (error) {
-      console.error('[BackgroundBlur] Erreur d\'initialisation:', error);
+      console.error("[BackgroundBlur] Erreur d'initialisation:", error);
       return false;
     }
   }

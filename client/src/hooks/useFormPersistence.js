@@ -4,9 +4,6 @@ import { useEffect, useRef } from 'react';
  * Persists a controlled-form state object across navigation / accidental
  * page unmount, with optional `beforeunload` warning when the form is dirty.
  *
- * Beta-testers reported losing form data when going back to verify a field
- * (cf. analyse UX 2.7 — analogie impôts.gouv.fr).
- *
  * Usage:
  *   const [values, setValues] = useState(initial);
  *   useFormPersistence('account-profile', values, setValues, { warnOnLeave: true });
@@ -20,11 +17,7 @@ import { useEffect, useRef } from 'react';
  * @param {boolean} [options.skip=false]  Disable the hook (e.g. while loading).
  */
 export function useFormPersistence(key, values, setValues, options = {}) {
-  const {
-    warnOnLeave = false,
-    storage = 'session',
-    skip = false,
-  } = options;
+  const { warnOnLeave = false, storage = 'session', skip = false } = options;
 
   const storageKey = `visiconnect.form.${key}`;
   const hydratedRef = useRef(false);

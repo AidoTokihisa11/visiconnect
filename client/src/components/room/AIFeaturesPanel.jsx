@@ -1,17 +1,17 @@
 /**
  * AIFeaturesPanel - Panneau de contrôle des fonctionnalités IA
- * 
+ *
  * Permet à l'utilisateur d'activer/désactiver les features IA
  * à la demande pour ne pas impacter les performances
  */
 
 import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
-import { 
-  Sparkles, 
-  Mic, 
-  Languages, 
-  Image, 
+import {
+  Sparkles,
+  Mic,
+  Languages,
+  Image,
   Sliders,
   Volume2,
   FileText,
@@ -22,7 +22,7 @@ import {
   ChevronUp,
   Info,
   Download,
-  Loader2
+  Loader2,
 } from 'lucide-react';
 import { ROOM_THEME as THEME } from '../../styles/roomTheme';
 import { useAISettings } from '../../hooks/useAISettings';
@@ -75,9 +75,9 @@ const PresetRow = styled.div`
 const PresetButton = styled.button`
   flex: 1;
   padding: 0.5rem;
-  border: 1px solid ${props => props.$active ? THEME.accent : THEME.border};
-  background: ${props => props.$active ? THEME.accentSoft : THEME.cardBg};
-  color: ${props => props.$active ? THEME.accent : THEME.text};
+  border: 1px solid ${(props) => (props.$active ? THEME.accent : THEME.border)};
+  background: ${(props) => (props.$active ? THEME.accentSoft : THEME.cardBg)};
+  color: ${(props) => (props.$active ? THEME.accent : THEME.text)};
   border-radius: 8px;
   font-size: 0.8rem;
   cursor: pointer;
@@ -90,11 +90,13 @@ const PresetButton = styled.button`
 
 const FeatureCard = styled.div`
   background: ${THEME.cardBg};
-  border: 1px solid ${props => props.$enabled ? THEME.accent : THEME.border};
+  border: 1px solid ${(props) => (props.$enabled ? THEME.accent : THEME.border)};
   border-radius: 12px;
   transition: all 0.2s;
 
-  ${props => props.$enabled && `
+  ${(props) =>
+    props.$enabled &&
+    `
     box-shadow: 0 0 0 1px ${THEME.accent}20;
   `}
 `;
@@ -122,11 +124,11 @@ const IconWrapper = styled.div`
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: ${props => props.$enabled ? THEME.accent : THEME.border};
+  background: ${(props) => (props.$enabled ? THEME.accent : THEME.border)};
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${props => props.$enabled ? 'white' : THEME.textDim};
+  color: ${(props) => (props.$enabled ? 'white' : THEME.textDim)};
   transition: all 0.2s;
 `;
 
@@ -147,7 +149,7 @@ const Switch = styled.button`
   height: 24px;
   border-radius: 999px;
   border: none;
-  background: ${props => props.$on ? THEME.accent : '#94a3b8'};
+  background: ${(props) => (props.$on ? THEME.accent : '#94a3b8')};
   position: relative;
   cursor: pointer;
   transition: all 0.2s;
@@ -156,7 +158,7 @@ const Switch = styled.button`
     content: '';
     position: absolute;
     top: 2px;
-    left: ${props => props.$on ? '22px' : '2px'};
+    left: ${(props) => (props.$on ? '22px' : '2px')};
     width: 20px;
     height: 20px;
     border-radius: 50%;
@@ -232,21 +234,22 @@ const StatusIndicator = styled.span`
   font-size: 0.7rem;
   padding: 0.15rem 0.4rem;
   border-radius: 4px;
-  background: ${props => props.$available ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)'};
-  color: ${props => props.$available ? '#16a34a' : '#dc2626'};
+  background: ${(props) =>
+    props.$available ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)'};
+  color: ${(props) => (props.$available ? '#16a34a' : '#dc2626')};
 `;
 
 // Composant Feature individuel
-const Feature = ({ 
-  icon: Icon, 
-  name, 
-  description, 
-  enabled, 
+const Feature = ({
+  icon: Icon,
+  name,
+  description,
+  enabled,
   available = true,
   disabled = false,
-  onToggle, 
+  onToggle,
   children,
-  expandable = true 
+  expandable = true,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const isInteractive = available && !disabled;
@@ -270,9 +273,7 @@ const Feature = ({
               {t('aiFeatures.notSupported', 'Non supporté')}
             </StatusIndicator>
           )}
-          {/* m1 / US-DEMO-02 — explicit ON/OFF state next to the slider knob.
-              Beta-tester reported the bare round knob ("rond blanc gauche-droite")
-              wasn't self-explanatory. */}
+          {/* explicit ON/OFF state next to the slider knob */}
           {available && (
             <span
               aria-hidden="true"
@@ -285,13 +286,11 @@ const Feature = ({
                 textAlign: 'right',
               }}
             >
-              {enabled
-                ? t('aiFeatures.on', 'ACTIVÉ')
-                : t('aiFeatures.off', 'INACTIF')}
+              {enabled ? t('aiFeatures.on', 'ACTIVÉ') : t('aiFeatures.off', 'INACTIF')}
             </span>
           )}
-          <Switch 
-            $on={enabled} 
+          <Switch
+            $on={enabled}
             disabled={!isInteractive}
             onClick={(e) => {
               e.stopPropagation();
@@ -301,17 +300,23 @@ const Feature = ({
             role="switch"
             aria-checked={!!enabled}
             aria-label={`${name} — ${enabled ? t('aiFeatures.on', 'activé') : t('aiFeatures.off', 'inactif')}. ${t('aiFeatures.toggleHint', 'Cliquez pour changer.')}`}
-            title={enabled ? t('aiFeatures.clickToDisable', 'Cliquer pour désactiver') : t('aiFeatures.clickToEnable', 'Cliquer pour activer')}
+            title={
+              enabled
+                ? t('aiFeatures.clickToDisable', 'Cliquer pour désactiver')
+                : t('aiFeatures.clickToEnable', 'Cliquer pour activer')
+            }
           />
-          {expandable && children && (
-            expanded ? <ChevronUp size={16} color={THEME.textDim} /> : <ChevronDown size={16} color={THEME.textDim} />
-          )}
+          {expandable &&
+            children &&
+            (expanded ? (
+              <ChevronUp size={16} color={THEME.textDim} />
+            ) : (
+              <ChevronDown size={16} color={THEME.textDim} />
+            ))}
         </div>
       </FeatureHeader>
       {expanded && children && (
-        <ExpandedContent onClick={(e) => e.stopPropagation()}>
-          {children}
-        </ExpandedContent>
+        <ExpandedContent onClick={(e) => e.stopPropagation()}>{children}</ExpandedContent>
       )}
     </FeatureCard>
   );
@@ -338,16 +343,13 @@ const BlurSliderRow = ({ currentValue, onCommit }) => {
 };
 
 // Composant principal
-export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion VisiConnect' } = {}) => {
+export const AIFeaturesPanel = ({
+  chatMessages = [],
+  meetingTitle = 'Réunion VisiConnect',
+} = {}) => {
   const { t } = useTranslation();
-  const {
-    settings,
-    capabilities,
-    isLowEndDevice,
-    toggleFeature,
-    updateSettings,
-    applyPreset,
-  } = useAISettings();
+  const { settings, capabilities, isLowEndDevice, toggleFeature, updateSettings, applyPreset } =
+    useAISettings();
 
   const [activePreset, setActivePreset] = useState(null);
   const [summary, setSummary] = useState(null);
@@ -363,10 +365,12 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
       service.setPreferredModel?.(
         settings.smartNotes?.model || 'meta-llama/llama-3.1-8b-instruct:free'
       );
-      const normalizedMessages = (chatMessages || []).map((m) => ({
-        sender: m.sender || m.user || m.from || 'Anonyme',
-        text: m.text || m.message || m.content || '',
-      })).filter((m) => m.text);
+      const normalizedMessages = (chatMessages || [])
+        .map((m) => ({
+          sender: m.sender || m.user || m.from || 'Anonyme',
+          text: m.text || m.message || m.content || '',
+        }))
+        .filter((m) => m.text);
       const result = await service.generateMeetingSummary({
         transcript: [],
         chatMessages: normalizedMessages,
@@ -417,29 +421,29 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
         <WarningBox>
           <AlertCircle size={16} color="#b45309" style={{ flexShrink: 0, marginTop: 2 }} />
           <WarningText>
-            {t('aiFeatures.lowEnd', 'Appareil à faibles ressources détecté. Certaines fonctionnalités sont désactivées pour préserver les performances.')}
+            {t(
+              'aiFeatures.lowEnd',
+              'Appareil à faibles ressources détecté. Certaines fonctionnalités sont désactivées pour préserver les performances.'
+            )}
           </WarningText>
         </WarningBox>
       )}
 
       <PresetRow>
-        <PresetButton 
-          $active={activePreset === 'performance'} 
+        <PresetButton
+          $active={activePreset === 'performance'}
           onClick={() => handlePreset('performance')}
         >
           <Zap size={14} style={{ marginRight: 4 }} />
           {t('aiFeatures.preset.performance', 'Performance')}
         </PresetButton>
-        <PresetButton 
-          $active={activePreset === 'balanced'} 
+        <PresetButton
+          $active={activePreset === 'balanced'}
           onClick={() => handlePreset('balanced')}
         >
           {t('aiFeatures.preset.balanced', 'Équilibré')}
         </PresetButton>
-        <PresetButton 
-          $active={activePreset === 'full'} 
-          onClick={() => handlePreset('full')}
-        >
+        <PresetButton $active={activePreset === 'full'} onClick={() => handlePreset('full')}>
           <Sparkles size={14} style={{ marginRight: 4 }} />
           {t('aiFeatures.preset.full', 'Complet')}
         </PresetButton>
@@ -456,7 +460,7 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
       >
         <OptionRow>
           Langue de reconnaissance
-          <Select 
+          <Select
             value={settings.transcription?.language || 'fr-FR'}
             onChange={(e) => updateSettings('transcription', { language: e.target.value })}
           >
@@ -468,9 +472,11 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
         </OptionRow>
         <OptionRow>
           {t('aiFeatures.autoStart', 'Démarrer automatiquement')}
-          <Switch 
+          <Switch
             $on={settings.transcription?.autoStart}
-            onClick={() => updateSettings('transcription', { autoStart: !settings.transcription?.autoStart })}
+            onClick={() =>
+              updateSettings('transcription', { autoStart: !settings.transcription?.autoStart })
+            }
           />
         </OptionRow>
       </Feature>
@@ -486,7 +492,7 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
       >
         <OptionRow>
           {t('aiFeatures.aiModel', 'Modèle IA')}
-          <Select 
+          <Select
             value={settings.smartNotes?.model || 'meta-llama/llama-3.1-8b-instruct:free'}
             onChange={(e) => updateSettings('smartNotes', { model: e.target.value })}
           >
@@ -497,11 +503,13 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
         </OptionRow>
 
         {/* Bouton de génération manuelle du résumé */}
-        <div style={{ marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        <div
+          style={{ marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}
+        >
           <button
             type="button"
             onClick={handleGenerateSummary}
-            disabled={isGeneratingSummary || (!chatMessages || chatMessages.length === 0)}
+            disabled={isGeneratingSummary || !chatMessages || chatMessages.length === 0}
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -517,28 +525,68 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
               fontWeight: 600,
               fontSize: '0.85rem',
               cursor: isGeneratingSummary ? 'wait' : 'pointer',
-              opacity: (!chatMessages || chatMessages.length === 0) ? 0.55 : 1,
+              opacity: !chatMessages || chatMessages.length === 0 ? 0.55 : 1,
               transition: 'all 0.2s',
             }}
-            title={(!chatMessages || chatMessages.length === 0) ? t('aiFeatures.summaryNothingToTitle', 'Aucun message dans le chat à résumer pour le moment.') : t('aiFeatures.summaryGenerateTitle', 'Générer un résumé IA à partir du chat.')}
+            title={
+              !chatMessages || chatMessages.length === 0
+                ? t(
+                    'aiFeatures.summaryNothingToTitle',
+                    'Aucun message dans le chat à résumer pour le moment.'
+                  )
+                : t('aiFeatures.summaryGenerateTitle', 'Générer un résumé IA à partir du chat.')
+            }
           >
-            {isGeneratingSummary
-              ? <><Loader2 size={14} style={{ animation: 'spin 1s linear infinite' }} /> {t('aiFeatures.generating', 'Génération...')}</>
-              : <><Sparkles size={14} /> {t('aiFeatures.generateNow', 'Générer un résumé maintenant')}</>}
+            {isGeneratingSummary ? (
+              <>
+                <Loader2 size={14} style={{ animation: 'spin 1s linear infinite' }} />{' '}
+                {t('aiFeatures.generating', 'Génération...')}
+              </>
+            ) : (
+              <>
+                <Sparkles size={14} /> {t('aiFeatures.generateNow', 'Générer un résumé maintenant')}
+              </>
+            )}
           </button>
 
           {summaryError && (
-            <div style={{ fontSize: '0.78rem', color: '#f87171', padding: '6px 10px', background: 'rgba(239,68,68,0.08)', borderRadius: '6px', border: '1px solid rgba(239,68,68,0.25)' }}>
+            <div
+              style={{
+                fontSize: '0.78rem',
+                color: '#f87171',
+                padding: '6px 10px',
+                background: 'rgba(239,68,68,0.08)',
+                borderRadius: '6px',
+                border: '1px solid rgba(239,68,68,0.25)',
+              }}
+            >
               {summaryError}
             </div>
           )}
 
           {summary && (
-            <div style={{ marginTop: '0.5rem', padding: '0.75rem', background: 'rgba(15,23,42,0.6)', border: `1px solid ${THEME.border}`, borderRadius: '8px', maxHeight: '260px', overflowY: 'auto' }}>
+            <div
+              style={{
+                marginTop: '0.5rem',
+                padding: '0.75rem',
+                background: 'rgba(15,23,42,0.6)',
+                border: `1px solid ${THEME.border}`,
+                borderRadius: '8px',
+                maxHeight: '260px',
+                overflowY: 'auto',
+              }}
+            >
               <div style={{ fontSize: '0.72rem', color: THEME.textDim, marginBottom: '0.4rem' }}>
                 Résumé IA • {new Date(summary.generatedAt).toLocaleTimeString()}
               </div>
-              <div style={{ fontSize: '0.85rem', color: THEME.text, whiteSpace: 'pre-wrap', lineHeight: 1.55 }}>
+              <div
+                style={{
+                  fontSize: '0.85rem',
+                  color: THEME.text,
+                  whiteSpace: 'pre-wrap',
+                  lineHeight: 1.55,
+                }}
+              >
                 {summary.summary}
               </div>
               <button
@@ -571,18 +619,20 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
         name={
           <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             {t('aiFeatures.translation.name', 'Traduction Instantanée')}
-            <span style={{
-              fontSize: '0.65rem',
-              fontWeight: 700,
-              letterSpacing: '0.05em',
-              padding: '2px 7px',
-              borderRadius: '999px',
-              background: 'rgba(99,102,241,0.2)',
-              color: '#818cf8',
-              border: '1px solid rgba(99,102,241,0.35)',
-              textTransform: 'uppercase',
-              lineHeight: 1.5,
-            }}>
+            <span
+              style={{
+                fontSize: '0.65rem',
+                fontWeight: 700,
+                letterSpacing: '0.05em',
+                padding: '2px 7px',
+                borderRadius: '999px',
+                background: 'rgba(99,102,241,0.2)',
+                color: '#818cf8',
+                border: '1px solid rgba(99,102,241,0.35)',
+                textTransform: 'uppercase',
+                lineHeight: 1.5,
+              }}
+            >
               {t('aiFeatures.soon', 'Bientôt')}
             </span>
           </span>
@@ -594,7 +644,10 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', opacity: 0.85 }}>
           <div style={{ fontSize: '0.78rem', color: THEME.textDim, lineHeight: 1.5 }}>
-            {t('aiFeatures.translation.intro', 'Traduisez automatiquement les messages du chat dans votre langue, en temps réel.')}
+            {t(
+              'aiFeatures.translation.intro',
+              'Traduisez automatiquement les messages du chat dans votre langue, en temps réel.'
+            )}
           </div>
           <OptionRow>
             {t('aiFeatures.translation.targetLang', 'Langue cible')}
@@ -610,20 +663,27 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
               <option value="ar">العربية (AR)</option>
             </Select>
           </OptionRow>
-          <div style={{
-            display: 'flex',
-            alignItems: 'flex-start',
-            gap: '0.5rem',
-            padding: '0.55rem 0.7rem',
-            borderRadius: '8px',
-            border: `1px dashed ${THEME.border}`,
-            background: 'rgba(99,102,241,0.06)',
-            fontSize: '0.72rem',
-            color: THEME.textDim,
-            lineHeight: 1.45,
-          }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '0.5rem',
+              padding: '0.55rem 0.7rem',
+              borderRadius: '8px',
+              border: `1px dashed ${THEME.border}`,
+              background: 'rgba(99,102,241,0.06)',
+              fontSize: '0.72rem',
+              color: THEME.textDim,
+              lineHeight: 1.45,
+            }}
+          >
             <Sparkles size={14} color="#818cf8" style={{ flexShrink: 0, marginTop: '2px' }} />
-            <span>{t('aiFeatures.translation.soonHint', 'Déploiement prévu prochainement — détection auto de la langue source & traduction inline.')}</span>
+            <span>
+              {t(
+                'aiFeatures.translation.soonHint',
+                'Déploiement prévu prochainement — détection auto de la langue source & traduction inline.'
+              )}
+            </span>
           </div>
         </div>
       </Feature>
@@ -639,7 +699,7 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
       >
         <OptionRow>
           {t('aiFeatures.mode', 'Mode')}
-          <Select 
+          <Select
             value={settings.backgroundBlur?.mode || 'blur'}
             onChange={(e) => updateSettings('backgroundBlur', { mode: e.target.value })}
           >
@@ -666,15 +726,19 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
       >
         <OptionRow>
           {t('aiFeatures.videoEnhance.preset', 'Preset')}
-          <Select 
+          <Select
             value={settings.videoEnhancement?.preset || 'natural'}
             onChange={(e) => updateSettings('videoEnhancement', { preset: e.target.value })}
           >
             <option value="natural">{t('aiFeatures.videoEnhance.natural', 'Naturel')}</option>
             <option value="vivid">{t('aiFeatures.videoEnhance.vivid', 'Vif')}</option>
             <option value="cinema">{t('aiFeatures.videoEnhance.cinema', 'Cinéma')}</option>
-            <option value="lowLight">{t('aiFeatures.videoEnhance.lowLight', 'Faible lumière')}</option>
-            <option value="professional">{t('aiFeatures.videoEnhance.pro', 'Professionnel')}</option>
+            <option value="lowLight">
+              {t('aiFeatures.videoEnhance.lowLight', 'Faible lumière')}
+            </option>
+            <option value="professional">
+              {t('aiFeatures.videoEnhance.pro', 'Professionnel')}
+            </option>
           </Select>
         </OptionRow>
       </Feature>
@@ -691,7 +755,7 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
       >
         <OptionRow>
           {t('aiFeatures.noise.level', 'Niveau')}
-          <Select 
+          <Select
             value={settings.noiseSuppression?.level || 'moderate'}
             onChange={(e) => updateSettings('noiseSuppression', { level: e.target.value })}
           >
@@ -702,20 +766,25 @@ export const AIFeaturesPanel = ({ chatMessages = [], meetingTitle = 'Réunion Vi
         </OptionRow>
       </Feature>
 
-      <div style={{ 
-        marginTop: 'auto', 
-        padding: '0.75rem', 
-        background: THEME.accentSoft, 
-        borderRadius: 8,
-        fontSize: '0.75rem',
-        color: THEME.textDim,
-        display: 'flex',
-        alignItems: 'flex-start',
-        gap: '0.5rem'
-      }}>
+      <div
+        style={{
+          marginTop: 'auto',
+          padding: '0.75rem',
+          background: THEME.accentSoft,
+          borderRadius: 8,
+          fontSize: '0.75rem',
+          color: THEME.textDim,
+          display: 'flex',
+          alignItems: 'flex-start',
+          gap: '0.5rem',
+        }}
+      >
         <Info size={14} style={{ flexShrink: 0, marginTop: 2 }} />
         <span>
-          {t('aiFeatures.footer', "Toutes les fonctionnalités IA utilisent des modèles open source gratuits ou des API navigateur natives. Aucun coût d'infrastructure.")}
+          {t(
+            'aiFeatures.footer',
+            "Toutes les fonctionnalités IA utilisent des modèles open source gratuits ou des API navigateur natives. Aucun coût d'infrastructure."
+          )}
         </span>
       </div>
     </Wrapper>

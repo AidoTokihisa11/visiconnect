@@ -2,7 +2,7 @@ import { AuthenticateWithRedirectCallback } from '@clerk/react';
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { ThemeProvider } from "./components/theme-provider";
+import { ThemeProvider } from './components/theme-provider';
 import { AuthProvider } from './contexts/AuthContext';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { AdminProvider } from './contexts/AdminContext';
@@ -14,7 +14,6 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
-import RoomPage from './pages/RoomPageNew';
 import SupportPageNew from './pages/SupportPageNew';
 import AccountPageSimple from './pages/AccountPageSimple';
 // CheckoutPage removed — /checkout redirects to /pricing
@@ -31,7 +30,7 @@ import PricingPage from './pages/PricingPage';
 import StatusPageNew from './pages/StatusPageNew';
 import CareersPageNew from './pages/CareersPageNew';
 import SchedulerPageNew from './pages/SchedulerPageNew';
-import AdminDashboard from './pages/AdminDashboard'; // Admin monitoring component
+import AdminDashboard from './pages/AdminDashboard';
 import TermsPage from './pages/TermsPage';
 import CookiesPage from './pages/CookiesPage';
 import DemoPageNew from './pages/DemoPageNew';
@@ -74,61 +73,64 @@ function App() {
       <CookieConsentProvider>
         <LanguageProvider>
           <AppContainer>
-              <Router
-                future={{
+            <Router
+              future={{
                 v7_startTransition: true,
-                v7_relativeSplatPath: true
+                v7_relativeSplatPath: true,
               }}
             >
               <ScrollToTop />
-                <AuthProvider>
-                  <AdminProvider>
-                      
-                        <AdminToolbar />
-                        <Routes>
-                        <Route path="/sso-callback" element={<AuthenticateWithRedirectCallback signUpForceRedirectUrl="/signup" />} />
-                        
-                        <Route path="/" element={<HomePageClean />} />
-                        <Route path="/login" element={<LoginPage />} />
-                        <Route path="/signup" element={<SignupPage />} />
-                        <Route path="/register" element={<Navigate to="/signup" replace />} />
-                        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-                        <Route path="/reset-password" element={<ResetPasswordPage />} />
-                        <Route path="/room/:roomId" element={<RoomPage />} />
-                        <Route path="/meeting/:roomId" element={<MeetingRoomPage />} />
-                        <Route path="/admin" element={<AdminDashboard />} />
-                        <Route path="/settings" element={<SettingsPage />} />
-                        <Route path="/support" element={<SupportPageNew />} />
-                        <Route path="/account" element={<AccountPageSimple />} />
-                        <Route path="/checkout" element={<Navigate to="/pricing" replace />} />
-                        <Route path="/success" element={<SuccessPage />} />
-                        <Route path="/user-guide" element={<UserGuidePage />} />
-                        <Route path="/community" element={<CommunityPage />} />
-                        <Route path="/security" element={<SecurityPage />} />
-                        <Route path="/integrations" element={<IntegrationsPage />} />
-                        <Route path="/about" element={<AboutPageNew />} />
-                        <Route path="/pricing" element={<PricingPage />} />
-                        <Route path="/privacy" element={<PrivacyPage />} />
-                        <Route path="/contact" element={<ContactPage />} />
-                        <Route path="/features" element={<FeaturesPage />} />
-                        <Route path="/developer" element={<DeveloperPage />} />
-                        <Route path="/dashboard" element={<AccountPageSimple />} /> 
-                        <Route path="/status" element={<StatusPageNew />} />
-                        <Route path="/careers" element={<CareersPageNew />} />
-                        <Route path="/scheduler" element={<SchedulerPageNew />} />
-                        <Route path="/terms" element={<TermsPage />} />
-                        <Route path="/cookies" element={<CookiesPage />} />
-                        <Route path="/demo" element={<DemoPageNew />} />
-                        <Route path="/changelog" element={<ChangelogPage />} />
-                        <Route path="/blog" element={<BlogPage />} />
-                        <Route path="/partners" element={<PartnersPage />} />
-                        <Route path="/docs" element={<DocsPage />} />
-                      </Routes>
-                      <AIChatbot />
-                      <BackToTopButton />
-                    
-                  </AdminProvider>
-                </AuthProvider>
+              <AuthProvider>
+                <AdminProvider>
+                  <AdminToolbar />
+                  <Routes>
+                    <Route
+                      path="/sso-callback"
+                      element={
+                        <AuthenticateWithRedirectCallback signUpForceRedirectUrl="/signup" />
+                      }
+                    />
+
+                    <Route path="/" element={<HomePageClean />} />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/signup" element={<SignupPage />} />
+                    <Route path="/register" element={<Navigate to="/signup" replace />} />
+                    <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                    <Route path="/reset-password" element={<ResetPasswordPage />} />
+                    <Route path="/room/:roomId" element={<Navigate to="/dashboard" replace />} />
+                    <Route path="/meeting/:roomId" element={<MeetingRoomPage />} />
+                    <Route path="/admin" element={<AdminDashboard />} />
+                    <Route path="/settings" element={<SettingsPage />} />
+                    <Route path="/support" element={<SupportPageNew />} />
+                    <Route path="/account" element={<AccountPageSimple />} />
+                    <Route path="/checkout" element={<Navigate to="/pricing" replace />} />
+                    <Route path="/success" element={<SuccessPage />} />
+                    <Route path="/user-guide" element={<UserGuidePage />} />
+                    <Route path="/community" element={<CommunityPage />} />
+                    <Route path="/security" element={<SecurityPage />} />
+                    <Route path="/integrations" element={<IntegrationsPage />} />
+                    <Route path="/about" element={<AboutPageNew />} />
+                    <Route path="/pricing" element={<PricingPage />} />
+                    <Route path="/privacy" element={<PrivacyPage />} />
+                    <Route path="/contact" element={<ContactPage />} />
+                    <Route path="/features" element={<FeaturesPage />} />
+                    <Route path="/developer" element={<DeveloperPage />} />
+                    <Route path="/dashboard" element={<AccountPageSimple />} />
+                    <Route path="/status" element={<StatusPageNew />} />
+                    <Route path="/careers" element={<CareersPageNew />} />
+                    <Route path="/scheduler" element={<SchedulerPageNew />} />
+                    <Route path="/terms" element={<TermsPage />} />
+                    <Route path="/cookies" element={<CookiesPage />} />
+                    <Route path="/demo" element={<DemoPageNew />} />
+                    <Route path="/changelog" element={<ChangelogPage />} />
+                    <Route path="/blog" element={<BlogPage />} />
+                    <Route path="/partners" element={<PartnersPage />} />
+                    <Route path="/docs" element={<DocsPage />} />
+                  </Routes>
+                  <AIChatbot />
+                  <BackToTopButton />
+                </AdminProvider>
+              </AuthProvider>
             </Router>
             <NotificationProvider />
             <CookieBanner />

@@ -84,16 +84,16 @@ quota artificielle.
 
 ## 2.2 Acteurs
 
-| Rôle                       | Personne           | Mission                                                                               |
-| -------------------------- | ------------------ | ------------------------------------------------------------------------------------- |
-| Concepteur-développeur     | Théo GARCES        | Conception, développement, tests, déploiement, maintenance — toutes les couches.      |
-| Référente pédagogique      | Formatrice CODA    | Suivi, validation des jalons, revues techniques.                                      |
-| Bêta-testeurs              | 12 personnes       | Tests fonctionnels, feedback UX (cf. `BILAN_RETOURS_BETA.md`).                        |
-| Hébergeur d'infrastructure | DigitalOcean Inc.  | VPS Frankfurt (Allemagne, FRA1) — sous-traitant RGPD documenté.                       |
-| Médiacontent WebRTC        | LiveKit Inc.       | SFU géré + TURN — région Europe — sous-traitant RGPD.                                 |
-| Paiements                  | Stripe Payments EU | Encaissement abonnements — Stripe Payments Europe Ltd, conformité PCI-DSS niveau 1.   |
-| Routeur d'emails           | Resend Inc.        | Envoi des emails transactionnels (invitations, codes bêta) — sous-traitant documenté. |
-| Identité utilisateur       | Clerk Inc.         | Authentification, gestion des sessions — sous-traitant RGPD.                          |
+| Rôle                       | Personne           | Mission                                                                             |
+| -------------------------- | ------------------ | ----------------------------------------------------------------------------------- |
+| Concepteur-développeur     | Théo GARCES        | Conception, développement, tests, déploiement, maintenance — toutes les couches.    |
+| Référente pédagogique      | Formatrice CODA    | Suivi, validation des jalons, revues techniques.                                    |
+| Utilisateurs tests         | 12 personnes       | Tests fonctionnels, feedback UX (recueillis lors des sessions de validation).       |
+| Hébergeur d'infrastructure | DigitalOcean Inc.  | VPS Frankfurt (Allemagne, FRA1) — sous-traitant RGPD documenté.                     |
+| Médiacontent WebRTC        | LiveKit Inc.       | SFU géré + TURN — région Europe — sous-traitant RGPD.                               |
+| Paiements                  | Stripe Payments EU | Encaissement abonnements — Stripe Payments Europe Ltd, conformité PCI-DSS niveau 1. |
+| Routeur d'emails           | Resend Inc.        | Envoi des emails transactionnels (invitations) — sous-traitant documenté.           |
+| Identité utilisateur       | Clerk Inc.         | Authentification, gestion des sessions — sous-traitant RGPD.                        |
 
 ## 2.3 Contraintes spécifiques
 
@@ -113,8 +113,7 @@ quota artificielle.
 
 ## 3.1 Origine et besoin
 
-Le besoin part de trois constats personnels, recoupés par les retours
-des bêta-testeurs :
+Le besoin part de trois constats personnels :
 
 1. **Les solutions grand public** (Zoom gratuit, Google Meet gratuit)
    imposent des limites artificielles (40 minutes, 100 participants
@@ -134,7 +133,7 @@ conformité européenne, et un tarif lisible (gratuit → 15 € → 35 €).
 
 | ID    | Objectif                                                                              | Mesure                                                                      |
 | ----- | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| OBJ-1 | Permettre à un utilisateur de **créer** une réunion vidéo en moins de **30 secondes** | Mesuré au chronomètre lors des sessions bêta (résultat : 22 s en moy.).     |
+| OBJ-1 | Permettre à un utilisateur de **créer** une réunion vidéo en moins de **30 secondes** | Mesuré au chronomètre en test fonctionnel (résultat : 22 s en moyenne).     |
 | OBJ-2 | Permettre à un invité de **rejoindre** une réunion sans installer de logiciel         | WebRTC pur, fonctionne dans Chrome / Firefox / Safari / Edge.               |
 | OBJ-3 | Garantir la **confidentialité** des médias et des messages                            | Médias E2EE possibles via LiveKit (option), TLS 1.3 sur la signalisation.   |
 | OBJ-4 | Permettre l'**internationalisation** au lancement                                     | 6 langues livrées dès la v1 (fr/en/es/it/pt/ca).                            |
@@ -250,7 +249,7 @@ handler`).
 | Suivi de tâches | GitHub Projects                            | Kanban, traçabilité commit ↔ issue.                            |
 | IDE             | VS Code + ESLint + Prettier                | Linter automatique, formatage à la sauvegarde.                 |
 | Maquettage      | Figma                                      | Wireframes, palette, composants, prototypes interactifs.       |
-| Communication   | Discord (groupe bêta)                      | Feedback bêta-testeurs.                                        |
+| Communication   | Discord                                    | Échanges avec la formatrice CODA.                              |
 | CI              | GitHub Actions                             | Lint + tests + build + audit npm sur chaque push.              |
 | Déploiement     | SSH + Docker Compose                       | Procédure manuelle versionnée dans `infra/deploy/runbook.md`.  |
 | Monitoring      | `pm2` + journaux Pino + DigitalOcean Cloud | Suivi processus + logs applicatifs structurés JSON.            |
@@ -269,7 +268,7 @@ préparation de l'examen.
 | i18n (6 langues)                      | avr. 2024 → juin 2024  | Système i18next, scripts de traduction, sélecteur de langue.            |
 | Module visio (LiveKit + Convex)       | mai 2024 → sept. 2024  | Salle de réunion, chat, whiteboard, breakout, polls.                    |
 | Module IA + outils annexes            | oct. 2024 → janv. 2025 | Assistant IA (Groq + OpenRouter en repli), export PDF.                  |
-| Phase bêta + retours                  | févr. 2025 → mars 2025 | 12 testeurs, `BILAN_RETOURS_BETA.md`, ajustements UX.                   |
+| Tests utilisateurs                    | févr. 2025 → mars 2025 | 12 sessions, ajustements UX.                                            |
 | Paiements Stripe                      | avr. 2025 → mai 2025   | 3 plans, upgrade/downgrade, webhook signé.                              |
 | Mise en production v1                 | juin 2025              | Domaine `visioconnect.pro`, certificat Let's Encrypt, premiers clients. |
 | **Audit + hardening + tests + CI/CD** | mars 2026 → mai 2026   | Branche `chore/exam-hardening`, 14 findings corrigés, 26 tests verts.   |
@@ -945,7 +944,7 @@ synchroniser les clés entre langues (`add_room_i18n.js`,
 | -------------------------- | ------------------------------ | ----------------------------------------------- |
 | Tests unitaires (services) | Vitest                         | `livekitService`, schémas Zod                   |
 | Tests d'intégration HTTP   | Vitest + Supertest             | Auth Clerk, CORS allowlist, routes santé        |
-| Tests manuels              | Bêta-testeurs (12 personnes)   | Parcours utilisateur complets, multi-navigateur |
+| Tests manuels              | Testeurs (12 personnes)        | Parcours utilisateur complets, multi-navigateur |
 | Lint statique              | ESLint flat config + Prettier  | 100 % des fichiers .js/.jsx                     |
 | Audit dépendances          | `npm audit --audit-level=high` | À chaque pipeline CI                            |
 
@@ -1404,7 +1403,7 @@ concret de veille de sécurité aboutissant à un correctif immédiat.
 
 ### 15.1.1 Responsable de traitement
 
-VisiConnect est un projet personnel. Pour la phase de bêta et la mise
+VisiConnect est un projet personnel. Pour la mise
 en ligne sous personne physique, **Théo GARCES** est responsable de
 traitement au sens de l'article 4(7) du RGPD. La transformation en
 structure juridique (auto-entreprise / SASU) est planifiée pour
@@ -1613,9 +1612,7 @@ nouvelle fonctionnalité touchant des données personnelles.
 2. `dossiers/01_MISE_A_NIVEAU.md` — bilan technique des stages A-H.
 3. `dossiers/02_DOSSIER_PROFESSIONNEL.md` — DP (livrable distinct).
 4. `infra/deploy/runbook.md` — runbook de déploiement DigitalOcean.
-5. `BILAN_RETOURS_BETA.md` — synthèse phase bêta (12 testeurs).
-6. `GUIDE_BETA_TESTEUR.md` — guide remis aux testeurs.
-7. Captures d'écran (dossier `captures website/`).
+5. Captures d'écran (dossier `capture website/`).
 
 ## Annexe C — Sortie complète de la suite de tests
 

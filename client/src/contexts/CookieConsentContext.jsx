@@ -22,9 +22,10 @@ export function CookieConsentProvider({ children }) {
   const [sessionId, setSessionId] = useState(() => {
     let sid = localStorage.getItem('visiconnect_session_id');
     if (!sid) {
-      sid = typeof crypto !== 'undefined' && crypto.randomUUID 
-        ? crypto.randomUUID() 
-        : Math.random().toString(36).substring(2) + Date.now().toString(36);
+      sid =
+        typeof crypto !== 'undefined' && crypto.randomUUID
+          ? crypto.randomUUID()
+          : Math.random().toString(36).substring(2) + Date.now().toString(36);
       localStorage.setItem('visiconnect_session_id', sid);
     }
     return sid;
@@ -42,23 +43,23 @@ export function CookieConsentProvider({ children }) {
   }, [consentState]);
 
   const acceptAll = () => {
-    const state = { 
-      essential: true, 
-      analytics: true, 
-      marketing: true, 
-      preferences: true, 
-      timestamp: new Date().toISOString() 
+    const state = {
+      essential: true,
+      analytics: true,
+      marketing: true,
+      preferences: true,
+      timestamp: new Date().toISOString(),
     };
     saveAndApply(state, true);
   };
 
   const rejectAll = () => {
-    const state = { 
-      essential: true, 
-      analytics: false, 
-      marketing: false, 
-      preferences: false, 
-      timestamp: new Date().toISOString() 
+    const state = {
+      essential: true,
+      analytics: false,
+      marketing: false,
+      preferences: false,
+      timestamp: new Date().toISOString(),
     };
     saveAndApply(state, false);
   };
@@ -67,7 +68,7 @@ export function CookieConsentProvider({ children }) {
     const state = {
       ...customState,
       essential: true,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
     saveAndApply(state, 'custom');
   };
@@ -80,19 +81,22 @@ export function CookieConsentProvider({ children }) {
     applyConsentMetrics(state);
 
     // 2. Notification Visuelle Utilisateur
-    let message = "Vos préférences de confidentialité ont bien été enregistrées.";
-    if (type === true) message = "✅ Tous les cookies essentiels et analytiques ont été acceptés.";
-    if (type === false) message = "🛡️ Refus enregistré. Seuls les cookies strictement essentiels seront utilisés.";
-    
+    let message = 'Vos préférences de confidentialité ont bien été enregistrées.';
+    if (type === true) message = '✅ Tous les cookies essentiels et analytiques ont été acceptés.';
+    if (type === false)
+      message = '🛡️ Refus enregistré. Seuls les cookies strictement essentiels seront utilisés.';
+
     // Déclenche une notification locale (capter par App.jsx)
-    window.dispatchEvent(new CustomEvent('app-notify', { 
-      detail: { 
-        type: 'success', 
-        title: 'Mise à jour de confidentialité',
-        message: message,
-        duration: 4000
-      } 
-    }));
+    window.dispatchEvent(
+      new CustomEvent('app-notify', {
+        detail: {
+          type: 'success',
+          title: 'Mise à jour de confidentialité',
+          message: message,
+          duration: 4000,
+        },
+      })
+    );
 
     // 3. Archivage RGPD sur la Base de Données Convex
     try {
@@ -105,7 +109,6 @@ export function CookieConsentProvider({ children }) {
           marketing: !!state.marketing,
           preferences: !!state.preferences,
         });
-        console.log('✅ Preuve de consentement RGPD stockée.');
       }
     } catch (error) {
       console.error('Erreur lors de la sauvegarde du consentement dans Convex:', error);
@@ -113,21 +116,19 @@ export function CookieConsentProvider({ children }) {
   };
 
   const applyConsentMetrics = (state) => {
+    // Active ou désactive les scripts tiers selon les choix utilisateur.
     if (state.analytics) {
-      console.log('🟢 Analytics: Autorisé');
-    } else {
-      console.log('🔴 Analytics: REFUSÉ');
+      // placeholder : activer Google Analytics, Hotjar, etc.
     }
-
     if (state.marketing) {
-      console.log('🟢 Marketing : Autorisé');
-    } else {
-      console.log('🔴 Marketing : REFUSÉ');
+      // placeholder : activer pixels publicitaires, etc.
     }
   };
 
   return (
-    <CookieConsentContext.Provider value={{ consentState, showBanner, acceptAll, rejectAll, saveCustomChoices, setShowBanner }}>
+    <CookieConsentContext.Provider
+      value={{ consentState, showBanner, acceptAll, rejectAll, saveCustomChoices, setShowBanner }}
+    >
       {children}
     </CookieConsentContext.Provider>
   );

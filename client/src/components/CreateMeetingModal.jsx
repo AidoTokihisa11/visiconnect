@@ -80,7 +80,6 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
   const [newParticipantEmail, setNewParticipantEmail] = useState('');
 
   // Public meeting URL: routes to MeetingRoomPage (the actual conference room).
-  // Beware: "/room/:id" maps to a beta-promo page, NOT the conference room.
   const meetingLink = `${window.location.origin}/meeting/${meetingId}`;
 
   const timeSlots = ['09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00'];
