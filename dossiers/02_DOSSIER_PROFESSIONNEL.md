@@ -41,7 +41,7 @@ _[Arrêté du 22 décembre 2015, relatif aux conditions de délivrance des titre
 Ce dossier comporte :
 
 - Pour chaque activité-type du titre visé, un à trois exemples de pratique professionnelle ;
-- Un tableau à renseigner si le candidat souhaite porter à la connaissance du jury la détention d’un titre, d’un diplôme, d'un certificat de qualification professionnelle (CQP) ou des attestations de formation ;
+- Un tableau à renseigner si le candidat souhaite porter à la connaissance du jury la détention d’un titre, d'un diplôme, d'un certificat de qualification professionnelle (CQP) ou des attestations de formation ;
 - Une déclaration sur l’honneur à compléter et à signer ;
 - Des documents illustrant la pratique professionnelle du candidat (facultatif) ;
 - Des annexes, si nécessaire.
@@ -244,7 +244,7 @@ Afin de garantir le respect de mes délais de livraison pour la bibliothèque d'
 - Technologies : React 18, Framer Motion 10, Tailwind CSS, styled-components, Convex, Zod, Clerk
 
 **3. Avec qui avez-vous travaillé ?**
-Travail réalisé en autonomie.
+**Travail réalisé en autonomie (avec revues régulières de l'organisation avec ma formatrice référente CODA).**
 
 **4. Contexte**
 
@@ -398,13 +398,13 @@ Pour corriger ce défaut, j'ai modifié ma logique d'identification pour l'immua
 - Outils : VS Code, GitHub, Looping (Modélisation Merise MCD/MLD)
 
 **3. Avec qui avez-vous travaillé ?**
-Travail réalisé en autonomie (avec revues régulières de l'organisation CI/CD avec ma formatrice référente CODA).
+Travail réalisé en autonomie (avec revues régulières de l'organisation avec ma formatrice référente CODA).
 
 **4. Contexte**
 
 - **Nom de l’entreprise, organisme ou association** : Projet personnel — VisioConnect
 - **Chantier, atelier, service** : Modélisation de base de données et WebRTC
-- **Période d’exercice** : Du : mai 2024 au : septembre 24
+- **Période d’exercice** : Du : mai 2024 au : septembre 2024
 
 **5. Informations complémentaires (facultatif)**
 
@@ -509,7 +509,7 @@ Avant cette mise à niveau, le serveur back-end de VisioConnect ne disposait d'a
 
 **Préparation de l'infrastructure et sécurité système (durcissement)**
 
-Avant d'exposer la moindre ligne de code sur le réseau public, j'ai provisionné une instance de serveur virtuel (Droplet) sous Ubuntu 24.04 LTS situé dans le centre de données de Francfort. Conformément aux recommandations de sécurité fondamentales de l'ANSSI, j'ai appliqué une procédure de sécurisation de ce système hôte :
+Avant d'exposer la moindre ligne de code sur le réseau public, j'ai provisionné une instance de serveur virtuel (Droplet) sous Ubuntu 24.04 LTS situé dans le centre de données de Francfort. Conformément aux recommandations de sécurité fondamentales de l'ANSSI, j'ai appliqué une procédure de sécurisation rigoureuse de ce système hôte :
 
 - Désactivation complète et immédiate de l'accès root par mot de passe via SSH au profit d'une authentification par clés asymétriques RSA 4096 bits.
 - Création d'un compte utilisateur dédié et limité disposant des privilèges d'administration sudo restreints.
