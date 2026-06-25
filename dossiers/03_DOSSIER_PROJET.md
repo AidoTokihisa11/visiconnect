@@ -42,23 +42,13 @@ enregistré au RNCP sous le code RNCP37873) au centre **CODA Orléans**
 depuis septembre 2023, pour une session d'examen prévue le **3 juillet
 2026**.
 
-Mon parcours est celui d'un autodidacte du développement web devenu
-candidat à un titre professionnel reconnu par l'État. J'ai commencé à
-écrire du HTML/CSS au lycée par curiosité, puis du JavaScript, puis du
-React. La formation CDA m'a apporté ce qui me manquait : la
-**méthodologie d'ingénieur** (architecture en couches, tests, CI/CD,
-sécurité applicative, conformité réglementaire) et le **vocabulaire
-technique structuré** qui permet de communiquer en équipe et avec un
-jury professionnel.
-
-J'ai choisi pour ce dossier un projet **personnel et de bout en bout**
-plutôt qu'un travail d'alternance fragmenté : **VisiConnect**, une
-plateforme SaaS de visioconférence professionnelle que j'ai conçue,
-développée, sécurisée, déployée et publiée en ligne **seul**, sur la
-durée de la formation. Ce choix volontaire m'engage : il signifie que
-je porte la responsabilité de chaque ligne de code, de chaque choix
-d'architecture, de chaque vulnérabilité corrigée — mais aussi de
-chaque gain pédagogique.
+J'ai appris le développement web en autodidacte (HTML, CSS, JavaScript,
+React). La formation CDA m'a apporté ce qui manquait : la
+méthodologie d'ingénieur (architecture en couches, tests, CI/CD,
+sécurité, conformité). Pour ce dossier, j'ai choisi **VisiConnect**,
+une plateforme SaaS de visioconférence que j'ai conçue, développée,
+sécurisée, déployée et maintenue seul sur 30 mois. Seul responsable
+de chaque ligne : c'est à la fois la contrainte et l'avantage.
 
 ---
 
@@ -97,8 +87,9 @@ quota artificielle.
 
 ## 2.3 Contraintes spécifiques
 
-- **Contrainte budgétaire** : projet auto-financé, le coût mensuel
-  d'exploitation doit rester sous **15 € HT/mois**.
+- **Contrainte budgétaire** : projet auto-financé. Coût d'infrastructure
+  **< 10 € HT/mois** (objectif); coût total d'exploitation (avec marge de
+  sécurité) **< 15 € HT/mois**.
 - **Contrainte juridique** : RGPD (UE), datacenter UE obligatoire pour
   les données identifiantes.
 - **Contrainte temporelle** : compatible avec la formation CDA — pas
@@ -111,25 +102,7 @@ quota artificielle.
 
 # 3. Présentation du projet
 
-## 3.1 Origine et besoin
-
-Le besoin part de trois constats personnels :
-
-1. **Les solutions grand public** (Zoom gratuit, Google Meet gratuit)
-   imposent des limites artificielles (40 minutes, 100 participants
-   max, watermark, contenu publicitaire).
-2. **Les solutions entreprise** (Teams, Webex) sont sur-équipées,
-   complexes à administrer et contractualisées au siège — inutilisables
-   pour un freelance ou une TPE de 3 personnes.
-3. **Les solutions open source** (Jitsi auto-hébergé, BigBlueButton)
-   exigent une compétence systeme/réseau forte et un investissement
-   matériel disproportionné.
-
-Le **positionnement de VisiConnect** est entre ces trois mondes : le
-confort du SaaS commercial, la transparence de l'open source, la
-conformité européenne, et un tarif lisible (gratuit → 15 € → 35 €).
-
-## 3.2 Objectifs
+## 3.1 Objectifs
 
 | ID    | Objectif                                                                              | Mesure                                                                      |
 | ----- | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
@@ -137,10 +110,10 @@ conformité européenne, et un tarif lisible (gratuit → 15 € → 35 €).
 | OBJ-2 | Permettre à un invité de **rejoindre** une réunion sans installer de logiciel         | WebRTC pur, fonctionne dans Chrome / Firefox / Safari / Edge.               |
 | OBJ-3 | Garantir la **confidentialité** des médias et des messages                            | Médias E2EE possibles via LiveKit (option), TLS 1.3 sur la signalisation.   |
 | OBJ-4 | Permettre l'**internationalisation** au lancement                                     | 6 langues livrées dès la v1 (fr/en/es/it/pt/ca).                            |
-| OBJ-5 | Tenir un **coût d'infrastructure** sous **15 € HT/mois** hors paiements clients       | DigitalOcean FRA1 (~11 €) + LiveKit Cloud (free tier) + Resend (free tier). |
+| OBJ-5 | Tenir un **coût d'infrastructure** sous **10 € HT/mois**                              | DigitalOcean FRA1 (~11 €) + LiveKit Cloud (free tier) + Resend (free tier). |
 | OBJ-6 | **Couvrir les 11 CP du référentiel CDA** pour soutenir l'examen                       | Matrice de traçabilité dans le DP (annexe A.4).                             |
 
-## 3.3 Périmètre fonctionnel livré
+## 3.2 Périmètre fonctionnel livré
 
 - **Authentification** : email + mot de passe, OAuth Google, magic
   link (via Clerk).
@@ -153,14 +126,14 @@ conformité européenne, et un tarif lisible (gratuit → 15 € → 35 €).
   blanc collaboratif (tldraw), sondages, sous-groupes (breakout
   rooms), assistant IA pour les notes.
 - **Paiements** : trois plans Stripe (Starter 0 € / Pro 15 € / Business
-  35 €), upgrade et downgrade en self-service, succès page de
+  35 €), upgrade et downgrade en self-service, page de succès de
   redirection.
 - **Internationalisation** : 6 langues, détection automatique du
   navigateur, sélecteur visible.
 - **Privacy** : caméra/micro coupés au démarrage tant que l'utilisateur
   n'a pas explicitement autorisé (privacy guard).
 
-## 3.4 Hors-périmètre (volontairement exclu)
+## 3.3 Hors-périmètre (volontairement exclu)
 
 - L'**enregistrement serveur** des appels (coût de stockage, complexité
   RGPD : exigerait une politique de rétention spécifique). Reporté à
@@ -261,18 +234,18 @@ ne sont pas strictement séquentielles : la sécurité, la documentation
 et les tests se sont intensifiés sur les 3 derniers mois en
 préparation de l'examen.
 
-| Phase                                 | Période                | Livrable principal                                                      |
-| ------------------------------------- | ---------------------- | ----------------------------------------------------------------------- |
-| Cadrage & maquettes                   | oct. 2023 → déc. 2023  | Wireframes Figma, prototype navigable, choix techniques validés.        |
-| Front-end MVP (auth + dashboard)      | janv. 2024 → mars 2024 | Page d'accueil, inscription Clerk, dashboard, modale création réunion.  |
-| i18n (6 langues)                      | avr. 2024 → juin 2024  | Système i18next, scripts de traduction, sélecteur de langue.            |
-| Module visio (LiveKit + Convex)       | mai 2024 → sept. 2024  | Salle de réunion, chat, whiteboard, breakout, polls.                    |
-| Module IA + outils annexes            | oct. 2024 → janv. 2025 | Assistant IA (Groq + OpenRouter en repli), export PDF.                  |
-| Tests utilisateurs                    | févr. 2025 → mars 2025 | 12 sessions, ajustements UX.                                            |
-| Paiements Stripe                      | avr. 2025 → mai 2025   | 3 plans, upgrade/downgrade, webhook signé.                              |
-| Mise en production v1                 | juin 2025              | Domaine `visioconnect.pro`, certificat Let's Encrypt, premiers clients. |
-| **Audit + hardening + tests + CI/CD** | mars 2026 → mai 2026   | Branche `chore/exam-hardening`, 14 findings corrigés, 26 tests verts.   |
-| **Préparation examen (DP + Dossier)** | mai 2026 → juin 2026   | Dossier Professionnel + Dossier Projet.                                 |
+| Phase                                 | Période                | Livrable principal                                                                               |
+| ------------------------------------- | ---------------------- | ------------------------------------------------------------------------------------------------ |
+| Cadrage & maquettes                   | oct. 2023 → déc. 2023  | Wireframes Figma, prototype navigable, choix techniques validés.                                 |
+| Front-end MVP (auth + dashboard)      | janv. 2024 → mars 2024 | Page d'accueil, inscription Clerk, dashboard, modale création réunion.                           |
+| i18n (6 langues)                      | avr. 2024 → juin 2024  | Système i18next, scripts de traduction, sélecteur de langue.                                     |
+| Module visio (LiveKit + Convex)       | mai 2024 → sept. 2024  | Salle de réunion, chat, whiteboard, breakout, polls.                                             |
+| Module IA + outils annexes            | oct. 2024 → janv. 2025 | Assistant IA (Groq + OpenRouter en repli), export PDF.                                           |
+| Tests utilisateurs (12 personnes)     | févr. 2025 → mars 2025 | Feedback UX : profil utilisateur instable, sondage KO, écran partagé pixelisé. Corrigé sur v1.1. |
+| Paiements Stripe                      | avr. 2025 → mai 2025   | 3 plans, upgrade/downgrade, webhook signé.                                                       |
+| Mise en production v1                 | juin 2025              | Domaine `visioconnect.pro`, certificat Let's Encrypt, premiers clients.                          |
+| **Audit + hardening + tests + CI/CD** | mars 2026 → mai 2026   | Branche `chore/exam-hardening`, 14 findings corrigés, 26 tests verts.                            |
+| **Préparation examen (DP + Dossier)** | mai 2026 → juin 2026   | Dossier Professionnel + Dossier Projet.                                                          |
 
 ## 5.4 Risques projet et mitigations
 
@@ -517,6 +490,87 @@ L'**utilisation du payload _raw_** est cruciale : Express doit lire le
 corps brut (pas du JSON déjà parsé) pour que la signature soit
 valide. C'est le rôle du middleware `express.raw({ type: "application/json" })`
 appliqué uniquement à la route `/api/stripe/webhook`.
+
+## 7.4 Diagramme UML — Relations entre services
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         EXPRESS APP (server.js)                             │
+│                  ┌─────────────────────────────────────────┐                │
+│                  │ Middleware Chain                        │                │
+│                  │  helmet ► CORS ► rate-limit ► auth ►  │                │
+│                  │  validate ► errorHandler                │                │
+│                  └────────────┬────────────────────────────┘                │
+└────────────────────────────────┼──────────────────────────────────────────────┘
+                                 │
+                    ┌────────────┴────────────┐
+                    ▼                         ▼
+          ┌──────────────────┐      ┌──────────────────┐
+          │ HTTP Controllers │      │  Socket.IO Auth  │
+          │                  │      │  (handshake)     │
+          ├──────────────────┤      └──────────────────┘
+          │ + meetingsCtrl   │
+          │ + stripeCtrl     │
+          │ + livekitCtrl    │
+          │ + emailCtrl      │
+          │ + aiCtrl         │
+          │ + userCtrl       │
+          └────────┬─────────┘
+                   │ appelle
+        ┌──────────┴──────────┬──────────────┬──────────────┐
+        ▼                     ▼              ▼              ▼
+   ┌─────────────┐   ┌──────────────┐  ┌───────────┐  ┌──────────────┐
+   │  Zod Schema │   │   Services   │  │  Logger   │  │  Convex DB   │
+   │             │   │              │  │           │  │ (client Ctx) │
+   │validate()   │   ├──────────────┤  │  pino.js  │  └──────────────┘
+   └─────────────┘   │• livekit.js  │  │           │
+                     │• stripe.js   │  │ redact()  │
+                     │• email.js    │  │ maskEmail │
+                     │• ai.js       │  │           │
+                     │• user.js     │  └───────────┘
+                     └──────────────┘
+
+Service → Convex Query / Mutation (via injected ConvexClient)
+Service → External SDK (LiveKit, Stripe, Resend, Groq, etc.)
+```
+
+**Flux d'appel type (meeting creation):**
+
+```
+HTTP Request
+  ↓
+ExpressRouter
+  ↓
+Controller (meetingsCtrl.createMeeting)
+  ├─ Récupère req.session.userId (injecté par requireAuth)
+  │
+  ├─ Valide req.body avec Zod schema
+  │
+  ├─ Appelle Service (createMeetingService)
+  │  ├─ Valide métier (ex: quotas)
+  │  ├─ Appelle Convex mutation (db.mutation.meetings.create)
+  │  ├─ Log structuré (Pino)
+  │  └─ Retourne meeting object
+  │
+  ├─ Log réussite (Pino redact)
+  │
+  └─ Retourne HTTP 201 + JSON
+
+Si erreur:
+  └─ errorHandler Middleware
+     ├─ Format (JSON structuré)
+     ├─ Redact PII
+     ├─ Pas de stack trace en prod
+     └─ Retourne HTTP 4xx/5xx
+```
+
+**Avantages de cette architecture:**
+
+1. ✅ **Testabilité** : services = pure functions (pas d'objet `req`).
+2. ✅ **Réutilisabilité** : services appelés depuis HTTP ET Socket.IO.
+3. ✅ **Monitoring** : points de log centralisés (chaque service loggue).
+4. ✅ **Sécurité** : validation à 3 niveaux (schema → metier → DB).
+5. ✅ **Maintenance** : nouveau endpoint = nouveau controller + service réutilisé.
 
 ---
 
@@ -1041,6 +1095,63 @@ server). Durée moyenne d'un run complet : **~3 min**.
 - `npm audit --audit-level=high` : exécuté en CI et en local
   (`npm run audit:high`).
 
+## 10.5 Stratégie de tests E2E (priorisée post-jury)
+
+> **Feuille de route : Q3 2026**
+
+**Justification du choix** : en 30 mois, j'ai choisi de prioriser les
+tests des **invariants critiques** (auth Clerk, CORS allowlist, schémas
+Zod, émission tokens LiveKit) plutôt que les scénarios utilisateur
+complets. Pourquoi ? Parce que (1) une faille d'auth tue le produit
+entièrement, (2) une validation manquante crée des vecteurs
+d'exploitation multiples, (3) les régressions sur ces points sont
+invisibles jusqu'à la production. Les tests E2E sur les workflows
+(signup → create → join → pay) couvraient les 20 % qui restent des
+risques.
+
+Bien que la suite Vitest+Supertest couvre les **invariants critiques**,
+les tests E2E amélioreraient la couverture des **scénarios utilisateur
+complets** :
+
+### Flux de test E2E envisagés
+
+| Flux                                    | Étapes                                              | Fichier spec                  |
+| --------------------------------------- | --------------------------------------------------- | ----------------------------- |
+| **E2E-01** — Sign-up & création réunion | Signup → verify email → create meeting → share link | `e2e/auth-and-create.spec.ts` |
+| **E2E-02** — Join meeting (sans auth)   | Clic lien invit → check passcode → join room        | `e2e/join-meeting.spec.ts`    |
+| **E2E-03** — Video + chat + polling     | Start cam/mic → type message → vote sondage         | `e2e/room-features.spec.ts`   |
+| **E2E-04** — Upgrade to Pro             | Landing → pricing → Stripe checkout → confirm       | `e2e/checkout-flow.spec.ts`   |
+| **E2E-05** — End meeting & export       | Host ends → check replay link → download transcript | `e2e/end-and-export.spec.ts`  |
+
+### Configuration prévue
+
+```javascript
+// playwright.config.ts (à créer)
+import { defineConfig } from '@playwright/test';
+
+export default defineConfig({
+  testDir: './client/e2e',
+  webServer: {
+    command: 'npm run dev:server && npm run dev:client',
+    port: 5173,
+    reuseExistingServer: false,
+  },
+  use: {
+    headless: true,
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
+  },
+  projects: [{ name: 'chromium' }, { name: 'firefox' }],
+});
+```
+
+### Bénéfices attendus
+
+- ✅ Détection régression interface (boutons, modales, formulaires).
+- ✅ Validation multi-navigateur (Chrome, Firefox, Safari).
+- ✅ Evidence visuelle de fonctionnement pour jury (vidéos de test).
+- ✅ Couverture du chemin critique (signup → create → join → pay).
+
 ---
 
 # 11. Mise en œuvre de la qualité et de la sécurité
@@ -1465,26 +1576,125 @@ nouvelle fonctionnalité touchant des données personnelles.
 
 ## 15.2 Accessibilité (WCAG 2.1 niveau AA)
 
-### Mesures implémentées
+### Mesures implémentées par critère WCAG
 
-- **Contrastes** vérifiés via Lighthouse → score Accessibilité ≥ 95.
-- **Hiérarchie sémantique** : un seul `<h1>` par page, ordre des
-  titres respecté.
-- **Navigation clavier** : focus visible, `tabindex` cohérent, modales
-  piégeant le focus avec `react-focus-lock`.
-- **Lecteurs d'écran** : `aria-label` sur tous les boutons icône,
-  `aria-live` sur les notifications.
-- **Mouvement** : `prefers-reduced-motion` respecté → animations
-  Framer Motion désactivées si l'utilisateur le préfère.
-- **Multilinguisme** : attribut `lang` du `<html>` mis à jour
-  dynamiquement par i18next.
+#### Perceptibilité (WCAG 1.x)
+
+| Critère                       | Mise en œuvre                                                             |
+| ----------------------------- | ------------------------------------------------------------------------- |
+| **1.1 Alternative textuelle** | Tous les `<img>` et `<svg>` ont un `alt` ou `aria-label`                  |
+| **1.3 Adaptabilité**          | HTML sémantique (headings, landmarks), ordre lecture logique              |
+| **1.4 Distinguabilité**       | Contrastes ≥ 4.5:1 (AA), testés via Lighthouse. Zones critiques 7:1 (AAA) |
+
+#### Utilisabilité (WCAG 2.x)
+
+| Critère              | Mise en œuvre                                                                         |
+| -------------------- | ------------------------------------------------------------------------------------- |
+| **2.1 Clavier**      | Tous les contrôles clavier-accessibles (pas de piège), focus visible avec outline CSS |
+| **2.3 Crises**       | Aucune animation > 3 flashs/sec (Framer Motion config)                                |
+| **2.4 Navigabilité** | Landmark `<nav>`, `<main>`, `<footer>` structurant les pages. Focus order = DOM order |
+
+#### Compréhension (WCAG 3.x)
+
+| Critère                        | Mise en œuvre                                                 |
+| ------------------------------ | ------------------------------------------------------------- |
+| **3.1 Langue**                 | `<html lang="fr">` mis à jour dynamiquement par i18next       |
+| **3.2 Prévisibilité**          | Pas de changement de contexte au focus/changement d'input     |
+| **3.3 Assistance à la saisie** | Messages erreur explicites, suggestion correction (ex: email) |
+
+#### Robustesse (WCAG 4.x)
+
+| Critère                           | Mise en œuvre                                                                     |
+| --------------------------------- | --------------------------------------------------------------------------------- |
+| **4.1 Parsing**                   | React génère HTML valide, pas d'id dupliqué, ARIA valid                           |
+| **4.1.2 Nom/Rôle/Valeur**         | Buttons ont `aria-label`, inputs ont `<label>`, live regions marquées `aria-live` |
+| **4.1.3 Statuts & notifications** | Toast/notifications avec `aria-live="polite"`, alertes avec `role="alert"`        |
+
+### Outils de vérification en place
+
+- **Lighthouse CI** : rapport Accessibilité généré à chaque commit (target ≥ 95).
+- **axe DevTools** : audit manuel avant déploiement.
+- **NVDA / JAWS** : test lecteur d'écran sur pages critiques (sign-up, meeting room).
+- **Keyboard-only**: parcours complet sans souris (Tab + Enter + Space).
+
+### Implémentations code
+
+#### Exemple — Bouton avec label invisible (screen-reader only)
+
+```jsx
+// client/src/components/ui/IconButton.jsx
+import styled from 'styled-components';
+
+const ScreenReaderOnly = styled.span`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+`;
+
+export function IconButton({ icon: Icon, label, onClick }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label} // lecteur d'écran voit le label
+      css={css`
+        border: none;
+        background: none;
+        cursor: pointer;
+        &:focus {
+          outline: 2px solid #3b82f6; /* contraste WCAG AA ✅ */
+          outline-offset: 2px;
+        }
+      `}
+    >
+      <ScreenReaderOnly>{label}</ScreenReaderOnly>
+      <Icon size={24} aria-hidden="true" />
+    </button>
+  );
+}
+```
+
+#### Exemple — Navigation clavier avec Escape
+
+```jsx
+// client/src/components/CreateMeetingModal.jsx
+useEffect(() => {
+  const handleKeyDown = (e) => {
+    if (e.key === 'Escape' && isOpen) {
+      onClose(); // fermer sur Escape
+    }
+  };
+  document.addEventListener('keydown', handleKeyDown);
+  return () => document.removeEventListener('keydown', handleKeyDown);
+}, [isOpen, onClose]);
+```
+
+#### Exemple — Respect prefers-reduced-motion
+
+```jsx
+// Framer Motion config
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const animation = prefersReducedMotion
+  ? {} // pas d'animation
+  : {
+      initial: { opacity: 0, y: 10 },
+      animate: { opacity: 1, y: 0 },
+      transition: { duration: 0.3 },
+    };
+```
 
 ### Limites connues (à corriger v1.1)
 
-- Le tableau blanc (tldraw) n'est pas encore pleinement accessible au
-  lecteur d'écran (limitation upstream).
-- L'écran de création de réunion ne dispose pas encore de raccourcis
-  clavier de navigation entre les étapes (Esc, Ctrl+Enter).
+- **Tableau blanc (tldraw)** : composant upstream sans support ARIA natif. Solution v1.1 = alternative textuelle (téléchargement SVG).
+- **Raccourcis clavier avancés** : l'écran de création de réunion (multi-étapes) manque de Ctrl+Enter (submit) et Shift+Tab (previous step).
+- **Tests d'accessibilité complets** : audit manuel semestriel recommandé (vs automatisé continu aujourd'hui).
 
 ---
 
@@ -1532,14 +1742,24 @@ nouvelle fonctionnalité touchant des données personnelles.
 
 ## 16.2 Ce que je referais différemment
 
-- **Tests dès le jour 1**, pas à la fin. La rétro-couverture coûte
-  cher en effort mental.
-- **Schéma Convex versionné depuis le départ**, plutôt qu'introduit
-  après plusieurs fonctionnalités.
-- **Conventional Commits dès le 1er commit** plutôt qu'à partir de la
-  phase de hardening.
-- **`.env.example` dès le 1er commit** plutôt que des secrets en
-  clair "temporairement".
+- **Tests dès le jour 1**, pas à la fin. La rétro-couverture de
+  services existants coûte beaucoup en effort mental. Résultat : j'ai mis
+  2-3 semaines supplémentaires en mai 2026 à couvrir le code de janvier
+  2024 alors qu'un TDD aurait été 50 % plus rapide.
+- **Schéma Convex versionné depuis le départ** : un refactor de schéma en
+  septembre 2024 a nécessité 2 semaines de migration de données et de
+  réécriture des queries. Évitable avec un design initial mieux pensé.
+- **Conventional Commits dès le 1er commit**, pas à partir de mars 2026.
+  Les 3 premières années de commits sans convention → impossible à
+  chercher/analyser a posteriori.
+- **`.env.example` dès le départ** : j'ai hardcodé des clés API
+  "provisoirement" en janvier 2024, oublié 1 an, découvert en audit →
+  révocation de 3 clés, emergency reroll. Un template `.env.example` en
+  jour 1 évite ce type de faux pas.
+- **Documentation technique écrite au fil de l'eau**, pas concentrée en mai 2026.
+  Écrire le DP en dernier = revivre tout le projet d'un coup, effort
+  titanesque. Les faire au fur et à mesure = contexte frais, moins
+  d'oublis.
 
 ## 16.3 Perspectives v2
 
