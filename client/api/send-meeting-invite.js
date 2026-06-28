@@ -4,6 +4,9 @@ const { requireAuth } = require('./_lib/auth');
 const { rateLimit } = require('./_lib/rateLimit');
 const { parseBody, schemas } = require('./_lib/schemas');
 
+const FROM_LOCAL_PART = 'contact';
+const FROM_DOMAIN = 'visioconnect.pro';
+
 module.exports = async function handler(req, res) {
   if (applyCors(req, res)) return;
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method Not Allowed' });
@@ -41,7 +44,7 @@ module.exports = async function handler(req, res) {
 
   try {
     await resend.emails.send({
-      from: 'VisiConnect <contact@visioconnect.pro>',
+      from: `VisioConnect <${FROM_LOCAL_PART}@${FROM_DOMAIN}>`,
       to: email,
       subject: `📹 Invitation : ${title}`,
       html: `

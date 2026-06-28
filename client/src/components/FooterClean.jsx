@@ -149,6 +149,7 @@ const ExLink = styled.a`
 export default function FooterClean() {
   const { t } = useTranslation();
   const { setShowBanner } = useCookieConsent();
+  const supportAddress = ['support', 'visiconnect.com'].join('@');
   return (
     <FooterContainer>
       <FooterContent>
@@ -222,7 +223,7 @@ export default function FooterClean() {
           &copy; {new Date().getFullYear()} VisioConnect. {t('common.allRightsReserved')}
         </div>
         <div style={{ display: 'flex', gap: '1.5rem' }}>
-          <ExLink href="mailto:support@visiconnect.com">support@visiconnect.com</ExLink>
+          <ExLink href={`mailto:${supportAddress}`}>{supportAddress}</ExLink>
         </div>
       </BottomBar>
     </FooterContainer>

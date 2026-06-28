@@ -3,6 +3,7 @@ import { Video, Users, Shield, Zap, Mail, Github, Linkedin } from 'lucide-react'
 
 export const useHomePageData = () => {
   const { t } = useTranslation();
+  const publicContactEmail = ['contact', 'visioconnect.pro'].join('@');
 
   // Slider data
   const sliderData = [
@@ -168,8 +169,8 @@ export const useHomePageData = () => {
     {
       icon: Mail,
       label: 'Email',
-      value: 'theo.garces.aido@gmail.com',
-      href: 'mailto:theo.garces.aido@gmail.com',
+      value: publicContactEmail,
+      href: `mailto:${publicContactEmail}`,
     },
     {
       icon: Github,

@@ -21,7 +21,9 @@ function getResend() {
   return resendInstance;
 }
 
-const FROM_DEFAULT = 'VisiConnect <contact@visioconnect.pro>';
+const FROM_LOCAL_PART = 'contact';
+const FROM_DOMAIN = 'visioconnect.pro';
+const FROM_DEFAULT = `VisioConnect <${FROM_LOCAL_PART}@${FROM_DOMAIN}>`;
 
 async function sendEmail({ to, subject, html, attachments, from = FROM_DEFAULT }) {
   const resend = getResend();

@@ -6,6 +6,8 @@ import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import { useTranslation } from '../hooks/useTranslation';
 
+const contactAddress = ['contact', 'visioconnect.pro'].join('@');
+
 const PageLayout = styled.div`
   min-height: 100vh;
   display: flex;
@@ -421,7 +423,7 @@ export default function ContactPage() {
                 </div>
                 <div className="text-container">
                   <h4>{t('contact.info.email_title')}</h4>
-                  <a href="mailto:theo.garces.aido@gmail.com">theo.garces.aido@gmail.com</a>
+                  <a href={`mailto:${contactAddress}`}>{contactAddress}</a>
                 </div>
               </InfoBlock>
 

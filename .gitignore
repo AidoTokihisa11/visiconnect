@@ -15,6 +15,11 @@ build/
 dist/
 *.tsbuildinfo
 
+# Certification / jury artifacts
+dossiers/
+capture website/
+*.pdf
+
 # ============================================
 # 🔒 FICHIERS SENSIBLES - NE JAMAIS COMMIT !
 # ============================================

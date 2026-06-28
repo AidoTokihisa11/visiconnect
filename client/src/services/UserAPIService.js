@@ -2,7 +2,7 @@ const USER_PROFILE_KEY = 'visiconnect_user_profile';
 
 const createDefaultUserProfile = () => ({
   id: localStorage.getItem('convex_user_id') || 'demo_user',
-  email: 'user@visiconnect.com',
+  email: '',
   displayName: 'Meta User',
   bio: '',
   phone: '',

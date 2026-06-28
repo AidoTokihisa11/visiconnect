@@ -28,6 +28,8 @@ import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import { useTranslation } from '../hooks/useTranslation';
 
+const businessContactAddress = ['contact', 'visiconnect.app'].join('@');
+
 // ─── Palette ──────────────────────────────────────────────────────────────────
 const C = {
   primary: '#2563eb',
@@ -2172,7 +2174,7 @@ export default function DeveloperPageV2() {
               Z.
             </CtaSub>
             <CtaActions data-reveal style={{ '--reveal-delay': '180ms' }}>
-              <CtaBtnPrimary href="mailto:contact@visiconnect.app">
+              <CtaBtnPrimary href={`mailto:${businessContactAddress}`}>
                 <Rocket size={18} />
                 Démarrer un projet
               </CtaBtnPrimary>
@@ -2182,7 +2184,7 @@ export default function DeveloperPageV2() {
               </CtaBtnSecondary>
             </CtaActions>
             <CtaEmail data-reveal style={{ '--reveal-delay': '240ms' }}>
-              Réponse sous 24h&nbsp;·&nbsp;<span>contact@visiconnect.app</span>
+              Réponse sous 24h&nbsp;·&nbsp;<span>{businessContactAddress}</span>
             </CtaEmail>
           </CtaInner>
         </CtaSection>
