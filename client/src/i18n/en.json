@@ -64,7 +64,7 @@
     "subtitle": "HD quality, instant start, built-in security. Join your teams in one click, from any device.",
     "startFree": "Try for free",
     "watchDemo": "See it in action",
-    "trustedBy": "Already adopted by {{count}}+ teams",
+    "trustedBy": "Currently in beta",
     "title1": "Next-generation ",
     "title2": "video conferencing.",
     "testRoom": "Join the room"
@@ -214,7 +214,7 @@
     },
     "cta": {
       "title": "Ready to get started?",
-      "description": "Join thousands of teams already using VisioConnect for their meetings.",
+      "description": "Free access, no commitment.",
       "button": "Get started for free"
     },
     "plans": {
@@ -291,7 +291,7 @@
   "auth": {
     "login": {
       "title": "Login",
-      "subtitle": "Access your VisiConnect account",
+      "subtitle": "Access your VisioConnect account",
       "email": "Email address",
       "password": "Password",
       "rememberMe": "Remember me",
@@ -303,7 +303,7 @@
     },
     "signup": {
       "title": "Create Account",
-      "subtitle": "Join VisiConnect today",
+      "subtitle": "Join VisioConnect today",
       "firstName": "First Name",
       "lastName": "Last Name",
       "email": "Email address",
@@ -345,7 +345,7 @@
   },
   "tutorial": {
     "title": "Getting Started Guide",
-    "welcome": "Welcome to VisiConnect!",
+    "welcome": "Welcome to VisioConnect!",
     "step1": {
       "title": "Create a Meeting",
       "description": "Click \"New Meeting\" to get started"
@@ -475,7 +475,7 @@
   "contactDescription": "A question, a suggestion, or want to collaborate? Don't hesitate to contact me!",
   "integrations": {
     "title": "Integrations",
-    "subtitle": "Connect VisiConnect to your favorite tools for a unified and productive experience.",
+    "subtitle": "Connect VisioConnect to your favorite tools for a unified and productive experience.",
     "connect": "Connect",
     "google": {
       "description": "Integrate Gmail, Google Calendar, Drive and the entire Google suite for maximum productivity."
@@ -624,7 +624,7 @@
   "community": {
     "hero": {
       "title": "VisioConnect Community",
-      "subtitle": "Join thousands of creators, developers, and professionals."
+      "subtitle": "A space to share feedback and follow the project's progress."
     },
     "social": {
       "discord": {
@@ -929,10 +929,10 @@
     "story": {
       "title": "Our Story",
       "p1": "VisioConnect was born from a simple observation: video communication has become essential, but existing tools were either too complex, unsecure, or too expensive.",
-      "p2": "We gathered a team of passionate engineers and designers to build a platform that puts the user first. After months of intensive development, we launched a solution that combines the highest video quality with a dead-simple interface.",
-      "p3": "Today, VisioConnect helps thousands of businesses, schools, and families stay close, no matter the distance.",
+      "p2": "I built this platform on my own, learning as I went. The goal was straightforward: create something usable and reliable without cutting corners on quality.",
+      "p3": "Today, VisioConnect is in beta and welcoming its first users. Feedback directly shapes what gets built next.",
       "paragraph1": "VisioConnect was born from a simple observation: video communication has become essential, but existing tools were either too complex, unsecure, or too expensive.",
-      "paragraph2": "We gathered a team of passionate engineers and designers to build a platform that puts the user first. After months of intensive development, we launched a solution that combines the highest video quality with a dead-simple interface.",
+      "paragraph2": "I built this platform on my own, learning as I went. The goal was straightforward: create something usable and reliable without cutting corners on quality.",
       "paragraph3": "Today, VisioConnect is available in 6 countries, welcoming its first early adopters. We are building the communication tool of tomorrow, together, one step at a time."
     },
     "values": {
@@ -963,8 +963,8 @@
       "support": "Support"
     },
     "cta": {
-      "title": "Join the revolution",
-      "description": "Discover how VisioConnect can transform your meetings today.",
+      "title": "Try it yourself",
+      "description": "Create a free account and start a meeting in seconds.",
       "button": "Try for free"
     }
   },
@@ -991,37 +991,37 @@
   },
   "testimonials": {
     "0": {
-      "quote": "VisioConnect transformed our meetings. Simple, effective, no headache.",
-      "author": "Marie Dubois",
-      "title": "Founder of TechStart"
+      "quote": "Video quality holds up well even on an average connection. The integrated chat means you never have to switch tabs during a meeting.",
+      "author": "Maëlle G.",
+      "title": "Graphic Designer"
     },
     "1": {
-      "quote": "The best solution for our clients. Intuitive interface, responsive support.",
-      "author": "Jean Martin",
-      "title": "CTO, Digital Solutions"
+      "quote": "The collaborative whiteboard works well for small teams. The automatic transcription picks up speech accurately — useful for keeping track of what was said.",
+      "author": "Anthony D.",
+      "title": "Professional Photographer"
     },
     "2": {
-      "quote": "No equivalent on the market at this price. Truly professional quality.",
-      "author": "Sophie Leclerc",
-      "title": "Commercial Director, HR Consulting"
+      "quote": "La sala de reuniones carga rápido y el uso compartido de pantalla es fácil de encontrar. Para estar en fase beta, está bastante completo.",
+      "author": "Magus S.",
+      "title": "General Manager"
     },
-    "title": "They trust VisioConnect",
-    "subtitle": "Companies of all sizes use our platform for effective collaboration.",
+    "title": "What early users say",
+    "subtitle": "A few words from people who tested the tool.",
     "items": {
       "1": {
-        "content": "The 4K quality is just insane. You really feel like you are in the same room!",
-        "name": "Marie Dubois",
-        "role": "Founder TechStart"
+        "content": "Video quality holds up well even on an average connection. The integrated chat means you never have to switch tabs during a meeting.",
+        "name": "Maëlle G.",
+        "role": "Graphic Designer"
       },
       "2": {
-        "content": "Perfect for our remote developers. Very smooth!",
-        "name": "Jean Martin",
-        "role": "CTO"
+        "content": "The collaborative whiteboard works well for small teams. The automatic transcription picks up speech accurately — useful for keeping track of what was said.",
+        "name": "Anthony D.",
+        "role": "Professional Photographer"
       },
       "3": {
-        "content": "No equivalent on the market for this price. Truly professional quality.",
-        "name": "Sophie Leclerc",
-        "role": "Commercial Director"
+        "content": "La sala de reuniones carga rápido y el uso compartido de pantalla es fácil de encontrar. Para estar en fase beta, está bastante completo.",
+        "name": "Magus S.",
+        "role": "General Manager"
       }
     }
   },
@@ -1122,7 +1122,7 @@
     },
     "cta": {
       "title": "Ready to transform your communications?",
-      "description": "Join thousands of teams who trust VisioConnect for their meetings.",
+      "description": "Free access, no commitment.",
       "button": "Get Started Free"
     },
     "eyebrow": "Features",
@@ -1790,7 +1790,7 @@
   },
   "createMeetingModal": {
     "title": "Create a meeting",
-    "defaultTitle": "VisiConnect Meeting",
+    "defaultTitle": "VisioConnect Meeting",
     "linkLabel": "Link:",
     "sections": {
       "general": {
@@ -2556,10 +2556,10 @@
     }
   },
   "aiChatbot": {
-    "title": "VisiConnect Assistant",
+    "title": "VisioConnect Assistant",
     "subtitle": "Ultra-fast AI",
     "placeholder": "Ask your question...",
-    "greeting": "Hi! I'm the VisiConnect AI assistant. I know the platform inside out. How can I help you today?"
+    "greeting": "Hi! I'm the VisioConnect AI assistant. I know the platform inside out. How can I help you today?"
   },
   "aiChatPanel": {
     "greeting": "Hi! Ask me anything about the meeting.",

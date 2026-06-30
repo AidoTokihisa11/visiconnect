@@ -28,7 +28,7 @@ module.exports = async function handler(req, res) {
   }
   const resend = new Resend(process.env.RESEND_API_KEY);
   const displayName = name || email.split('@')[0];
-  const title = meetingTitle || 'Réunion VisiConnect';
+  const title = meetingTitle || 'Réunion VisioConnect';
 
   let dateInfo = '';
   if (date) {
@@ -53,7 +53,7 @@ module.exports = async function handler(req, res) {
           <!-- Logo / Brand -->
           <div style="text-align: center; margin-bottom: 28px;">
             <div style="display: inline-block; background: #2563eb; border-radius: 12px; padding: 10px 20px;">
-              <span style="color: white; font-size: 18px; font-weight: 700; letter-spacing: -0.5px;">VisiConnect</span>
+              <span style="color: white; font-size: 18px; font-weight: 700; letter-spacing: -0.5px;">VisioConnect</span>
             </div>
           </div>
 
@@ -92,7 +92,7 @@ module.exports = async function handler(req, res) {
           </div>
 
           <p style="color: #94a3b8; font-size: 12px; text-align: center; margin-top: 16px;">
-            © ${new Date().getFullYear()} VisiConnect · Cet email vous a été envoyé automatiquement
+            © ${new Date().getFullYear()} VisioConnect · Cet email vous a été envoyé automatiquement
           </p>
         </div>
       `,

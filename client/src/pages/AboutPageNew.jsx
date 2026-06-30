@@ -278,8 +278,8 @@ const AboutPageNew = () => {
               <HeroPanelLabel>VisioConnect en chiffres</HeroPanelLabel>
               <StatGrid>
                 {[
-                  ['30', 'Utilisateurs actifs'],
-                  ['20', 'Réunions actives'],
+                  ['Beta', 'Accès anticipé'],
+                  ['~10', 'Bêta-testeurs actifs'],
                   ['6', 'Pays disponibles'],
                   ['99.5%', 'Disponibilité'],
                 ].map(([v, l]) => (
@@ -337,7 +337,7 @@ const AboutPageNew = () => {
         <StatsSection>
           <StatsGrid>
             <StatItem>
-              <StatNumber>30</StatNumber>
+              <StatNumber>~10</StatNumber>
               <StatLabel>{t('about.stats.users')}</StatLabel>
             </StatItem>
             <StatItem>

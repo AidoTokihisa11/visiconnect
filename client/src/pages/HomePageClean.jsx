@@ -9,8 +9,6 @@ import { useHomePageData } from '../hooks/useHomePageData';
 import FeaturesCarousel3D from '../components/home/FeaturesCarousel3D';
 import KeyStats from '../components/home/KeyStats';
 import TechBentoGrid from '../components/home/TechBentoGrid';
-import IndieBadge from '../components/home/IndieBadge';
-import ProofArea from '../components/home/ProofArea';
 import { EditableText } from '../components/Admin/EditableContent';
 import FeaturesTabs from '../components/home/FeaturesTabs';
 import FeatureCard from '../components/home/FeatureCard';
@@ -673,11 +671,7 @@ export default function HomePageClean() {
         </HeroContainer>
       </HeroSection>
 
-      <ProofArea />
-
       <FeaturesCarousel3D />
-
-      <KeyStats />
 
       {/* FEATURES TABS SECTION */}
       <FeaturesTabs t={t} />
@@ -831,8 +825,6 @@ export default function HomePageClean() {
           </ContactActions>
         </ContactContainer>
       </ContactSection>
-
-      <IndieBadge />
 
       <FooterClean />
     </PageContainer>

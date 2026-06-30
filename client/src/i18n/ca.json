@@ -62,7 +62,7 @@
     "subtitle": "Qualitat HD, inici instantani, seguretat integrada. Uneix-te al teu equip amb un clic, des de qualsevol dispositiu.",
     "startFree": "Prova gratis",
     "watchDemo": "Veure en acció",
-    "trustedBy": "Ja adoptat per més de {{count}} equips",
+    "trustedBy": "Actualment en fase beta",
     "title1": "Videoconferencia ",
     "title2": "de nova generació.",
     "testRoom": "Unir-se a la sala",
@@ -181,7 +181,7 @@
     },
     "cta": {
       "title": "A punt per començar?",
-      "description": "Uneix-te a milers d'equips que ja utilitzen VisioConnect per a les seves reunions.",
+      "description": "Accés gratuït, sense compromís.",
       "button": "Comença gratis"
     },
     "plans": {
@@ -258,7 +258,7 @@
   "auth": {
     "login": {
       "title": "Inicia sessió",
-      "subtitle": "Accedeix al teu compte de VisiConnect",
+      "subtitle": "Accedeix al teu compte de VisioConnect",
       "email": "Adreça de correu electrònic",
       "password": "Contrasenya",
       "rememberMe": "Recorda'm",
@@ -270,7 +270,7 @@
     },
     "signup": {
       "title": "Crear un compte",
-      "subtitle": "Uneix-te a VisiConnect avui",
+      "subtitle": "Uneix-te a VisioConnect avui",
       "firstName": "Nom",
       "lastName": "Cognom",
       "email": "Adreça de correu electrònic",
@@ -312,7 +312,7 @@
   },
   "tutorial": {
     "title": "Guía de inicio",
-    "welcome": "Benvingut a VisiConnect!",
+    "welcome": "Benvingut a VisioConnect!",
     "step1": {
       "title": "Crear una reunió",
       "description": "Haz clic en \"Nueva reunió\" para comenzar"
@@ -481,7 +481,7 @@
   "analyticsCookies": "Cookies de análisis",
   "integrations": {
     "title": "Integracions",
-    "subtitle": "Conecte VisiConnect con sus herramientas favoritas para una experiencia fluida",
+    "subtitle": "Conecte VisioConnect con sus herramientas favoritas para una experiencia fluida",
     "connectButton": "Connectar",
     "services": {
       "google": {
@@ -494,7 +494,7 @@
       },
       "slack": {
         "title": "Slack",
-        "description": "Sincronice sus canales y missatges directamente en VisiConnect"
+        "description": "Sincronice sus canales y missatges directamente en VisioConnect"
       },
       "zoom": {
         "title": "Zoom",
@@ -502,7 +502,7 @@
       },
       "trello": {
         "title": "Trello",
-        "description": "Gestione sus tableros y tarjetas Trello desde VisiConnect"
+        "description": "Gestione sus tableros y tarjetas Trello desde VisioConnect"
       },
       "jira": {
         "title": "Jira",
@@ -666,37 +666,37 @@
   },
   "testimonials": {
     "0": {
-      "quote": "VisioConnect ha transformado nuestras reunions. Simple, eficaz, sin dolor de cabeza.",
-      "author": "Marie Dubois",
-      "title": "Fundadora de TechStart"
+      "quote": "La qualitat de vídeo aguanta bé fins i tot amb una connexió normal. El xat integrat durant la reunió evita haver de canviar de pestañya.",
+      "author": "Maëlle G.",
+      "title": "Dissenyadora Gràfica"
     },
     "1": {
-      "quote": "La mejor solución para nuestros clientes. Interfaz intuitiva, suport reactivo.",
-      "author": "Jean Martin",
-      "title": "CTO, Soluciones Digitales"
+      "quote": "La pissarra col·laborativa és pràctica per treballar en equip. La transcripció automàtica reconeix bé la parla, útil per fer el seguiment dels intercanvis.",
+      "author": "Anthony D.",
+      "title": "Fotògraf Professional"
     },
     "2": {
-      "quote": "Sin equivalente en el mercado por este precio. Calidad verdaderamente profesional.",
-      "author": "Sophie Leclerc",
-      "title": "Directora Comercial, Consultoría RH"
+      "quote": "La sala de reunions carrega ràpid i compartir la pantalla és fàcil de trobar. Per estar en fase beta, és bastant complet.",
+      "author": "Magus S.",
+      "title": "Directora General"
     },
-    "title": "Confían en VisioConnect",
-    "subtitle": "Empresas de todos los tamaños utilizan nuestra plataforma para una colaboración efectiva.",
+    "title": "El que diuen els primers usuaris",
+    "subtitle": "Alguns comentaris de persones que han provat l'eina.",
     "items": {
       "1": {
-        "content": "La calidad 4K es una locura. ¡Realmente te sientes en la misma habitación!",
-        "name": "Marie Dubois",
-        "role": "Fundadora TechStart"
+        "content": "La qualitat de vídeo aguanta bé fins i tot amb una connexió normal. El xat integrat durant la reunió evita haver de canviar de pestañya.",
+        "name": "Maëlle G.",
+        "role": "Dissenyadora Gràfica"
       },
       "2": {
-        "content": "Perfecto para nuestros desarrolladores remotos. ¡Muy fluido!",
-        "name": "Jean Martin",
-        "role": "CTO"
+        "content": "La pissarra col·laborativa és pràctica per treballar en equip. La transcripció automàtica reconeix bé la parla.",
+        "name": "Anthony D.",
+        "role": "Fotògraf Professional"
       },
       "3": {
-        "content": "No hay equivalente en el mercado por este precio. Calidad verdaderamente profesional.",
-        "name": "Sophie Leclerc",
-        "role": "Directora Comercial"
+        "content": "La sala de reunions carrega ràpid i compartir la pantalla és fàcil de trobar. Per estar en fase beta, és bastant complet.",
+        "name": "Magus S.",
+        "role": "Directora General"
       }
     }
   },
@@ -837,7 +837,7 @@
   "community": {
     "hero": {
       "title": "Comunidad VisioConnect",
-      "subtitle": "Únase a miles de desarrolladores y profesionales."
+      "subtitle": "Un espai per compartir comentaris i seguir el progrés del projecte."
     },
     "social": {
       "discord": {
@@ -1159,7 +1159,7 @@
     },
     "cta": {
       "title": "A punt per transformar les vostres comunicacions?",
-      "description": "Uneix-te a milers d'equips que confien en VisioConnect.",
+      "description": "Accés gratuït, sense compromís.",
       "button": "Comença gratis"
     },
     "eyebrow": "Funcionalidades",
@@ -1827,7 +1827,7 @@
   },
   "createMeetingModal": {
     "title": "Crear una reunió",
-    "defaultTitle": "Reunió VisiConnect",
+    "defaultTitle": "Reunió VisioConnect",
     "linkLabel": "Enllaç:",
     "sections": {
       "general": {
@@ -2593,10 +2593,10 @@
     }
   },
   "aiChatbot": {
-    "title": "Assistent VisiConnect",
+    "title": "Assistent VisioConnect",
     "subtitle": "IA ultra ràpida",
     "placeholder": "Feu la vostra pregunta...",
-    "greeting": "Hola! Sóc l'assistent d'IA de VisiConnect. Conec la plataforma a fons. Com us puc ajudar avui?"
+    "greeting": "Hola! Sóc l'assistent d'IA de VisioConnect. Conec la plataforma a fons. Com us puc ajudar avui?"
   },
   "aiChatPanel": {
     "greeting": "Hola! Pregunta'm sobre la reunió.",

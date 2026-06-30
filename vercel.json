@@ -1,5 +1,12 @@
 {
   "buildCommand": "npm run build:client",
   "outputDirectory": "client/build",
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "functions": {
+    "client/api/**/*.js": {}
+  },
+  "rewrites": [
+    { "source": "/api/ai/chat", "destination": "/client/api/ai/chat" },
+    { "source": "/api/(.*)",    "destination": "/client/api/$1" },
+    { "source": "/(.*)",        "destination": "/index.html" }
+  ]
 }

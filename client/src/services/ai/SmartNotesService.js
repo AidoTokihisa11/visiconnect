@@ -28,7 +28,7 @@ class SmartNotesService {
   async generateMeetingSummary({ transcript, chatMessages, meetingTitle, duration }) {
     // Prépare le contexte
     let context = `# Contexte de la réunion\n`;
-    context += `Titre: ${meetingTitle || 'Réunion VisiConnect'}\n`;
+    context += `Titre: ${meetingTitle || 'Réunion VisioConnect'}\n`;
     context += `Durée: ${duration || 'Non spécifiée'}\n\n`;
 
     if (transcript && transcript.length > 0) {

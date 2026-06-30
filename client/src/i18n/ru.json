@@ -62,7 +62,7 @@
     "subtitle": "HD качество, мгновенный старт, встроенная безопасность. Подключайтесь к команде в один клик с любого устройства.",
     "startFree": "Попробовать бесплатно",
     "watchDemo": "Посмотреть в действии",
-    "trustedBy": "Уже используется {{count}}+ командами",
+    "trustedBy": "Сейчас в бета-версии",
     "title1": "Видеоконференции ",
     "title2": "нового поколения.",
     "testRoom": "Войти в комнату",
@@ -258,7 +258,7 @@
   "auth": {
     "login": {
       "title": "Вход",
-      "subtitle": "Войдите в свою учетную запись VisiConnect",
+      "subtitle": "Войдите в свою учетную запись VisioConnect",
       "email": "Адрес электронной почты",
       "password": "Пароль",
       "rememberMe": "Запомнить меня",
@@ -270,7 +270,7 @@
     },
     "signup": {
       "title": "Создать учетную запись",
-      "subtitle": "Присоединяйтесь к VisiConnect сегодня",
+      "subtitle": "Присоединяйтесь к VisioConnect сегодня",
       "firstName": "Имя",
       "lastName": "Фамилия",
       "email": "Адрес электронной почты",
@@ -312,7 +312,7 @@
   },
   "tutorial": {
     "title": "Руководство по началу работы",
-    "welcome": "Добро пожаловать в VisiConnect!",
+    "welcome": "Добро пожаловать в VisioConnect!",
     "step1": {
       "title": "Создать встречу",
       "description": "Нажмите \"Новая встреча\" чтобы начать"
@@ -481,7 +481,7 @@
   "analyticsCookies": "Аналитические cookies",
   "integrations": {
     "title": "Интеграции",
-    "subtitle": "Подключите VisiConnect к вашим любимым инструментам для бесшовного опыта",
+    "subtitle": "Подключите VisioConnect к вашим любимым инструментам для бесшовного опыта",
     "connectButton": "Подключить",
     "services": {
       "google": {
@@ -494,7 +494,7 @@
       },
       "slack": {
         "title": "Slack",
-        "description": "Синхронизируйте ваши каналы и сообщения прямо в VisiConnect"
+        "description": "Синхронизируйте ваши каналы и сообщения прямо в VisioConnect"
       },
       "zoom": {
         "title": "Zoom",
@@ -502,7 +502,7 @@
       },
       "trello": {
         "title": "Trello",
-        "description": "Управляйте досками и карточками Trello из VisiConnect"
+        "description": "Управляйте досками и карточками Trello из VisioConnect"
       },
       "jira": {
         "title": "Jira",
@@ -628,37 +628,37 @@
   },
   "testimonials": {
     "0": {
-      "quote": "VisioConnect преобразил наши встречи. Просто, эффективно, без головной боли.",
-      "author": "Мари Дюбуа",
-      "title": "Основатель TechStart"
+      "quote": "La qualité vidéo tient bien même avec une connexion moyenne. Le chat intégré pendant la réunion évite d'avoir à changer d'onglet.",
+      "author": "Maëlle G.",
+      "title": "Графический дизайнер"
     },
     "1": {
-      "quote": "Лучшее решение для наших клиентов. Интуитивный интерфейс, оперативная поддержка.",
-      "author": "Жан Мартен",
-      "title": "CTO, Цифровые Решения"
+      "quote": "Le tableau blanc collaboratif est pratique pour travailler à plusieurs. La transcription automatique reconnaît bien la parole, utile pour garder une trace des échanges.",
+      "author": "Anthony D.",
+      "title": "Профессиональный фотограф"
     },
     "2": {
-      "quote": "Нет аналогов на рынке за эту цену. По-настоящему профессиональное качество.",
-      "author": "Софи Леклерк",
-      "title": "Коммерческий директор, HR-консалтинг"
+      "quote": "La sala de reuniones carga rápido y el uso compartido de pantalla es fácil de encontrar. Para estar en fase beta, está bastante completo.",
+      "author": "Magus S.",
+      "title": "Генеральный директор"
     },
-    "title": "Они доверяют VisioConnect",
-    "subtitle": "Компании всех размеров используют нашу платформу для эффективного сотрудничества.",
+    "title": "Что говорят первые пользователи",
+    "subtitle": "Несколько отзывов от людей, протестировавших инструмент.",
     "items": {
       "1": {
-        "content": "Качество 4K просто безумное. Вы действительно чувствуете себя в одной комнате!",
-        "name": "Мари Дюбуа",
-        "role": "Основатель TechStart"
+        "content": "La qualité vidéo tient bien même avec une connexion moyenne. Le chat intégré pendant la réunion évite d'avoir à changer d'onglet.",
+        "name": "Maëlle G.",
+        "role": "Графический дизайнер"
       },
       "2": {
-        "content": "Идеально подходит для наших удаленных разработчиков. Очень плавно!",
-        "name": "Жан Мартин",
-        "role": "CTO"
+        "content": "Le tableau blanc collaboratif est pratique pour travailler à plusieurs. La transcription automatique reconnaît bien la parole, utile pour garder une trace des échanges.",
+        "name": "Anthony D.",
+        "role": "Профессиональный фотограф"
       },
       "3": {
-        "content": "Нет аналогов на рынке за эту цену. Профессиональное качество, действительно.",
-        "name": "Софи Леклерк",
-        "role": "Коммерческий директор"
+        "content": "La sala de reuniones carga rápido y el uso compartido de pantalla es fácil de encontrar. Para estar en fase beta, está bastante completo.",
+        "name": "Magus S.",
+        "role": "Генеральный директор"
       }
     }
   },
@@ -1823,7 +1823,7 @@
   },
   "createMeetingModal": {
     "title": "Создать встречу",
-    "defaultTitle": "Встреча VisiConnect",
+    "defaultTitle": "Встреча VisioConnect",
     "linkLabel": "Ссылка:",
     "sections": {
       "general": {
@@ -2589,10 +2589,10 @@
     }
   },
   "aiChatbot": {
-    "title": "Ассистент VisiConnect",
+    "title": "Ассистент VisioConnect",
     "subtitle": "Сверхбыстрый ИИ",
     "placeholder": "Задайте свой вопрос...",
-    "greeting": "Здравствуйте! Я ИИ-ассистент VisiConnect. Я знаю платформу досконально. Чем могу помочь?"
+    "greeting": "Здравствуйте! Я ИИ-ассистент VisioConnect. Я знаю платформу досконально. Чем могу помочь?"
   },
   "aiChatPanel": {
     "greeting": "Здравствуйте! Спросите меня о встрече.",

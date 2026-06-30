@@ -1,4 +1,4 @@
-# Runbook — Déploiement VisiConnect sur Hetzner CX22
+# Runbook — Déploiement VisioConnect sur Hetzner CX22
 
 > **Public visé** : Théo Garces (CDA Orléans). Document servant à
 > argumenter la compétence **CP10 — Préparer et exécuter le déploiement**
@@ -99,7 +99,7 @@ nano .env   # remplir CLERK_SECRET_KEY, LIVEKIT_*, STRIPE_*, RESEND_API_KEY, ALL
 # Build + démarrage
 docker compose build
 docker compose up -d
-docker compose logs -f api    # vérifier "🚀 Serveur VisiConnect démarré"
+docker compose logs -f api    # vérifier "🚀 Serveur VisioConnect démarré"
 ```
 
 Tester :

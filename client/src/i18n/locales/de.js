@@ -60,7 +60,7 @@ const deTranslations = {
       'Treten Sie einfach mit Ihren Teams in Kontakt durch unsere fortschrittliche und intuitive Videokonferenzlösung',
     startFree: 'Kostenlos starten',
     watchDemo: 'Demo ansehen',
-    trustedBy: 'Vertraut von über {{count}} Unternehmen weltweit',
+    trustedBy: 'Aktuell in der Beta-Phase',
     title1: 'Videokonferenzen ',
     title2: 'einfach professionell.',
     testRoom: 'Raum betreten',
@@ -147,7 +147,7 @@ const deTranslations = {
   auth: {
     login: {
       title: 'Anmelden',
-      subtitle: 'Greifen Sie auf Ihr VisiConnect-Konto zu',
+      subtitle: 'Greifen Sie auf Ihr VisioConnect-Konto zu',
       email: 'E-Mail-Adresse',
       password: 'Passwort',
       rememberMe: 'Angemeldet bleiben',
@@ -159,7 +159,7 @@ const deTranslations = {
     },
     signup: {
       title: 'Konto erstellen',
-      subtitle: 'Treten Sie VisiConnect heute bei',
+      subtitle: 'Treten Sie VisioConnect heute bei',
       firstName: 'Vorname',
       lastName: 'Nachname',
       email: 'E-Mail-Adresse',
@@ -200,7 +200,7 @@ const deTranslations = {
   },
   tutorial: {
     title: 'Erste Schritte Guide',
-    welcome: 'Willkommen bei VisiConnect!',
+    welcome: 'Willkommen bei VisioConnect!',
     step1: {
       title: 'Meeting erstellen',
       description: 'Klicken Sie auf "Neues Meeting" um zu beginnen',
@@ -374,7 +374,7 @@ const deTranslations = {
   integrations: {
     title: 'Integrationen',
     subtitle:
-      'Verbinden Sie VisiConnect mit Ihren bevorzugten Tools für eine einheitliche und produktive Erfahrung.',
+      'Verbinden Sie VisioConnect mit Ihren bevorzugten Tools für eine einheitliche und produktive Erfahrung.',
     connect: 'Verbinden',
     google: {
       description: 'Integrieren Sie Google Workspace.',

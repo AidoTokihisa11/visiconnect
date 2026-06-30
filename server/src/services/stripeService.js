@@ -1,5 +1,5 @@
 /**
- * StripeService \u2014 gestion des abonnements VisiConnect.
+ * StripeService \u2014 gestion des abonnements VisioConnect.
  *
  * Encapsule la cr\u00e9ation des Checkout Sessions et la v\u00e9rification des
  * webhooks (signature). Pas de logique m\u00e9tier dans les controllers : ils
@@ -22,8 +22,8 @@ function getStripe() {
 }
 
 const PLAN_PRICES = {
-  pro: { monthly: 1500, annual: 14400, name: 'VisiConnect Pro' },
-  business: { monthly: 3500, annual: 34800, name: 'VisiConnect Business' },
+  pro: { monthly: 1500, annual: 14400, name: 'VisioConnect Pro' },
+  business: { monthly: 3500, annual: 34800, name: 'VisioConnect Business' },
 };
 
 const STRIPE_LOCALES = new Set([

@@ -1,5 +1,5 @@
 /**
- * Single source of truth for VisiConnect pricing.
+ * Single source of truth for VisioConnect pricing.
  * All amounts are in euro cents (for Stripe) unless noted.
  * Use `priceMonthly` / `priceAnnual` (human-readable €) for display.
  */

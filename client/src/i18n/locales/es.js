@@ -60,7 +60,7 @@ const esTranslations = {
       'Conéctese fácilmente con sus equipos gracias a nuestra solución avanzada e intuitiva de videoconferencia',
     startFree: 'Comenzar gratis',
     watchDemo: 'Ver demo',
-    trustedBy: 'Confiado por más de {{count}} empresas en todo el mundo',
+    trustedBy: 'Actualmente en fase beta',
     title1: 'Videoconferencia ',
     title2: 'simplemente profesional.',
     testRoom: 'Unirse a la sala',
@@ -147,7 +147,7 @@ const esTranslations = {
   auth: {
     login: {
       title: 'Iniciar sesión',
-      subtitle: 'Accede a tu cuenta de VisiConnect',
+      subtitle: 'Accede a tu cuenta de VisioConnect',
       email: 'Dirección de email',
       password: 'Contraseña',
       rememberMe: 'Recordarme',
@@ -159,7 +159,7 @@ const esTranslations = {
     },
     signup: {
       title: 'Crear cuenta',
-      subtitle: 'Únete a VisiConnect hoy',
+      subtitle: 'Únete a VisioConnect hoy',
       firstName: 'Nombre',
       lastName: 'Apellido',
       email: 'Dirección de email',
@@ -200,7 +200,7 @@ const esTranslations = {
   },
   tutorial: {
     title: 'Guía de inicio',
-    welcome: '¡Bienvenido a VisiConnect!',
+    welcome: '¡Bienvenido a VisioConnect!',
     step1: {
       title: 'Crear una reunión',
       description: 'Haz clic en "Nueva reunión" para comenzar',
@@ -372,7 +372,7 @@ const esTranslations = {
   analyticsCookies: 'Cookies de análisis',
   integrations: {
     title: 'Integraciones',
-    subtitle: 'Conecte VisiConnect con sus herramientas favoritas para una experiencia fluida',
+    subtitle: 'Conecte VisioConnect con sus herramientas favoritas para una experiencia fluida',
     connectButton: 'Conectar',
     services: {
       google: {
@@ -385,7 +385,7 @@ const esTranslations = {
       },
       slack: {
         title: 'Slack',
-        description: 'Sincronice sus canales y mensajes directamente en VisiConnect',
+        description: 'Sincronice sus canales y mensajes directamente en VisioConnect',
       },
       zoom: {
         title: 'Zoom',
@@ -393,7 +393,7 @@ const esTranslations = {
       },
       trello: {
         title: 'Trello',
-        description: 'Gestione sus tableros y tarjetas Trello desde VisiConnect',
+        description: 'Gestione sus tableros y tarjetas Trello desde VisioConnect',
       },
       jira: {
         title: 'Jira',
@@ -513,24 +513,23 @@ const esTranslations = {
       author: 'Marie Dubois',
       title: 'Fundadora de TechStart',
     },
-    title: 'Confían en VisioConnect',
-    subtitle:
-      'Empresas de todos los tamaños utilizan nuestra plataforma para una colaboración efectiva.',
+    title: 'Lo que dicen los primeros usuarios',
+    subtitle: 'Algunas palabras de personas que probaron la herramienta.',
     items: {
       1: {
         content: 'La calidad 4K es una locura. ¡Realmente te sientes en la misma habitación!',
-        name: 'Marie Dubois',
+        name: 'Maëlle G.',
         role: 'Fundadora TechStart',
       },
       2: {
         content: 'Perfecto para nuestros desarrolladores remotos. ¡Muy fluido!',
-        name: 'Jean Martin',
+        name: 'Anthony D.',
         role: 'CTO',
       },
       3: {
         content:
           'No hay equivalente en el mercado por este precio. Calidad verdaderamente profesional.',
-        name: 'Sophie Leclerc',
+        name: 'Beta-testeur',
         role: 'Directora Comercial',
       },
     },

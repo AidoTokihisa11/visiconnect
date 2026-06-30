@@ -7,13 +7,6 @@
  *   3. L'autorisation effective de rejoindre la room (placeholder Convex \u00e0
  *      remplir une fois la query c\u00f4t\u00e9 Convex disponible : ici on autorise par
  *      d\u00e9faut tous les utilisateurs authentifi\u00e9s, mais on logge le contr\u00f4le).
- *
- * Diff\u00e9rences avec la version pr\u00e9c\u00e9dente :
- *   \u2014 Plus de CORS wildcard.
- *   \u2014 Plus de mock token silencieux (\u00e9chec rapide si cl\u00e9s manquantes).
- *   \u2014 Identit\u00e9 LiveKit = userId Clerk (impossible de l'usurper c\u00f4t\u00e9 client).
- *   \u2014 TTL explicite (4h au lieu du d\u00e9faut 6h).
- *   \u2014 Rate-limit 10 requ\u00eates / minute / IP.
  */
 const { AccessToken } = require('livekit-server-sdk');
 const { applyCors } = require('./_lib/cors');
@@ -44,14 +37,7 @@ module.exports = async function handler(req, res) {
     return res.status(503).json({ error: 'Service de visio temporairement indisponible.' });
   }
 
-  // \ud83d\udd10 Autorisation m\u00e9tier
-  // TODO : remplacer ce hook par une v\u00e9rification Convex r\u00e9elle
-  //   const meeting = await convex.query(api.meetings.getByRoomName, { roomName });
-  //   if (!meeting) return res.status(404).json({ error: 'R\u00e9union introuvable.' });
-  //   if (meeting.isProtected && meeting.passcode !== hashed(passcode)) {
-  //     return res.status(403).json({ error: 'Passcode invalide.' });
-  //   }
-  // Pour l'instant on logge l'\u00e9v\u00e9nement \u00e0 des fins d'audit.
+  // TODO: replace with a Convex authorization check (open room / passcode / host).
   console.info('[livekit-token] grant', { userId: session.userId, room: data.roomName });
 
   try {

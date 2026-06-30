@@ -75,7 +75,7 @@ export const useRecording = () => {
         const a = document.createElement('a');
         a.style.display = 'none';
         a.href = url;
-        a.download = `VisiConnect-Recording-${new Date().toISOString().slice(0, 10)}.webm`;
+        a.download = `VisioConnect-Recording-${new Date().toISOString().slice(0, 10)}.webm`;
         document.body.appendChild(a);
         a.click();
 

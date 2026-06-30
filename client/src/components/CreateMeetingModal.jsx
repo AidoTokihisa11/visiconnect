@@ -153,7 +153,7 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
           name: participant.name,
           meetingId,
           meetingTitle:
-            formData.title || t('createMeetingModal.defaultTitle', 'Réunion VisiConnect'),
+            formData.title || t('createMeetingModal.defaultTitle', 'Réunion VisioConnect'),
           meetingLink,
           date: formData.date,
           startTime: formData.startTime,
@@ -251,7 +251,7 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
         const previous = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
         const entry = {
           id: meetingId,
-          title: formData.title || t('createMeetingModal.defaultTitle', 'Réunion VisiConnect'),
+          title: formData.title || t('createMeetingModal.defaultTitle', 'Réunion VisioConnect'),
           date: formData.date,
           startTime: formData.startTime,
           endTime: formData.endTime,

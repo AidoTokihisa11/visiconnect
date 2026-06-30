@@ -176,7 +176,7 @@ const enTranslations = {
   auth: {
     login: {
       title: 'Login',
-      subtitle: 'Access your VisiConnect account',
+      subtitle: 'Access your VisioConnect account',
       email: 'Email address',
       password: 'Password',
       rememberMe: 'Remember me',
@@ -188,7 +188,7 @@ const enTranslations = {
     },
     signup: {
       title: 'Create Account',
-      subtitle: 'Join VisiConnect today',
+      subtitle: 'Join VisioConnect today',
       firstName: 'First Name',
       lastName: 'Last Name',
       email: 'Email address',
@@ -229,7 +229,7 @@ const enTranslations = {
   },
   tutorial: {
     title: 'Getting Started Guide',
-    welcome: 'Welcome to VisiConnect!',
+    welcome: 'Welcome to VisioConnect!',
     step1: {
       title: 'Create a Meeting',
       description: 'Click "New Meeting" to get started',
@@ -362,7 +362,7 @@ const enTranslations = {
     "A question, a suggestion, or want to collaborate? Don't hesitate to contact me!",
   integrations: {
     title: 'Integrations',
-    subtitle: 'Connect VisiConnect to your favorite tools for a unified and productive experience.',
+    subtitle: 'Connect VisioConnect to your favorite tools for a unified and productive experience.',
     connect: 'Connect',
     google: {
       description:
@@ -619,8 +619,8 @@ const enTranslations = {
     story: {
       title: 'Our Story',
       p1: 'VisioConnect was born from a simple observation: video communication has become essential, but existing tools were either too complex, unsecure, or too expensive.',
-      p2: 'We gathered a team of passionate engineers and designers to build a platform that puts the user first. After months of intensive development, we launched a solution that combines the highest video quality with a dead-simple interface.',
-      p3: 'Today, VisioConnect helps thousands of businesses, schools, and families stay close, no matter the distance.',
+      p2: 'I built this platform on my own, learning as I went. The goal was straightforward: create something usable and reliable without cutting corners on quality.',
+      p3: 'Today, VisioConnect is in beta and welcoming its first users. Their feedback directly shapes what gets built next.',
     },
     values: {
       title: 'Our Values',
@@ -641,8 +641,8 @@ const enTranslations = {
       support: 'Support',
     },
     cta: {
-      title: 'Join the revolution',
-      description: 'Discover how VisioConnect can transform your meetings today.',
+      title: 'Try it yourself',
+      description: 'Create a free account and start a meeting in seconds.',
       button: 'Try for free',
     },
   },
@@ -669,27 +669,27 @@ const enTranslations = {
   },
   testimonials: {
     0: {
-      quote: 'VisioConnect transformed our meetings. Simple, effective, no headache.',
-      author: 'Marie Dubois',
-      title: 'Founder of TechStart',
+      quote: 'Video quality holds up well even on an average connection. The integrated chat means you never have to switch tabs during a meeting.',
+      author: 'Maëlle G.',
+      title: 'Graphic Designer',
     },
-    title: 'They trust VisioConnect',
-    subtitle: 'Companies of all sizes use our platform for effective collaboration.',
+    title: 'What early users say',
+    subtitle: 'A few words from people who tested the tool.',
     items: {
       1: {
-        content: 'The 4K quality is just insane. You really feel like you are in the same room!',
-        name: 'Marie Dubois',
-        role: 'Founder TechStart',
+        content: 'Video quality holds up well even on an average connection. The integrated chat means you never have to switch tabs during a meeting.',
+        name: 'Maëlle G.',
+        role: 'Graphic Designer',
       },
       2: {
-        content: 'Perfect for our remote developers. Very smooth!',
-        name: 'Jean Martin',
-        role: 'CTO',
+        content: 'The collaborative whiteboard works well for small teams. The automatic transcription picks up speech accurately — useful for keeping track of what was said.',
+        name: 'Anthony D.',
+        role: 'Professional Photographer',
       },
       3: {
-        content: 'No equivalent on the market for this price. Truly professional quality.',
-        name: 'Sophie Leclerc',
-        role: 'Commercial Director',
+        content: "La sala de reuniones carga rápido y el uso compartido de pantalla es fácil de encontrar. Para estar en fase beta, está bastante completo.",
+        name: 'Magus S.',
+        role: 'General Manager',
       },
     },
   },

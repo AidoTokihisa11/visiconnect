@@ -252,17 +252,17 @@ const knowledgeBase = [
   {
     tags: ['prix', 'tarif', 'abonnement', 'combien', 'payant', 'gratuit', 'premium'],
     response:
-      "VisiConnect propose plusieurs formules : une version gratuite (Membres Basic) idéale pour les petites réunions, et des abonnements Premium/Pro offrant des réunions illimitées, la 4K, des salles de sous-commission, et l'accès au tableau blanc avancé.",
+      "VisioConnect propose plusieurs formules : une version gratuite (Membres Basic) idéale pour les petites réunions, et des abonnements Premium/Pro offrant des réunions illimitées, la 4K, des salles de sous-commission, et l'accès au tableau blanc avancé.",
   },
   {
     tags: ['tableau', 'blanc', 'dessin', 'tableau blanc', 'dessiner', 'schéma'],
     response:
-      "Le tableau blanc interactif de VisiConnect vous permet de dessiner, d'ajouter des formes et des notes en temps réel avec tous les participants. Il est accessible directement depuis la barre d'outils de votre salle de réunion.",
+      "Le tableau blanc interactif de VisioConnect vous permet de dessiner, d'ajouter des formes et des notes en temps réel avec tous les participants. Il est accessible directement depuis la barre d'outils de votre salle de réunion.",
   },
   {
     tags: ['sécurité', 'chiffrement', 'sécurisé', 'données', 'confidenciel'],
     response:
-      "La sécurité est notre priorité. Toutes les communications sur VisiConnect sont protégées par un chiffrement de bout en bout (E2EE), et nous offrons des options de salle d'attente et de mot de passe pour contrôler l'accès à vos réunions.",
+      "La sécurité est notre priorité. Toutes les communications sur VisioConnect sont protégées par un chiffrement de bout en bout (E2EE), et nous offrons des options de salle d'attente et de mot de passe pour contrôler l'accès à vos réunions.",
   },
   {
     tags: ['4k', 'qualité', 'hd', 'haute définition', 'vidéo'],
@@ -282,7 +282,7 @@ const knowledgeBase = [
   {
     tags: ['micro', 'audio', 'entends', 'son', 'parle', 'sourd'],
     response:
-      'Si vous avez des problèmes de son, vérifiez que votre micro/casque est bien sélectionné dans les Paramètres > Audio. Assurez-vous également que votre navigateur autorise VisiConnect à utiliser le microphone.',
+      'Si vous avez des problèmes de son, vérifiez que votre micro/casque est bien sélectionné dans les Paramètres > Audio. Assurez-vous également que votre navigateur autorise VisioConnect à utiliser le microphone.',
   },
   {
     tags: ['caméra', 'video', 'marche pas', 'cam', 'voir'],
@@ -292,22 +292,22 @@ const knowledgeBase = [
   {
     tags: ['fonctionnalités', 'features', 'quoi', 'pourquoi', 'visiconnect'],
     response:
-      "VisiConnect est une plateforme ultra-performante offrant : Appels vidéo 4K, Audio spatial, Chat en direct, Messagerie privée, Tableau blanc collaboratif, Partage d'écran fluide, et une sécurité de bout en bout.",
+      "VisioConnect est une plateforme ultra-performante offrant : Appels vidéo 4K, Audio spatial, Chat en direct, Messagerie privée, Tableau blanc collaboratif, Partage d'écran fluide, et une sécurité de bout en bout.",
   },
   {
     tags: ['salut', 'bonjour', 'hey', 'coucou', 'hello'],
     response:
-      "Bonjour ! Bienvenue sur VisiConnect. Je suis l'IA de la plateforme, entraînée pour répondre à toutes vos questions. Que puis-je faire pour vous aujourd'hui ?",
+      "Bonjour ! Bienvenue sur VisioConnect. Je suis l'IA de la plateforme, entraînée pour répondre à toutes vos questions. Que puis-je faire pour vous aujourd'hui ?",
   },
   {
     tags: ['merci', 'thanks', 'super', 'génial', 'top'],
     response:
-      "Avec grand plaisir ! N'hésitez pas si vous avez la moindre question concernant VisiConnect ou ses fonctionnalités.",
+      "Avec grand plaisir ! N'hésitez pas si vous avez la moindre question concernant VisioConnect ou ses fonctionnalités.",
   },
   {
     tags: ['qui', 'es tu', 'nom', 'ia', 'robot', 'agent'],
     response:
-      "Je suis VisiBot, l'Intelligence Artificielle ultra-performante de VisiConnect. Mon rôle est de vous guider, de vous aider à résoudre vos problèmes et de tout vous expliquer sur notre plateforme !",
+      "Je suis VisiBot, l'Intelligence Artificielle ultra-performante de VisioConnect. Mon rôle est de vous guider, de vous aider à résoudre vos problèmes et de tout vous expliquer sur notre plateforme !",
   },
 ];
 
@@ -334,7 +334,7 @@ const findBestMatch = (input) => {
   if (highestScore > 0) return bestMatch;
 
   // Default fallback if no match
-  return "C'est une excellente question. VisiConnect propose tellement de fonctionnalités (4K, tableau blanc, sécurité E2E) que la réponse pourrait dépendre de votre situation exacte. Pouvez-vous reformuler ou préciser de quelle partie de la plateforme vous parlez ?";
+  return "C'est une excellente question. VisioConnect propose tellement de fonctionnalités (4K, tableau blanc, sécurité E2E) que la réponse pourrait dépendre de votre situation exacte. Pouvez-vous reformuler ou préciser de quelle partie de la plateforme vous parlez ?";
 };
 
 const normalizeForDisplay = (text = '') =>
@@ -357,7 +357,7 @@ const askExternalLLM = async (messages, uiLanguage) => {
     messages: [
       {
         role: 'system',
-        content: `You are the official VisiConnect assistant. The user interface is currently set to language code "${locale}".
+        content: `You are the official VisioConnect assistant. The user interface is currently set to language code "${locale}".
 
 LANGUAGE RULES (MANDATORY, NO EXCEPTIONS):
 1. Detect the language of the user's LATEST message.
@@ -490,7 +490,7 @@ const AIChatbot = () => {
                   <Sparkles size={20} />
                 </IconWrapper>
                 <div>
-                  <HeaderTitle>{t('aiChatbot.title', 'Assistant VisiConnect')}</HeaderTitle>
+                  <HeaderTitle>{t('aiChatbot.title', 'Assistant VisioConnect')}</HeaderTitle>
                   <div style={{ fontSize: '0.75rem', color: COLORS.lightText }}>
                     {t('aiChatbot.subtitle', 'IA Ultra-performante')}
                   </div>

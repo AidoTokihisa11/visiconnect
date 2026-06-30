@@ -1,7 +1,7 @@
 {
   "name": "visiconnect-server",
   "version": "2.0.0",
-  "description": "Serveur Node.js pour VisiConnect (visioconférence, chat, whiteboard, paiements)",
+  "description": "Serveur Node.js pour VisioConnect (visioconférence, chat, whiteboard, paiements)",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",

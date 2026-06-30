@@ -306,15 +306,15 @@ const CallToAction = ({
     description ||
     t(
       'cta.defaultDescription',
-      "Rejoignez les milliers d'équipes qui font confiance à VisioConnect."
+      "L'accès Starter est gratuit. Aucune carte bancaire requise."
     );
   const _buttonText = buttonText || t('cta.defaultButton', 'Commencer gratuitement');
   const _eyebrow =
     eyebrow !== null ? eyebrow : t('cta.defaultEyebrow', "Démarrez en moins d'une minute");
 
   const stats = customStats || [
-    { value: '50K+', label: t('cta.stats.users', 'Utilisateurs') },
-    { value: '4.9★', label: t('cta.stats.rating', 'Note moyenne') },
+    { value: 'E2E', label: t('cta.stats.encryption', 'Chiffrement') },
+    { value: 'Beta', label: t('cta.stats.access', 'Accès anticipé') },
     { value: '99.9%', label: t('cta.stats.uptime', 'Disponibilité') },
   ];
 

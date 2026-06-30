@@ -462,7 +462,7 @@ export const AIChatPanel = ({ responseStyle = 'balanced', roomMessages = [], roo
           size={14}
           style={{ display: 'inline', marginRight: '6px', verticalAlign: 'middle' }}
         />
-        {t('aiChatPanel.subtitle', 'Assistant IA VisiConnect — GROQ + OpenRouter')}
+        {t('aiChatPanel.subtitle', 'Assistant IA VisioConnect — GROQ + OpenRouter')}
       </TopHint>
 
       {aiError && <ErrorMessage>{aiError}</ErrorMessage>}

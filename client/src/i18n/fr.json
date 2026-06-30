@@ -58,42 +58,42 @@
     "integrations": "Intégrations"
   },
   "hero": {
-    "title": "La visioconférence nouvelle génération.",
-    "titleLine1": "La visioconférence",
-    "titleLine2": "nouvelle génération.",
-    "subtitle": "Qualité HD, démarrage instantané, sécurité intégrée. Rejoignez vos équipes en un clic, depuis n'importe quel appareil.",
+    "title": "Organisez vos réunions en ligne, simplement.",
+    "titleLine1": "Organisez vos réunions",
+    "titleLine2": "en ligne, simplement.",
+    "subtitle": "Créez une réunion en quelques secondes et partagez le lien. Vos participants rejoignent directement depuis leur navigateur, sans application à installer.",
     "startFree": "Essayer gratuitement",
     "testRoom": "Rejoindre la room",
     "watchDemo": "Voir en action",
-    "trustedBy": "Déjà adopté par {{count}}+ équipes",
-    "title1": "La visioconférence ",
-    "title2": "nouvelle génération."
+    "trustedBy": "En phase bêta",
+    "title1": "Organisez vos réunions ",
+    "title2": "en ligne, simplement."
   },
   "homeFeatures": {
-    "title": "Conçu pour la performance",
-    "subtitle": "Une suite complète d'outils professionnels pour des réunions efficaces, sécurisées et sans friction.",
+    "title": "Ce que vous pouvez faire avec VisioConnect",
+    "subtitle": "Des outils accessibles depuis le navigateur pour collaborer avec votre équipe en temps réel.",
     "video": {
-      "title": "Qualité vidéo exceptionnelle",
-      "text": "Résolution HD adaptative jusqu'à 1080p. Notre moteur intelligent optimise la qualité en temps réel pour garantir une image fluide, quelle que soit votre connexion.",
+      "title": "Vidéo HD adaptative",
+      "text": "La résolution s'adapte automatiquement à votre connexion, jusqu'à 1080p. La suppression du bruit par IA est activée par défaut.",
       "items": [
-        "HD adaptative jusqu'à 1080p",
+        "HD jusqu'à 1080p",
         "Suppression du bruit par IA",
-        "Codecs nouvelle génération VP9/AV1"
+        "Codecs VP9/AV1"
       ]
     },
     "security": {
-      "title": "Sécurité de niveau entreprise",
-      "text": "Vos communications sont protégées par un chiffrement DTLS-SRTP de bout en bout. Conforme RGPD, aucune donnée n'est stockée ni exploitée.",
-      "items": ["Chiffrement DTLS-SRTP", "100% conforme RGPD", "Aucun stockage de données"]
+      "title": "Communications chiffrées",
+      "text": "Vos échanges sont protégés par un chiffrement DTLS-SRTP de bout en bout. La plateforme est conforme RGPD et ne conserve pas vos données de réunion.",
+      "items": ["Chiffrement DTLS-SRTP", "Conforme RGPD", "Aucun stockage des données"]
     },
     "instant": {
-      "title": "Démarrage instantané",
-      "text": "Créez une réunion en 3 secondes. Partagez le lien, vos participants rejoignent immédiatement — sans téléchargement, sans compte requis.",
+      "title": "Prêt en quelques secondes",
+      "text": "Créez une réunion, partagez le lien. Vos invités rejoignent depuis leur navigateur — aucun compte ni téléchargement requis.",
       "items": ["Lien unique sécurisé", "Aucune installation requise", "Compatible tous appareils"]
     },
     "collaboration": {
-      "title": "Collaboration en temps réel",
-      "text": "Partage d'écran instantané, tableau blanc interactif et chat intégré. Tous vos outils de productivité réunis dans une seule interface.",
+      "title": "Travaillez ensemble en direct",
+      "text": "Partagez votre écran, utilisez le tableau blanc ou échangez dans le chat. Ces outils sont disponibles pendant toute la réunion.",
       "items": ["Partage d'écran HD", "Tableau blanc collaboratif", "Chat temps réel"]
     },
     "meetings": {
@@ -103,8 +103,8 @@
     }
   },
   "features": {
-    "title": "Fonctionnalités puissantes",
-    "subtitle": "Tout ce dont vous avez besoin pour des réunions productives",
+    "title": "Les outils disponibles",
+    "subtitle": "Un ensemble d'outils conçus pour rendre vos réunions efficaces.",
     "videoCall": {
       "title": "Appels vidéo HD",
       "description": "Qualité vidéo cristalline jusqu'à 4K avec audio de qualité studio"
@@ -212,8 +212,8 @@
       }
     },
     "cta": {
-      "title": "Prêt à commencer ?",
-      "description": "Rejoignez des milliers d'équipes qui utilisent déjà VisioConnect pour leurs réunions.",
+      "title": "Vous souhaitez essayer ?",
+      "description": "L'accès Starter est gratuit et sans engagement. Aucune carte bancaire requise.",
       "button": "Commencer gratuitement"
     },
     "plans": {
@@ -290,7 +290,7 @@
   "auth": {
     "login": {
       "title": "Connexion",
-      "subtitle": "Accédez à votre compte VisiConnect",
+      "subtitle": "Accédez à votre compte VisioConnect",
       "email": "Adresse email",
       "password": "Mot de passe",
       "rememberMe": "Se souvenir de moi",
@@ -302,7 +302,7 @@
     },
     "signup": {
       "title": "Créer un compte",
-      "subtitle": "Rejoignez VisiConnect dès aujourd'hui",
+      "subtitle": "Rejoignez VisioConnect dès aujourd'hui",
       "firstName": "Prénom",
       "lastName": "Nom",
       "email": "Adresse email",
@@ -371,7 +371,7 @@
   },
   "tutorial": {
     "title": "Guide de démarrage",
-    "welcome": "Bienvenue sur VisiConnect !",
+    "welcome": "Bienvenue sur VisioConnect !",
     "step1": {
       "title": "Créer une réunion",
       "description": "Cliquez sur \"Nouvelle réunion\" pour commencer"
@@ -488,11 +488,11 @@
   "needsAdaptation": "Adaptation aux besoins",
   "contactMe": "Me contacter",
   "aboutProject": "À propos du projet",
-  "projectDescription": "VisioConnect est une plateforme de visioconférence développée avec les technologies les plus récentes. Notre objectif : offrir une expérience de communication fluide, sécurisée et accessible à tous les professionnels.",
+  "projectDescription": "VisioConnect est une plateforme de visioconférence développée par un développeur indépendant. Elle repose sur React, LiveKit (WebRTC) et Convex, et fonctionne sans installation côté utilisateur.",
   "myVision": "Ma vision",
-  "visionDescription": "Rendre la visioconférence professionnelle accessible à tous. Que vous soyez une startup de 3 personnes ou une équipe de 100, vous méritez des outils qui fonctionnent sans compromis.",
+  "visionDescription": "Proposer un outil simple à utiliser, sans friction technique. L'objectif est que n'importe qui puisse organiser ou rejoindre une réunion en quelques secondes.",
   "technologiesUsed": "Technologies",
-  "techDescription": "Architecture moderne basée sur React, LiveKit (WebRTC) et Convex. Optimisation audio par intelligence artificielle pour une qualité sonore professionnelle.",
+  "techDescription": "L'application est construite avec React, LiveKit (WebRTC) et Convex. La suppression du bruit repose sur un traitement IA côté client.",
   "creationYear": "Année de création",
   "philosophy": "Philosophie",
   "philosophyValue": "Open Source",
@@ -500,7 +500,7 @@
   "scopeLabel": "Portée",
   "globalValue": "Global",
   "contactTitle": "Une question ?",
-  "contactDescription": "Notre équipe est disponible pour répondre à vos questions et vous accompagner dans votre projet.",
+  "contactDescription": "N'hésitez pas à écrire au développeur. Les retours et suggestions sont les bienvenus.",
   "fullNamePlaceholder": "Nom complet",
   "emailPlaceholder": "Votre adresse email",
   "subjectPlaceholder": "Sujet",
@@ -510,7 +510,7 @@
   "messageSent": "Message envoyé !",
   "integrations": {
     "title": "Intégrations",
-    "subtitle": "Connectez VisiConnect à vos outils préférés pour une expérience unifiée et productive.",
+    "subtitle": "Connectez VisioConnect à vos outils préférés pour une expérience unifiée et productive.",
     "connect": "Se connecter",
     "google": {
       "description": "Intégrez Gmail, Google Calendar, Drive et toute la suite Google pour une productivité maximale."
@@ -659,7 +659,7 @@
   "community": {
     "hero": {
       "title": "Communauté VisioConnect",
-      "subtitle": "Rejoignez des milliers de créateurs, développeurs et professionnels."
+      "subtitle": "Un espace pour partager vos retours et suivre l'avancement du projet."
     },
     "social": {
       "discord": {
@@ -867,9 +867,9 @@
   "privacyCompliance": "Conformité RGPD",
   "complianceDesc": "Respect total des réglementations européennes sur la protection des données.",
   "projectVision": "Vision du projet",
-  "visionText": "VisioConnect est né de ma passion pour les technologies de communication moderne. En tant que développeur full-stack, j'ai voulu créer une solution qui combine innovation technologique et expérience utilisateur exceptionnelle.",
+  "visionText": "VisioConnect est un projet personnel né de l'envie d'explorer les technologies de communication temps réel. L'objectif était de construire quelque chose de simple et fiable que d'autres pourraient utiliser.",
   "technicalStack": "Stack technique",
-  "stackText": "React.js, WebRTC, Socket.io, Node.js, MongoDB, AI/ML pour l'optimisation vidéo, et bien d'autres technologies cutting-edge pour une expérience fluide.",
+  "stackText": "React, LiveKit (WebRTC), Convex, Node.js et un moteur de traitement vidéo côté client pour la suppression du bruit.",
   "yourMessage": "Votre message",
   "emailAddress": "Adresse email",
   "fullName": "Nom complet",
@@ -955,37 +955,37 @@
   },
   "testimonials": {
     "0": {
-      "quote": "VisioConnect a transformé nos réunions. Simple, efficace, sans prise de tête.",
-      "author": "Marie Dubois",
-      "title": "Fondatrice de TechStart"
+      "quote": "La qualité vidéo tient bien même avec une connexion moyenne. Le chat intégré pendant la réunion évite d'avoir à changer d'onglet.",
+      "author": "Maëlle G.",
+      "title": "Graphiste"
     },
     "1": {
-      "quote": "La meilleure solution pour nos clients. Interface intuitive, support réactif.",
-      "author": "Jean Martin",
-      "title": "CTO, Solutions Digitales"
+      "quote": "Le tableau blanc collaboratif est pratique pour travailler à plusieurs. La transcription automatique reconnaît bien la parole, utile pour garder une trace des échanges.",
+      "author": "Anthony D.",
+      "title": "Photographe Professionnel"
     },
     "2": {
-      "quote": "Pas d'équivalent sur le marché pour ce prix. Qualité professionnelle, vraiment.",
-      "author": "Sophie Leclerc",
-      "title": "Directrice Commerciale, Conseil RH"
+      "quote": "La sala de reuniones carga rápido y el uso compartido de pantalla es fácil de encontrar. Para estar en fase beta, está bastante completo.",
+      "author": "Magus S.",
+      "title": "Directrice Générale"
     },
-    "title": "Ils font confiance à VisioConnect",
-    "subtitle": "Des entreprises de toutes tailles utilisent notre plateforme pour une collaboration efficace.",
+    "title": "Ce qu'en disent les premiers utilisateurs",
+    "subtitle": "Quelques retours de personnes qui ont testé l'outil.",
     "items": {
       "1": {
-        "content": "La qualité 4K est juste folle. On se croirait vraiment dans la même pièce !",
-        "name": "Marie Dubois",
-        "role": "Fondatrice TechStart"
+        "content": "La qualité vidéo tient bien même avec une connexion moyenne. Le chat intégré pendant la réunion évite d'avoir à changer d'onglet.",
+        "name": "Maëlle G.",
+        "role": "Graphiste"
       },
       "2": {
-        "content": "Parfait pour nos développeurs en remote. Très fluide !",
-        "name": "Jean Martin",
-        "role": "CTO"
+        "content": "Le tableau blanc collaboratif est pratique pour travailler à plusieurs. La transcription automatique reconnaît bien la parole, utile pour garder une trace des échanges.",
+        "name": "Anthony D.",
+        "role": "Photographe Professionnel"
       },
       "3": {
-        "content": "Aucun équivalent sur le marché pour ce prix. Vraiment une qualité pro.",
-        "name": "Sophie Leclerc",
-        "role": "Directrice Commerciale"
+        "content": "La sala de reuniones carga rápido y el uso compartido de pantalla es fácil de encontrar. Para estar en fase beta, está bastante completo.",
+        "name": "Magus S.",
+        "role": "Directrice Générale"
       }
     }
   },
@@ -1000,10 +1000,10 @@
     "story": {
       "title": "Notre Histoire",
       "p1": "VisioConnect est né d'un constat simple : la communication vidéo est devenue essentielle, mais les outils existants étaient soit trop complexes, soit peu sécurisés, soit trop coûteux.",
-      "p2": "Nous avons rassemblé une équipe d'ingénieurs passionnés et de designers pour créer une plateforme qui met l'utilisateur au premier plan. Après des mois de développement intensif, nous avons lancé une solution qui combine la plus haute qualité vidéo avec une interface d'une simplicité enfantine.",
+      "p2": "J'ai développé seul cette plateforme, en apprenant au fil du projet. L'objectif était simple : créer quelque chose d'utilisable et de fiable sans sacrifier la qualité technique.",
       "p3": "Aujourd'hui, VisioConnect est disponible dans 6 pays et accueille ses premiers utilisateurs passionnés. Nous construisons l'outil de communication de demain, ensemble, pas à pas.",
       "paragraph1": "VisioConnect est né d'un constat simple : la communication vidéo est devenue essentielle, mais les outils existants étaient soit trop complexes, soit peu sécurisés, soit trop coûteux.",
-      "paragraph2": "Nous avons rassemblé une équipe d'ingénieurs passionnés et de designers pour créer une plateforme qui met l'utilisateur au premier plan. Après des mois de développement intensif, nous avons lancé une solution qui combine la plus haute qualité vidéo avec une interface d'une simplicité enfantine.",
+      "paragraph2": "J'ai développé seul cette plateforme, en apprenant au fil du projet. L'objectif était simple : créer quelque chose d'utilisable et de fiable sans sacrifier la qualité technique.",
       "paragraph3": "Aujourd'hui, VisioConnect est disponible dans 6 pays et accueille ses premiers utilisateurs passionnés. Nous construisons l'outil de communication de demain, ensemble, pas à pas."
     },
     "values": {
@@ -1034,8 +1034,8 @@
       "support": "Support"
     },
     "cta": {
-      "title": "Rejoignez la révolution",
-      "description": "Découvrez comment VisioConnect peut transformer vos réunions dès aujourd'hui.",
+      "title": "Essayez par vous-même",
+      "description": "Créez un compte gratuit et lancez une réunion en quelques secondes.",
       "button": "Essayer gratuitement"
     }
   },
@@ -1146,7 +1146,7 @@
     },
     "cta": {
       "title": "Prêt à transformer vos communications ?",
-      "description": "Rejoignez des milliers d'équipes qui font confiance à VisioConnect pour leurs réunions.",
+      "description": "Accès gratuit, sans engagement.",
       "button": "Commencer Gratuitement"
     },
     "eyebrow": "Fonctionnalités",
@@ -1261,7 +1261,7 @@
         "desc": "Organisez des conférences, formations et événements en ligne pour de larges audiences."
       },
       "title": "Pour tous les usages",
-      "subtitle": "Des équipes de toutes tailles et tous secteurs font confiance à VisioConnect."
+      "subtitle": "Pour les réunions en petites équipes ou les discussions à distance."
     }
   },
   "login": {
@@ -1684,7 +1684,7 @@
   "checkout": {
     "back": "Retour aux tarifs",
     "title": "Finaliser votre commande",
-    "subtitle": "Sécurisez votre accès à VisiConnect et transformez vos réunions.",
+    "subtitle": "Sécurisez votre accès à VisioConnect et transformez vos réunions.",
     "contact": {
       "title": "Informations de contact",
       "email": "Adresse email *",
@@ -1820,7 +1820,7 @@
   },
   "createMeetingModal": {
     "title": "Créer une réunion",
-    "defaultTitle": "Réunion VisiConnect",
+    "defaultTitle": "Réunion VisioConnect",
     "linkLabel": "Lien :",
     "sections": {
       "general": {
@@ -2026,7 +2026,7 @@
     "categories": {
       "0": {
         "title": "Premiers Pas",
-        "desc": "Tout ce qu'il faut savoir pour bien démarrer avec VisiConnect."
+        "desc": "Tout ce qu'il faut savoir pour bien démarrer avec VisioConnect."
       },
       "1": {
         "title": "Dépannage",
@@ -2319,7 +2319,7 @@
   },
   "room": {
     "cameraRefused": "Accès à la caméra refusé",
-    "cameraRefusedDesc": "VisiConnect a besoin de votre permission pour utiliser la caméra ou le microphone.",
+    "cameraRefusedDesc": "VisioConnect a besoin de votre permission pour utiliser la caméra ou le microphone.",
     "refresh": "Rafraîchir la page",
     "unexpectedError": "Une erreur inattendue est survenue.",
     "preparing": "Préparation de la salle sécurisée...",
@@ -2586,7 +2586,7 @@
     }
   },
   "aiChatbot": {
-    "title": "Assistant VisiConnect",
+    "title": "Assistant VisioConnect",
     "subtitle": "IA Ultra-performante",
     "placeholder": "Posez votre question...",
     "greeting": "Bonjour 👋 Je peux vous aider à :\n• Résumer la réunion\n• Générer un compte-rendu automatique\n• Répondre à vos questions techniques (caméra, audio, partage d’écran...)\n• Traduire en direct les échanges\n\nPar quoi commencer ?"

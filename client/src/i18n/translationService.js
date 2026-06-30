@@ -1,4 +1,4 @@
-// Translation service for VisiConnect
+// Translation service for VisioConnect
 import frTranslations from './fr.json';
 import enTranslations from './en.json';
 import deTranslations from './de.json';

@@ -1,5 +1,5 @@
 /**
- * Point d'entr\u00e9e du serveur VisiConnect.
+ * Point d'entr\u00e9e du serveur VisioConnect.
  *
  * 1. Charge .env (dotenv) AVANT toute lecture de process.env.
  * 2. Valide la configuration (fail-fast via src/config/env.js).
@@ -23,7 +23,7 @@ const io = attachSocketIo(httpServer);
 httpServer.listen(env.PORT, () => {
   logger.info(
     { port: env.PORT, env: env.NODE_ENV },
-    `\ud83d\ude80 Serveur VisiConnect d\u00e9marr\u00e9`
+    `\ud83d\ude80 Serveur VisioConnect d\u00e9marr\u00e9`
   );
 });
 

@@ -81,7 +81,7 @@ const SecurityPage = () => {
   return (
     <LegalLayout title={t('securityPageTitle')} lastUpdated="21 Février 2024">
       <Paragraph>
-        La sécurité est au cœur de l'architecture de VisiConnect. Nous utilisons les technologies
+        La sécurité est au cœur de l'architecture de VisioConnect. Nous utilisons les technologies
         les plus avancées pour garantir la confidentialité, l'intégrité et la disponibilité de vos
         données.
       </Paragraph>
@@ -155,7 +155,7 @@ const SecurityPage = () => {
 
       <SectionTitle>Signalement de vulnérabilités</SectionTitle>
       <Paragraph>
-        Si vous découvrez une vulnérabilité de sécurité sur VisiConnect, nous vous encourageons à
+        Si vous découvrez une vulnérabilité de sécurité sur VisioConnect, nous vous encourageons à
         nous la signaler immédiatement. Nous avons un programme de Bug Bounty pour récompenser les
         chercheurs en sécurité.
       </Paragraph>

@@ -87,10 +87,10 @@ module.exports = async function handler(req, res) {
 
     if (plan === 'pro') {
       amount = billingCycle === 'annual' ? 14400 : 1500; // matches src/config/pricing.js PLANS.pro
-      name = 'VisiConnect Pro';
+      name = 'VisioConnect Pro';
     } else if (plan === 'business') {
       amount = billingCycle === 'annual' ? 34800 : 3500; // matches src/config/pricing.js PLANS.business
-      name = 'VisiConnect Business';
+      name = 'VisioConnect Business';
     } else {
       return res
         .status(400)

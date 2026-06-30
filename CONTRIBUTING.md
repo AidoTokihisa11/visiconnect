@@ -1,6 +1,6 @@
-# Contributing to VisiConnect
+# Contributing to VisioConnect
 
-Thank you for your interest in contributing to VisiConnect! This document provides guidelines for contributing to the project.
+Thank you for your interest in contributing to VisioConnect! This document provides guidelines for contributing to the project.
 
 ## 📋 Code of Conduct
 
@@ -177,7 +177,7 @@ This is a normal and constructive process!
 
 ## 🙏 Thank You
 
-Thank you for contributing to VisiConnect!
+Thank you for contributing to VisioConnect!
 
 ---
 

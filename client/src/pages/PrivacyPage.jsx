@@ -32,7 +32,7 @@ const PrivacyPage = () => {
   return (
     <LegalLayout title={t('privacyPolicy')} lastUpdated="21 Février 2024">
       <Paragraph>
-        Chez VisiConnect, nous prenons votre confidentialité très au sérieux. Cette politique décrit
+        Chez VisioConnect, nous prenons votre confidentialité très au sérieux. Cette politique décrit
         comment nous recueillons, utilisons et protégeons vos informations personnelles lorsque vous
         utilisez nos services de visioconférence et de collaboration.
       </Paragraph>
@@ -56,7 +56,7 @@ const PrivacyPage = () => {
       </List>
 
       <SectionTitle>2. Utilisation des Données</SectionTitle>
-      <Paragraph>VisiConnect utilise les données collectées pour diverses finalités :</Paragraph>
+      <Paragraph>VisioConnect utilise les données collectées pour diverses finalités :</Paragraph>
       <List>
         <ListItem>Pour fournir et maintenir notre Service.</ListItem>
         <ListItem>Pour vous notifier des changements apportés à notre Service.</ListItem>

@@ -1,14 +1,11 @@
 /**
- * Configuration de Socket.IO avec authentification JWT Clerk.
+ * Socket.IO setup with Clerk JWT authentication.
  *
- * \u00c9volution majeure par rapport \u00e0 l'ancien serveur :
- *   1. Authentification au handshake (`io.use(...)`) \u2014 pas de connexion
- *      anonyme. Le client doit envoyer son JWT Clerk via
- *      `auth: { token }` dans `io({ ... })`.
- *   2. L'`identity` (userId) est tir\u00e9e du JWT, jamais du payload client \u2014
- *      \u00e9limine la faille F-05 (usurpation par header).
- *   3. Les \u00e9v\u00e9nements `whiteboard-update` et `cursor-update` sont restreints
- *      aux rooms o\u00f9 l'utilisateur a explicitement rejoint (anti-spam).
+ * - Authentication at handshake (`io.use`): anonymous connections are rejected.
+ * - Identity (userId) is extracted from the JWT, never from the client payload
+ *   (prevents identity spoofing at the transport layer).
+ * - `whiteboard-update` and `cursor-update` events are restricted
+ *   to rooms the socket has explicitly joined (anti-spam).
  */
 'use strict';
 
@@ -29,7 +26,7 @@ function attachSocketIo(httpServer) {
     },
   });
 
-  // \ud83d\udd10 Middleware d'authentification : rejette les sockets non sign\u00e9s.
+  // Auth middleware: rejects sockets without a valid JWT.
   io.use(async (socket, next) => {
     try {
       const token =

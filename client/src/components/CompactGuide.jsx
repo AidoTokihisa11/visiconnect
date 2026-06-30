@@ -173,7 +173,7 @@ const CompactGuide = () => {
 
   const steps = [
     {
-      title: 'Bienvenue sur VisiConnect !',
+      title: 'Bienvenue sur VisioConnect !',
       description:
         'Découvrez toutes les fonctionnalités premium de notre plateforme de visioconférence professionnelle.',
       icon: <Star size={16} />,
@@ -253,8 +253,8 @@ const CompactGuide = () => {
             transition={{ duration: 0.2 }}
           >
             <GuideHeader>
-              <Avatar name="Guide VisiConnect" size="40px" />
-              <GuideTitle>Assistant VisiConnect</GuideTitle>
+              <Avatar name="Guide VisioConnect" size="40px" />
+              <GuideTitle>Assistant VisioConnect</GuideTitle>
               <CloseButton onClick={closeGuide}>
                 <X size={16} />
               </CloseButton>

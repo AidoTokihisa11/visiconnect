@@ -2,7 +2,7 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in VisiConnect, please help us protect our users by reporting it responsibly.
+If you discover a security vulnerability in VisioConnect, please help us protect our users by reporting it responsibly.
 
 ### How to Report
 
@@ -28,7 +28,7 @@ If you discover a security vulnerability in VisiConnect, please help us protect 
 
 ## Security Best Practices
 
-When using VisiConnect:
+When using VisioConnect:
 
 - Keep your dependencies up to date
 - Never commit sensitive data (.env files)
@@ -42,4 +42,4 @@ When using VisiConnect:
 - Security fixes will be released as soon as possible
 - Credits will be given to responsible reporters
 
-Thank you for helping keep VisiConnect secure!
+Thank you for helping keep VisioConnect secure!

@@ -173,7 +173,7 @@ const frTranslations = {
   auth: {
     login: {
       title: 'Connexion',
-      subtitle: 'Accédez à votre compte VisiConnect',
+      subtitle: 'Accédez à votre compte VisioConnect',
       email: 'Adresse email',
       password: 'Mot de passe',
       rememberMe: 'Se souvenir de moi',
@@ -185,7 +185,7 @@ const frTranslations = {
     },
     signup: {
       title: 'Créer un compte',
-      subtitle: "Rejoignez VisiConnect dès aujourd'hui",
+      subtitle: "Rejoignez VisioConnect dès aujourd'hui",
       firstName: 'Prénom',
       lastName: 'Nom',
       email: 'Adresse email',
@@ -226,7 +226,7 @@ const frTranslations = {
   },
   tutorial: {
     title: 'Guide de démarrage',
-    welcome: 'Bienvenue sur VisiConnect !',
+    welcome: 'Bienvenue sur VisioConnect !',
     step1: {
       title: 'Créer une réunion',
       description: 'Cliquez sur "Nouvelle réunion" pour commencer',
@@ -369,7 +369,7 @@ const frTranslations = {
   integrations: {
     title: 'Intégrations',
     subtitle:
-      'Connectez VisiConnect à vos outils préférés pour une expérience unifiée et productive.',
+      'Connectez VisioConnect à vos outils préférés pour une expérience unifiée et productive.',
     connect: 'Se connecter',
     google: {
       description:
@@ -630,24 +630,23 @@ const frTranslations = {
     participants: '8',
   },
   testimonials: {
-    title: 'Ils font confiance à VisioConnect',
-    subtitle:
-      'Des entreprises de toutes tailles utilisent notre plateforme pour une collaboration efficace.',
+    title: "Ce qu'en disent les premiers utilisateurs",
+    subtitle: 'Quelques retours de personnes qui ont testé l\'outil.',
     items: {
       1: {
-        content: 'La qualité 4K est juste folle. On se croirait vraiment dans la même pièce !',
-        name: 'Marie Dubois',
-        role: 'Fondatrice TechStart',
+        content: "La qualité vidéo tient bien même avec une connexion moyenne. Le chat intégré pendant la réunion évite d'avoir à changer d'onglet.",
+        name: 'Maëlle G.',
+        role: 'Graphiste',
       },
       2: {
-        content: 'Parfait pour nos développeurs en remote. Très fluide !',
-        name: 'Jean Martin',
-        role: 'CTO',
+        content: "Le tableau blanc collaboratif est pratique pour travailler à plusieurs. La transcription automatique reconnaît bien la parole, utile pour garder une trace des échanges.",
+        name: 'Anthony D.',
+        role: 'Photographe Professionnel',
       },
       3: {
-        content: 'Aucun équivalent sur le marché pour ce prix. Vraiment une qualité pro.',
-        name: 'Sophie Leclerc',
-        role: 'Directrice Commerciale',
+        content: "La sala de reuniones carga rápido y el uso compartido de pantalla es fácil de encontrar. Para estar en fase beta, está bastante completo.",
+        name: 'Magus S.',
+        role: 'Directrice Générale',
       },
     },
   },
@@ -661,8 +660,8 @@ const frTranslations = {
     story: {
       title: 'Notre Histoire',
       p1: "VisioConnect est né d'un constat simple : la communication vidéo est devenue essentielle, mais les outils existants étaient soit trop complexes, soit peu sécurisés, soit trop coûteux.",
-      p2: "Nous avons rassemblé une équipe d'ingénieurs passionnés et de designers pour créer une plateforme qui met l'utilisateur au premier plan. Après des mois de développement intensif, nous avons lancé une solution qui combine la plus haute qualité vidéo avec une interface d'une simplicité enfantine.",
-      p3: "Aujourd'hui, VisioConnect aide des milliers d'entreprises, d'écoles et de familles à rester proches, peu importe la distance qui les sépare.",
+      p2: "J'ai développé seul cette plateforme, en apprenant au fil du projet. L'objectif était simple : créer quelque chose d'utilisable et de fiable sans sacrifier la qualité technique.",
+      p3: "Aujourd'hui, VisioConnect est en bêta et accueille ses premiers utilisateurs. Leurs retours orientent directement les prochaines évolutions.",
     },
     values: {
       title: 'Nos Valeurs',
@@ -683,8 +682,8 @@ const frTranslations = {
       support: 'Support',
     },
     cta: {
-      title: 'Rejoignez la révolution',
-      description: "Découvrez comment VisioConnect peut transformer vos réunions dès aujourd'hui.",
+      title: 'Essayez par vous-même',
+      description: 'Créez un compte gratuit et lancez une réunion en quelques secondes.',
       button: 'Essayer gratuitement',
     },
   },

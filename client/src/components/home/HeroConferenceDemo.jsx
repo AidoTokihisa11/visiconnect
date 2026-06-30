@@ -678,7 +678,7 @@ const T = styled.span`
 const SyntaxCode = memo(() => (
   <CodeContainer>
     <CodeLines>
-      <C>{'// VisiConnect — LiveKit WebRTC Engine\n'}</C>
+      <C>{'// VisioConnect — LiveKit WebRTC Engine\n'}</C>
       <K>import </K>
       <T>{'{ '}</T>
       <V>useState</V>

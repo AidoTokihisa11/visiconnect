@@ -17,8 +17,7 @@ async function postLivekitToken(req, res) {
       return res.status(401).json({ error: 'Authentification requise.' });
     }
 
-    // \ud83d\udd10 TODO autorisation m\u00e9tier : v\u00e9rifier dans Convex que l'utilisateur peut
-    // rejoindre la room (host ? passcode ? r\u00e9union ouverte ?). On logge l'\u00e9v\u00e9nement.
+    // TODO: verify in Convex that the user is allowed to join this room (host / passcode / open).
     logger.info({ userId, room: roomName }, '[livekit-token] grant');
 
     const result = await issueAccessToken({

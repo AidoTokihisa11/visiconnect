@@ -1,5 +1,5 @@
 /**
- * ESLint flat config — VisiConnect (root level).
+ * ESLint flat config — VisioConnect (root level).
  *
  * Politique de sévérité :
  *   - Code nouveau (server/src, client/api, client/src/lib, hooks récents) :

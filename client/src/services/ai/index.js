@@ -1,5 +1,5 @@
 /**
- * Services IA VisiConnect - Export Principal
+ * Services IA VisioConnect - Export Principal
  *
  * Pipeline d'intelligence gratuit:
  * - Transcription: Web Speech API (100% client)

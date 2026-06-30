@@ -345,7 +345,7 @@ const BlurSliderRow = ({ currentValue, onCommit }) => {
 // Composant principal
 export const AIFeaturesPanel = ({
   chatMessages = [],
-  meetingTitle = 'Réunion VisiConnect',
+  meetingTitle = 'Réunion VisioConnect',
 } = {}) => {
   const { t } = useTranslation();
   const { settings, capabilities, isLowEndDevice, toggleFeature, updateSettings, applyPreset } =

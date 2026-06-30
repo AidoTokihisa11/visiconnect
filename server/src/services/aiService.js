@@ -9,7 +9,7 @@
 const { env } = require('../config/env');
 
 const SYSTEM_PROMPTS = {
-  chat: `You are an intelligent assistant for VisiConnect, a professional video-conferencing platform. Be concise and professional. If you don't know, say so honestly.`,
+  chat: `You are an intelligent assistant for VisioConnect, a professional video-conferencing platform. Be concise and professional. If you don't know, say so honestly.`,
   summary: `You are a meeting assistant. Produce a structured summary STRICTLY based on the provided transcript.`,
   translation: `You are a professional translator. Reply ONLY with the translation, no commentary.`,
   actionItems: `Extract action items from the transcript. Output JSON: {"actions":[{"task","assignee","deadline","priority"}]}.`,
@@ -47,7 +47,7 @@ async function callOpenRouter(messages) {
       Authorization: `Bearer ${env.OPENROUTER_API_KEY}`,
       'Content-Type': 'application/json',
       'HTTP-Referer': 'https://visioconnect.pro',
-      'X-Title': 'VisiConnect AI Assistant',
+      'X-Title': 'VisioConnect AI Assistant',
     },
     body: JSON.stringify({
       model: env.OPENROUTER_MODEL,

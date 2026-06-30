@@ -1,4 +1,4 @@
-# 🎥 VisiConnect
+# 🎥 VisioConnect
 
 > Modern video conferencing platform with real-time chat and collaborative features. **Secure by design** with encrypted backups and zero secrets in Git.
 
@@ -23,7 +23,7 @@
 
 ## 🏗️ Architecture
 
-**VisiConnect utilise Supabase Realtime pour le signaling WebRTC**, éliminant le besoin d'un serveur Socket.io local.
+**VisioConnect utilise Supabase Realtime pour le signaling WebRTC**, éliminant le besoin d'un serveur Socket.io local.
 
 - **Frontend:** React 18, Framer Motion, Styled Components
 - **Backend:** Supabase (Auth, Database, Realtime)

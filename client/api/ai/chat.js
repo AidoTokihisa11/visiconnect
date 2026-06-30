@@ -21,7 +21,7 @@ const { parseBody, schemas } = require('../_lib/schemas');
 
 // System prompts for different purposes
 const SYSTEM_PROMPTS = {
-  chat: `You are an intelligent assistant for VisiConnect, a professional video-conferencing platform.
+  chat: `You are an intelligent assistant for VisioConnect, a professional video-conferencing platform.
 You help users with:
 - Technical questions (camera, mic, video quality, latency)
 - Platform features (chat, polls, screen share, whiteboard)
@@ -119,7 +119,7 @@ async function callOpenRouter(messages, model) {
       Authorization: `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
       'HTTP-Referer': 'https://visiconnect.vercel.app',
-      'X-Title': 'VisiConnect AI Assistant',
+      'X-Title': 'VisioConnect AI Assistant',
     },
     body: JSON.stringify({
       model: model || process.env.OPENROUTER_MODEL || 'meta-llama/llama-3.1-8b-instruct:free',

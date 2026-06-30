@@ -60,7 +60,7 @@ const ruTranslations = {
       'Легко подключайтесь к своим командам с помощью нашего передового и интуитивного решения для видеоконференций',
     startFree: 'Начать бесплатно',
     watchDemo: 'Посмотреть демо',
-    trustedBy: 'Доверяют более {{count}} компаний по всему миру',
+    trustedBy: 'Сейчас в бета-версии',
     title1: 'Visioconférence ',
     title2: 'simplement professionnelle.',
     testRoom: 'Войти в комнату',
@@ -147,7 +147,7 @@ const ruTranslations = {
   auth: {
     login: {
       title: 'Вход',
-      subtitle: 'Войдите в свою учетную запись VisiConnect',
+      subtitle: 'Войдите в свою учетную запись VisioConnect',
       email: 'Адрес электронной почты',
       password: 'Пароль',
       rememberMe: 'Запомнить меня',
@@ -159,7 +159,7 @@ const ruTranslations = {
     },
     signup: {
       title: 'Создать учетную запись',
-      subtitle: 'Присоединяйтесь к VisiConnect сегодня',
+      subtitle: 'Присоединяйтесь к VisioConnect сегодня',
       firstName: 'Имя',
       lastName: 'Фамилия',
       email: 'Адрес электронной почты',
@@ -200,7 +200,7 @@ const ruTranslations = {
   },
   tutorial: {
     title: 'Руководство по началу работы',
-    welcome: 'Добро пожаловать в VisiConnect!',
+    welcome: 'Добро пожаловать в VisioConnect!',
     step1: {
       title: 'Создать встречу',
       description: 'Нажмите "Новая встреча" чтобы начать',
@@ -372,7 +372,7 @@ const ruTranslations = {
   analyticsCookies: 'Аналитические cookies',
   integrations: {
     title: 'Интеграции',
-    subtitle: 'Подключите VisiConnect к вашим любимым инструментам для бесшовного опыта',
+    subtitle: 'Подключите VisioConnect к вашим любимым инструментам для бесшовного опыта',
     connectButton: 'Подключить',
     services: {
       google: {
@@ -385,7 +385,7 @@ const ruTranslations = {
       },
       slack: {
         title: 'Slack',
-        description: 'Синхронизируйте ваши каналы и сообщения прямо в VisiConnect',
+        description: 'Синхронизируйте ваши каналы и сообщения прямо в VisioConnect',
       },
       zoom: {
         title: 'Zoom',
@@ -393,7 +393,7 @@ const ruTranslations = {
       },
       trello: {
         title: 'Trello',
-        description: 'Управляйте досками и карточками Trello из VisiConnect',
+        description: 'Управляйте досками и карточками Trello из VisioConnect',
       },
       jira: {
         title: 'Jira',

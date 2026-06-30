@@ -48,7 +48,6 @@ const schema = z.object({
 });
 
 function loadEnv() {
-  // dotenv est charg\u00e9 c\u00f4t\u00e9 entry-point (server.js).
   const parsed = schema.safeParse(process.env);
   if (!parsed.success) {
     const issues = parsed.error.issues

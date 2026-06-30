@@ -81,26 +81,26 @@ export const useHomePageData = () => {
     {
       quote: t(
         'testimonials.0.quote',
-        'VisioConnect a transformé nos réunions. Simple, efficace, sans prise de tête.'
+        "La qualité vidéo tient bien même avec une connexion moyenne. Le chat intégré pendant la réunion évite d'avoir à changer d'onglet."
       ),
-      author: t('testimonials.0.author', 'Marie Dubois'),
-      title: t('testimonials.0.title', 'Fondatrice de TechStart'),
+      author: t('testimonials.0.author', 'Maëlle G.'),
+      title: t('testimonials.0.title', 'Graphiste'),
     },
     {
       quote: t(
         'testimonials.1.quote',
-        'La meilleure solution pour nos clients. Interface intuitive, support réactif.'
+        "Le tableau blanc collaboratif est pratique pour travailler à plusieurs. La transcription automatique reconnaît bien la parole, utile pour garder une trace des échanges."
       ),
-      author: t('testimonials.1.author', 'Jean Martin'),
-      title: t('testimonials.1.title', 'CTO, Solutions Digitales'),
+      author: t('testimonials.1.author', 'Anthony D.'),
+      title: t('testimonials.1.title', 'Photographe Professionnel'),
     },
     {
       quote: t(
         'testimonials.2.quote',
-        "Pas d'quivalent sur le marché pour ce prix. Qualité professionnelle, vraiment."
+        "La sala de reuniones carga rápido y el uso compartido de pantalla es fácil de encontrar. Para estar en fase beta, está bastante completo."
       ),
-      author: t('testimonials.2.author', 'Sophie Leclerc'),
-      title: t('testimonials.2.title', 'Directrice Commerciale, Conseil RH'),
+      author: t('testimonials.2.author', 'Magus S.'),
+      title: t('testimonials.2.title', 'Directrice Générale'),
     },
   ];
 

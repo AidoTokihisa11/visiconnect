@@ -1,11 +1,8 @@
 /**
- * LivekitService \u2014 \u00e9met les AccessToken JWT pour rejoindre une room LiveKit.
+ * LivekitService — seul point de contact avec le SDK LiveKit.
  *
- * Cette couche service est *seule* \u00e0 manipuler le SDK LiveKit. Les
- * controllers ne d\u00e9pendent que de l'API publique de ce module, ce qui :
- *   1. simplifie les tests (on stubbe AccessToken une seule fois) ;
- *   2. permet de changer de provider plus tard sans toucher aux routes ;
- *   3. concentre la politique de s\u00e9curit\u00e9 (TTL, grants) en un seul endroit.
+ * Centralise la politique de sécurité (TTL, grants) et isole les controllers
+ * du SDK, ce qui simplifie les tests et facilite un éventuel changement de provider.
  */
 'use strict';
 
