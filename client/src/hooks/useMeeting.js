@@ -1,7 +1,7 @@
 import { AIEngineManager } from '../lib/AIEngineManager';
 import { AIVideoProcessor } from '../lib/AIVideoEngine';
 import { setupAntiFreezeListeners, setupVisibilityProtection } from './LiveKitEngine';
-import { useAuth } from '@clerk/react';
+import { apiPostJson } from '../lib/apiClient';
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import {
   useRoomContext,
@@ -13,61 +13,36 @@ import { Track } from 'livekit-client';
 import { BackgroundProcessor } from '@livekit/track-processors';
 
 /**
- * Hook to fetch LiveKit token — waits for Clerk to be fully loaded before fetching.
+ * Hook to fetch LiveKit token (authentifi\u00e9 via Clerk).
  */
 export const useRoomToken = (roomName, participantName) => {
-  const { getToken, isLoaded: isClerkLoaded } = useAuth();
   const [token, setToken] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!roomName || !participantName || !isClerkLoaded) return;
+    if (!roomName || !participantName) return;
     let cancelled = false;
 
     const fetchToken = async () => {
       // Bypass token fetch if explicit demo flag is true
       if (import.meta.env.VITE_DEMO_MODE === 'true') {
-        console.warn('⚠️ Demo Mode: Skipping API token fetch.');
+        console.warn('\u26a0\ufe0f Demo Mode: Skipping API token fetch.');
         if (!cancelled) setToken(null);
         return;
       }
 
       try {
-        const clerkToken = await getToken();
-        const url = import.meta.env.PROD
-          ? '/api/livekit-token'
-          : `${import.meta.env.VITE_API_URL || ''}/api/livekit-token`;
-        const res = await fetch(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...(clerkToken ? { Authorization: `Bearer ${clerkToken}` } : {}),
-          },
-          body: JSON.stringify({ roomName, participantName }),
-        });
+        const data = await apiPostJson('/api/livekit-token', { roomName, participantName });
         if (cancelled) return;
-        const text = await res.text();
-        let data = null;
-        try {
-          data = text ? JSON.parse(text) : null;
-        } catch {
-          /* not JSON */
-        }
-        if (!res.ok) {
-          const err = new Error(data?.error || `HTTP ${res.status}`);
-          err.status = res.status;
-          if (!cancelled) setError(err);
-          return;
-        }
         if (typeof data?.token === 'string') {
-          if (!cancelled) setToken(data.token);
+          setToken(data.token);
         } else {
-          if (!cancelled) setError(new Error('Réponse de token invalide.'));
+          setError(new Error('R\u00e9ponse de token invalide.'));
         }
       } catch (err) {
         if (cancelled) return;
         if (import.meta.env.DEV) {
-          console.warn('[useRoomToken] backend error:', err.message);
+          console.warn('[useRoomToken] backend error:', err.status, err.message);
         }
         setError(err);
       }
@@ -77,7 +52,7 @@ export const useRoomToken = (roomName, participantName) => {
     return () => {
       cancelled = true;
     };
-  }, [roomName, participantName, isClerkLoaded, getToken]);
+  }, [roomName, participantName]);
 
   return { token, error };
 };
@@ -110,17 +85,35 @@ export const useMeeting = (maxQualityLock = true) => {
   const [isAIEnhanced, setIsAIEnhanced] = useState(false);
 
   // === PRIVACY LOCKS: Verrous d'intention pour caméra/micro ===
-  // Réinitialisés à chaque nouvelle session de réunion (pas de persistance entre les salles)
-  const [isCameraManualMute, setIsCameraManualMute] = useState(false);
-  const [isMicManualMute, setIsMicManualMute] = useState(false);
+  // Persiste dans sessionStorage pour survivre aux changements d'onglet
+  const [isCameraManualMute, setIsCameraManualMute] = useState(() => {
+    try {
+      return sessionStorage.getItem('visi_cam_mute') === 'true';
+    } catch {
+      return false;
+    }
+  });
 
-  // Nettoyer les anciens verrous sessionStorage au montage (évite le blocage entre sessions)
+  const [isMicManualMute, setIsMicManualMute] = useState(() => {
+    try {
+      return sessionStorage.getItem('visi_mic_mute') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  // Persister les verrous dans sessionStorage
   useEffect(() => {
     try {
-      sessionStorage.removeItem('visi_cam_mute');
-      sessionStorage.removeItem('visi_mic_mute');
+      sessionStorage.setItem('visi_cam_mute', isCameraManualMute ? 'true' : 'false');
     } catch {}
-  }, []);
+  }, [isCameraManualMute]);
+
+  useEffect(() => {
+    try {
+      sessionStorage.setItem('visi_mic_mute', isMicManualMute ? 'true' : 'false');
+    } catch {}
+  }, [isMicManualMute]);
 
   // === PRIVACY GUARD: Bloquer l'auto-unmute ET couper les flux quand l'onglet est caché ===
   // Réfs pour stocker l'état avant la mise en arrière-plan (restauration au retour)

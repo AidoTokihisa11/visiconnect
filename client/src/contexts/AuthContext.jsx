@@ -68,7 +68,7 @@ export const AuthProvider = ({ children }) => {
         await clerkSignIn.authenticateWithRedirect({
           strategy: `oauth_${provider}`,
           redirectUrl: `${origin}/sso-callback`,
-          redirectUrlComplete: `${origin}/account`,
+          redirectUrlComplete: `${origin}/`,
         });
         return { success: true };
       }
