@@ -7,6 +7,8 @@
  * Variables d'environnement requises (lues automatiquement par Clerk) :
  *   - CLERK_SECRET_KEY
  *   - CLERK_PUBLISHABLE_KEY (optionnel, pour les checks d'audience)
+ *   - CLERK_AUTHORIZED_PARTIES (optionnel, CSV — ex: https://www.visioconnect.pro)
+ *     Si absent, la vérification azp est ignorée. Distinct de ALLOWED_ORIGINS (CORS).
  *
  * Usage :
  *   const { requireAuth } = require('./_lib/auth');
@@ -48,16 +50,21 @@ async function requireAuth(req, res) {
     const token = match[1].trim();
 
     const clerk = await getClerkClient();
+    // authorizedParties est piloté par CLERK_AUTHORIZED_PARTIES (variable dédiée,
+    // distincte de ALLOWED_ORIGINS qui est réservée au CORS).
+    // Si absente → la vérification azp est ignorée (signature JWT validée quand même).
+    const authorizedParties = process.env.CLERK_AUTHORIZED_PARTIES
+      ? process.env.CLERK_AUTHORIZED_PARTIES.split(',')
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : undefined;
     const authState = await clerk.authenticateRequest(
       new Request('https://internal/', {
         headers: { authorization: `Bearer ${token}` },
       }),
       {
         secretKey: process.env.CLERK_SECRET_KEY,
-        authorizedParties: (process.env.ALLOWED_ORIGINS || '')
-          .split(',')
-          .map((s) => s.trim())
-          .filter(Boolean),
+        ...(authorizedParties ? { authorizedParties } : {}),
       }
     );
 
