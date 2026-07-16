@@ -1,7 +1,7 @@
 export default {
   providers: [
     {
-      domain: "https://crisp-lion-37.clerk.accounts.dev",
+      domain: "https://clerk.visioconnect.pro",
       applicationID: "convex",
     },
   ]
