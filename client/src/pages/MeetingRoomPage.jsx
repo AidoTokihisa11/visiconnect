@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 import { LiveKitRoom } from '@livekit/components-react';
+import { useUser } from '@clerk/react';
 import { useRoomToken } from '../hooks/useMeeting';
 import { MeetingRoom } from '../components/room/MeetingRoom';
 import '@livekit/components-styles';
@@ -57,11 +58,23 @@ const Spinner = styled.div`
 export default function MeetingRoomPage() {
   const { roomId } = useParams();
   const navigate = useNavigate();
+  const { user: clerkUser, isLoaded: isUserLoaded } = useUser();
 
-  // Nom entré dans la modale de la page démo, ou nom généré automatiquement
-  const displayName =
-    sessionStorage.getItem('guestDisplayName') ||
-    `Invité_${Math.random().toString(36).substring(2, 6)}`;
+  // Utilise le nom de l'utilisateur connecté en priorité, puis le nom invité, puis un nom aléatoire
+  const displayName = React.useMemo(() => {
+    if (clerkUser) {
+      return (
+        clerkUser.fullName ||
+        clerkUser.firstName ||
+        clerkUser.primaryEmailAddress?.emailAddress ||
+        clerkUser.id
+      );
+    }
+    return (
+      sessionStorage.getItem('guestDisplayName') ||
+      `Invité_${Math.random().toString(36).substring(2, 6)}`
+    );
+  }, [clerkUser]);
 
   const { token, error: tokenError } = useRoomToken(roomId, displayName);
 
@@ -69,10 +82,15 @@ export default function MeetingRoomPage() {
 
   const handleLeave = () => {
     sessionStorage.removeItem('guestDisplayName');
-    navigate('/demo');
+    if (clerkUser) {
+      navigate('/account');
+    } else {
+      navigate('/demo');
+    }
   };
 
-  if (!token && !tokenError) {
+  // Attendre que Clerk soit prêt avant de montrer l'écran de chargement
+  if (!isUserLoaded || (!token && !tokenError)) {
     return (
       <LoadingScreen>
         <Spinner />
@@ -81,23 +99,52 @@ export default function MeetingRoomPage() {
     );
   }
 
-  const safeToken = token || '';
+  if (tokenError && !token) {
+    return (
+      <LoadingScreen>
+        <span
+          style={{ color: '#f87171', fontSize: '15px', textAlign: 'center', maxWidth: '360px' }}
+        >
+          Impossible de rejoindre la salle. Veuillez vous connecter ou réessayer.
+        </span>
+        <button
+          onClick={() => navigate('/login')}
+          style={{
+            marginTop: '16px',
+            padding: '10px 24px',
+            background: '#2563eb',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            fontWeight: 600,
+          }}
+        >
+          Se connecter
+        </button>
+      </LoadingScreen>
+    );
+  }
+
+  const userInfo = clerkUser
+    ? {
+        id: clerkUser.id,
+        name: displayName,
+        email: clerkUser.primaryEmailAddress?.emailAddress || displayName,
+      }
+    : { id: displayName, name: displayName, email: displayName };
 
   return (
     <PageContainer>
       <LiveKitRoom
-        token={safeToken}
+        token={token}
         serverUrl={liveKitUrl}
-        connect={!!safeToken && safeToken.length > 0}
+        connect={true}
         video={true}
         audio={true}
         data-lk-theme="default"
       >
-        <MeetingRoom
-          roomId={roomId}
-          user={{ id: displayName, name: displayName, email: displayName }}
-          onLeave={handleLeave}
-        />
+        <MeetingRoom roomId={roomId} user={userInfo} onLeave={handleLeave} />
       </LiveKitRoom>
     </PageContainer>
   );
