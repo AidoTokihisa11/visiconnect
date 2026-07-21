@@ -370,6 +370,11 @@ const CounterBadge = styled(motion.div)`
   text-align: center;
   white-space: nowrap;
 
+  @media (max-width: 640px) {
+    white-space: normal;
+    padding: 0.75rem 1rem;
+  }
+
   .highlight {
     font-weight: 700;
     font-size: 1.25rem;

@@ -95,6 +95,14 @@ const HeroSection = styled.section`
   border-bottom: 1px solid ${C.border};
   position: relative;
   overflow: hidden;
+
+  @media (max-width: 768px) {
+    padding: 4rem 1.1rem 3rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 2.6rem 1rem 2rem;
+  }
 `;
 const BgGrid = styled.div`
   position: absolute;
@@ -1276,6 +1284,15 @@ const CtaSection = styled.section`
   text-align: center;
   position: relative;
   overflow: hidden;
+
+  @media (max-width: 768px) {
+    padding: 4rem 1.1rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 2.8rem 1rem;
+  }
+
   &::before {
     content: '';
     position: absolute;

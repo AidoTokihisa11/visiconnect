@@ -43,6 +43,14 @@ const Hero = styled.section`
   background: transparent;
   padding: 6rem 1.5rem 5rem;
   border-bottom: 1px solid ${COLORS.border};
+
+  @media (max-width: 768px) {
+    padding: 4rem 1.1rem 3rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 2.6rem 1rem 2rem;
+  }
 `;
 
 const HeroInner = styled.div`

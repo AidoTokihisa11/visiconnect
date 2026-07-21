@@ -85,7 +85,13 @@ const HeroWrap = styled.section`
   text-align: center;
   border-bottom: 1px solid ${C.border};
   position: relative;
-`;
+  @media (max-width: 768px) {
+    padding: 4rem 1.1rem 3rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 2.6rem 1rem 2rem;
+  }`;
 
 const Eyebrow = styled.div`
   display: inline-flex;

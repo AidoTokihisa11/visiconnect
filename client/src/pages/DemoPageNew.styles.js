@@ -63,6 +63,14 @@ export const MainContent = styled.main`
 export const HeroSection = styled.section`
   padding: 6.8rem 1.5rem 4.5rem;
   border-bottom: 1px solid ${COLORS.border};
+
+  @media (max-width: 768px) {
+    padding: 4rem 1.1rem 2.8rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 2.6rem 1rem 2rem;
+  }
 `;
 
 export const HeroContainer = styled.div`

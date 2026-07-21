@@ -91,6 +91,14 @@ const Main = styled.main`
 const HeroSection = styled.section`
   padding: 6.5rem 1.5rem 5rem;
   border-bottom: 1px solid ${C.border};
+
+  @media (max-width: 768px) {
+    padding: 4rem 1.1rem 3rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 2.6rem 1rem 2rem;
+  }
 `;
 const HeroContainer = styled.div`
   max-width: 1200px;
@@ -321,6 +329,10 @@ const ProofGrid = styled.div`
   gap: 1rem;
   @media (max-width: 760px) {
     grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    padding: 1.5rem 1rem;
   }
 `;
 const ProofCard = styled.div`

@@ -252,6 +252,11 @@ export const MonthYear = styled.span`
   color: #1e293b;
   min-width: 150px;
   text-align: center;
+
+  @media (max-width: 480px) {
+    min-width: auto;
+    font-size: 0.9rem;
+  }
 `;
 
 export const ViewSelector = styled.div`
@@ -287,6 +292,11 @@ export const CalendarGrid = styled.div`
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
   border: 1px solid rgba(59, 130, 246, 0.1);
   overflow: hidden;
+
+  @media (max-width: 768px) {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 `;
 
 export const CalendarWeekHeader = styled.div`
@@ -294,6 +304,11 @@ export const CalendarWeekHeader = styled.div`
   grid-template-columns: repeat(7, 1fr);
   background: #f8fafc;
   border-bottom: 1px solid #e2e8f0;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(7, minmax(80px, 1fr));
+    min-width: 560px;
+  }
 `;
 
 export const WeekDay = styled.div`
@@ -302,11 +317,21 @@ export const WeekDay = styled.div`
   font-weight: 600;
   color: #475569;
   font-size: 0.875rem;
+
+  @media (max-width: 768px) {
+    padding: 0.6rem 0.25rem;
+    font-size: 0.75rem;
+  }
 `;
 
 export const CalendarBody = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(7, minmax(80px, 1fr));
+    min-width: 560px;
+  }
 `;
 
 export const CalendarDay = styled(motion.div)`

@@ -22,6 +22,14 @@ const ContentWrapper = styled.main`
   flex-direction: column;
   align-items: center;
   width: 100%;
+
+  @media (max-width: 768px) {
+    padding: 4rem 1.1rem 3rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 2.6rem 1rem 2rem;
+  }
 `;
 
 const MainHeader = styled(motion.div)`

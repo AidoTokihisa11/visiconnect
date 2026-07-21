@@ -47,6 +47,14 @@ const HeroSection = styled.div`
   padding: 6rem 1.5rem 4rem;
   text-align: center;
   transition: background-color 0.3s ease;
+
+  @media (max-width: 768px) {
+    padding: 4rem 1.1rem 3rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 2.6rem 1rem 2rem;
+  }
 `;
 
 const HeroTitle = styled.h1`
@@ -62,6 +70,10 @@ const HeroTitle = styled.h1`
 
   @media (max-width: 768px) {
     font-size: 2.5rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1.9rem;
   }
 `;
 
