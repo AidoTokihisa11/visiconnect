@@ -879,10 +879,10 @@
   "tips": "Tips and tricks",
   "personalDescription": "Hi! I'm Théo, I'm 25 and I've been developing VisioConnect since July 2023. It's my video conferencing platform made with React and Node.js. The project has been live since 2024.",
   "keyStats": {
-    "teams": "Pro Teams",
-    "native": "Native App",
-    "latency": "Avg Latency",
-    "uptime": "Uptime"
+    "languages": "Supported languages",
+    "quality": "Video quality",
+    "opensource": "On GitHub",
+    "live": "In production since"
   },
   "proofArea": {
     "label": "Early-access phase for HD pioneers"
@@ -901,10 +901,10 @@
       "tag": "Business Intelligence"
     },
     "slide3": {
-      "title": "Accessible Everywhere",
+      "title": "Accessible everywhere",
       "subtitle": "From office to cafe, frictionlessly.",
-      "description": "A native mobile app that rivals the desktop version. Join a meeting with one tap, share your screen, and chat without compromise.",
-      "tag": "Total Mobility"
+      "description": "A responsive interface that adapts to every screen — desktop, tablet, mobile. Join a meeting from any browser, no install required.",
+      "tag": "Multi-device"
     }
   },
   "ui": {

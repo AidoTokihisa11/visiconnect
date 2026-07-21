@@ -609,10 +609,10 @@
     "label": "Early-Access-Phase für HD-Pioniere"
   },
   "keyStats": {
-    "teams": "Pro-Teams",
-    "native": "Native App",
-    "latency": "Durchschn. Latenz",
-    "uptime": "Uptime"
+    "languages": "Unterstützte Sprachen",
+    "quality": "Videoqualität",
+    "opensource": "Auf GitHub",
+    "live": "In Produktion seit"
   },
   "ui": {
     "presentation": "Q3 Präsentation",

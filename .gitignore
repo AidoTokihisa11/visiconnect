@@ -260,3 +260,5 @@ bash.exe.stackdump
 _archive/
 
 capture website/
+.vercel
+.env*

@@ -914,10 +914,10 @@
   "tips": "Conseils et astuces",
   "personalDescription": "Salut ! Moi c'est Théo, j'ai 25 ans et je développe VisioConnect depuis juillet 2023. C'est ma plateforme de visioconférence faite avec React et Node.js. Le projet est en production depuis 2024.",
   "keyStats": {
-    "teams": "Équipes Pro",
-    "native": "App Native",
-    "latency": "Latence Moy.",
-    "uptime": "Uptime"
+    "languages": "Langues supportées",
+    "quality": "Qualité vidéo",
+    "opensource": "Sur GitHub",
+    "live": "En production depuis"
   },
   "proofArea": {
     "label": "Phase d'accès anticipé pour pionniers HD"
@@ -936,10 +936,10 @@
       "tag": "Intelligence d'Affaires"
     },
     "slide3": {
-      "title": "Accessible Partout",
+      "title": "Accessible partout",
       "subtitle": "Du bureau au café, sans friction.",
-      "description": "Une application mobile native qui rivalise avec la version desktop. Rejoignez une réunion en un tap, partagez votre écran et chattez sans compromis.",
-      "tag": "Mobilité Totale"
+      "description": "Une interface responsive qui s'adapte à tous vos écrans — ordinateur, tablette, mobile. Rejoignez une réunion depuis n'importe quel navigateur, sans installation.",
+      "tag": "Multi-écrans"
     }
   },
   "ui": {

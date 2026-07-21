@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { Users, MonitorPlay, Zap, Activity } from 'lucide-react';
+import { Globe, MonitorPlay, Github, Calendar } from 'lucide-react';
 import { useTranslation } from '../../hooks/useTranslation';
 
 const COLORS = {
@@ -80,10 +80,10 @@ const StatLabel = styled.span`
 export default function KeyStats() {
   const { t } = useTranslation();
   const stats = [
-    { icon: Users, value: '3+', label: t('keyStats.teams') },
-    { icon: MonitorPlay, value: '4K', label: t('keyStats.native') },
-    { icon: Zap, value: '< 50ms', label: t('keyStats.latency') },
-    { icon: Activity, value: '99.9%', label: t('keyStats.uptime') },
+    { icon: Globe, value: '6', label: t('keyStats.languages') },
+    { icon: MonitorPlay, value: '4K', label: t('keyStats.quality') },
+    { icon: Github, value: 'Open Source', label: t('keyStats.opensource') },
+    { icon: Calendar, value: '2024', label: t('keyStats.live') },
   ];
 
   return (

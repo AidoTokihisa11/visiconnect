@@ -148,7 +148,7 @@ const ImageCard = styled(motion.div)`
 `;
 
 /* ------------------------------------------------------------------
-   Branded illustrations (remplacent les photos stock Unsplash)
+   Illustrations SVG maison
    ------------------------------------------------------------------ */
 
 const IllustrationWrapper = styled.div`
@@ -160,203 +160,315 @@ const IllustrationWrapper = styled.div`
   justify-content: center;
 `;
 
-/* Slide 1 : mockup d'interface de réunion (fenêtre navigateur + tuiles) */
+/* Petite silhouette abstraite pour repr\u00e9senter un participant sans
+   tomber dans le mockup enfantin \u00e0 grosses initiales. */
+const AbstractPerson = ({ x, y, hueVar = 'a', size = 1 }) => {
+  const gradients = {
+    a: ['#2563eb', '#1d4ed8'],
+    b: ['#60a5fa', '#2563eb'],
+    c: ['#6366f1', '#4f46e5'],
+    d: ['#93c5fd', '#3b82f6'],
+    e: ['#38bdf8', '#0ea5e9'],
+    f: ['#818cf8', '#6366f1'],
+  };
+  const [c1, c2] = gradients[hueVar] || gradients.a;
+  const rHead = 6 * size;
+  const rBody = 18 * size;
+  return (
+    <g transform={`translate(${x} ${y})`}>
+      <circle cx="0" cy="-8" r={rHead} fill={c1} opacity="0.9" />
+      <path
+        d={`M ${-rBody} ${16 * size} A ${rBody} ${rBody} 0 0 1 ${rBody} ${16 * size} L ${rBody} ${
+          22 * size
+        } L ${-rBody} ${22 * size} Z`}
+        fill={c2}
+        opacity="0.85"
+      />
+    </g>
+  );
+};
+
+/* Slide 1 \u2014 R\u00e9union : fen\u00eatre navigateur + speaker principal + tuiles + chat */
 const MeetingIllustration = () => (
   <IllustrationWrapper>
     <svg viewBox="0 0 400 280" width="100%" height="100%" role="img" aria-hidden="true">
       <defs>
-        <linearGradient id="tileA" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#2563eb" />
-          <stop offset="100%" stopColor="#1d4ed8" />
+        <linearGradient id="mtgSpeaker" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#eff6ff" />
+          <stop offset="100%" stopColor="#dbeafe" />
         </linearGradient>
-        <linearGradient id="tileB" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#60a5fa" />
-          <stop offset="100%" stopColor="#2563eb" />
-        </linearGradient>
-        <linearGradient id="tileC" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#6366f1" />
-          <stop offset="100%" stopColor="#4f46e5" />
-        </linearGradient>
-        <linearGradient id="tileD" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#93c5fd" />
-          <stop offset="100%" stopColor="#3b82f6" />
+        <linearGradient id="mtgTile1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#f0f9ff" />
+          <stop offset="100%" stopColor="#e0f2fe" />
         </linearGradient>
       </defs>
 
-      {/* Fenêtre / cadre navigateur */}
-      <rect x="10" y="10" width="380" height="260" rx="14" fill="#ffffff" stroke="#dbeafe" strokeWidth="1.5" />
-      <rect x="10" y="10" width="380" height="32" rx="14" fill="#f8fafc" />
-      <rect x="10" y="32" width="380" height="10" fill="#f8fafc" />
-      <circle cx="26" cy="26" r="4" fill="#fca5a5" />
-      <circle cx="40" cy="26" r="4" fill="#fcd34d" />
-      <circle cx="54" cy="26" r="4" fill="#86efac" />
-      <rect x="140" y="20" width="120" height="12" rx="6" fill="#e2e8f0" />
+      {/* Cadre fen\u00eatre */}
+      <rect x="8" y="8" width="384" height="264" rx="14" fill="#ffffff" stroke="#e2e8f0" strokeWidth="1" />
+      <rect x="8" y="8" width="384" height="30" rx="14" fill="#f8fafc" />
+      <rect x="8" y="30" width="384" height="8" fill="#f8fafc" />
+      <circle cx="22" cy="23" r="3.5" fill="#fca5a5" />
+      <circle cx="34" cy="23" r="3.5" fill="#fcd34d" />
+      <circle cx="46" cy="23" r="3.5" fill="#86efac" />
+      <rect x="140" y="17" width="120" height="12" rx="6" fill="#e2e8f0" />
+      <rect x="360" y="17" width="20" height="12" rx="3" fill="#e2e8f0" />
 
-      {/* 2x2 grille de participants */}
-      <g transform="translate(26 58)">
-        <rect width="165" height="90" rx="10" fill="url(#tileA)" />
-        <text x="82.5" y="52" textAnchor="middle" fontFamily="Inter, sans-serif" fontSize="22" fontWeight="700" fill="#ffffff" opacity="0.95">JD</text>
-        <circle cx="152" cy="80" r="4" fill="#86efac" stroke="#ffffff" strokeWidth="1.5" />
+      {/* Zone principale : speaker + tuiles + chat */}
+      {/* Speaker principal (grande zone gauche) */}
+      <rect x="20" y="50" width="220" height="164" rx="10" fill="url(#mtgSpeaker)" stroke="#dbeafe" strokeWidth="1" />
+      <AbstractPerson x={130} y={130} hueVar="a" size={2.2} />
+
+      {/* Overlay bas : nom + micro */}
+      <rect x="28" y="196" width="90" height="14" rx="7" fill="rgba(15,23,42,0.75)" />
+      <rect x="34" y="201" width="60" height="4" rx="2" fill="#ffffff" />
+      <circle cx="228" cy="60" r="9" fill="#ef4444" />
+      <text x="228" y="63" textAnchor="middle" fontFamily="Inter, sans-serif" fontSize="7" fontWeight="700" fill="#ffffff">REC</text>
+
+      {/* Colonne participants */}
+      <g>
+        <rect x="248" y="50" width="66" height="46" rx="8" fill="url(#mtgTile1)" stroke="#e2e8f0" strokeWidth="0.8" />
+        <AbstractPerson x={281} y={78} hueVar="b" size={0.9} />
+
+        <rect x="248" y="102" width="66" height="46" rx="8" fill="url(#mtgTile1)" stroke="#e2e8f0" strokeWidth="0.8" />
+        <AbstractPerson x={281} y={130} hueVar="c" size={0.9} />
+
+        <rect x="248" y="154" width="66" height="46" rx="8" fill="url(#mtgTile1)" stroke="#e2e8f0" strokeWidth="0.8" />
+        <AbstractPerson x={281} y={182} hueVar="d" size={0.9} />
+        {/* Micro coup\u00e9 */}
+        <circle cx="305" cy="163" r="6" fill="#0f172a" opacity="0.8" />
+        <line x1="302" y1="160" x2="308" y2="166" stroke="#ffffff" strokeWidth="1" />
       </g>
-      <g transform="translate(203 58)">
-        <rect width="165" height="90" rx="10" fill="url(#tileB)" />
-        <text x="82.5" y="52" textAnchor="middle" fontFamily="Inter, sans-serif" fontSize="22" fontWeight="700" fill="#ffffff" opacity="0.95">MR</text>
-        <rect x="140" y="12" width="18" height="12" rx="3" fill="rgba(0,0,0,0.35)" />
-        <circle cx="152" cy="80" r="4" fill="#86efac" stroke="#ffffff" strokeWidth="1.5" />
-      </g>
-      <g transform="translate(26 158)">
-        <rect width="165" height="64" rx="10" fill="url(#tileC)" />
-        <text x="82.5" y="40" textAnchor="middle" fontFamily="Inter, sans-serif" fontSize="20" fontWeight="700" fill="#ffffff" opacity="0.95">AS</text>
-      </g>
-      <g transform="translate(203 158)">
-        <rect width="165" height="64" rx="10" fill="url(#tileD)" />
-        <text x="82.5" y="40" textAnchor="middle" fontFamily="Inter, sans-serif" fontSize="20" fontWeight="700" fill="#ffffff" opacity="0.95">TK</text>
-      </g>
+
+      {/* Panneau chat */}
+      <rect x="322" y="50" width="60" height="164" rx="8" fill="#f8fafc" stroke="#e2e8f0" strokeWidth="0.8" />
+      <rect x="328" y="58" width="38" height="5" rx="2.5" fill="#94a3b8" />
+      {/* Bulles de chat */}
+      {[
+        { y: 72, w: 44, self: false },
+        { y: 92, w: 32, self: true },
+        { y: 112, w: 40, self: false },
+        { y: 132, w: 28, self: false },
+        { y: 152, w: 36, self: true },
+      ].map((b, i) => (
+        <g key={i}>
+          <rect
+            x={b.self ? 380 - b.w : 328}
+            y={b.y}
+            width={b.w}
+            height="12"
+            rx="6"
+            fill={b.self ? '#2563eb' : '#e2e8f0'}
+          />
+        </g>
+      ))}
+      <rect x="328" y="196" width="48" height="10" rx="5" fill="#e2e8f0" />
 
       {/* Barre d'outils */}
-      <rect x="26" y="236" width="342" height="22" rx="11" fill="#f1f5f9" />
-      <circle cx="140" cy="247" r="7" fill="#2563eb" />
-      <circle cx="164" cy="247" r="7" fill="#2563eb" />
-      <circle cx="188" cy="247" r="7" fill="#94a3b8" />
-      <circle cx="212" cy="247" r="7" fill="#94a3b8" />
-      <circle cx="236" cy="247" r="7" fill="#94a3b8" />
-      <circle cx="260" cy="247" r="7" fill="#ef4444" />
+      <rect x="20" y="228" width="362" height="30" rx="15" fill="#f1f5f9" />
+      {[100, 130, 160, 190, 220, 250, 280].map((cx, i) => (
+        <circle key={i} cx={cx} cy="243" r="9" fill={i < 2 ? '#2563eb' : '#94a3b8'} />
+      ))}
+      <circle cx="310" cy="243" r="9" fill="#ef4444" />
+
+      {/* Compteur temps */}
+      <rect x="30" y="238" width="52" height="11" rx="5.5" fill="rgba(37,99,235,0.1)" />
+      <text x="56" y="246" textAnchor="middle" fontFamily="Inter, sans-serif" fontSize="8" fontWeight="700" fill="#2563eb">
+        24:18
+      </text>
     </svg>
   </IllustrationWrapper>
 );
 
-/* Slide 2 : réseau mondial avec nœuds connectés */
-const GlobalIllustration = () => (
+/* Slide 2 \u2014 Analytics : vrai dashboard avec KPI + line chart + bar chart + liste */
+const AnalyticsIllustration = () => (
   <IllustrationWrapper>
     <svg viewBox="0 0 400 280" width="100%" height="100%" role="img" aria-hidden="true">
       <defs>
-        <radialGradient id="globeGlow" cx="0.5" cy="0.5" r="0.6">
-          <stop offset="0%" stopColor="#dbeafe" stopOpacity="1" />
-          <stop offset="100%" stopColor="#dbeafe" stopOpacity="0" />
-        </radialGradient>
+        <linearGradient id="chartArea" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#2563eb" stopOpacity="0.35" />
+          <stop offset="100%" stopColor="#2563eb" stopOpacity="0" />
+        </linearGradient>
+        <linearGradient id="barGrad" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0%" stopColor="#2563eb" />
+          <stop offset="100%" stopColor="#60a5fa" />
+        </linearGradient>
       </defs>
 
-      {/* Halo derrière le globe */}
-      <circle cx="200" cy="140" r="120" fill="url(#globeGlow)" />
+      {/* Cadre fen\u00eatre */}
+      <rect x="8" y="8" width="384" height="264" rx="14" fill="#ffffff" stroke="#e2e8f0" strokeWidth="1" />
+      <rect x="8" y="8" width="384" height="30" rx="14" fill="#f8fafc" />
+      <rect x="8" y="30" width="384" height="8" fill="#f8fafc" />
+      <rect x="22" y="17" width="14" height="12" rx="3" fill="#e2e8f0" />
+      <rect x="42" y="17" width="80" height="12" rx="6" fill="#e2e8f0" />
 
-      {/* Globe stylisé */}
-      <circle cx="200" cy="140" r="78" fill="#ffffff" stroke="#2563eb" strokeWidth="2" />
-      <ellipse cx="200" cy="140" rx="78" ry="28" fill="none" stroke="#93c5fd" strokeWidth="1.5" />
-      <ellipse cx="200" cy="140" rx="78" ry="55" fill="none" stroke="#93c5fd" strokeWidth="1.5" />
-      <line x1="122" y1="140" x2="278" y2="140" stroke="#93c5fd" strokeWidth="1.5" />
-      <line x1="200" y1="62" x2="200" y2="218" stroke="#93c5fd" strokeWidth="1.5" />
-
-      {/* Nœuds sur les continents */}
+      {/* KPI Cards */}
       {[
-        { cx: 155, cy: 110 },
-        { cx: 245, cy: 130 },
-        { cx: 180, cy: 175 },
-        { cx: 235, cy: 90 },
-      ].map((n, i) => (
+        { x: 22, label: 'R\u00e9unions', value: '128', trend: '+12%' },
+        { x: 148, label: 'Participants', value: '842', trend: '+8%' },
+        { x: 274, label: 'Dur\u00e9e moy.', value: '42min', trend: '+3%' },
+      ].map((k, i) => (
         <g key={i}>
-          <circle cx={n.cx} cy={n.cy} r="8" fill="#2563eb" opacity="0.15" />
-          <circle cx={n.cx} cy={n.cy} r="4" fill="#2563eb" />
-        </g>
-      ))}
-
-      {/* Nœuds externes reliés au globe */}
-      {[
-        { cx: 70, cy: 60, label: 'EU' },
-        { cx: 340, cy: 70, label: 'NA' },
-        { cx: 60, cy: 220, label: 'AS' },
-        { cx: 340, cy: 220, label: 'AF' },
-      ].map((p, i) => (
-        <g key={i}>
-          <line
-            x1={p.cx}
-            y1={p.cy}
-            x2="200"
-            y2="140"
-            stroke="#2563eb"
-            strokeWidth="1"
-            strokeDasharray="4 4"
-            opacity="0.4"
-          />
-          <circle cx={p.cx} cy={p.cy} r="18" fill="#ffffff" stroke="#2563eb" strokeWidth="1.5" />
+          <rect x={k.x} y="52" width="104" height="52" rx="8" fill="#f8fafc" stroke="#e2e8f0" strokeWidth="0.8" />
+          <text x={k.x + 12} y="68" fontFamily="Inter, sans-serif" fontSize="8" fontWeight="600" fill="#64748b">
+            {k.label}
+          </text>
+          <text x={k.x + 12} y="88" fontFamily="Inter, sans-serif" fontSize="16" fontWeight="800" fill="#0f172a">
+            {k.value}
+          </text>
+          <rect x={k.x + 68} y="78" width="26" height="12" rx="6" fill="rgba(16,185,129,0.15)" />
           <text
-            x={p.cx}
-            y={p.cy + 4}
+            x={k.x + 81}
+            y="87"
             textAnchor="middle"
             fontFamily="Inter, sans-serif"
-            fontSize="10"
+            fontSize="7"
             fontWeight="700"
-            fill="#1d4ed8"
+            fill="#059669"
           >
-            {p.label}
+            {k.trend}
           </text>
         </g>
       ))}
+
+      {/* Chart card gauche : line chart */}
+      <rect x="22" y="118" width="230" height="140" rx="8" fill="#ffffff" stroke="#e2e8f0" strokeWidth="1" />
+      <text x="36" y="136" fontFamily="Inter, sans-serif" fontSize="9" fontWeight="700" fill="#0f172a">
+        Engagement
+      </text>
+      <circle cx="216" cy="134" r="3" fill="#10b981" />
+      <text x="224" y="137" fontFamily="Inter, sans-serif" fontSize="7" fontWeight="600" fill="#10b981">
+        Live
+      </text>
+
+      {/* Grille */}
+      {[160, 185, 210, 235].map((y) => (
+        <line key={y} x1="36" y1={y} x2="238" y2={y} stroke="#f1f5f9" strokeWidth="0.8" />
+      ))}
+
+      {/* Aire + ligne */}
+      <path
+        d="M 36 220 L 60 205 L 84 195 L 108 180 L 132 165 L 156 175 L 180 155 L 204 150 L 228 138 L 238 130 L 238 246 L 36 246 Z"
+        fill="url(#chartArea)"
+      />
+      <path
+        d="M 36 220 L 60 205 L 84 195 L 108 180 L 132 165 L 156 175 L 180 155 L 204 150 L 228 138 L 238 130"
+        stroke="#2563eb"
+        strokeWidth="1.75"
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      {[60, 108, 156, 204, 238].map((cx, i) => (
+        <circle key={i} cx={cx} cy={[205, 180, 175, 150, 130][i]} r="2.5" fill="#2563eb" />
+      ))}
+
+      {/* Chart card droite : bar chart */}
+      <rect x="262" y="118" width="120" height="140" rx="8" fill="#ffffff" stroke="#e2e8f0" strokeWidth="1" />
+      <text x="274" y="136" fontFamily="Inter, sans-serif" fontSize="9" fontWeight="700" fill="#0f172a">
+        Par jour
+      </text>
+
+      {[
+        { x: 274, h: 34 },
+        { x: 288, h: 52 },
+        { x: 302, h: 40 },
+        { x: 316, h: 70 },
+        { x: 330, h: 58 },
+        { x: 344, h: 88 },
+        { x: 358, h: 66 },
+      ].map((b, i) => (
+        <rect key={i} x={b.x} y={244 - b.h} width="8" height={b.h} rx="2" fill="url(#barGrad)" />
+      ))}
     </svg>
   </IllustrationWrapper>
 );
 
-/* Slide 3 : mockup smartphone avec appel actif */
-const MobileIllustration = () => (
+/* Slide 3 \u2014 Multi-\u00e9crans : desktop + tablette + smartphone avec m\u00eame UI */
+const MultiDeviceIllustration = () => (
   <IllustrationWrapper>
     <svg viewBox="0 0 400 280" width="100%" height="100%" role="img" aria-hidden="true">
       <defs>
-        <linearGradient id="phoneCall" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#2563eb" />
-          <stop offset="100%" stopColor="#1e40af" />
+        <linearGradient id="mdScreen" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#eff6ff" />
+          <stop offset="100%" stopColor="#dbeafe" />
         </linearGradient>
       </defs>
 
-      {/* Halo diffus */}
-      <ellipse cx="200" cy="140" rx="140" ry="90" fill="#dbeafe" opacity="0.55" />
+      {/* Halo derri\u00e8re */}
+      <ellipse cx="200" cy="150" rx="180" ry="100" fill="#eff6ff" opacity="0.7" />
 
-      {/* Cadre téléphone */}
-      <rect x="148" y="18" width="104" height="244" rx="22" fill="#0f172a" />
-      <rect x="153" y="23" width="94" height="234" rx="18" fill="url(#phoneCall)" />
+      {/* Laptop (arri\u00e8re-plan) */}
+      <g>
+        {/* \u00e9cran */}
+        <rect x="70" y="52" width="230" height="140" rx="8" fill="#0f172a" />
+        <rect x="76" y="58" width="218" height="128" rx="4" fill="url(#mdScreen)" />
+        {/* mini UI dans laptop */}
+        <rect x="82" y="64" width="206" height="10" rx="2" fill="#ffffff" />
+        <circle cx="88" cy="69" r="1.5" fill="#fca5a5" />
+        <circle cx="93" cy="69" r="1.5" fill="#fcd34d" />
+        <circle cx="98" cy="69" r="1.5" fill="#86efac" />
+        <rect x="82" y="80" width="140" height="94" rx="3" fill="#ffffff" />
+        <rect x="228" y="80" width="60" height="44" rx="3" fill="#ffffff" />
+        <rect x="228" y="130" width="60" height="44" rx="3" fill="#ffffff" />
+        {/* silhouettes */}
+        <AbstractPerson x={152} y={128} hueVar="a" size={1.4} />
+        <AbstractPerson x={258} y={100} hueVar="b" size={0.6} />
+        <AbstractPerson x={258} y={150} hueVar="c" size={0.6} />
 
-      {/* Encoche */}
-      <rect x="184" y="28" width="32" height="6" rx="3" fill="#0f172a" />
-
-      {/* Avatar en appel */}
-      <circle cx="200" cy="100" r="30" fill="rgba(255,255,255,0.15)" />
-      <circle cx="200" cy="100" r="22" fill="#ffffff" />
-      <text x="200" y="106" textAnchor="middle" fontFamily="Inter, sans-serif" fontSize="14" fontWeight="700" fill="#1d4ed8">JD</text>
-
-      {/* Nom + durée */}
-      <rect x="170" y="144" width="60" height="6" rx="3" fill="rgba(255,255,255,0.85)" />
-      <rect x="180" y="156" width="40" height="5" rx="2.5" fill="rgba(255,255,255,0.5)" />
-
-      {/* Onde audio */}
-      <g transform="translate(200 190)">
-        {[-24, -12, 0, 12, 24].map((x, i) => (
-          <rect
-            key={i}
-            x={x - 1.5}
-            y={-6 - Math.abs(i - 2) * 2}
-            width="3"
-            height={12 + (4 - Math.abs(i - 2) * 2) * 2}
-            rx="1.5"
-            fill="rgba(255,255,255,0.75)"
-          />
-        ))}
+        {/* base du laptop */}
+        <rect x="52" y="192" width="266" height="8" rx="3" fill="#1e293b" />
+        <rect x="160" y="192" width="50" height="4" rx="2" fill="#0f172a" />
       </g>
 
-      {/* Boutons d'appel */}
-      <circle cx="178" cy="232" r="12" fill="rgba(255,255,255,0.18)" />
-      <circle cx="222" cy="232" r="12" fill="#ef4444" />
-
-      {/* Notification flottante à côté */}
-      <g transform="translate(38 96)">
-        <rect width="96" height="46" rx="10" fill="#ffffff" stroke="#dbeafe" strokeWidth="1.5" />
-        <circle cx="18" cy="23" r="8" fill="#2563eb" />
-        <rect x="32" y="14" width="52" height="6" rx="3" fill="#0f172a" />
-        <rect x="32" y="25" width="40" height="5" rx="2.5" fill="#94a3b8" />
+      {/* Tablette (milieu) */}
+      <g transform="translate(230 116)">
+        <rect width="90" height="122" rx="8" fill="#0f172a" />
+        <rect x="4" y="4" width="82" height="114" rx="5" fill="url(#mdScreen)" />
+        <rect x="8" y="8" width="74" height="8" rx="2" fill="#ffffff" />
+        <rect x="8" y="20" width="74" height="60" rx="3" fill="#ffffff" />
+        <AbstractPerson x={45} y={52} hueVar="a" size={0.9} />
+        <rect x="8" y="84" width="35" height="30" rx="3" fill="#ffffff" />
+        <rect x="47" y="84" width="35" height="30" rx="3" fill="#ffffff" />
+        <AbstractPerson x={25} y={100} hueVar="b" size={0.5} />
+        <AbstractPerson x={64} y={100} hueVar="c" size={0.5} />
       </g>
 
-      {/* Badge chiffrement */}
-      <g transform="translate(268 60)">
-        <rect width="90" height="28" rx="14" fill="#ffffff" stroke="#dbeafe" strokeWidth="1.5" />
-        <circle cx="16" cy="14" r="5" fill="#10b981" />
-        <rect x="28" y="10" width="52" height="8" rx="4" fill="#0f172a" opacity="0.7" />
+      {/* Smartphone (avant-plan) */}
+      <g transform="translate(56 130)">
+        <rect width="72" height="128" rx="12" fill="#0f172a" />
+        <rect x="4" y="4" width="64" height="120" rx="8" fill="url(#mdScreen)" />
+        <rect x="28" y="8" width="16" height="3" rx="1.5" fill="#0f172a" />
+        {/* UI mobile */}
+        <rect x="8" y="18" width="56" height="6" rx="2" fill="#ffffff" />
+        <rect x="8" y="28" width="56" height="52" rx="4" fill="#ffffff" />
+        <AbstractPerson x={36} y={57} hueVar="a" size={0.85} />
+        <rect x="8" y="84" width="26" height="24" rx="3" fill="#ffffff" />
+        <rect x="38" y="84" width="26" height="24" rx="3" fill="#ffffff" />
+        <AbstractPerson x={21} y={98} hueVar="b" size={0.45} />
+        <AbstractPerson x={51} y={98} hueVar="c" size={0.45} />
+        {/* barre outils */}
+        <rect x="8" y="112" width="56" height="8" rx="4" fill="#eff6ff" />
+        <circle cx="20" cy="116" r="2.5" fill="#2563eb" />
+        <circle cx="30" cy="116" r="2.5" fill="#2563eb" />
+        <circle cx="40" cy="116" r="2.5" fill="#94a3b8" />
+        <circle cx="52" cy="116" r="2.5" fill="#ef4444" />
+      </g>
+
+      {/* Badge en haut */}
+      <g transform="translate(150 20)">
+        <rect width="100" height="22" rx="11" fill="#ffffff" stroke="#dbeafe" strokeWidth="1.2" />
+        <circle cx="14" cy="11" r="4" fill="#10b981" />
+        <text
+          x="56"
+          y="14"
+          textAnchor="middle"
+          fontFamily="Inter, sans-serif"
+          fontSize="8"
+          fontWeight="700"
+          fill="#0f172a"
+        >
+          RESPONSIVE
+        </text>
       </g>
     </svg>
   </IllustrationWrapper>
@@ -364,8 +476,8 @@ const MobileIllustration = () => (
 
 const ILLUSTRATION_MAP = {
   meeting: MeetingIllustration,
-  global: GlobalIllustration,
-  mobile: MobileIllustration,
+  global: AnalyticsIllustration,
+  mobile: MultiDeviceIllustration,
 };
 
 export default function FeaturesCarousel3D() {

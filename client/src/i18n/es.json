@@ -648,10 +648,10 @@
     "label": "Fase de acceso anticipado para pioneros HD"
   },
   "keyStats": {
-    "teams": "Equipos Pro",
-    "native": "App Nativa",
-    "latency": "Latencia Prom.",
-    "uptime": "Uptime"
+    "languages": "Idiomas soportados",
+    "quality": "Calidad de vídeo",
+    "opensource": "En GitHub",
+    "live": "En producción desde"
   },
   "ui": {
     "presentation": "Presentación Q3",
