@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import {
   Rocket,
@@ -10,8 +10,13 @@ import {
   Search,
   ExternalLink,
   ChevronRight,
+  ChevronLeft,
   Mail,
   ArrowUp,
+  PlayCircle,
+  UserPlus,
+  Users as UsersIcon,
+  Sparkles,
 } from 'lucide-react';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
@@ -669,14 +674,204 @@ const HelpButton = styled(Link)`
   `}
 `;
 
+/* --- QUICK ACCESS GRID (Home view) --- */
+const QuickAccessSection = styled.div`
+  margin-bottom: 2rem;
+`;
+
+const QuickAccessTitle = styled.h2`
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: ${COLORS.dark};
+  margin: 0 0 0.4rem;
+`;
+
+const QuickAccessSubtitle = styled.p`
+  color: ${COLORS.lightText};
+  margin: 0 0 1.5rem;
+  font-size: 0.95rem;
+`;
+
+const QuickGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 1rem;
+  margin-bottom: 3rem;
+`;
+
+const QuickCard = styled.button`
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1.25rem;
+  border-radius: 12px;
+  border: 1px solid ${COLORS.border};
+  background: ${COLORS.card};
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition:
+    transform 0.15s,
+    border-color 0.15s,
+    box-shadow 0.15s;
+
+  &:hover {
+    transform: translateY(-3px);
+    border-color: ${COLORS.primary};
+    box-shadow: 0 10px 24px -12px rgba(37, 99, 235, 0.35);
+  }
+`;
+
+const QuickIcon = styled.span`
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(37, 99, 235, 0.1);
+  color: ${COLORS.primary};
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const QuickTitle = styled.span`
+  font-weight: 700;
+  color: ${COLORS.dark};
+  font-size: 0.98rem;
+`;
+
+const QuickDesc = styled.span`
+  color: ${COLORS.lightText};
+  font-size: 0.85rem;
+  line-height: 1.4;
+`;
+
+/* --- ARTICLE VIEW EXTRAS --- */
+const Breadcrumb = styled.nav`
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: ${COLORS.lightText};
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+
+  button {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    color: ${COLORS.primary};
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`;
+
+const PrevNext = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 2rem;
+
+  @media (max-width: 560px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const NavButton = styled.button`
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid ${COLORS.border};
+  border-radius: 12px;
+  background: ${COLORS.card};
+  cursor: pointer;
+  font-family: inherit;
+  transition:
+    border-color 0.15s,
+    transform 0.15s;
+  min-width: 0;
+  text-align: ${(p) => (p.$dir === 'next' ? 'right' : 'left')};
+  grid-column: ${(p) => (p.$dir === 'next' ? '2' : '1')};
+
+  &:hover:not(:disabled) {
+    border-color: ${COLORS.primary};
+    transform: translateY(-2px);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 560px) {
+    grid-column: auto;
+    text-align: left;
+  }
+`;
+
+const NavLabel = styled.span`
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: ${COLORS.lightText};
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  justify-content: ${(p) => (p.$dir === 'next' ? 'flex-end' : 'flex-start')};
+
+  @media (max-width: 560px) {
+    justify-content: flex-start;
+  }
+`;
+
+const NavTitle = styled.span`
+  color: ${COLORS.dark};
+  font-weight: 600;
+  font-size: 0.95rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
+
+/* --- FLAT ARTICLE LIST + QUICK ACCESS SHORTCUTS --- */
+const FLAT_ARTICLES = CATEGORIES.flatMap((cat) =>
+  cat.articles.map((a) => ({ ...a, category: cat }))
+);
+
+const QUICK_ACCESS = [
+  { slug: 'premiere-reunion', icon: PlayCircle, desc: 'Créez et lancez votre première salle.' },
+  { slug: 'inviter-participants', icon: UsersIcon, desc: 'Partagez le lien à votre équipe.' },
+  { slug: 'audio-video', icon: Sparkles, desc: 'Résolvez les problèmes de micro/caméra.' },
+  { slug: 'creer-compte', icon: UserPlus, desc: 'Inscription en 30 secondes.' },
+];
+
 /* --- COMPONENT --- */
 const UserGuidePageNew = () => {
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const location = useLocation();
-  const [activeSlug, setActiveSlug] = useState(null);
-  const articleRefs = useRef({});
+  const navigate = useNavigate();
 
+  // Article actif — dérivé du hash de l'URL. Null = vue d'accueil (grille rapide).
+  const hashSlug = location.hash?.replace('#', '') || null;
+  const activeArticle = useMemo(
+    () => FLAT_ARTICLES.find((a) => a.slug === hashSlug) || null,
+    [hashSlug]
+  );
+
+  const setActiveSlug = (slug) => {
+    if (slug) navigate(`#${slug}`, { replace: false });
+    else navigate('', { replace: false });
+    // Scroll top de la zone contenu
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Recherche — filtre la sidebar
   const filteredCategories = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return CATEGORIES;
@@ -695,22 +890,29 @@ const UserGuidePageNew = () => {
     })).filter((cat) => cat.articles.length > 0);
   }, [query]);
 
+  // Auto-sélectionne le 1er résultat de recherche si l'article actif n'est plus visible
   useEffect(() => {
-    const hash = location.hash?.replace('#', '');
-    if (!hash) return;
-    const node = articleRefs.current[hash];
-    if (node) {
-      setTimeout(() => {
-        node.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        setActiveSlug(hash);
-      }, 100);
+    if (!query.trim()) return;
+    if (activeArticle) {
+      const stillVisible = filteredCategories.some((cat) =>
+        cat.articles.some((a) => a.slug === activeArticle.slug)
+      );
+      if (stillVisible) return;
     }
-  }, [location.hash]);
+    const first = filteredCategories[0]?.articles[0];
+    if (first) setActiveSlug(first.slug);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query]);
 
-  const totalArticles = filteredCategories.reduce(
-    (sum, c) => sum + c.articles.length,
-    0
-  );
+  // Prev/Next (basés sur la liste plate)
+  const activeIndex = activeArticle
+    ? FLAT_ARTICLES.findIndex((a) => a.slug === activeArticle.slug)
+    : -1;
+  const prevArticle = activeIndex > 0 ? FLAT_ARTICLES[activeIndex - 1] : null;
+  const nextArticle =
+    activeIndex >= 0 && activeIndex < FLAT_ARTICLES.length - 1
+      ? FLAT_ARTICLES[activeIndex + 1]
+      : null;
 
   return (
     <Page>
@@ -739,7 +941,10 @@ const UserGuidePageNew = () => {
 
         <Body>
           <Sidebar>
-            {CATEGORIES.map((cat) => {
+            {filteredCategories.length === 0 && (
+              <EmptyState>Aucun résultat pour « {query} ».</EmptyState>
+            )}
+            {filteredCategories.map((cat) => {
               const Icon = cat.icon;
               return (
                 <SidebarGroup key={cat.id}>
@@ -751,8 +956,11 @@ const UserGuidePageNew = () => {
                     <SidebarLink
                       key={a.slug}
                       href={`#${a.slug}`}
-                      className={activeSlug === a.slug ? 'active' : ''}
-                      onClick={() => setActiveSlug(a.slug)}
+                      className={activeArticle?.slug === a.slug ? 'active' : ''}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setActiveSlug(a.slug);
+                      }}
                     >
                       {a.title}
                       <ChevronRight size={14} />
@@ -764,47 +972,119 @@ const UserGuidePageNew = () => {
           </Sidebar>
 
           <Content>
-            {totalArticles === 0 ? (
-              <EmptyState>
-                Aucun article ne correspond à « {query} ». Essayez d'autres
-                mots-clés ou <Link to="/contact">contactez-nous</Link>.
-              </EmptyState>
-            ) : (
-              filteredCategories.map((cat) => {
-                const Icon = cat.icon;
-                return (
-                  <CategoryBlock key={cat.id} id={cat.id}>
-                    <CategoryHeader>
-                      <CategoryIconWrap>
-                        <Icon size={22} />
-                      </CategoryIconWrap>
-                      <CategoryTitle>{cat.title}</CategoryTitle>
-                    </CategoryHeader>
-                    {cat.articles.map((a) => (
-                      <Article
-                        key={a.slug}
-                        id={a.slug}
-                        ref={(el) => (articleRefs.current[a.slug] = el)}
-                        className={activeSlug === a.slug ? 'highlighted' : ''}
-                      >
-                        <ArticleTitle>{a.title}</ArticleTitle>
-                        <ArticleSummary>{a.summary}</ArticleSummary>
-                        <StepsList>
-                          {a.steps.map((step, i) => (
-                            <li key={i}>{step}</li>
-                          ))}
-                        </StepsList>
-                        {a.cta && (
-                          <ArticleCTA to={a.cta.to}>
-                            {a.cta.label}
-                            <ExternalLink size={14} />
-                          </ArticleCTA>
-                        )}
-                      </Article>
+            {activeArticle ? (
+              <>
+                <Breadcrumb>
+                  <button type="button" onClick={() => setActiveSlug(null)}>
+                    Guide
+                  </button>
+                  <ChevronRight size={14} />
+                  <span>{activeArticle.category.title}</span>
+                  <ChevronRight size={14} />
+                  <span style={{ color: COLORS.dark, fontWeight: 600 }}>
+                    {activeArticle.title}
+                  </span>
+                </Breadcrumb>
+
+                <Article id={activeArticle.slug} className="highlighted">
+                  <ArticleTitle>{activeArticle.title}</ArticleTitle>
+                  <ArticleSummary>{activeArticle.summary}</ArticleSummary>
+                  <StepsList>
+                    {activeArticle.steps.map((step, i) => (
+                      <li key={i}>{step}</li>
                     ))}
-                  </CategoryBlock>
-                );
-              })
+                  </StepsList>
+                  {activeArticle.cta && (
+                    <ArticleCTA to={activeArticle.cta.to}>
+                      {activeArticle.cta.label}
+                      <ExternalLink size={14} />
+                    </ArticleCTA>
+                  )}
+                </Article>
+
+                <PrevNext>
+                  <NavButton
+                    type="button"
+                    $dir="prev"
+                    disabled={!prevArticle}
+                    onClick={() => prevArticle && setActiveSlug(prevArticle.slug)}
+                  >
+                    <NavLabel $dir="prev">
+                      <ChevronLeft size={14} /> Précédent
+                    </NavLabel>
+                    <NavTitle>
+                      {prevArticle ? prevArticle.title : '—'}
+                    </NavTitle>
+                  </NavButton>
+                  <NavButton
+                    type="button"
+                    $dir="next"
+                    disabled={!nextArticle}
+                    onClick={() => nextArticle && setActiveSlug(nextArticle.slug)}
+                  >
+                    <NavLabel $dir="next">
+                      Suivant <ChevronRight size={14} />
+                    </NavLabel>
+                    <NavTitle>
+                      {nextArticle ? nextArticle.title : '—'}
+                    </NavTitle>
+                  </NavButton>
+                </PrevNext>
+              </>
+            ) : (
+              <>
+                <QuickAccessSection>
+                  <QuickAccessTitle>Démarrage rapide</QuickAccessTitle>
+                  <QuickAccessSubtitle>
+                    Les 4 questions les plus fréquentes — cliquez pour la
+                    réponse en 30 secondes.
+                  </QuickAccessSubtitle>
+                  <QuickGrid>
+                    {QUICK_ACCESS.map((q) => {
+                      const article = FLAT_ARTICLES.find(
+                        (a) => a.slug === q.slug
+                      );
+                      if (!article) return null;
+                      const Icon = q.icon;
+                      return (
+                        <QuickCard
+                          key={q.slug}
+                          type="button"
+                          onClick={() => setActiveSlug(q.slug)}
+                        >
+                          <QuickIcon>
+                            <Icon size={20} />
+                          </QuickIcon>
+                          <QuickTitle>{article.title}</QuickTitle>
+                          <QuickDesc>{q.desc}</QuickDesc>
+                        </QuickCard>
+                      );
+                    })}
+                  </QuickGrid>
+                </QuickAccessSection>
+
+                <QuickAccessTitle style={{ fontSize: '1.1rem' }}>
+                  Toutes les catégories
+                </QuickAccessTitle>
+                <QuickGrid>
+                  {CATEGORIES.map((cat) => {
+                    const Icon = cat.icon;
+                    return (
+                      <QuickCard
+                        key={cat.id}
+                        type="button"
+                        onClick={() => setActiveSlug(cat.articles[0].slug)}
+                      >
+                        <QuickIcon>
+                          <Icon size={20} />
+                        </QuickIcon>
+                        <QuickTitle>{cat.title}</QuickTitle>
+                        <QuickDesc>{cat.articles.length} articles</QuickDesc>
+                      </QuickCard>
+                    );
+                  })}
+                </QuickGrid>
+              </>
             )}
 
             <HelpCta>
