@@ -2,105 +2,166 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
+import { FaGoogle, FaGithub } from 'react-icons/fa';
+import { Mail, Lock, Eye, EyeOff, AlertCircle, Loader2, Video } from 'lucide-react';
+
 import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from '../hooks/useTranslation';
-import { FaGoogle, FaGithub } from 'react-icons/fa';
-import { Mail, Lock, Eye, EyeOff, AlertCircle, ArrowLeft, Loader2 } from 'lucide-react';
-import AuthRightPanel from '../components/AuthRightPanel';
+import HeaderClean from '../components/HeaderClean';
+
+/* ------------------------------------------------------------------ */
+/*  Design system : on s'aligne sur HeaderClean / HomePageClean.       */
+/*  Toutes les couleurs passent par les variables HSL de index.css     */
+/*  → thème clair/sombre géré automatiquement.                         */
+/* ------------------------------------------------------------------ */
 
 const PageWrapper = styled.div`
-  display: flex;
   min-height: 100vh;
-  background-color: white;
-  flex-direction: column-reverse;
-
-  @media (min-width: 1024px) {
-    flex-direction: row;
-  }
+  display: flex;
+  flex-direction: column;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
 `;
 
-const LeftPanel = styled.div`
+const Main = styled.main`
   flex: 1;
+  position: relative;
   display: flex;
   flex-direction: column;
-  padding: 2rem;
-  overflow-y: auto;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-
-  @media (min-width: 1024px) {
-    padding: 2rem 4rem;
-  }
-`;
-
-const BackLink = styled(Link)`
-  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  color: #64748b;
-  font-size: 0.9rem;
-  font-weight: 500;
-  text-decoration: none;
-  transition: color 0.2s;
-  margin-bottom: 2rem;
+  justify-content: center;
+  padding: 3rem 1.25rem 2rem;
+  overflow: hidden;
+`;
 
-  &:hover {
-    color: #0f172a;
+/* Halo lumineux discret derrière la carte : reprend la couleur primaire
+   du site à faible opacité, comme les sections hero. */
+const BackgroundGlow = styled.div`
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      60% 55% at 50% 0%,
+      hsl(var(--primary) / 0.09) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      45% 45% at 100% 100%,
+      hsl(var(--primary) / 0.05) 0%,
+      transparent 70%
+    );
+`;
+
+/* Grille très légère pour donner de la texture (comme sur le hero). */
+const GridPattern = styled.div`
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.4;
+  background-image:
+    linear-gradient(hsl(var(--border) / 0.5) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--border) / 0.5) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse at center, black 0%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 75%);
+`;
+
+const Card = styled(motion.div)`
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  background-color: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 14px;
+  padding: 2.25rem 2rem;
+  box-shadow:
+    0 1px 2px rgb(0 0 0 / 0.04),
+    0 12px 32px -12px rgb(15 23 42 / 0.15);
+
+  @media (min-width: 640px) {
+    padding: 2.5rem 2.5rem;
   }
 `;
 
-const FormContainer = styled(motion.div)`
-  width: 100%;
-  max-width: 400px;
-  margin: auto;
+const LogoRow = styled.div`
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 1.75rem;
+`;
+
+const LogoBadge = styled.div`
+  width: 38px;
+  height: 38px;
+  background-color: hsl(var(--primary));
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
   justify-content: center;
+  color: hsl(var(--primary-foreground));
 `;
 
-const Header = styled.div`
-  margin-bottom: 2.5rem;
-`;
-
-const Logo = styled.div`
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: #2563eb;
-  margin-bottom: 1.5rem;
-`;
-
-const Title = styled.h2`
-  font-size: 2rem;
+const LogoText = styled.span`
+  font-size: 1.1rem;
   font-weight: 700;
-  color: #0f172a;
-  margin-bottom: 0.5rem;
+  color: hsl(var(--foreground));
+  letter-spacing: -0.02em;
+`;
+
+const Title = styled.h1`
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+  letter-spacing: -0.02em;
+  margin: 0 0 0.4rem;
+
+  @media (min-width: 640px) {
+    font-size: 1.75rem;
+  }
 `;
 
 const Subtitle = styled.p`
-  font-size: 1rem;
-  color: #64748b;
+  font-size: 0.95rem;
+  color: hsl(var(--muted-foreground));
+  margin: 0 0 1.75rem;
+  line-height: 1.5;
 `;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.1rem;
 `;
 
 const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.4rem;
+`;
+
+const LabelRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 const Label = styled.label`
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  color: #334155;
+  color: hsl(var(--foreground));
+`;
+
+const ForgotLink = styled(Link)`
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: hsl(var(--primary));
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 const InputWrapper = styled.div`
@@ -111,82 +172,71 @@ const InputWrapper = styled.div`
 
 const IconWrapper = styled.div`
   position: absolute;
-  left: 1rem;
-  color: #94a3b8;
+  left: 0.85rem;
+  color: hsl(var(--muted-foreground));
   display: flex;
+  pointer-events: none;
 `;
 
 const Input = styled.input`
   width: 100%;
-  padding: 0.875rem 1rem 0.875rem 2.75rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  color: #0f172a;
-  background: #f8fafc;
-  transition: all 0.2s;
+  padding: 0.8rem 0.9rem 0.8rem 2.6rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: hsl(var(--foreground));
+  background: hsl(var(--background));
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  font-family: inherit;
+
+  &:hover:not(:focus) {
+    border-color: hsl(var(--muted-foreground) / 0.4);
+  }
 
   &:focus {
     outline: none;
-    border-color: #2563eb;
-    background: white;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    border-color: hsl(var(--primary));
+    box-shadow: 0 0 0 3px hsl(var(--primary) / 0.15);
   }
 
   &::placeholder {
-    color: #94a3b8;
+    color: hsl(var(--muted-foreground) / 0.75);
   }
 `;
 
 const PasswordToggle = styled.button`
   position: absolute;
-  right: 1rem;
+  right: 0.75rem;
   background: none;
   border: none;
-  color: #94a3b8;
+  color: hsl(var(--muted-foreground));
   cursor: pointer;
   display: flex;
   padding: 4px;
+  border-radius: 4px;
 
   &:hover {
-    color: #475569;
+    color: hsl(var(--foreground));
+    background: hsl(var(--muted));
   }
 `;
 
-const ForgotPassword = styled.div`
-  text-align: right;
-  margin-top: -0.4rem;
-
-  a {
-    color: #64748b;
-    text-decoration: none;
-    font-size: 0.85rem;
-    font-weight: 600;
-
-    &:hover {
-      color: #0f172a;
-      text-decoration: underline;
-    }
-  }
-`;
-
-/* Keep visual parity with Signup page */
 const SubmitButton = styled(motion.button)`
   width: 100%;
-  padding: 0.875rem;
-  background: #0f172a;
-  color: white;
-  border: 1px solid #0f172a;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  font-weight: 500;
+  padding: 0.85rem 1rem;
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border: 1px solid hsl(var(--primary));
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
-  margin-top: 0.5rem;
+  transition: background 0.15s ease, transform 0.05s ease;
+  margin-top: 0.4rem;
+  font-family: inherit;
 
   &:hover:not(:disabled) {
-    background: white;
-    color: #0f172a;
+    background: hsl(var(--primary) / 0.9);
   }
 
   &:disabled {
@@ -199,29 +249,29 @@ const Divider = styled.div`
   display: flex;
   align-items: center;
   text-align: center;
-  margin: 1.5rem 0;
+  margin: 1.5rem 0 1.1rem;
 
   &::before,
   &::after {
     content: '';
     flex: 1;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid hsl(var(--border));
   }
 
   span {
-    padding: 0 1rem;
-    color: #64748b;
-    font-size: 0.85rem;
+    padding: 0 0.85rem;
+    color: hsl(var(--muted-foreground));
+    font-size: 0.75rem;
     font-weight: 500;
     text-transform: uppercase;
+    letter-spacing: 0.06em;
   }
 `;
 
 const OAuthButtons = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: 0.75rem;
 `;
 
 const OAuthButton = styled.button`
@@ -229,23 +279,20 @@ const OAuthButton = styled.button`
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.75rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 0.5rem;
-  background: white;
-  color: #475569;
-  font-size: 0.95rem;
+  padding: 0.7rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 8px;
+  background: hsl(var(--card));
+  color: hsl(var(--foreground));
+  font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background 0.15s ease, border-color 0.15s ease;
+  font-family: inherit;
 
   &:hover:not(:disabled) {
-    background: #f8fafc;
-    border-color: #cbd5e1;
-  }
-
-  &:active:not(:disabled) {
-    transform: scale(0.97);
+    background: hsl(var(--muted));
+    border-color: hsl(var(--muted-foreground) / 0.4);
   }
 
   &:disabled {
@@ -255,15 +302,16 @@ const OAuthButton = styled.button`
 `;
 
 const FooterLink = styled.div`
+  margin-top: 1.5rem;
   text-align: center;
-  color: #64748b;
-  font-size: 0.95rem;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.9rem;
 
   a {
-    color: #0f172a;
+    color: hsl(var(--primary));
     text-decoration: none;
     font-weight: 600;
-    margin-left: 0.25rem;
+    margin-left: 0.35rem;
 
     &:hover {
       text-decoration: underline;
@@ -274,15 +322,34 @@ const FooterLink = styled.div`
 const ErrorMessage = styled(motion.div)`
   display: flex;
   align-items: flex-start;
-  gap: 0.75rem;
-  background: #fef2f2;
-  border-left: 4px solid #ef4444;
-  color: #b91c1c;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  margin-bottom: 1.5rem;
-  font-size: 0.9rem;
-  line-height: 1.4;
+  gap: 0.65rem;
+  background: hsl(var(--destructive) / 0.08);
+  border: 1px solid hsl(var(--destructive) / 0.3);
+  color: hsl(var(--destructive));
+  padding: 0.75rem 0.9rem;
+  border-radius: 8px;
+  margin-bottom: 1.25rem;
+  font-size: 0.85rem;
+  line-height: 1.45;
+`;
+
+const LegalFootnote = styled.p`
+  position: relative;
+  margin: 1.75rem 0 0;
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground));
+  text-align: center;
+
+  a {
+    color: hsl(var(--muted-foreground));
+    text-decoration: none;
+    margin: 0 0.25rem;
+
+    &:hover {
+      color: hsl(var(--foreground));
+      text-decoration: underline;
+    }
+  }
 `;
 
 const LoginPage = () => {
@@ -297,7 +364,6 @@ const LoginPage = () => {
   } = useAuth();
 
   // Already-signed-in users land directly on the dashboard (US-AUTH-03).
-  // Avoid a flash of the login form by redirecting as soon as the auth state is known.
   React.useEffect(() => {
     if (isLoggedIn) navigate('/account', { replace: true });
   }, [isLoggedIn, navigate]);
@@ -359,8 +425,6 @@ const LoginPage = () => {
       setOauthLoading(provider);
       setError('');
       const { error: oauthError } = await signInWithProvider(provider);
-      // signInWithProvider triggers a full-page redirect on success — only
-      // an error path returns synchronously.
       if (oauthError) {
         setError(oauthError.message);
       }
@@ -374,38 +438,43 @@ const LoginPage = () => {
 
   return (
     <PageWrapper>
-      <LeftPanel>
-        <BackLink to="/">
-          <ArrowLeft size={18} /> {t('signup.backHome')}
-        </BackLink>
+      <HeaderClean />
 
-        <FormContainer
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4 }}
+      <Main>
+        <BackgroundGlow />
+        <GridPattern />
+
+        <Card
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, ease: 'easeOut' }}
         >
+          <LogoRow>
+            <LogoBadge>
+              <Video size={20} strokeWidth={2.25} />
+            </LogoBadge>
+            <LogoText>VisioConnect</LogoText>
+          </LogoRow>
+
+          <Title>{t('login.title')}</Title>
+          <Subtitle>{t('login.subtitle')}</Subtitle>
+
           {(error || authError) && (
             <ErrorMessage
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
+              initial={{ opacity: 0, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
             >
-              <AlertCircle size={20} style={{ flexShrink: 0, marginTop: '2px' }} />
+              <AlertCircle size={18} style={{ flexShrink: 0, marginTop: '1px' }} />
               <span>{error || authError}</span>
             </ErrorMessage>
           )}
-
-          <Header>
-            <Logo>VisioConnect</Logo>
-            <Title>{t('login.title')}</Title>
-            <Subtitle>{t('login.subtitle')}</Subtitle>
-          </Header>
 
           <Form onSubmit={handleSubmit}>
             <FormGroup>
               <Label htmlFor="email">{t('login.email')}</Label>
               <InputWrapper>
                 <IconWrapper>
-                  <Mail size={18} />
+                  <Mail size={17} />
                 </IconWrapper>
                 <Input
                   type="email"
@@ -421,10 +490,13 @@ const LoginPage = () => {
             </FormGroup>
 
             <FormGroup>
-              <Label htmlFor="password">{t('login.password')}</Label>
+              <LabelRow>
+                <Label htmlFor="password">{t('login.password')}</Label>
+                <ForgotLink to="/forgot-password">{t('login.forgotPassword')}</ForgotLink>
+              </LabelRow>
               <InputWrapper>
                 <IconWrapper>
-                  <Lock size={18} />
+                  <Lock size={17} />
                 </IconWrapper>
                 <Input
                   type={showPassword ? 'text' : 'password'}
@@ -436,15 +508,15 @@ const LoginPage = () => {
                   required
                   autoComplete="current-password"
                 />
-                <PasswordToggle type="button" onClick={() => setShowPassword(!showPassword)}>
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                <PasswordToggle
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+                >
+                  {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
                 </PasswordToggle>
               </InputWrapper>
             </FormGroup>
-
-            <ForgotPassword>
-              <Link to="/forgot-password">{t('login.forgotPassword')}</Link>
-            </ForgotPassword>
 
             <SubmitButton
               type="submit"
@@ -513,13 +585,14 @@ const LoginPage = () => {
             {t('login.noAccount')}
             <Link to="/signup">{t('login.createAccount')}</Link>
           </FooterLink>
-        </FormContainer>
-      </LeftPanel>
+        </Card>
 
-      <AuthRightPanel
-        title={t('signup.rightPanel.title')}
-        description={t('signup.rightPanel.desc')}
-      />
+        <LegalFootnote>
+          © {new Date().getFullYear()} VisioConnect ·
+          <Link to="/terms">Conditions</Link>·
+          <Link to="/privacy">Confidentialité</Link>
+        </LegalFootnote>
+      </Main>
     </PageWrapper>
   );
 };

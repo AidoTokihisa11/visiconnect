@@ -99,17 +99,167 @@ const CardText = styled.p`
 
 const Visualization = styled.div`
   margin-top: auto;
-  height: 100px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #eff6ff 100%);
+  height: 110px;
+  background:
+    radial-gradient(circle at 50% 20%, rgba(37, 99, 235, 0.06) 0%, transparent 70%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #eff6ff 100%);
   border-radius: 12px;
-  border: 1px dashed ${COLORS.border};
+  border: 1px solid ${COLORS.border};
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: monospace;
-  font-size: 0.75rem;
-  color: ${COLORS.muted};
+  overflow: hidden;
+  padding: 0.75rem;
+
+  &.tall {
+    height: 200px;
+  }
+
+  svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
 `;
+
+/* Diagramme WebRTC : deux navigateurs reliés en pair à pair */
+const WebRTCDiagram = () => (
+  <svg viewBox="0 0 320 90" role="img" aria-hidden="true">
+    <defs>
+      <linearGradient id="rtcLine" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stopColor="#2563eb" stopOpacity="0.15" />
+        <stop offset="50%" stopColor="#2563eb" stopOpacity="0.85" />
+        <stop offset="100%" stopColor="#2563eb" stopOpacity="0.15" />
+      </linearGradient>
+    </defs>
+
+    {/* Navigateur gauche */}
+    <g transform="translate(20 22)">
+      <rect width="70" height="46" rx="6" fill="#ffffff" stroke="#2563eb" strokeWidth="1.4" />
+      <rect width="70" height="10" rx="6" fill="#eff6ff" />
+      <circle cx="6" cy="5" r="1.5" fill="#94a3b8" />
+      <circle cx="12" cy="5" r="1.5" fill="#94a3b8" />
+      <circle cx="18" cy="5" r="1.5" fill="#94a3b8" />
+      <rect x="10" y="20" width="50" height="18" rx="3" fill="#dbeafe" />
+    </g>
+
+    {/* Navigateur droite */}
+    <g transform="translate(230 22)">
+      <rect width="70" height="46" rx="6" fill="#ffffff" stroke="#2563eb" strokeWidth="1.4" />
+      <rect width="70" height="10" rx="6" fill="#eff6ff" />
+      <circle cx="6" cy="5" r="1.5" fill="#94a3b8" />
+      <circle cx="12" cy="5" r="1.5" fill="#94a3b8" />
+      <circle cx="18" cy="5" r="1.5" fill="#94a3b8" />
+      <rect x="10" y="20" width="50" height="18" rx="3" fill="#dbeafe" />
+    </g>
+
+    {/* Lien P2P + paquets */}
+    <line x1="90" y1="45" x2="230" y2="45" stroke="url(#rtcLine)" strokeWidth="2" />
+    <circle cx="130" cy="45" r="3" fill="#2563eb" />
+    <circle cx="160" cy="45" r="3" fill="#2563eb" opacity="0.7" />
+    <circle cx="190" cy="45" r="3" fill="#2563eb" opacity="0.45" />
+
+    {/* Badge chiffrement au milieu */}
+    <g transform="translate(146 20)">
+      <rect width="28" height="14" rx="7" fill="#ffffff" stroke="#93c5fd" strokeWidth="1" />
+      <text
+        x="14"
+        y="10"
+        textAnchor="middle"
+        fontFamily="Inter, sans-serif"
+        fontSize="7"
+        fontWeight="700"
+        fill="#1d4ed8"
+      >
+        DTLS
+      </text>
+    </g>
+  </svg>
+);
+
+/* Diagramme SFU : 1 serveur central diffuse aux clients */
+const SFUDiagram = () => (
+  <svg viewBox="0 0 300 180" role="img" aria-hidden="true">
+    <defs>
+      <linearGradient id="sfuCore" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="#2563eb" />
+        <stop offset="100%" stopColor="#1d4ed8" />
+      </linearGradient>
+    </defs>
+
+    {/* Liens (dessinés avant les cercles pour passer en-dessous) */}
+    {[
+      { x: 30, y: 30 },
+      { x: 270, y: 30 },
+      { x: 30, y: 150 },
+      { x: 270, y: 150 },
+      { x: 150, y: 20 },
+      { x: 150, y: 160 },
+    ].map((p, i) => (
+      <line
+        key={i}
+        x1="150"
+        y1="90"
+        x2={p.x}
+        y2={p.y}
+        stroke="#93c5fd"
+        strokeWidth="1.4"
+        strokeDasharray="3 3"
+      />
+    ))}
+
+    {/* SFU central */}
+    <circle cx="150" cy="90" r="30" fill="url(#sfuCore)" />
+    <circle cx="150" cy="90" r="38" fill="none" stroke="#2563eb" strokeOpacity="0.2" strokeWidth="1" />
+    <text
+      x="150"
+      y="87"
+      textAnchor="middle"
+      fontFamily="Inter, sans-serif"
+      fontSize="9"
+      fontWeight="700"
+      fill="#ffffff"
+    >
+      SFU
+    </text>
+    <text
+      x="150"
+      y="99"
+      textAnchor="middle"
+      fontFamily="Inter, sans-serif"
+      fontSize="7"
+      fontWeight="500"
+      fill="#dbeafe"
+    >
+      Core
+    </text>
+
+    {/* Clients autour */}
+    {[
+      { cx: 30, cy: 30, label: 'A' },
+      { cx: 270, cy: 30, label: 'B' },
+      { cx: 30, cy: 150, label: 'C' },
+      { cx: 270, cy: 150, label: 'D' },
+      { cx: 150, cy: 20, label: 'E' },
+      { cx: 150, cy: 160, label: 'F' },
+    ].map((c) => (
+      <g key={c.label}>
+        <circle cx={c.cx} cy={c.cy} r="14" fill="#ffffff" stroke="#2563eb" strokeWidth="1.5" />
+        <text
+          x={c.cx}
+          y={c.cy + 3.5}
+          textAnchor="middle"
+          fontFamily="Inter, sans-serif"
+          fontSize="10"
+          fontWeight="700"
+          fill="#1d4ed8"
+        >
+          {c.label}
+        </text>
+      </g>
+    ))}
+  </svg>
+);
 
 const TechBentoGrid = () => {
   return (
@@ -152,7 +302,9 @@ const TechBentoGrid = () => {
                 d'installation, juste le navigateur.
               </CardText>
             </div>
-            <Visualization>PeerConnection API • ICE Candidates • DTLS</Visualization>
+            <Visualization>
+              <WebRTCDiagram />
+            </Visualization>
           </BentoCard>
 
           <BentoCard
@@ -174,12 +326,8 @@ const TechBentoGrid = () => {
                 participant, permettant des appels de groupe massifs sans surcharge client.
               </CardText>
             </div>
-            <Visualization style={{ height: '200px', flexDirection: 'column', gap: '8px' }}>
-              <div>Client A ⬆️</div>
-              <div style={{ padding: '4px 12px', background: '#eff6ff', borderRadius: '4px' }}>
-                SFU Core
-              </div>
-              <div>⬇️ Client B, C, D</div>
+            <Visualization className="tall">
+              <SFUDiagram />
             </Visualization>
           </BentoCard>
 

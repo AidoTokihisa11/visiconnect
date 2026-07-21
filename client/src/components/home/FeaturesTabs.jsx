@@ -22,31 +22,35 @@ import {
    FeaturesTabs — Premium SaaS feature showcase
    - Left: animated tab list with sliding 2px indicator
    - Right: glassmorphism preview pane
-   - Studio: real Unsplash portraits, pulsing REC, clean 4K · E2EE
+   - Studio: branded gradient tiles + initials (no stock photos)
    - Analytics: live SVG engagement chart
    - All text via t() with FR fallback
    ════════════════════════════════════════════════════════════════ */
 
-/* ----------------------------- Mock people (Unsplash portraits) */
+/* ----------------------------- Mock people (branded gradient tiles + initials) */
 const STUDIO_PEOPLE = [
   {
     name: 'Julia D.',
-    photo: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?fit=crop&w=320&h=240&q=80',
+    initials: 'JD',
+    gradient: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
     muted: false,
   },
   {
     name: 'Marc R.',
-    photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=320&h=240&q=80',
+    initials: 'MR',
+    gradient: 'linear-gradient(135deg, #60a5fa 0%, #2563eb 100%)',
     muted: false,
   },
   {
     name: 'Alice S.',
-    photo: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?fit=crop&w=320&h=240&q=80',
+    initials: 'AS',
+    gradient: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)',
     muted: true,
   },
   {
     name: 'Tom K.',
-    photo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?fit=crop&w=320&h=240&q=80',
+    initials: 'TK',
+    gradient: 'linear-gradient(135deg, #93c5fd 0%, #3b82f6 100%)',
     muted: true,
   },
 ];
@@ -208,26 +212,40 @@ const DashboardPreview = memo(function DashboardPreview({ t }) {
 });
 
 /* ════════════════════════════════════════════════════════════════
-   2) STUDIO preview — Unsplash grid + pulsing REC + 4K · E2EE
+   2) STUDIO preview — Branded gradient tiles + initials avatars
    ════════════════════════════════════════════════════════════════ */
 const StudioTile = memo(function StudioTile({ person, isLive }) {
   return (
     <motion.div
-      className="relative rounded-xl overflow-hidden border border-white/10 bg-slate-900"
+      className="relative rounded-xl overflow-hidden border border-white/10"
+      style={{ background: person.gradient }}
       initial={{ opacity: 0, scale: 0.96 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.4, ease: 'easeOut' }}
     >
-      <img
-        src={person.photo}
-        alt={person.name}
-        loading="lazy"
-        className="w-full h-full object-cover"
-        onError={(e) => {
-          e.currentTarget.style.display = 'none';
+      {/* Branded initials avatar (no fake stock photos) */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span
+          className="text-white font-extrabold tracking-wide"
+          style={{
+            fontSize: 'clamp(1.25rem, 4vw, 2rem)',
+            textShadow: '0 2px 8px rgba(0,0,0,0.2)',
+          }}
+        >
+          {person.initials}
+        </span>
+      </div>
+
+      {/* Subtle radial highlight for depth */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(circle at 30% 25%, rgba(255,255,255,0.18) 0%, transparent 55%)',
         }}
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/10 pointer-events-none" />
+
+      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/5 pointer-events-none" />
 
       {isLive && (
         <span className="absolute top-2 left-2 inline-flex items-center gap-1.5 bg-red-500/95 text-white text-[0.58rem] font-bold tracking-wider px-2 py-0.5 rounded-md shadow-lg">
