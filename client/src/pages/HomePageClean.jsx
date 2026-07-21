@@ -226,6 +226,10 @@ const HeroSection = styled.section`
   @media (max-width: 640px) {
     padding: 3rem 1rem;
   }
+
+  @media (max-width: 420px) {
+    padding: 2rem 0.9rem;
+  }
 `;
 
 const HeroContainer = styled.div`
@@ -251,6 +255,8 @@ const HeroContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  min-width: 0;
+  max-width: 100%;
 
   @media (max-width: 900px) {
     align-items: center;
@@ -263,6 +269,8 @@ const HeroHeadline = styled.h1`
   line-height: 1.1;
   color: ${COLORS.dark};
   letter-spacing: -0.05em;
+  max-width: 100%;
+  overflow-wrap: break-word;
 
   span {
     color: ${COLORS.primary};
@@ -279,8 +287,9 @@ const HeroHeadline = styled.h1`
   }
 
   @media (max-width: 480px) {
-    font-size: 2rem;
+    font-size: 1.9rem;
     white-space: normal;
+    letter-spacing: -0.03em;
   }
 `;
 
@@ -289,6 +298,36 @@ const HeroSubhead = styled.p`
   line-height: 1.6;
   color: ${COLORS.lightText};
   max-width: 600px;
+  width: 100%;
+  overflow-wrap: break-word;
+
+  @media (max-width: 640px) {
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+`;
+
+const HeroActions = styled.div`
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 100%;
+
+  @media (max-width: 900px) {
+    justify-content: center;
+  }
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: stretch;
+
+    & > a,
+    & > button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
 `;
 
 const HeroImage = styled.div`
@@ -299,6 +338,14 @@ const HeroImage = styled.div`
   align-items: center;
   justify-content: center;
   overflow: visible;
+
+  @media (max-width: 640px) {
+    min-height: 300px;
+  }
+
+  @media (max-width: 420px) {
+    min-height: 260px;
+  }
 `;
 
 // --- TRUSTED SECTION ---
@@ -306,6 +353,10 @@ const TrustedSection = styled.section`
   padding: 4rem 1.5rem;
   background-color: ${COLORS.altBackground};
   border-bottom: 1px solid ${COLORS.border};
+
+  @media (max-width: 640px) {
+    padding: 2.5rem 1rem;
+  }
 `;
 
 const TrustedContainer = styled.div`
@@ -331,6 +382,10 @@ const LogosGrid = styled.div`
   flex-wrap: wrap;
   opacity: 0.6;
 
+  @media (max-width: 640px) {
+    gap: 1.5rem;
+  }
+
   svg {
     height: 32px;
     width: auto;
@@ -342,6 +397,10 @@ const LogosGrid = styled.div`
       opacity: 1;
       transform: scale(1.05);
     }
+
+    @media (max-width: 480px) {
+      height: 26px;
+    }
   }
 `;
 
@@ -350,6 +409,10 @@ const StatsSection = styled.section`
   padding: 4rem 1.5rem;
   background-color: ${COLORS.white};
   border-bottom: 1px solid ${COLORS.border};
+
+  @media (max-width: 640px) {
+    padding: 2.5rem 1rem;
+  }
 `;
 
 const StatsContainer = styled.div`
@@ -415,12 +478,20 @@ const StatItemPill = ({ icon: Icon, value, label }) => (
 const FeaturesSection = styled.section`
   padding: 5rem 1.5rem;
   background-color: ${COLORS.altBackground};
+
+  @media (max-width: 640px) {
+    padding: 3rem 1rem;
+  }
 `;
 
 const SectionHeader = styled.div`
   text-align: center;
   max-width: 800px;
   margin: 0 auto 4rem auto;
+
+  @media (max-width: 640px) {
+    margin: 0 auto 2.25rem auto;
+  }
 `;
 
 const SectionTitle = styled.h2`
@@ -429,12 +500,24 @@ const SectionTitle = styled.h2`
   color: ${COLORS.dark};
   margin-bottom: 1rem;
   letter-spacing: -0.025em;
+
+  @media (max-width: 640px) {
+    font-size: 1.75rem;
+  }
+
+  @media (max-width: 420px) {
+    font-size: 1.5rem;
+  }
 `;
 
 const SectionSubtitle = styled.p`
   font-size: 1.125rem;
   color: ${COLORS.lightText};
   line-height: 1.6;
+
+  @media (max-width: 640px) {
+    font-size: 1rem;
+  }
 `;
 
 const FeaturesGrid = styled.div`
@@ -444,9 +527,13 @@ const FeaturesGrid = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
 
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   @media (max-width: 640px) {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 1.25rem;
   }
 `;
 
@@ -468,9 +555,12 @@ const TestimonialsGrid = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
 
-  @media (max-width: 640px) {
+  @media (max-width: 900px) {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+  }
+
+  @media (max-width: 640px) {
+    gap: 1.25rem;
   }
 `;
 
@@ -479,6 +569,10 @@ const PricingSectionWrapper = styled.section`
   padding: 5rem 1.5rem;
   background-color: ${COLORS.altBackground};
   border-top: 1px solid ${COLORS.border};
+
+  @media (max-width: 640px) {
+    padding: 3rem 1rem;
+  }
 `;
 
 const PricingGrid = styled.div`
@@ -487,6 +581,11 @@ const PricingGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 2rem;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
 `;
 
 // --- ABOUT SECTION ---
@@ -494,6 +593,10 @@ const AboutSection = styled.section`
   padding: 5rem 1.5rem;
   background-color: ${COLORS.background};
   border-top: 1px solid ${COLORS.border};
+
+  @media (max-width: 640px) {
+    padding: 3rem 1rem;
+  }
 `;
 
 const AboutContent = styled.div`
@@ -502,6 +605,10 @@ const AboutContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 3rem;
+
+  @media (max-width: 640px) {
+    gap: 2rem;
+  }
 `;
 
 const AboutText = styled.p`
@@ -511,6 +618,11 @@ const AboutText = styled.p`
   text-align: center;
   max-width: 800px;
   margin: 0 auto;
+
+  @media (max-width: 640px) {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
 `;
 
 const AboutGrid = styled.div`
@@ -518,8 +630,12 @@ const AboutGrid = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   gap: 2rem;
 
-  @media (max-width: 768px) {
+  @media (max-width: 900px) {
     grid-template-columns: 1fr;
+  }
+
+  @media (max-width: 640px) {
+    gap: 1.25rem;
   }
 `;
 
@@ -532,6 +648,10 @@ const AboutCard = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+
+  @media (max-width: 640px) {
+    padding: 1.25rem;
+  }
 `;
 
 const AboutCardTitle = styled.h3`
@@ -541,6 +661,10 @@ const AboutCardTitle = styled.h3`
   display: flex;
   align-items: center;
   gap: 0.75rem;
+
+  @media (max-width: 640px) {
+    font-size: 1.2rem;
+  }
 `;
 
 const AboutStatsGrid = styled.div`
@@ -552,6 +676,10 @@ const AboutStatsGrid = styled.div`
   @media (max-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  @media (max-width: 420px) {
+    gap: 0.75rem;
+  }
 `;
 
 const AboutStat = styled.div`
@@ -561,6 +689,10 @@ const AboutStat = styled.div`
   text-align: center;
   border: 1px solid ${COLORS.border};
   box-shadow: ${SHADOWS.sm};
+
+  @media (max-width: 640px) {
+    padding: 1rem 0.75rem;
+  }
 `;
 
 // --- CONTACT SECTION ---
@@ -568,6 +700,10 @@ const ContactSection = styled.section`
   padding: 5rem 1.5rem;
   background-color: ${COLORS.altBackground};
   border-top: 1px solid ${COLORS.border};
+
+  @media (max-width: 640px) {
+    padding: 3rem 1rem;
+  }
 `;
 
 const ContactContainer = styled.div`
@@ -582,6 +718,11 @@ const ContactActions = styled.div`
   gap: 2rem;
   margin-top: 2.5rem;
   flex-wrap: wrap;
+
+  @media (max-width: 640px) {
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+  }
 `;
 
 const ContactLink = styled.a`
@@ -602,6 +743,12 @@ const ContactLink = styled.a`
     background-color: ${COLORS.background};
     border-color: ${COLORS.border};
     transform: translateY(-2px);
+  }
+
+  @media (max-width: 640px) {
+    width: 100px;
+    padding: 1rem 0.5rem;
+    font-size: 0.9rem;
   }
 `;
 
@@ -636,7 +783,7 @@ export default function HomePageClean() {
                 type="textarea"
               />
             </HeroSubhead>
-            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            <HeroActions>
               <Button
                 to="/signup"
                 $variant="primary"
@@ -667,7 +814,7 @@ export default function HomePageClean() {
                 <Play size={18} style={{ marginRight: '8px' }} fill={COLORS.secondary} />
                 {t('hero.watchDemo')}
               </Button>
-            </div>
+            </HeroActions>
           </HeroContent>
 
           <HeroImage>

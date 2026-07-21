@@ -9,6 +9,14 @@ const Wrapper = styled.section`
   background: #f8fafc; // Slate-50 explicitly
   border-bottom: 1px solid #e2e8f0;
   overflow: hidden;
+
+  @media (max-width: 768px) {
+    padding: 3.5rem 1rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 2.5rem 0.9rem;
+  }
 `;
 
 const Container = styled.div`
