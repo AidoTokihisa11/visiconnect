@@ -62,9 +62,12 @@
     "titleLine1": "Organisez vos réunions",
     "titleLine2": "en ligne, simplement.",
     "subtitle": "Créez une réunion en quelques secondes et partagez le lien. Vos participants rejoignent directement depuis leur navigateur, sans application à installer.",
-    "startFree": "Essayer gratuitement",
-    "testRoom": "Rejoindre la room",
+    "startFree": "Créer mon compte gratuit",
+    "startFreeSub": "Gratuit • Aucune carte bancaire • 30 s",
+    "testRoom": "Tester une réunion",
+    "testRoomSub": "Ouvre une salle de test dans le navigateur, sans compte",
     "watchDemo": "Voir en action",
+    "watchDemoSub": "Visite guidée du produit (2 min)",
     "trustedBy": "En phase bêta",
     "title1": "Organisez vos réunions ",
     "title2": "en ligne, simplement."
@@ -1368,11 +1371,11 @@
   },
   "demo": {
     "modal": {
-      "title": "Rejoindre la démo live",
-      "subtitle": "Entrez un prénom ou un pseudo pour participer à la démonstration. Aucun compte requis.",
-      "placeholder": "Votre prénom ou pseudo",
+      "title": "Tester une réunion",
+      "subtitle": "Choisissez un pseudo pour rejoindre une salle de test. Aucun compte requis, aucune donnée conservée.",
+      "placeholder": "Votre pseudo (ex. Théo)",
       "cancel": "Annuler",
-      "submit": "Lancer la démo →"
+      "submit": "Rejoindre la salle →"
     },
     "hero": {
       "eyebrow": "Démo immersive de la plateforme",

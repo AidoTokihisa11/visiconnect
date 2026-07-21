@@ -62,12 +62,15 @@
     "titleLine2": "video conferencing.",
     "title": "Next-generation video conferencing platform",
     "subtitle": "HD quality, instant start, built-in security. Join your teams in one click, from any device.",
-    "startFree": "Try for free",
+    "startFree": "Create my free account",
+    "startFreeSub": "Free • No credit card • 30 s",
     "watchDemo": "See it in action",
+    "watchDemoSub": "Guided product tour (2 min)",
     "trustedBy": "Currently in beta",
     "title1": "Next-generation ",
     "title2": "video conferencing.",
-    "testRoom": "Join the room"
+    "testRoom": "Try a meeting",
+    "testRoomSub": "Opens a test room in your browser, no signup"
   },
   "homeFeatures": {
     "title": "Built for performance",
@@ -1344,11 +1347,11 @@
   },
   "demo": {
     "modal": {
-      "title": "Join the live demo",
-      "subtitle": "Enter a first name or nickname to join the demo. No account required.",
-      "placeholder": "Your first name or nickname",
+      "title": "Try a meeting",
+      "subtitle": "Pick a nickname to join a test room. No account required, nothing is saved.",
+      "placeholder": "Your nickname (e.g. Alex)",
       "cancel": "Cancel",
-      "submit": "Launch the demo →"
+      "submit": "Join the room →"
     },
     "hero": {
       "eyebrow": "Immersive platform demo",

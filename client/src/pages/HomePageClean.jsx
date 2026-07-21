@@ -321,26 +321,133 @@ const HeroSubhead = styled.p`
 
 const HeroActions = styled.div`
   display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 0.9rem;
   width: 100%;
-  max-width: 100%;
+  max-width: 520px;
   min-width: 0;
 
   @media (max-width: 900px) {
-    justify-content: center;
+    align-items: stretch;
+    margin: 0 auto;
+  }
+`;
+
+const CtaCard = styled(Link)`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-decoration: none;
+  padding: 1rem 1.25rem;
+  border-radius: 14px;
+  border: 1px solid transparent;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+  min-width: 0;
+  width: 100%;
+  text-align: left;
+
+  ${(props) =>
+    props.$variant === 'primary'
+      ? `
+    background: linear-gradient(135deg, ${COLORS.primary}, #1d4ed8);
+    color: ${COLORS.white};
+    box-shadow: 0 8px 24px -8px rgba(37, 99, 235, 0.5);
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px -10px rgba(37, 99, 235, 0.65);
+    }
+  `
+      : `
+    background-color: ${COLORS.white};
+    color: ${COLORS.dark};
+    border-color: ${COLORS.border};
+    &:hover {
+      transform: translateY(-2px);
+      border-color: ${COLORS.primary};
+      box-shadow: 0 10px 24px -14px rgba(15, 23, 42, 0.35);
+    }
+  `}
+`;
+
+const CtaIcon = styled.span`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  flex-shrink: 0;
+
+  ${(props) =>
+    props.$variant === 'primary'
+      ? `
+    background-color: rgba(255, 255, 255, 0.18);
+    color: #fff;
+  `
+      : `
+    background-color: rgba(37, 99, 235, 0.1);
+    color: ${COLORS.primary};
+  `}
+`;
+
+const CtaLabel = styled.span`
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+  flex: 1;
+
+  strong {
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  small {
+    font-size: 0.82rem;
+    font-weight: 500;
+    opacity: 0.85;
+    line-height: 1.35;
   }
 
   @media (max-width: 480px) {
-    flex-direction: column;
-    align-items: stretch;
-
-    & > a,
-    & > button {
-      width: 100%;
-      justify-content: center;
-      max-width: 100%;
+    strong {
+      font-size: 1rem;
     }
+    small {
+      font-size: 0.78rem;
+    }
+  }
+`;
+
+const CtaArrow = styled.span`
+  font-size: 1.2rem;
+  opacity: 0.7;
+  flex-shrink: 0;
+`;
+
+const CtaTertiary = styled(Link)`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+  padding: 0.4rem 0;
+  color: ${COLORS.secondary};
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.15s ease;
+  align-self: flex-start;
+
+  &:hover {
+    color: ${COLORS.primary};
+  }
+
+  @media (max-width: 900px) {
+    align-self: center;
   }
 `;
 
@@ -800,36 +907,32 @@ export default function HomePageClean() {
               />
             </HeroSubhead>
             <HeroActions>
-              <Button
-                to="/signup"
-                $variant="primary"
-                style={{ padding: '0.875rem 1.5rem', fontSize: '1.125rem' }}
-              >
-                {t('hero.startFree')}
-              </Button>
-              <Button
-                to="/demo?join=1"
-                style={{
-                  padding: '0.875rem 1.5rem',
-                  fontSize: '1.125rem',
-                  backgroundColor: '#0f172a',
-                  color: 'white',
-                  border: '1px solid #0f172a',
-                  display: 'flex',
-                  alignItems: 'center',
-                }}
-              >
-                <Zap size={18} style={{ marginRight: '8px' }} />
-                {t('hero.testRoom')}
-              </Button>
-              <Button
-                to="/demo"
-                $variant="ghost"
-                style={{ padding: '0.875rem 1.5rem', fontSize: '1.125rem' }}
-              >
-                <Play size={18} style={{ marginRight: '8px' }} fill={COLORS.secondary} />
-                {t('hero.watchDemo')}
-              </Button>
+              <CtaCard to="/signup" $variant="primary" aria-label={t('hero.startFree')}>
+                <CtaIcon $variant="primary">
+                  <Zap size={22} />
+                </CtaIcon>
+                <CtaLabel>
+                  <strong>{t('hero.startFree')}</strong>
+                  <small>{t('hero.startFreeSub')}</small>
+                </CtaLabel>
+                <CtaArrow aria-hidden="true">→</CtaArrow>
+              </CtaCard>
+
+              <CtaCard to="/demo?join=1" aria-label={t('hero.testRoom')}>
+                <CtaIcon>
+                  <Video size={22} />
+                </CtaIcon>
+                <CtaLabel>
+                  <strong>{t('hero.testRoom')}</strong>
+                  <small>{t('hero.testRoomSub')}</small>
+                </CtaLabel>
+                <CtaArrow aria-hidden="true">→</CtaArrow>
+              </CtaCard>
+
+              <CtaTertiary to="/demo">
+                <Play size={14} fill="currentColor" />
+                {t('hero.watchDemo')} · {t('hero.watchDemoSub')}
+              </CtaTertiary>
             </HeroActions>
           </HeroContent>
 
