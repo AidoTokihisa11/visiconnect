@@ -76,6 +76,9 @@ const PageContainer = styled.div`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
@@ -222,6 +225,9 @@ const HeroSection = styled.section`
   background-color: ${COLORS.white};
   padding: 5rem 1.5rem;
   border-bottom: 1px solid ${COLORS.border};
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 
   @media (max-width: 640px) {
     padding: 3rem 1rem;
@@ -234,14 +240,15 @@ const HeroSection = styled.section`
 
 const HeroContainer = styled.div`
   max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 4rem;
   align-items: center;
 
   @media (max-width: 900px) {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     text-align: center;
     gap: 3rem;
   }
@@ -256,6 +263,7 @@ const HeroContent = styled.div`
   flex-direction: column;
   gap: 1.5rem;
   min-width: 0;
+  width: 100%;
   max-width: 100%;
 
   @media (max-width: 900px) {
@@ -271,6 +279,8 @@ const HeroHeadline = styled.h1`
   letter-spacing: -0.05em;
   max-width: 100%;
   overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
 
   span {
     color: ${COLORS.primary};
@@ -300,6 +310,8 @@ const HeroSubhead = styled.p`
   max-width: 600px;
   width: 100%;
   overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
 
   @media (max-width: 640px) {
     font-size: 1rem;
@@ -313,6 +325,7 @@ const HeroActions = styled.div`
   flex-wrap: wrap;
   width: 100%;
   max-width: 100%;
+  min-width: 0;
 
   @media (max-width: 900px) {
     justify-content: center;
@@ -326,6 +339,7 @@ const HeroActions = styled.div`
     & > button {
       width: 100%;
       justify-content: center;
+      max-width: 100%;
     }
   }
 `;
@@ -333,11 +347,13 @@ const HeroActions = styled.div`
 const HeroImage = styled.div`
   position: relative;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   min-height: 420px;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: visible;
+  overflow: hidden;
 
   @media (max-width: 640px) {
     min-height: 300px;
