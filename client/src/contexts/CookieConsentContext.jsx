@@ -82,9 +82,9 @@ export function CookieConsentProvider({ children }) {
 
     // 2. Notification Visuelle Utilisateur
     let message = 'Vos préférences de confidentialité ont bien été enregistrées.';
-    if (type === true) message = '✅ Tous les cookies essentiels et analytiques ont été acceptés.';
+    if (type === true) message = 'Tous les cookies essentiels et analytiques ont été acceptés.';
     if (type === false)
-      message = '🛡️ Refus enregistré. Seuls les cookies strictement essentiels seront utilisés.';
+      message = 'Refus enregistré. Seuls les cookies strictement essentiels seront utilisés.';
 
     // Déclenche une notification locale (capter par App.jsx)
     window.dispatchEvent(
