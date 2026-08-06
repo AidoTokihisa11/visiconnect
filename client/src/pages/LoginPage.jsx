@@ -413,26 +413,20 @@ const BrandBody = styled.div`
 `;
 
 const BrandTagline = styled.h2`
-  font-size: 2.25rem;
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.03em;
-  margin: 0 0 1rem;
-
-  em {
-    font-style: normal;
-    background: linear-gradient(90deg, #93c5fd, #ffffff);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
+  font-size: 1.875rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  margin: 0 0 0.875rem;
+  color: rgba(248, 250, 252, 0.95);
 `;
 
 const BrandLead = styled.p`
-  font-size: 1rem;
-  line-height: 1.6;
-  color: rgba(226, 232, 240, 0.85);
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: rgba(203, 213, 225, 0.75);
   margin: 0 0 2rem;
+  max-width: 380px;
 `;
 
 const FeatureList = styled.ul`
@@ -441,47 +435,31 @@ const FeatureList = styled.ul`
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.875rem;
+  gap: 0.75rem;
 `;
 
 const FeatureItem = styled.li`
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
-  font-size: 0.9375rem;
-  color: rgba(241, 245, 249, 0.92);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: rgba(226, 232, 240, 0.8);
 
   svg {
-    color: #93c5fd;
+    color: rgba(147, 197, 253, 0.85);
     flex-shrink: 0;
-    margin-top: 2px;
+    margin-top: 3px;
   }
 `;
 
-const BrandBottom = styled.div`
+const BrandFootnote = styled.p`
   position: relative;
   z-index: 1;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-`;
-
-const Stat = styled.div`
-  strong {
-    display: block;
-    font-size: 1.375rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-  }
-  span {
-    display: block;
-    font-size: 0.75rem;
-    color: rgba(203, 213, 225, 0.7);
-    letter-spacing: 0.02em;
-    margin-top: 2px;
-  }
+  margin: 0;
+  font-size: 0.75rem;
+  color: rgba(203, 213, 225, 0.5);
+  letter-spacing: 0.02em;
 `;
 
 /* ------------------------------------------------------------------ */
@@ -739,52 +717,36 @@ const LoginPage = () => {
 
           <BrandBody>
             <BrandTagline>
-              Vos réunions,{' '}
-              <em>
-                plus fluides,
-                <br />
-                plus humaines.
-              </em>
+              Un espace pour vos réunions,
+              <br />
+              sans le bruit autour.
             </BrandTagline>
             <BrandLead>
-              Rejoignez les équipes qui utilisent VisioConnect pour collaborer sans friction — vidéo
-              HD, transcription IA, tableau blanc et sécurité de bout en bout.
+              VisioConnect regroupe la vidéo, le chat et le tableau blanc dans une interface simple
+              — pour que la conversation reste au centre.
             </BrandLead>
 
             <FeatureList>
               <FeatureItem>
-                <ShieldCheck size={18} strokeWidth={2.25} />
-                Chiffrement E2EE et conformité RGPD par défaut.
+                <ShieldCheck size={16} strokeWidth={2} />
+                Chiffrement de bout en bout, conforme RGPD.
               </FeatureItem>
               <FeatureItem>
-                <Sparkles size={18} strokeWidth={2.25} />
-                Résumés, actions et traductions générés par IA en direct.
+                <Sparkles size={16} strokeWidth={2} />
+                Résumés et transcription assistés par IA, à la demande.
               </FeatureItem>
               <FeatureItem>
-                <Users size={18} strokeWidth={2.25} />
-                Salles de sous-groupes, sondages et tableau blanc collaboratif.
+                <Users size={16} strokeWidth={2} />
+                Sous-groupes, sondages et tableau blanc partagé.
               </FeatureItem>
               <FeatureItem>
-                <Globe2 size={18} strokeWidth={2.25} />
-                Infrastructure mondiale — moins de 50 ms de latence.
+                <Globe2 size={16} strokeWidth={2} />
+                Disponible en français, anglais, espagnol et allemand.
               </FeatureItem>
             </FeatureList>
           </BrandBody>
 
-          <BrandBottom>
-            <Stat>
-              <strong>12k+</strong>
-              <span>Équipes actives</span>
-            </Stat>
-            <Stat>
-              <strong>4,9/5</strong>
-              <span>Satisfaction client</span>
-            </Stat>
-            <Stat>
-              <strong>99,99 %</strong>
-              <span>Disponibilité</span>
-            </Stat>
-          </BrandBottom>
+          <BrandFootnote>Projet indépendant · Fait avec soin.</BrandFootnote>
         </BrandSide>
       </Main>
     </PageWrapper>
