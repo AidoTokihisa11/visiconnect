@@ -322,9 +322,9 @@ const HeroSubhead = styled.p`
 const HeroActions = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.9rem;
+  gap: 0.625rem;
   width: 100%;
-  max-width: 520px;
+  max-width: 460px;
   min-width: 0;
 
   @media (max-width: 900px) {
@@ -336,114 +336,111 @@ const HeroActions = styled.div`
 const CtaCard = styled(Link)`
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
   text-decoration: none;
-  padding: 1rem 1.25rem;
-  border-radius: 14px;
+  padding: 13px 16px;
+  border-radius: 10px;
   border: 1px solid transparent;
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'SF Pro Text',
+    sans-serif;
   transition:
-    transform 0.15s ease,
-    box-shadow 0.2s ease,
-    background-color 0.2s ease;
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
   min-width: 0;
   width: 100%;
   text-align: left;
 
+  svg {
+    flex-shrink: 0;
+  }
+
   ${(props) =>
     props.$variant === 'primary'
       ? `
-    background: linear-gradient(135deg, ${COLORS.primary}, #1d4ed8);
+    background-color: ${COLORS.primary};
     color: ${COLORS.white};
-    box-shadow: 0 8px 24px -8px rgba(37, 99, 235, 0.5);
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
     &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 14px 30px -10px rgba(37, 99, 235, 0.65);
+      background-color: #1d4ed8;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px -4px rgba(37, 99, 235, 0.4);
+    }
+    &:active {
+      transform: translateY(0);
     }
   `
       : `
-    background-color: ${COLORS.white};
+    background-color: transparent;
     color: ${COLORS.dark};
-    border-color: ${COLORS.border};
+    border-color: #E2E8F0;
     &:hover {
-      transform: translateY(-2px);
-      border-color: ${COLORS.primary};
-      box-shadow: 0 10px 24px -14px rgba(15, 23, 42, 0.35);
+      background-color: #F8FAFC;
+      border-color: #CBD5E1;
     }
-  `}
-`;
-
-const CtaIcon = styled.span`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  flex-shrink: 0;
-
-  ${(props) =>
-    props.$variant === 'primary'
-      ? `
-    background-color: rgba(255, 255, 255, 0.18);
-    color: #fff;
-  `
-      : `
-    background-color: rgba(37, 99, 235, 0.1);
-    color: ${COLORS.primary};
   `}
 `;
 
 const CtaLabel = styled.span`
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  gap: 2px;
   min-width: 0;
   flex: 1;
+  line-height: 1.25;
 
   strong {
-    font-size: 1.05rem;
-    font-weight: 700;
-    line-height: 1.2;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: -0.005em;
   }
 
   small {
-    font-size: 0.82rem;
-    font-weight: 500;
+    font-size: 0.8125rem;
+    font-weight: 400;
     opacity: 0.85;
     line-height: 1.35;
-  }
-
-  @media (max-width: 480px) {
-    strong {
-      font-size: 1rem;
-    }
-    small {
-      font-size: 0.78rem;
-    }
   }
 `;
 
 const CtaArrow = styled.span`
-  font-size: 1.2rem;
-  opacity: 0.7;
+  font-size: 1rem;
+  opacity: 0.6;
   flex-shrink: 0;
+  transition: transform 0.15s ease;
+
+  ${CtaCard}:hover & {
+    transform: translateX(2px);
+    opacity: 0.9;
+  }
 `;
 
 const CtaTertiary = styled(Link)`
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.25rem;
-  padding: 0.4rem 0;
+  gap: 0.4rem;
+  margin-top: 0.375rem;
+  padding: 2px 0;
   color: ${COLORS.secondary};
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.8125rem;
+  font-weight: 500;
   text-decoration: none;
   transition: color 0.15s ease;
   align-self: flex-start;
 
+  svg {
+    opacity: 0.7;
+  }
+
   &:hover {
     color: ${COLORS.primary};
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   @media (max-width: 900px) {
@@ -908,9 +905,7 @@ export default function HomePageClean() {
             </HeroSubhead>
             <HeroActions>
               <CtaCard to="/signup" $variant="primary" aria-label={t('hero.startFree')}>
-                <CtaIcon $variant="primary">
-                  <Zap size={22} />
-                </CtaIcon>
+                <Zap size={16} strokeWidth={2.25} aria-hidden="true" />
                 <CtaLabel>
                   <strong>{t('hero.startFree')}</strong>
                   <small>{t('hero.startFreeSub')}</small>
@@ -919,9 +914,7 @@ export default function HomePageClean() {
               </CtaCard>
 
               <CtaCard to="/demo?join=1" aria-label={t('hero.testRoom')}>
-                <CtaIcon>
-                  <Video size={22} />
-                </CtaIcon>
+                <Video size={16} strokeWidth={2} aria-hidden="true" />
                 <CtaLabel>
                   <strong>{t('hero.testRoom')}</strong>
                   <small>{t('hero.testRoomSub')}</small>
@@ -930,8 +923,8 @@ export default function HomePageClean() {
               </CtaCard>
 
               <CtaTertiary to="/demo">
-                <Play size={14} fill="currentColor" />
-                {t('hero.watchDemo')} · {t('hero.watchDemoSub')}
+                <Play size={12} fill="currentColor" />
+                <span>{t('hero.watchDemo')} · {t('hero.watchDemoSub')}</span>
               </CtaTertiary>
             </HeroActions>
           </HeroContent>
