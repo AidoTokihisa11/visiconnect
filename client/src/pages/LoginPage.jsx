@@ -72,15 +72,14 @@ const LogoRow = styled.div`
 `;
 
 const LogoBadge = styled.div`
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   background-color: hsl(var(--primary));
-  border-radius: 9px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: hsl(var(--primary-foreground));
-  box-shadow: 0 4px 12px -4px hsl(var(--primary) / 0.4);
 `;
 
 const LogoText = styled.span`
@@ -213,15 +212,12 @@ const SubmitButton = styled(motion.button)`
   cursor: pointer;
   transition:
     background 0.15s ease,
-    transform 0.05s ease,
-    box-shadow 0.15s ease;
+    transform 0.05s ease;
   margin-top: 0.5rem;
   font-family: inherit;
-  box-shadow: 0 2px 8px -2px hsl(var(--primary) / 0.4);
 
   &:hover:not(:disabled) {
-    background: hsl(var(--primary) / 0.92);
-    box-shadow: 0 4px 14px -4px hsl(var(--primary) / 0.55);
+    background: hsl(var(--primary) / 0.9);
   }
 
   &:disabled {
@@ -342,59 +338,31 @@ const LegalFootnote = styled.p`
 
 const BrandSide = styled.div`
   position: relative;
-  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #2563eb 100%);
+  background: #0f172a;
   color: #ffffff;
   padding: 3.5rem 3rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  overflow: hidden;
-  isolation: isolate;
+  border-left: 1px solid #e2e8f0;
 
   @media (max-width: 960px) {
     display: none;
   }
 `;
 
-const Glow = styled.div`
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background:
-    radial-gradient(60% 45% at 90% 10%, rgba(96, 165, 250, 0.35) 0%, transparent 60%),
-    radial-gradient(50% 40% at 10% 90%, rgba(37, 99, 235, 0.4) 0%, transparent 65%);
-`;
-
-const GridOverlay = styled.div`
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.12;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.6) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.6) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: radial-gradient(ellipse at center, black 0%, transparent 75%);
-  -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 75%);
-`;
-
 const BrandTop = styled.div`
-  position: relative;
-  z-index: 1;
   display: flex;
   align-items: center;
   gap: 0.625rem;
 `;
 
 const BrandLogo = styled.div`
-  width: 36px;
-  height: 36px;
-  background: rgba(255, 255, 255, 0.14);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 9px;
+  width: 34px;
+  height: 34px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -407,8 +375,6 @@ const BrandName = styled.span`
 `;
 
 const BrandBody = styled.div`
-  position: relative;
-  z-index: 1;
   max-width: 460px;
 `;
 
@@ -447,18 +413,16 @@ const FeatureItem = styled.li`
   color: rgba(226, 232, 240, 0.8);
 
   svg {
-    color: rgba(147, 197, 253, 0.85);
+    color: #60a5fa;
     flex-shrink: 0;
     margin-top: 3px;
   }
 `;
 
 const BrandFootnote = styled.p`
-  position: relative;
-  z-index: 1;
   margin: 0;
   font-size: 0.75rem;
-  color: rgba(203, 213, 225, 0.5);
+  color: rgba(148, 163, 184, 0.6);
   letter-spacing: 0.02em;
 `;
 
@@ -705,9 +669,6 @@ const LoginPage = () => {
         </FormSide>
 
         <BrandSide>
-          <Glow />
-          <GridOverlay />
-
           <BrandTop>
             <BrandLogo>
               <Video size={19} strokeWidth={2.25} />
