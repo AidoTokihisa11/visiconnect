@@ -1,14 +1,12 @@
 import React, { createContext, useContext } from 'react';
 import { useUser, useAuth as useClerkAuth, useSignIn, useSignUp } from '@clerk/react';
-// Clerk Core 3 (@clerk/react v6) correct API:
-// signUp.password({ emailAddress, password })  → returns { error }
-// signUp.verifications.sendEmailCode()          → returns { error }
-// signUp.verifications.verifyEmailCode({ code })→ returns { error }
-// signUp.finalize()                             → activates session
-// signIn.password({ emailAddress, password })  → returns { error }
-// signIn.finalize()                             → activates session
-// useSignUp() → { signUp }  (no setActive)
-// useSignIn() → { signIn }  (no setActive)
+// Clerk JS (@clerk/react v6) — SignIn / SignUp resource API:
+//   signIn.create({ identifier, password })                → returns SignInResource
+//   signUp.create({ emailAddress, password })              → returns SignUpResource
+//   signUp.prepareEmailAddressVerification({ strategy })   → sends the code
+//   signUp.attemptEmailAddressVerification({ code })       → verifies the code
+//   setActive({ session: <createdSessionId> })             → activates the session
+// Errors are thrown (try/catch) and exposed on err.errors[].code / .message.
 import { useConvexAuth } from 'convex/react';
 
 const AuthContext = createContext({});
@@ -24,13 +22,12 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
   const { isSignedIn, signOut, isLoaded: isAuthLoaded } = useClerkAuth();
-  const { signIn: clerkSignIn } = useSignIn();
-  const { signUp: clerkSignUp } = useSignUp();
+  const { signIn: clerkSignIn, setActive: setActiveSignIn } = useSignIn();
+  const { signUp: clerkSignUp, setActive: setActiveSignUp } = useSignUp();
   const { isLoading: isConvexLoading } = useConvexAuth();
 
   const isLoggedIn = !!isSignedIn;
 
-  // Adaptateur pour la compatibilité avec le reste du code
   const user = clerkUser
     ? {
         id: clerkUser.id,
@@ -40,63 +37,71 @@ export const AuthProvider = ({ children }) => {
       }
     : null;
 
-  // Helper de gestion d'erreur réseau
-  const handleNetworkError = (err) => {
-    if (
-      err.message &&
-      (err.message.includes('Failed to fetch') || err.message.includes('Network error'))
-    ) {
-      return 'Erreur réseau. Vérifiez votre connexion à internet.';
+  const extractClerkError = (err) => {
+    if (err?.errors?.[0]) {
+      return {
+        code: err.errors[0].code,
+        message: err.errors[0].longMessage || err.errors[0].message,
+      };
     }
-    return (
-      err.errors?.[0]?.message || err.message || "Une erreur est survenue avec l'authentification."
-    );
+    if (
+      err?.message &&
+      (err.message.includes('Failed to fetch') || err.message.includes('Network'))
+    ) {
+      return {
+        code: 'network_error',
+        message: 'Erreur réseau. Vérifiez votre connexion à internet.',
+      };
+    }
+    return {
+      code: 'unknown',
+      message: err?.message || "Une erreur est survenue avec l'authentification.",
+    };
   };
 
-  // Clerk Core 3 (@clerk/react v6) — OAuth via authenticateWithRedirect (stable API).
+  const mapSignInError = (err) => {
+    const { code, message } = extractClerkError(err);
+    if (code === 'form_password_incorrect') return 'Mot de passe incorrect.';
+    if (code === 'form_identifier_not_found') return 'Aucun compte trouvé avec cet email.';
+    if (code === 'form_param_format_invalid') return "Format d'email invalide.";
+    if (code === 'strategy_for_user_invalid')
+      return 'Ce compte utilise une connexion externe (Google/GitHub).';
+    return message || 'Erreur de connexion.';
+  };
+
+  const mapSignUpError = (err) => {
+    const { code, message } = extractClerkError(err);
+    if (code === 'form_identifier_exists') return 'Un compte existe déjà avec cet email.';
+    if (code === 'form_password_pwned')
+      return 'Ce mot de passe est trop commun. Choisissez-en un autre.';
+    if (code === 'form_password_length_too_short')
+      return 'Le mot de passe est trop court (minimum 8 caractères).';
+    if (code === 'form_password_validation_failed')
+      return 'Mot de passe invalide. Respectez les critères de sécurité.';
+    return message || 'Erreur lors de la création du compte.';
+  };
+
+  // OAuth via authenticateWithRedirect (Clerk stable API).
   const signInWithProvider = async (provider) => {
     if (!clerkSignIn) {
-      const msg =
-        'Authentification non prête — veuillez patienter quelques secondes puis réessayer.';
-      console.error('[OAuth] clerkSignIn is null/undefined');
-      return { error: { message: msg } };
-    }
-    try {
-      const origin = window.location.origin;
-      // The official method on Core 3 SignIn resource.
-      if (typeof clerkSignIn.authenticateWithRedirect === 'function') {
-        await clerkSignIn.authenticateWithRedirect({
-          strategy: `oauth_${provider}`,
-          redirectUrl: `${origin}/sso-callback`,
-          redirectUrlComplete: `${origin}/`,
-        });
-        return { success: true };
-      }
-      // Fallback pour les anciennes versions de Clerk.
-      if (typeof clerkSignIn.sso === 'function') {
-        const { error } = await clerkSignIn.sso({
-          strategy: `oauth_${provider}`,
-          redirectCallbackUrl: `${origin}/sso-callback`,
-          redirectUrl: `${origin}/`,
-        });
-        if (error) return { error: { message: handleNetworkError(error) } };
-        return { success: true };
-      }
-      console.error(
-        '[OAuth] No OAuth method available on signIn resource',
-        Object.keys(clerkSignIn || {})
-      );
       return {
         error: {
           message:
-            'Méthode OAuth indisponible. Vérifiez la configuration Clerk (provider activé dans le dashboard).',
+            'Authentification non prête — veuillez patienter quelques secondes puis réessayer.',
         },
       };
+    }
+    try {
+      const origin = window.location.origin;
+      await clerkSignIn.authenticateWithRedirect({
+        strategy: `oauth_${provider}`,
+        redirectUrl: `${origin}/sso-callback`,
+        redirectUrlComplete: `${origin}/account`,
+      });
+      return { success: true };
     } catch (err) {
-      console.error('[signInWithProvider] caught error:', err, err?.errors);
-      // Clerk surfaces errors via err.errors[0]
-      const clerkMsg = err?.errors?.[0]?.longMessage || err?.errors?.[0]?.message;
-      return { error: { message: clerkMsg || handleNetworkError(err) } };
+      console.error('[signInWithProvider] error:', err);
+      return { error: { message: extractClerkError(err).message } };
     }
   };
 
@@ -104,118 +109,84 @@ export const AuthProvider = ({ children }) => {
   const signInWithGithub = () => signInWithProvider('github');
   const signInWithDiscord = () => signInWithProvider('discord');
 
-  // Clerk Core 3 (v6) : signIn.password({ emailAddress, password }) + signIn.finalize()
   const signInWithEmail = async (email, password) => {
-    if (!clerkSignIn) return { error: { message: "Clerk n'est pas prêt." } };
+    if (!clerkSignIn || !setActiveSignIn) {
+      return { error: { message: "Clerk n'est pas prêt." } };
+    }
     try {
-      const { error } = await clerkSignIn.password({ emailAddress: email, password });
-      if (error) {
-        const code = error.errors?.[0]?.code;
-        if (code === 'form_password_incorrect')
-          return { error: { message: 'Mot de passe incorrect.' } };
-        if (code === 'form_identifier_not_found')
-          return { error: { message: 'Aucun compte trouvé avec cet email.' } };
-        return { error: { message: error.errors?.[0]?.message || 'Erreur de connexion.' } };
+      const result = await clerkSignIn.create({ identifier: email, password });
+
+      if (result.status === 'complete') {
+        await setActiveSignIn({ session: result.createdSessionId });
+        return { data: { user: clerkUser }, success: true };
       }
-      if (clerkSignIn.status === 'complete') {
-        await clerkSignIn.finalize({ navigate: () => {} });
-        return { data: { user: clerkSignIn }, success: true };
-      }
-      if (
-        clerkSignIn.status === 'needs_second_factor' ||
-        clerkSignIn.status === 'needs_client_trust'
-      ) {
+
+      if (result.status === 'needs_second_factor') {
         return {
           error: {
             message:
-              'Votre compte a la double authentification (2FA) activée. Veuillez la désactiver depuis les paramètres de votre compte.',
+              "Votre compte utilise la double authentification (2FA). Cette étape n'est pas encore prise en charge ici.",
           },
         };
       }
+
       return {
-        error: {
-          message: `Connexion incomplète (statut: ${clerkSignIn.status}). Veuillez réessayer.`,
-        },
+        error: { message: `Connexion incomplète (statut: ${result.status}).` },
       };
     } catch (err) {
-      return { error: { message: handleNetworkError(err) } };
+      return { error: { message: mapSignInError(err) } };
     }
   };
 
-  // Clerk Core 3 (v6) : signUp.password() + verifications.sendEmailCode()
   const signUpWithEmail = async (email, password) => {
-    if (!clerkSignUp) return { error: { message: "Clerk n'est pas prêt." } };
+    if (!clerkSignUp || !setActiveSignUp) {
+      return { error: { message: "Clerk n'est pas prêt." } };
+    }
     try {
-      const { error: pwdError } = await clerkSignUp.password({ emailAddress: email, password });
-      if (pwdError) {
-        const code = pwdError.errors?.[0]?.code;
-        if (code === 'form_identifier_exists')
-          return { error: { message: 'Un compte existe déjà avec cet email.' } };
-        if (code === 'form_password_pwned')
-          return { error: { message: 'Ce mot de passe est trop commun. Choisissez-en un autre.' } };
-        if (code === 'form_password_length_too_short')
-          return { error: { message: 'Le mot de passe est trop court.' } };
-        return {
-          error: {
-            message: pwdError.errors?.[0]?.message || 'Erreur lors de la création du compte.',
-          },
-        };
+      const result = await clerkSignUp.create({ emailAddress: email, password });
+
+      if (result.status === 'complete') {
+        await setActiveSignUp({ session: result.createdSessionId });
+        return { data: { user: clerkUser }, success: true };
       }
 
-      if (clerkSignUp.status === 'complete') {
-        await clerkSignUp.finalize({ navigate: () => {} });
-        return { data: { user: clerkSignUp }, success: true };
-      }
-
-      // Statut missing_requirements → l'email doit être vérifié
-      const { error: sendError } = await clerkSignUp.verifications.sendEmailCode();
-      if (sendError) {
-        return {
-          error: {
-            message:
-              sendError.errors?.[0]?.message || "Impossible d'envoyer le code de vérification.",
-          },
-        };
-      }
+      // Email verification required.
+      await clerkSignUp.prepareEmailAddressVerification({ strategy: 'email_code' });
       return { data: { requiresVerification: true, email }, success: true };
     } catch (err) {
-      return { error: { message: handleNetworkError(err) } };
+      return { error: { message: mapSignUpError(err) } };
     }
   };
 
-  // Clerk Core 3 (v6) : signUp.verifications.verifyEmailCode({ code }) + signUp.finalize()
   const verifyEmailCode = async (code) => {
-    if (!clerkSignUp) return { error: { message: "Clerk n'est pas prêt." } };
+    if (!clerkSignUp || !setActiveSignUp) {
+      return { error: { message: "Clerk n'est pas prêt." } };
+    }
     try {
-      const { error } = await clerkSignUp.verifications.verifyEmailCode({ code });
-      if (error) {
-        const errCode = error.errors?.[0]?.code;
-        if (errCode === 'form_code_incorrect')
-          return { error: { message: 'Code incorrect. Vérifiez votre email.' } };
-        if (errCode === 'verification_expired')
-          return { error: { message: "Code expiré. Veuillez recommencer l'inscription." } };
-        return { error: { message: error.errors?.[0]?.message || 'Code invalide.' } };
+      const result = await clerkSignUp.attemptEmailAddressVerification({ code });
+
+      if (result.status === 'complete') {
+        await setActiveSignUp({ session: result.createdSessionId });
+        return { data: { user: clerkUser }, success: true };
       }
 
-      if (clerkSignUp.status === 'complete') {
-        await clerkSignUp.finalize({ navigate: () => {} });
-        return { data: { user: clerkSignUp }, success: true };
-      }
-      if (clerkSignUp.status === 'missing_requirements') {
-        const missing = clerkSignUp.missingFields?.join(', ') ?? 'inconnu';
+      if (result.status === 'missing_requirements') {
+        const missing = result.missingFields?.join(', ') ?? 'inconnu';
         return {
           error: {
-            message: `Champs obligatoires manquants dans Clerk Dashboard : [ ${missing} ]. Allez dans User & Authentication → passez-les en "Optionnel".`,
+            message: `Champs obligatoires manquants dans le Clerk Dashboard : [${missing}]. Passez-les en optionnel.`,
           },
         };
       }
-      return {
-        error: {
-          message: `Vérification incomplète (statut: ${clerkSignUp.status}). Veuillez réessayer.`,
-        },
-      };
+
+      return { error: { message: `Vérification incomplète (statut: ${result.status}).` } };
     } catch (err) {
-      return { error: { message: handleNetworkError(err) } };
+      const { code: errCode, message } = extractClerkError(err);
+      if (errCode === 'form_code_incorrect')
+        return { error: { message: 'Code incorrect. Vérifiez votre email.' } };
+      if (errCode === 'verification_expired')
+        return { error: { message: "Code expiré. Veuillez recommencer l'inscription." } };
+      return { error: { message: message || 'Code invalide.' } };
     }
   };
 
@@ -224,102 +195,55 @@ export const AuthProvider = ({ children }) => {
     return { success: true };
   };
 
-  // Clerk Core 3 (@clerk/react v6) — password reset flow:
-  //   1) signIn.create({ identifier })            → populates the identifier
-  //   2) signIn.resetPasswordEmailCode.sendCode() → sends the email code
-  //   3) signIn.resetPasswordEmailCode.verifyCode({ code }) → status: 'needs_new_password'
-  //   4) signIn.resetPasswordEmailCode.submitPassword({ password }) → status: 'complete'
-  //   5) signIn.finalize()                        → activates session
+  // Password reset — Clerk JS SignIn resource flow:
+  //   1) signIn.create({ strategy: 'reset_password_email_code', identifier: email }) → sends code
+  //   2) signIn.attemptFirstFactor({ strategy: 'reset_password_email_code', code, password })
+  //   3) setActive({ session: createdSessionId })
   const requestPasswordReset = async (email) => {
     if (!clerkSignIn) return { error: { message: "Clerk n'est pas prêt." } };
     try {
-      // Step 1: populate identifier on the sign-in attempt.
-      const createRes = await clerkSignIn.create({ identifier: email });
-      if (createRes?.error) {
-        const code = createRes.error.errors?.[0]?.code;
-        if (code === 'form_identifier_not_found') {
-          return { error: { message: 'Aucun compte trouvé avec cet email.' } };
-        }
-        if (code === 'form_param_format_invalid') {
-          return { error: { message: "Format d'email invalide." } };
-        }
-        return { error: { message: handleNetworkError(createRes.error) } };
-      }
-
-      // Step 2: send the reset password email code.
-      if (!clerkSignIn.resetPasswordEmailCode?.sendCode) {
-        return {
-          error: {
-            message: 'Cette version de Clerk ne supporte pas la réinitialisation par email.',
-          },
-        };
-      }
-      const sendRes = await clerkSignIn.resetPasswordEmailCode.sendCode();
-      if (sendRes?.error) {
-        const code = sendRes.error.errors?.[0]?.code;
-        if (code === 'form_identifier_not_found') {
-          return { error: { message: 'Aucun compte trouvé avec cet email.' } };
-        }
-        return { error: { message: handleNetworkError(sendRes.error) } };
-      }
+      await clerkSignIn.create({
+        strategy: 'reset_password_email_code',
+        identifier: email,
+      });
       return { success: true };
     } catch (err) {
-      console.warn('[Clerk] requestPasswordReset error:', err);
-      return { error: { message: handleNetworkError(err) } };
+      const { code, message } = extractClerkError(err);
+      if (code === 'form_identifier_not_found')
+        return { error: { message: 'Aucun compte trouvé avec cet email.' } };
+      if (code === 'form_param_format_invalid')
+        return { error: { message: "Format d'email invalide." } };
+      return { error: { message: message } };
     }
   };
 
-  // Clerk Core 3 — verifies the code and sets a new password.
   const confirmPasswordReset = async (code, newPassword) => {
-    if (!clerkSignIn) return { error: { message: "Clerk n'est pas prêt." } };
-    if (!clerkSignIn.resetPasswordEmailCode?.verifyCode) {
-      return {
-        error: {
-          message: "Réinitialisation indisponible. Veuillez recommencer depuis l'étape précédente.",
-        },
-      };
+    if (!clerkSignIn || !setActiveSignIn) {
+      return { error: { message: "Clerk n'est pas prêt." } };
     }
     try {
-      // Step 3: verify the code from the email.
-      const verifyRes = await clerkSignIn.resetPasswordEmailCode.verifyCode({ code });
-      if (verifyRes?.error) {
-        const c = verifyRes.error.errors?.[0]?.code;
-        if (c === 'form_code_incorrect')
-          return { error: { message: 'Code incorrect. Vérifiez votre email.' } };
-        if (c === 'verification_expired')
-          return { error: { message: 'Code expiré. Veuillez recommencer.' } };
-        return { error: { message: handleNetworkError(verifyRes.error) } };
-      }
-
-      // Step 4: submit the new password.
-      const submitRes = await clerkSignIn.resetPasswordEmailCode.submitPassword({
+      const result = await clerkSignIn.attemptFirstFactor({
+        strategy: 'reset_password_email_code',
+        code,
         password: newPassword,
       });
-      if (submitRes?.error) {
-        const c = submitRes.error.errors?.[0]?.code;
-        if (c === 'form_password_pwned')
-          return { error: { message: 'Ce mot de passe est trop commun. Choisissez-en un autre.' } };
-        if (c === 'form_password_length_too_short')
-          return { error: { message: 'Le mot de passe est trop court (minimum 8 caractères).' } };
-        if (c === 'form_password_validation_failed')
-          return {
-            error: { message: 'Mot de passe invalide. Respectez les critères de sécurité.' },
-          };
-        return { error: { message: handleNetworkError(submitRes.error) } };
-      }
 
-      // Step 5: activate the new session.
-      if (clerkSignIn.status === 'complete') {
-        try {
-          await clerkSignIn.finalize({ navigate: () => {} });
-        } catch (e) {
-          console.warn('[Clerk] finalize after reset failed:', e);
-        }
+      if (result.status === 'complete') {
+        await setActiveSignIn({ session: result.createdSessionId });
+        return { success: true };
       }
-      return { success: true };
+      return { error: { message: `Réinitialisation incomplète (statut: ${result.status}).` } };
     } catch (err) {
-      console.warn('[Clerk] confirmPasswordReset error:', err);
-      return { error: { message: handleNetworkError(err) } };
+      const { code: errCode, message } = extractClerkError(err);
+      if (errCode === 'form_code_incorrect')
+        return { error: { message: 'Code incorrect. Vérifiez votre email.' } };
+      if (errCode === 'verification_expired')
+        return { error: { message: 'Code expiré. Veuillez recommencer.' } };
+      if (errCode === 'form_password_pwned')
+        return { error: { message: 'Ce mot de passe est trop commun. Choisissez-en un autre.' } };
+      if (errCode === 'form_password_length_too_short')
+        return { error: { message: 'Le mot de passe est trop court (minimum 8 caractères).' } };
+      return { error: { message: message } };
     }
   };
 
