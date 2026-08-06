@@ -1,12 +1,16 @@
 import React, { createContext, useContext } from 'react';
 import { useUser, useAuth as useClerkAuth, useSignIn, useSignUp } from '@clerk/react';
-// Clerk JS (@clerk/react v6) — SignIn / SignUp resource API:
-//   signIn.create({ identifier, password })                → returns SignInResource
-//   signUp.create({ emailAddress, password })              → returns SignUpResource
-//   signUp.prepareEmailAddressVerification({ strategy })   → sends the code
-//   signUp.attemptEmailAddressVerification({ code })       → verifies the code
-//   setActive({ session: <createdSessionId> })             → activates the session
-// Errors are thrown (try/catch) and exposed on err.errors[].code / .message.
+// @clerk/react v6 uses the SIGNAL-based Future API (NOT the classic @clerk/clerk-react API).
+//   useSignIn()  → { signIn, errors, fetchStatus }   where signIn is SignInFutureResource
+//   useSignUp()  → { signUp, errors, fetchStatus }   where signUp is SignUpFutureResource
+// All method calls return { error } (no throw). Session activation uses .finalize().
+//
+// Sign in (password):  signIn.password({ emailAddress, password }) → signIn.finalize()
+// Sign up (password):  signUp.password({ emailAddress, password }) → signUp.verifications.sendEmailCode()
+//                      → signUp.verifications.verifyEmailCode({ code }) → signUp.finalize()
+// OAuth:               signIn.sso({ strategy: 'oauth_google', redirectUrl, redirectCallbackUrl })
+// Password reset:      signIn.resetPasswordEmailCode.sendCode()  (identifier set via signIn.create first)
+//                      → .verifyCode({ code }) → .submitPassword({ password }) → signIn.finalize()
 import { useConvexAuth } from 'convex/react';
 
 const AuthContext = createContext({});
@@ -22,8 +26,8 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
   const { isSignedIn, signOut, isLoaded: isAuthLoaded } = useClerkAuth();
-  const { signIn: clerkSignIn, setActive: setActiveSignIn } = useSignIn();
-  const { signUp: clerkSignUp, setActive: setActiveSignUp } = useSignUp();
+  const { signIn: clerkSignIn } = useSignIn();
+  const { signUp: clerkSignUp } = useSignUp();
   const { isLoading: isConvexLoading } = useConvexAuth();
 
   const isLoggedIn = !!isSignedIn;
@@ -37,16 +41,26 @@ export const AuthProvider = ({ children }) => {
       }
     : null;
 
-  const extractClerkError = (err) => {
-    if (err?.errors?.[0]) {
+  // Signal-Future API returns { error } objects (ClerkError instances). It only THROWS on network/unexpected issues.
+  const extractClerkError = (errOrCaught) => {
+    if (!errOrCaught) return { code: 'unknown', message: 'Erreur inconnue.' };
+    // ClerkError (Signal-Future returned error)
+    if (errOrCaught.clerkError || typeof errOrCaught.code === 'string') {
       return {
-        code: err.errors[0].code,
-        message: err.errors[0].longMessage || err.errors[0].message,
+        code: errOrCaught.code || 'unknown',
+        message: errOrCaught.longMessage || errOrCaught.message || 'Erreur.',
+      };
+    }
+    // Classic thrown error with `.errors[]`
+    if (errOrCaught?.errors?.[0]) {
+      return {
+        code: errOrCaught.errors[0].code,
+        message: errOrCaught.errors[0].longMessage || errOrCaught.errors[0].message,
       };
     }
     if (
-      err?.message &&
-      (err.message.includes('Failed to fetch') || err.message.includes('Network'))
+      errOrCaught?.message &&
+      (errOrCaught.message.includes('Failed to fetch') || errOrCaught.message.includes('Network'))
     ) {
       return {
         code: 'network_error',
@@ -55,7 +69,7 @@ export const AuthProvider = ({ children }) => {
     }
     return {
       code: 'unknown',
-      message: err?.message || "Une erreur est survenue avec l'authentification.",
+      message: errOrCaught?.message || "Une erreur est survenue avec l'authentification.",
     };
   };
 
@@ -81,7 +95,7 @@ export const AuthProvider = ({ children }) => {
     return message || 'Erreur lors de la création du compte.';
   };
 
-  // OAuth via authenticateWithRedirect (Clerk stable API).
+  // OAuth via the Signal-Future `sso()` method.
   const signInWithProvider = async (provider) => {
     if (!clerkSignIn) {
       return {
@@ -93,11 +107,14 @@ export const AuthProvider = ({ children }) => {
     }
     try {
       const origin = window.location.origin;
-      await clerkSignIn.authenticateWithRedirect({
+      const { error } = await clerkSignIn.sso({
         strategy: `oauth_${provider}`,
         redirectUrl: `${origin}/sso-callback`,
-        redirectUrlComplete: `${origin}/account`,
+        redirectCallbackUrl: `${origin}/sso-callback`,
       });
+      if (error) {
+        return { error: { message: extractClerkError(error).message } };
+      }
       return { success: true };
     } catch (err) {
       console.error('[signInWithProvider] error:', err);
@@ -110,48 +127,40 @@ export const AuthProvider = ({ children }) => {
   const signInWithDiscord = () => signInWithProvider('discord');
 
   const signInWithEmail = async (email, password) => {
-    if (!clerkSignIn || !setActiveSignIn) {
+    if (!clerkSignIn) {
       return { error: { message: "Clerk n'est pas prêt." } };
     }
     try {
-      const result = await clerkSignIn.create({ identifier: email, password });
+      const { error } = await clerkSignIn.password({ emailAddress: email, password });
+      if (error) return { error: { message: mapSignInError(error) } };
 
-      if (result.status === 'complete') {
-        await setActiveSignIn({ session: result.createdSessionId });
-        return { data: { user: clerkUser }, success: true };
-      }
+      const { error: finalizeError } = await clerkSignIn.finalize();
+      if (finalizeError) return { error: { message: mapSignInError(finalizeError) } };
 
-      if (result.status === 'needs_second_factor') {
-        return {
-          error: {
-            message:
-              "Votre compte utilise la double authentification (2FA). Cette étape n'est pas encore prise en charge ici.",
-          },
-        };
-      }
-
-      return {
-        error: { message: `Connexion incomplète (statut: ${result.status}).` },
-      };
+      return { data: { user: clerkUser }, success: true };
     } catch (err) {
       return { error: { message: mapSignInError(err) } };
     }
   };
 
   const signUpWithEmail = async (email, password) => {
-    if (!clerkSignUp || !setActiveSignUp) {
+    if (!clerkSignUp) {
       return { error: { message: "Clerk n'est pas prêt." } };
     }
     try {
-      const result = await clerkSignUp.create({ emailAddress: email, password });
+      const { error } = await clerkSignUp.password({ emailAddress: email, password });
+      if (error) return { error: { message: mapSignUpError(error) } };
 
-      if (result.status === 'complete') {
-        await setActiveSignUp({ session: result.createdSessionId });
+      // If sign-up is already complete (email verification disabled), finalize.
+      if (clerkSignUp.status === 'complete') {
+        await clerkSignUp.finalize();
         return { data: { user: clerkUser }, success: true };
       }
 
-      // Email verification required.
-      await clerkSignUp.prepareEmailAddressVerification({ strategy: 'email_code' });
+      // Otherwise, send the email verification code.
+      const { error: sendError } = await clerkSignUp.verifications.sendEmailCode();
+      if (sendError) return { error: { message: mapSignUpError(sendError) } };
+
       return { data: { requiresVerification: true, email }, success: true };
     } catch (err) {
       return { error: { message: mapSignUpError(err) } };
@@ -159,19 +168,28 @@ export const AuthProvider = ({ children }) => {
   };
 
   const verifyEmailCode = async (code) => {
-    if (!clerkSignUp || !setActiveSignUp) {
+    if (!clerkSignUp) {
       return { error: { message: "Clerk n'est pas prêt." } };
     }
     try {
-      const result = await clerkSignUp.attemptEmailAddressVerification({ code });
+      const { error } = await clerkSignUp.verifications.verifyEmailCode({ code });
+      if (error) {
+        const { code: errCode, message } = extractClerkError(error);
+        if (errCode === 'form_code_incorrect')
+          return { error: { message: 'Code incorrect. Vérifiez votre email.' } };
+        if (errCode === 'verification_expired')
+          return { error: { message: "Code expiré. Veuillez recommencer l'inscription." } };
+        return { error: { message: message || 'Code invalide.' } };
+      }
 
-      if (result.status === 'complete') {
-        await setActiveSignUp({ session: result.createdSessionId });
+      if (clerkSignUp.status === 'complete') {
+        const { error: finalizeError } = await clerkSignUp.finalize();
+        if (finalizeError) return { error: { message: extractClerkError(finalizeError).message } };
         return { data: { user: clerkUser }, success: true };
       }
 
-      if (result.status === 'missing_requirements') {
-        const missing = result.missingFields?.join(', ') ?? 'inconnu';
+      if (clerkSignUp.status === 'missing_requirements') {
+        const missing = clerkSignUp.missingFields?.join(', ') ?? 'inconnu';
         return {
           error: {
             message: `Champs obligatoires manquants dans le Clerk Dashboard : [${missing}]. Passez-les en optionnel.`,
@@ -179,7 +197,7 @@ export const AuthProvider = ({ children }) => {
         };
       }
 
-      return { error: { message: `Vérification incomplète (statut: ${result.status}).` } };
+      return { error: { message: `Vérification incomplète (statut: ${clerkSignUp.status}).` } };
     } catch (err) {
       const { code: errCode, message } = extractClerkError(err);
       if (errCode === 'form_code_incorrect')
@@ -195,17 +213,26 @@ export const AuthProvider = ({ children }) => {
     return { success: true };
   };
 
-  // Password reset — Clerk JS SignIn resource flow:
-  //   1) signIn.create({ strategy: 'reset_password_email_code', identifier: email }) → sends code
-  //   2) signIn.attemptFirstFactor({ strategy: 'reset_password_email_code', code, password })
-  //   3) setActive({ session: createdSessionId })
+  // Password reset — Signal-Future API:
+  //   1) signIn.create({ strategy: 'reset_password_email_code', identifier })  (sets identifier + sends code)
+  //   2) signIn.resetPasswordEmailCode.verifyCode({ code })
+  //   3) signIn.resetPasswordEmailCode.submitPassword({ password })
+  //   4) signIn.finalize()
   const requestPasswordReset = async (email) => {
     if (!clerkSignIn) return { error: { message: "Clerk n'est pas prêt." } };
     try {
-      await clerkSignIn.create({
+      const { error } = await clerkSignIn.create({
         strategy: 'reset_password_email_code',
         identifier: email,
       });
+      if (error) {
+        const { code, message } = extractClerkError(error);
+        if (code === 'form_identifier_not_found')
+          return { error: { message: 'Aucun compte trouvé avec cet email.' } };
+        if (code === 'form_param_format_invalid')
+          return { error: { message: "Format d'email invalide." } };
+        return { error: { message } };
+      }
       return { success: true };
     } catch (err) {
       const { code, message } = extractClerkError(err);
@@ -213,26 +240,39 @@ export const AuthProvider = ({ children }) => {
         return { error: { message: 'Aucun compte trouvé avec cet email.' } };
       if (code === 'form_param_format_invalid')
         return { error: { message: "Format d'email invalide." } };
-      return { error: { message: message } };
+      return { error: { message } };
     }
   };
 
   const confirmPasswordReset = async (code, newPassword) => {
-    if (!clerkSignIn || !setActiveSignIn) {
+    if (!clerkSignIn) {
       return { error: { message: "Clerk n'est pas prêt." } };
     }
     try {
-      const result = await clerkSignIn.attemptFirstFactor({
-        strategy: 'reset_password_email_code',
-        code,
+      const { error: verifyError } = await clerkSignIn.resetPasswordEmailCode.verifyCode({ code });
+      if (verifyError) {
+        const { code: errCode, message } = extractClerkError(verifyError);
+        if (errCode === 'form_code_incorrect')
+          return { error: { message: 'Code incorrect. Vérifiez votre email.' } };
+        if (errCode === 'verification_expired')
+          return { error: { message: 'Code expiré. Veuillez recommencer.' } };
+        return { error: { message } };
+      }
+
+      const { error: submitError } = await clerkSignIn.resetPasswordEmailCode.submitPassword({
         password: newPassword,
       });
-
-      if (result.status === 'complete') {
-        await setActiveSignIn({ session: result.createdSessionId });
-        return { success: true };
+      if (submitError) {
+        const { code: errCode, message } = extractClerkError(submitError);
+        if (errCode === 'form_password_pwned')
+          return { error: { message: 'Ce mot de passe est trop commun. Choisissez-en un autre.' } };
+        if (errCode === 'form_password_length_too_short')
+          return { error: { message: 'Le mot de passe est trop court (minimum 8 caractères).' } };
+        return { error: { message } };
       }
-      return { error: { message: `Réinitialisation incomplète (statut: ${result.status}).` } };
+
+      await clerkSignIn.finalize();
+      return { success: true };
     } catch (err) {
       const { code: errCode, message } = extractClerkError(err);
       if (errCode === 'form_code_incorrect')
@@ -243,7 +283,7 @@ export const AuthProvider = ({ children }) => {
         return { error: { message: 'Ce mot de passe est trop commun. Choisissez-en un autre.' } };
       if (errCode === 'form_password_length_too_short')
         return { error: { message: 'Le mot de passe est trop court (minimum 8 caractères).' } };
-      return { error: { message: message } };
+      return { error: { message } };
     }
   };
 
