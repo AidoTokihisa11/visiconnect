@@ -324,7 +324,7 @@ const HeroSubhead = styled.p`
 const HeroActions = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.9rem;
+  gap: 1.25rem;
   width: 100%;
   max-width: 520px;
   min-width: 0;
@@ -335,25 +335,57 @@ const HeroActions = styled.div`
   }
 `;
 
-const CtaCard = styled(Link)`
+const CtaRow = styled.div`
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  flex-wrap: wrap;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.625rem;
+  }
+`;
+
+const CtaButton = styled(Link)`
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   text-decoration: none;
-  padding: 0.875rem 1.25rem;
-  border-radius: 12px;
+  padding: 0.6875rem 1.125rem;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  line-height: 1;
+  white-space: nowrap;
   border: 1px solid transparent;
+  cursor: pointer;
   transition:
-    transform 0.15s ease,
-    box-shadow 0.2s ease,
-    background-color 0.2s ease,
-    border-color 0.2s ease;
-  min-width: 0;
-  width: 100%;
-  text-align: left;
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.1s ease;
+
+  svg {
+    transition: transform 0.2s ease;
+  }
+
+  &:hover svg {
+    transform: translateX(2px);
+  }
 
   &:active {
-    transform: scale(0.98);
+    transform: translateY(0.5px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
   }
 
   ${(props) =>
@@ -361,75 +393,50 @@ const CtaCard = styled(Link)`
       ? `
     background-color: #2563eb;
     color: #ffffff;
-    box-shadow: 0 6px 18px -8px rgba(37, 99, 235, 0.55);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.1) inset,
+      0 1px 2px rgba(15, 23, 42, 0.08),
+      0 4px 12px -4px rgba(37, 99, 235, 0.4);
     &:hover {
       background-color: #1d4ed8;
-      box-shadow: 0 10px 24px -10px rgba(37, 99, 235, 0.65);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.1) inset,
+        0 2px 4px rgba(15, 23, 42, 0.1),
+        0 8px 20px -6px rgba(37, 99, 235, 0.5);
     }
   `
       : `
-    background-color: rgba(241, 245, 249, 0.8);
-    color: ${COLORS.dark};
-    border-color: rgba(226, 232, 240, 0.6);
+    background-color: transparent;
+    color: #0f172a;
+    border-color: #e2e8f0;
     &:hover {
-      background-color: rgba(226, 232, 240, 0.8);
+      background-color: #f8fafc;
+      border-color: #cbd5e1;
     }
   `}
 `;
 
-const CtaInlineIcon = styled.span`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  color: ${(props) => (props.$variant === 'primary' ? '#ffffff' : '#475569')};
-  opacity: ${(props) => (props.$variant === 'primary' ? 1 : 0.85)};
-`;
-
-const CtaLabel = styled.span`
+const HeroMeta = styled.ul`
   display: flex;
-  flex-direction: column;
-  gap: 0.1rem;
-  min-width: 0;
-  flex: 1;
-
-  strong {
-    font-size: 0.98rem;
-    font-weight: 600;
-    line-height: 1.25;
-    letter-spacing: -0.005em;
-  }
-
-  small {
-    font-size: 0.75rem;
-    font-weight: 400;
-    line-height: 1.4;
-    margin-top: 0.125rem;
-    ${(props) =>
-      props.$variant === 'primary' ? `color: rgba(219, 234, 254, 0.85);` : `color: #64748b;`}
-  }
-
-  @media (max-width: 480px) {
-    strong {
-      font-size: 0.94rem;
-    }
-    small {
-      font-size: 0.72rem;
-    }
-  }
-`;
-
-const CtaArrow = styled.span`
-  display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  opacity: 0.75;
-  transition: transform 0.2s ease;
+  gap: 0.25rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.8125rem;
+  color: #64748b;
+  line-height: 1.4;
 
-  ${CtaCard}:hover & {
-    transform: translateX(2px);
-    opacity: 1;
+  li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  svg {
+    color: #16a34a;
+    flex-shrink: 0;
   }
 `;
 
@@ -437,14 +444,14 @@ const CtaTertiary = styled(Link)`
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  margin-top: 0.35rem;
-  padding: 0.35rem 0;
-  color: #64748b;
+  padding: 0.25rem 0;
+  color: #475569;
   font-size: 0.875rem;
   font-weight: 500;
   text-decoration: none;
   transition: color 0.15s ease;
   align-self: flex-start;
+  border-bottom: 1px dashed transparent;
 
   svg {
     transition: transform 0.2s ease;
@@ -452,10 +459,11 @@ const CtaTertiary = styled(Link)`
 
   &:hover {
     color: #0f172a;
+    border-bottom-color: #cbd5e1;
   }
 
   &:hover svg {
-    transform: scale(1.1);
+    transform: scale(1.15);
   }
 
   @media (max-width: 900px) {
@@ -919,31 +927,31 @@ export default function HomePageClean() {
               />
             </HeroSubhead>
             <HeroActions>
-              <CtaCard to="/signup" $variant="primary" aria-label={t('hero.startFree')}>
-                <CtaInlineIcon $variant="primary">
-                  <Sparkles size={18} />
-                </CtaInlineIcon>
-                <CtaLabel $variant="primary">
-                  <strong>{t('hero.startFree')}</strong>
-                  <small>{t('hero.startFreeSub')}</small>
-                </CtaLabel>
-                <CtaArrow aria-hidden="true">
-                  <ArrowRight size={18} />
-                </CtaArrow>
-              </CtaCard>
+              <CtaRow>
+                <CtaButton to="/signup" $variant="primary" aria-label={t('hero.startFree')}>
+                  {t('hero.startFree')}
+                  <ArrowRight size={16} strokeWidth={2.25} aria-hidden="true" />
+                </CtaButton>
 
-              <CtaCard to="/demo?join=1" aria-label={t('hero.testRoom')}>
-                <CtaInlineIcon>
-                  <Video size={18} />
-                </CtaInlineIcon>
-                <CtaLabel>
-                  <strong>{t('hero.testRoom')}</strong>
-                  <small>{t('hero.testRoomSub')}</small>
-                </CtaLabel>
-                <CtaArrow aria-hidden="true">
-                  <ArrowRight size={16} />
-                </CtaArrow>
-              </CtaCard>
+                <CtaButton to="/demo?join=1" aria-label={t('hero.testRoom')}>
+                  {t('hero.testRoom')}
+                </CtaButton>
+              </CtaRow>
+
+              <HeroMeta aria-label="Avantages">
+                <li>
+                  <Check size={14} strokeWidth={2.75} aria-hidden="true" />
+                  Gratuit
+                </li>
+                <li>
+                  <Check size={14} strokeWidth={2.75} aria-hidden="true" />
+                  Aucune carte bancaire
+                </li>
+                <li>
+                  <Check size={14} strokeWidth={2.75} aria-hidden="true" />
+                  30 s pour démarrer
+                </li>
+              </HeroMeta>
 
               <CtaTertiary to="/demo">
                 <Play size={12} fill="currentColor" />
