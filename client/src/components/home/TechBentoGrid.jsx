@@ -210,7 +210,15 @@ const SFUDiagram = () => (
 
     {/* SFU central */}
     <circle cx="150" cy="90" r="30" fill="url(#sfuCore)" />
-    <circle cx="150" cy="90" r="38" fill="none" stroke="#2563eb" strokeOpacity="0.2" strokeWidth="1" />
+    <circle
+      cx="150"
+      cy="90"
+      r="38"
+      fill="none"
+      stroke="#2563eb"
+      strokeOpacity="0.2"
+      strokeWidth="1"
+    />
     <text
       x="150"
       y="87"

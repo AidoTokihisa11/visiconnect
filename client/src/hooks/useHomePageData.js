@@ -89,7 +89,7 @@ export const useHomePageData = () => {
     {
       quote: t(
         'testimonials.1.quote',
-        "Le tableau blanc collaboratif est pratique pour travailler à plusieurs. La transcription automatique reconnaît bien la parole, utile pour garder une trace des échanges."
+        'Le tableau blanc collaboratif est pratique pour travailler à plusieurs. La transcription automatique reconnaît bien la parole, utile pour garder une trace des échanges.'
       ),
       author: t('testimonials.1.author', 'Anthony D.'),
       title: t('testimonials.1.title', 'Photographe Professionnel'),
@@ -97,7 +97,7 @@ export const useHomePageData = () => {
     {
       quote: t(
         'testimonials.2.quote',
-        "La sala de reuniones carga rápido y el uso compartido de pantalla es fácil de encontrar. Para estar en fase beta, está bastante completo."
+        'La sala de reuniones carga rápido y el uso compartido de pantalla es fácil de encontrar. Para estar en fase beta, está bastante completo.'
       ),
       author: t('testimonials.2.author', 'Magus S.'),
       title: t('testimonials.2.title', 'Directrice Générale'),

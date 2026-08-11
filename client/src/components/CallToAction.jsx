@@ -304,10 +304,7 @@ const CallToAction = ({
   const _title = title || t('cta.defaultTitle', 'Prêt à transformer vos communications ?');
   const _description =
     description ||
-    t(
-      'cta.defaultDescription',
-      "L'accès Starter est gratuit. Aucune carte bancaire requise."
-    );
+    t('cta.defaultDescription', "L'accès Starter est gratuit. Aucune carte bancaire requise.");
   const _buttonText = buttonText || t('cta.defaultButton', 'Commencer gratuitement');
   const _eyebrow =
     eyebrow !== null ? eyebrow : t('cta.defaultEyebrow', "Démarrez en moins d'une minute");

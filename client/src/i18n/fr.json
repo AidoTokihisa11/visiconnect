@@ -78,11 +78,7 @@
     "video": {
       "title": "Vidéo HD adaptative",
       "text": "La résolution s'adapte automatiquement à votre connexion, jusqu'à 1080p. La suppression du bruit par IA est activée par défaut.",
-      "items": [
-        "HD jusqu'à 1080p",
-        "Suppression du bruit par IA",
-        "Codecs VP9/AV1"
-      ]
+      "items": ["HD jusqu'à 1080p", "Suppression du bruit par IA", "Codecs VP9/AV1"]
     },
     "security": {
       "title": "Communications chiffrées",

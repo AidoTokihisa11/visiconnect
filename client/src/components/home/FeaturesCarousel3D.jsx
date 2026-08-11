@@ -212,7 +212,16 @@ const MeetingIllustration = () => (
       </defs>
 
       {/* Cadre fen\u00eatre */}
-      <rect x="8" y="8" width="384" height="264" rx="14" fill="#ffffff" stroke="#e2e8f0" strokeWidth="1" />
+      <rect
+        x="8"
+        y="8"
+        width="384"
+        height="264"
+        rx="14"
+        fill="#ffffff"
+        stroke="#e2e8f0"
+        strokeWidth="1"
+      />
       <rect x="8" y="8" width="384" height="30" rx="14" fill="#f8fafc" />
       <rect x="8" y="30" width="384" height="8" fill="#f8fafc" />
       <circle cx="22" cy="23" r="3.5" fill="#fca5a5" />
@@ -223,24 +232,70 @@ const MeetingIllustration = () => (
 
       {/* Zone principale : speaker + tuiles + chat */}
       {/* Speaker principal (grande zone gauche) */}
-      <rect x="20" y="50" width="220" height="164" rx="10" fill="url(#mtgSpeaker)" stroke="#dbeafe" strokeWidth="1" />
+      <rect
+        x="20"
+        y="50"
+        width="220"
+        height="164"
+        rx="10"
+        fill="url(#mtgSpeaker)"
+        stroke="#dbeafe"
+        strokeWidth="1"
+      />
       <AbstractPerson x={130} y={130} hueVar="a" size={2.2} />
 
       {/* Overlay bas : nom + micro */}
       <rect x="28" y="196" width="90" height="14" rx="7" fill="rgba(15,23,42,0.75)" />
       <rect x="34" y="201" width="60" height="4" rx="2" fill="#ffffff" />
       <circle cx="228" cy="60" r="9" fill="#ef4444" />
-      <text x="228" y="63" textAnchor="middle" fontFamily="Inter, sans-serif" fontSize="7" fontWeight="700" fill="#ffffff">REC</text>
+      <text
+        x="228"
+        y="63"
+        textAnchor="middle"
+        fontFamily="Inter, sans-serif"
+        fontSize="7"
+        fontWeight="700"
+        fill="#ffffff"
+      >
+        REC
+      </text>
 
       {/* Colonne participants */}
       <g>
-        <rect x="248" y="50" width="66" height="46" rx="8" fill="url(#mtgTile1)" stroke="#e2e8f0" strokeWidth="0.8" />
+        <rect
+          x="248"
+          y="50"
+          width="66"
+          height="46"
+          rx="8"
+          fill="url(#mtgTile1)"
+          stroke="#e2e8f0"
+          strokeWidth="0.8"
+        />
         <AbstractPerson x={281} y={78} hueVar="b" size={0.9} />
 
-        <rect x="248" y="102" width="66" height="46" rx="8" fill="url(#mtgTile1)" stroke="#e2e8f0" strokeWidth="0.8" />
+        <rect
+          x="248"
+          y="102"
+          width="66"
+          height="46"
+          rx="8"
+          fill="url(#mtgTile1)"
+          stroke="#e2e8f0"
+          strokeWidth="0.8"
+        />
         <AbstractPerson x={281} y={130} hueVar="c" size={0.9} />
 
-        <rect x="248" y="154" width="66" height="46" rx="8" fill="url(#mtgTile1)" stroke="#e2e8f0" strokeWidth="0.8" />
+        <rect
+          x="248"
+          y="154"
+          width="66"
+          height="46"
+          rx="8"
+          fill="url(#mtgTile1)"
+          stroke="#e2e8f0"
+          strokeWidth="0.8"
+        />
         <AbstractPerson x={281} y={182} hueVar="d" size={0.9} />
         {/* Micro coup\u00e9 */}
         <circle cx="305" cy="163" r="6" fill="#0f172a" opacity="0.8" />
@@ -248,7 +303,16 @@ const MeetingIllustration = () => (
       </g>
 
       {/* Panneau chat */}
-      <rect x="322" y="50" width="60" height="164" rx="8" fill="#f8fafc" stroke="#e2e8f0" strokeWidth="0.8" />
+      <rect
+        x="322"
+        y="50"
+        width="60"
+        height="164"
+        rx="8"
+        fill="#f8fafc"
+        stroke="#e2e8f0"
+        strokeWidth="0.8"
+      />
       <rect x="328" y="58" width="38" height="5" rx="2.5" fill="#94a3b8" />
       {/* Bulles de chat */}
       {[
@@ -280,7 +344,15 @@ const MeetingIllustration = () => (
 
       {/* Compteur temps */}
       <rect x="30" y="238" width="52" height="11" rx="5.5" fill="rgba(37,99,235,0.1)" />
-      <text x="56" y="246" textAnchor="middle" fontFamily="Inter, sans-serif" fontSize="8" fontWeight="700" fill="#2563eb">
+      <text
+        x="56"
+        y="246"
+        textAnchor="middle"
+        fontFamily="Inter, sans-serif"
+        fontSize="8"
+        fontWeight="700"
+        fill="#2563eb"
+      >
         24:18
       </text>
     </svg>
@@ -303,7 +375,16 @@ const AnalyticsIllustration = () => (
       </defs>
 
       {/* Cadre fen\u00eatre */}
-      <rect x="8" y="8" width="384" height="264" rx="14" fill="#ffffff" stroke="#e2e8f0" strokeWidth="1" />
+      <rect
+        x="8"
+        y="8"
+        width="384"
+        height="264"
+        rx="14"
+        fill="#ffffff"
+        stroke="#e2e8f0"
+        strokeWidth="1"
+      />
       <rect x="8" y="8" width="384" height="30" rx="14" fill="#f8fafc" />
       <rect x="8" y="30" width="384" height="8" fill="#f8fafc" />
       <rect x="22" y="17" width="14" height="12" rx="3" fill="#e2e8f0" />
@@ -316,11 +397,34 @@ const AnalyticsIllustration = () => (
         { x: 274, label: 'Dur\u00e9e moy.', value: '42min', trend: '+3%' },
       ].map((k, i) => (
         <g key={i}>
-          <rect x={k.x} y="52" width="104" height="52" rx="8" fill="#f8fafc" stroke="#e2e8f0" strokeWidth="0.8" />
-          <text x={k.x + 12} y="68" fontFamily="Inter, sans-serif" fontSize="8" fontWeight="600" fill="#64748b">
+          <rect
+            x={k.x}
+            y="52"
+            width="104"
+            height="52"
+            rx="8"
+            fill="#f8fafc"
+            stroke="#e2e8f0"
+            strokeWidth="0.8"
+          />
+          <text
+            x={k.x + 12}
+            y="68"
+            fontFamily="Inter, sans-serif"
+            fontSize="8"
+            fontWeight="600"
+            fill="#64748b"
+          >
             {k.label}
           </text>
-          <text x={k.x + 12} y="88" fontFamily="Inter, sans-serif" fontSize="16" fontWeight="800" fill="#0f172a">
+          <text
+            x={k.x + 12}
+            y="88"
+            fontFamily="Inter, sans-serif"
+            fontSize="16"
+            fontWeight="800"
+            fill="#0f172a"
+          >
             {k.value}
           </text>
           <rect x={k.x + 68} y="78" width="26" height="12" rx="6" fill="rgba(16,185,129,0.15)" />
@@ -339,12 +443,35 @@ const AnalyticsIllustration = () => (
       ))}
 
       {/* Chart card gauche : line chart */}
-      <rect x="22" y="118" width="230" height="140" rx="8" fill="#ffffff" stroke="#e2e8f0" strokeWidth="1" />
-      <text x="36" y="136" fontFamily="Inter, sans-serif" fontSize="9" fontWeight="700" fill="#0f172a">
+      <rect
+        x="22"
+        y="118"
+        width="230"
+        height="140"
+        rx="8"
+        fill="#ffffff"
+        stroke="#e2e8f0"
+        strokeWidth="1"
+      />
+      <text
+        x="36"
+        y="136"
+        fontFamily="Inter, sans-serif"
+        fontSize="9"
+        fontWeight="700"
+        fill="#0f172a"
+      >
         Engagement
       </text>
       <circle cx="216" cy="134" r="3" fill="#10b981" />
-      <text x="224" y="137" fontFamily="Inter, sans-serif" fontSize="7" fontWeight="600" fill="#10b981">
+      <text
+        x="224"
+        y="137"
+        fontFamily="Inter, sans-serif"
+        fontSize="7"
+        fontWeight="600"
+        fill="#10b981"
+      >
         Live
       </text>
 
@@ -371,8 +498,24 @@ const AnalyticsIllustration = () => (
       ))}
 
       {/* Chart card droite : bar chart */}
-      <rect x="262" y="118" width="120" height="140" rx="8" fill="#ffffff" stroke="#e2e8f0" strokeWidth="1" />
-      <text x="274" y="136" fontFamily="Inter, sans-serif" fontSize="9" fontWeight="700" fill="#0f172a">
+      <rect
+        x="262"
+        y="118"
+        width="120"
+        height="140"
+        rx="8"
+        fill="#ffffff"
+        stroke="#e2e8f0"
+        strokeWidth="1"
+      />
+      <text
+        x="274"
+        y="136"
+        fontFamily="Inter, sans-serif"
+        fontSize="9"
+        fontWeight="700"
+        fill="#0f172a"
+      >
         Par jour
       </text>
 
@@ -572,8 +715,7 @@ export default function FeaturesCarousel3D() {
               {(() => {
                 const NextIllustration =
                   ILLUSTRATION_MAP[SLIDES[(index + 1) % SLIDES.length].illustration];
-                const CurrentIllustration =
-                  ILLUSTRATION_MAP[currentSlide.illustration];
+                const CurrentIllustration = ILLUSTRATION_MAP[currentSlide.illustration];
                 return (
                   <>
                     <ImageCard

@@ -362,7 +362,8 @@ const enTranslations = {
     "A question, a suggestion, or want to collaborate? Don't hesitate to contact me!",
   integrations: {
     title: 'Integrations',
-    subtitle: 'Connect VisioConnect to your favorite tools for a unified and productive experience.',
+    subtitle:
+      'Connect VisioConnect to your favorite tools for a unified and productive experience.',
     connect: 'Connect',
     google: {
       description:
@@ -669,7 +670,8 @@ const enTranslations = {
   },
   testimonials: {
     0: {
-      quote: 'Video quality holds up well even on an average connection. The integrated chat means you never have to switch tabs during a meeting.',
+      quote:
+        'Video quality holds up well even on an average connection. The integrated chat means you never have to switch tabs during a meeting.',
       author: 'Maëlle G.',
       title: 'Graphic Designer',
     },
@@ -677,17 +679,20 @@ const enTranslations = {
     subtitle: 'A few words from people who tested the tool.',
     items: {
       1: {
-        content: 'Video quality holds up well even on an average connection. The integrated chat means you never have to switch tabs during a meeting.',
+        content:
+          'Video quality holds up well even on an average connection. The integrated chat means you never have to switch tabs during a meeting.',
         name: 'Maëlle G.',
         role: 'Graphic Designer',
       },
       2: {
-        content: 'The collaborative whiteboard works well for small teams. The automatic transcription picks up speech accurately — useful for keeping track of what was said.',
+        content:
+          'The collaborative whiteboard works well for small teams. The automatic transcription picks up speech accurately — useful for keeping track of what was said.',
         name: 'Anthony D.',
         role: 'Professional Photographer',
       },
       3: {
-        content: "La sala de reuniones carga rápido y el uso compartido de pantalla es fácil de encontrar. Para estar en fase beta, está bastante completo.",
+        content:
+          'La sala de reuniones carga rápido y el uso compartido de pantalla es fácil de encontrar. Para estar en fase beta, está bastante completo.',
         name: 'Magus S.',
         role: 'General Manager',
       },

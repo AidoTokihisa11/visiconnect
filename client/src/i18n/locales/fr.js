@@ -631,20 +631,23 @@ const frTranslations = {
   },
   testimonials: {
     title: "Ce qu'en disent les premiers utilisateurs",
-    subtitle: 'Quelques retours de personnes qui ont testé l\'outil.',
+    subtitle: "Quelques retours de personnes qui ont testé l'outil.",
     items: {
       1: {
-        content: "La qualité vidéo tient bien même avec une connexion moyenne. Le chat intégré pendant la réunion évite d'avoir à changer d'onglet.",
+        content:
+          "La qualité vidéo tient bien même avec une connexion moyenne. Le chat intégré pendant la réunion évite d'avoir à changer d'onglet.",
         name: 'Maëlle G.',
         role: 'Graphiste',
       },
       2: {
-        content: "Le tableau blanc collaboratif est pratique pour travailler à plusieurs. La transcription automatique reconnaît bien la parole, utile pour garder une trace des échanges.",
+        content:
+          'Le tableau blanc collaboratif est pratique pour travailler à plusieurs. La transcription automatique reconnaît bien la parole, utile pour garder une trace des échanges.',
         name: 'Anthony D.',
         role: 'Photographe Professionnel',
       },
       3: {
-        content: "La sala de reuniones carga rápido y el uso compartido de pantalla es fácil de encontrar. Para estar en fase beta, está bastante completo.",
+        content:
+          'La sala de reuniones carga rápido y el uso compartido de pantalla es fácil de encontrar. Para estar en fase beta, está bastante completo.',
         name: 'Magus S.',
         role: 'Directrice Générale',
       },

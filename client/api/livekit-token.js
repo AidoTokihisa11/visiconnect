@@ -25,10 +25,12 @@ function randomSuffix() {
 }
 
 function sanitizeName(name) {
-  return String(name || 'Invité')
-    .replace(/[^\p{L}\p{N}\s._-]/gu, '')
-    .trim()
-    .slice(0, 40) || 'Invité';
+  return (
+    String(name || 'Invité')
+      .replace(/[^\p{L}\p{N}\s._-]/gu, '')
+      .trim()
+      .slice(0, 40) || 'Invité'
+  );
 }
 
 module.exports = async function handler(req, res) {
