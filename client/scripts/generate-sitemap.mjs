@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const SITE_URL = (process.env.VITE_SITE_URL || 'https://visioconnect.app').replace(/\/$/, '');
+const SITE_URL = (process.env.VITE_SITE_URL || 'https://www.visioconnect.pro').replace(/\/$/, '');
 
 // Public routes only (auth-protected & dynamic routes excluded).
 const routes = [

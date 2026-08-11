@@ -902,12 +902,30 @@ export default function HomePageClean() {
   const { t } = useTranslation();
   const { featuresData, testimonialsData, pricingData, contactLinks } = useHomePageData();
 
+  const homeJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'VisioConnect',
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'Web',
+    url: 'https://www.visioconnect.pro/',
+    description:
+      'Plateforme de visioconférence sécurisée P2P avec chiffrement de bout en bout, tableau blanc collaboratif, enregistrements et sous-titres temps réel.',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'EUR',
+    },
+    publisher: { '@id': 'https://www.visioconnect.pro/#organization' },
+  };
+
   return (
     <>
       <SEO
         title="Visioconférence sécurisée"
         description="VisioConnect : plateforme de visioconférence sécurisée P2P, chiffrement de bout en bout, tableau blanc collaboratif et enregistrements."
         path="/"
+        jsonLd={homeJsonLd}
       />
       <PageContainer>
         <HeaderClean />

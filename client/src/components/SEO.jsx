@@ -1,7 +1,10 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
-const SITE_URL = (import.meta.env?.VITE_SITE_URL || 'https://visioconnect.app').replace(/\/$/, '');
+const SITE_URL = (import.meta.env?.VITE_SITE_URL || 'https://www.visioconnect.pro').replace(
+  /\/$/,
+  ''
+);
 const DEFAULT_IMAGE = `${SITE_URL}/og-default.png`;
 const DEFAULT_TITLE = 'VisioConnect — Visioconférence sécurisée';
 const DEFAULT_DESC =
