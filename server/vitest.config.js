@@ -12,7 +12,9 @@ export default defineConfig({
     globals: false,
     setupFiles: ['./tests/setup.js'],
     coverage: {
-      reporter: ['text', 'lcov'],
+      provider: 'v8',
+      reporter: ['text', 'html', 'lcov'],
+      reportsDirectory: './coverage',
       include: ['src/**/*.js'],
     },
   },

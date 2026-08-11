@@ -17,8 +17,14 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"**/*.{js,jsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{js,jsx,json,md}\"",
-    "test": "npm run test --workspaces --if-present",
+    "test": "npm run test:server && npm run test:client",
     "test:server": "cd server && npm test",
+    "test:client": "cd client && npm test",
+    "test:coverage": "npm run test:coverage:server && npm run test:coverage:client",
+    "test:coverage:server": "cd server && npm test -- --coverage",
+    "test:coverage:client": "cd client && npm run test:coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
     "audit:high": "npm audit --audit-level=high",
     "prepare": "husky"
   },
@@ -44,12 +50,13 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/AidoTokihisa11/visiconnect.git"
+    "url": "git+https://github.com/AidoTokihisa11/visiconnect.git"
   },
   "devDependencies": {
     "@babel/plugin-syntax-jsx": "^7.28.6",
     "@babel/preset-react": "^7.28.5",
     "@eslint/js": "^9.15.0",
+    "@playwright/test": "^1.62.1",
     "@react-email/preview-server": "^5.2.10",
     "@react-email/ui": "^6.0.0",
     "@tolgee/cli": "^2.16.1",
@@ -92,5 +99,10 @@
     "socket.io-client": "^4.8.3",
     "tldraw": "^4.4.0",
     "zustand": "^5.0.11"
-  }
+  },
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/AidoTokihisa11/visiconnect/issues"
+  },
+  "homepage": "https://github.com/AidoTokihisa11/visiconnect#readme"
 }
