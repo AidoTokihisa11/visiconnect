@@ -953,8 +953,9 @@ export default function HomePageClean() {
   return (
     <>
       <SEO
-        title="Visioconférence sécurisée"
-        description="VisioConnect : plateforme de visioconférence sécurisée P2P, chiffrement de bout en bout, tableau blanc collaboratif et enregistrements."
+        title="Visioconférence en ligne sécurisée & RGPD"
+        description="Visioconférence en ligne sécurisée, sans installation. Chiffrement bout en bout, tableau blanc collaboratif. Alternative française à Zoom, conforme RGPD."
+        keywords="visioconférence, visioconférence en ligne, visioconférence sécurisée, alternative Zoom, visioconférence française, visio RGPD, réunion en ligne sans installation, tableau blanc collaboratif"
         path="/"
         jsonLd={homeJsonLd}
       />
