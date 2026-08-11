@@ -5,6 +5,7 @@ import { useTranslation } from '../hooks/useTranslation';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import CallToAction from '../components/CallToAction';
+import SEO from '../components/SEO';
 
 const COLORS = {
   primary: '#2563eb',
@@ -266,110 +267,117 @@ const AboutPageNew = () => {
   }, []);
 
   return (
-    <PageContainer>
-      <HeaderClean />
-      <MainContent>
-        <HeroSection>
-          <HeroInner>
-            <HeroContent>
-              <HeroEyebrow>
-                <Building2 size={14} />
-                {t('about.eyebrow') || 'Notre histoire'}
-              </HeroEyebrow>
-              <HeroTitle>
-                {t('about.hero.title_part1')}{' '}
-                <span style={{ color: COLORS.primary }}>{t('about.hero.title_part2')}</span>
-              </HeroTitle>
-              <HeroSubtitle>{t('about.hero.subtitle')}</HeroSubtitle>
-            </HeroContent>
-            <HeroPanel>
-              <HeroPanelLabel>VisioConnect en chiffres</HeroPanelLabel>
-              <StatGrid>
-                {[
-                  ['Beta', 'Accès anticipé'],
-                  ['~10', 'Bêta-testeurs actifs'],
-                  ['6', 'Pays disponibles'],
-                  ['99.5%', 'Disponibilité'],
-                ].map(([v, l]) => (
-                  <HeroStatItem key={l}>
-                    <HeroStatValue>{v}</HeroStatValue>
-                    <HeroStatLabel>{l}</HeroStatLabel>
-                  </HeroStatItem>
-                ))}
-              </StatGrid>
-            </HeroPanel>
-          </HeroInner>
-        </HeroSection>
-        <Section>
-          <SectionTitle>{t('about.story.title')}</SectionTitle>
-          <StoryContainer>
-            <TextBlock>{t('about.story.paragraph1')}</TextBlock>
-            <TextBlock>{t('about.story.paragraph2')}</TextBlock>
-            <TextBlock>{t('about.story.paragraph3')}</TextBlock>
-          </StoryContainer>
-        </Section>
-        <Section
-          style={{
-            backgroundColor: '#fff',
-            borderTop: `1px solid ${COLORS.border}`,
-            borderBottom: `1px solid ${COLORS.border}`,
-          }}
-        >
-          <SectionTitle>{t('about.values.title')}</SectionTitle>
-          <ValuesGrid>
-            <ValueCard>
-              <IconBox>
-                <Target size={24} />
-              </IconBox>
-              <ValueTitle>{t('about.values.simplicity.title')}</ValueTitle>
-              <ValueText>{t('about.values.simplicity.description')}</ValueText>
-            </ValueCard>
+    <>
+      <SEO
+        title="À propos"
+        description="Découvrez VisioConnect : mission, valeurs et vision d’un espace de visioconférence sobre et sécurisé."
+        path="/about"
+      />
+      <PageContainer>
+        <HeaderClean />
+        <MainContent>
+          <HeroSection>
+            <HeroInner>
+              <HeroContent>
+                <HeroEyebrow>
+                  <Building2 size={14} />
+                  {t('about.eyebrow') || 'Notre histoire'}
+                </HeroEyebrow>
+                <HeroTitle>
+                  {t('about.hero.title_part1')}{' '}
+                  <span style={{ color: COLORS.primary }}>{t('about.hero.title_part2')}</span>
+                </HeroTitle>
+                <HeroSubtitle>{t('about.hero.subtitle')}</HeroSubtitle>
+              </HeroContent>
+              <HeroPanel>
+                <HeroPanelLabel>VisioConnect en chiffres</HeroPanelLabel>
+                <StatGrid>
+                  {[
+                    ['Beta', 'Accès anticipé'],
+                    ['~10', 'Bêta-testeurs actifs'],
+                    ['6', 'Pays disponibles'],
+                    ['99.5%', 'Disponibilité'],
+                  ].map(([v, l]) => (
+                    <HeroStatItem key={l}>
+                      <HeroStatValue>{v}</HeroStatValue>
+                      <HeroStatLabel>{l}</HeroStatLabel>
+                    </HeroStatItem>
+                  ))}
+                </StatGrid>
+              </HeroPanel>
+            </HeroInner>
+          </HeroSection>
+          <Section>
+            <SectionTitle>{t('about.story.title')}</SectionTitle>
+            <StoryContainer>
+              <TextBlock>{t('about.story.paragraph1')}</TextBlock>
+              <TextBlock>{t('about.story.paragraph2')}</TextBlock>
+              <TextBlock>{t('about.story.paragraph3')}</TextBlock>
+            </StoryContainer>
+          </Section>
+          <Section
+            style={{
+              backgroundColor: '#fff',
+              borderTop: `1px solid ${COLORS.border}`,
+              borderBottom: `1px solid ${COLORS.border}`,
+            }}
+          >
+            <SectionTitle>{t('about.values.title')}</SectionTitle>
+            <ValuesGrid>
+              <ValueCard>
+                <IconBox>
+                  <Target size={24} />
+                </IconBox>
+                <ValueTitle>{t('about.values.simplicity.title')}</ValueTitle>
+                <ValueText>{t('about.values.simplicity.description')}</ValueText>
+              </ValueCard>
 
-            <ValueCard>
-              <IconBox>
-                <Shield size={24} />
-              </IconBox>
-              <ValueTitle>{t('about.values.privacy.title')}</ValueTitle>
-              <ValueText>{t('about.values.privacy.description')}</ValueText>
-            </ValueCard>
+              <ValueCard>
+                <IconBox>
+                  <Shield size={24} />
+                </IconBox>
+                <ValueTitle>{t('about.values.privacy.title')}</ValueTitle>
+                <ValueText>{t('about.values.privacy.description')}</ValueText>
+              </ValueCard>
 
-            <ValueCard>
-              <IconBox>
-                <Heart size={24} />
-              </IconBox>
-              <ValueTitle>{t('about.values.accessibility.title')}</ValueTitle>
-              <ValueText>{t('about.values.accessibility.description')}</ValueText>
-            </ValueCard>
-          </ValuesGrid>
-        </Section>
-        <StatsSection>
-          <StatsGrid>
-            <StatItem>
-              <StatNumber>~10</StatNumber>
-              <StatLabel>{t('about.stats.users')}</StatLabel>
-            </StatItem>
-            <StatItem>
-              <StatNumber>6</StatNumber>
-              <StatLabel>{t('about.stats.countries')}</StatLabel>
-            </StatItem>
-            <StatItem>
-              <StatNumber>99.5%</StatNumber>
-              <StatLabel>{t('about.stats.uptime')}</StatLabel>
-            </StatItem>
-            <StatItem>
-              <StatNumber>24/7</StatNumber>
-              <StatLabel>{t('about.stats.support')}</StatLabel>
-            </StatItem>
-          </StatsGrid>
-        </StatsSection>
-        <CallToAction
-          title={t('about.cta.title')}
-          description={t('about.cta.description')}
-          buttonText={t('about.cta.button')}
-        />{' '}
-      </MainContent>
-      <FooterClean />
-    </PageContainer>
+              <ValueCard>
+                <IconBox>
+                  <Heart size={24} />
+                </IconBox>
+                <ValueTitle>{t('about.values.accessibility.title')}</ValueTitle>
+                <ValueText>{t('about.values.accessibility.description')}</ValueText>
+              </ValueCard>
+            </ValuesGrid>
+          </Section>
+          <StatsSection>
+            <StatsGrid>
+              <StatItem>
+                <StatNumber>~10</StatNumber>
+                <StatLabel>{t('about.stats.users')}</StatLabel>
+              </StatItem>
+              <StatItem>
+                <StatNumber>6</StatNumber>
+                <StatLabel>{t('about.stats.countries')}</StatLabel>
+              </StatItem>
+              <StatItem>
+                <StatNumber>99.5%</StatNumber>
+                <StatLabel>{t('about.stats.uptime')}</StatLabel>
+              </StatItem>
+              <StatItem>
+                <StatNumber>24/7</StatNumber>
+                <StatLabel>{t('about.stats.support')}</StatLabel>
+              </StatItem>
+            </StatsGrid>
+          </StatsSection>
+          <CallToAction
+            title={t('about.cta.title')}
+            description={t('about.cta.description')}
+            buttonText={t('about.cta.button')}
+          />{' '}
+        </MainContent>
+        <FooterClean />
+      </PageContainer>
+    </>
   );
 };
 

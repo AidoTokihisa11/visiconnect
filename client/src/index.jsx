@@ -5,6 +5,7 @@ import App from './App';
 import { ConvexReactClient } from 'convex/react';
 import { ClerkProvider, useAuth } from '@clerk/react';
 import { ConvexProviderWithClerk } from 'convex/react-clerk';
+import { HelmetProvider } from 'react-helmet-async';
 
 const CONVEX_URL = import.meta.env.VITE_CONVEX_URL || import.meta.env.VITE_PUBLIC_CONVEX_URL;
 const CLERK_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY?.trim();
@@ -28,11 +29,13 @@ if (!CONVEX_URL || !CLERK_KEY) {
   const convex = new ConvexReactClient(CONVEX_URL);
   root.render(
     <React.StrictMode>
-      <ClerkProvider publishableKey={CLERK_KEY}>
-        <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
-          <App />
-        </ConvexProviderWithClerk>
-      </ClerkProvider>
+      <HelmetProvider>
+        <ClerkProvider publishableKey={CLERK_KEY}>
+          <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
+            <App />
+          </ConvexProviderWithClerk>
+        </ClerkProvider>
+      </HelmetProvider>
     </React.StrictMode>
   );
 }

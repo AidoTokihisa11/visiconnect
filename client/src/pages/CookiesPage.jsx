@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useTranslation } from '../hooks/useTranslation';
 import LegalLayout from '../components/LegalLayout';
 import CallToAction from '../components/CallToAction';
+import SEO from '../components/SEO';
 
 const Paragraph = styled.p`
   line-height: 1.8;
@@ -31,6 +32,7 @@ const CookiesPage = () => {
 
   return (
     <LegalLayout title={t('cookiePolicy')} lastUpdated="21 Février 2024">
+      <SEO title="Cookies" description="Politique de cookies de VisioConnect." path="/cookies" />
       <SectionTitle>1. Introduction</SectionTitle>
       <Paragraph>
         Chez VisioConnect, nous croyons en la transparence sur la façon dont nous utilisons vos

@@ -5,6 +5,7 @@ import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import CallToAction from '../components/CallToAction';
 import { useTranslation } from '../hooks/useTranslation';
+import SEO from '../components/SEO';
 
 const COLORS = {
   primary: '#2563eb',
@@ -249,66 +250,73 @@ const IntegrationsPage = () => {
   ];
 
   return (
-    <PageContainer>
-      <HeaderClean />
-      <MainContent>
-        <Hero>
-          <HeroInner>
-            <HeroLeft>
-              <HeroEyebrow>
-                <Puzzle size={14} />
-                Intégrations
-              </HeroEyebrow>
-              <Title>{t('integrations.hero.title')}</Title>
-              <Subtitle>{t('integrations.hero.subtitle')}</Subtitle>
-              <CategoryFilter>
-                <FilterButton active>{t('integrations.filters.all')}</FilterButton>
-                <FilterButton>{t('integrations.filters.communication')}</FilterButton>
-                <FilterButton>{t('integrations.filters.productivity')}</FilterButton>
-                <FilterButton>{t('integrations.filters.crm')}</FilterButton>
-                <FilterButton>{t('integrations.filters.development')}</FilterButton>
-              </CategoryFilter>
-            </HeroLeft>
-            <HeroPanel>
-              <PanelTitle>Écosystème</PanelTitle>
-              <StatRow>
-                <StatBox>
-                  <strong>50+</strong>
-                  <span>Intégrations</span>
-                </StatBox>
-                <StatBox>
-                  <strong>5</strong>
-                  <span>Catégories</span>
-                </StatBox>
-                <StatBox>
-                  <strong>API</strong>
-                  <span>Ouverte</span>
-                </StatBox>
-              </StatRow>
-            </HeroPanel>
-          </HeroInner>
-        </Hero>
+    <>
+      <SEO
+        title="Intégrations"
+        description="Connectez VisioConnect à vos outils favoris : Slack, Google Agenda, Notion et plus."
+        path="/integrations"
+      />
+      <PageContainer>
+        <HeaderClean />
+        <MainContent>
+          <Hero>
+            <HeroInner>
+              <HeroLeft>
+                <HeroEyebrow>
+                  <Puzzle size={14} />
+                  Intégrations
+                </HeroEyebrow>
+                <Title>{t('integrations.hero.title')}</Title>
+                <Subtitle>{t('integrations.hero.subtitle')}</Subtitle>
+                <CategoryFilter>
+                  <FilterButton active>{t('integrations.filters.all')}</FilterButton>
+                  <FilterButton>{t('integrations.filters.communication')}</FilterButton>
+                  <FilterButton>{t('integrations.filters.productivity')}</FilterButton>
+                  <FilterButton>{t('integrations.filters.crm')}</FilterButton>
+                  <FilterButton>{t('integrations.filters.development')}</FilterButton>
+                </CategoryFilter>
+              </HeroLeft>
+              <HeroPanel>
+                <PanelTitle>Écosystème</PanelTitle>
+                <StatRow>
+                  <StatBox>
+                    <strong>50+</strong>
+                    <span>Intégrations</span>
+                  </StatBox>
+                  <StatBox>
+                    <strong>5</strong>
+                    <span>Catégories</span>
+                  </StatBox>
+                  <StatBox>
+                    <strong>API</strong>
+                    <span>Ouverte</span>
+                  </StatBox>
+                </StatRow>
+              </HeroPanel>
+            </HeroInner>
+          </Hero>
 
-        <IntegrationsGrid>
-          {INTEGRATIONS.map((app, index) => (
-            <IntegrationCard key={index}>
-              <IconWrapper>{app.icon}</IconWrapper>
-              <IntegrationName>{app.name}</IntegrationName>
-              <IntegrationDesc>{app.desc}</IntegrationDesc>
-              <InstallButton>{t('integrations.install')}</InstallButton>
-            </IntegrationCard>
-          ))}
-        </IntegrationsGrid>
+          <IntegrationsGrid>
+            {INTEGRATIONS.map((app, index) => (
+              <IntegrationCard key={index}>
+                <IconWrapper>{app.icon}</IconWrapper>
+                <IntegrationName>{app.name}</IntegrationName>
+                <IntegrationDesc>{app.desc}</IntegrationDesc>
+                <InstallButton>{t('integrations.install')}</InstallButton>
+              </IntegrationCard>
+            ))}
+          </IntegrationsGrid>
 
-        <CallToAction
-          title={t('integrations.cta.title')}
-          description={t('integrations.cta.description')}
-          buttonText={t('integrations.cta.button')}
-          buttonLink="/contact"
-        />
-      </MainContent>
-      <FooterClean />
-    </PageContainer>
+          <CallToAction
+            title={t('integrations.cta.title')}
+            description={t('integrations.cta.description')}
+            buttonText={t('integrations.cta.button')}
+            buttonLink="/contact"
+          />
+        </MainContent>
+        <FooterClean />
+      </PageContainer>
+    </>
   );
 };
 

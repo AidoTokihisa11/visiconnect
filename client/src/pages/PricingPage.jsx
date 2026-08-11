@@ -9,6 +9,7 @@ import FooterClean from '../components/FooterClean';
 import { useTranslation } from '../hooks/useTranslation';
 import { useUser } from '@clerk/react';
 import CallToAction from '../components/CallToAction';
+import SEO from '../components/SEO';
 
 const stripePromise = loadStripe(
   'pk_test_51T5EwZ8YZRxeQjiW412gOFLsaZ4fn6ArvMjf74OphD9WhovPuRDde4qOGwrpdwlnFQIt1apdfwnWNfjbt6n0CkkB00p9k8z1MO'
@@ -449,204 +450,215 @@ const PricingPage = () => {
   };
 
   return (
-    <PageContainer>
-      <HeaderClean />
-
-      <HeroSection>
-        <HeroTitle>
-          Investissez dans <span>Votre Collaboration</span>
-        </HeroTitle>
-        <HeroSubtitle>
-          Des tarifications transparentes. Aucun frais caché. Annulez à tout moment.
-        </HeroSubtitle>
-      </HeroSection>
-
-      <PricingGrid>
-        {/* FREE */}
-        <PlanCard>
-          <PlanTitle>Starter</PlanTitle>
-          <PlanDescription>
-            {t(
-              'pricing.plans.starter.description',
-              'Pour découvrir la plateforme sans engagement.'
-            )}
-          </PlanDescription>
-          <Price>
-            <span className="currency">€</span>0
-            <span className="period">{t('pricing.plans.free.period')}</span>
-          </Price>
-          <FeatureList>
-            <FeatureItem>
-              <Check size={18} /> {t('billing.features.starter.0', "Jusqu'à 3 participants")}
-            </FeatureItem>
-            <FeatureItem>
-              <Check size={18} /> {t('billing.features.starter.1', '45 min par réunion')}
-            </FeatureItem>
-            <FeatureItem>
-              <Check size={18} /> {t('pricing.features.screenShare', "Partage d'écran")}
-            </FeatureItem>
-            <FeatureItem className="disabled">
-              <X size={18} /> {t('pricing.features.recording', 'Enregistrement')}
-            </FeatureItem>
-            <FeatureItem className="disabled">
-              <X size={18} /> {t('pricing.features.aiTranscription', 'Transcriptions IA')}
-            </FeatureItem>
-          </FeatureList>
-          <PlanButton to="#" className="outline" onClick={(e) => handleSubscribe(e, 'starter')}>
-            {t('pricing.plans.starter.cta', 'Commencer Gratuit')}
-          </PlanButton>
-        </PlanCard>
-
-        {/* PRO */}
-        <PlanCard $featured>
-          <PopularBadge>{t('pricing.recommended', 'RECOMMANDÉ')}</PopularBadge>
-          <PlanTitle>Pro</PlanTitle>
-          <PlanDescription>
-            {t('pricing.plans.pro.description', 'Pour les équipes agiles et les freelances.')}
-          </PlanDescription>
-          <Price>
-            <span className="currency">€</span>15
-            <span className="period">{t('pricing.perMonthPerUser', '/mois par utilisateur')}</span>
-          </Price>
-          <FeatureList>
-            <FeatureItem>
-              <Check size={18} /> {t('pricing.features.upTo50', "Jusqu'à 50 participants")}
-            </FeatureItem>
-            <FeatureItem>
-              <Check size={18} /> {t('pricing.features.unlimitedDuration', 'Durée illimitée')}
-            </FeatureItem>
-            <FeatureItem>
-              <Check size={18} /> {t('pricing.features.cloud5gb', '5 Go de stockage Cloud')}
-            </FeatureItem>
-            <FeatureItem>
-              <Check size={18} /> {t('pricing.features.prioritySupport', 'Support Prioritaire')}
-            </FeatureItem>
-            <FeatureItem>
-              <Check size={18} />{' '}
-              {t('pricing.features.aiTranscription10h', 'Transcriptions IA (10h/mois)')}
-            </FeatureItem>
-          </FeatureList>
-          <PlanButton to="#" variant="primary" onClick={(e) => handleSubscribe(e, 'pro')}>
-            {t('pricing.subscribe', "S'abonner")}
-          </PlanButton>
-        </PlanCard>
-
-        {/* BUSINESS */}
-        <PlanCard>
-          <PlanTitle>Business</PlanTitle>
-          <PlanDescription>
-            {t('pricing.plans.business.description', 'Pour les organisations à grande échelle.')}
-          </PlanDescription>
-          <Price>
-            <span className="currency">€</span>35
-            <span className="period">{t('pricing.perMonthPerUser', '/mois par utilisateur')}</span>
-          </Price>
-          <FeatureList>
-            <FeatureItem>
-              <Check size={18} /> {t('pricing.features.upTo200', "Jusqu'à 200 participants")}
-            </FeatureItem>
-            <FeatureItem>
-              <Check size={18} /> {t('pricing.features.unlimitedStorage', 'Stockage illimité')}
-            </FeatureItem>
-            <FeatureItem>
-              <Check size={18} /> {t('pricing.features.breakout_rooms')}
-            </FeatureItem>
-            <FeatureItem>
-              <Check size={18} /> {t('pricing.features.ssoAdmin', 'SSO & Admin Avancé')}
-            </FeatureItem>
-            <FeatureItem>
-              <Check size={18} />{' '}
-              {t('pricing.features.unlimitedTranscriptions', 'Transcriptions Illimitées')}
-            </FeatureItem>
-          </FeatureList>
-          <PlanButton to="#" className="outline" onClick={(e) => handleSubscribe(e, 'business')}>
-            {t('pricing.subscribe', "S'abonner")}
-          </PlanButton>
-        </PlanCard>
-      </PricingGrid>
-
-      <ComparisonSection>
-        <TableTitle>{t('pricing.compare.title')}</TableTitle>
-        <TableWrapper>
-          <Table>
-            <thead>
-              <tr>
-                <th>{t('pricing.compare.feature')}</th>
-                <th>{t('pricing.compare.starter')}</th>
-                <th>{t('pricing.compare.pro')}</th>
-                <th>{t('pricing.compare.business')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{t('pricing.compare.max_participants')}</td>
-                <td>3</td>
-                <td>50</td>
-                <td>200</td>
-              </tr>
-              <tr>
-                <td>{t('pricing.compare.duration')}</td>
-                <td>45 min</td>
-                <td>{t('pricing.compare.unlimited')}</td>
-                <td>{t('pricing.compare.unlimited')}</td>
-              </tr>
-              <tr>
-                <td>{t('pricing.compare.quality')}</td>
-                <td>720p</td>
-                <td>1080p</td>
-                <td>4K ({t('pricing.compare.if_available')})</td>
-              </tr>
-              <tr>
-                <td>{t('pricing.compare.support')}</td>
-                <td>{t('pricing.compare.support_community')}</td>
-                <td>Email (24h)</td>
-                <td>{t('pricing.compare.support_phone')}</td>
-              </tr>
-              <tr>
-                <td>{t('pricing.compare.recording')}</td>
-                <td>-</td>
-                <td>5 Go</td>
-                <td>{t('pricing.compare.unlimited')}</td>
-              </tr>
-              <tr>
-                <td>{t('pricing.compare.transcription')}</td>
-                <td>-</td>
-                <td>10 {t('pricing.compare.hours')}</td>
-                <td>{t('pricing.compare.unlimited')}</td>
-              </tr>
-              <tr>
-                <td>SSO (Single Sign-On)</td>
-                <td>-</td>
-                <td>-</td>
-                <td>{t('pricing.compare.included')}</td>
-              </tr>
-            </tbody>
-          </Table>
-        </TableWrapper>
-      </ComparisonSection>
-
-      <FAQSection>
-        <FAQTitle>{t('pricing.faq.title')}</FAQTitle>
-        {FAQList.map((item, index) => (
-          <FAQItem key={index}>
-            <FAQQuestion onClick={() => toggleFAQ(index)}>
-              {t(item.q)}
-              {openFAQ === index ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-            </FAQQuestion>
-            <FAQAnswer $isOpen={openFAQ === index}>{t(item.a)}</FAQAnswer>
-          </FAQItem>
-        ))}
-      </FAQSection>
-
-      <CallToAction
-        title={t('pricing.cta.title')}
-        description={t('pricing.cta.description')}
-        buttonText={t('pricing.cta.button')}
-        buttonLink="/contact"
+    <>
+      <SEO
+        title="Tarifs"
+        description="Comparez les plans VisioConnect. Un plan gratuit, des options avancées pour équipes et entreprises. Sans engagement."
+        path="/pricing"
       />
+      <PageContainer>
+        <HeaderClean />
 
-      <FooterClean />
-    </PageContainer>
+        <HeroSection>
+          <HeroTitle>
+            Investissez dans <span>Votre Collaboration</span>
+          </HeroTitle>
+          <HeroSubtitle>
+            Des tarifications transparentes. Aucun frais caché. Annulez à tout moment.
+          </HeroSubtitle>
+        </HeroSection>
+
+        <PricingGrid>
+          {/* FREE */}
+          <PlanCard>
+            <PlanTitle>Starter</PlanTitle>
+            <PlanDescription>
+              {t(
+                'pricing.plans.starter.description',
+                'Pour découvrir la plateforme sans engagement.'
+              )}
+            </PlanDescription>
+            <Price>
+              <span className="currency">€</span>0
+              <span className="period">{t('pricing.plans.free.period')}</span>
+            </Price>
+            <FeatureList>
+              <FeatureItem>
+                <Check size={18} /> {t('billing.features.starter.0', "Jusqu'à 3 participants")}
+              </FeatureItem>
+              <FeatureItem>
+                <Check size={18} /> {t('billing.features.starter.1', '45 min par réunion')}
+              </FeatureItem>
+              <FeatureItem>
+                <Check size={18} /> {t('pricing.features.screenShare', "Partage d'écran")}
+              </FeatureItem>
+              <FeatureItem className="disabled">
+                <X size={18} /> {t('pricing.features.recording', 'Enregistrement')}
+              </FeatureItem>
+              <FeatureItem className="disabled">
+                <X size={18} /> {t('pricing.features.aiTranscription', 'Transcriptions IA')}
+              </FeatureItem>
+            </FeatureList>
+            <PlanButton to="#" className="outline" onClick={(e) => handleSubscribe(e, 'starter')}>
+              {t('pricing.plans.starter.cta', 'Commencer Gratuit')}
+            </PlanButton>
+          </PlanCard>
+
+          {/* PRO */}
+          <PlanCard $featured>
+            <PopularBadge>{t('pricing.recommended', 'RECOMMANDÉ')}</PopularBadge>
+            <PlanTitle>Pro</PlanTitle>
+            <PlanDescription>
+              {t('pricing.plans.pro.description', 'Pour les équipes agiles et les freelances.')}
+            </PlanDescription>
+            <Price>
+              <span className="currency">€</span>15
+              <span className="period">
+                {t('pricing.perMonthPerUser', '/mois par utilisateur')}
+              </span>
+            </Price>
+            <FeatureList>
+              <FeatureItem>
+                <Check size={18} /> {t('pricing.features.upTo50', "Jusqu'à 50 participants")}
+              </FeatureItem>
+              <FeatureItem>
+                <Check size={18} /> {t('pricing.features.unlimitedDuration', 'Durée illimitée')}
+              </FeatureItem>
+              <FeatureItem>
+                <Check size={18} /> {t('pricing.features.cloud5gb', '5 Go de stockage Cloud')}
+              </FeatureItem>
+              <FeatureItem>
+                <Check size={18} /> {t('pricing.features.prioritySupport', 'Support Prioritaire')}
+              </FeatureItem>
+              <FeatureItem>
+                <Check size={18} />{' '}
+                {t('pricing.features.aiTranscription10h', 'Transcriptions IA (10h/mois)')}
+              </FeatureItem>
+            </FeatureList>
+            <PlanButton to="#" variant="primary" onClick={(e) => handleSubscribe(e, 'pro')}>
+              {t('pricing.subscribe', "S'abonner")}
+            </PlanButton>
+          </PlanCard>
+
+          {/* BUSINESS */}
+          <PlanCard>
+            <PlanTitle>Business</PlanTitle>
+            <PlanDescription>
+              {t('pricing.plans.business.description', 'Pour les organisations à grande échelle.')}
+            </PlanDescription>
+            <Price>
+              <span className="currency">€</span>35
+              <span className="period">
+                {t('pricing.perMonthPerUser', '/mois par utilisateur')}
+              </span>
+            </Price>
+            <FeatureList>
+              <FeatureItem>
+                <Check size={18} /> {t('pricing.features.upTo200', "Jusqu'à 200 participants")}
+              </FeatureItem>
+              <FeatureItem>
+                <Check size={18} /> {t('pricing.features.unlimitedStorage', 'Stockage illimité')}
+              </FeatureItem>
+              <FeatureItem>
+                <Check size={18} /> {t('pricing.features.breakout_rooms')}
+              </FeatureItem>
+              <FeatureItem>
+                <Check size={18} /> {t('pricing.features.ssoAdmin', 'SSO & Admin Avancé')}
+              </FeatureItem>
+              <FeatureItem>
+                <Check size={18} />{' '}
+                {t('pricing.features.unlimitedTranscriptions', 'Transcriptions Illimitées')}
+              </FeatureItem>
+            </FeatureList>
+            <PlanButton to="#" className="outline" onClick={(e) => handleSubscribe(e, 'business')}>
+              {t('pricing.subscribe', "S'abonner")}
+            </PlanButton>
+          </PlanCard>
+        </PricingGrid>
+
+        <ComparisonSection>
+          <TableTitle>{t('pricing.compare.title')}</TableTitle>
+          <TableWrapper>
+            <Table>
+              <thead>
+                <tr>
+                  <th>{t('pricing.compare.feature')}</th>
+                  <th>{t('pricing.compare.starter')}</th>
+                  <th>{t('pricing.compare.pro')}</th>
+                  <th>{t('pricing.compare.business')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{t('pricing.compare.max_participants')}</td>
+                  <td>3</td>
+                  <td>50</td>
+                  <td>200</td>
+                </tr>
+                <tr>
+                  <td>{t('pricing.compare.duration')}</td>
+                  <td>45 min</td>
+                  <td>{t('pricing.compare.unlimited')}</td>
+                  <td>{t('pricing.compare.unlimited')}</td>
+                </tr>
+                <tr>
+                  <td>{t('pricing.compare.quality')}</td>
+                  <td>720p</td>
+                  <td>1080p</td>
+                  <td>4K ({t('pricing.compare.if_available')})</td>
+                </tr>
+                <tr>
+                  <td>{t('pricing.compare.support')}</td>
+                  <td>{t('pricing.compare.support_community')}</td>
+                  <td>Email (24h)</td>
+                  <td>{t('pricing.compare.support_phone')}</td>
+                </tr>
+                <tr>
+                  <td>{t('pricing.compare.recording')}</td>
+                  <td>-</td>
+                  <td>5 Go</td>
+                  <td>{t('pricing.compare.unlimited')}</td>
+                </tr>
+                <tr>
+                  <td>{t('pricing.compare.transcription')}</td>
+                  <td>-</td>
+                  <td>10 {t('pricing.compare.hours')}</td>
+                  <td>{t('pricing.compare.unlimited')}</td>
+                </tr>
+                <tr>
+                  <td>SSO (Single Sign-On)</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>{t('pricing.compare.included')}</td>
+                </tr>
+              </tbody>
+            </Table>
+          </TableWrapper>
+        </ComparisonSection>
+
+        <FAQSection>
+          <FAQTitle>{t('pricing.faq.title')}</FAQTitle>
+          {FAQList.map((item, index) => (
+            <FAQItem key={index}>
+              <FAQQuestion onClick={() => toggleFAQ(index)}>
+                {t(item.q)}
+                {openFAQ === index ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+              </FAQQuestion>
+              <FAQAnswer $isOpen={openFAQ === index}>{t(item.a)}</FAQAnswer>
+            </FAQItem>
+          ))}
+        </FAQSection>
+
+        <CallToAction
+          title={t('pricing.cta.title')}
+          description={t('pricing.cta.description')}
+          buttonText={t('pricing.cta.button')}
+          buttonLink="/contact"
+        />
+
+        <FooterClean />
+      </PageContainer>
+    </>
   );
 };
 

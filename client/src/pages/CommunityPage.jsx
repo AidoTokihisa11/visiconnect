@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import { useTranslation } from '../hooks/useTranslation';
+import SEO from '../components/SEO';
 
 const COLORS = {
   primary: 'hsl(var(--primary))',
@@ -178,72 +179,79 @@ const CommunityPage = () => {
   const { t } = useTranslation();
 
   return (
-    <PageContainer>
-      <HeaderClean />
-      <MainContent>
-        <Hero>
-          <Title>{t('community.hero.title')}</Title>
-          <Subtitle>{t('community.hero.subtitle')}</Subtitle>
-        </Hero>
+    <>
+      <SEO
+        title="Communauté"
+        description="Participez à la communauté VisioConnect : forums, événements et échanges."
+        path="/community"
+      />
+      <PageContainer>
+        <HeaderClean />
+        <MainContent>
+          <Hero>
+            <Title>{t('community.hero.title')}</Title>
+            <Subtitle>{t('community.hero.subtitle')}</Subtitle>
+          </Hero>
 
-        <CommunityGrid>
-          <CommunityCard>
-            <IconWrapper bgColor={COLORS.discord}>💬</IconWrapper>
-            <CardTitle>{t('community.social.discord.title')}</CardTitle>
-            <CardText>{t('community.social.discord.desc')}</CardText>
-            <ActionButton href="#" color={COLORS.discord}>
-              {t('community.social.discord.button')}
-            </ActionButton>
-          </CommunityCard>
+          <CommunityGrid>
+            <CommunityCard>
+              <IconWrapper bgColor={COLORS.discord}>💬</IconWrapper>
+              <CardTitle>{t('community.social.discord.title')}</CardTitle>
+              <CardText>{t('community.social.discord.desc')}</CardText>
+              <ActionButton href="#" color={COLORS.discord}>
+                {t('community.social.discord.button')}
+              </ActionButton>
+            </CommunityCard>
 
-          <CommunityCard>
-            <IconWrapper bgColor={COLORS.twitter}>🐦</IconWrapper>
-            <CardTitle>{t('community.social.twitter.title')}</CardTitle>
-            <CardText>{t('community.social.twitter.desc')}</CardText>
-            <ActionButton href="#" color={COLORS.twitter}>
-              {t('community.social.twitter.button')}
-            </ActionButton>
-          </CommunityCard>
+            <CommunityCard>
+              <IconWrapper bgColor={COLORS.twitter}>🐦</IconWrapper>
+              <CardTitle>{t('community.social.twitter.title')}</CardTitle>
+              <CardText>{t('community.social.twitter.desc')}</CardText>
+              <ActionButton href="#" color={COLORS.twitter}>
+                {t('community.social.twitter.button')}
+              </ActionButton>
+            </CommunityCard>
 
-          <CommunityCard>
-            <IconWrapper bgColor={COLORS.linkedin}>💼</IconWrapper>
-            <CardTitle>{t('community.social.linkedin.title')}</CardTitle>
-            <CardText>{t('community.social.linkedin.desc')}</CardText>
-            <ActionButton href="#" color={COLORS.linkedin}>
-              {t('community.social.linkedin.button')}
-            </ActionButton>
-          </CommunityCard>
-        </CommunityGrid>
+            <CommunityCard>
+              <IconWrapper bgColor={COLORS.linkedin}>💼</IconWrapper>
+              <CardTitle>{t('community.social.linkedin.title')}</CardTitle>
+              <CardText>{t('community.social.linkedin.desc')}</CardText>
+              <ActionButton href="#" color={COLORS.linkedin}>
+                {t('community.social.linkedin.button')}
+              </ActionButton>
+            </CommunityCard>
+          </CommunityGrid>
 
-        <ForumSection>
-          <ForumHeader>
-            <CardTitle style={{ marginBottom: 0 }}>{t('community.forum.title')}</CardTitle>
-            <ActionButton href="#" style={{ fontSize: '0.9rem', padding: '8px 16px' }}>
-              {t('community.forum.viewAll')}
-            </ActionButton>
-          </ForumHeader>
-          <TopicList>
-            <TopicItem>
-              <TopicTitle>{t('community.forum.posts.0.title')}</TopicTitle>
-              <TopicMeta>{t('community.forum.posts.0.meta')}</TopicMeta>
-            </TopicItem>
-            <TopicItem>
-              <TopicTitle>{t('community.forum.posts.1.title')}</TopicTitle>
-              <TopicMeta>{t('community.forum.posts.1.meta')}</TopicMeta>
-            </TopicItem>
-            <TopicItem>
-              <TopicTitle>{t('community.forum.posts.2.title')}</TopicTitle>
-              <TopicMeta>{t('community.forum.posts.2.meta')}</TopicMeta>
-            </TopicItem>
-            <TopicItem>
-              <TopicTitle>{t('community.forum.posts.3.title')}</TopicTitle>
-              <TopicMeta>{t('community.forum.posts.3.meta')}</TopicMeta>
-            </TopicItem>
-          </TopicList>
-        </ForumSection>
-      </MainContent>
-      <FooterClean />
-    </PageContainer>
+          <ForumSection>
+            <ForumHeader>
+              <CardTitle style={{ marginBottom: 0 }}>{t('community.forum.title')}</CardTitle>
+              <ActionButton href="#" style={{ fontSize: '0.9rem', padding: '8px 16px' }}>
+                {t('community.forum.viewAll')}
+              </ActionButton>
+            </ForumHeader>
+            <TopicList>
+              <TopicItem>
+                <TopicTitle>{t('community.forum.posts.0.title')}</TopicTitle>
+                <TopicMeta>{t('community.forum.posts.0.meta')}</TopicMeta>
+              </TopicItem>
+              <TopicItem>
+                <TopicTitle>{t('community.forum.posts.1.title')}</TopicTitle>
+                <TopicMeta>{t('community.forum.posts.1.meta')}</TopicMeta>
+              </TopicItem>
+              <TopicItem>
+                <TopicTitle>{t('community.forum.posts.2.title')}</TopicTitle>
+                <TopicMeta>{t('community.forum.posts.2.meta')}</TopicMeta>
+              </TopicItem>
+              <TopicItem>
+                <TopicTitle>{t('community.forum.posts.3.title')}</TopicTitle>
+                <TopicMeta>{t('community.forum.posts.3.meta')}</TopicMeta>
+              </TopicItem>
+            </TopicList>
+          </ForumSection>
+        </MainContent>
+        <FooterClean />
+      </PageContainer>
+    </>
   );
 };
 

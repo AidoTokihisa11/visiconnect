@@ -27,6 +27,7 @@ import {
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import { useTranslation } from '../hooks/useTranslation';
+import SEO from '../components/SEO';
 
 const businessContactAddress = ['contact', 'visiconnect.app'].join('@');
 
@@ -1449,798 +1450,809 @@ export default function DeveloperPageV2() {
   }, []);
 
   return (
-    <Page>
-      <HeaderClean />
-      <Main>
-        {/* ── Hero ── */}
-        <HeroSection>
-          <BgGrid />
-          <HeroContainer>
-            <HeroContent>
-              <Eyebrow>
-                <Rocket size={14} />
-                {t('developer.hero.role')}
-              </Eyebrow>
-              <HeroTitle>
-                {t('developer.hero.title1')}
-                <span>{t('developer.hero.title2')}</span>
-              </HeroTitle>
-              <HeroSubtitle>{t('developer.hero.desc')}</HeroSubtitle>
-              <HeroActions>
-                <PrimaryBtn>
-                  {t('developer.hero.ctaProjects')} <ArrowRight size={17} />
-                </PrimaryBtn>
-                <SecondaryBtn>{t('developer.hero.ctaContact')}</SecondaryBtn>
-              </HeroActions>
-            </HeroContent>
+    <>
+      <SEO
+        title="Développeurs"
+        description="Ressources pour développeurs : SDK, API, webhooks et exemples d’intégration."
+        path="/developer"
+      />
+      <Page>
+        <HeaderClean />
+        <Main>
+          {/* ── Hero ── */}
+          <HeroSection>
+            <BgGrid />
+            <HeroContainer>
+              <HeroContent>
+                <Eyebrow>
+                  <Rocket size={14} />
+                  {t('developer.hero.role')}
+                </Eyebrow>
+                <HeroTitle>
+                  {t('developer.hero.title1')}
+                  <span>{t('developer.hero.title2')}</span>
+                </HeroTitle>
+                <HeroSubtitle>{t('developer.hero.desc')}</HeroSubtitle>
+                <HeroActions>
+                  <PrimaryBtn>
+                    {t('developer.hero.ctaProjects')} <ArrowRight size={17} />
+                  </PrimaryBtn>
+                  <SecondaryBtn>{t('developer.hero.ctaContact')}</SecondaryBtn>
+                </HeroActions>
+              </HeroContent>
 
-            <HeroPanel>
-              <PanelTitle>
-                En quelques chiffres
-                <BadgeCheck size={18} color={C.primary} />
-              </PanelTitle>
-              <MetricGrid>
-                {[
-                  { val: t('developer.stats.0.value'), lbl: t('developer.stats.0.label') },
-                  { val: t('developer.stats.1.value'), lbl: t('developer.stats.1.label') },
-                  { val: t('developer.stats.2.value'), lbl: t('developer.stats.2.label') },
-                  { val: t('developer.stats.3.value'), lbl: t('developer.stats.3.label') },
-                ].map(({ val, lbl }) => (
-                  <MetricCard key={lbl}>
-                    <div className="val">{val}</div>
-                    <div className="lbl">{lbl}</div>
-                  </MetricCard>
-                ))}
-              </MetricGrid>
-            </HeroPanel>
-          </HeroContainer>
-        </HeroSection>
-
-        {/* ── Proof band ── */}
-        <ProofBand>
-          <ProofGrid>
-            {[
-              { icon: <Code2 size={22} />, val: 'Full-Stack', lbl: 'React · Node.js · TypeScript' },
-              { icon: <Zap size={22} />, val: 'Temps Réel', lbl: 'WebRTC · LiveKit · Socket.io' },
-              { icon: <ShieldCheck size={22} />, val: 'Sécurisé', lbl: 'OWASP · JWT · Auth2' },
-              {
-                icon: <Rocket size={22} />,
-                val: 'CI/CD Ready',
-                lbl: 'Vercel · Docker · GitHub Actions',
-              },
-            ].map(({ icon, val, lbl }, i) => (
-              <ProofCard key={val} data-reveal style={{ '--reveal-delay': `${i * 80}ms` }}>
-                <div className="icon">{icon}</div>
-                <div className="val">{val}</div>
-                <div className="lbl">{lbl}</div>
-              </ProofCard>
-            ))}
-          </ProofGrid>
-        </ProofBand>
-
-        {/* ── Services ── */}
-        <Section>
-          <SectionHeader>
-            <SectionEyebrow data-reveal>
-              <Zap size={13} />
-              &nbsp;Services
-            </SectionEyebrow>
-            <SectionTitle data-reveal style={{ '--reveal-delay': '80ms' }}>
-              Ce que je peux faire pour vous
-            </SectionTitle>
-            <SectionSub data-reveal style={{ '--reveal-delay': '140ms' }}>
-              Du design à la mise en production, je vous accompagne avec rigueur et passion à chaque
-              étape de votre projet.
-            </SectionSub>
-          </SectionHeader>
-          <ServicesGrid>
-            {[
-              {
-                icon: <MonitorSmartphone size={28} />,
-                title: 'Développement Frontend',
-                desc: 'Interfaces modernes, réactives et accessibles construites avec React, Next.js et des animations soignées qui convertissent.',
-                feats: [
-                  'React / Next.js / Vite',
-                  'Animations & micro-interactions',
-                  'Responsive & accessibilité WCAG',
-                ],
-              },
-              {
-                icon: <Server size={28} />,
-                title: 'Développement Backend',
-                desc: 'APIs robustes, sécurisées et scalables avec Node.js, Express et des bases de données adaptées à vos besoins.',
-                feats: [
-                  'Node.js / Express / REST & GraphQL',
-                  'PostgreSQL · Convex · Redis',
-                  'Auth JWT / OAuth2 / RBAC',
-                ],
-              },
-              {
-                icon: <Zap size={28} />,
-                title: 'Applications Temps Réel',
-                desc: 'Vidéo-conférence, chat live, tableaux blancs collaboratifs et tout ce qui demande des mises à jour instantanées.',
-                feats: [
-                  'WebRTC / LiveKit / Socket.io',
-                  'Rooms & breakout sessions',
-                  'Enregistrement & streaming HLS',
-                ],
-              },
-              {
-                icon: <Layout size={28} />,
-                title: 'Design UI/UX',
-                desc: 'Maquettes Figma haute-fidélité, design systems cohérents et prototypes interactifs pour valider vos idées rapidement.',
-                feats: [
-                  'Maquettes Figma haute-fidélité',
-                  'Design system & tokens CSS',
-                  'Tests utilisateurs & itération',
-                ],
-              },
-              {
-                icon: <ShieldCheck size={28} />,
-                title: 'Performance & Sécurité',
-                desc: 'Audit complet, optimisation des Core Web Vitals, sécurisation OWASP et revue de code pour des applications solides.',
-                feats: [
-                  'Lighthouse & Core Web Vitals',
-                  'Protection OWASP Top 10',
-                  'Code review & refactoring',
-                ],
-              },
-              {
-                icon: <Rocket size={28} />,
-                title: 'Déploiement & DevOps',
-                desc: 'Mise en production automatisée, CI/CD, monitoring et scalabilité pour que votre application reste toujours en ligne.',
-                feats: [
-                  'CI/CD GitHub Actions',
-                  'Vercel / Netlify / Docker',
-                  'Monitoring & alertes Sentry',
-                ],
-              },
-            ].map(({ icon, title, desc, feats }, i) => (
-              <ServiceCard key={title} data-reveal style={{ '--reveal-delay': `${i * 70}ms` }}>
-                <ServiceIconWrap>{icon}</ServiceIconWrap>
-                <ServiceTitle>{title}</ServiceTitle>
-                <ServiceDesc>{desc}</ServiceDesc>
-                <ServiceFeats>
-                  {feats.map((f) => (
-                    <li key={f}>{f}</li>
+              <HeroPanel>
+                <PanelTitle>
+                  En quelques chiffres
+                  <BadgeCheck size={18} color={C.primary} />
+                </PanelTitle>
+                <MetricGrid>
+                  {[
+                    { val: t('developer.stats.0.value'), lbl: t('developer.stats.0.label') },
+                    { val: t('developer.stats.1.value'), lbl: t('developer.stats.1.label') },
+                    { val: t('developer.stats.2.value'), lbl: t('developer.stats.2.label') },
+                    { val: t('developer.stats.3.value'), lbl: t('developer.stats.3.label') },
+                  ].map(({ val, lbl }) => (
+                    <MetricCard key={lbl}>
+                      <div className="val">{val}</div>
+                      <div className="lbl">{lbl}</div>
+                    </MetricCard>
                   ))}
-                </ServiceFeats>
-              </ServiceCard>
-            ))}
-          </ServicesGrid>
-        </Section>
+                </MetricGrid>
+              </HeroPanel>
+            </HeroContainer>
+          </HeroSection>
 
-        {/* ── Timeline ── */}
-        <SectionAlt>
-          <SectionInner>
+          {/* ── Proof band ── */}
+          <ProofBand>
+            <ProofGrid>
+              {[
+                {
+                  icon: <Code2 size={22} />,
+                  val: 'Full-Stack',
+                  lbl: 'React · Node.js · TypeScript',
+                },
+                { icon: <Zap size={22} />, val: 'Temps Réel', lbl: 'WebRTC · LiveKit · Socket.io' },
+                { icon: <ShieldCheck size={22} />, val: 'Sécurisé', lbl: 'OWASP · JWT · Auth2' },
+                {
+                  icon: <Rocket size={22} />,
+                  val: 'CI/CD Ready',
+                  lbl: 'Vercel · Docker · GitHub Actions',
+                },
+              ].map(({ icon, val, lbl }, i) => (
+                <ProofCard key={val} data-reveal style={{ '--reveal-delay': `${i * 80}ms` }}>
+                  <div className="icon">{icon}</div>
+                  <div className="val">{val}</div>
+                  <div className="lbl">{lbl}</div>
+                </ProofCard>
+              ))}
+            </ProofGrid>
+          </ProofBand>
+
+          {/* ── Services ── */}
+          <Section>
+            <SectionHeader>
+              <SectionEyebrow data-reveal>
+                <Zap size={13} />
+                &nbsp;Services
+              </SectionEyebrow>
+              <SectionTitle data-reveal style={{ '--reveal-delay': '80ms' }}>
+                Ce que je peux faire pour vous
+              </SectionTitle>
+              <SectionSub data-reveal style={{ '--reveal-delay': '140ms' }}>
+                Du design à la mise en production, je vous accompagne avec rigueur et passion à
+                chaque étape de votre projet.
+              </SectionSub>
+            </SectionHeader>
+            <ServicesGrid>
+              {[
+                {
+                  icon: <MonitorSmartphone size={28} />,
+                  title: 'Développement Frontend',
+                  desc: 'Interfaces modernes, réactives et accessibles construites avec React, Next.js et des animations soignées qui convertissent.',
+                  feats: [
+                    'React / Next.js / Vite',
+                    'Animations & micro-interactions',
+                    'Responsive & accessibilité WCAG',
+                  ],
+                },
+                {
+                  icon: <Server size={28} />,
+                  title: 'Développement Backend',
+                  desc: 'APIs robustes, sécurisées et scalables avec Node.js, Express et des bases de données adaptées à vos besoins.',
+                  feats: [
+                    'Node.js / Express / REST & GraphQL',
+                    'PostgreSQL · Convex · Redis',
+                    'Auth JWT / OAuth2 / RBAC',
+                  ],
+                },
+                {
+                  icon: <Zap size={28} />,
+                  title: 'Applications Temps Réel',
+                  desc: 'Vidéo-conférence, chat live, tableaux blancs collaboratifs et tout ce qui demande des mises à jour instantanées.',
+                  feats: [
+                    'WebRTC / LiveKit / Socket.io',
+                    'Rooms & breakout sessions',
+                    'Enregistrement & streaming HLS',
+                  ],
+                },
+                {
+                  icon: <Layout size={28} />,
+                  title: 'Design UI/UX',
+                  desc: 'Maquettes Figma haute-fidélité, design systems cohérents et prototypes interactifs pour valider vos idées rapidement.',
+                  feats: [
+                    'Maquettes Figma haute-fidélité',
+                    'Design system & tokens CSS',
+                    'Tests utilisateurs & itération',
+                  ],
+                },
+                {
+                  icon: <ShieldCheck size={28} />,
+                  title: 'Performance & Sécurité',
+                  desc: 'Audit complet, optimisation des Core Web Vitals, sécurisation OWASP et revue de code pour des applications solides.',
+                  feats: [
+                    'Lighthouse & Core Web Vitals',
+                    'Protection OWASP Top 10',
+                    'Code review & refactoring',
+                  ],
+                },
+                {
+                  icon: <Rocket size={28} />,
+                  title: 'Déploiement & DevOps',
+                  desc: 'Mise en production automatisée, CI/CD, monitoring et scalabilité pour que votre application reste toujours en ligne.',
+                  feats: [
+                    'CI/CD GitHub Actions',
+                    'Vercel / Netlify / Docker',
+                    'Monitoring & alertes Sentry',
+                  ],
+                },
+              ].map(({ icon, title, desc, feats }, i) => (
+                <ServiceCard key={title} data-reveal style={{ '--reveal-delay': `${i * 70}ms` }}>
+                  <ServiceIconWrap>{icon}</ServiceIconWrap>
+                  <ServiceTitle>{title}</ServiceTitle>
+                  <ServiceDesc>{desc}</ServiceDesc>
+                  <ServiceFeats>
+                    {feats.map((f) => (
+                      <li key={f}>{f}</li>
+                    ))}
+                  </ServiceFeats>
+                </ServiceCard>
+              ))}
+            </ServicesGrid>
+          </Section>
+
+          {/* ── Timeline ── */}
+          <SectionAlt>
+            <SectionInner>
+              <SectionHeader>
+                <SectionEyebrow data-reveal>
+                  <Compass size={13} />
+                  &nbsp;Parcours
+                </SectionEyebrow>
+                <SectionTitle data-reveal style={{ '--reveal-delay': '80ms' }}>
+                  {t('developer.journey.title')}
+                </SectionTitle>
+                <SectionSub data-reveal style={{ '--reveal-delay': '140ms' }}>
+                  {t('developer.journey.subtitle')}
+                </SectionSub>
+              </SectionHeader>
+              <TimelineWrapper>
+                {[0, 1, 2, 3, 4].map((i) => (
+                  <TItem key={i} data-reveal style={{ '--reveal-delay': `${i * 100}ms` }}>
+                    <div className="dot" />
+                    <TCard>
+                      <span className="year">{t(`developer.journey.stages.${i}.era`)}</span>
+                      <h4>{t(`developer.journey.stages.${i}.title`)}</h4>
+                      <p>{t(`developer.journey.stages.${i}.desc`)}</p>
+                    </TCard>
+                  </TItem>
+                ))}
+              </TimelineWrapper>
+            </SectionInner>
+          </SectionAlt>
+
+          {/* ── Skills ── */}
+          <Section style={{ paddingBottom: '3rem' }}>
+            <SectionHeader>
+              <SectionEyebrow data-reveal>
+                <Code size={13} />
+                &nbsp;Compétences
+              </SectionEyebrow>
+              <SectionTitle data-reveal style={{ '--reveal-delay': '80ms' }}>
+                {t('developer.skills.title')}
+              </SectionTitle>
+              <SectionSub data-reveal style={{ '--reveal-delay': '140ms' }}>
+                {t('developer.skills.subtitle')}
+              </SectionSub>
+            </SectionHeader>
+            <SkillsGrid data-reveal style={{ '--reveal-delay': '100ms' }}>
+              <SkillCard>
+                <SkillHeader>
+                  <SkillIconBox>
+                    <MonitorSmartphone size={26} />
+                  </SkillIconBox>
+                  <strong style={{ fontSize: '1.1rem', fontWeight: 800, color: C.navy }}>
+                    {t('developer.skills.categories.0')}
+                  </strong>
+                </SkillHeader>
+                <SkillList>
+                  {[
+                    ['React / Next.js', '95%'],
+                    ['Javascript / ES6+', '90%'],
+                    ['Tailwind / Styled-Comp', '95%'],
+                    ['HTML5 / CSS3', '98%'],
+                    ['Framer Motion / GSAP', '80%'],
+                    ['Zustand / Context API', '88%'],
+                  ].map(([n, w]) => (
+                    <SkillItem key={n}>
+                      <span>{n}</span>
+                      <BarBg>
+                        <BarFill $w={w} />
+                      </BarBg>
+                    </SkillItem>
+                  ))}
+                </SkillList>
+              </SkillCard>
+
+              <SkillCard>
+                <SkillHeader>
+                  <SkillIconBox>
+                    <Database size={26} />
+                  </SkillIconBox>
+                  <strong style={{ fontSize: '1.1rem', fontWeight: 800, color: C.navy }}>
+                    {t('developer.skills.categories.1')}
+                  </strong>
+                </SkillHeader>
+                <SkillList>
+                  {[
+                    ['Node.js / Express', '85%'],
+                    ['PostgreSQL / SQL', '80%'],
+                    ['Convex (BaaS)', '90%'],
+                    ['APIs REST / Webhooks', '92%'],
+                    ['WebRTC / LiveKit', '80%'],
+                    ['JWT / OAuth / Auth', '85%'],
+                  ].map(([n, w]) => (
+                    <SkillItem key={n}>
+                      <span>{n}</span>
+                      <BarBg>
+                        <BarFill $w={w} />
+                      </BarBg>
+                    </SkillItem>
+                  ))}
+                </SkillList>
+              </SkillCard>
+
+              <SkillCard>
+                <SkillHeader>
+                  <SkillIconBox>
+                    <Wrench size={26} />
+                  </SkillIconBox>
+                  <strong style={{ fontSize: '1.1rem', fontWeight: 800, color: C.navy }}>
+                    {t('developer.skills.categories.2')}
+                  </strong>
+                </SkillHeader>
+                <SkillList>
+                  {[
+                    ['Git / GitHub', '90%'],
+                    ['Vite / Webpack', '85%'],
+                    ['Figma / UX-UI Design', '85%'],
+                    ['Vercel / Netlify', '90%'],
+                    ['Postman / API Testing', '90%'],
+                    ['VS Code / CLI Bash', '95%'],
+                  ].map(([n, w]) => (
+                    <SkillItem key={n}>
+                      <span>{n}</span>
+                      <BarBg>
+                        <BarFill $w={w} />
+                      </BarBg>
+                    </SkillItem>
+                  ))}
+                </SkillList>
+              </SkillCard>
+            </SkillsGrid>
+          </Section>
+
+          {/* ── TechStack ── */}
+          <TechBand>
+            <TechInner>
+              <SectionHeader style={{ marginBottom: '3rem' }}>
+                <SectionEyebrow data-reveal>
+                  <Code size={13} />
+                  &nbsp;Stack technique
+                </SectionEyebrow>
+                <SectionTitle data-reveal style={{ '--reveal-delay': '80ms' }}>
+                  Technologies maîtrisées
+                </SectionTitle>
+                <SectionSub data-reveal style={{ '--reveal-delay': '140ms' }}>
+                  Un panorama complet des outils et langages que j'utilise au quotidien pour
+                  construire des produits robustes.
+                </SectionSub>
+              </SectionHeader>
+              <TechGroups>
+                <TechGroup data-reveal>
+                  <TechGroupTitle>
+                    <MonitorSmartphone size={14} />
+                    Frontend
+                  </TechGroupTitle>
+                  <TechTags>
+                    {[
+                      'React',
+                      'Next.js',
+                      'TypeScript',
+                      'JavaScript ES2024',
+                      'HTML5',
+                      'CSS3',
+                      'Tailwind CSS',
+                      'Styled-Components',
+                      'Framer Motion',
+                      'GSAP',
+                      'Zustand',
+                      'React Query',
+                      'Vite',
+                      'Webpack',
+                      'Storybook',
+                    ].map((tag) => (
+                      <TechTag key={tag}>{tag}</TechTag>
+                    ))}
+                  </TechTags>
+                </TechGroup>
+                <TechGroup data-reveal style={{ '--reveal-delay': '80ms' }}>
+                  <TechGroupTitle>
+                    <Database size={14} />
+                    Backend & BDD
+                  </TechGroupTitle>
+                  <TechTags>
+                    {[
+                      'Node.js',
+                      'Express',
+                      'NestJS',
+                      'PostgreSQL',
+                      'MySQL',
+                      'Redis',
+                      'Convex',
+                      'Prisma ORM',
+                      'Drizzle',
+                      'REST API',
+                      'GraphQL',
+                      'WebSockets',
+                      'JWT',
+                      'OAuth2',
+                      'Bcrypt',
+                    ].map((tag) => (
+                      <TechTag key={tag}>{tag}</TechTag>
+                    ))}
+                  </TechTags>
+                </TechGroup>
+                <TechGroup data-reveal style={{ '--reveal-delay': '160ms' }}>
+                  <TechGroupTitle>
+                    <Zap size={14} />
+                    Temps Réel & Media
+                  </TechGroupTitle>
+                  <TechTags>
+                    {[
+                      'LiveKit',
+                      'WebRTC',
+                      'Socket.io',
+                      'HLS Streaming',
+                      'Canvas API',
+                      'Fabric.js',
+                      'OpenAI API',
+                      'Stripe',
+                      'Webhooks',
+                      'SSE',
+                      'CRDT',
+                      'Y.js',
+                      'Liveblocks',
+                    ].map((tag) => (
+                      <TechTag key={tag}>{tag}</TechTag>
+                    ))}
+                  </TechTags>
+                </TechGroup>
+                <TechGroup data-reveal style={{ '--reveal-delay': '240ms' }}>
+                  <TechGroupTitle>
+                    <Wrench size={14} />
+                    DevOps & Outils
+                  </TechGroupTitle>
+                  <TechTags>
+                    {[
+                      'Git',
+                      'GitHub',
+                      'GitHub Actions',
+                      'Docker',
+                      'Vercel',
+                      'Netlify',
+                      'AWS S3',
+                      'Sentry',
+                      'Postman',
+                      'Figma',
+                      'VS Code',
+                      'Bash',
+                      'Linux',
+                      'Lighthouse',
+                      'OWASP ZAP',
+                    ].map((tag) => (
+                      <TechTag key={tag}>{tag}</TechTag>
+                    ))}
+                  </TechTags>
+                </TechGroup>
+              </TechGroups>
+            </TechInner>
+          </TechBand>
+
+          {/* ── Projects ── */}
+          <SectionAlt>
+            <SectionInner>
+              <SectionHeader>
+                <SectionEyebrow data-reveal>
+                  <Terminal size={13} />
+                  &nbsp;Projets
+                </SectionEyebrow>
+                <SectionTitle data-reveal style={{ '--reveal-delay': '80ms' }}>
+                  {t('developer.projects.title')}
+                </SectionTitle>
+                <SectionSub data-reveal style={{ '--reveal-delay': '140ms' }}>
+                  {t('developer.projects.subtitle')}
+                </SectionSub>
+              </SectionHeader>
+              <ProjectsList>
+                <FeatureProject data-reveal>
+                  <ProjectVisual>
+                    <BrowserFrame>
+                      <div className="browser-header">
+                        <div className="dot red" />
+                        <div className="dot yellow" />
+                        <div className="dot green" />
+                        <div className="url">app.visioconnect.com</div>
+                      </div>
+                      <div className="img-wrapper">
+                        <img
+                          src="https://images.unsplash.com/photo-1587620962725-abab7fe55159?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                          alt="VisioConnect"
+                        />
+                        <div className="overlay">
+                          <span>
+                            <Play size={18} /> {t('developer.livePreview')}
+                          </span>
+                        </div>
+                      </div>
+                    </BrowserFrame>
+                  </ProjectVisual>
+                  <ProjectInfo>
+                    <div className="proj-badge">{t('developer.projects.items.0.category')}</div>
+                    <h3>{t('developer.projects.items.0.title')}</h3>
+                    <p>{t('developer.projects.items.0.desc')}</p>
+                    <div className="stack">
+                      <span>
+                        <Layout size={14} />
+                        React.js
+                      </span>
+                      <span>
+                        <Server size={14} />
+                        Node.js
+                      </span>
+                      <span>
+                        <Zap size={14} />
+                        LiveKit
+                      </span>
+                      <span>
+                        <Database size={14} />
+                        Convex
+                      </span>
+                      <span>
+                        <MonitorSmartphone size={14} />
+                        Tailwind CSS
+                      </span>
+                    </div>
+                    <div className="actions">
+                      <a href="#" className="btn-primary">
+                        {t('developer.projects.items.0.cta')} <ArrowRight size={16} />
+                      </a>
+                      <a href="#" className="btn-secondary">
+                        <Github size={16} />
+                        Code source
+                      </a>
+                    </div>
+                  </ProjectInfo>
+                </FeatureProject>
+
+                <FeatureProject $reverse data-reveal style={{ '--reveal-delay': '60ms' }}>
+                  <ProjectVisual $reverse>
+                    <BrowserFrame>
+                      <div className="browser-header">
+                        <div className="dot red" />
+                        <div className="dot yellow" />
+                        <div className="dot green" />
+                        <div className="url">dashboard.financeflow.io</div>
+                      </div>
+                      <div className="img-wrapper">
+                        <img
+                          src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                          alt="Finance Dashboard"
+                        />
+                        <div className="overlay">
+                          <span>
+                            <Play size={18} /> {t('developer.livePreview')}
+                          </span>
+                        </div>
+                      </div>
+                    </BrowserFrame>
+                  </ProjectVisual>
+                  <ProjectInfo>
+                    <div className="proj-badge">{t('developer.projects.items.1.category')}</div>
+                    <h3>{t('developer.projects.items.1.title')}</h3>
+                    <p>{t('developer.projects.items.1.desc')}</p>
+                    <div className="stack">
+                      <span>
+                        <Layout size={14} />
+                        Next.js
+                      </span>
+                      <span>
+                        <Code2 size={14} />
+                        TypeScript
+                      </span>
+                      <span>
+                        <Database size={14} />
+                        PostgreSQL
+                      </span>
+                      <span>
+                        <Database size={14} />
+                        Prisma ORM
+                      </span>
+                      <span>
+                        <Layout size={14} />
+                        Recharts
+                      </span>
+                    </div>
+                    <div className="actions">
+                      <a href="#" className="btn-primary">
+                        {t('developer.projects.items.1.cta')} <ArrowRight size={16} />
+                      </a>
+                      <a href="#" className="btn-secondary">
+                        <Github size={16} />
+                        Architecture
+                      </a>
+                    </div>
+                  </ProjectInfo>
+                </FeatureProject>
+
+                <FeatureProject data-reveal style={{ '--reveal-delay': '60ms' }}>
+                  <ProjectVisual>
+                    <BrowserFrame>
+                      <div className="browser-header">
+                        <div className="dot red" />
+                        <div className="dot yellow" />
+                        <div className="dot green" />
+                        <div className="url">studio.nexusai.dev</div>
+                      </div>
+                      <div className="img-wrapper">
+                        <img
+                          src="https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                          alt="AI Builder"
+                        />
+                        <div className="overlay">
+                          <span>
+                            <Play size={18} /> {t('developer.livePreview')}
+                          </span>
+                        </div>
+                      </div>
+                    </BrowserFrame>
+                  </ProjectVisual>
+                  <ProjectInfo>
+                    <div className="proj-badge">{t('developer.projects.items.2.category')}</div>
+                    <h3>{t('developer.projects.items.2.title')}</h3>
+                    <p>{t('developer.projects.items.2.desc')}</p>
+                    <div className="stack">
+                      <span>
+                        <Layout size={14} />
+                        React.js
+                      </span>
+                      <span>
+                        <Zap size={14} />
+                        OpenAI API
+                      </span>
+                      <span>
+                        <Server size={14} />
+                        Express
+                      </span>
+                      <span>
+                        <Wrench size={14} />
+                        Vite
+                      </span>
+                      <span>
+                        <Code2 size={14} />
+                        AI Engineering
+                      </span>
+                    </div>
+                    <div className="actions">
+                      <a href="#" className="btn-primary">
+                        {t('developer.projects.items.2.cta')} <ArrowRight size={16} />
+                      </a>
+                      <a href="#" className="btn-secondary">
+                        <Github size={16} />
+                        Repository
+                      </a>
+                    </div>
+                  </ProjectInfo>
+                </FeatureProject>
+              </ProjectsList>
+            </SectionInner>
+          </SectionAlt>
+
+          {/* ── Process ── */}
+          <Section>
             <SectionHeader>
               <SectionEyebrow data-reveal>
                 <Compass size={13} />
-                &nbsp;Parcours
+                &nbsp;Méthode
               </SectionEyebrow>
               <SectionTitle data-reveal style={{ '--reveal-delay': '80ms' }}>
-                {t('developer.journey.title')}
+                Comment je travaille
               </SectionTitle>
               <SectionSub data-reveal style={{ '--reveal-delay': '140ms' }}>
-                {t('developer.journey.subtitle')}
+                Un processus éprouvé en 5 étapes pour transformer votre idée en produit fini, livré
+                dans les délais et sans surprise.
               </SectionSub>
             </SectionHeader>
-            <TimelineWrapper>
-              {[0, 1, 2, 3, 4].map((i) => (
-                <TItem key={i} data-reveal style={{ '--reveal-delay': `${i * 100}ms` }}>
-                  <div className="dot" />
-                  <TCard>
-                    <span className="year">{t(`developer.journey.stages.${i}.era`)}</span>
-                    <h4>{t(`developer.journey.stages.${i}.title`)}</h4>
-                    <p>{t(`developer.journey.stages.${i}.desc`)}</p>
-                  </TCard>
-                </TItem>
-              ))}
-            </TimelineWrapper>
-          </SectionInner>
-        </SectionAlt>
-
-        {/* ── Skills ── */}
-        <Section style={{ paddingBottom: '3rem' }}>
-          <SectionHeader>
-            <SectionEyebrow data-reveal>
-              <Code size={13} />
-              &nbsp;Compétences
-            </SectionEyebrow>
-            <SectionTitle data-reveal style={{ '--reveal-delay': '80ms' }}>
-              {t('developer.skills.title')}
-            </SectionTitle>
-            <SectionSub data-reveal style={{ '--reveal-delay': '140ms' }}>
-              {t('developer.skills.subtitle')}
-            </SectionSub>
-          </SectionHeader>
-          <SkillsGrid data-reveal style={{ '--reveal-delay': '100ms' }}>
-            <SkillCard>
-              <SkillHeader>
-                <SkillIconBox>
-                  <MonitorSmartphone size={26} />
-                </SkillIconBox>
-                <strong style={{ fontSize: '1.1rem', fontWeight: 800, color: C.navy }}>
-                  {t('developer.skills.categories.0')}
-                </strong>
-              </SkillHeader>
-              <SkillList>
+            <ProcessOuter>
+              <ProcessLine />
+              <ProcessGrid>
                 {[
-                  ['React / Next.js', '95%'],
-                  ['Javascript / ES6+', '90%'],
-                  ['Tailwind / Styled-Comp', '95%'],
-                  ['HTML5 / CSS3', '98%'],
-                  ['Framer Motion / GSAP', '80%'],
-                  ['Zustand / Context API', '88%'],
-                ].map(([n, w]) => (
-                  <SkillItem key={n}>
-                    <span>{n}</span>
-                    <BarBg>
-                      <BarFill $w={w} />
-                    </BarBg>
-                  </SkillItem>
+                  {
+                    num: '01',
+                    label: 'Découverte',
+                    desc: 'Analyse des besoins, objectifs, contraintes techniques et rédaction du cahier des charges.',
+                    hi: true,
+                  },
+                  {
+                    num: '02',
+                    label: 'Design',
+                    desc: 'Maquettes Figma, wireframes, design system et validation visuelle avant tout code.',
+                    hi: false,
+                  },
+                  {
+                    num: '03',
+                    label: 'Développement',
+                    desc: 'Code propre, composants réutilisables, commits Git réguliers et revues de code.',
+                    hi: true,
+                  },
+                  {
+                    num: '04',
+                    label: 'Tests & QA',
+                    desc: 'Tests unitaires, cross-browser, optimisation Lighthouse, sécurité et corrections.',
+                    hi: false,
+                  },
+                  {
+                    num: '05',
+                    label: 'Livraison',
+                    desc: 'Déploiement CI/CD, documentation technique, formation et support post-lancement.',
+                    hi: true,
+                  },
+                ].map(({ num, label, desc, hi }, i) => (
+                  <ProcessItem key={num} data-reveal style={{ '--reveal-delay': `${i * 80}ms` }}>
+                    <StepNum $hi={hi}>{num}</StepNum>
+                    <StepLabel>{label}</StepLabel>
+                    <StepDesc>{desc}</StepDesc>
+                  </ProcessItem>
                 ))}
-              </SkillList>
-            </SkillCard>
+              </ProcessGrid>
+            </ProcessOuter>
+          </Section>
 
-            <SkillCard>
-              <SkillHeader>
-                <SkillIconBox>
-                  <Database size={26} />
-                </SkillIconBox>
-                <strong style={{ fontSize: '1.1rem', fontWeight: 800, color: C.navy }}>
-                  {t('developer.skills.categories.1')}
-                </strong>
-              </SkillHeader>
-              <SkillList>
-                {[
-                  ['Node.js / Express', '85%'],
-                  ['PostgreSQL / SQL', '80%'],
-                  ['Convex (BaaS)', '90%'],
-                  ['APIs REST / Webhooks', '92%'],
-                  ['WebRTC / LiveKit', '80%'],
-                  ['JWT / OAuth / Auth', '85%'],
-                ].map(([n, w]) => (
-                  <SkillItem key={n}>
-                    <span>{n}</span>
-                    <BarBg>
-                      <BarFill $w={w} />
-                    </BarBg>
-                  </SkillItem>
-                ))}
-              </SkillList>
-            </SkillCard>
-
-            <SkillCard>
-              <SkillHeader>
-                <SkillIconBox>
-                  <Wrench size={26} />
-                </SkillIconBox>
-                <strong style={{ fontSize: '1.1rem', fontWeight: 800, color: C.navy }}>
-                  {t('developer.skills.categories.2')}
-                </strong>
-              </SkillHeader>
-              <SkillList>
-                {[
-                  ['Git / GitHub', '90%'],
-                  ['Vite / Webpack', '85%'],
-                  ['Figma / UX-UI Design', '85%'],
-                  ['Vercel / Netlify', '90%'],
-                  ['Postman / API Testing', '90%'],
-                  ['VS Code / CLI Bash', '95%'],
-                ].map(([n, w]) => (
-                  <SkillItem key={n}>
-                    <span>{n}</span>
-                    <BarBg>
-                      <BarFill $w={w} />
-                    </BarBg>
-                  </SkillItem>
-                ))}
-              </SkillList>
-            </SkillCard>
-          </SkillsGrid>
-        </Section>
-
-        {/* ── TechStack ── */}
-        <TechBand>
-          <TechInner>
-            <SectionHeader style={{ marginBottom: '3rem' }}>
-              <SectionEyebrow data-reveal>
-                <Code size={13} />
-                &nbsp;Stack technique
-              </SectionEyebrow>
-              <SectionTitle data-reveal style={{ '--reveal-delay': '80ms' }}>
-                Technologies maîtrisées
-              </SectionTitle>
-              <SectionSub data-reveal style={{ '--reveal-delay': '140ms' }}>
-                Un panorama complet des outils et langages que j'utilise au quotidien pour
-                construire des produits robustes.
-              </SectionSub>
-            </SectionHeader>
-            <TechGroups>
-              <TechGroup data-reveal>
-                <TechGroupTitle>
-                  <MonitorSmartphone size={14} />
-                  Frontend
-                </TechGroupTitle>
-                <TechTags>
+          {/* ── Philosophy ── */}
+          <Section>
+            <PhiloCard data-reveal>
+              <PhiloContent>
+                <h3>{t('developer.philosophy.title')}</h3>
+                <p>{t('developer.philosophy.desc')}</p>
+                <PhiloPrinciples>
                   {[
-                    'React',
-                    'Next.js',
-                    'TypeScript',
-                    'JavaScript ES2024',
-                    'HTML5',
-                    'CSS3',
-                    'Tailwind CSS',
-                    'Styled-Components',
-                    'Framer Motion',
-                    'GSAP',
-                    'Zustand',
-                    'React Query',
-                    'Vite',
-                    'Webpack',
-                    'Storybook',
-                  ].map((tag) => (
-                    <TechTag key={tag}>{tag}</TechTag>
-                  ))}
-                </TechTags>
-              </TechGroup>
-              <TechGroup data-reveal style={{ '--reveal-delay': '80ms' }}>
-                <TechGroupTitle>
-                  <Database size={14} />
-                  Backend & BDD
-                </TechGroupTitle>
-                <TechTags>
-                  {[
-                    'Node.js',
-                    'Express',
-                    'NestJS',
-                    'PostgreSQL',
-                    'MySQL',
-                    'Redis',
-                    'Convex',
-                    'Prisma ORM',
-                    'Drizzle',
-                    'REST API',
-                    'GraphQL',
-                    'WebSockets',
-                    'JWT',
-                    'OAuth2',
-                    'Bcrypt',
-                  ].map((tag) => (
-                    <TechTag key={tag}>{tag}</TechTag>
-                  ))}
-                </TechTags>
-              </TechGroup>
-              <TechGroup data-reveal style={{ '--reveal-delay': '160ms' }}>
-                <TechGroupTitle>
-                  <Zap size={14} />
-                  Temps Réel & Media
-                </TechGroupTitle>
-                <TechTags>
-                  {[
-                    'LiveKit',
-                    'WebRTC',
-                    'Socket.io',
-                    'HLS Streaming',
-                    'Canvas API',
-                    'Fabric.js',
-                    'OpenAI API',
-                    'Stripe',
-                    'Webhooks',
-                    'SSE',
-                    'CRDT',
-                    'Y.js',
-                    'Liveblocks',
-                  ].map((tag) => (
-                    <TechTag key={tag}>{tag}</TechTag>
-                  ))}
-                </TechTags>
-              </TechGroup>
-              <TechGroup data-reveal style={{ '--reveal-delay': '240ms' }}>
-                <TechGroupTitle>
-                  <Wrench size={14} />
-                  DevOps & Outils
-                </TechGroupTitle>
-                <TechTags>
-                  {[
-                    'Git',
-                    'GitHub',
-                    'GitHub Actions',
-                    'Docker',
-                    'Vercel',
-                    'Netlify',
-                    'AWS S3',
-                    'Sentry',
-                    'Postman',
-                    'Figma',
-                    'VS Code',
-                    'Bash',
-                    'Linux',
-                    'Lighthouse',
-                    'OWASP ZAP',
-                  ].map((tag) => (
-                    <TechTag key={tag}>{tag}</TechTag>
-                  ))}
-                </TechTags>
-              </TechGroup>
-            </TechGroups>
-          </TechInner>
-        </TechBand>
-
-        {/* ── Projects ── */}
-        <SectionAlt>
-          <SectionInner>
-            <SectionHeader>
-              <SectionEyebrow data-reveal>
-                <Terminal size={13} />
-                &nbsp;Projets
-              </SectionEyebrow>
-              <SectionTitle data-reveal style={{ '--reveal-delay': '80ms' }}>
-                {t('developer.projects.title')}
-              </SectionTitle>
-              <SectionSub data-reveal style={{ '--reveal-delay': '140ms' }}>
-                {t('developer.projects.subtitle')}
-              </SectionSub>
-            </SectionHeader>
-            <ProjectsList>
-              <FeatureProject data-reveal>
-                <ProjectVisual>
-                  <BrowserFrame>
-                    <div className="browser-header">
-                      <div className="dot red" />
-                      <div className="dot yellow" />
-                      <div className="dot green" />
-                      <div className="url">app.visioconnect.com</div>
-                    </div>
-                    <div className="img-wrapper">
-                      <img
-                        src="https://images.unsplash.com/photo-1587620962725-abab7fe55159?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
-                        alt="VisioConnect"
-                      />
-                      <div className="overlay">
-                        <span>
-                          <Play size={18} /> {t('developer.livePreview')}
-                        </span>
+                    {
+                      icon: <Star size={20} />,
+                      title: t('developer.philosophy.principles.0.title'),
+                      desc: t('developer.philosophy.principles.0.desc'),
+                    },
+                    {
+                      icon: <Zap size={20} />,
+                      title: t('developer.philosophy.principles.1.title'),
+                      desc: t('developer.philosophy.principles.1.desc'),
+                    },
+                    {
+                      icon: <Heart size={20} />,
+                      title: t('developer.philosophy.principles.2.title'),
+                      desc: t('developer.philosophy.principles.2.desc'),
+                    },
+                  ].map(({ icon, title, desc }) => (
+                    <Principle key={title}>
+                      <div className="icon-box">{icon}</div>
+                      <div className="txt">
+                        <strong>{title}</strong>
+                        <span>{desc}</span>
                       </div>
-                    </div>
-                  </BrowserFrame>
-                </ProjectVisual>
-                <ProjectInfo>
-                  <div className="proj-badge">{t('developer.projects.items.0.category')}</div>
-                  <h3>{t('developer.projects.items.0.title')}</h3>
-                  <p>{t('developer.projects.items.0.desc')}</p>
-                  <div className="stack">
-                    <span>
-                      <Layout size={14} />
-                      React.js
-                    </span>
-                    <span>
-                      <Server size={14} />
-                      Node.js
-                    </span>
-                    <span>
-                      <Zap size={14} />
-                      LiveKit
-                    </span>
-                    <span>
-                      <Database size={14} />
-                      Convex
-                    </span>
-                    <span>
-                      <MonitorSmartphone size={14} />
-                      Tailwind CSS
-                    </span>
-                  </div>
-                  <div className="actions">
-                    <a href="#" className="btn-primary">
-                      {t('developer.projects.items.0.cta')} <ArrowRight size={16} />
-                    </a>
-                    <a href="#" className="btn-secondary">
-                      <Github size={16} />
-                      Code source
-                    </a>
-                  </div>
-                </ProjectInfo>
-              </FeatureProject>
+                    </Principle>
+                  ))}
+                </PhiloPrinciples>
+              </PhiloContent>
+              <PhiloVisual>
+                <img
+                  src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                  alt="Code setup"
+                />
+                <div className="badge">
+                  <strong>100%</strong>
+                  <span>Apprentissage Continu</span>
+                </div>
+              </PhiloVisual>
+            </PhiloCard>
+          </Section>
 
-              <FeatureProject $reverse data-reveal style={{ '--reveal-delay': '60ms' }}>
-                <ProjectVisual $reverse>
-                  <BrowserFrame>
-                    <div className="browser-header">
-                      <div className="dot red" />
-                      <div className="dot yellow" />
-                      <div className="dot green" />
-                      <div className="url">dashboard.financeflow.io</div>
-                    </div>
-                    <div className="img-wrapper">
-                      <img
-                        src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
-                        alt="Finance Dashboard"
-                      />
-                      <div className="overlay">
-                        <span>
-                          <Play size={18} /> {t('developer.livePreview')}
-                        </span>
-                      </div>
-                    </div>
-                  </BrowserFrame>
-                </ProjectVisual>
-                <ProjectInfo>
-                  <div className="proj-badge">{t('developer.projects.items.1.category')}</div>
-                  <h3>{t('developer.projects.items.1.title')}</h3>
-                  <p>{t('developer.projects.items.1.desc')}</p>
-                  <div className="stack">
-                    <span>
-                      <Layout size={14} />
-                      Next.js
-                    </span>
-                    <span>
-                      <Code2 size={14} />
-                      TypeScript
-                    </span>
-                    <span>
-                      <Database size={14} />
-                      PostgreSQL
-                    </span>
-                    <span>
-                      <Database size={14} />
-                      Prisma ORM
-                    </span>
-                    <span>
-                      <Layout size={14} />
-                      Recharts
-                    </span>
-                  </div>
-                  <div className="actions">
-                    <a href="#" className="btn-primary">
-                      {t('developer.projects.items.1.cta')} <ArrowRight size={16} />
-                    </a>
-                    <a href="#" className="btn-secondary">
-                      <Github size={16} />
-                      Architecture
-                    </a>
-                  </div>
-                </ProjectInfo>
-              </FeatureProject>
+          {/* ── CTA ── */}
+          <CtaSection>
+            <CtaInner>
+              <CtaAvail data-reveal>
+                <div className="dot" />
+                Disponible pour de nouveaux projets
+              </CtaAvail>
+              <CtaTitle data-reveal style={{ '--reveal-delay': '60ms' }}>
+                Prêt à donner vie
+                <br />à votre projet&nbsp;?
+              </CtaTitle>
+              <CtaSub data-reveal style={{ '--reveal-delay': '120ms' }}>
+                Que vous ayez besoin d'un site vitrine, d'une application web complexe, d'une API
+                robuste ou simplement d'un conseil technique, je suis là pour vous accompagner de A
+                à Z.
+              </CtaSub>
+              <CtaActions data-reveal style={{ '--reveal-delay': '180ms' }}>
+                <CtaBtnPrimary href={`mailto:${businessContactAddress}`}>
+                  <Rocket size={18} />
+                  Démarrer un projet
+                </CtaBtnPrimary>
+                <CtaBtnSecondary href="#">
+                  <FileText size={18} />
+                  Télécharger le CV
+                </CtaBtnSecondary>
+              </CtaActions>
+              <CtaEmail data-reveal style={{ '--reveal-delay': '240ms' }}>
+                Réponse sous 24h&nbsp;·&nbsp;<span>{businessContactAddress}</span>
+              </CtaEmail>
+            </CtaInner>
+          </CtaSection>
 
-              <FeatureProject data-reveal style={{ '--reveal-delay': '60ms' }}>
-                <ProjectVisual>
-                  <BrowserFrame>
-                    <div className="browser-header">
-                      <div className="dot red" />
-                      <div className="dot yellow" />
-                      <div className="dot green" />
-                      <div className="url">studio.nexusai.dev</div>
-                    </div>
-                    <div className="img-wrapper">
-                      <img
-                        src="https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
-                        alt="AI Builder"
-                      />
-                      <div className="overlay">
-                        <span>
-                          <Play size={18} /> {t('developer.livePreview')}
-                        </span>
-                      </div>
-                    </div>
-                  </BrowserFrame>
-                </ProjectVisual>
-                <ProjectInfo>
-                  <div className="proj-badge">{t('developer.projects.items.2.category')}</div>
-                  <h3>{t('developer.projects.items.2.title')}</h3>
-                  <p>{t('developer.projects.items.2.desc')}</p>
-                  <div className="stack">
-                    <span>
-                      <Layout size={14} />
-                      React.js
-                    </span>
-                    <span>
-                      <Zap size={14} />
-                      OpenAI API
-                    </span>
-                    <span>
-                      <Server size={14} />
-                      Express
-                    </span>
-                    <span>
-                      <Wrench size={14} />
-                      Vite
-                    </span>
-                    <span>
-                      <Code2 size={14} />
-                      AI Engineering
-                    </span>
-                  </div>
-                  <div className="actions">
-                    <a href="#" className="btn-primary">
-                      {t('developer.projects.items.2.cta')} <ArrowRight size={16} />
-                    </a>
-                    <a href="#" className="btn-secondary">
-                      <Github size={16} />
-                      Repository
-                    </a>
-                  </div>
-                </ProjectInfo>
-              </FeatureProject>
-            </ProjectsList>
-          </SectionInner>
-        </SectionAlt>
-
-        {/* ── Process ── */}
-        <Section>
-          <SectionHeader>
-            <SectionEyebrow data-reveal>
-              <Compass size={13} />
-              &nbsp;Méthode
-            </SectionEyebrow>
-            <SectionTitle data-reveal style={{ '--reveal-delay': '80ms' }}>
-              Comment je travaille
-            </SectionTitle>
-            <SectionSub data-reveal style={{ '--reveal-delay': '140ms' }}>
-              Un processus éprouvé en 5 étapes pour transformer votre idée en produit fini, livré
-              dans les délais et sans surprise.
-            </SectionSub>
-          </SectionHeader>
-          <ProcessOuter>
-            <ProcessLine />
-            <ProcessGrid>
+          {/* ── Stats ── */}
+          <StatsWrap>
+            <StatsGrid data-reveal>
               {[
                 {
-                  num: '01',
-                  label: 'Découverte',
-                  desc: 'Analyse des besoins, objectifs, contraintes techniques et rédaction du cahier des charges.',
-                  hi: true,
+                  icon: <GraduationCap size={28} />,
+                  val: t('developer.stats.0.value'),
+                  lbl: t('developer.stats.0.label'),
                 },
                 {
-                  num: '02',
-                  label: 'Design',
-                  desc: 'Maquettes Figma, wireframes, design system et validation visuelle avant tout code.',
-                  hi: false,
+                  icon: <Code2 size={28} />,
+                  val: t('developer.stats.1.value'),
+                  lbl: t('developer.stats.1.label'),
                 },
                 {
-                  num: '03',
-                  label: 'Développement',
-                  desc: 'Code propre, composants réutilisables, commits Git réguliers et revues de code.',
-                  hi: true,
+                  icon: <Briefcase size={28} />,
+                  val: t('developer.stats.2.value'),
+                  lbl: t('developer.stats.2.label'),
                 },
                 {
-                  num: '04',
-                  label: 'Tests & QA',
-                  desc: 'Tests unitaires, cross-browser, optimisation Lighthouse, sécurité et corrections.',
-                  hi: false,
+                  icon: <Coffee size={28} />,
+                  val: t('developer.stats.3.value'),
+                  lbl: t('developer.stats.3.label'),
                 },
-                {
-                  num: '05',
-                  label: 'Livraison',
-                  desc: 'Déploiement CI/CD, documentation technique, formation et support post-lancement.',
-                  hi: true,
-                },
-              ].map(({ num, label, desc, hi }, i) => (
-                <ProcessItem key={num} data-reveal style={{ '--reveal-delay': `${i * 80}ms` }}>
-                  <StepNum $hi={hi}>{num}</StepNum>
-                  <StepLabel>{label}</StepLabel>
-                  <StepDesc>{desc}</StepDesc>
-                </ProcessItem>
+              ].map(({ icon, val, lbl }) => (
+                <StatItem key={lbl}>
+                  <div className="icon-wrap">{icon}</div>
+                  <div className="val">{val}</div>
+                  <div className="lbl">{lbl}</div>
+                </StatItem>
               ))}
-            </ProcessGrid>
-          </ProcessOuter>
-        </Section>
-
-        {/* ── Philosophy ── */}
-        <Section>
-          <PhiloCard data-reveal>
-            <PhiloContent>
-              <h3>{t('developer.philosophy.title')}</h3>
-              <p>{t('developer.philosophy.desc')}</p>
-              <PhiloPrinciples>
-                {[
-                  {
-                    icon: <Star size={20} />,
-                    title: t('developer.philosophy.principles.0.title'),
-                    desc: t('developer.philosophy.principles.0.desc'),
-                  },
-                  {
-                    icon: <Zap size={20} />,
-                    title: t('developer.philosophy.principles.1.title'),
-                    desc: t('developer.philosophy.principles.1.desc'),
-                  },
-                  {
-                    icon: <Heart size={20} />,
-                    title: t('developer.philosophy.principles.2.title'),
-                    desc: t('developer.philosophy.principles.2.desc'),
-                  },
-                ].map(({ icon, title, desc }) => (
-                  <Principle key={title}>
-                    <div className="icon-box">{icon}</div>
-                    <div className="txt">
-                      <strong>{title}</strong>
-                      <span>{desc}</span>
-                    </div>
-                  </Principle>
-                ))}
-              </PhiloPrinciples>
-            </PhiloContent>
-            <PhiloVisual>
-              <img
-                src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                alt="Code setup"
-              />
-              <div className="badge">
-                <strong>100%</strong>
-                <span>Apprentissage Continu</span>
-              </div>
-            </PhiloVisual>
-          </PhiloCard>
-        </Section>
-
-        {/* ── CTA ── */}
-        <CtaSection>
-          <CtaInner>
-            <CtaAvail data-reveal>
-              <div className="dot" />
-              Disponible pour de nouveaux projets
-            </CtaAvail>
-            <CtaTitle data-reveal style={{ '--reveal-delay': '60ms' }}>
-              Prêt à donner vie
-              <br />à votre projet&nbsp;?
-            </CtaTitle>
-            <CtaSub data-reveal style={{ '--reveal-delay': '120ms' }}>
-              Que vous ayez besoin d'un site vitrine, d'une application web complexe, d'une API
-              robuste ou simplement d'un conseil technique, je suis là pour vous accompagner de A à
-              Z.
-            </CtaSub>
-            <CtaActions data-reveal style={{ '--reveal-delay': '180ms' }}>
-              <CtaBtnPrimary href={`mailto:${businessContactAddress}`}>
-                <Rocket size={18} />
-                Démarrer un projet
-              </CtaBtnPrimary>
-              <CtaBtnSecondary href="#">
-                <FileText size={18} />
-                Télécharger le CV
-              </CtaBtnSecondary>
-            </CtaActions>
-            <CtaEmail data-reveal style={{ '--reveal-delay': '240ms' }}>
-              Réponse sous 24h&nbsp;·&nbsp;<span>{businessContactAddress}</span>
-            </CtaEmail>
-          </CtaInner>
-        </CtaSection>
-
-        {/* ── Stats ── */}
-        <StatsWrap>
-          <StatsGrid data-reveal>
-            {[
-              {
-                icon: <GraduationCap size={28} />,
-                val: t('developer.stats.0.value'),
-                lbl: t('developer.stats.0.label'),
-              },
-              {
-                icon: <Code2 size={28} />,
-                val: t('developer.stats.1.value'),
-                lbl: t('developer.stats.1.label'),
-              },
-              {
-                icon: <Briefcase size={28} />,
-                val: t('developer.stats.2.value'),
-                lbl: t('developer.stats.2.label'),
-              },
-              {
-                icon: <Coffee size={28} />,
-                val: t('developer.stats.3.value'),
-                lbl: t('developer.stats.3.label'),
-              },
-            ].map(({ icon, val, lbl }) => (
-              <StatItem key={lbl}>
-                <div className="icon-wrap">{icon}</div>
-                <div className="val">{val}</div>
-                <div className="lbl">{lbl}</div>
-              </StatItem>
-            ))}
-          </StatsGrid>
-        </StatsWrap>
-      </Main>
-      <FooterClean />
-    </Page>
+            </StatsGrid>
+          </StatsWrap>
+        </Main>
+        <FooterClean />
+      </Page>
+    </>
   );
 }

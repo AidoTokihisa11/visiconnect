@@ -5,6 +5,7 @@ import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import CallToAction from '../components/CallToAction';
 import { useTranslation } from '../hooks/useTranslation';
+import SEO from '../components/SEO';
 
 const COLORS = {
   primary: '#2563eb',
@@ -283,89 +284,96 @@ const CareersPageNew = () => {
   ];
 
   return (
-    <PageContainer>
-      <HeaderClean />
-      <MainContent>
-        <Hero>
-          <HeroInner>
-            <HeroContent>
-              <HeroEyebrow>
-                <Briefcase size={14} />
-                {t('careers.eyebrow') || 'Rejoignez-nous'}
-              </HeroEyebrow>
-              <Title style={{ color: COLORS.dark }}>{t('careers.hero.title')}</Title>
-              <Subtitle>{t('careers.hero.subtitle')}</Subtitle>
-            </HeroContent>
-            <HeroPanel>
-              <PanelLabel>Notre culture</PanelLabel>
-              <HeroCultureGrid>
-                {[
-                  ['🌍', 'Remote First'],
-                  ['🚀', 'Croissance rapide'],
-                  ['🎯', 'Impact direct'],
-                  ['❤️', 'Bien-être'],
-                ].map(([e, l]) => (
-                  <HeroCultureCard key={l}>
-                    <div style={{ fontSize: '1.5rem', marginBottom: 4 }}>{e}</div>
-                    {l}
-                  </HeroCultureCard>
-                ))}
-              </HeroCultureGrid>
-            </HeroPanel>
-          </HeroInner>
-        </Hero>
+    <>
+      <SEO
+        title="Carrières"
+        description="Rejoignez l’aventure VisioConnect : postes ouverts et culture d’équipe."
+        path="/careers"
+      />
+      <PageContainer>
+        <HeaderClean />
+        <MainContent>
+          <Hero>
+            <HeroInner>
+              <HeroContent>
+                <HeroEyebrow>
+                  <Briefcase size={14} />
+                  {t('careers.eyebrow') || 'Rejoignez-nous'}
+                </HeroEyebrow>
+                <Title style={{ color: COLORS.dark }}>{t('careers.hero.title')}</Title>
+                <Subtitle>{t('careers.hero.subtitle')}</Subtitle>
+              </HeroContent>
+              <HeroPanel>
+                <PanelLabel>Notre culture</PanelLabel>
+                <HeroCultureGrid>
+                  {[
+                    ['🌍', 'Remote First'],
+                    ['🚀', 'Croissance rapide'],
+                    ['🎯', 'Impact direct'],
+                    ['❤️', 'Bien-être'],
+                  ].map(([e, l]) => (
+                    <HeroCultureCard key={l}>
+                      <div style={{ fontSize: '1.5rem', marginBottom: 4 }}>{e}</div>
+                      {l}
+                    </HeroCultureCard>
+                  ))}
+                </HeroCultureGrid>
+              </HeroPanel>
+            </HeroInner>
+          </Hero>
 
-        <Section>
-          <SectionTitle>{t('careers.values.title')}</SectionTitle>
-          <CultureGrid>
-            <CultureCard>
-              <CultureIcon>🚀</CultureIcon>
-              <CultureTitle>{t('careers.values.0.title')}</CultureTitle>
-              <CultureText>{t('careers.values.0.desc')}</CultureText>
-            </CultureCard>
-            <CultureCard>
-              <CultureIcon>🤝</CultureIcon>
-              <CultureTitle>{t('careers.values.1.title')}</CultureTitle>
-              <CultureText>{t('careers.values.1.desc')}</CultureText>
-            </CultureCard>
-            <CultureCard>
-              <CultureIcon>🌍</CultureIcon>
-              <CultureTitle>{t('careers.values.2.title')}</CultureTitle>
-              <CultureText>{t('careers.values.2.desc')}</CultureText>
-            </CultureCard>
-          </CultureGrid>
-        </Section>
+          <Section>
+            <SectionTitle>{t('careers.values.title')}</SectionTitle>
+            <CultureGrid>
+              <CultureCard>
+                <CultureIcon>🚀</CultureIcon>
+                <CultureTitle>{t('careers.values.0.title')}</CultureTitle>
+                <CultureText>{t('careers.values.0.desc')}</CultureText>
+              </CultureCard>
+              <CultureCard>
+                <CultureIcon>🤝</CultureIcon>
+                <CultureTitle>{t('careers.values.1.title')}</CultureTitle>
+                <CultureText>{t('careers.values.1.desc')}</CultureText>
+              </CultureCard>
+              <CultureCard>
+                <CultureIcon>🌍</CultureIcon>
+                <CultureTitle>{t('careers.values.2.title')}</CultureTitle>
+                <CultureText>{t('careers.values.2.desc')}</CultureText>
+              </CultureCard>
+            </CultureGrid>
+          </Section>
 
-        <Section>
-          <SectionTitle>{t('careers.jobs.title')}</SectionTitle>
-          <JobList>
-            {JOBS.map((job) => (
-              <JobCard key={job.id}>
-                <JobInfo>
-                  <JobTitle>{job.title}</JobTitle>
-                  <JobMeta>
-                    <span>{job.department}</span>
-                    <span>•</span>
-                    <span>{job.location}</span>
-                    <JobTag>{job.type}</JobTag>
-                  </JobMeta>
-                </JobInfo>
-                <ApplyButton>{t('careers.jobs.apply')}</ApplyButton>
-              </JobCard>
-            ))}
-          </JobList>
-        </Section>
+          <Section>
+            <SectionTitle>{t('careers.jobs.title')}</SectionTitle>
+            <JobList>
+              {JOBS.map((job) => (
+                <JobCard key={job.id}>
+                  <JobInfo>
+                    <JobTitle>{job.title}</JobTitle>
+                    <JobMeta>
+                      <span>{job.department}</span>
+                      <span>•</span>
+                      <span>{job.location}</span>
+                      <JobTag>{job.type}</JobTag>
+                    </JobMeta>
+                  </JobInfo>
+                  <ApplyButton>{t('careers.jobs.apply')}</ApplyButton>
+                </JobCard>
+              ))}
+            </JobList>
+          </Section>
 
-        <CallToAction
-          title={t('careers.cta.title')}
-          description={t('careers.cta.description')}
-          buttonText={t('careers.cta.button')}
-          buttonLink="/contact"
-        />
-      </MainContent>
+          <CallToAction
+            title={t('careers.cta.title')}
+            description={t('careers.cta.description')}
+            buttonText={t('careers.cta.button')}
+            buttonLink="/contact"
+          />
+        </MainContent>
 
-      <FooterClean />
-    </PageContainer>
+        <FooterClean />
+      </PageContainer>
+    </>
   );
 };
 

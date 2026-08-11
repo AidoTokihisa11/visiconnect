@@ -5,6 +5,7 @@ import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import CallToAction from '../components/CallToAction';
 import { useTranslation } from '../hooks/useTranslation';
+import SEO from '../components/SEO';
 
 const COLORS = {
   primary: '#2563eb',
@@ -322,72 +323,79 @@ const BlogPage = () => {
   ];
 
   return (
-    <PageContainer>
-      <HeaderClean />
-      <MainContent>
-        <Hero>
-          <HeroInner>
-            <HeroLeft>
-              <HeroEyebrow>
-                <BookOpen size={14} />
-                Blog
-              </HeroEyebrow>
-              <SectionHeader>
-                <h1>{t('blog.hero.title')}</h1>
-                <p>{t('blog.hero.subtitle')}</p>
-              </SectionHeader>
-            </HeroLeft>
-            <HeroPanel>
-              <PanelTitle>Catégories</PanelTitle>
-              <TopicPills>
-                {[
-                  'Produit',
-                  'Sécurité',
-                  'Intégrations',
-                  'Tutoriels',
-                  'Actualités',
-                  'IA & Vidéo',
-                ].map((c) => (
-                  <Pill key={c}>{c}</Pill>
-                ))}
-              </TopicPills>
-            </HeroPanel>
-          </HeroInner>
-        </Hero>
+    <>
+      <SEO
+        title="Blog"
+        description="Articles, cas d’usage et actualités autour de la visioconférence sécurisée."
+        path="/blog"
+      />
+      <PageContainer>
+        <HeaderClean />
+        <MainContent>
+          <Hero>
+            <HeroInner>
+              <HeroLeft>
+                <HeroEyebrow>
+                  <BookOpen size={14} />
+                  Blog
+                </HeroEyebrow>
+                <SectionHeader>
+                  <h1>{t('blog.hero.title')}</h1>
+                  <p>{t('blog.hero.subtitle')}</p>
+                </SectionHeader>
+              </HeroLeft>
+              <HeroPanel>
+                <PanelTitle>Catégories</PanelTitle>
+                <TopicPills>
+                  {[
+                    'Produit',
+                    'Sécurité',
+                    'Intégrations',
+                    'Tutoriels',
+                    'Actualités',
+                    'IA & Vidéo',
+                  ].map((c) => (
+                    <Pill key={c}>{c}</Pill>
+                  ))}
+                </TopicPills>
+              </HeroPanel>
+            </HeroInner>
+          </Hero>
 
-        <ContentWrapper>
-          <Grid>
-            {posts.map((post) => (
-              <BlogCard key={post.id}>
-                <ImageContainer style={{ backgroundColor: post.imageColor }}>
-                  {/* Placeholder for image */}
-                  {post.category[0]}
-                </ImageContainer>
-                <CardContent>
-                  <Category>{post.category}</Category>
-                  <Title>{post.title}</Title>
-                  <Excerpt>{post.excerpt}</Excerpt>
-                  <Meta>
-                    <Author>
-                      <AvatarCircle style={{ backgroundColor: post.imageColor }} />
-                      {post.author}
-                    </Author>
-                    <span>{post.date}</span>
-                  </Meta>
-                </CardContent>
-              </BlogCard>
-            ))}
-          </Grid>
-        </ContentWrapper>
-        <CallToAction
-          title={t('blog.cta.title')}
-          description={t('blog.cta.description')}
-          buttonText={t('blog.cta.button')}
-          buttonLink="/contact"
-        />
-      </MainContent>
-      <FooterClean />
-    </PageContainer>
+          <ContentWrapper>
+            <Grid>
+              {posts.map((post) => (
+                <BlogCard key={post.id}>
+                  <ImageContainer style={{ backgroundColor: post.imageColor }}>
+                    {/* Placeholder for image */}
+                    {post.category[0]}
+                  </ImageContainer>
+                  <CardContent>
+                    <Category>{post.category}</Category>
+                    <Title>{post.title}</Title>
+                    <Excerpt>{post.excerpt}</Excerpt>
+                    <Meta>
+                      <Author>
+                        <AvatarCircle style={{ backgroundColor: post.imageColor }} />
+                        {post.author}
+                      </Author>
+                      <span>{post.date}</span>
+                    </Meta>
+                  </CardContent>
+                </BlogCard>
+              ))}
+            </Grid>
+          </ContentWrapper>
+          <CallToAction
+            title={t('blog.cta.title')}
+            description={t('blog.cta.description')}
+            buttonText={t('blog.cta.button')}
+            buttonLink="/contact"
+          />
+        </MainContent>
+        <FooterClean />
+      </PageContainer>
+    </>
   );
 };
 

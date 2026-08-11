@@ -59,6 +59,7 @@ import {
 
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import SEO from '../components/SEO';
 
 // --- Modale saisie du pseudo ---
 const ModalOverlay = styled.div`
@@ -301,222 +302,229 @@ export default function DemoPageNew() {
   }, []);
 
   return (
-    <PageContainer>
-      {showModal && (
-        <ModalOverlay onClick={() => setShowModal(false)}>
-          <ModalBox onClick={(e) => e.stopPropagation()}>
-            <ModalTitle>{t('demo.modal.title', 'Rejoindre la démo live')}</ModalTitle>
-            <ModalSub>
-              {t(
-                'demo.modal.subtitle',
-                'Entrez un prénom ou un pseudo pour participer à la démonstration. Aucun compte requis.'
-              )}
-            </ModalSub>
-            <ModalInput
-              autoFocus
-              type="text"
-              maxLength={40}
-              placeholder={t('demo.modal.placeholder', 'Votre prénom ou pseudo')}
-              value={guestName}
-              onChange={(e) => setGuestName(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleJoin()}
-            />
-            <ModalActions>
-              <ModalCancel onClick={() => setShowModal(false)}>
-                {t('demo.modal.cancel', 'Annuler')}
-              </ModalCancel>
-              <ModalSubmit onClick={handleJoin} disabled={!guestName.trim()}>
-                {t('demo.modal.submit', 'Lancer la démo →')}
-              </ModalSubmit>
-            </ModalActions>
-          </ModalBox>
-        </ModalOverlay>
-      )}
+    <>
+      <SEO
+        title="Démo interactive"
+        description="Testez VisioConnect gratuitement, sans inscription."
+        path="/demo"
+      />
+      <PageContainer>
+        {showModal && (
+          <ModalOverlay onClick={() => setShowModal(false)}>
+            <ModalBox onClick={(e) => e.stopPropagation()}>
+              <ModalTitle>{t('demo.modal.title', 'Rejoindre la démo live')}</ModalTitle>
+              <ModalSub>
+                {t(
+                  'demo.modal.subtitle',
+                  'Entrez un prénom ou un pseudo pour participer à la démonstration. Aucun compte requis.'
+                )}
+              </ModalSub>
+              <ModalInput
+                autoFocus
+                type="text"
+                maxLength={40}
+                placeholder={t('demo.modal.placeholder', 'Votre prénom ou pseudo')}
+                value={guestName}
+                onChange={(e) => setGuestName(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleJoin()}
+              />
+              <ModalActions>
+                <ModalCancel onClick={() => setShowModal(false)}>
+                  {t('demo.modal.cancel', 'Annuler')}
+                </ModalCancel>
+                <ModalSubmit onClick={handleJoin} disabled={!guestName.trim()}>
+                  {t('demo.modal.submit', 'Lancer la démo →')}
+                </ModalSubmit>
+              </ModalActions>
+            </ModalBox>
+          </ModalOverlay>
+        )}
 
-      <HeaderClean />
+        <HeaderClean />
 
-      <MainContent>
-        <HeroSection>
-          <HeroContainer>
-            <HeroContent>
-              <Eyebrow>
-                <Sparkles size={16} /> {t('demo.hero.eyebrow')}
-              </Eyebrow>
-              <HeroTitle>
-                {t('demo.hero.title')}
-                <span>{t('demo.hero.titleHighlight')}</span>
-              </HeroTitle>
-              <HeroSubtitle>{t('demo.hero.subtitle')}</HeroSubtitle>
-              <HeroActions>
-                <LaunchButton onClick={handleLaunchDemo}>
-                  <Play size={18} fill="currentColor" /> {t('demo.hero.launchDemo')}
-                </LaunchButton>
-                <SecondaryButton to="/contact">
-                  {t('demo.hero.schedulePresentation')} <ArrowRight size={18} />
-                </SecondaryButton>
-              </HeroActions>
-              <HeroMeta>
-                <MetaPill>
-                  <Gauge size={16} /> {t('demo.hero.meta.latency')}
-                </MetaPill>
-                <MetaPill>
-                  <Bot size={16} /> {t('demo.hero.meta.ai')}
-                </MetaPill>
-                <MetaPill>
-                  <ShieldCheck size={16} /> {t('demo.hero.meta.enterprise')}
-                </MetaPill>
-              </HeroMeta>
-            </HeroContent>
+        <MainContent>
+          <HeroSection>
+            <HeroContainer>
+              <HeroContent>
+                <Eyebrow>
+                  <Sparkles size={16} /> {t('demo.hero.eyebrow')}
+                </Eyebrow>
+                <HeroTitle>
+                  {t('demo.hero.title')}
+                  <span>{t('demo.hero.titleHighlight')}</span>
+                </HeroTitle>
+                <HeroSubtitle>{t('demo.hero.subtitle')}</HeroSubtitle>
+                <HeroActions>
+                  <LaunchButton onClick={handleLaunchDemo}>
+                    <Play size={18} fill="currentColor" /> {t('demo.hero.launchDemo')}
+                  </LaunchButton>
+                  <SecondaryButton to="/contact">
+                    {t('demo.hero.schedulePresentation')} <ArrowRight size={18} />
+                  </SecondaryButton>
+                </HeroActions>
+                <HeroMeta>
+                  <MetaPill>
+                    <Gauge size={16} /> {t('demo.hero.meta.latency')}
+                  </MetaPill>
+                  <MetaPill>
+                    <Bot size={16} /> {t('demo.hero.meta.ai')}
+                  </MetaPill>
+                  <MetaPill>
+                    <ShieldCheck size={16} /> {t('demo.hero.meta.enterprise')}
+                  </MetaPill>
+                </HeroMeta>
+              </HeroContent>
 
-            <CompactProofGrid data-reveal>
-              {proofMetrics.map((metric, index) => (
-                <ProofCard key={metric.label} style={{ '--reveal-delay': `${index * 70}ms` }}>
-                  <div className="label">{metric.label}</div>
-                  <div className="value">{metric.value}</div>
-                </ProofCard>
-              ))}
-            </CompactProofGrid>
-          </HeroContainer>
-        </HeroSection>
+              <CompactProofGrid data-reveal>
+                {proofMetrics.map((metric, index) => (
+                  <ProofCard key={metric.label} style={{ '--reveal-delay': `${index * 70}ms` }}>
+                    <div className="label">{metric.label}</div>
+                    <div className="value">{metric.value}</div>
+                  </ProofCard>
+                ))}
+              </CompactProofGrid>
+            </HeroContainer>
+          </HeroSection>
 
-        <Section data-reveal>
-          <SectionHeader>
-            <SectionLabel>
-              <Sparkles size={16} /> {t('demo.sections.difference.label')}
-            </SectionLabel>
-            <SectionTitle>{t('demo.sections.difference.title')}</SectionTitle>
-            <SectionText>{t('demo.sections.difference.text')}</SectionText>
-          </SectionHeader>
+          <Section data-reveal>
+            <SectionHeader>
+              <SectionLabel>
+                <Sparkles size={16} /> {t('demo.sections.difference.label')}
+              </SectionLabel>
+              <SectionTitle>{t('demo.sections.difference.title')}</SectionTitle>
+              <SectionText>{t('demo.sections.difference.text')}</SectionText>
+            </SectionHeader>
 
-          <CardGrid>
-            {highlights.map((item, index) => (
-              <FeatureCard
-                key={item.title}
-                data-reveal
-                style={{ '--reveal-delay': `${index * 80}ms` }}
-              >
-                <IconBox>{item.icon}</IconBox>
-                <h3>{item.title}</h3>
-                <p>{item.description}</p>
-              </FeatureCard>
-            ))}
-          </CardGrid>
-        </Section>
-
-        <Section data-reveal>
-          <SectionHeader>
-            <SectionLabel>
-              <Layers3 size={16} /> {t('demo.sections.workflow.label')}
-            </SectionLabel>
-            <SectionTitle>{t('demo.sections.workflow.title')}</SectionTitle>
-            <SectionText>{t('demo.sections.workflow.text')}</SectionText>
-          </SectionHeader>
-
-          <WorkflowGrid>
-            {workflowSteps.map((item, index) => (
-              <WorkflowCard
-                key={item.step}
-                data-reveal
-                style={{ '--reveal-delay': `${index * 90}ms` }}
-              >
-                <StepBadge>{item.step}</StepBadge>
-                <WorkflowContent>
+            <CardGrid>
+              {highlights.map((item, index) => (
+                <FeatureCard
+                  key={item.title}
+                  data-reveal
+                  style={{ '--reveal-delay': `${index * 80}ms` }}
+                >
+                  <IconBox>{item.icon}</IconBox>
                   <h3>{item.title}</h3>
                   <p>{item.description}</p>
-                </WorkflowContent>
-              </WorkflowCard>
-            ))}
-          </WorkflowGrid>
-        </Section>
+                </FeatureCard>
+              ))}
+            </CardGrid>
+          </Section>
 
-        <DarkBand>
-          <DarkContainer data-reveal>
-            <DarkText>
-              <SectionLabel style={{ color: '#93c5fd' }}>
-                <Gauge size={16} /> {t('demo.darkband.label')}
+          <Section data-reveal>
+            <SectionHeader>
+              <SectionLabel>
+                <Layers3 size={16} /> {t('demo.sections.workflow.label')}
               </SectionLabel>
-              <h2>{t('demo.darkband.title')}</h2>
-              <p>{t('demo.darkband.text')}</p>
-              <BulletGrid>
-                <Bullet>
-                  <BadgeCheck size={16} /> {t('demo.darkband.bullets.0')}
-                </Bullet>
-                <Bullet>
-                  <BadgeCheck size={16} /> {t('demo.darkband.bullets.1')}
-                </Bullet>
-                <Bullet>
-                  <BadgeCheck size={16} /> {t('demo.darkband.bullets.2')}
-                </Bullet>
-                <Bullet>
-                  <BadgeCheck size={16} /> {t('demo.darkband.bullets.3')}
-                </Bullet>
-              </BulletGrid>
-            </DarkText>
+              <SectionTitle>{t('demo.sections.workflow.title')}</SectionTitle>
+              <SectionText>{t('demo.sections.workflow.text')}</SectionText>
+            </SectionHeader>
 
-            <MetricsPanel>
-              <MetricsHero>
-                <div className="eyebrow">{t('demo.metrics.eyebrow')}</div>
-                <div className="value">{t('demo.metrics.value')}</div>
-                <div className="caption">{t('demo.metrics.caption')}</div>
-              </MetricsHero>
+            <WorkflowGrid>
+              {workflowSteps.map((item, index) => (
+                <WorkflowCard
+                  key={item.step}
+                  data-reveal
+                  style={{ '--reveal-delay': `${index * 90}ms` }}
+                >
+                  <StepBadge>{item.step}</StepBadge>
+                  <WorkflowContent>
+                    <h3>{item.title}</h3>
+                    <p>{item.description}</p>
+                  </WorkflowContent>
+                </WorkflowCard>
+              ))}
+            </WorkflowGrid>
+          </Section>
 
-              <MetricsGrid>
-                <MetricsTile>
-                  <div className="label">{t('demo.metrics.tiles.0.label')}</div>
-                  <div className="value">{t('demo.metrics.tiles.0.value')}</div>
-                </MetricsTile>
-                <MetricsTile>
-                  <div className="label">{t('demo.metrics.tiles.1.label')}</div>
-                  <div className="value">{t('demo.metrics.tiles.1.value')}</div>
-                </MetricsTile>
-                <MetricsTile>
-                  <div className="label">{t('demo.metrics.tiles.2.label')}</div>
-                  <div className="value">{t('demo.metrics.tiles.2.value')}</div>
-                </MetricsTile>
-                <MetricsTile>
-                  <div className="label">{t('demo.metrics.tiles.3.label')}</div>
-                  <div className="value">{t('demo.metrics.tiles.3.value')}</div>
-                </MetricsTile>
-              </MetricsGrid>
-            </MetricsPanel>
-          </DarkContainer>
-        </DarkBand>
+          <DarkBand>
+            <DarkContainer data-reveal>
+              <DarkText>
+                <SectionLabel style={{ color: '#93c5fd' }}>
+                  <Gauge size={16} /> {t('demo.darkband.label')}
+                </SectionLabel>
+                <h2>{t('demo.darkband.title')}</h2>
+                <p>{t('demo.darkband.text')}</p>
+                <BulletGrid>
+                  <Bullet>
+                    <BadgeCheck size={16} /> {t('demo.darkband.bullets.0')}
+                  </Bullet>
+                  <Bullet>
+                    <BadgeCheck size={16} /> {t('demo.darkband.bullets.1')}
+                  </Bullet>
+                  <Bullet>
+                    <BadgeCheck size={16} /> {t('demo.darkband.bullets.2')}
+                  </Bullet>
+                  <Bullet>
+                    <BadgeCheck size={16} /> {t('demo.darkband.bullets.3')}
+                  </Bullet>
+                </BulletGrid>
+              </DarkText>
 
-        <Section data-reveal>
-          <SectionHeader>
-            <SectionLabel>
-              <Globe size={16} /> {t('demo.sections.usecases.label')}
-            </SectionLabel>
-            <SectionTitle>{t('demo.sections.usecases.title')}</SectionTitle>
-            <SectionText>{t('demo.sections.usecases.text')}</SectionText>
-          </SectionHeader>
+              <MetricsPanel>
+                <MetricsHero>
+                  <div className="eyebrow">{t('demo.metrics.eyebrow')}</div>
+                  <div className="value">{t('demo.metrics.value')}</div>
+                  <div className="caption">{t('demo.metrics.caption')}</div>
+                </MetricsHero>
 
-          <CardGrid>
-            {useCases.map((item, index) => (
-              <FeatureCard
-                key={item.title}
-                data-reveal
-                style={{ '--reveal-delay': `${index * 80}ms` }}
-              >
-                <IconBox>{item.icon}</IconBox>
-                <h3>{item.title}</h3>
-                <p>{item.description}</p>
-              </FeatureCard>
-            ))}
-          </CardGrid>
-        </Section>
+                <MetricsGrid>
+                  <MetricsTile>
+                    <div className="label">{t('demo.metrics.tiles.0.label')}</div>
+                    <div className="value">{t('demo.metrics.tiles.0.value')}</div>
+                  </MetricsTile>
+                  <MetricsTile>
+                    <div className="label">{t('demo.metrics.tiles.1.label')}</div>
+                    <div className="value">{t('demo.metrics.tiles.1.value')}</div>
+                  </MetricsTile>
+                  <MetricsTile>
+                    <div className="label">{t('demo.metrics.tiles.2.label')}</div>
+                    <div className="value">{t('demo.metrics.tiles.2.value')}</div>
+                  </MetricsTile>
+                  <MetricsTile>
+                    <div className="label">{t('demo.metrics.tiles.3.label')}</div>
+                    <div className="value">{t('demo.metrics.tiles.3.value')}</div>
+                  </MetricsTile>
+                </MetricsGrid>
+              </MetricsPanel>
+            </DarkContainer>
+          </DarkBand>
 
-        <RevealBlock data-reveal style={{ '--reveal-delay': '80ms' }}>
-          <CallToAction
-            title={t('demo.cta.title')}
-            description={t('demo.cta.description')}
-            buttonText={t('demo.cta.button')}
-            buttonLink={`/room/${demoRoomId}`}
-          />
-        </RevealBlock>
-      </MainContent>
+          <Section data-reveal>
+            <SectionHeader>
+              <SectionLabel>
+                <Globe size={16} /> {t('demo.sections.usecases.label')}
+              </SectionLabel>
+              <SectionTitle>{t('demo.sections.usecases.title')}</SectionTitle>
+              <SectionText>{t('demo.sections.usecases.text')}</SectionText>
+            </SectionHeader>
 
-      <FooterClean />
-    </PageContainer>
+            <CardGrid>
+              {useCases.map((item, index) => (
+                <FeatureCard
+                  key={item.title}
+                  data-reveal
+                  style={{ '--reveal-delay': `${index * 80}ms` }}
+                >
+                  <IconBox>{item.icon}</IconBox>
+                  <h3>{item.title}</h3>
+                  <p>{item.description}</p>
+                </FeatureCard>
+              ))}
+            </CardGrid>
+          </Section>
+
+          <RevealBlock data-reveal style={{ '--reveal-delay': '80ms' }}>
+            <CallToAction
+              title={t('demo.cta.title')}
+              description={t('demo.cta.description')}
+              buttonText={t('demo.cta.button')}
+              buttonLink={`/room/${demoRoomId}`}
+            />
+          </RevealBlock>
+        </MainContent>
+
+        <FooterClean />
+      </PageContainer>
+    </>
   );
 }

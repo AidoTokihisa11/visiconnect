@@ -3,21 +3,12 @@ import { useNavigate, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { FaGoogle, FaGithub } from 'react-icons/fa';
-import {
-  Mail,
-  Lock,
-  Eye,
-  EyeOff,
-  AlertCircle,
-  Check,
-  X,
-  Video,
-  Loader2,
-} from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, AlertCircle, Check, X, Video, Loader2 } from 'lucide-react';
 
 import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from '../hooks/useTranslation';
 import HeaderClean from '../components/HeaderClean';
+import SEO from '../components/SEO';
 
 /* ------------------------------------------------------------------ */
 /*  Design aligné sur LoginPage / HeaderClean / HomePageClean.         */
@@ -31,7 +22,11 @@ const PageWrapper = styled.div`
   flex-direction: column;
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family:
+    'Inter',
+    system-ui,
+    -apple-system,
+    sans-serif;
 `;
 
 const Main = styled.main`
@@ -50,16 +45,8 @@ const BackgroundGlow = styled.div`
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(
-      60% 55% at 50% 0%,
-      hsl(var(--primary) / 0.09) 0%,
-      transparent 70%
-    ),
-    radial-gradient(
-      45% 45% at 100% 100%,
-      hsl(var(--primary) / 0.05) 0%,
-      transparent 70%
-    );
+    radial-gradient(60% 55% at 50% 0%, hsl(var(--primary) / 0.09) 0%, transparent 70%),
+    radial-gradient(45% 45% at 100% 100%, hsl(var(--primary) / 0.05) 0%, transparent 70%);
 `;
 
 const GridPattern = styled.div`
@@ -176,7 +163,10 @@ const Input = styled.input`
   font-size: 0.95rem;
   color: hsl(var(--foreground));
   background: hsl(var(--background));
-  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
   font-family: inherit;
 
   &:hover:not(:focus) {
@@ -258,10 +248,10 @@ const StrengthBarWrapper = styled.div`
 `;
 
 const strengthColor = (strength) => {
-  if (strength === 1) return 'hsl(0 84% 60%)';       // rouge
-  if (strength === 2) return 'hsl(25 90% 55%)';      // orange
-  if (strength === 3) return 'hsl(45 90% 50%)';      // jaune
-  if (strength >= 4) return 'hsl(142 71% 40%)';      // vert
+  if (strength === 1) return 'hsl(0 84% 60%)'; // rouge
+  if (strength === 2) return 'hsl(25 90% 55%)'; // orange
+  if (strength === 3) return 'hsl(45 90% 50%)'; // jaune
+  if (strength >= 4) return 'hsl(142 71% 40%)'; // vert
   return 'hsl(var(--muted))';
 };
 
@@ -287,8 +277,7 @@ const Criterion = styled.div`
   align-items: center;
   font-size: 0.78rem;
   font-weight: 500;
-  color: ${(props) =>
-    props.$met ? 'hsl(142 71% 40%)' : 'hsl(var(--muted-foreground))'};
+  color: ${(props) => (props.$met ? 'hsl(142 71% 40%)' : 'hsl(var(--muted-foreground))')};
   transition: color 0.2s;
 
   svg {
@@ -339,7 +328,9 @@ const OAuthButton = styled.button`
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
   font-family: inherit;
 
   &:hover:not(:disabled) {
@@ -437,8 +428,7 @@ const OTPChar = styled.div`
   color: hsl(var(--foreground));
   background: ${(props) =>
     props.$active ? 'hsl(var(--primary) / 0.05)' : 'hsl(var(--background))'};
-  box-shadow: ${(props) =>
-    props.$active ? '0 0 0 3px hsl(var(--primary) / 0.15)' : 'none'};
+  box-shadow: ${(props) => (props.$active ? '0 0 0 3px hsl(var(--primary) / 0.15)' : 'none')};
   transition: all 0.15s ease;
 `;
 
@@ -572,241 +562,253 @@ const SignupPage = () => {
   const strengthLabels = ['', 'Faible', 'Moyen', 'Bien', 'Fort'];
 
   return (
-    <PageWrapper>
-      <HeaderClean />
+    <>
+      <SEO
+        title="Inscription"
+        description="Créez votre compte VisioConnect gratuitement."
+        path="/signup"
+        noindex
+      />
+      <PageWrapper>
+        <HeaderClean />
 
-      <Main>
-        <BackgroundGlow />
-        <GridPattern />
+        <Main>
+          <BackgroundGlow />
+          <GridPattern />
 
-        <Card
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, ease: 'easeOut' }}
-        >
-          <LogoRow>
-            <LogoBadge>
-              <Video size={20} strokeWidth={2.25} />
-            </LogoBadge>
-            <LogoText>VisioConnect</LogoText>
-          </LogoRow>
+          <Card
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
+          >
+            <LogoRow>
+              <LogoBadge>
+                <Video size={20} strokeWidth={2.25} />
+              </LogoBadge>
+              <LogoText>VisioConnect</LogoText>
+            </LogoRow>
 
-          {error && (
-            <ErrorMessage
-              initial={{ opacity: 0, y: -4 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              <AlertCircle size={18} style={{ flexShrink: 0, marginTop: '1px' }} />
-              <span>{error}</span>
-            </ErrorMessage>
-          )}
+            {error && (
+              <ErrorMessage initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }}>
+                <AlertCircle size={18} style={{ flexShrink: 0, marginTop: '1px' }} />
+                <span>{error}</span>
+              </ErrorMessage>
+            )}
 
-          {!pendingVerification ? (
-            <>
-              <Title>{t('signup.title')}</Title>
-              <Subtitle>{t('signup.subtitle')}</Subtitle>
+            {!pendingVerification ? (
+              <>
+                <Title>{t('signup.title')}</Title>
+                <Subtitle>{t('signup.subtitle')}</Subtitle>
 
-              <Form onSubmit={handleSubmit}>
-                <FormGroup>
-                  <Label htmlFor="email">{t('signup.email')}</Label>
-                  <InputWrapper>
-                    <IconWrapper>
-                      <Mail size={17} />
-                    </IconWrapper>
-                    <Input
-                      type="email"
-                      id="email"
-                      name="email"
-                      placeholder={t('signup.emailPlaceholder')}
-                      value={registrationForm.email}
-                      onChange={syncRegistrationInput}
-                      required
-                      autoComplete="email"
-                    />
-                  </InputWrapper>
-                </FormGroup>
+                <Form onSubmit={handleSubmit}>
+                  <FormGroup>
+                    <Label htmlFor="email">{t('signup.email')}</Label>
+                    <InputWrapper>
+                      <IconWrapper>
+                        <Mail size={17} />
+                      </IconWrapper>
+                      <Input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder={t('signup.emailPlaceholder')}
+                        value={registrationForm.email}
+                        onChange={syncRegistrationInput}
+                        required
+                        autoComplete="email"
+                      />
+                    </InputWrapper>
+                  </FormGroup>
 
-                <FormGroup>
-                  <Label htmlFor="password">{t('signup.password')}</Label>
-                  <InputWrapper>
-                    <IconWrapper>
-                      <Lock size={17} />
-                    </IconWrapper>
-                    <Input
-                      type={showPassword ? 'text' : 'password'}
-                      id="password"
-                      name="password"
-                      placeholder={t('signup.passwordPlaceholder')}
-                      value={registrationForm.password}
-                      onChange={syncRegistrationInput}
-                      required
-                      autoComplete="new-password"
-                    />
-                    <PasswordToggle
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      aria-label={
-                        showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'
-                      }
-                    >
-                      {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
-                    </PasswordToggle>
-                  </InputWrapper>
-
-                  {registrationForm.password.length > 0 && (
-                    <>
-                      <StrengthRow>
-                        <StrengthBarWrapper>
-                          {[0, 1, 2, 3].map((i) => (
-                            <StrengthSegment key={i} $strength={strength} $index={i} />
-                          ))}
-                        </StrengthBarWrapper>
-                        <StrengthLabel $strength={strength}>
-                          {strengthLabels[strength]}
-                        </StrengthLabel>
-                      </StrengthRow>
-
-                      <PasswordCriteria>
-                        <Criterion $met={passwordRules.length}>
-                          {passwordRules.length ? <Check size={13} /> : <X size={13} />}
-                          {t('signup.criteria.length')}
-                        </Criterion>
-                        <Criterion $met={passwordRules.uppercase}>
-                          {passwordRules.uppercase ? <Check size={13} /> : <X size={13} />}
-                          {t('signup.criteria.uppercase')}
-                        </Criterion>
-                        <Criterion $met={passwordRules.number}>
-                          {passwordRules.number ? <Check size={13} /> : <X size={13} />}
-                          {t('signup.criteria.number')}
-                        </Criterion>
-                        <Criterion $met={passwordRules.special}>
-                          {passwordRules.special ? <Check size={13} /> : <X size={13} />}
-                          {t('signup.criteria.special')}
-                        </Criterion>
-                      </PasswordCriteria>
-                    </>
-                  )}
-                </FormGroup>
-
-                <SubmitButton
-                  type="submit"
-                  disabled={
-                    loading ||
-                    (registrationForm.password.length > 0 &&
-                      !Object.values(passwordRules).every(Boolean))
-                  }
-                  whileTap={{ scale: 0.98 }}
-                >
-                  {loading ? (
-                    <span
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <Loader2 size={16} className="animate-spin" /> {t('signup.loading')}
-                    </span>
-                  ) : (
-                    t('signup.submit')
-                  )}
-                </SubmitButton>
-              </Form>
-
-              <Divider>
-                <span>{t('signup.orSignupWith')}</span>
-              </Divider>
-
-              <OAuthButtons>
-                <OAuthButton type="button" disabled={loading} onClick={() => handleOAuth('google')}>
-                  {oauthLoading === 'google' ? (
-                    <>
-                      <Loader2 size={16} className="animate-spin" />{' '}
-                      {t('auth.signingIn', 'Connexion...')}
-                    </>
-                  ) : (
-                    <>
-                      <FaGoogle color="#ea4335" /> Google
-                    </>
-                  )}
-                </OAuthButton>
-                <OAuthButton type="button" disabled={loading} onClick={() => handleOAuth('github')}>
-                  {oauthLoading === 'github' ? (
-                    <>
-                      <Loader2 size={16} className="animate-spin" />{' '}
-                      {t('auth.signingIn', 'Connexion...')}
-                    </>
-                  ) : (
-                    <>
-                      <FaGithub /> GitHub
-                    </>
-                  )}
-                </OAuthButton>
-              </OAuthButtons>
-
-              <FooterLink>
-                {t('signup.hasAccount')}
-                <Link to="/login">{t('signup.login')}</Link>
-              </FooterLink>
-            </>
-          ) : (
-            <VerifyContainer>
-              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
-                <SuccessIconBox>
-                  <Mail size={28} />
-                </SuccessIconBox>
-                <Title>{t('signup.verifyTitle')}</Title>
-                <Subtitle style={{ marginBottom: '0.5rem' }}>
-                  {t('signup.verifySubtitle')}
-                  <br />
-                  <strong style={{ color: 'hsl(var(--foreground))' }}>
-                    {registrationForm.email}
-                  </strong>
-                </Subtitle>
-
-                <Form onSubmit={handleVerify}>
-                  <OTPGroup>
-                    {[0, 1, 2, 3, 4, 5].map((index) => (
-                      <OTPChar
-                        key={index}
-                        $active={code.length === index}
-                        $filled={code.length > index}
+                  <FormGroup>
+                    <Label htmlFor="password">{t('signup.password')}</Label>
+                    <InputWrapper>
+                      <IconWrapper>
+                        <Lock size={17} />
+                      </IconWrapper>
+                      <Input
+                        type={showPassword ? 'text' : 'password'}
+                        id="password"
+                        name="password"
+                        placeholder={t('signup.passwordPlaceholder')}
+                        value={registrationForm.password}
+                        onChange={syncRegistrationInput}
+                        required
+                        autoComplete="new-password"
+                      />
+                      <PasswordToggle
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        aria-label={
+                          showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'
+                        }
                       >
-                        {code[index] || ''}
-                      </OTPChar>
-                    ))}
-                    <HiddenInput
-                      type="text"
-                      inputMode="numeric"
-                      autoComplete="one-time-code"
-                      maxLength={6}
-                      value={code}
-                      onChange={(e) => setCode(e.target.value.replace(/[^0-9]/g, ''))}
-                      autoFocus
-                    />
-                  </OTPGroup>
+                        {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
+                      </PasswordToggle>
+                    </InputWrapper>
+
+                    {registrationForm.password.length > 0 && (
+                      <>
+                        <StrengthRow>
+                          <StrengthBarWrapper>
+                            {[0, 1, 2, 3].map((i) => (
+                              <StrengthSegment key={i} $strength={strength} $index={i} />
+                            ))}
+                          </StrengthBarWrapper>
+                          <StrengthLabel $strength={strength}>
+                            {strengthLabels[strength]}
+                          </StrengthLabel>
+                        </StrengthRow>
+
+                        <PasswordCriteria>
+                          <Criterion $met={passwordRules.length}>
+                            {passwordRules.length ? <Check size={13} /> : <X size={13} />}
+                            {t('signup.criteria.length')}
+                          </Criterion>
+                          <Criterion $met={passwordRules.uppercase}>
+                            {passwordRules.uppercase ? <Check size={13} /> : <X size={13} />}
+                            {t('signup.criteria.uppercase')}
+                          </Criterion>
+                          <Criterion $met={passwordRules.number}>
+                            {passwordRules.number ? <Check size={13} /> : <X size={13} />}
+                            {t('signup.criteria.number')}
+                          </Criterion>
+                          <Criterion $met={passwordRules.special}>
+                            {passwordRules.special ? <Check size={13} /> : <X size={13} />}
+                            {t('signup.criteria.special')}
+                          </Criterion>
+                        </PasswordCriteria>
+                      </>
+                    )}
+                  </FormGroup>
 
                   <SubmitButton
                     type="submit"
-                    disabled={code.length !== 6 || loading}
+                    disabled={
+                      loading ||
+                      (registrationForm.password.length > 0 &&
+                        !Object.values(passwordRules).every(Boolean))
+                    }
                     whileTap={{ scale: 0.98 }}
                   >
-                    {loading ? t('signup.verifying') : t('signup.validateCode')}
+                    {loading ? (
+                      <span
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.5rem',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <Loader2 size={16} className="animate-spin" /> {t('signup.loading')}
+                      </span>
+                    ) : (
+                      t('signup.submit')
+                    )}
                   </SubmitButton>
                 </Form>
-              </motion.div>
-            </VerifyContainer>
-          )}
-        </Card>
 
-        <LegalFootnote>
-          © {new Date().getFullYear()} VisioConnect ·
-          <Link to="/terms">Conditions</Link>·
-          <Link to="/privacy">Confidentialité</Link>
-        </LegalFootnote>
-      </Main>
-    </PageWrapper>
+                <Divider>
+                  <span>{t('signup.orSignupWith')}</span>
+                </Divider>
+
+                <OAuthButtons>
+                  <OAuthButton
+                    type="button"
+                    disabled={loading}
+                    onClick={() => handleOAuth('google')}
+                  >
+                    {oauthLoading === 'google' ? (
+                      <>
+                        <Loader2 size={16} className="animate-spin" />{' '}
+                        {t('auth.signingIn', 'Connexion...')}
+                      </>
+                    ) : (
+                      <>
+                        <FaGoogle color="#ea4335" /> Google
+                      </>
+                    )}
+                  </OAuthButton>
+                  <OAuthButton
+                    type="button"
+                    disabled={loading}
+                    onClick={() => handleOAuth('github')}
+                  >
+                    {oauthLoading === 'github' ? (
+                      <>
+                        <Loader2 size={16} className="animate-spin" />{' '}
+                        {t('auth.signingIn', 'Connexion...')}
+                      </>
+                    ) : (
+                      <>
+                        <FaGithub /> GitHub
+                      </>
+                    )}
+                  </OAuthButton>
+                </OAuthButtons>
+
+                <FooterLink>
+                  {t('signup.hasAccount')}
+                  <Link to="/login">{t('signup.login')}</Link>
+                </FooterLink>
+              </>
+            ) : (
+              <VerifyContainer>
+                <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+                  <SuccessIconBox>
+                    <Mail size={28} />
+                  </SuccessIconBox>
+                  <Title>{t('signup.verifyTitle')}</Title>
+                  <Subtitle style={{ marginBottom: '0.5rem' }}>
+                    {t('signup.verifySubtitle')}
+                    <br />
+                    <strong style={{ color: 'hsl(var(--foreground))' }}>
+                      {registrationForm.email}
+                    </strong>
+                  </Subtitle>
+
+                  <Form onSubmit={handleVerify}>
+                    <OTPGroup>
+                      {[0, 1, 2, 3, 4, 5].map((index) => (
+                        <OTPChar
+                          key={index}
+                          $active={code.length === index}
+                          $filled={code.length > index}
+                        >
+                          {code[index] || ''}
+                        </OTPChar>
+                      ))}
+                      <HiddenInput
+                        type="text"
+                        inputMode="numeric"
+                        autoComplete="one-time-code"
+                        maxLength={6}
+                        value={code}
+                        onChange={(e) => setCode(e.target.value.replace(/[^0-9]/g, ''))}
+                        autoFocus
+                      />
+                    </OTPGroup>
+
+                    <SubmitButton
+                      type="submit"
+                      disabled={code.length !== 6 || loading}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      {loading ? t('signup.verifying') : t('signup.validateCode')}
+                    </SubmitButton>
+                  </Form>
+                </motion.div>
+              </VerifyContainer>
+            )}
+          </Card>
+
+          <LegalFootnote>
+            © {new Date().getFullYear()} VisioConnect ·<Link to="/terms">Conditions</Link>·
+            <Link to="/privacy">Confidentialité</Link>
+          </LegalFootnote>
+        </Main>
+      </PageWrapper>
+    </>
   );
 };
 

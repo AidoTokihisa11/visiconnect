@@ -4,6 +4,7 @@ import { useTranslation } from '../hooks/useTranslation';
 import LegalLayout from '../components/LegalLayout';
 import CallToAction from '../components/CallToAction';
 import { Shield, Lock, Activity, Eye, FileCheck, CheckCircle2 } from 'lucide-react';
+import SEO from '../components/SEO';
 
 const Paragraph = styled.p`
   line-height: 1.8;
@@ -80,6 +81,11 @@ const SecurityPage = () => {
 
   return (
     <LegalLayout title={t('securityPageTitle')} lastUpdated="21 Février 2024">
+      <SEO
+        title="Sécurité"
+        description="Comment VisioConnect protège vos données : chiffrement, hébergement UE et bonnes pratiques."
+        path="/security"
+      />
       <Paragraph>
         La sécurité est au cœur de l'architecture de VisioConnect. Nous utilisons les technologies
         les plus avancées pour garantir la confidentialité, l'intégrité et la disponibilité de vos

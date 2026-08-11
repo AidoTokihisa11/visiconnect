@@ -3,6 +3,33 @@
 @tailwind components;
 @tailwind utilities;
 
+/* A11y — skip-link visible on keyboard focus */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100000;
+  background: #0f172a;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 0 0 8px 0;
+  font-weight: 600;
+  text-decoration: none;
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  left: 0;
+  outline: 3px solid #60a5fa;
+  outline-offset: 2px;
+}
+
+/* A11y — global focus-visible ring */
+*:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

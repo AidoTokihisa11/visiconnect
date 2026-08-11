@@ -33,6 +33,7 @@ import SchedulerPageNew from './pages/SchedulerPageNew';
 import AdminDashboard from './pages/AdminDashboard';
 import TermsPage from './pages/TermsPage';
 import CookiesPage from './pages/CookiesPage';
+import LegalPage from './pages/LegalPage';
 import DemoPageNew from './pages/DemoPageNew';
 import MeetingRoomPage from './pages/MeetingRoomPage';
 import ChangelogPage from './pages/ChangelogPage';
@@ -83,50 +84,54 @@ function App() {
               <AuthProvider>
                 <AdminProvider>
                   <AdminToolbar />
-                  <Routes>
-                    <Route
-                      path="/sso-callback"
-                      element={
-                        <AuthenticateWithRedirectCallback signUpForceRedirectUrl="/signup" />
-                      }
-                    />
+                  <main id="main-content" tabIndex="-1">
+                    <Routes>
+                      <Route
+                        path="/sso-callback"
+                        element={
+                          <AuthenticateWithRedirectCallback signUpForceRedirectUrl="/signup" />
+                        }
+                      />
 
-                    <Route path="/" element={<HomePageClean />} />
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/signup" element={<SignupPage />} />
-                    <Route path="/register" element={<Navigate to="/signup" replace />} />
-                    <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-                    <Route path="/reset-password" element={<ResetPasswordPage />} />
-                    <Route path="/room/:roomId" element={<Navigate to="/dashboard" replace />} />
-                    <Route path="/meeting/:roomId" element={<MeetingRoomPage />} />
-                    <Route path="/admin" element={<AdminDashboard />} />
-                    <Route path="/settings" element={<SettingsPage />} />
-                    <Route path="/support" element={<SupportPageNew />} />
-                    <Route path="/account" element={<AccountPageSimple />} />
-                    <Route path="/checkout" element={<Navigate to="/pricing" replace />} />
-                    <Route path="/success" element={<SuccessPage />} />
-                    <Route path="/user-guide" element={<UserGuidePage />} />
-                    <Route path="/community" element={<CommunityPage />} />
-                    <Route path="/security" element={<SecurityPage />} />
-                    <Route path="/integrations" element={<IntegrationsPage />} />
-                    <Route path="/about" element={<AboutPageNew />} />
-                    <Route path="/pricing" element={<PricingPage />} />
-                    <Route path="/privacy" element={<PrivacyPage />} />
-                    <Route path="/contact" element={<ContactPage />} />
-                    <Route path="/features" element={<FeaturesPage />} />
-                    <Route path="/developer" element={<DeveloperPage />} />
-                    <Route path="/dashboard" element={<AccountPageSimple />} />
-                    <Route path="/status" element={<StatusPageNew />} />
-                    <Route path="/careers" element={<CareersPageNew />} />
-                    <Route path="/scheduler" element={<SchedulerPageNew />} />
-                    <Route path="/terms" element={<TermsPage />} />
-                    <Route path="/cookies" element={<CookiesPage />} />
-                    <Route path="/demo" element={<DemoPageNew />} />
-                    <Route path="/changelog" element={<ChangelogPage />} />
-                    <Route path="/blog" element={<BlogPage />} />
-                    <Route path="/partners" element={<PartnersPage />} />
-                    <Route path="/docs" element={<DocsPage />} />
-                  </Routes>
+                      <Route path="/" element={<HomePageClean />} />
+                      <Route path="/login" element={<LoginPage />} />
+                      <Route path="/signup" element={<SignupPage />} />
+                      <Route path="/register" element={<Navigate to="/signup" replace />} />
+                      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                      <Route path="/reset-password" element={<ResetPasswordPage />} />
+                      <Route path="/room/:roomId" element={<Navigate to="/dashboard" replace />} />
+                      <Route path="/meeting/:roomId" element={<MeetingRoomPage />} />
+                      <Route path="/admin" element={<AdminDashboard />} />
+                      <Route path="/settings" element={<SettingsPage />} />
+                      <Route path="/support" element={<SupportPageNew />} />
+                      <Route path="/account" element={<AccountPageSimple />} />
+                      <Route path="/checkout" element={<Navigate to="/pricing" replace />} />
+                      <Route path="/success" element={<SuccessPage />} />
+                      <Route path="/user-guide" element={<UserGuidePage />} />
+                      <Route path="/community" element={<CommunityPage />} />
+                      <Route path="/security" element={<SecurityPage />} />
+                      <Route path="/integrations" element={<IntegrationsPage />} />
+                      <Route path="/about" element={<AboutPageNew />} />
+                      <Route path="/pricing" element={<PricingPage />} />
+                      <Route path="/privacy" element={<PrivacyPage />} />
+                      <Route path="/contact" element={<ContactPage />} />
+                      <Route path="/features" element={<FeaturesPage />} />
+                      <Route path="/developer" element={<DeveloperPage />} />
+                      <Route path="/dashboard" element={<AccountPageSimple />} />
+                      <Route path="/status" element={<StatusPageNew />} />
+                      <Route path="/careers" element={<CareersPageNew />} />
+                      <Route path="/scheduler" element={<SchedulerPageNew />} />
+                      <Route path="/terms" element={<TermsPage />} />
+                      <Route path="/cookies" element={<CookiesPage />} />
+                      <Route path="/legal" element={<LegalPage />} />
+                      <Route path="/mentions-legales" element={<Navigate to="/legal" replace />} />
+                      <Route path="/demo" element={<DemoPageNew />} />
+                      <Route path="/changelog" element={<ChangelogPage />} />
+                      <Route path="/blog" element={<BlogPage />} />
+                      <Route path="/partners" element={<PartnersPage />} />
+                      <Route path="/docs" element={<DocsPage />} />
+                    </Routes>
+                  </main>
                   <AIChatbot />
                   <BackToTopButton />
                 </AdminProvider>

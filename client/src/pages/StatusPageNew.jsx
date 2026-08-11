@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import { useTranslation } from '../hooks/useTranslation';
+import SEO from '../components/SEO';
 
 const COLORS = {
   primary: 'hsl(var(--primary))',
@@ -196,61 +197,68 @@ const StatusPageNew = () => {
   const { t } = useTranslation();
 
   return (
-    <PageContainer>
-      <HeaderClean />
-      <MainContent>
-        <Hero>
-          <StatusBadge>{t('status.allOperational')}</StatusBadge>
-          <Title>{t('status.title')}</Title>
-          <LastUpdated>{t('status.lastUpdate')}</LastUpdated>
-        </Hero>
+    <>
+      <SEO
+        title="Statut"
+        description="État en temps réel des services VisioConnect."
+        path="/status"
+      />
+      <PageContainer>
+        <HeaderClean />
+        <MainContent>
+          <Hero>
+            <StatusBadge>{t('status.allOperational')}</StatusBadge>
+            <Title>{t('status.title')}</Title>
+            <LastUpdated>{t('status.lastUpdate')}</LastUpdated>
+          </Hero>
 
-        <Container>
-          <SystemGrid>
-            <SystemCard>
-              <SystemName>{t('status.services.api')}</SystemName>
-              <StatusIndicator status="operational">{t('status.operational')}</StatusIndicator>
-            </SystemCard>
-            <SystemCard>
-              <SystemName>{t('status.services.video')}</SystemName>
-              <StatusIndicator status="operational">{t('status.operational')}</StatusIndicator>
-            </SystemCard>
-            <SystemCard>
-              <SystemName>{t('status.services.web')}</SystemName>
-              <StatusIndicator status="operational">{t('status.operational')}</StatusIndicator>
-            </SystemCard>
-            <SystemCard>
-              <SystemName>{t('status.services.db')}</SystemName>
-              <StatusIndicator status="operational">{t('status.operational')}</StatusIndicator>
-            </SystemCard>
-            <SystemCard>
-              <SystemName>{t('status.services.ai')}</SystemName>
-              <StatusIndicator status="operational">{t('status.operational')}</StatusIndicator>
-            </SystemCard>
-          </SystemGrid>
+          <Container>
+            <SystemGrid>
+              <SystemCard>
+                <SystemName>{t('status.services.api')}</SystemName>
+                <StatusIndicator status="operational">{t('status.operational')}</StatusIndicator>
+              </SystemCard>
+              <SystemCard>
+                <SystemName>{t('status.services.video')}</SystemName>
+                <StatusIndicator status="operational">{t('status.operational')}</StatusIndicator>
+              </SystemCard>
+              <SystemCard>
+                <SystemName>{t('status.services.web')}</SystemName>
+                <StatusIndicator status="operational">{t('status.operational')}</StatusIndicator>
+              </SystemCard>
+              <SystemCard>
+                <SystemName>{t('status.services.db')}</SystemName>
+                <StatusIndicator status="operational">{t('status.operational')}</StatusIndicator>
+              </SystemCard>
+              <SystemCard>
+                <SystemName>{t('status.services.ai')}</SystemName>
+                <StatusIndicator status="operational">{t('status.operational')}</StatusIndicator>
+              </SystemCard>
+            </SystemGrid>
 
-          <UptimeSection>
-            <SectionTitle>{t('status.uptimeTitle')}</SectionTitle>
-            <UptimeGraph>{t('status.uptimeChart')}</UptimeGraph>
-          </UptimeSection>
+            <UptimeSection>
+              <SectionTitle>{t('status.uptimeTitle')}</SectionTitle>
+              <UptimeGraph>{t('status.uptimeChart')}</UptimeGraph>
+            </UptimeSection>
 
-          <IncidentHistory>
-            <SectionTitle>{t('status.incidents.title')}</SectionTitle>
-            <IncidentCard>
-              <IncidentDate>{t('status.incidents.0.date')}</IncidentDate>
-              <IncidentTitle>{t('status.incidents.0.title')}</IncidentTitle>
-              <IncidentDesc>{t('status.incidents.0.desc')}</IncidentDesc>
-            </IncidentCard>
-            <IncidentCard>
-              <IncidentDate>{t('status.incidents.1.date')}</IncidentDate>
-              <IncidentTitle>{t('status.incidents.1.title')}</IncidentTitle>
-              <IncidentDesc>{t('status.incidents.1.desc')}</IncidentDesc>
-            </IncidentCard>
-          </IncidentHistory>
-        </Container>
-      </MainContent>
-      <FooterClean />
-    </PageContainer>
+            <IncidentHistory>
+              <SectionTitle>{t('status.incidents.title')}</SectionTitle>
+              <IncidentCard>
+                <IncidentDate>{t('status.incidents.0.date')}</IncidentDate>
+                <IncidentTitle>{t('status.incidents.0.title')}</IncidentTitle>
+                <IncidentDesc>{t('status.incidents.0.desc')}</IncidentDesc>
+              </IncidentCard>
+              <IncidentCard>
+                <IncidentDate>{t('status.incidents.1.date')}</IncidentDate>
+                <IncidentTitle>{t('status.incidents.1.title')}</IncidentTitle>
+                <IncidentDesc>{t('status.incidents.1.desc')}</IncidentDesc>
+              </IncidentCard>
+            </IncidentHistory>
+          </Container>
+        </MainContent>
+        <FooterClean />
+      </PageContainer>
+    </>
   );
 };
 

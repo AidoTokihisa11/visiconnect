@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useTranslation } from '../hooks/useTranslation';
 import LegalLayout from '../components/LegalLayout';
 import CallToAction from '../components/CallToAction';
+import SEO from '../components/SEO';
 
 const Paragraph = styled.p`
   line-height: 1.8;
@@ -31,10 +32,15 @@ const PrivacyPage = () => {
 
   return (
     <LegalLayout title={t('privacyPolicy')} lastUpdated="21 Février 2024">
+      <SEO
+        title="Politique de confidentialité"
+        description="Politique de confidentialité de VisioConnect : traitement des données et droits RGPD."
+        path="/privacy"
+      />
       <Paragraph>
-        Chez VisioConnect, nous prenons votre confidentialité très au sérieux. Cette politique décrit
-        comment nous recueillons, utilisons et protégeons vos informations personnelles lorsque vous
-        utilisez nos services de visioconférence et de collaboration.
+        Chez VisioConnect, nous prenons votre confidentialité très au sérieux. Cette politique
+        décrit comment nous recueillons, utilisons et protégeons vos informations personnelles
+        lorsque vous utilisez nos services de visioconférence et de collaboration.
       </Paragraph>
 
       <SectionTitle>1. Collecte des Informations</SectionTitle>

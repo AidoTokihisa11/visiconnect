@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import { useTranslation } from '../hooks/useTranslation';
+import SEO from '../components/SEO';
 
 const COLORS = {
   primary: 'hsl(var(--primary))',
@@ -206,60 +207,63 @@ const ContactButton = styled.button`
 const SupportPageNew = () => {
   const { t } = useTranslation();
   return (
-    <PageContainer>
-      <HeaderClean />
-      <MainContent>
-        <HeroSection>
-          <Title>{t('support.hero.title')}</Title>
-          <Subtitle>{t('support.hero.subtitle')}</Subtitle>
-          <SearchContainer>
-            <SearchInput placeholder={t('support.search')} />
-            <SearchIcon>🔍</SearchIcon>
-          </SearchContainer>
-        </HeroSection>
+    <>
+      <SEO title="Support" description="Centre d’aide et support VisioConnect." path="/support" />
+      <PageContainer>
+        <HeaderClean />
+        <MainContent>
+          <HeroSection>
+            <Title>{t('support.hero.title')}</Title>
+            <Subtitle>{t('support.hero.subtitle')}</Subtitle>
+            <SearchContainer>
+              <SearchInput placeholder={t('support.search')} />
+              <SearchIcon>🔍</SearchIcon>
+            </SearchContainer>
+          </HeroSection>
 
-        <CategoriesGrid>
-          <CategoryCard href="#getting-started">
-            <IconBox bgColor="#eff6ff" color="#2563eb">
-              🚀
-            </IconBox>
-            <CategoryTitle>{t('support.categories.0.title')}</CategoryTitle>
-            <CategoryDesc>{t('support.categories.0.desc')}</CategoryDesc>
-          </CategoryCard>
+          <CategoriesGrid>
+            <CategoryCard href="#getting-started">
+              <IconBox bgColor="#eff6ff" color="#2563eb">
+                🚀
+              </IconBox>
+              <CategoryTitle>{t('support.categories.0.title')}</CategoryTitle>
+              <CategoryDesc>{t('support.categories.0.desc')}</CategoryDesc>
+            </CategoryCard>
 
-          <CategoryCard href="#troubleshooting">
-            <IconBox bgColor="#fef2f2" color="#dc2626">
-              🛠️
-            </IconBox>
-            <CategoryTitle>{t('support.categories.1.title')}</CategoryTitle>
-            <CategoryDesc>{t('support.categories.1.desc')}</CategoryDesc>
-          </CategoryCard>
+            <CategoryCard href="#troubleshooting">
+              <IconBox bgColor="#fef2f2" color="#dc2626">
+                🛠️
+              </IconBox>
+              <CategoryTitle>{t('support.categories.1.title')}</CategoryTitle>
+              <CategoryDesc>{t('support.categories.1.desc')}</CategoryDesc>
+            </CategoryCard>
 
-          <CategoryCard href="#account">
-            <IconBox bgColor="#f0fdf4" color="#16a34a">
-              👤
-            </IconBox>
-            <CategoryTitle>{t('support.categories.2.title')}</CategoryTitle>
-            <CategoryDesc>{t('support.categories.2.desc')}</CategoryDesc>
-          </CategoryCard>
+            <CategoryCard href="#account">
+              <IconBox bgColor="#f0fdf4" color="#16a34a">
+                👤
+              </IconBox>
+              <CategoryTitle>{t('support.categories.2.title')}</CategoryTitle>
+              <CategoryDesc>{t('support.categories.2.desc')}</CategoryDesc>
+            </CategoryCard>
 
-          <CategoryCard href="#billing">
-            <IconBox bgColor="#fff7ed" color="#ea580c">
-              💳
-            </IconBox>
-            <CategoryTitle>{t('support.categories.3.title')}</CategoryTitle>
-            <CategoryDesc>{t('support.categories.3.desc')}</CategoryDesc>
-          </CategoryCard>
-        </CategoriesGrid>
+            <CategoryCard href="#billing">
+              <IconBox bgColor="#fff7ed" color="#ea580c">
+                💳
+              </IconBox>
+              <CategoryTitle>{t('support.categories.3.title')}</CategoryTitle>
+              <CategoryDesc>{t('support.categories.3.desc')}</CategoryDesc>
+            </CategoryCard>
+          </CategoriesGrid>
 
-        <ContactSection>
-          <ContactTitle>{t('support.cta.title')}</ContactTitle>
-          <ContactText>{t('support.cta.description')}</ContactText>
-          <ContactButton>{t('support.cta.button')}</ContactButton>
-        </ContactSection>
-      </MainContent>
-      <FooterClean />
-    </PageContainer>
+          <ContactSection>
+            <ContactTitle>{t('support.cta.title')}</ContactTitle>
+            <ContactText>{t('support.cta.description')}</ContactText>
+            <ContactButton>{t('support.cta.button')}</ContactButton>
+          </ContactSection>
+        </MainContent>
+        <FooterClean />
+      </PageContainer>
+    </>
   );
 };
 

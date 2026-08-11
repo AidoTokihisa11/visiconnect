@@ -5,6 +5,7 @@ import { Mail, Building2, MapPin, CheckCircle2, AlertCircle, Briefcase } from 'l
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import { useTranslation } from '../hooks/useTranslation';
+import SEO from '../components/SEO';
 
 const contactAddress = ['contact', 'visioconnect.pro'].join('@');
 
@@ -400,211 +401,218 @@ export default function ContactPage() {
   };
 
   return (
-    <PageLayout>
-      <HeaderClean />
-      <ContentWrapper>
-        <MainHeader
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-        >
-          <h1>
-            {t('contact.header.title_part1')} <span>{t('contact.header.title_part2')}</span>
-          </h1>
-          <p>{t('contact.header.subtitle')}</p>
-        </MainHeader>
+    <>
+      <SEO
+        title="Contact"
+        description="Une question, un partenariat, un signalement ? Contactez l’équipe VisioConnect."
+        path="/contact"
+      />
+      <PageLayout>
+        <HeaderClean />
+        <ContentWrapper>
+          <MainHeader
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <h1>
+              {t('contact.header.title_part1')} <span>{t('contact.header.title_part2')}</span>
+            </h1>
+            <p>{t('contact.header.subtitle')}</p>
+          </MainHeader>
 
-        <ContactContainer
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
-          {/* Panneau d'Information (Couleurs claires VisioConnect) */}
-          <LeftPanel>
-            <PanelContent>
-              <h3>{t('contact.info.title')}</h3>
-              <p className="desc">{t('contact.info.desc')}</p>
+          <ContactContainer
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            {/* Panneau d'Information (Couleurs claires VisioConnect) */}
+            <LeftPanel>
+              <PanelContent>
+                <h3>{t('contact.info.title')}</h3>
+                <p className="desc">{t('contact.info.desc')}</p>
 
-              <InfoBlock>
-                <div className="icon-container">
-                  <Mail size={20} strokeWidth={2.5} />
-                </div>
-                <div className="text-container">
-                  <h4>{t('contact.info.email_title')}</h4>
-                  <a href={`mailto:${contactAddress}`}>{contactAddress}</a>
-                </div>
-              </InfoBlock>
-
-              <InfoBlock>
-                <div className="icon-container">
-                  <Briefcase size={20} strokeWidth={2.5} />
-                </div>
-                <div className="text-container">
-                  <h4>{t('contact.info.enterprise_title')}</h4>
-                  <p>{t('contact.info.enterprise_desc')}</p>
-                </div>
-              </InfoBlock>
-
-              <InfoBlock>
-                <div className="icon-container">
-                  <MapPin size={20} strokeWidth={2.5} />
-                </div>
-                <div className="text-container">
-                  <h4>{t('contact.info.hours_title')}</h4>
-                  <p>
-                    Lundi au Vendredi
-                    <br />
-                    09:00 - 18:00 (Paris)
-                  </p>
-                </div>
-              </InfoBlock>
-            </PanelContent>
-          </LeftPanel>
-
-          {/* Formulaire (Proportionné et responsive) */}
-          <RightPanel>
-            <AnimatePresence mode="wait">
-              {status === 'success' && (
-                <AlertBox
-                  key="success"
-                  className="success"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, height: 0, marginBottom: 0, padding: 0 }}
-                >
-                  <CheckCircle2 size={24} />
-                  <div>
-                    <strong>{t('contact.form.success_title')}</strong>
-                    <br />
-                    Notre équipe reviendra vers vous rapidement.
+                <InfoBlock>
+                  <div className="icon-container">
+                    <Mail size={20} strokeWidth={2.5} />
                   </div>
-                </AlertBox>
-              )}
-              {status === 'error' && (
-                <AlertBox
-                  key="error"
-                  className="error"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                >
-                  <AlertCircle size={24} />
-                  <div>
-                    <strong>{t('contact.form.error_title')}</strong>
-                    <br />
-                    Veuillez réessayer ou nous contacter directement par e-mail.
+                  <div className="text-container">
+                    <h4>{t('contact.info.email_title')}</h4>
+                    <a href={`mailto:${contactAddress}`}>{contactAddress}</a>
                   </div>
-                </AlertBox>
-              )}
-            </AnimatePresence>
+                </InfoBlock>
 
-            <Form onSubmit={handleSubmit}>
-              <FormRow>
+                <InfoBlock>
+                  <div className="icon-container">
+                    <Briefcase size={20} strokeWidth={2.5} />
+                  </div>
+                  <div className="text-container">
+                    <h4>{t('contact.info.enterprise_title')}</h4>
+                    <p>{t('contact.info.enterprise_desc')}</p>
+                  </div>
+                </InfoBlock>
+
+                <InfoBlock>
+                  <div className="icon-container">
+                    <MapPin size={20} strokeWidth={2.5} />
+                  </div>
+                  <div className="text-container">
+                    <h4>{t('contact.info.hours_title')}</h4>
+                    <p>
+                      Lundi au Vendredi
+                      <br />
+                      09:00 - 18:00 (Paris)
+                    </p>
+                  </div>
+                </InfoBlock>
+              </PanelContent>
+            </LeftPanel>
+
+            {/* Formulaire (Proportionné et responsive) */}
+            <RightPanel>
+              <AnimatePresence mode="wait">
+                {status === 'success' && (
+                  <AlertBox
+                    key="success"
+                    className="success"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, height: 0, marginBottom: 0, padding: 0 }}
+                  >
+                    <CheckCircle2 size={24} />
+                    <div>
+                      <strong>{t('contact.form.success_title')}</strong>
+                      <br />
+                      Notre équipe reviendra vers vous rapidement.
+                    </div>
+                  </AlertBox>
+                )}
+                {status === 'error' && (
+                  <AlertBox
+                    key="error"
+                    className="error"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <AlertCircle size={24} />
+                    <div>
+                      <strong>{t('contact.form.error_title')}</strong>
+                      <br />
+                      Veuillez réessayer ou nous contacter directement par e-mail.
+                    </div>
+                  </AlertBox>
+                )}
+              </AnimatePresence>
+
+              <Form onSubmit={handleSubmit}>
+                <FormRow>
+                  <FormGroup>
+                    <label htmlFor="firstName">{t('contact.form.first_name')}</label>
+                    <Input
+                      type="text"
+                      id="firstName"
+                      name="firstName"
+                      placeholder={t('contact.form.first_name_placeholder')}
+                      required
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <label htmlFor="lastName">{t('contact.form.last_name')}</label>
+                    <Input
+                      type="text"
+                      id="lastName"
+                      name="lastName"
+                      placeholder={t('contact.form.last_name_placeholder')}
+                      required
+                    />
+                  </FormGroup>
+                </FormRow>
+
+                <FormRow>
+                  <FormGroup>
+                    <label htmlFor="email">{t('contact.form.email')}</label>
+                    <Input
+                      type="email"
+                      id="email"
+                      name="email"
+                      placeholder={t('contact.form.email_placeholder')}
+                      required
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <label htmlFor="phone">
+                      Téléphone <span className="sub-label">(Optionnel)</span>
+                    </label>
+                    <Input type="tel" id="phone" name="phone" placeholder="+33 6 00 00 00 00" />
+                  </FormGroup>
+                </FormRow>
+
                 <FormGroup>
-                  <label htmlFor="firstName">{t('contact.form.first_name')}</label>
+                  <label htmlFor="company">{t('contact.form.company')}</label>
                   <Input
                     type="text"
-                    id="firstName"
-                    name="firstName"
-                    placeholder={t('contact.form.first_name_placeholder')}
+                    id="company"
+                    name="company"
+                    placeholder={t('contact.form.company_placeholder')}
                     required
                   />
                 </FormGroup>
+
                 <FormGroup>
-                  <label htmlFor="lastName">{t('contact.form.last_name')}</label>
-                  <Input
-                    type="text"
-                    id="lastName"
-                    name="lastName"
-                    placeholder={t('contact.form.last_name_placeholder')}
+                  <label htmlFor="category">{t('contact.form.category')}</label>
+                  <SelectWrapper>
+                    <select id="category" name="category" required defaultValue="">
+                      <option value="" disabled>
+                        Sélectionnez un sujet...
+                      </option>
+                      <option value="Démo">{t('contact.form.category_options.demo')}</option>
+                      <option value="Tarifs">Question sur les tarifs (Devis)</option>
+                      <option value="Partenariat">Proposition de partenariat</option>
+                      <option value="Support">{t('contact.form.category_options.support')}</option>
+                      <option value="Autre">{t('contact.form.category_options.other')}</option>
+                    </select>
+                    <div className="icon-right">
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </svg>
+                    </div>
+                  </SelectWrapper>
+                </FormGroup>
+
+                <FormGroup>
+                  <label htmlFor="message">{t('contact.form.message')}</label>
+                  <TextArea
+                    id="message"
+                    name="message"
+                    placeholder={t('contact.form.message_placeholder')}
                     required
-                  />
+                  ></TextArea>
                 </FormGroup>
-              </FormRow>
 
-              <FormRow>
-                <FormGroup>
-                  <label htmlFor="email">{t('contact.form.email')}</label>
-                  <Input
-                    type="email"
-                    id="email"
-                    name="email"
-                    placeholder={t('contact.form.email_placeholder')}
-                    required
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <label htmlFor="phone">
-                    Téléphone <span className="sub-label">(Optionnel)</span>
-                  </label>
-                  <Input type="tel" id="phone" name="phone" placeholder="+33 6 00 00 00 00" />
-                </FormGroup>
-              </FormRow>
-
-              <FormGroup>
-                <label htmlFor="company">{t('contact.form.company')}</label>
-                <Input
-                  type="text"
-                  id="company"
-                  name="company"
-                  placeholder={t('contact.form.company_placeholder')}
-                  required
-                />
-              </FormGroup>
-
-              <FormGroup>
-                <label htmlFor="category">{t('contact.form.category')}</label>
-                <SelectWrapper>
-                  <select id="category" name="category" required defaultValue="">
-                    <option value="" disabled>
-                      Sélectionnez un sujet...
-                    </option>
-                    <option value="Démo">{t('contact.form.category_options.demo')}</option>
-                    <option value="Tarifs">Question sur les tarifs (Devis)</option>
-                    <option value="Partenariat">Proposition de partenariat</option>
-                    <option value="Support">{t('contact.form.category_options.support')}</option>
-                    <option value="Autre">{t('contact.form.category_options.other')}</option>
-                  </select>
-                  <div className="icon-right">
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
-                  </div>
-                </SelectWrapper>
-              </FormGroup>
-
-              <FormGroup>
-                <label htmlFor="message">{t('contact.form.message')}</label>
-                <TextArea
-                  id="message"
-                  name="message"
-                  placeholder={t('contact.form.message_placeholder')}
-                  required
-                ></TextArea>
-              </FormGroup>
-
-              <SubmitBtn
-                type="submit"
-                disabled={isSubmitting}
-                whileHover={{ scale: isSubmitting ? 1 : 1.01 }}
-                whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
-              >
-                {isSubmitting ? t('contact.form.submitting') : t('contact.form.submit_button')}
-              </SubmitBtn>
-            </Form>
-          </RightPanel>
-        </ContactContainer>
-      </ContentWrapper>
-      <FooterClean />
-    </PageLayout>
+                <SubmitBtn
+                  type="submit"
+                  disabled={isSubmitting}
+                  whileHover={{ scale: isSubmitting ? 1 : 1.01 }}
+                  whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
+                >
+                  {isSubmitting ? t('contact.form.submitting') : t('contact.form.submit_button')}
+                </SubmitBtn>
+              </Form>
+            </RightPanel>
+          </ContactContainer>
+        </ContentWrapper>
+        <FooterClean />
+      </PageLayout>
+    </>
   );
 }

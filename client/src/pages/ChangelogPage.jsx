@@ -15,6 +15,7 @@ import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import CallToAction from '../components/CallToAction';
 import { useTranslation } from '../hooks/useTranslation';
+import SEO from '../components/SEO';
 
 // ─── Colour palette ──────────────────────────────────────────────────────────
 const C = {
@@ -91,7 +92,8 @@ const HeroWrap = styled.section`
 
   @media (max-width: 480px) {
     padding: 2.6rem 1rem 2rem;
-  }`;
+  }
+`;
 
 const Eyebrow = styled.div`
   display: inline-flex;
@@ -389,35 +391,42 @@ const ChangelogPage = () => {
             {items.map((item, idx) => {
               const Icon = item.meta.icon;
               return (
-                <Entry key={item.version} data-cl-reveal style={{ '--delay': `${idx * 0.08}s` }}>
-                  <IconCircle $color={item.meta.color} $bg={item.meta.bg} $latest={item.latest}>
-                    <Icon size={22} strokeWidth={1.8} />
-                  </IconCircle>
+                <>
+                  <SEO
+                    title="Changelog"
+                    description="Historique des nouveautés et améliorations de VisioConnect."
+                    path="/changelog"
+                  />
+                  <Entry key={item.version} data-cl-reveal style={{ '--delay': `${idx * 0.08}s` }}>
+                    <IconCircle $color={item.meta.color} $bg={item.meta.bg} $latest={item.latest}>
+                      <Icon size={22} strokeWidth={1.8} />
+                    </IconCircle>
 
-                  <Card $color={item.meta.color}>
-                    <CardMeta>
-                      <VersionBadge $color={item.meta.color}>
-                        {item.version}
-                        {item.latest && <LatestDot />}
-                      </VersionBadge>
-                      <TagBadge $color={item.meta.color} $bg={item.meta.bg}>
-                        {item.tag}
-                      </TagBadge>
-                      <DateLabel>{item.date}</DateLabel>
-                    </CardMeta>
+                    <Card $color={item.meta.color}>
+                      <CardMeta>
+                        <VersionBadge $color={item.meta.color}>
+                          {item.version}
+                          {item.latest && <LatestDot />}
+                        </VersionBadge>
+                        <TagBadge $color={item.meta.color} $bg={item.meta.bg}>
+                          {item.tag}
+                        </TagBadge>
+                        <DateLabel>{item.date}</DateLabel>
+                      </CardMeta>
 
-                    <CardTitle>{item.title}</CardTitle>
+                      <CardTitle>{item.title}</CardTitle>
 
-                    <NoteList>
-                      {item.notes.map((note, ni) => (
-                        <NoteItem key={ni} $color={item.meta.color}>
-                          <CheckCircle2 size={16} strokeWidth={2} />
-                          {note}
-                        </NoteItem>
-                      ))}
-                    </NoteList>
-                  </Card>
-                </Entry>
+                      <NoteList>
+                        {item.notes.map((note, ni) => (
+                          <NoteItem key={ni} $color={item.meta.color}>
+                            <CheckCircle2 size={16} strokeWidth={2} />
+                            {note}
+                          </NoteItem>
+                        ))}
+                      </NoteList>
+                    </Card>
+                  </Entry>
+                </>
               );
             })}
           </Rail>

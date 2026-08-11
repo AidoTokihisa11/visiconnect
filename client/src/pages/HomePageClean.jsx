@@ -15,6 +15,7 @@ import FeatureCard from '../components/home/FeatureCard';
 import TestimonialCard from '../components/home/TestimonialCard';
 import PricingCard from '../components/home/PricingCard';
 import HeroConferenceDemo from '../components/home/HeroConferenceDemo';
+import SEO from '../components/SEO';
 
 import {
   Video,
@@ -902,226 +903,246 @@ export default function HomePageClean() {
   const { featuresData, testimonialsData, pricingData, contactLinks } = useHomePageData();
 
   return (
-    <PageContainer>
-      <HeaderClean />
+    <>
+      <SEO
+        title="Visioconférence sécurisée"
+        description="VisioConnect : plateforme de visioconférence sécurisée P2P, chiffrement de bout en bout, tableau blanc collaboratif et enregistrements."
+        path="/"
+      />
+      <PageContainer>
+        <HeaderClean />
 
-      {/* HERO SECTION */}
-      <HeroSection>
-        <HeroContainer>
-          <HeroContent>
-            <HeroHeadline>
-              <EditableText translationKey="hero.titleLine1" defaultValue={t('hero.titleLine1')} />
-              <br />
-              <span>
+        {/* HERO SECTION */}
+        <HeroSection>
+          <HeroContainer>
+            <HeroContent>
+              <HeroHeadline>
                 <EditableText
-                  translationKey="hero.titleLine2"
-                  defaultValue={t('hero.titleLine2')}
+                  translationKey="hero.titleLine1"
+                  defaultValue={t('hero.titleLine1')}
                 />
-              </span>
-            </HeroHeadline>
-            <HeroSubhead>
-              <EditableText
-                translationKey="hero.subtitle"
-                defaultValue={t('hero.subtitle')}
-                type="textarea"
+                <br />
+                <span>
+                  <EditableText
+                    translationKey="hero.titleLine2"
+                    defaultValue={t('hero.titleLine2')}
+                  />
+                </span>
+              </HeroHeadline>
+              <HeroSubhead>
+                <EditableText
+                  translationKey="hero.subtitle"
+                  defaultValue={t('hero.subtitle')}
+                  type="textarea"
+                />
+              </HeroSubhead>
+              <HeroActions>
+                <CtaRow>
+                  <CtaButton to="/signup" $variant="primary" aria-label={t('hero.startFree')}>
+                    {t('hero.startFree')}
+                    <ArrowRight size={16} strokeWidth={2.25} aria-hidden="true" />
+                  </CtaButton>
+
+                  <CtaButton to="/demo?join=1" aria-label={t('hero.testRoom')}>
+                    {t('hero.testRoom')}
+                  </CtaButton>
+                </CtaRow>
+
+                <HeroMeta aria-label="Avantages">
+                  <li>
+                    <Check size={14} strokeWidth={2.75} aria-hidden="true" />
+                    Gratuit
+                  </li>
+                  <li>
+                    <Check size={14} strokeWidth={2.75} aria-hidden="true" />
+                    Aucune carte bancaire
+                  </li>
+                  <li>
+                    <Check size={14} strokeWidth={2.75} aria-hidden="true" />
+                    30 s pour démarrer
+                  </li>
+                </HeroMeta>
+
+                <CtaTertiary to="/demo">
+                  <Play size={12} fill="currentColor" />
+                  {t('hero.watchDemo')} · {t('hero.watchDemoSub')}
+                </CtaTertiary>
+              </HeroActions>
+            </HeroContent>
+
+            <HeroImage>
+              <HeroConferenceDemo />
+            </HeroImage>
+          </HeroContainer>
+        </HeroSection>
+
+        <FeaturesCarousel3D />
+
+        {/* FEATURES TABS SECTION */}
+        <FeaturesTabs t={t} />
+
+        {/* FEATURES SECTION */}
+        <FeaturesSection id="features">
+          <SectionHeader>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <SectionTitle>{t('homeFeatures.title')}</SectionTitle>
+              <SectionSubtitle>{t('homeFeatures.subtitle')}</SectionSubtitle>
+            </motion.div>
+          </SectionHeader>
+
+          <FeaturesGrid>
+            {featuresData?.map((feature, index) => (
+              <FeatureCard
+                key={index}
+                icon={feature.icon}
+                title={feature.title}
+                description={feature.description}
+                items={Array.isArray(feature.items) ? feature.items : []}
+                iconBg={feature.iconBg}
+                iconColor={feature.iconColor}
+                delay={index * 0.1}
               />
-            </HeroSubhead>
-            <HeroActions>
-              <CtaRow>
-                <CtaButton to="/signup" $variant="primary" aria-label={t('hero.startFree')}>
-                  {t('hero.startFree')}
-                  <ArrowRight size={16} strokeWidth={2.25} aria-hidden="true" />
-                </CtaButton>
-
-                <CtaButton to="/demo?join=1" aria-label={t('hero.testRoom')}>
-                  {t('hero.testRoom')}
-                </CtaButton>
-              </CtaRow>
-
-              <HeroMeta aria-label="Avantages">
-                <li>
-                  <Check size={14} strokeWidth={2.75} aria-hidden="true" />
-                  Gratuit
-                </li>
-                <li>
-                  <Check size={14} strokeWidth={2.75} aria-hidden="true" />
-                  Aucune carte bancaire
-                </li>
-                <li>
-                  <Check size={14} strokeWidth={2.75} aria-hidden="true" />
-                  30 s pour démarrer
-                </li>
-              </HeroMeta>
-
-              <CtaTertiary to="/demo">
-                <Play size={12} fill="currentColor" />
-                {t('hero.watchDemo')} · {t('hero.watchDemoSub')}
-              </CtaTertiary>
-            </HeroActions>
-          </HeroContent>
-
-          <HeroImage>
-            <HeroConferenceDemo />
-          </HeroImage>
-        </HeroContainer>
-      </HeroSection>
-
-      <FeaturesCarousel3D />
-
-      {/* FEATURES TABS SECTION */}
-      <FeaturesTabs t={t} />
-
-      {/* FEATURES SECTION */}
-      <FeaturesSection id="features">
-        <SectionHeader>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <SectionTitle>{t('homeFeatures.title')}</SectionTitle>
-            <SectionSubtitle>{t('homeFeatures.subtitle')}</SectionSubtitle>
-          </motion.div>
-        </SectionHeader>
-
-        <FeaturesGrid>
-          {featuresData?.map((feature, index) => (
-            <FeatureCard
-              key={index}
-              icon={feature.icon}
-              title={feature.title}
-              description={feature.description}
-              items={Array.isArray(feature.items) ? feature.items : []}
-              iconBg={feature.iconBg}
-              iconColor={feature.iconColor}
-              delay={index * 0.1}
-            />
-          ))}
-        </FeaturesGrid>
-      </FeaturesSection>
-
-      <TechBentoGrid />
-
-      {/* TESTIMONIALS SECTION */}
-      <TestimonialsSection>
-        <SectionHeader>
-          <SectionTitle>{t('testimonials.title')}</SectionTitle>
-          <SectionSubtitle>{t('testimonials.subtitle')}</SectionSubtitle>
-        </SectionHeader>
-
-        <TestimonialsGrid>
-          {testimonialsData?.map((testimonial, index) => (
-            <TestimonialCard
-              key={index}
-              quote={testimonial.quote}
-              author={testimonial.author}
-              title={testimonial.title}
-              avatar={testimonial.avatar}
-            />
-          ))}
-        </TestimonialsGrid>
-      </TestimonialsSection>
-
-      {/* PRICING SECTION */}
-      <PricingSectionWrapper id="pricing">
-        <SectionHeader>
-          <SectionTitle>{t('pricing.title')}</SectionTitle>
-          <SectionSubtitle>{t('pricing.subtitle')}</SectionSubtitle>
-        </SectionHeader>
-
-        <PricingGrid>
-          {pricingData?.map((plan, index) => (
-            <PricingCard
-              key={index}
-              planName={plan.planName}
-              price={plan.price}
-              description={plan.description}
-              features={Array.isArray(plan.features) ? plan.features : []}
-              ctaText={plan.ctaText}
-              ctaLink={plan.ctaLink}
-              isPopular={plan.isPopular}
-            />
-          ))}
-        </PricingGrid>
-      </PricingSectionWrapper>
-
-      {/* ABOUT SECTION */}
-      <AboutSection id="about">
-        <SectionHeader>
-          <SectionTitle>{t('aboutProject')}</SectionTitle>
-          <AboutText>{t('projectDescription')}</AboutText>
-        </SectionHeader>
-
-        <AboutContent>
-          <AboutGrid>
-            <AboutCard>
-              <AboutCardTitle>
-                <Eye size={24} color={COLORS.primary} />
-                {t('myVision')}
-              </AboutCardTitle>
-              <p style={{ color: COLORS.lightText, lineHeight: '1.6' }}>{t('visionDescription')}</p>
-            </AboutCard>
-            <AboutCard>
-              <AboutCardTitle>
-                <Server size={24} color={COLORS.primary} />
-                {t('technologiesUsed')}
-              </AboutCardTitle>
-              <p style={{ color: COLORS.lightText, lineHeight: '1.6' }}>{t('techDescription')}</p>
-            </AboutCard>
-          </AboutGrid>
-
-          <AboutStatsGrid>
-            <AboutStat>
-              <Calendar size={28} color={COLORS.primary} style={{ marginBottom: '0.5rem' }} />
-              <div style={{ fontWeight: '700', fontSize: '1.25rem', color: COLORS.dark }}>2024</div>
-              <div style={{ fontSize: '0.875rem', color: COLORS.lightText }}>
-                {t('creationYear')}
-              </div>
-            </AboutStat>
-            <AboutStat>
-              <Code size={28} color={COLORS.primary} style={{ marginBottom: '0.5rem' }} />
-              <div style={{ fontWeight: '700', fontSize: '1.25rem', color: COLORS.dark }}>
-                {t('philosophyValue')}
-              </div>
-              <div style={{ fontSize: '0.875rem', color: COLORS.lightText }}>{t('philosophy')}</div>
-            </AboutStat>
-            <AboutStat>
-              <Heart size={28} color={COLORS.primary} style={{ marginBottom: '0.5rem' }} />
-              <div style={{ fontWeight: '700', fontSize: '1.25rem', color: COLORS.dark }}>100%</div>
-              <div style={{ fontSize: '0.875rem', color: COLORS.lightText }}>
-                {t('passionLabel')}
-              </div>
-            </AboutStat>
-            <AboutStat>
-              <Globe size={28} color={COLORS.primary} style={{ marginBottom: '0.5rem' }} />
-              <div style={{ fontWeight: '700', fontSize: '1.25rem', color: COLORS.dark }}>
-                {t('globalValue')}
-              </div>
-              <div style={{ fontSize: '0.875rem', color: COLORS.lightText }}>{t('scopeLabel')}</div>
-            </AboutStat>
-          </AboutStatsGrid>
-        </AboutContent>
-      </AboutSection>
-
-      {/* CONTACT SECTION */}
-      <ContactSection id="contact">
-        <ContactContainer>
-          <SectionTitle>{t('contactTitle')}</SectionTitle>
-          <SectionSubtitle>{t('contactDescription')}</SectionSubtitle>
-
-          <ContactActions>
-            {contactLinks?.map((link, index) => (
-              <ContactLink key={index} href={link.href} target={link.target} rel={link.rel}>
-                {link.icon && <link.icon size={24} />}
-                <span>{link.label}</span>
-              </ContactLink>
             ))}
-          </ContactActions>
-        </ContactContainer>
-      </ContactSection>
+          </FeaturesGrid>
+        </FeaturesSection>
 
-      <FooterClean />
-    </PageContainer>
+        <TechBentoGrid />
+
+        {/* TESTIMONIALS SECTION */}
+        <TestimonialsSection>
+          <SectionHeader>
+            <SectionTitle>{t('testimonials.title')}</SectionTitle>
+            <SectionSubtitle>{t('testimonials.subtitle')}</SectionSubtitle>
+          </SectionHeader>
+
+          <TestimonialsGrid>
+            {testimonialsData?.map((testimonial, index) => (
+              <TestimonialCard
+                key={index}
+                quote={testimonial.quote}
+                author={testimonial.author}
+                title={testimonial.title}
+                avatar={testimonial.avatar}
+              />
+            ))}
+          </TestimonialsGrid>
+        </TestimonialsSection>
+
+        {/* PRICING SECTION */}
+        <PricingSectionWrapper id="pricing">
+          <SectionHeader>
+            <SectionTitle>{t('pricing.title')}</SectionTitle>
+            <SectionSubtitle>{t('pricing.subtitle')}</SectionSubtitle>
+          </SectionHeader>
+
+          <PricingGrid>
+            {pricingData?.map((plan, index) => (
+              <PricingCard
+                key={index}
+                planName={plan.planName}
+                price={plan.price}
+                description={plan.description}
+                features={Array.isArray(plan.features) ? plan.features : []}
+                ctaText={plan.ctaText}
+                ctaLink={plan.ctaLink}
+                isPopular={plan.isPopular}
+              />
+            ))}
+          </PricingGrid>
+        </PricingSectionWrapper>
+
+        {/* ABOUT SECTION */}
+        <AboutSection id="about">
+          <SectionHeader>
+            <SectionTitle>{t('aboutProject')}</SectionTitle>
+            <AboutText>{t('projectDescription')}</AboutText>
+          </SectionHeader>
+
+          <AboutContent>
+            <AboutGrid>
+              <AboutCard>
+                <AboutCardTitle>
+                  <Eye size={24} color={COLORS.primary} />
+                  {t('myVision')}
+                </AboutCardTitle>
+                <p style={{ color: COLORS.lightText, lineHeight: '1.6' }}>
+                  {t('visionDescription')}
+                </p>
+              </AboutCard>
+              <AboutCard>
+                <AboutCardTitle>
+                  <Server size={24} color={COLORS.primary} />
+                  {t('technologiesUsed')}
+                </AboutCardTitle>
+                <p style={{ color: COLORS.lightText, lineHeight: '1.6' }}>{t('techDescription')}</p>
+              </AboutCard>
+            </AboutGrid>
+
+            <AboutStatsGrid>
+              <AboutStat>
+                <Calendar size={28} color={COLORS.primary} style={{ marginBottom: '0.5rem' }} />
+                <div style={{ fontWeight: '700', fontSize: '1.25rem', color: COLORS.dark }}>
+                  2024
+                </div>
+                <div style={{ fontSize: '0.875rem', color: COLORS.lightText }}>
+                  {t('creationYear')}
+                </div>
+              </AboutStat>
+              <AboutStat>
+                <Code size={28} color={COLORS.primary} style={{ marginBottom: '0.5rem' }} />
+                <div style={{ fontWeight: '700', fontSize: '1.25rem', color: COLORS.dark }}>
+                  {t('philosophyValue')}
+                </div>
+                <div style={{ fontSize: '0.875rem', color: COLORS.lightText }}>
+                  {t('philosophy')}
+                </div>
+              </AboutStat>
+              <AboutStat>
+                <Heart size={28} color={COLORS.primary} style={{ marginBottom: '0.5rem' }} />
+                <div style={{ fontWeight: '700', fontSize: '1.25rem', color: COLORS.dark }}>
+                  100%
+                </div>
+                <div style={{ fontSize: '0.875rem', color: COLORS.lightText }}>
+                  {t('passionLabel')}
+                </div>
+              </AboutStat>
+              <AboutStat>
+                <Globe size={28} color={COLORS.primary} style={{ marginBottom: '0.5rem' }} />
+                <div style={{ fontWeight: '700', fontSize: '1.25rem', color: COLORS.dark }}>
+                  {t('globalValue')}
+                </div>
+                <div style={{ fontSize: '0.875rem', color: COLORS.lightText }}>
+                  {t('scopeLabel')}
+                </div>
+              </AboutStat>
+            </AboutStatsGrid>
+          </AboutContent>
+        </AboutSection>
+
+        {/* CONTACT SECTION */}
+        <ContactSection id="contact">
+          <ContactContainer>
+            <SectionTitle>{t('contactTitle')}</SectionTitle>
+            <SectionSubtitle>{t('contactDescription')}</SectionSubtitle>
+
+            <ContactActions>
+              {contactLinks?.map((link, index) => (
+                <ContactLink key={index} href={link.href} target={link.target} rel={link.rel}>
+                  {link.icon && <link.icon size={24} />}
+                  <span>{link.label}</span>
+                </ContactLink>
+              ))}
+            </ContactActions>
+          </ContactContainer>
+        </ContactSection>
+
+        <FooterClean />
+      </PageContainer>
+    </>
   );
 }

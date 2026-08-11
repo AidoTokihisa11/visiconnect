@@ -21,6 +21,7 @@ import {
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import { useTranslation } from '../hooks/useTranslation';
+import SEO from '../components/SEO';
 
 /* --- DESIGN TOKENS --- */
 const COLORS = {
@@ -47,12 +48,11 @@ const CATEGORIES = [
       {
         slug: 'creer-compte',
         title: 'Créer votre compte',
-        summary:
-          "Créez un compte VisioConnect en moins d'une minute, sans carte bancaire.",
+        summary: "Créez un compte VisioConnect en moins d'une minute, sans carte bancaire.",
         steps: [
           "Cliquez sur « S'inscrire » en haut à droite du site.",
           'Entrez votre email et choisissez un mot de passe fort (12 caractères min.).',
-          "Confirmez votre email via le lien reçu (vérifiez les spams si besoin).",
+          'Confirmez votre email via le lien reçu (vérifiez les spams si besoin).',
           'Vous arrivez directement sur votre tableau de bord.',
         ],
         cta: { label: 'Créer mon compte', to: '/signup' },
@@ -74,7 +74,7 @@ const CATEGORIES = [
         slug: 'premiere-reunion',
         title: 'Lancer votre première réunion',
         summary:
-          "Créez une salle en un clic et invitez avec un simple lien — aucune installation requise.",
+          'Créez une salle en un clic et invitez avec un simple lien — aucune installation requise.',
         steps: [
           'Depuis le tableau de bord, cliquez sur « Nouvelle réunion ».',
           'Une salle est créée avec un lien unique et un ID lisible.',
@@ -106,8 +106,7 @@ const CATEGORIES = [
       {
         slug: 'partage-ecran',
         title: 'Partager votre écran',
-        summary:
-          'Partagez tout votre écran, une fenêtre spécifique ou un onglet de navigateur.',
+        summary: 'Partagez tout votre écran, une fenêtre spécifique ou un onglet de navigateur.',
         steps: [
           "Cliquez sur l'icône « Partage d'écran » dans la barre d'outils du bas.",
           'Le navigateur propose : Écran entier / Fenêtre / Onglet Chrome.',
@@ -130,13 +129,12 @@ const CATEGORIES = [
       {
         slug: 'enregistrement',
         title: 'Enregistrer la session',
-        summary:
-          "L'enregistrement capture vidéo, audio et partages d'écran de la réunion.",
+        summary: "L'enregistrement capture vidéo, audio et partages d'écran de la réunion.",
         steps: [
           "Le bouton rouge dans la barre d'outils démarre l'enregistrement.",
           'Tous les participants voient un indicateur « REC » — consentement transparent.',
           'Arrêtez à tout moment. Le fichier est traité côté serveur.',
-          "Vous recevez le lien de téléchargement par email dans les 5-10 min qui suivent.",
+          'Vous recevez le lien de téléchargement par email dans les 5-10 min qui suivent.',
         ],
       },
       {
@@ -161,8 +159,7 @@ const CATEGORIES = [
       {
         slug: 'transcription',
         title: 'Transcription en direct',
-        summary:
-          'Sous-titres en temps réel et compte-rendu écrit automatique de la réunion.',
+        summary: 'Sous-titres en temps réel et compte-rendu écrit automatique de la réunion.',
         steps: [
           "Activez « Transcription » depuis le menu « … » de la barre d'outils.",
           "Les sous-titres s'affichent en direct au bas de la vidéo.",
@@ -178,7 +175,7 @@ const CATEGORIES = [
         steps: [
           "Activez d'abord la transcription (voir article précédent).",
           'Ouvrez le menu langue en bas des sous-titres.',
-          "Chaque participant peut choisir sa propre langue cible, indépendamment des autres.",
+          'Chaque participant peut choisir sa propre langue cible, indépendamment des autres.',
           'La latence de traduction est de 1 à 2 s en moyenne.',
         ],
       },
@@ -191,15 +188,14 @@ const CATEGORIES = [
           'Ouvrez la page Intégrations depuis le menu « Mon compte ».',
           "Cliquez sur l'intégration voulue puis « Connecter ».",
           'Autorisez VisioConnect via OAuth (Slack, Google, Microsoft).',
-          "Configurez les déclencheurs (nouvelle réunion, invitation reçue, compte-rendu prêt…).",
+          'Configurez les déclencheurs (nouvelle réunion, invitation reçue, compte-rendu prêt…).',
         ],
         cta: { label: 'Voir les intégrations', to: '/integrations' },
       },
       {
         slug: 'webinaire',
         title: 'Mode webinaire',
-        summary:
-          "Idéal pour les événements >50 personnes : audience silencieuse, Q&R modérée.",
+        summary: 'Idéal pour les événements >50 personnes : audience silencieuse, Q&R modérée.',
         steps: [
           "À la création d'une salle, choisissez « Mode webinaire ».",
           'Définissez les animateurs (ceux qui peuvent parler / partager).',
@@ -217,11 +213,10 @@ const CATEGORIES = [
       {
         slug: 'notifications',
         title: 'Gérer les notifications',
-        summary:
-          'Choisissez quelles alertes vous recevez par email et à quelle fréquence.',
+        summary: 'Choisissez quelles alertes vous recevez par email et à quelle fréquence.',
         steps: [
           'Ouvrez « Mon compte » > onglet « Notifications ».',
-          "Cochez / décochez les événements : invitation reçue, compte-rendu prêt, rappel de réunion…",
+          'Cochez / décochez les événements : invitation reçue, compte-rendu prêt, rappel de réunion…',
           'Choisissez la fréquence des résumés (jamais, quotidien, hebdomadaire).',
           'Vos changements sont enregistrés automatiquement.',
         ],
@@ -230,8 +225,7 @@ const CATEGORIES = [
       {
         slug: 'facturation',
         title: 'Facturation et abonnements',
-        summary:
-          'Consultez votre plan actuel, changez de formule, téléchargez vos factures.',
+        summary: 'Consultez votre plan actuel, changez de formule, téléchargez vos factures.',
         steps: [
           'Allez dans « Mon compte » > onglet « Abonnement ».',
           'Comparez les plans (Free, Pro, Business) et changez à tout moment.',
@@ -243,8 +237,7 @@ const CATEGORIES = [
       {
         slug: 'securite',
         title: 'Sécurité et confidentialité',
-        summary:
-          'Chiffrement E2E, conformité RGPD, gestion des données personnelles.',
+        summary: 'Chiffrement E2E, conformité RGPD, gestion des données personnelles.',
         steps: [
           'Les communications audio/vidéo sont chiffrées de bout en bout (DTLS-SRTP).',
           'Les enregistrements sont chiffrés au repos (AES-256).',
@@ -256,8 +249,7 @@ const CATEGORIES = [
       {
         slug: 'supprimer-compte',
         title: 'Supprimer mon compte',
-        summary:
-          'Suppression définitive et irréversible de votre compte et de toutes vos données.',
+        summary: 'Suppression définitive et irréversible de votre compte et de toutes vos données.',
         steps: [
           'Ouvrez « Mon compte » > onglet « Sécurité ».',
           "Faites défiler jusqu'à la section « Zone de danger ».",
@@ -276,8 +268,7 @@ const CATEGORIES = [
       {
         slug: 'audio-video',
         title: 'Problèmes audio / vidéo',
-        summary:
-          'Micro muet, caméra noire, écho — les résolutions les plus courantes en 4 étapes.',
+        summary: 'Micro muet, caméra noire, écho — les résolutions les plus courantes en 4 étapes.',
         steps: [
           "Vérifiez que le navigateur a bien accès à la caméra / au micro (icône cadenas dans la barre d'adresse).",
           "Rechargez l'onglet (Ctrl+R). Puis testez sur webcamtests.com et mictests.com.",
@@ -312,8 +303,7 @@ const CATEGORIES = [
       {
         slug: 'contacter-support',
         title: 'Contacter le support',
-        summary:
-          "Une question qui reste sans réponse ? Écrivez-nous, on répond sous 24 h ouvrées.",
+        summary: 'Une question qui reste sans réponse ? Écrivez-nous, on répond sous 24 h ouvrées.',
         steps: [
           "Utilisez le formulaire de contact avec le maximum de détails (navigateur, OS, capture d'écran).",
           'Consultez le statut de la plateforme sur /status en cas de panne suspectée.',
@@ -878,13 +868,7 @@ const UserGuidePageNew = () => {
     return CATEGORIES.map((cat) => ({
       ...cat,
       articles: cat.articles.filter((a) => {
-        const haystack = (
-          a.title +
-          ' ' +
-          a.summary +
-          ' ' +
-          a.steps.join(' ')
-        ).toLowerCase();
+        const haystack = (a.title + ' ' + a.summary + ' ' + a.steps.join(' ')).toLowerCase();
         return haystack.includes(q);
       }),
     })).filter((cat) => cat.articles.length > 0);
@@ -923,8 +907,8 @@ const UserGuidePageNew = () => {
             <HeroEyebrow>{t('userGuide.hero.title')}</HeroEyebrow>
             <HeroTitle>Trouvez la réponse à toutes vos questions</HeroTitle>
             <HeroSubtitle>
-              {t('userGuide.hero.subtitle')} Guides pas à pas, résolution de
-              problèmes et intégrations.
+              {t('userGuide.hero.subtitle')} Guides pas à pas, résolution de problèmes et
+              intégrations.
             </HeroSubtitle>
             <SearchWrap>
               <Search size={18} />
@@ -981,9 +965,7 @@ const UserGuidePageNew = () => {
                   <ChevronRight size={14} />
                   <span>{activeArticle.category.title}</span>
                   <ChevronRight size={14} />
-                  <span style={{ color: COLORS.dark, fontWeight: 600 }}>
-                    {activeArticle.title}
-                  </span>
+                  <span style={{ color: COLORS.dark, fontWeight: 600 }}>{activeArticle.title}</span>
                 </Breadcrumb>
 
                 <Article id={activeArticle.slug} className="highlighted">
@@ -1012,9 +994,7 @@ const UserGuidePageNew = () => {
                     <NavLabel $dir="prev">
                       <ChevronLeft size={14} /> Précédent
                     </NavLabel>
-                    <NavTitle>
-                      {prevArticle ? prevArticle.title : '—'}
-                    </NavTitle>
+                    <NavTitle>{prevArticle ? prevArticle.title : '—'}</NavTitle>
                   </NavButton>
                   <NavButton
                     type="button"
@@ -1025,9 +1005,7 @@ const UserGuidePageNew = () => {
                     <NavLabel $dir="next">
                       Suivant <ChevronRight size={14} />
                     </NavLabel>
-                    <NavTitle>
-                      {nextArticle ? nextArticle.title : '—'}
-                    </NavTitle>
+                    <NavTitle>{nextArticle ? nextArticle.title : '—'}</NavTitle>
                   </NavButton>
                 </PrevNext>
               </>
@@ -1036,22 +1014,15 @@ const UserGuidePageNew = () => {
                 <QuickAccessSection>
                   <QuickAccessTitle>Démarrage rapide</QuickAccessTitle>
                   <QuickAccessSubtitle>
-                    Les 4 questions les plus fréquentes — cliquez pour la
-                    réponse en 30 secondes.
+                    Les 4 questions les plus fréquentes — cliquez pour la réponse en 30 secondes.
                   </QuickAccessSubtitle>
                   <QuickGrid>
                     {QUICK_ACCESS.map((q) => {
-                      const article = FLAT_ARTICLES.find(
-                        (a) => a.slug === q.slug
-                      );
+                      const article = FLAT_ARTICLES.find((a) => a.slug === q.slug);
                       if (!article) return null;
                       const Icon = q.icon;
                       return (
-                        <QuickCard
-                          key={q.slug}
-                          type="button"
-                          onClick={() => setActiveSlug(q.slug)}
-                        >
+                        <QuickCard key={q.slug} type="button" onClick={() => setActiveSlug(q.slug)}>
                           <QuickIcon>
                             <Icon size={20} />
                           </QuickIcon>
@@ -1070,17 +1041,24 @@ const UserGuidePageNew = () => {
                   {CATEGORIES.map((cat) => {
                     const Icon = cat.icon;
                     return (
-                      <QuickCard
-                        key={cat.id}
-                        type="button"
-                        onClick={() => setActiveSlug(cat.articles[0].slug)}
-                      >
-                        <QuickIcon>
-                          <Icon size={20} />
-                        </QuickIcon>
-                        <QuickTitle>{cat.title}</QuickTitle>
-                        <QuickDesc>{cat.articles.length} articles</QuickDesc>
-                      </QuickCard>
+                      <>
+                        <SEO
+                          title="Guide d’utilisation"
+                          description="Guide d’utilisation pas-à-pas de VisioConnect."
+                          path="/user-guide"
+                        />
+                        <QuickCard
+                          key={cat.id}
+                          type="button"
+                          onClick={() => setActiveSlug(cat.articles[0].slug)}
+                        >
+                          <QuickIcon>
+                            <Icon size={20} />
+                          </QuickIcon>
+                          <QuickTitle>{cat.title}</QuickTitle>
+                          <QuickDesc>{cat.articles.length} articles</QuickDesc>
+                        </QuickCard>
+                      </>
                     );
                   })}
                 </QuickGrid>
@@ -1090,9 +1068,8 @@ const UserGuidePageNew = () => {
             <HelpCta>
               <h3>Vous ne trouvez pas la réponse ?</h3>
               <p>
-                L'équipe support répond à toutes les questions sous 24 h
-                ouvrées. La communauté est aussi active pour l'entraide entre
-                utilisateurs.
+                L'équipe support répond à toutes les questions sous 24 h ouvrées. La communauté est
+                aussi active pour l'entraide entre utilisateurs.
               </p>
               <HelpCtaActions>
                 <HelpButton to="/contact" $variant="primary">

@@ -116,12 +116,58 @@ export function CookieConsentProvider({ children }) {
   };
 
   const applyConsentMetrics = (state) => {
-    // Active ou désactive les scripts tiers selon les choix utilisateur.
-    if (state.analytics) {
-      // placeholder : activer Google Analytics, Hotjar, etc.
+    // Effective gating: inject/remove third-party scripts based on consent.
+    // Must be called BOTH on initial load and after preference change.
+    const GA_ID = import.meta.env.VITE_GA_MEASUREMENT_ID;
+    const HOTJAR_ID = import.meta.env.VITE_HOTJAR_ID;
+    const META_PIXEL_ID = import.meta.env.VITE_META_PIXEL_ID;
+
+    const removeScript = (id) => {
+      const el = document.getElementById(id);
+      if (el) el.remove();
+    };
+
+    // --- Analytics ---
+    if (state.analytics && GA_ID && !document.getElementById('ga-script')) {
+      const s = document.createElement('script');
+      s.id = 'ga-script';
+      s.async = true;
+      s.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
+      document.head.appendChild(s);
+
+      const inline = document.createElement('script');
+      inline.id = 'ga-inline';
+      inline.text = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}',{anonymize_ip:true});`;
+      document.head.appendChild(inline);
+    } else if (!state.analytics) {
+      removeScript('ga-script');
+      removeScript('ga-inline');
+      // Also drop any GA cookies already set.
+      document.cookie.split(';').forEach((c) => {
+        const n = c.split('=')[0].trim();
+        if (n.startsWith('_ga') || n === '_gid') {
+          document.cookie = `${n}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+        }
+      });
     }
-    if (state.marketing) {
-      // placeholder : activer pixels publicitaires, etc.
+
+    if (state.analytics && HOTJAR_ID && !document.getElementById('hotjar-script')) {
+      const s = document.createElement('script');
+      s.id = 'hotjar-script';
+      s.text = `(function(h,o,t,j,a,r){h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};h._hjSettings={hjid:${HOTJAR_ID},hjsv:6};a=o.getElementsByTagName('head')[0];r=o.createElement('script');r.async=1;r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;a.appendChild(r);})(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');`;
+      document.head.appendChild(s);
+    } else if (!state.analytics) {
+      removeScript('hotjar-script');
+    }
+
+    // --- Marketing ---
+    if (state.marketing && META_PIXEL_ID && !document.getElementById('meta-pixel')) {
+      const s = document.createElement('script');
+      s.id = 'meta-pixel';
+      s.text = `!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','${META_PIXEL_ID}');fbq('track','PageView');`;
+      document.head.appendChild(s);
+    } else if (!state.marketing) {
+      removeScript('meta-pixel');
     }
   };
 

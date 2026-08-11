@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useTranslation } from '../hooks/useTranslation';
 import LegalLayout from '../components/LegalLayout';
 import CallToAction from '../components/CallToAction';
+import SEO from '../components/SEO';
 
 const Paragraph = styled.p`
   line-height: 1.8;
@@ -31,6 +32,11 @@ const TermsPage = () => {
 
   return (
     <LegalLayout title={t('termsOfUse')} lastUpdated="21 Février 2024">
+      <SEO
+        title="Conditions d’utilisation"
+        description="Conditions d’utilisation de VisioConnect."
+        path="/terms"
+      />
       <Paragraph>
         Bienvenue sur VisioConnect. En accédant ou en utilisant notre site web et nos services, vous
         acceptez d'être lié par les présentes Conditions d'Utilisation. Si vous n'acceptez pas ces

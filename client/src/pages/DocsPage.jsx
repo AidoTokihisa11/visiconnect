@@ -25,6 +25,7 @@ import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
 import CallToAction from '../components/CallToAction';
 import { useTranslation } from '../hooks/useTranslation';
+import SEO from '../components/SEO';
 
 // ─── Palette ──────────────────────────────────────────────────────────────────
 const C = {
@@ -1706,19 +1707,26 @@ const DocsPage = () => {
                 const items = filtered.filter((s) => s.group === group);
                 if (!items.length) return null;
                 return (
-                  <SidebarSection key={group}>
-                    <SidebarHeading>{group}</SidebarHeading>
-                    {items.map(({ id, label, icon: Icon }) => (
-                      <SidebarItem
-                        key={id}
-                        $active={activeSection === id}
-                        onClick={() => handleNav(id)}
-                      >
-                        <Icon size={15} />
-                        {label}
-                      </SidebarItem>
-                    ))}
-                  </SidebarSection>
+                  <>
+                    <SEO
+                      title="Documentation"
+                      description="Documentation technique VisioConnect : API, intégrations, guides d’installation et bonnes pratiques."
+                      path="/docs"
+                    />
+                    <SidebarSection key={group}>
+                      <SidebarHeading>{group}</SidebarHeading>
+                      {items.map(({ id, label, icon: Icon }) => (
+                        <SidebarItem
+                          key={id}
+                          $active={activeSection === id}
+                          onClick={() => handleNav(id)}
+                        >
+                          <Icon size={15} />
+                          {label}
+                        </SidebarItem>
+                      ))}
+                    </SidebarSection>
+                  </>
                 );
               })}
             </Sidebar>

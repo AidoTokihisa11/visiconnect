@@ -20,6 +20,7 @@ import {
 import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from '../hooks/useTranslation';
 import HeaderClean from '../components/HeaderClean';
+import SEO from '../components/SEO';
 
 /* ------------------------------------------------------------------ */
 /*  Split-screen SaaS auth : formulaire à gauche, panneau brand à droite.
@@ -515,202 +516,205 @@ const LoginPage = () => {
   };
 
   return (
-    <PageWrapper>
-      <HeaderClean />
+    <>
+      <SEO title="Connexion" description="Connectez-vous à VisioConnect." path="/login" noindex />
+      <PageWrapper>
+        <HeaderClean />
 
-      <Main>
-        <FormSide>
-          <FormInner
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, ease: 'easeOut' }}
-          >
-            <LogoRow>
-              <LogoBadge>
+        <Main>
+          <FormSide>
+            <FormInner
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, ease: 'easeOut' }}
+            >
+              <LogoRow>
+                <LogoBadge>
+                  <Video size={19} strokeWidth={2.25} />
+                </LogoBadge>
+                <LogoText>VisioConnect</LogoText>
+              </LogoRow>
+
+              <Title>{t('login.title')}</Title>
+              <Subtitle>{t('login.subtitle')}</Subtitle>
+
+              {(error || authError) && (
+                <ErrorMessage initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }}>
+                  <AlertCircle size={18} style={{ flexShrink: 0, marginTop: '1px' }} />
+                  <span>{error || authError}</span>
+                </ErrorMessage>
+              )}
+
+              <Form onSubmit={handleSubmit}>
+                <FormGroup>
+                  <Label htmlFor="email">{t('login.email')}</Label>
+                  <InputWrapper>
+                    <InputIcon>
+                      <Mail size={16} />
+                    </InputIcon>
+                    <Input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={credentials.email}
+                      onChange={syncCredentialsInput}
+                      placeholder={t('login.emailPlaceholder')}
+                      required
+                      autoComplete="email"
+                    />
+                  </InputWrapper>
+                </FormGroup>
+
+                <FormGroup>
+                  <LabelRow>
+                    <Label htmlFor="password">{t('login.password')}</Label>
+                    <ForgotLink to="/forgot-password">{t('login.forgotPassword')}</ForgotLink>
+                  </LabelRow>
+                  <InputWrapper>
+                    <InputIcon>
+                      <Lock size={16} />
+                    </InputIcon>
+                    <Input
+                      type={showPassword ? 'text' : 'password'}
+                      id="password"
+                      name="password"
+                      value={credentials.password}
+                      onChange={syncCredentialsInput}
+                      placeholder="••••••••"
+                      required
+                      autoComplete="current-password"
+                    />
+                    <PasswordToggle
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      aria-label={
+                        showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'
+                      }
+                    >
+                      {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
+                    </PasswordToggle>
+                  </InputWrapper>
+                </FormGroup>
+
+                <SubmitButton
+                  type="submit"
+                  disabled={loading || !!oauthLoading}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  {loading ? (
+                    <span
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <Loader2 size={16} className="animate-spin" /> {t('login.loading')}
+                    </span>
+                  ) : (
+                    t('login.submit')
+                  )}
+                </SubmitButton>
+              </Form>
+
+              <Divider>
+                <span>{t('login.orContinue')}</span>
+              </Divider>
+
+              <OAuthButtons>
+                <OAuthButton
+                  type="button"
+                  onClick={() => handleOAuthLogin('google')}
+                  disabled={loading || !!oauthLoading}
+                  aria-busy={oauthLoading === 'google'}
+                >
+                  {oauthLoading === 'google' ? (
+                    <>
+                      <Loader2 size={16} className="animate-spin" />{' '}
+                      {t('auth.signingIn', 'Connexion...')}
+                    </>
+                  ) : (
+                    <>
+                      <FaGoogle color="#ea4335" /> Google
+                    </>
+                  )}
+                </OAuthButton>
+                <OAuthButton
+                  type="button"
+                  onClick={() => handleOAuthLogin('github')}
+                  disabled={loading || !!oauthLoading}
+                  aria-busy={oauthLoading === 'github'}
+                >
+                  {oauthLoading === 'github' ? (
+                    <>
+                      <Loader2 size={16} className="animate-spin" />{' '}
+                      {t('auth.signingIn', 'Connexion...')}
+                    </>
+                  ) : (
+                    <>
+                      <FaGithub /> GitHub
+                    </>
+                  )}
+                </OAuthButton>
+              </OAuthButtons>
+
+              <FooterLink>
+                {t('login.noAccount')}
+                <Link to="/signup">{t('login.createAccount')}</Link>
+              </FooterLink>
+
+              <LegalFootnote>
+                © {new Date().getFullYear()} VisioConnect ·<Link to="/terms">Conditions</Link>·
+                <Link to="/privacy">Confidentialité</Link>
+              </LegalFootnote>
+            </FormInner>
+          </FormSide>
+
+          <BrandSide>
+            <BrandTop>
+              <BrandLogo>
                 <Video size={19} strokeWidth={2.25} />
-              </LogoBadge>
-              <LogoText>VisioConnect</LogoText>
-            </LogoRow>
+              </BrandLogo>
+              <BrandName>VisioConnect</BrandName>
+            </BrandTop>
 
-            <Title>{t('login.title')}</Title>
-            <Subtitle>{t('login.subtitle')}</Subtitle>
+            <BrandBody>
+              <BrandTagline>
+                Un espace pour vos réunions,
+                <br />
+                sans le bruit autour.
+              </BrandTagline>
+              <BrandLead>
+                VisioConnect regroupe la vidéo, le chat et le tableau blanc dans une interface
+                simple — pour que la conversation reste au centre.
+              </BrandLead>
 
-            {(error || authError) && (
-              <ErrorMessage initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }}>
-                <AlertCircle size={18} style={{ flexShrink: 0, marginTop: '1px' }} />
-                <span>{error || authError}</span>
-              </ErrorMessage>
-            )}
+              <FeatureList>
+                <FeatureItem>
+                  <ShieldCheck size={16} strokeWidth={2} />
+                  Chiffrement de bout en bout, conforme RGPD.
+                </FeatureItem>
+                <FeatureItem>
+                  <Sparkles size={16} strokeWidth={2} />
+                  Résumés et transcription assistés par IA, à la demande.
+                </FeatureItem>
+                <FeatureItem>
+                  <Users size={16} strokeWidth={2} />
+                  Sous-groupes, sondages et tableau blanc partagé.
+                </FeatureItem>
+                <FeatureItem>
+                  <Globe2 size={16} strokeWidth={2} />
+                  Disponible en français, anglais, espagnol et allemand.
+                </FeatureItem>
+              </FeatureList>
+            </BrandBody>
 
-            <Form onSubmit={handleSubmit}>
-              <FormGroup>
-                <Label htmlFor="email">{t('login.email')}</Label>
-                <InputWrapper>
-                  <InputIcon>
-                    <Mail size={16} />
-                  </InputIcon>
-                  <Input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={credentials.email}
-                    onChange={syncCredentialsInput}
-                    placeholder={t('login.emailPlaceholder')}
-                    required
-                    autoComplete="email"
-                  />
-                </InputWrapper>
-              </FormGroup>
-
-              <FormGroup>
-                <LabelRow>
-                  <Label htmlFor="password">{t('login.password')}</Label>
-                  <ForgotLink to="/forgot-password">{t('login.forgotPassword')}</ForgotLink>
-                </LabelRow>
-                <InputWrapper>
-                  <InputIcon>
-                    <Lock size={16} />
-                  </InputIcon>
-                  <Input
-                    type={showPassword ? 'text' : 'password'}
-                    id="password"
-                    name="password"
-                    value={credentials.password}
-                    onChange={syncCredentialsInput}
-                    placeholder="••••••••"
-                    required
-                    autoComplete="current-password"
-                  />
-                  <PasswordToggle
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    aria-label={
-                      showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'
-                    }
-                  >
-                    {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
-                  </PasswordToggle>
-                </InputWrapper>
-              </FormGroup>
-
-              <SubmitButton
-                type="submit"
-                disabled={loading || !!oauthLoading}
-                whileTap={{ scale: 0.98 }}
-              >
-                {loading ? (
-                  <span
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <Loader2 size={16} className="animate-spin" /> {t('login.loading')}
-                  </span>
-                ) : (
-                  t('login.submit')
-                )}
-              </SubmitButton>
-            </Form>
-
-            <Divider>
-              <span>{t('login.orContinue')}</span>
-            </Divider>
-
-            <OAuthButtons>
-              <OAuthButton
-                type="button"
-                onClick={() => handleOAuthLogin('google')}
-                disabled={loading || !!oauthLoading}
-                aria-busy={oauthLoading === 'google'}
-              >
-                {oauthLoading === 'google' ? (
-                  <>
-                    <Loader2 size={16} className="animate-spin" />{' '}
-                    {t('auth.signingIn', 'Connexion...')}
-                  </>
-                ) : (
-                  <>
-                    <FaGoogle color="#ea4335" /> Google
-                  </>
-                )}
-              </OAuthButton>
-              <OAuthButton
-                type="button"
-                onClick={() => handleOAuthLogin('github')}
-                disabled={loading || !!oauthLoading}
-                aria-busy={oauthLoading === 'github'}
-              >
-                {oauthLoading === 'github' ? (
-                  <>
-                    <Loader2 size={16} className="animate-spin" />{' '}
-                    {t('auth.signingIn', 'Connexion...')}
-                  </>
-                ) : (
-                  <>
-                    <FaGithub /> GitHub
-                  </>
-                )}
-              </OAuthButton>
-            </OAuthButtons>
-
-            <FooterLink>
-              {t('login.noAccount')}
-              <Link to="/signup">{t('login.createAccount')}</Link>
-            </FooterLink>
-
-            <LegalFootnote>
-              © {new Date().getFullYear()} VisioConnect ·<Link to="/terms">Conditions</Link>·
-              <Link to="/privacy">Confidentialité</Link>
-            </LegalFootnote>
-          </FormInner>
-        </FormSide>
-
-        <BrandSide>
-          <BrandTop>
-            <BrandLogo>
-              <Video size={19} strokeWidth={2.25} />
-            </BrandLogo>
-            <BrandName>VisioConnect</BrandName>
-          </BrandTop>
-
-          <BrandBody>
-            <BrandTagline>
-              Un espace pour vos réunions,
-              <br />
-              sans le bruit autour.
-            </BrandTagline>
-            <BrandLead>
-              VisioConnect regroupe la vidéo, le chat et le tableau blanc dans une interface simple
-              — pour que la conversation reste au centre.
-            </BrandLead>
-
-            <FeatureList>
-              <FeatureItem>
-                <ShieldCheck size={16} strokeWidth={2} />
-                Chiffrement de bout en bout, conforme RGPD.
-              </FeatureItem>
-              <FeatureItem>
-                <Sparkles size={16} strokeWidth={2} />
-                Résumés et transcription assistés par IA, à la demande.
-              </FeatureItem>
-              <FeatureItem>
-                <Users size={16} strokeWidth={2} />
-                Sous-groupes, sondages et tableau blanc partagé.
-              </FeatureItem>
-              <FeatureItem>
-                <Globe2 size={16} strokeWidth={2} />
-                Disponible en français, anglais, espagnol et allemand.
-              </FeatureItem>
-            </FeatureList>
-          </BrandBody>
-
-          <BrandFootnote>Projet indépendant · Fait avec soin.</BrandFootnote>
-        </BrandSide>
-      </Main>
-    </PageWrapper>
+            <BrandFootnote>Projet indépendant · Fait avec soin.</BrandFootnote>
+          </BrandSide>
+        </Main>
+      </PageWrapper>
+    </>
   );
 };
 
