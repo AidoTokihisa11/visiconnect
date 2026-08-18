@@ -56,6 +56,8 @@ export default defineSchema({
     createdAt: v.number(),
   }).index("by_user", ["targetUserId"]),
 
+  // CNIL-compliant consent registry: immutable audit trail.
+  // Each choice creates a NEW row; previous ones stay for legal proof.
   cookieConsents: defineTable({
     sessionId: v.string(),
     userId: v.optional(v.string()),
@@ -64,8 +66,24 @@ export default defineSchema({
     marketing: v.boolean(),
     preferences: v.boolean(),
     timestamp: v.number(),
-  }).index("by_session", ["sessionId"])
-    .index("by_user", ["userId"]),
+    // Consent lifecycle
+    expiresAt: v.number(),
+    policyVersion: v.string(),
+    method: v.union(
+      v.literal("accept_all"),
+      v.literal("reject_all"),
+      v.literal("custom"),
+      v.literal("revoked")
+    ),
+    // Audit context
+    userAgent: v.optional(v.string()),
+    language: v.optional(v.string()),
+    previousConsentId: v.optional(v.id("cookieConsents")),
+    revokedAt: v.optional(v.number()),
+  })
+    .index("by_session", ["sessionId"])
+    .index("by_user", ["userId"])
+    .index("by_session_and_time", ["sessionId", "timestamp"]),
 
   polls: defineTable({
     meetingId: v.string(),
