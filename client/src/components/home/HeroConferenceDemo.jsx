@@ -1,208 +1,161 @@
 import React, { memo } from 'react';
 import styled from 'styled-components';
-import { Mic, MicOff, Video, Monitor, MoreHorizontal, Lock } from 'lucide-react';
-import { useTranslation } from '../../hooks/useTranslation';
+import {
+  Mic,
+  MicOff,
+  Video,
+  Monitor,
+  MessageSquare,
+  MoreHorizontal,
+  Lock,
+  User,
+  Check,
+  Circle,
+  PhoneOff,
+} from 'lucide-react';
 
 /* ─────────────────────────────────────────────
-   Single-card product mockup.
-   No floating chips, no gradient avatar bubbles,
-   no oversized shadows. One coherent surface.
+   Product-dashboard hero mockup.
+   One coherent surface; density comes from
+   functional content, not from decoration.
    ───────────────────────────────────────────── */
 
 const Frame = styled.div`
-  position: relative;
   width: 100%;
-  max-width: 640px;
+  max-width: 720px;
   background: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 10px;
-  box-shadow:
-    0 1px 2px rgba(15, 23, 42, 0.04),
-    0 8px 24px -12px rgba(15, 23, 42, 0.12);
   overflow: hidden;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: #0f172a;
 `;
 
-/* Browser-style chrome bar */
-const Chrome = styled.div`
+/* ── Call header ─────────────────────────── */
+const CallHeader = styled.header`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #eef0f3;
+  background: #ffffff;
+`;
+
+const Title = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 14px;
-  background: #f9fafb;
-  border-bottom: 1px solid #eef0f3;
-`;
-
-const Dots = styled.div`
-  display: flex;
-  gap: 6px;
-
-  span {
-    width: 10px;
-    height: 10px;
-    border-radius: 999px;
-    background: #e2e5ea;
-  }
-`;
-
-const AddressBar = styled.div`
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  background: #ffffff;
-  border: 1px solid #eef0f3;
-  border-radius: 6px;
-  font-size: 12px;
-  color: #6b7280;
   min-width: 0;
 
-  svg {
-    color: #10b981;
-    flex-shrink: 0;
-  }
-
-  span {
+  h3 {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: #0f172a;
+    margin: 0;
+    letter-spacing: -0.005em;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
   }
 `;
 
-/* Main call stage */
-const Stage = styled.div`
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 172px;
-  gap: 0;
-  background: #ffffff;
+const LiveDot = styled.span`
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #dc2626;
+  flex-shrink: 0;
+`;
 
-  @media (max-width: 520px) {
+const HeaderMeta = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: #64748b;
+  flex-shrink: 0;
+`;
+
+const Encrypted = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #475569;
+
+  svg {
+    color: #64748b;
+  }
+`;
+
+const Duration = styled.span`
+  font-variant-numeric: tabular-nums;
+  color: #475569;
+`;
+
+/* ── Body layout: video grid + sidebar ───── */
+const Body = styled.div`
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 200px;
+
+  @media (max-width: 640px) {
     grid-template-columns: minmax(0, 1fr);
   }
 `;
 
-const Speaker = styled.div`
-  position: relative;
-  aspect-ratio: 16 / 10;
-  background:
-    radial-gradient(120% 80% at 20% 10%, #1f2937 0%, #0f172a 60%, #0b1220 100%);
+const VideoArea = styled.div`
+  padding: 12px;
+  background: #f8fafc;
   border-right: 1px solid #eef0f3;
-  overflow: hidden;
 
-  @media (max-width: 520px) {
+  @media (max-width: 640px) {
     border-right: none;
     border-bottom: 1px solid #eef0f3;
   }
 `;
 
-const SpeakerContent = styled.div`
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(255, 255, 255, 0.55);
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-
-  svg {
-    margin-right: 8px;
-    opacity: 0.7;
-  }
-`;
-
-const SpeakerLabel = styled.div`
-  position: absolute;
-  left: 12px;
-  bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 8px;
-  background: rgba(15, 23, 42, 0.55);
-  backdrop-filter: blur(6px);
-  color: #ffffff;
-  font-size: 11.5px;
-  font-weight: 500;
-  border-radius: 4px;
-
-  svg {
-    width: 11px;
-    height: 11px;
-  }
-`;
-
-const RecDot = styled.div`
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 8px;
-  background: rgba(15, 23, 42, 0.55);
-  backdrop-filter: blur(6px);
-  border-radius: 4px;
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 10.5px;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-
-  &::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: 999px;
-    background: #ef4444;
-  }
-`;
-
-/* Right column: participants stack */
-const Sidebar = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 10px;
+const VideoGrid = styled.div`
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  grid-template-rows: 1fr 1fr;
   gap: 8px;
-  background: #fbfbfc;
-
-  @media (max-width: 520px) {
-    flex-direction: row;
-    overflow-x: auto;
-    padding: 10px;
-  }
+  height: 260px;
 `;
 
 const Tile = styled.div`
   position: relative;
-  aspect-ratio: 4 / 3;
+  background: #0f172a;
   border-radius: 6px;
   overflow: hidden;
-  background: ${(props) => props.$bg || '#1f2937'};
-  border: 1px solid rgba(15, 23, 42, 0.06);
-  flex: 0 0 auto;
-  min-width: 0;
-
-  @media (max-width: 520px) {
-    width: 132px;
-  }
-`;
-
-const TileName = styled.div`
-  position: absolute;
-  left: 6px;
-  bottom: 6px;
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 2px 6px;
-  background: rgba(15, 23, 42, 0.55);
+  justify-content: center;
+
+  ${(props) =>
+    props.$primary &&
+    `
+    grid-row: span 2;
+  `}
+`;
+
+const Silhouette = styled(User)`
+  color: rgba(255, 255, 255, 0.22);
+`;
+
+const TileLabel = styled.div`
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 7px;
+  border-radius: 4px;
+  background: rgba(15, 23, 42, 0.6);
   color: #ffffff;
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 500;
-  border-radius: 3px;
+  line-height: 1;
 
   svg {
     width: 10px;
@@ -211,37 +164,34 @@ const TileName = styled.div`
   }
 `;
 
-/* Bottom control bar */
+const StatusBadge = styled.span`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 3px 7px;
+  border-radius: 4px;
+  background: rgba(15, 23, 42, 0.6);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+`;
+
+/* ── Control bar (integrated, not floating) ── */
 const Controls = styled.div`
+  margin-top: 10px;
+  padding: 8px 10px;
+  background: #ffffff;
+  border: 1px solid #eef0f3;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 14px;
-  border-top: 1px solid #eef0f3;
-  background: #ffffff;
+  gap: 8px;
 `;
 
-const Meta = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 11.5px;
-  color: #6b7280;
-
-  strong {
-    color: #111827;
-    font-weight: 600;
-  }
-`;
-
-const Divider = styled.span`
-  width: 1px;
-  height: 12px;
-  background: #e5e7eb;
-`;
-
-const ButtonRow = styled.div`
-  display: flex;
+const CtrlGroup = styled.div`
+  display: inline-flex;
   align-items: center;
   gap: 6px;
 `;
@@ -255,7 +205,7 @@ const CtrlBtn = styled.button`
   border-radius: 6px;
   border: 1px solid #e5e7eb;
   background: #ffffff;
-  color: #374151;
+  color: #334155;
   cursor: default;
   padding: 0;
 
@@ -264,81 +214,202 @@ const CtrlBtn = styled.button`
     color: #0f172a;
     border-color: #dbe0e6;
   }
+
+  &[data-danger='true'] {
+    background: #ffffff;
+    color: #b91c1c;
+    border-color: #fecaca;
+  }
+`;
+
+/* ── Sidebar ─────────────────────────────── */
+const Sidebar = styled.aside`
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+`;
+
+const SidebarSection = styled.section`
+  padding: 14px 14px 12px;
+
+  & + & {
+    border-top: 1px solid #eef0f3;
+  }
+`;
+
+const SectionHead = styled.h4`
+  margin: 0 0 10px;
+  font-size: 10.5px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #94a3b8;
+`;
+
+const List = styled.ul`
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+const ParticipantItem = styled.li`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12.5px;
+  color: #1e293b;
+  font-weight: 500;
+
+  svg {
+    width: 12px;
+    height: 12px;
+    color: ${(props) => (props.$muted ? '#94a3b8' : '#16a34a')};
+    flex-shrink: 0;
+  }
+
+  span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+`;
+
+const AgendaItem = styled.li`
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12.5px;
+  color: ${(props) => (props.$done ? '#94a3b8' : '#1e293b')};
+  line-height: 1.4;
+  text-decoration: ${(props) => (props.$done ? 'line-through' : 'none')};
+
+  & > svg {
+    margin-top: 1px;
+    flex-shrink: 0;
+    color: ${(props) => (props.$done ? '#16a34a' : '#cbd5e1')};
+    fill: ${(props) => (props.$done ? '#16a34a' : 'transparent')};
+  }
 `;
 
 const PARTICIPANTS = [
-  { name: 'Julie D.', bg: 'linear-gradient(160deg,#2b3646 0%,#1a2130 100%)', muted: false },
-  { name: 'Marc R.', bg: 'linear-gradient(160deg,#2e2a3a 0%,#1c1a26 100%)', muted: true },
-  { name: 'Aïcha S.', bg: 'linear-gradient(160deg,#26343a 0%,#141d22 100%)', muted: false },
+  { name: 'Tom K.', muted: false, presenter: true },
+  { name: 'Julie D.', muted: false },
+  { name: 'Marc R.', muted: true },
+  { name: 'Aïcha S.', muted: false },
+];
+
+const AGENDA = [
+  { text: 'Revue des OKR trimestriels', done: true },
+  { text: 'Roadmap release 2.4', done: true },
+  { text: 'Décisions produit — mobile', done: false },
 ];
 
 const HeroConferenceDemo = memo(function HeroConferenceDemo() {
-  const { t } = useTranslation();
-
   return (
-    <Frame role="img" aria-label="Aperçu de l'interface VisioConnect">
-      <Chrome>
-        <Dots>
-          <span />
-          <span />
-          <span />
-        </Dots>
-        <AddressBar>
-          <Lock size={11} strokeWidth={2.5} aria-hidden="true" />
-          <span>visioconnect.pro/room/equipe-produit</span>
-        </AddressBar>
-      </Chrome>
+    <Frame role="img" aria-label="Aperçu de l'interface d'une réunion VisioConnect">
+      <CallHeader>
+        <Title>
+          <LiveDot aria-hidden="true" />
+          <h3>Réunion produit — hebdo</h3>
+        </Title>
+        <HeaderMeta>
+          <Encrypted>
+            <Lock size={12} strokeWidth={2.25} aria-hidden="true" />
+            Chiffré
+          </Encrypted>
+          <Duration>24:29</Duration>
+        </HeaderMeta>
+      </CallHeader>
 
-      <Stage>
-        <Speaker>
-          <SpeakerContent>
-            <Monitor size={16} strokeWidth={2} aria-hidden="true" />
-            {t('ui.screenShare') || "Partage d'écran"}
-          </SpeakerContent>
-          <SpeakerLabel>
-            <Mic size={11} strokeWidth={2.25} aria-hidden="true" />
-            Tom K.
-          </SpeakerLabel>
-          <RecDot aria-label="Enregistrement en cours">REC</RecDot>
-        </Speaker>
+      <Body>
+        <VideoArea>
+          <VideoGrid>
+            <Tile $primary aria-label="Tom K., présentateur">
+              <Silhouette size={44} strokeWidth={1.5} aria-hidden="true" />
+              <StatusBadge>Présente</StatusBadge>
+              <TileLabel>
+                <Mic strokeWidth={2.25} aria-hidden="true" />
+                Tom K.
+              </TileLabel>
+            </Tile>
+            <Tile aria-label="Julie D.">
+              <Silhouette size={26} strokeWidth={1.5} aria-hidden="true" />
+              <TileLabel>
+                <Mic strokeWidth={2.25} aria-hidden="true" />
+                Julie D.
+              </TileLabel>
+            </Tile>
+            <Tile aria-label="Marc R., micro coupé">
+              <Silhouette size={26} strokeWidth={1.5} aria-hidden="true" />
+              <TileLabel $muted>
+                <MicOff strokeWidth={2.25} aria-hidden="true" />
+                Marc R.
+              </TileLabel>
+            </Tile>
+          </VideoGrid>
+
+          <Controls>
+            <CtrlGroup>
+              <CtrlBtn data-active="true" title="Micro" aria-label="Micro actif">
+                <Mic size={14} strokeWidth={2} />
+              </CtrlBtn>
+              <CtrlBtn data-active="true" title="Caméra" aria-label="Caméra active">
+                <Video size={14} strokeWidth={2} />
+              </CtrlBtn>
+              <CtrlBtn title="Partage d'écran" aria-label="Partage d'écran">
+                <Monitor size={14} strokeWidth={2} />
+              </CtrlBtn>
+              <CtrlBtn title="Chat" aria-label="Chat">
+                <MessageSquare size={14} strokeWidth={2} />
+              </CtrlBtn>
+              <CtrlBtn title="Plus" aria-label="Plus d'options">
+                <MoreHorizontal size={14} strokeWidth={2} />
+              </CtrlBtn>
+            </CtrlGroup>
+            <CtrlBtn data-danger="true" title="Quitter" aria-label="Quitter la réunion">
+              <PhoneOff size={14} strokeWidth={2} />
+            </CtrlBtn>
+          </Controls>
+        </VideoArea>
 
         <Sidebar>
-          {PARTICIPANTS.map((p) => (
-            <Tile key={p.name} $bg={p.bg}>
-              <TileName $muted={p.muted}>
-                {p.muted ? (
-                  <MicOff strokeWidth={2.25} aria-hidden="true" />
-                ) : (
-                  <Mic strokeWidth={2.25} aria-hidden="true" />
-                )}
-                {p.name}
-              </TileName>
-            </Tile>
-          ))}
-        </Sidebar>
-      </Stage>
+          <SidebarSection>
+            <SectionHead>Participants · 4</SectionHead>
+            <List>
+              {PARTICIPANTS.map((p) => (
+                <ParticipantItem key={p.name} $muted={p.muted}>
+                  <span>{p.name}</span>
+                  {p.muted ? (
+                    <MicOff strokeWidth={2.25} aria-hidden="true" />
+                  ) : (
+                    <Mic strokeWidth={2.25} aria-hidden="true" />
+                  )}
+                </ParticipantItem>
+              ))}
+            </List>
+          </SidebarSection>
 
-      <Controls>
-        <Meta>
-          <strong>4 participants</strong>
-          <Divider />
-          <span>E2EE · 24:29</span>
-        </Meta>
-        <ButtonRow aria-hidden="true">
-          <CtrlBtn data-active="true" title="Micro">
-            <Mic size={14} strokeWidth={2} />
-          </CtrlBtn>
-          <CtrlBtn data-active="true" title="Caméra">
-            <Video size={14} strokeWidth={2} />
-          </CtrlBtn>
-          <CtrlBtn title="Partage d'écran">
-            <Monitor size={14} strokeWidth={2} />
-          </CtrlBtn>
-          <CtrlBtn title="Plus">
-            <MoreHorizontal size={14} strokeWidth={2} />
-          </CtrlBtn>
-        </ButtonRow>
-      </Controls>
+          <SidebarSection>
+            <SectionHead>Ordre du jour</SectionHead>
+            <List>
+              {AGENDA.map((item) => (
+                <AgendaItem key={item.text} $done={item.done}>
+                  {item.done ? (
+                    <Check size={12} strokeWidth={2.5} aria-hidden="true" />
+                  ) : (
+                    <Circle size={12} strokeWidth={2} aria-hidden="true" />
+                  )}
+                  {item.text}
+                </AgendaItem>
+              ))}
+            </List>
+          </SidebarSection>
+        </Sidebar>
+      </Body>
     </Frame>
   );
 });
