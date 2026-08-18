@@ -246,13 +246,14 @@ const HeroContainer = styled.div`
   width: 100%;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 4rem;
+  /* Asymmetric split: content 5, visual 7 — visual gets more room */
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 5rem;
   align-items: center;
 
   @media (max-width: 900px) {
     grid-template-columns: minmax(0, 1fr);
-    text-align: center;
+    text-align: left;
     gap: 3rem;
   }
 
@@ -264,76 +265,63 @@ const HeroContainer = styled.div`
 const HeroContent = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.75rem;
   min-width: 0;
   width: 100%;
   max-width: 100%;
-
-  @media (max-width: 900px) {
-    align-items: center;
-  }
 `;
 
 const HeroHeadline = styled.h1`
-  font-size: 3.5rem;
-  font-weight: 800;
-  line-height: 1.1;
+  font-size: 3rem;
+  font-weight: 600;
+  line-height: 1.15;
   color: ${COLORS.dark};
-  letter-spacing: -0.05em;
+  letter-spacing: -0.022em;
   max-width: 100%;
   overflow-wrap: break-word;
-  word-break: break-word;
   hyphens: auto;
 
   span {
     color: ${COLORS.primary};
+    font-weight: 600;
   }
 
   @media (max-width: 900px) {
-    font-size: 3rem;
-    white-space: normal;
+    font-size: 2.75rem;
   }
 
   @media (max-width: 768px) {
-    font-size: 2.5rem;
-    white-space: normal;
+    font-size: 2.25rem;
   }
 
   @media (max-width: 480px) {
-    font-size: 1.9rem;
-    white-space: normal;
-    letter-spacing: -0.03em;
+    font-size: 1.85rem;
+    letter-spacing: -0.018em;
   }
 `;
 
 const HeroSubhead = styled.p`
-  font-size: 1.25rem;
-  line-height: 1.6;
+  font-size: 1.0625rem;
+  line-height: 1.65;
   color: ${COLORS.lightText};
-  max-width: 600px;
+  max-width: 520px;
   width: 100%;
   overflow-wrap: break-word;
-  word-break: break-word;
   hyphens: auto;
 
   @media (max-width: 640px) {
-    font-size: 1rem;
-    line-height: 1.55;
+    font-size: 0.9875rem;
+    line-height: 1.6;
   }
 `;
 
 const HeroActions = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.125rem;
   width: 100%;
   max-width: 520px;
   min-width: 0;
-
-  @media (max-width: 900px) {
-    align-items: stretch;
-    margin: 0 auto;
-  }
 `;
 
 const CtaRow = styled.div`
@@ -394,20 +382,13 @@ const CtaButton = styled(Link)`
       ? `
     background-color: #2563eb;
     color: #ffffff;
-    box-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.1) inset,
-      0 1px 2px rgba(15, 23, 42, 0.08),
-      0 4px 12px -4px rgba(37, 99, 235, 0.4);
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
     &:hover {
       background-color: #1d4ed8;
-      box-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.1) inset,
-        0 2px 4px rgba(15, 23, 42, 0.1),
-        0 8px 20px -6px rgba(37, 99, 235, 0.5);
     }
   `
       : `
-    background-color: transparent;
+    background-color: #ffffff;
     color: #0f172a;
     border-color: #e2e8f0;
     &:hover {
@@ -421,7 +402,7 @@ const HeroMeta = styled.ul`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.25rem 1rem;
+  gap: 0.25rem 1.25rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -436,7 +417,7 @@ const HeroMeta = styled.ul`
   }
 
   svg {
-    color: #16a34a;
+    color: #94a3b8;
     flex-shrink: 0;
   }
 `;
@@ -466,10 +447,6 @@ const CtaTertiary = styled(Link)`
   &:hover svg {
     transform: scale(1.15);
   }
-
-  @media (max-width: 900px) {
-    align-self: center;
-  }
 `;
 
 const HeroImage = styled.div`
@@ -477,18 +454,15 @@ const HeroImage = styled.div`
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  min-height: 420px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  overflow: hidden;
+  justify-content: flex-end;
+  /* Slight vertical offset breaks the strict 50/50 symmetry */
+  transform: translateY(-8px);
 
-  @media (max-width: 640px) {
-    min-height: 300px;
-  }
-
-  @media (max-width: 420px) {
-    min-height: 260px;
+  @media (max-width: 900px) {
+    justify-content: flex-start;
+    transform: none;
   }
 `;
 
@@ -953,8 +927,9 @@ export default function HomePageClean() {
   return (
     <>
       <SEO
-        title="Visioconférence sécurisée"
-        description="VisioConnect : plateforme de visioconférence sécurisée P2P, chiffrement de bout en bout, tableau blanc collaboratif et enregistrements."
+        title="Visioconférence en ligne sécurisée & RGPD"
+        description="Visioconférence en ligne sécurisée, sans installation. Chiffrement bout en bout, tableau blanc collaboratif. Alternative française à Zoom, conforme RGPD."
+        keywords="visioconférence, visioconférence en ligne, visioconférence sécurisée, alternative Zoom, visioconférence française, visio RGPD, réunion en ligne sans installation, tableau blanc collaboratif"
         path="/"
         jsonLd={homeJsonLd}
       />
