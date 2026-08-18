@@ -148,7 +148,7 @@ const ExLink = styled.a`
 
 export default function FooterClean() {
   const { t } = useTranslation();
-  const { setShowBanner } = useCookieConsent();
+  const { openPreferences } = useCookieConsent();
   const supportAddress = ['support', 'visiconnect.com'].join('@');
   return (
     <FooterContainer>
@@ -200,7 +200,7 @@ export default function FooterClean() {
           <FooterLink to="/terms">{t('navigation.terms', 'Conditions')}</FooterLink>
           <FooterLink to="/security">{t('navigation.security', 'Sécurité')}</FooterLink>
           <button
-            onClick={() => setShowBanner(true)}
+            onClick={openPreferences}
             style={{
               textAlign: 'left',
               background: 'none',
