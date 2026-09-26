@@ -14,12 +14,13 @@
 const DEFAULT_ORIGINS = [
   'https://visioconnect.pro',
   'https://www.visioconnect.pro',
-  'https://visiconnect.pro',
-  'https://www.visiconnect.pro',
   'http://localhost:5173',
   'http://localhost:3000',
   'http://127.0.0.1:5173',
 ];
+
+// Vercel preview hostnames for this project only, e.g. visioconnect-1-abc123.vercel.app.
+const PREVIEW_HOST = /^visioconnect-1(-[a-z0-9-]+)?\.vercel\.app$/;
 
 function getAllowedOrigins() {
   const fromEnv = (process.env.ALLOWED_ORIGINS || '')
@@ -36,7 +37,7 @@ function isOriginAllowed(origin) {
   // Autorise *.vercel.app pour les previews du projet uniquement.
   try {
     const { hostname } = new URL(origin);
-    if (hostname.endsWith('.vercel.app') && hostname.startsWith('visiconnect')) {
+    if (PREVIEW_HOST.test(hostname)) {
       return true;
     }
   } catch {

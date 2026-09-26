@@ -403,15 +403,15 @@ export default function FeatureShowcase() {
       id: 'meeting',
       label: 'Visioconférence 4K',
       icon: Video,
-      url: 'visiconnect.app/meeting/live',
+      url: 'visioconnect.pro/meeting/live',
     },
     {
       id: 'analytics',
       label: 'Analytics Dashboard',
       icon: BarChart3,
-      url: 'visiconnect.app/stats',
+      url: 'visioconnect.pro/stats',
     },
-    { id: 'admin', label: "Gestion d'Équipe", icon: Users, url: 'visiconnect.app/team/settings' },
+    { id: 'admin', label: "Gestion d'Équipe", icon: Users, url: 'visioconnect.pro/team/settings' },
   ];
 
   const activeTabData = tabs.find((t) => t.id === activeTab);

@@ -916,7 +916,7 @@ const SectionContent = ({ id }) => {
             {[
               [
                 'Créer votre compte',
-                'Rendez-vous sur app.visiconnect.com et inscrivez-vous avec votre email professionnel.',
+                'Rendez-vous sur app.visioconnect.pro et inscrivez-vous avec votre email professionnel.',
               ],
               [
                 'Configurer votre profil',
@@ -1124,7 +1124,7 @@ const SectionContent = ({ id }) => {
           <CopyableCode
             lang="bash"
             code={`<span style="color:#94a3b8"># Authentification Bearer</span>
-curl -X GET https://api.visiconnect.com/v1/meetings \\
+curl -X GET https://api.visioconnect.pro/v1/meetings \\
   -H <span style="color:#93c5fd">"Authorization: Bearer YOUR_API_KEY"</span> \\
   -H <span style="color:#93c5fd">"Content-Type: application/json"</span>`}
           />
@@ -1142,19 +1142,19 @@ curl -X GET https://api.visiconnect.com/v1/meetings \\
                   <tr>
                     <td>Authorization</td>
                     <td>
-                      <code>https://auth.visiconnect.com/oauth/authorize</code>
+                      <code>https://auth.visioconnect.pro/oauth/authorize</code>
                     </td>
                   </tr>
                   <tr>
                     <td>Token</td>
                     <td>
-                      <code>https://auth.visiconnect.com/oauth/token</code>
+                      <code>https://auth.visioconnect.pro/oauth/token</code>
                     </td>
                   </tr>
                   <tr>
                     <td>Refresh</td>
                     <td>
-                      <code>https://auth.visiconnect.com/oauth/refresh</code>
+                      <code>https://auth.visioconnect.pro/oauth/refresh</code>
                     </td>
                   </tr>
                 </tbody>
@@ -1178,13 +1178,13 @@ curl -X GET https://api.visiconnect.com/v1/meetings \\
           </ContentHeader>
           <ArticleCard>
             <ArticleTitle>URL de base</ArticleTitle>
-            <CopyableCode lang="text" code="https://api.visiconnect.com/v1" />
+            <CopyableCode lang="text" code="https://api.visioconnect.pro/v1" />
           </ArticleCard>
           <ArticleCard>
             <ArticleTitle>Créer une réunion</ArticleTitle>
             <CopyableCode
               lang="javascript"
-              code={`<span style="color:#bfdbfe">const</span> response = <span style="color:#bfdbfe">await</span> fetch(<span style="color:#93c5fd">'https://api.visiconnect.com/v1/meetings'</span>, {
+              code={`<span style="color:#bfdbfe">const</span> response = <span style="color:#bfdbfe">await</span> fetch(<span style="color:#93c5fd">'https://api.visioconnect.pro/v1/meetings'</span>, {
   method: <span style="color:#93c5fd">'POST'</span>,
   headers: {
     <span style="color:#93c5fd">'Authorization'</span>: <span style="color:#93c5fd">\`Bearer \${API_KEY}\`</span>,
@@ -1197,7 +1197,7 @@ curl -X GET https://api.visiconnect.com/v1/meetings \\
     settings: { waiting_room: <span style="color:#bfdbfe">true</span>, recording: <span style="color:#bfdbfe">true</span> },
   }),
 });
-<span style="color:#94a3b8">// → { join_url: "https://meet.visiconnect.com/abc123" }</span>`}
+<span style="color:#94a3b8">// → { join_url: "https://meet.visioconnect.pro/abc123" }</span>`}
             />
           </ArticleCard>
           <ArticleCard>
@@ -1351,8 +1351,8 @@ curl -X GET https://api.visiconnect.com/v1/meetings \\
           <ArticleCard>
             <ArticleTitle>URLs de configuration SAML</ArticleTitle>
             {[
-              ['ACS URL', 'https://auth.visiconnect.com/sso/saml/callback'],
-              ['Entity ID', 'https://auth.visiconnect.com/sso/saml/metadata'],
+              ['ACS URL', 'https://auth.visioconnect.pro/sso/saml/callback'],
+              ['Entity ID', 'https://auth.visioconnect.pro/sso/saml/metadata'],
             ].map(([k, v]) => (
               <div key={k} style={{ marginBottom: '0.75rem' }}>
                 <div
@@ -1493,8 +1493,8 @@ curl -X GET https://api.visiconnect.com/v1/meetings \\
               code={`<span style="color:#94a3b8"># docker-compose.yml</span>
 version: <span style="color:#93c5fd">'3.8'</span>
 services:
-  visiconnect:
-    image: <span style="color:#93c5fd">visiconnect/server:latest</span>
+  visioconnect:
+    image: <span style="color:#93c5fd">visioconnect/server:latest</span>
     ports:
       - <span style="color:#93c5fd">"443:443"</span>
     environment:
