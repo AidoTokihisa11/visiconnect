@@ -50,11 +50,28 @@ function bail(reason) {
 if (process.env.SKIP_PRERENDER === '1') bail('SKIP_PRERENDER=1');
 if (!existsSync(BUILD_DIR)) bail('build/ not found — run `vite build` first');
 
-let puppeteer;
-try {
-  puppeteer = (await import('puppeteer')).default;
-} catch {
-  bail('puppeteer is not installed (npm i -D puppeteer)');
+// Vercel's build image ships no Chrome system libraries, so the Chromium that
+// puppeteer downloads dies on `libnspr4.so`. @sparticuz/chromium bundles them.
+const useServerlessChromium = Boolean(
+  process.env.VERCEL || process.env.PRERENDER_SERVERLESS_CHROMIUM
+);
+
+async function launchBrowser() {
+  if (useServerlessChromium) {
+    const chromium = (await import('@sparticuz/chromium')).default;
+    const core = (await import('puppeteer-core')).default;
+    return core.launch({
+      args: [...chromium.args, '--no-sandbox', '--disable-dev-shm-usage'],
+      executablePath: await chromium.executablePath(),
+      headless: true,
+    });
+  }
+
+  const puppeteer = (await import('puppeteer')).default;
+  return puppeteer.launch({
+    headless: 'new',
+    args: ['--no-sandbox', '--disable-dev-shm-usage'],
+  });
 }
 
 const MIME = {
@@ -119,10 +136,7 @@ let browser;
 
 try {
   await ready;
-  browser = await puppeteer.launch({
-    headless: 'new',
-    args: ['--no-sandbox', '--disable-dev-shm-usage'],
-  });
+  browser = await launchBrowser();
   const page = await browser.newPage();
   await page.setViewport({ width: 1366, height: 900 });
 
