@@ -2,9 +2,14 @@ name: CI
 
 on:
   push:
-    branches: [main, 'chore/**', 'feat/**', 'fix/**']
+    branches: [main, dev, preprod, prod, 'chore/**', 'feat/**', 'fix/**', 'seo/**']
   pull_request:
-    branches: [main]
+    branches: [main, dev, preprod, prod]
+
+# A new push to the same branch supersedes the previous run.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   lint:
@@ -55,6 +60,14 @@ jobs:
   build-client:
     name: Build client (Vite)
     runs-on: ubuntu-latest
+    env:
+      # Publishable values inlined into the bundle by Vite — public by design.
+      # Override per-repo via Settings > Secrets and variables > Actions > Variables.
+      VITE_CONVEX_URL: ${{ vars.VITE_CONVEX_URL || 'https://keen-swan-699.eu-west-1.convex.cloud' }}
+      VITE_CLERK_PUBLISHABLE_KEY: ${{ vars.VITE_CLERK_PUBLISHABLE_KEY || 'pk_live_Y2xlcmsudmlzaW9jb25uZWN0LnBybyQ' }}
+      # The prerender needs Chromium and is exercised on the deploy build, not here.
+      PUPPETEER_SKIP_DOWNLOAD: '1'
+      SKIP_PRERENDER: '1'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

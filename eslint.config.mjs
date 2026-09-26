@@ -25,6 +25,7 @@ export default [
       'convex/_generated/**',
       'capture website/**',
       'client/public/**',
+      'load-tests/**',
     ],
   },
 

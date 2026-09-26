@@ -9,4 +9,4 @@ Disallow: /sso-callback
 Disallow: /meeting/
 Disallow: /api/
 
-Sitemap: https://visioconnect.app/sitemap.xml
+Sitemap: https://www.visioconnect.pro/sitemap.xml

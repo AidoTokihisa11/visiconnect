@@ -6,9 +6,9 @@ const SITE_URL = (import.meta.env?.VITE_SITE_URL || 'https://www.visioconnect.pr
   ''
 );
 const DEFAULT_IMAGE = `${SITE_URL}/og-default.png`;
-const DEFAULT_TITLE = 'VisioConnect — Visioconférence sécurisée';
+const DEFAULT_TITLE = 'VisioConnect · Visioconférence en ligne sécurisée & RGPD';
 const DEFAULT_DESC =
-  'VisioConnect : plateforme de visioconférence sécurisée P2P, chiffrement de bout en bout, tableau blanc collaboratif et enregistrements.';
+  'Visioconférence en ligne sécurisée, sans installation. Chiffrement bout en bout, tableau blanc collaboratif. Alternative française à Zoom, conforme RGPD.';
 
 export default function SEO({
   title,
