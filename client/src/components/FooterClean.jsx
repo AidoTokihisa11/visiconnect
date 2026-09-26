@@ -149,7 +149,7 @@ const ExLink = styled.a`
 export default function FooterClean() {
   const { t } = useTranslation();
   const { setShowBanner } = useCookieConsent();
-  const supportAddress = ['support', 'visiconnect.com'].join('@');
+  const supportAddress = ['support', 'visioconnect.pro'].join('@');
   return (
     <FooterContainer>
       <FooterContent>

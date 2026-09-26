@@ -29,7 +29,7 @@ import FooterClean from '../components/FooterClean';
 import { useTranslation } from '../hooks/useTranslation';
 import SEO from '../components/SEO';
 
-const businessContactAddress = ['contact', 'visiconnect.app'].join('@');
+const businessContactAddress = ['contact', 'visioconnect.pro'].join('@');
 
 // ─── Palette ──────────────────────────────────────────────────────────────────
 const C = {

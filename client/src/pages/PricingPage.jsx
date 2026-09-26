@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { Check, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { loadStripe } from '@stripe/stripe-js';
 import { apiFetch } from '../lib/apiClient';
 import HeaderClean from '../components/HeaderClean';
 import FooterClean from '../components/FooterClean';
@@ -10,10 +9,6 @@ import { useTranslation } from '../hooks/useTranslation';
 import { useUser } from '@clerk/react';
 import CallToAction from '../components/CallToAction';
 import SEO from '../components/SEO';
-
-const stripePromise = loadStripe(
-  'pk_test_51T5EwZ8YZRxeQjiW412gOFLsaZ4fn6ArvMjf74OphD9WhovPuRDde4qOGwrpdwlnFQIt1apdfwnWNfjbt6n0CkkB00p9k8z1MO'
-);
 
 const COLORS = {
   primary: 'hsl(var(--primary))',

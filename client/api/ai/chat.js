@@ -118,7 +118,7 @@ async function callOpenRouter(messages, model) {
     headers: {
       Authorization: `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
-      'HTTP-Referer': 'https://visiconnect.vercel.app',
+      'HTTP-Referer': 'https://www.visioconnect.pro',
       'X-Title': 'VisioConnect AI Assistant',
     },
     body: JSON.stringify({
