@@ -1,8 +1,8 @@
 // Build-time static prerender of the public routes.
 // Runs automatically as part of `npm run build` (see package.json).
 //
-// Spins up `vite preview` on the freshly built `build/`, visits each public
-// route with Puppeteer and writes the fully-rendered HTML to
+// Serves the freshly built `build/` from an in-process static server, visits
+// each public route with Puppeteer and writes the fully-rendered HTML to
 // build/<route>/index.html so crawlers get real content without executing JS.
 // The React bundle still boots on top of it (CSR takes over after load).
 //
@@ -10,10 +10,10 @@
 //   --strict          exit(1) if any route fails  (also PRERENDER_STRICT=1)
 //   SKIP_PRERENDER=1  skip entirely, leave the CSR build untouched
 
-import { spawn } from 'node:child_process';
-import { mkdirSync, writeFileSync, existsSync } from 'node:fs';
+import { createServer } from 'node:http';
+import { createReadStream, statSync, mkdirSync, writeFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { dirname, resolve } from 'node:path';
+import { dirname, resolve, extname, normalize, join } from 'node:path';
 import { setTimeout as sleep } from 'node:timers/promises';
 import { prerenderRoutes } from './public-routes.mjs';
 
@@ -21,7 +21,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const CLIENT_DIR = resolve(__dirname, '..');
 const BUILD_DIR = resolve(CLIENT_DIR, 'build');
 const PORT = Number(process.env.PRERENDER_PORT || 4173);
-const BASE = `http://localhost:${PORT}`;
+const BASE = `http://127.0.0.1:${PORT}`;
 const STRICT = process.argv.includes('--strict') || process.env.PRERENDER_STRICT === '1';
 const NAV_TIMEOUT = 45000;
 const RENDER_TIMEOUT = 20000;
@@ -57,26 +57,51 @@ try {
   bail('puppeteer is not installed (npm i -D puppeteer)');
 }
 
-function startPreviewServer() {
-  const server = spawn('npx', ['vite', 'preview', '--port', String(PORT), '--strictPort'], {
-    cwd: CLIENT_DIR,
-    stdio: ['ignore', 'pipe', 'pipe'],
-    shell: true,
+const MIME = {
+  '.html': 'text/html; charset=utf-8',
+  '.js': 'text/javascript; charset=utf-8',
+  '.mjs': 'text/javascript; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.json': 'application/json; charset=utf-8',
+  '.svg': 'image/svg+xml',
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.webp': 'image/webp',
+  '.gif': 'image/gif',
+  '.ico': 'image/x-icon',
+  '.woff': 'font/woff',
+  '.woff2': 'font/woff2',
+  '.ttf': 'font/ttf',
+  '.txt': 'text/plain; charset=utf-8',
+  '.xml': 'application/xml; charset=utf-8',
+  '.webmanifest': 'application/manifest+json',
+};
+
+// `vite preview` was spawned through npx here and silently failed to come up in
+// the deploy container. Serving in-process removes the shell, the PATH lookup
+// and the stdout parsing that made readiness detection unreliable.
+function startStaticServer() {
+  const server = createServer((req, res) => {
+    const urlPath = decodeURIComponent(new URL(req.url, BASE).pathname);
+    const candidate = normalize(join(BUILD_DIR, urlPath));
+
+    // Defense in depth: a crafted path must not escape the build directory.
+    let filePath = candidate.startsWith(BUILD_DIR) ? candidate : BUILD_DIR;
+    try {
+      if (statSync(filePath).isDirectory()) filePath = join(filePath, 'index.html');
+    } catch {
+      filePath = join(BUILD_DIR, 'index.html'); // SPA fallback
+    }
+    if (!existsSync(filePath)) filePath = join(BUILD_DIR, 'index.html');
+
+    res.writeHead(200, { 'Content-Type': MIME[extname(filePath)] || 'application/octet-stream' });
+    createReadStream(filePath).pipe(res);
   });
 
   const ready = new Promise((res, rej) => {
-    const timer = setTimeout(() => rej(new Error('preview server did not start in 30s')), 30000);
-    server.stdout.on('data', (d) => {
-      if (String(d).includes(`localhost:${PORT}`)) {
-        clearTimeout(timer);
-        res();
-      }
-    });
-    server.stderr.on('data', (d) => process.stderr.write(d));
-    server.once('exit', (code) => {
-      clearTimeout(timer);
-      rej(new Error(`preview server exited with code ${code}`));
-    });
+    server.once('error', rej);
+    server.listen(PORT, '127.0.0.1', res);
   });
 
   return { server, ready };
@@ -87,8 +112,9 @@ function stamp(html) {
   return html.includes('</head>') ? html.replace('</head>', `  ${marker}\n</head>`) : html;
 }
 
-const { server, ready } = startPreviewServer();
+const { server, ready } = startStaticServer();
 const failed = [];
+let rendered = 0;
 let browser;
 
 try {
@@ -144,6 +170,7 @@ try {
       const outDir = route === '/' ? BUILD_DIR : resolve(BUILD_DIR, route.replace(/^\//, ''));
       mkdirSync(outDir, { recursive: true });
       writeFileSync(resolve(outDir, 'index.html'), stamp(html), 'utf8');
+      rendered += 1;
       log(`${route}  ✓`);
     } catch (err) {
       failed.push(route);
@@ -155,12 +182,19 @@ try {
   if (STRICT) process.exitCode = 1;
 } finally {
   await browser?.close();
-  server.kill();
+  server.close();
 }
 
-log(`done — ${prerenderRoutes.length - failed.length}/${prerenderRoutes.length} routes rendered`);
+log(`done — ${rendered}/${prerenderRoutes.length} routes rendered`);
 
 if (failed.length) {
   console.warn(`[prerender] failed routes: ${failed.join(', ')}`);
   if (STRICT) process.exitCode = 1;
+}
+
+// Nothing written means the step is broken, not flaky: shipping a silently
+// CSR-only build would defeat the whole point of running it.
+if (rendered === 0) {
+  console.error('[prerender] no route was rendered — the build is CSR-only');
+  process.exitCode = 1;
 }
