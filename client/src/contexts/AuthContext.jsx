@@ -1,4 +1,5 @@
 import React, { createContext, useContext } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useUser, useAuth as useClerkAuth, useSignIn, useSignUp } from '@clerk/react';
 // @clerk/react v6 uses the SIGNAL-based Future API (NOT the classic @clerk/clerk-react API).
 //   useSignIn()  → { signIn, errors, fetchStatus }   where signIn is SignInFutureResource
@@ -15,6 +16,22 @@ import { useConvexAuth } from 'convex/react';
 
 const AuthContext = createContext({});
 
+// Marketing/legal pages must paint without waiting on Clerk: crawlers and the
+// build-time prerender would otherwise only ever capture the loading spinner.
+const AUTH_GATED_PREFIXES = [
+  '/dashboard',
+  '/account',
+  '/settings',
+  '/admin',
+  '/scheduler',
+  '/meeting',
+  '/success',
+  '/checkout',
+];
+
+const isAuthGated = (pathname) =>
+  AUTH_GATED_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
@@ -24,6 +41,7 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
+  const { pathname } = useLocation();
   const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
   const { isSignedIn, signOut, isLoaded: isAuthLoaded } = useClerkAuth();
   const { signIn: clerkSignIn } = useSignIn();
@@ -305,7 +323,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   // On bloque seulement le chargement critique global pour éviter un rendu prématuré
-  if (!clerkLoaded || !isAuthLoaded) {
+  if ((!clerkLoaded || !isAuthLoaded) && isAuthGated(pathname)) {
     return (
       <div
         style={{

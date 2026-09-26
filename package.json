@@ -10,6 +10,8 @@
     "build:client": "cd client && npm install --legacy-peer-deps && npm run build && cd .. && rm -rf build && cp -r client/build build",
     "build:server": "cd server && npm run build",
     "build": "npm run build:client",
+    "prerender": "cd client && npm run prerender",
+    "prerender:strict": "cd client && npm run prerender:strict",
     "env:encrypt": "node scripts/env-crypto.js encrypt",
     "env:decrypt": "node scripts/env-crypto.js decrypt",
     "start": "npm run dev",
